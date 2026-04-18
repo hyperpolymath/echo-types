@@ -98,6 +98,14 @@ cd /var/mnt/eclipse/repos/echo-types
 agda -i proofs/agda proofs/agda/Echo.agda
 ----
 
+Full suite:
+
+[source,bash]
+----
+cd /var/mnt/eclipse/repos/echo-types
+agda -i proofs/agda proofs/agda/All.agda
+----
+
 == Roadmap
 
 Proof milestones and decision gates are in:
