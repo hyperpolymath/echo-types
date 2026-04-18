@@ -292,6 +292,21 @@ cd proofs/agda
 for f in *.agda; do agda -i . "$f"; done
 ----
 
+M12. Cross-bridge integration:
+
+* add `proofs/agda/EchoIntegration.agda`
+* prove a theorem combining choreographic knowledge preservation with graded
+  controlled degradation behavior
+
+Status: DONE (2026-04-18)
+
+Delivered in `proofs/agda/EchoIntegration.agda`:
+
+* `knowledge-preserved-under-choreo`
+* `merged-at-residue`
+* `no-recovery-after-residue-degrade`
+* `knowledge-and-controlled-degradation`
+
 == Operating Rules
 
 * No postulates unless explicitly isolated and justified.

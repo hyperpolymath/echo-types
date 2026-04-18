@@ -12,6 +12,7 @@ open import EchoEpistemic
 open import EchoLinear
 open import EchoGraded
 open import EchoTropical
+open import EchoIntegration
 
 open import EchoIndexed
 open import EchoEpistemicResidue

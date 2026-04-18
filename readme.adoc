@@ -35,6 +35,7 @@ Current formal foundation is in:
 * `proofs/agda/EchoLinear.agda`
 * `proofs/agda/EchoGraded.agda`
 * `proofs/agda/EchoTropical.agda`
+* `proofs/agda/EchoIntegration.agda`
 
 with constructive proofs (safe Agda, no postulates):
 
@@ -58,6 +59,7 @@ Scope-broadening stages now include:
 * affine/linear bridge (strict weakening from full echoes to residues)
 * graded bridge (grade order and compositional degradation law)
 * tropical bridge (argmin-style witness residues under tropical collapse)
+* integration bridge (knowledge preservation under choreography plus controlled graded degradation)
 
 == What Echo Types Are For
 
@@ -111,3 +113,7 @@ agda -i proofs/agda proofs/agda/All.agda
 Proof milestones and decision gates are in:
 
 * `roadmap.adoc`
+
+Open hard questions are tracked in:
+
+* `docs/next-questions.adoc`

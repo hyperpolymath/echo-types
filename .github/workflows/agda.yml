@@ -18,17 +18,21 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y agda agda-stdlib
 
-      - name: Configure Agda standard library
+      - name: Locate Agda standard library
+        id: stdlib
         run: |
-          STDLIB_LIB="$(find /usr/share -name 'standard-library.agda-lib' | head -n 1)"
-          if [ -z "$STDLIB_LIB" ]; then
-            echo "Could not locate standard-library.agda-lib"
+          STDLIB_DIR="$(
+            find /usr/share /usr/lib -type f -path '*/Data/Nat/Base.agda' 2>/dev/null \
+            | head -n 1 \
+            | sed 's#/Data/Nat/Base.agda##'
+          )"
+
+          if [ -z "$STDLIB_DIR" ]; then
+            echo "Could not locate Agda standard library directory"
             exit 1
           fi
 
-          mkdir -p "$HOME/.agda"
-          printf '%s\n' "$STDLIB_LIB" > "$HOME/.agda/libraries"
-          printf '%s\n' "standard-library" > "$HOME/.agda/defaults"
+          echo "stdlib_dir=$STDLIB_DIR" >> "$GITHUB_OUTPUT"
 
       - name: Typecheck full suite
-        run: agda -i proofs/agda proofs/agda/All.agda
+        run: agda -i proofs/agda -i "${{ steps.stdlib.outputs.stdlib_dir }}" proofs/agda/All.agda
