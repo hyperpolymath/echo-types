@@ -34,5 +34,18 @@ jobs:
 
           echo "stdlib_dir=$STDLIB_DIR" >> "$GITHUB_OUTPUT"
 
+      - name: Register standard library for Agda
+        run: |
+          mkdir -p "$HOME/.agda"
+
+          STDLIB_LIB="$RUNNER_TEMP/standard-library.agda-lib"
+          cat > "$STDLIB_LIB" <<EOF
+          name: standard-library
+          include: ${{ steps.stdlib.outputs.stdlib_dir }}
+          EOF
+
+          printf '%s\n' "$STDLIB_LIB" > "$HOME/.agda/libraries"
+          printf '%s\n' "standard-library" > "$HOME/.agda/defaults"
+
       - name: Typecheck full suite
-        run: agda -i proofs/agda -i "${{ steps.stdlib.outputs.stdlib_dir }}" proofs/agda/All.agda
+        run: agda -i proofs/agda proofs/agda/All.agda
