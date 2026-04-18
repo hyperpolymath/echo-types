@@ -1,0 +1,50 @@
+= Echo Types Assessment (M5)
+
+Date: 2026-04-18
+
+== Binary Conclusion
+
+*Established as distinct concept* (within the current formal scope of this repository).
+
+== Basis for Verdict
+
+The roadmap required three independent criteria for identity beyond raw sigma/fiber syntax.
+All three are currently met.
+
+=== 1. Distinct phenomenon isolated
+
+Target phenomenon: *structured loss under non-injective computation*.
+
+Evidence:
+
+* `collapse-non-injective` and `no-section-collapse` in `proofs/agda/EchoCharacteristic.agda`
+* `no-section-visible` in `proofs/agda/EchoCharacteristic.agda`
+
+These show outputs can be operationally irreversible while the echo layer remains proof-relevant.
+
+=== 2. Characteristic theorem family exists
+
+Evidence in `proofs/agda/Echo.agda`, `proofs/agda/EchoCharacteristic.agda`,
+and `proofs/agda/EchoResidue.agda`:
+
+* echo introduction and transport laws (`echo-intro`, `map-over`, `map-over-id`, `map-over-comp`, `map-square`)
+* distinct echoes over same visible value (`echo-true≢echo-false`, `stateA≢stateB`)
+* strict weakening to residue plus non-recoverability (`strict-weakening-collapse`, `no-section-collapse-to-residue`)
+
+This is more than definitional unpacking: it exhibits irreversible-but-not-forgetful behavior.
+
+=== 3. Canonical examples succeed
+
+Evidence in `proofs/agda/EchoExamples.agda`:
+
+* sign-loss squaring model (`square9`)
+* structured projection with forgotten component (`visible`)
+* quotient/collapse representative class behavior (`quot`)
+* residue identification under collapse (`collapse-residue-identifies`)
+
+These examples are compiled Agda objects/lemmas, not prose-only claims.
+
+== Scope Note
+
+This verdict is about proof-theoretic identity in ordinary intensional DTT (`--safe --without-K`) as developed here.
+It does not claim a completed full categorical semantics formalization yet.

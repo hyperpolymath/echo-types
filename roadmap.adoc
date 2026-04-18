@@ -1,0 +1,283 @@
+= echo-types Proof Roadmap
+
+== Mission
+
+Establish whether echo types are a genuine proof-theoretic concept, not merely a naming layer over fibers.
+
+Guiding claim:
+
+*echo types formalize irreversible computation with retained constraints on what was lost.*
+
+Decision policy:
+
+* If the claim can be established with precise theorems and examples, continue and scale.
+* If it cannot be established, document failure clearly and stop the identity claim.
+
+== Current Foundation (Established)
+
+File: `proofs/agda/Echo.agda`
+
+Already proved:
+
+* `Echo` definition via sigma/fiber
+* `echo-intro`
+* `map-over`
+* `map-over-id`
+* `map-over-comp`
+* `map-square`
+
+These are the minimal structural laws for functorial behavior over fixed codomain and commuting-square transport.
+
+== Workstream A: Characteristic Echo Theorems
+
+Goal: prove results that express *structured loss*, not only generic sigma manipulation.
+
+Target theorem family:
+
+1. Non-injective with retained witness:
+   prove explicit examples where `x₁ ≠ x₂` and `f x₁ ≡ f x₂`, but echoes retain distinguishing constraints.
+2. Irreversible but not forgetful:
+   formalize that plain output `y : B` underdetermines source while `Echo f y` remains proof-relevant.
+3. Collapse with constrained preimage:
+   model collapse maps and prove retained witness class constraints.
+4. Distinct echoes over same visible result:
+   for fixed `y`, exhibit non-identical echo inhabitants carrying different source constraints.
+
+Pass condition:
+
+* at least 3 nontrivial theorems above compile and are phrased without ad hoc postulates.
+
+Fail condition:
+
+* all attempted statements reduce to tautological repackaging with no additional inferential content.
+
+== Workstream B: Weakened Echo / Residue Types
+
+Goal: formalize “not full witness, but certified residue”.
+
+Planned form:
+
+[source]
+----
+EchoR f R y := Σ (r : R y) , Certifies r
+----
+
+where `R y` captures residue-level evidence and `Certifies` links it to preimages.
+
+Pass condition:
+
+* at least one residue construction that is strictly weaker than full fiber witness and still supports useful inference.
+
+Fail condition:
+
+* residue variants collapse either to full fibers or to vacuous annotations.
+
+== Workstream C: Canonical Examples
+
+Goal: show echo types solve examples better than nearby notions.
+
+Priority examples:
+
+1. Squaring `x ↦ x²`: visible `9`, hidden sign provenance.
+2. Structured projection: state projection with retained constraints on forgotten fields.
+3. Quotient-like map: identify equivalence classes while retaining certified class-level residue.
+4. Scar/collapse examples: retained witness under collapse transformations.
+
+Pass condition:
+
+* examples are executable as Agda definitions/lemmas, not prose only.
+
+== Workstream D: Semantic Bridge
+
+Goal: connect DTT construction to categorical semantics without overcommitting to HoTT.
+
+Deliverables:
+
+* slice-over-fixed-codomain reading of `map-over`
+* commuting-square transport reading of `map-square`
+* explicit statement of assumptions used (intensional equality only unless otherwise stated)
+
+Pass condition:
+
+* semantics map cleanly onto existing proofs, with no hidden extensionality assumptions.
+
+== Milestones
+
+M1. Foundation complete (DONE): core echo/fiber functoriality module compiles.
+
+M2. Characteristic theorem pack:
+
+* add `proofs/agda/EchoCharacteristic.agda` (or similar)
+* compile cleanly
+
+Status: DONE (2026-04-18)
+
+Delivered in `proofs/agda/EchoCharacteristic.agda`:
+
+* `collapse-non-injective`
+* `no-section-collapse`
+* `echo-true≢echo-false`
+* `visible-constraint`
+* `stateA≢stateB`
+* `no-section-visible`
+* `transport-visible-not`
+
+M3. Residue formalization:
+
+* add `proofs/agda/EchoResidue.agda`
+* prove at least one strict weakening result
+
+Status: DONE (2026-04-18)
+
+Delivered in `proofs/agda/EchoResidue.agda`:
+
+* generic residue echo `EchoR`
+* generic lowering map `echo-to-residue`
+* collapse-instance lowering `collapse-to-residue`
+* strict weakening witness `strict-weakening-collapse`
+* non-recoverability theorem `no-section-collapse-to-residue`
+
+M4. Example suite:
+
+* add `proofs/agda/EchoExamples.agda`
+* encode and prove at least 3 canonical cases
+
+Status: DONE (2026-04-18)
+
+Delivered in `proofs/agda/EchoExamples.agda`:
+
+* squaring/sign-loss model (`square9`, `echo-plus3`, `echo-minus3`)
+* structured projection model (`visible`, `visible-constraint`, `stateA≢stateB`)
+* quotient/collapse model (`quot`, `quot-echo-classification`)
+* collapse residue identification (`collapse-residue-identifies`)
+
+M5. Assessment report:
+
+* add `docs/assessment.adoc` with binary conclusion:
+  * established as distinct concept
+  * not established (end-of-story)
+
+Status: DONE (2026-04-18)
+
+Delivered in `docs/assessment.adoc` with binary verdict.
+
+M6. Choreographic bridge:
+
+* add `proofs/agda/EchoChoreo.agda`
+* define role-indexed echoes via global-to-local projections
+* prove transport along commuting squares
+
+Status: DONE (2026-04-18)
+
+Delivered in `proofs/agda/EchoChoreo.agda`:
+
+* `RoleEcho`
+* `client-non-injective`, `server-non-injective`
+* `client-to-server`
+* `client-stability`
+* `client-preimage-class`
+
+M7. Epistemic bridge:
+
+* add `proofs/agda/EchoEpistemic.agda`
+* define indistinguishability and echo-indexed knowledge
+* prove non-trivial non-knowledge examples
+
+Status: DONE (2026-04-18)
+
+Delivered in `proofs/agda/EchoEpistemic.agda`:
+
+* `Indist`
+* `Knows`
+* `knowledge-monotone`
+* `not-knows-server-true-at-client-true`
+* `shared-echo-from-indist`
+* `indist-from-two-echoes`
+
+M8. Linear/affine bridge:
+
+* add `proofs/agda/EchoLinear.agda`
+* formalize strict weakening from full witness to affine residue
+
+Status: DONE (2026-04-18)
+
+Delivered in `proofs/agda/EchoLinear.agda`:
+
+* `Mode`, `LEcho`
+* `weaken`
+* `strict-linear-example`
+* `no-section-weaken`
+
+M9. Graded bridge:
+
+* add `proofs/agda/EchoGraded.agda`
+* define grade order and compositional degradation
+
+Status: DONE (2026-04-18)
+
+Delivered in `proofs/agda/EchoGraded.agda`:
+
+* `Grade`, `_≤g_`
+* `degrade`
+* `degrade-comp`
+* `⊔g-assoc`
+
+M10. Tropical bridge:
+
+* add `proofs/agda/EchoTropical.agda`
+* prove distinct candidates can share visible tropical value but retain distinct echoes
+
+Status: DONE (2026-04-18)
+
+Delivered in `proofs/agda/EchoTropical.agda`:
+
+* `score`
+* `tropical-non-injective`
+* `IsArgmin`, `TropEcho`
+* `distinct-candidates-same-visible-distinct-echo`
+
+== Controlled Scope Broadening (A-D)
+
+Status: DONE (2026-04-18)
+
+Phase A (`proofs/agda/EchoIndexed.agda`):
+
+* role-indexed echoes `Echoᵢ`
+* `echoᵢ-intro`, indexed transport `map-role-indexed`
+* trace-level provenance examples (`echo-user-ok`, `echo-auditor-ok`)
+
+Phase B (`proofs/agda/EchoEpistemicResidue.agda`):
+
+* residue-based epistemic echoes via `EchoR`
+* lowering `to-epistemic` from full echo to residue
+* strict weakening witness (`no-section-to-epistemic`, `strict-epistemic-weakening`)
+
+Phase C (`proofs/agda/EchoRelational.agda`):
+
+* relational semantics `EchoStep Step o = Σ s , Step s o`
+* relational transport (`map-rel`, `map-rel-id`, `map-rel-comp`, `map-rel-square`)
+* nondeterministic fiber example (`StepND`, distinct echoes over `true`)
+
+Phase D (`proofs/agda/EchoCategorical.agda`):
+
+* slice packaging (`SliceHom`, `slice-act`, `slice-act-comp`)
+* relational/fibration packaging (`Fiber`, `Total`, `π`)
+* projection-fiber bridge (`fiber-to-echo`, `echo-to-fiber`)
+
+Cross-phase coherence (`proofs/agda/EchoScope.agda`):
+
+* graph roundtrips (`graph-roundtrip₁`, `graph-roundtrip₂`)
+* indexed-to-relational bridge (`indexed-to-graph`)
+* relational-to-residue bridge (`rel-to-residue`)
+* slice/fibration coherence (`slice-act-via-relmap`, `fiber-echo-to-residue`)
+
+Single-shot build entrypoint (`proofs/agda/All.agda`):
+
+* imports the full proof suite for one-command checking
+
+== Operating Rules
+
+* No postulates unless explicitly isolated and justified.
+* Keep universe levels explicit where needed.
+* Keep proofs minimal and computationally meaningful.
+* Every edit ends with an Agda compile command and captured output.

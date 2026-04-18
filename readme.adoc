@@ -1,0 +1,105 @@
+= echo-types
+
+Constructive Agda development for *echo types* as a first-class notion of:
+
+*loss that is not total erasure*.
+
+== Core Idea
+
+Most formalisms foreground two clean cases:
+
+* reversible / injective / linear-ish: no important loss
+* ordinary irreversible: loss occurs and is usually forgotten
+
+Echo types target a third case:
+
+* irreversible, but with a retained proof-relevant constraint on what was lost
+
+This repository treats that third case as the primary object of study.
+
+== Definition (Foundation)
+
+Given `f : A -> B`, define the fiber/echo at `y : B`:
+
+[source]
+----
+Echo f y := Σ (x : A) , (f x ≡ y)
+----
+
+Current formal foundation is in:
+
+* `proofs/agda/Echo.agda`
+* `proofs/agda/EchoCharacteristic.agda`
+* `proofs/agda/EchoChoreo.agda`
+* `proofs/agda/EchoEpistemic.agda`
+* `proofs/agda/EchoLinear.agda`
+* `proofs/agda/EchoGraded.agda`
+* `proofs/agda/EchoTropical.agda`
+
+with constructive proofs (safe Agda, no postulates):
+
+* `echo-intro` (introduction into own fiber)
+* `map-over` (action on fibers for morphisms over fixed base)
+* `map-over-id` (identity law)
+* `map-over-comp` (composition law)
+* `map-square` (action along commuting squares)
+
+Characteristic M2 results include:
+
+* explicit non-injectivity witnesses for collapse maps
+* impossibility of full reconstruction from plain visible output (`no-section-*`)
+* distinct echoes over the same visible value (`echo-true≢echo-false`, `stateA≢stateB`)
+* retained-constraint theorem for projection-style structured loss (`visible-constraint`)
+
+Scope-broadening stages now include:
+
+* choreographic bridge (`RoleEcho` over role projections, commuting-square transport)
+* epistemic bridge (indistinguishability and echo-indexed knowledge)
+* affine/linear bridge (strict weakening from full echoes to residues)
+* graded bridge (grade order and compositional degradation law)
+* tropical bridge (argmin-style witness residues under tropical collapse)
+
+== What Echo Types Are For
+
+Echo types are useful when outputs are:
+
+* insufficient to reconstruct their source exactly
+* still sufficient to constrain the source non-trivially
+
+Intended proof-use cases include:
+
+* non-injective computation
+* provenance
+* structured irreversibility
+* partial recoverability
+* classification up to equivalence
+* forensic inference from residues
+* refined taxonomies of information loss
+
+== Identity Claim and Falsifiability
+
+This repo is trying to establish echo types as a concept with its own identity.
+Since `Echo` is built from sigma/fiber machinery, identity will not come from syntax.
+It must come from role and theorems.
+
+We treat the claim as established only if all three are met:
+
+1. Distinct phenomenon: structured loss under non-injective computation.
+2. Characteristic theorem family: results that are naturally “echo-shaped”, not just generic sigma lemmas.
+3. Canonical examples: cases where “echo type” is the right explanatory unit.
+
+If these fail, we record that result and stop the identity claim.
+
+== Build
+
+[source,bash]
+----
+cd /var/mnt/eclipse/repos/echo-types
+agda -i proofs/agda proofs/agda/Echo.agda
+----
+
+== Roadmap
+
+Proof milestones and decision gates are in:
+
+* `roadmap.adoc`

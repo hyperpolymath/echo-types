@@ -1,0 +1,34 @@
+name: Agda
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Agda and standard library
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y agda agda-stdlib
+
+      - name: Configure Agda standard library
+        run: |
+          STDLIB_LIB="$(find /usr/share -name 'standard-library.agda-lib' | head -n 1)"
+          if [ -z "$STDLIB_LIB" ]; then
+            echo "Could not locate standard-library.agda-lib"
+            exit 1
+          fi
+
+          mkdir -p "$HOME/.agda"
+          printf '%s\n' "$STDLIB_LIB" > "$HOME/.agda/libraries"
+          printf '%s\n' "standard-library" > "$HOME/.agda/defaults"
+
+      - name: Typecheck full suite
+        run: agda -i proofs/agda proofs/agda/All.agda
