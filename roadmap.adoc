@@ -275,6 +275,23 @@ Single-shot build entrypoint (`proofs/agda/All.agda`):
 
 * imports the full proof suite for one-command checking
 
+M11. Full-suite gate:
+
+* compile every module under `proofs/agda` from a clean `_build` cache
+* ensure no residual failing module after scope broadening
+
+Status: DONE (2026-04-18)
+
+Gate command:
+
+[source,bash]
+----
+cd /var/mnt/eclipse/repos/echo-types
+find _build/2.8.0/agda/proofs/agda -type f -name '*.agdai' -delete 2>/dev/null || true
+cd proofs/agda
+for f in *.agda; do agda -i . "$f"; done
+----
+
 == Operating Rules
 
 * No postulates unless explicitly isolated and justified.
