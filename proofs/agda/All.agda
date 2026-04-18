@@ -19,3 +19,5 @@ open import EchoEpistemicResidue
 open import EchoRelational
 open import EchoCategorical
 open import EchoScope
+
+open import Smoke

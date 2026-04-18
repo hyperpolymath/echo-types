@@ -307,6 +307,62 @@ Delivered in `proofs/agda/EchoIntegration.agda`:
 * `no-recovery-after-residue-degrade`
 * `knowledge-and-controlled-degradation`
 
+M13. Headline-theorem smoke gate:
+
+* add `proofs/agda/Smoke.agda` pinning load-bearing names per bridge module
+  via `using` clauses
+* wire it into `All.agda` and a dedicated CI step so silent renames or
+  deletions fail CI fast even if the rest of the suite still typechecks
+* harden `.github/workflows/agda.yml`: SHA-pin checkout, add SPDX header,
+  set workflow-level `permissions: read-all`
+
+Status: DONE (2026-04-19)
+
+== Deferred Research Track
+
+These are open synthesis problems graduated from `docs/next-questions.adoc`.
+They are dissertation-scale or require extensions beyond the current
+`--safe --without-K` core, so they sit on the roadmap rather than on the
+near-term backlog. Each entry records the gap, what would close it, and
+why it is parked.
+
+R1. Unified dependent linear + choreographic + epistemic calculus
+
+* Gap: bridges exist pairwise but not as one typed calculus enforcing
+  usage discipline + role projection + knowledge operators simultaneously.
+* Closure: a core syntax/judgment layer with preservation/progress-style
+  metatheory tying the three disciplines together.
+* Difficulty: extremely hard. Parked: this is the main synthesis target;
+  not advanced in single sessions.
+
+R2. Cubical or quotient treatment of indistinguishability
+
+* Gap: indistinguishability is currently set-level/propositional; rich
+  observational equivalence classes need first-class identity handling.
+* Closure: a quotient-aware or cubical extension with proofs that echo
+  constructions commute with equivalence-class semantics.
+* Difficulty: very hard. Parked: requires moving off plain
+  `--safe --without-K` into cubical agda or a heavy quotient layer.
+
+R3. Probabilistic epistemic echoes
+
+* Gap: no probability/distribution layer over echoes; evidence is
+  binary, not weighted.
+* Closure: distribution-valued observation semantics, posterior-style
+  residue objects, plus stability/transport theorems.
+* Difficulty: very hard. Parked: needs a measure/distribution
+  formalisation that the current core deliberately avoids.
+
+R4. Tropical optimization beyond toy candidate sets
+
+* Gap: tropical development is finite/toy-level (3-element `Candidate`
+  set, hand-built `IsArgmin`).
+* Closure: scalable tropical witness/certificate framework with
+  composition laws and integration with graded degradation, generalised
+  over arbitrary finite candidate sets.
+* Difficulty: hard. Smallest-step start: lift `IsArgmin` over an
+  arbitrary `Fin n`-indexed score family; compose with `degrade`.
+
 == Operating Rules
 
 * No postulates unless explicitly isolated and justified.
