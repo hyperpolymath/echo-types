@@ -48,4 +48,4 @@ jobs:
           printf '%s\n' "standard-library" > "$HOME/.agda/defaults"
 
       - name: Typecheck full suite
-        run: agda -i proofs/agda proofs/agda/All.agda
+        run: agda --local-interfaces -i proofs/agda proofs/agda/All.agda
