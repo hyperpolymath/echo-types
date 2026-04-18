@@ -32,7 +32,7 @@ jobs:
           STDLIB_LIB="$RUNNER_TEMP/standard-library.agda-lib"
           cat > "$STDLIB_LIB" <<EOF
           name: standard-library
-          include: ${{ steps.stdlib.outputs.stdlib_dir }}
+          include: ${{ steps.stdlib.outputs.stdlib_dir }}/src
           EOF
 
           printf '%s\n' "$STDLIB_LIB" > "$HOME/.agda/libraries"
