@@ -1,0 +1,80 @@
+= Adjacency: Refinement Types
+:toc: macro
+
+toc::[]
+
+== 1. Nearest existing construction
+
+Refinement types carve out a subset of an ambient type by a predicate:
+
+[source]
+----
+{ x : A | P x }
+----
+
+Inhabitants are values of `A` together with (in practice, erased) proof
+that `P x` holds. The paradigmatic developments are LiquidHaskell,
+F*, Stainless, and Dafny. In a dependently typed setting the refinement
+subset type is definitionally `Σ (x : A) , P x` with `P x : Prop`.
+
+== 2. What do echo types add?
+
+The echo construction is _also_ a sigma, but the right component is an
+equation against a _named_ output:
+
+[source, agda]
+----
+Echo f y := Σ (x : A) , (f x ≡ y)
+----
+
+Three features separate it from the refinement-type reading in the
+current development:
+
+. *Extensional indexing by a post-image rather than by an arbitrary
+  predicate.* The constraint is `f x ≡ y`, tied to the function whose
+  loss is being studied. This yields a family `Echo f : B → Set`, not a
+  single subset. The family structure is what makes `map-over` and
+  `map-square` in `proofs/agda/Echo.agda` type-check as transport along
+  morphisms between families, rather than as weakening of a single
+  predicate.
+. *Proof-relevant distinctions over the same visible output.*
+  `echo-true≢echo-false` in `proofs/agda/EchoCharacteristic.agda` shows
+  two inhabitants of `Echo collapse tt` that are _not_ equal. In a
+  refinement-type reading the proposition `P` would typically be
+  proof-irrelevant, and `{ x : ⊤ | ⊤ }` would be contractible. The
+  echo layer deliberately retains the source witness.
+. *Strict weakening to residue.* `strict-weakening-collapse` in
+  `proofs/agda/EchoResidue.agda` exhibits a lowering `Echo → EchoR`
+  with no section. Refinement-type presentations usually collapse at
+  the propositional level and do not admit an analogous hierarchy of
+  strictly weaker certificates.
+
+== 3. What do echo types _not_ add?
+
+* No new subset-type discipline. Refinement types already subsume the
+  pattern "value of `A` plus certificate".
+* No new predicate logic. The echo equation `f x ≡ y` is a single
+  intensional equality; refinement types support arbitrary decidable
+  predicates, and are strictly more expressive at that level.
+* No automation. Tools like LiquidHaskell emphasise SMT-backed
+  inference; this development is manual Agda proofs.
+
+== 4. Honest risk to the distinction
+
+The sharpest adversarial reading is: "an echo type is just the
+refinement `{ x : A | f x = y }`, and your proof-relevance claim only
+survives because you chose an intensional equality as the predicate."
+Under that reading, the "addition" of proof-relevant distinctions is
+a property of how equality behaves in `--without-K` Agda, not of
+echo types as such.
+
+The residue-based strict weakening in `EchoResidue` is the part most
+resistant to this reading: a refinement type has no natural
+counterpart to "lower to a certificate, and prove no section exists".
+That is where the identity claim, if it survives, is load-bearing.
+
+== 5. Verdict for Gate 1
+
+Survives, with caveat: the distinction from refinement types rests
+materially on (a) the family indexing by `f` and (b) the residue
+hierarchy, rather than on the subset-type form itself.

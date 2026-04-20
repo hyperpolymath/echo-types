@@ -1,0 +1,84 @@
+= Adjacency: Setoid Quotients
+:toc: macro
+
+toc::[]
+
+== 1. Nearest existing construction
+
+A setoid is a pair `(A , ~)` of a carrier and an equivalence relation.
+Quotients are handled _extrinsically_: functions must respect `~`,
+and equality up to `~` is proved rather than built in. In Agda without
+cubical features, this is the standard discipline for "identify
+elements while remaining in plain DTT".
+
+The echo pattern "same visible output, distinct retained source" can
+be read as "quotient by the kernel of `f`".
+
+== 2. What do echo types add?
+
+. *Kernel is implicit rather than named.* A setoid requires the user
+  to name `~`. The echo construction names the function `f` instead,
+  and recovers the kernel only up to the family `Echo f`. Two
+  inhabitants `e₁ e₂ : Echo f y` sit in the same visible class by
+  construction; the equivalence relation is not a primitive.
+. *Proof-relevant representatives.* The setoid discipline quotients
+  _away_ the distinction between representatives. Echo types retain
+  it. `echo-true≢echo-false` in `EchoCharacteristic` shows that
+  distinct representatives are distinct echo inhabitants, even though
+  their visible output agrees. A setoid reader would identify them.
+. *Residue as a chosen quotient target.* `EchoR C Cert y` in
+  `EchoResidue` chooses a specific intermediate between "full source"
+  and "quotient class". `collapse-kappa` plays the role of a
+  normaliser into the residue, and the strict-weakening theorem shows
+  that no section reverses this normalisation. In setoid terms this
+  is an explicit surjection with no splitting; stated this way, the
+  residue hierarchy becomes a sequence of strict quotients. The echo
+  framing takes this sequence as the primary object.
+. *Graded hierarchy of lossy maps.* `EchoGraded.degrade` and
+  `degrade-comp` compose lowerings in a pre-ordered family. A
+  setoid presentation would need one relation per grade and explicit
+  respect proofs; the graded presentation collapses this into a
+  single function family indexed by `g₁ ≤g g₂`.
+
+== 3. What do echo types _not_ add?
+
+* No quotient _types_. Plain intensional Agda cannot form genuine
+  quotient types, and this development does not attempt to. If what
+  the reader wants is a type whose inhabitants _are_ equivalence
+  classes, echo types do not provide that.
+* No relation-level reasoning primitives. Setoid-oriented libraries
+  ship setoid maps, relation combinators, rewriting by `~`, etc.
+  None of that appears here.
+* No quotient induction / elimination principle. The echo framing is
+  about retaining witnesses, not about eliminating into a quotient.
+
+== 4. Honest risk to the distinction
+
+A setoid partisan can claim that the development is a presentation of
+"setoid with remembered representative", which is just a pointed
+setoid. On that reading:
+
+* `Echo f y` is the setoid `(f⁻¹(y) , (λ _ _ → ⊤))` with a chosen
+  element.
+* The residue is the setoid `f⁻¹(y)` quotiented to a point.
+* The strict-weakening theorem is "you cannot choose a representative
+  up to a constant relation and then recover the original".
+
+Under this reading, "structured loss" is "retain the representative,
+then forget it; note that you cannot un-forget". That is true and
+not deep.
+
+The echo development pushes back by (a) making the family `Echo f`
+functorial under `map-over` and `map-square` without invoking
+setoid-respecting-maps, and (b) building the bridges (linear, graded,
+epistemic, choreographic, tropical) as integrations, not as separate
+quotients. Whether this genuinely escapes the "setoid with pointed
+representative" reading is load-bearing on Gate 2.
+
+== 5. Verdict for Gate 1
+
+Survives, narrowly. The distinction is that echo types work _against_
+the setoid discipline of identification, choosing instead to retain
+witnesses; and that retention is what the residue and graded bridges
+consume. A development that only reached the core `Echo` type would
+fail this gate.

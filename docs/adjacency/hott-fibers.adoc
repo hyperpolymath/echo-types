@@ -1,0 +1,89 @@
+= Adjacency: HoTT Fibers
+:toc: macro
+
+toc::[]
+
+== 1. Nearest existing construction
+
+In homotopy type theory the fiber of `f : A → B` over `y : B` is
+
+[source]
+----
+fib f y := Σ (x : A) , (f x = y)
+----
+
+This is _definitionally_ the echo construction. On that reading, this
+note is where the identity claim is most directly at risk. Everything
+below is an argument that the interesting content is not in the
+definition but in the intensional setting and the development built
+on top of it.
+
+== 2. What do echo types add?
+
+. *Plain intensional setting, no univalence.* The Agda development
+  uses `--safe --without-K` and `Relation.Binary.PropositionalEquality`.
+  The `Echo` type family is therefore not claimed to be a ∞-groupoid
+  or to satisfy function extensionality. Its equalities are the
+  ordinary intensional ones, and theorems like
+  `EchoCharacteristic.echo-true≢echo-false` rely on that. A HoTT
+  reader who treats `fib f y` up to homotopy would _not_ get this
+  disequality for free; the distinction is intensional.
+. *Explicit functorial laws without path induction gymnastics.*
+  `map-over-id`, `map-over-comp`, `map-square` in
+  `proofs/agda/Echo.agda` are proved by `refl` and `trans-assoc`, not
+  by transporting along higher paths. The composition proof
+  `map-over-comp` is a rewrite on `trans-assoc`; the square proof
+  `map-square` uses only `cong` and `trans`. These are reusable
+  outside of a HoTT library.
+. *Residue, graded, linear, epistemic extensions sit on top of the
+  intensional core.* Modules `EchoResidue`, `EchoGraded`,
+  `EchoLinear`, `EchoEpistemic`, `EchoIntegration` do not require
+  univalence. They reason about loss in terms of lowerings and
+  no-section theorems, not in terms of (n-)truncations.
+
+== 3. What do echo types _not_ add?
+
+* *No new mathematical object.* `Echo f y` and `fib f y` are the same
+  sigma. Anything stated purely about the type former, with no further
+  structure, is already a HoTT fiber result.
+* *No univalent / higher-path content.* The development does not prove
+  equivalences between fibers in the HoTT sense, does not consider
+  truncation levels, and does not use higher inductive types.
+* *No contractibility-of-fibers style characterisation of
+  equivalences.* That is a HoTT theorem and remains one.
+
+== 4. Honest risk to the distinction
+
+This is the sharpest adjacency. The honest reading is:
+
+> `Echo = fib`; the identity claim is an _editorial_ claim that
+> studying fibers in the intensional, non-univalent setting with an
+> emphasis on structured loss is worthwhile in its own right.
+
+Gate 2 (characteristic theorems) and Gate 3 (canonical examples) are
+where that editorial claim has to pay its way. If the theorems and
+examples turn out to all be corollaries of standard HoTT fiber
+results, then this gate fails retrospectively even though the
+definitions live in plain Agda.
+
+Two specific stress tests:
+
+. `strict-weakening-collapse` in `EchoResidue`: is there a HoTT
+  presentation of "certificate with no section back to the fiber"
+  that subsumes this result? If yes, the residue hierarchy is
+  renamed HoTT content.
+. The epistemic/choreographic/graded bridges: are these specialisations
+  of HoTT sliced constructions, or are they new compositions?
+
+The current development asserts the former answer is "no" and the
+latter is "new composition", but this is the gate most likely to
+fail on careful scrutiny.
+
+== 5. Verdict for Gate 1
+
+Marginal pass. The type former is not new. The distinction rests on
+the intensional setting, the residue/degradation hierarchy, and the
+bridge modules. If Gate 2 or Gate 3 fails, this gate should be
+revisited and likely flipped to fail, because the HoTT reader
+would be right to treat the whole development as renamed fiber
+theory.

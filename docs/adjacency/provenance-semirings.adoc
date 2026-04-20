@@ -1,0 +1,96 @@
+= Adjacency: Provenance Semirings
+:toc: macro
+
+toc::[]
+
+== 1. Nearest existing construction
+
+Green, Karvounarakis, and Tannen introduced K-provenance: database
+tuples are annotated by elements of a commutative semiring `K`, and
+relational-algebra operations compose annotations using `+` (union),
+`·` (join), `0`, `1`. Specialisations include boolean provenance
+(which-provenance), `Bag`-provenance (how-many), `Trio`-style
+provenance (why/where), and the free semiring `N[X]` (how). The
+discipline is "track what each output tuple was derived from, in a
+structure that is compositional".
+
+The echo pattern "retain provenance of a visible output under
+collapsing computation" is in the same genre.
+
+== 2. What do echo types add?
+
+. *Witness at the level of types, not annotations.* K-provenance
+  attaches a _label_ to each tuple. Echo types attach a _proof term_
+  `(x , p)` where `p : f x ≡ y`. The witness is itself an inhabitant
+  of a dependent type, not a semiring element. This is what
+  `map-over-id` and `map-over-comp` in `proofs/agda/Echo.agda`
+  transport.
+. *Role-indexed provenance.* `EchoIndexed.Echoᵢ` extends the witness
+  by a role index so the same visible output can carry different
+  provenance certificates for different observers. The closest
+  K-provenance analogue is polynomial provenance with variables per
+  source, but there the labels are still scalar algebraic terms, not
+  types indexed by observer.
+. *Graded degradation with composition.* `EchoGraded.degrade-comp`
+  in `proofs/agda/EchoGraded.agda` composes lowerings along
+  `_≤g_`. K-provenance has a natural homomorphism story ("evaluate in
+  a simpler semiring"), but a homomorphism between semirings is a
+  different mathematical object from a typed lowering of witnesses.
+. *Strict non-recoverability as a theorem.*
+  `no-section-collapse-to-residue` in `EchoResidue` _proves_ that the
+  lowering from echo to residue has no inverse. Provenance
+  homomorphisms are surjections by construction; the usual framing
+  does not supply a non-inverse theorem at this granularity.
+. *Epistemic integration.* `EchoEpistemic` ties echoes to
+  observer-indistinguishability and knowledge operators. This is
+  adjacent to how-provenance but built on different primitives
+  (`Indist`, `Knows`), not on semiring annotations.
+
+== 3. What do echo types _not_ add?
+
+* No semiring. There is no `+`, no `·`, no `0`, no `1`. The
+  K-provenance algebra is absent.
+* No database-theoretic reading. Relational algebra operators
+  (projection, selection, join, union) are not instantiated. The
+  `visible : Bool × Bool → Bool` example is _in the same spirit_ as
+  projection, but the development does not claim to reconstruct a
+  provenance-semiring-aware relational algebra.
+* No free/polynomial provenance. There is no analogue of `N[X]` that
+  would let one recover which source contributed how many times.
+* No query-equivalence theorems. Provenance theory has powerful
+  results about when two queries agree on all K-annotations for all
+  `K`. This is entirely absent here.
+
+== 4. Honest risk to the distinction
+
+A provenance researcher can argue that the residue hierarchy
+(`keep`, `residue`, `forget`) is a 3-element bounded lattice and that
+`degrade` is a homomorphism into a coarser annotation. On that
+reading, everything in `EchoGraded` is "K-provenance for an
+impoverished `K`, dressed up as a type family".
+
+There are two non-trivial replies:
+
+. The witnesses are _types_, not semiring elements. `Echo collapse tt`
+  has two distinct inhabitants that are not identified by any
+  annotation algebra, because annotations cannot distinguish
+  `echo-true` from `echo-false` once the semiring is trivial (as it
+  must be when the output type is `⊤`). The echo framing keeps the
+  distinction by keeping the source term.
+. The bridges (linear, choreographic, epistemic) are not naturally
+  semiring structures. Attempting to force them into a K-provenance
+  framing loses the typed content that makes e.g.
+  `EchoIntegration.knowledge-and-controlled-degradation` go through.
+
+Still, the overlap of _spirit_ is real: both frameworks care about
+tracking what survives under lossy operations. The distinction is on
+mechanism (types and lowerings vs. semiring annotations), not on
+motive.
+
+== 5. Verdict for Gate 1
+
+Survives. The motive overlaps with provenance-semiring work, but the
+mechanism is genuinely different. An echo is a proof witness; a
+provenance annotation is a semiring element. The two meet in the
+middle only via a homomorphism story that no existing work combines
+with dependent-type residue hierarchies and epistemic bridges.

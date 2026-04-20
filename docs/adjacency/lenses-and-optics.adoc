@@ -1,0 +1,80 @@
+= Adjacency: Lenses and Optics
+:toc: macro
+
+toc::[]
+
+== 1. Nearest existing construction
+
+A lawful lens between `S` and `A` is a pair
+
+[source]
+----
+get : S → A
+put : S → A → S
+----
+
+satisfying get-put, put-get, and put-put laws. Prisms, traversals, and
+general optics (van Laarhoven, profunctor, indexed, etc.) generalise
+this to partial, pluralised, or parameterised access. Optics are the
+dominant engineering vocabulary for "structured access to a part of a
+larger whole".
+
+The `visible : Bool × Bool → Bool` example in
+`proofs/agda/EchoCharacteristic.agda` is in the same neighbourhood as
+the "first projection lens" `_1 : Lens (A × B) A`.
+
+== 2. What do echo types add?
+
+. *Explicit source-retention instead of set-back.* A lens carries a
+  `put` that _reconstructs_ a source from an updated visible value
+  plus an existing source. Echo types instead _record_ a specific
+  source alongside the equation `f x ≡ y`. The witness `(true , false)`
+  in `state₂ : Echo visible true` is a specific retained state, not
+  the machinery for overwriting one.
+. *Asymmetry on the put side.* `no-section-visible` in
+  `EchoCharacteristic` proves there is no section `Bool → Bool × Bool`
+  of `visible`. A well-behaved lens's `put` is _not_ a section of
+  `get`; it is a two-argument update. The echo framing is honest
+  about the one-argument impossibility and then captures what is
+  nevertheless retained. Lenses assume a source is already in hand.
+. *Composition by commuting square rather than by profunctor.*
+  `map-square` in `proofs/agda/Echo.agda` transports echoes along a
+  square `f' ∘ u ≡ v ∘ f`. This is adjacent to lens composition but
+  the morphism data is different: morphisms of source and target
+  codomains plus a coherence, not a get/put pair at each step.
+. *Residue as first-class lowering.* `EchoResidue.echo-to-residue`
+  lowers a full echo to a certificate, with
+  `no-section-collapse-to-residue` witnessing strict loss. Lenses
+  typically do not ship an analogous quotient-of-the-witness
+  construction with a non-recoverability proof.
+
+== 3. What do echo types _not_ add?
+
+* No update/`put` operation. Echo types do not say how to overwrite
+  the visible component or the forgotten component.
+* No laws about round-tripping. The lens laws are genuinely more
+  structured than what the current echo development asks for.
+* No profunctor, traversal, or Van Laarhoven encoding. These are
+  engineering artefacts of optics and have no echo analogue.
+* No support for "effectful access" (indexed, monadic, affine optics).
+  The echo development is pure functions and equalities.
+
+== 4. Honest risk to the distinction
+
+A skeptic can claim that `Echo f y` is the "pre-image half" of a
+getter `f`, and that everything interesting here is already implicit
+in partial lenses or prisms (which also admit non-existence of a put).
+
+The strongest reply is in the _retention_ semantics: optics are
+designed around the ability to reflect an update back, whereas
+echoes are designed around the ability to remember what was lost
+without reflection. `state₁≢state₂` makes this concrete: two states
+with identical visible component and no ability to reconstruct the
+second component, yet proof-relevantly distinct on the echo layer.
+
+== 5. Verdict for Gate 1
+
+Survives. Lenses emphasise reversible access; echo types emphasise
+witness retention under non-reversibility. The two coincide only at
+the get-side skeleton, and diverge immediately on the put/residue
+question.
