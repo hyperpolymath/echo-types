@@ -1,0 +1,72 @@
+= Echo Types: A Constructive Formalisation of Structured Loss
+Joshua Jewell <joshua@example.invalid>
+:description: Preliminary Agda formalisation of echo types as a first-class notion of structured loss.
+:keywords: Agda, dependent types, fibers, structured loss, provenance, formal verification, constructive mathematics
+:revdate: 2026-04-20
+:revnumber: preliminary
+:icons: font
+
+[.lead]
+Echo types are a proposed formal object for reasoning about irreversible
+computation that retains a proof-relevant constraint on what was lost.
+
+== Definition
+
+Given `f : A → B` and `y : B`, the echo is the fiber
+
+[source, agda]
+----
+Echo f y := Σ (x : A) , (f x ≡ y)
+----
+
+This is standard sigma/fiber machinery. The contribution of this
+repository is not the definition but the attempt to establish whether
+"echo type" names a distinct phenomenon worth studying as a primary
+object, rather than a decorative wrapper around existing constructions.
+
+== Current development
+
+The Agda development is safe and uses no postulates. It provides:
+
+* the core fiber definition and introduction;
+* action on fibers for morphisms over a fixed base, with identity and
+  composition laws;
+* action along commuting squares;
+* explicit non-injectivity witnesses for collapse maps;
+* no-section results establishing the impossibility of full
+  reconstruction from visible output alone;
+* a retained-constraint result for projection-style structured loss.
+
+Eight modules extend this foundation toward choreographic, epistemic,
+affine/linear, graded, and tropical settings.
+
+== Falsifiability
+
+The identity claim for echo types is treated as falsifiable. It is
+established only if three conditions are met:
+
+. a distinct phenomenon;
+. a characteristic theorem family that is not reducible to generic
+  sigma lemmas;
+. canonical examples where "echo type" is the right explanatory unit.
+
+[IMPORTANT]
+====
+If any of these fails during development, the result is recorded and
+the identity claim is retracted.
+====
+
+See `roadmap.adoc` for the decision gates that operationalise each
+condition.
+
+== Status
+
+This is a preliminary formalisation and a work in progress. The
+repository is released to establish a citable reference point for the
+approach and to invite scrutiny of the three falsifiability conditions
+in particular.
+
+== Keywords
+
+Agda; dependent types; fibers; structured loss; provenance; formal
+verification; constructive mathematics.
