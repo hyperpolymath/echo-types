@@ -1,0 +1,60 @@
+= Adjacency Notes (Gate 1)
+:toc: macro
+:sectnums:
+
+[.lead]
+One note per neighbouring framework, written to discharge Gate 1 of
+`roadmap-gates.adoc`: that echo types name a phenomenon not already
+covered elsewhere under a different name.
+
+toc::[]
+
+== Gate 1 test, repeated
+
+For each framework below, the note answers three questions:
+
+. What is the nearest existing construction?
+. What do echo types add?
+. What do echo types _not_ add?
+
+A framework *fails* the test if every claimed addition is already
+present elsewhere under another name. Gate 1 *fails* if no framework
+survives the test — in which case the identity claim is retracted per
+`roadmap-gates.adoc`.
+
+== Frameworks surveyed
+
+[cols="1,3", options="header"]
+|===
+| Note | Nearest construction
+
+| link:refinement-types.adoc[Refinement types]
+| `{ x : A | P x }` subset types with predicate carrier.
+
+| link:lenses-and-optics.adoc[Lenses and optics]
+| get/put pairs with lawful round-tripping.
+
+| link:hott-fibers.adoc[HoTT fibers]
+| `fib f y := Σ x , f x = y` with univalent identity.
+
+| link:setoid-quotients.adoc[Setoid quotients]
+| `(A , ~)` carrier plus equivalence relation.
+
+| link:provenance-semirings.adoc[Provenance semirings]
+| `K`-annotated tuples tracked through relational algebra.
+|===
+
+== Reading order
+
+The notes are independent; read whichever framework you already know and
+then cross-check the others. If after reading every note you conclude
+that echo types are strictly renamed components of one of these
+frameworks, Gate 1 fails and the verdict is recorded in
+`docs/retractions.adoc`.
+
+== Scope
+
+All notes are written against the current Agda development
+(`--safe --without-K`, no postulates). Claims reference specific
+theorems by module and name. Anything not backed by a compiled
+theorem is called out as conjectural.
