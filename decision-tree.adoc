@@ -1,0 +1,177 @@
+= Identity Claim: Decision Gates
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+The identity claim for echo types (see <<readme#,README>>) rests on three
+conditions. Each is treated as a decision gate with an explicit failure
+action. Failure is recorded in `docs/retractions.adoc` rather than
+silently revised.
+
+[NOTE]
+====
+Gates are reassessed at each tagged release. An identity claim that
+survives one round of scrutiny is not immune in the next.
+====
+
+toc::[]
+
+== Gate summary
+
+[cols="1,3,2,2", options="header"]
+|===
+| Gate | Condition | Artefact | Failure action
+
+| <<gate-1,1. Distinct phenomenon>>
+| Echo types name a phenomenon not already covered by neighbouring frameworks.
+| `docs/adjacency/`
+| Drop identity claim; retain as Agda exposition.
+
+| <<gate-2,2. Characteristic theorems>>
+| At least two theorems are naturally echo-shaped and not reducible to generic sigma lemmas.
+| `docs/characteristic.adoc`
+| Drop claim of a distinct theorem family; modules remain.
+
+| <<gate-3,3. Canonical examples>>
+| At least one worked example where echo types are the right explanatory unit.
+| `proofs/agda/examples/`
+| Reframe as theoretical scaffolding awaiting application.
+|===
+
+[[gate-1]]
+== Gate 1: Distinct phenomenon
+
+.Claim
+****
+Echo types name structured loss under non-injective computation as a
+phenomenon distinct from existing treatments — refinement types,
+lens/optic theory, HoTT fibers, setoid quotients, provenance semirings.
+****
+
+=== Test
+
+For each neighbouring framework, produce a short note in
+`docs/adjacency/` answering:
+
+. What is the nearest existing construction?
+. What do echo types add?
+. What do echo types _not_ add?
+
+A framework fails the test if every claimed addition is already present
+elsewhere under another name.
+
+[IMPORTANT]
+====
+*Gate 1 fails* if no neighbouring framework survives this test.
+====
+
+=== Failure action
+
+. Record outcome in `docs/retractions.adoc`.
+. Reframe the repository as an Agda exposition of fiber-based structured
+  loss.
+. Remove the identity claim from README and Zenodo metadata.
+
+[[gate-2]]
+== Gate 2: Characteristic theorem family
+
+.Claim
+****
+There exist theorems whose statements are naturally echo-shaped and are
+not reducible to generic sigma/fiber lemmas.
+****
+
+=== Test
+
+Nominate at least three theorems from the development as characteristic.
+For each, write a one-paragraph justification in
+`docs/characteristic.adoc` answering:
+
+[quote]
+Would this theorem be stated, or stated in this form, without the
+echo framing?
+
+A theorem that survives only as "fiber lemma X with renamed components"
+does not count.
+
+=== Current candidates for nomination
+
+[cols="1,3", options="header"]
+|===
+| Module | Candidate theorem
+
+| `EchoCharacteristic`
+| `visible-constraint` — retained-constraint under projection.
+
+| `EchoGraded`
+| Compositional degradation law.
+
+| `EchoIntegration`
+| Knowledge preservation under choreography with graded degradation.
+|===
+
+[IMPORTANT]
+====
+*Gate 2 fails* if fewer than two candidates survive.
+====
+
+=== Failure action
+
+. Record outcome in `docs/retractions.adoc`.
+. Retain the modules as useful Agda.
+. Drop the claim that echo types carry their own theorem family.
+
+[[gate-3]]
+== Gate 3: Canonical examples
+
+.Claim
+****
+There exist concrete cases where "echo type" is the right explanatory
+unit — preferable to, not merely compatible with, existing framings.
+****
+
+=== Test
+
+Produce at least one fully worked example in `proofs/agda/examples/`
+that is:
+
+* small enough to read end to end;
+* formalised, not narrated;
+* accompanied by an honest comparison to how the same example would be
+  handled under the nearest existing framing.
+
+"Preferable" means shorter, clearer, or proves something the alternative
+does not.
+
+[IMPORTANT]
+====
+*Gate 3 fails* if zero examples survive.
+====
+
+=== Failure action
+
+. Record outcome in `docs/retractions.adoc`.
+. Reframe as theoretical scaffolding awaiting application.
+
+== Gate resolution
+
+[cols="1,3", options="header"]
+|===
+| Outcome | Action
+
+| All three gates pass
+| Identity claim upheld. Proceed to submission for peer review.
+
+| Any gate fails
+| Identity claim retracted in README and on Zenodo (as a new version
+  with revised abstract). Modules remain available; the claim does not.
+|===
+
+[TIP]
+====
+Retractions are not failures of the repository. They are the mechanism
+by which the identity claim is made falsifiable in the first place.
+====
