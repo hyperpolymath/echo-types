@@ -56,13 +56,14 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-ψΩ
   ; <ᵇ-ψΩ≤
   ; <ᵇ-+ω
+  ; <ᵇ-+ψω
   ; <ᵇ-+1
   ; <ᵇ-irrefl
   ; <ᵇ-trans
   ; <ᵇ-inv-Ω+
   ; <ᵇ-inv-+Ωfin
   ; <ᵇ-inv-ψ+
-  ; <ᵇ-inv-+ψ
+  ; <ᵇ-inv-+ψfin
   )
 
 open import Ordinal.Buchholz.Psi using
