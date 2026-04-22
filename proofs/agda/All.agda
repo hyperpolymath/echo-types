@@ -13,6 +13,7 @@ open import EchoLinear
 open import EchoGraded
 open import EchoTropical
 open import EchoIntegration
+open import EchoCNOBridge
 
 open import EchoIndexed
 open import EchoEpistemicResidue
@@ -20,6 +21,7 @@ open import EchoRelational
 open import EchoCategorical
 open import EchoScope
 open import EchoOrdinal
+open import EchoJanusBridge
 
 open import Ordinal.Base
 open import Ordinal.Closure

@@ -29,3 +29,25 @@ agda -i proofs/agda proofs/agda/Echo.agda
 agda -i proofs/agda proofs/agda/All.agda
 for f in proofs/agda/*.agda; do agda -i proofs/agda "$f"; done
 ```
+
+## Bridge to Certified Null Operations (CNOs)
+
+This repository now includes a theoretical bridge to **Certified Null Operations (CNOs)** from the [Absolute Zero](https://gitlab.com/maa-framework/6-the-foundation/absolute-zero) project.
+
+**Key Insight**: CNOs are singleton echo types over identity functions.
+
+**Bridge Modules**:
+- `proofs/agda/EchoCNO.agda` - Basic bridge with core theorems
+- `proofs/agda/EchoCNOBridge.agda` - Comprehensive bridge with full mapping
+
+**Documentation**: See `docs/ECHO-CNO-BRIDGE.adoc` for detailed explanation.
+
+**Main Theorems**:
+- `cno-echo-equivalence`: CNOs ≃ singleton echoes over identity
+- `all-cnos-are-echos`: All state-preserving programs are echoes over identity
+- `cno-composition-echo`: CNO composition preserves echo structure
+
+This bridge enables:
+- Using echo type theory for CNO verification
+- Cross-repository theorem sharing
+- Unified foundation for structured loss and null operations
