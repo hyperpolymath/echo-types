@@ -17,9 +17,9 @@ open import Ordinal.Buchholz.Syntax using (BT; bpsi)
 open import Ordinal.Buchholz.Closure using (Cν; cν-psi)
 
 psiν-notin-Cν : ∀ {ν μ β} → ¬ Cν ν 0 (bpsi μ β)
-psiν-notin-Cν (cν-psi () _)
+psiν-notin-Cν (cν-psi _ () _)
 
 -- Useful companion: any derivation of `ψ_μ β` lives at stage at least 1.
 
 psiν-stage-lb : ∀ {ν μ β m} → Cν ν m (bpsi μ β) → 1 ≤ m
-psiν-stage-lb (cν-psi k<m _) = ≤-trans (s≤s z≤n) k<m
+psiν-stage-lb (cν-psi _ k<m _) = ≤-trans (s≤s z≤n) k<m

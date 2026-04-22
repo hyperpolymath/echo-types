@@ -28,5 +28,7 @@ open import Ordinal.OmegaMarkers
 open import Ordinal.Buchholz.Syntax
 open import Ordinal.Buchholz.Closure
 open import Ordinal.Buchholz.Psi
+open import Ordinal.Buchholz.Examples
+open import Ordinal.Buchholz.Smoke
 
 open import Smoke
