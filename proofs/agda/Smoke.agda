@@ -63,6 +63,17 @@ open import EchoIntegration using
   ; knowledge-and-controlled-degradation
   )
 
+open import EchoOrdinal using
+  ( ordinal-collapse
+  ; ordinal-left
+  ; ordinal-right
+  ; ordinal-left≢ordinal-right
+  ; ordinal-collapse-non-injective
+  ; ordinal-echo-left
+  ; ordinal-echo-right
+  ; ordinal-echo-left≢ordinal-echo-right
+  )
+
 open import Ordinal.Base using
   ( OT
   ; zero
@@ -160,3 +171,18 @@ open import Ordinal.Buchholz.Examples using
   )
 
 open import Ordinal.Buchholz.Smoke using ()
+
+open import Ordinal.Buchholz.WellFormed using
+  ( WfΩ
+  ; WfBT
+  ; wf-fin
+  ; wf-ω
+  ; wf-bzero
+  ; wf-bomega
+  ; wf-bplus
+  ; wf-bpsi
+  ; BH
+  ; BH-wf
+  ; psi-OmegaOmega
+  ; psi-OmegaOmega-wf
+  )

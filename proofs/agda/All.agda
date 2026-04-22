@@ -19,6 +19,7 @@ open import EchoEpistemicResidue
 open import EchoRelational
 open import EchoCategorical
 open import EchoScope
+open import EchoOrdinal
 
 open import Ordinal.Base
 open import Ordinal.Closure
@@ -29,6 +30,7 @@ open import Ordinal.Buchholz.Syntax
 open import Ordinal.Buchholz.Closure
 open import Ordinal.Buchholz.Psi
 open import Ordinal.Buchholz.Examples
+open import Ordinal.Buchholz.WellFormed
 open import Ordinal.Buchholz.Smoke
 
 open import Smoke

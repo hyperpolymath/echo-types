@@ -65,3 +65,18 @@ open import Ordinal.Buchholz.Examples using
   ; psi0-omega1-at-1
   ; psi0-omega1-not-at-0
   )
+
+open import Ordinal.Buchholz.WellFormed using
+  ( WfΩ
+  ; WfBT
+  ; wf-fin
+  ; wf-ω
+  ; wf-bzero
+  ; wf-bomega
+  ; wf-bplus
+  ; wf-bpsi
+  ; BH
+  ; BH-wf
+  ; psi-OmegaOmega
+  ; psi-OmegaOmega-wf
+  )
