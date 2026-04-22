@@ -77,6 +77,8 @@ Modules are added to `All.agda` only as each stage compiles cleanly.
 
 == Milestone matrix
 
+Note: `CLAUDE.md` currently refers to CNF trichotomy as "E3" (post-merge renumbering), while this matrix keeps it as E2.
+
 [cols="1,2,4,2", options="header"]
 |===
 | ID | Layer | Goal | Headline lemma

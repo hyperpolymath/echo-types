@@ -22,5 +22,7 @@ open import EchoScope
 
 open import Ordinal.Base
 open import Ordinal.Closure
+open import Ordinal.CNF
+open import Ordinal.PsiSimple
 
 open import Smoke

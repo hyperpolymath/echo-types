@@ -79,3 +79,21 @@ open import Ordinal.Closure using
   ; c-psi
   ; C-monotone
   )
+
+open import Ordinal.CNF using
+  ( CNF
+  ; czero
+  ; _∷_
+  ; _<ᶜ_
+  ; <-zero-cons
+  ; <-head
+  ; <-tail
+  ; <ᶜ-irrefl
+  ; <ᶜ-trans
+  ; cnf-trichotomy
+  )
+
+open import Ordinal.PsiSimple using
+  ( psi-notin-C
+  ; psi-least
+  )
