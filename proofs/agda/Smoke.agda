@@ -6,7 +6,18 @@
 
 module Smoke where
 
-open import Echo using (Echo; echo-intro; map-over; map-over-id; map-over-comp; map-square)
+open import Echo using
+  ( Echo
+  ; echo-intro
+  ; map-over
+  ; map-over-id
+  ; map-over-comp
+  ; map-square
+  ; Echo-comp-iso-to
+  ; Echo-comp-iso-from
+  ; Echo-comp-iso-from-to
+  ; Echo-comp-iso-to-from
+  )
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
 open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)
