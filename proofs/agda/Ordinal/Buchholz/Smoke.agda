@@ -66,6 +66,12 @@ open import Ordinal.Buchholz.Examples using
   ; psi0-omega1-not-at-0
   )
 
+open import Ordinal.Buchholz.WellFounded using
+  ( <Ω-wf
+  ; wf-<ᵇ
+  ; <ᵇ-irreflexive
+  )
+
 open import Ordinal.Buchholz.WellFormed using
   ( WfΩ
   ; WfBT
