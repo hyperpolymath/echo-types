@@ -17,9 +17,7 @@ Adjacent projects, in one line each, for session bootstrapping:
 - VCL-UT (now VCL-total) — next-generation interaction language for
   VeriSim; designed to satisfy all 10 levels of type safety when
   proposing, inspecting, and verifying operations in a consonance engine
-  (rather than querying a passive database). NOTE: operator wrote
-  "VQL-UT" — confirm whether this is the same project under a different
-  spelling or a distinct one.
+  (rather than querying a passive database).
 - Groove protocol — HTTP-based service-discovery mechanism; lets
   capabilities across the hyperpolymath ecosystem announce themselves
   for automatic detection and integration (e.g. discipline-specific
