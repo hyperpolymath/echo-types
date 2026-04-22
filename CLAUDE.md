@@ -12,7 +12,10 @@ Adjacent projects, in one line each, for session bootstrapping:
   to fully distributed mesh. In PanLL, used for team replication via
   broadcast and as a switchable service alongside Gossamer.
 - Echidna (hyperpolymath) — planned high-assurance interface verification.
-  NOT the Ethereum fuzzer of the same name.
+  NOT the Ethereum fuzzer of the same name. Exact repo still to confirm.
+- Ephapax — programming language with a linear type system guaranteeing
+  memory safety for WebAssembly (compile-time "no use-after-free / no
+  memory leaks"). https://github.com/hyperpolymath/ephapax
 - VeriSim / VeriSimDB — identity-state capture with filesystem fallback.
 - VCL-UT (now VCL-total) — next-generation interaction language for
   VeriSim; designed to satisfy all 10 levels of type safety when
