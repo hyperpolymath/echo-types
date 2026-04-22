@@ -8,16 +8,21 @@ module Ordinal.Buchholz.WellFounded where
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Nat.Base using (ℕ; _<_)
 open import Data.Nat.Induction as NatInd using (<-wellFounded)
+open import Data.Product.Base using (_×_; _,_; proj₁; proj₂)
+open import Data.Sum.Base using (inj₁; inj₂)
 open import Relation.Nullary using (¬_)
+open import Relation.Binary.PropositionalEquality using (refl)
 open import Induction.WellFounded using (Acc; acc; WellFounded; wf⇒asym)
 
 open import Ordinal.OmegaMarkers using
   ( OmegaIndex
+  ; _≤Ω_
   ; fin
   ; ω
   ; _<Ω_
   ; fin<fin
   ; fin<ω
+  ; ≤Ω-split
   )
 open import Ordinal.Buchholz.Syntax using (BT; bzero; bOmega; bplus; bpsi)
 open import Ordinal.Buchholz.Order using
@@ -28,6 +33,7 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-ΩΩ
   ; <ᵇ-Ωψ
   ; <ᵇ-ψΩ
+  ; <ᵇ-ψΩ≤
   ; <ᵇ-+1
   )
 
@@ -52,44 +58,47 @@ open import Ordinal.Buchholz.Order using
 <ᵇ-acc-bzero : Acc _<ᵇ_ bzero
 <ᵇ-acc-bzero = acc <ᵇ-pred-bzero
 
-mutual
+ΩBundle : OmegaIndex → Set
+ΩBundle μ = Acc _<ᵇ_ (bOmega μ) × ((α : BT) → Acc _<ᵇ_ (bpsi μ α))
 
-  <ᵇ-pred-bOmega-fromΩ : ∀ {μ x} → Acc _<Ω_ μ → x <ᵇ bOmega μ → Acc _<ᵇ_ x
-  <ᵇ-pred-bOmega-fromΩ _              <ᵇ-0-Ω         = <ᵇ-acc-bzero
-  <ᵇ-pred-bOmega-fromΩ (acc rsμ)      (<ᵇ-ΩΩ κ<μ)    = <ᵇ-acc-bOmega-fromΩ (rsμ κ<μ)
+<ᵇ-bundle-fromΩ : ∀ {μ} → Acc _<Ω_ μ → ΩBundle μ
+<ᵇ-bundle-fromΩ {μ} aμ@(acc rsμ) = omegaAcc , psiAcc
+  where
+  mutual
 
-  <ᵇ-acc-bOmega-fromΩ : ∀ {μ} → Acc _<Ω_ μ → Acc _<ᵇ_ (bOmega μ)
-  <ᵇ-acc-bOmega-fromΩ aμ = acc (<ᵇ-pred-bOmega-fromΩ aμ)
+    omegaAcc : Acc _<ᵇ_ (bOmega μ)
+    omegaAcc = acc predOmega
 
-mutual
+    predOmega : ∀ {x} → x <ᵇ bOmega μ → Acc _<ᵇ_ x
+    predOmega <ᵇ-0-Ω = <ᵇ-acc-bzero
+    predOmega (<ᵇ-ΩΩ κ<μ) = proj₁ (<ᵇ-bundle-fromΩ (rsμ κ<μ))
+    predOmega (<ᵇ-ψΩ≤ {α = α} ν≤μ) with ≤Ω-split ν≤μ
+    ... | inj₁ ν<μ = proj₂ (<ᵇ-bundle-fromΩ (rsμ ν<μ)) α
+    ... | inj₂ refl = psiAcc α
 
-  <ᵇ-pred-bplus-from : ∀ {α β x} → Acc _<ᵇ_ α → x <ᵇ bplus α β → Acc _<ᵇ_ x
-  <ᵇ-pred-bplus-from _               <ᵇ-0-+                    = <ᵇ-acc-bzero
-  <ᵇ-pred-bplus-from (acc rsα)       (<ᵇ-+1 {x₂ = x₂} x₁<α)    = <ᵇ-acc-bplus-from (rsα x₁<α) x₂
-
-  <ᵇ-acc-bplus-from : ∀ {α} → Acc _<ᵇ_ α → (β : BT) → Acc _<ᵇ_ (bplus α β)
-  <ᵇ-acc-bplus-from aα β = acc (<ᵇ-pred-bplus-from aα)
-
-mutual
-
-  <ᵇ-pred-bpsi-fromΩ : ∀ {μ α x} → Acc _<Ω_ μ → x <ᵇ bpsi μ α → Acc _<ᵇ_ x
-  <ᵇ-pred-bpsi-fromΩ _              <ᵇ-0-ψ                 = <ᵇ-acc-bzero
-  <ᵇ-pred-bpsi-fromΩ (acc rsμ)      (<ᵇ-Ωψ κ<μ)            = <ᵇ-acc-bOmega-fromΩ (rsμ κ<μ)
-  <ᵇ-pred-bpsi-fromΩ (acc rsμ)      (<ᵇ-ψΩ {α = β} κ<μ)    = <ᵇ-acc-bpsi-fromΩ (rsμ κ<μ) β
-
-  <ᵇ-acc-bpsi-fromΩ : ∀ {μ} → Acc _<Ω_ μ → (α : BT) → Acc _<ᵇ_ (bpsi μ α)
-  <ᵇ-acc-bpsi-fromΩ aμ α = acc (<ᵇ-pred-bpsi-fromΩ aμ)
+    psiAcc : (α : BT) → Acc _<ᵇ_ (bpsi μ α)
+    psiAcc α = acc λ where
+      <ᵇ-0-ψ               → <ᵇ-acc-bzero
+      (<ᵇ-Ωψ κ<μ)          → proj₁ (<ᵇ-bundle-fromΩ (rsμ κ<μ))
+      (<ᵇ-ψΩ {α = β} κ<μ)  → proj₂ (<ᵇ-bundle-fromΩ (rsμ κ<μ)) β
 
 mutual
 
   <ᵇ-acc-bOmega : (μ : OmegaIndex) → Acc _<ᵇ_ (bOmega μ)
-  <ᵇ-acc-bOmega μ = <ᵇ-acc-bOmega-fromΩ (<Ω-wf μ)
+  <ᵇ-acc-bOmega μ = proj₁ (<ᵇ-bundle-fromΩ (<Ω-wf μ))
+
+  <ᵇ-pred-bplus-from : ∀ {α β x} → Acc _<ᵇ_ α → x <ᵇ bplus α β → Acc _<ᵇ_ x
+  <ᵇ-pred-bplus-from _          <ᵇ-0-+                  = <ᵇ-acc-bzero
+  <ᵇ-pred-bplus-from (acc rsα)  (<ᵇ-+1 {x₂ = x₂} x₁<α)  = <ᵇ-acc-bplus-from (rsα x₁<α) x₂
+
+  <ᵇ-acc-bplus-from : ∀ {α} → Acc _<ᵇ_ α → (β : BT) → Acc _<ᵇ_ (bplus α β)
+  <ᵇ-acc-bplus-from aα β = acc (<ᵇ-pred-bplus-from aα)
 
   <ᵇ-acc-bplus : (α β : BT) → Acc _<ᵇ_ (bplus α β)
   <ᵇ-acc-bplus α β = <ᵇ-acc-bplus-from (wf-<ᵇ α) β
 
   <ᵇ-acc-bpsi : (μ : OmegaIndex) (α : BT) → Acc _<ᵇ_ (bpsi μ α)
-  <ᵇ-acc-bpsi μ α = <ᵇ-acc-bpsi-fromΩ (<Ω-wf μ) α
+  <ᵇ-acc-bpsi μ α = proj₂ (<ᵇ-bundle-fromΩ (<Ω-wf μ)) α
 
   wf-<ᵇ : WellFounded _<ᵇ_
   wf-<ᵇ bzero       = <ᵇ-acc-bzero

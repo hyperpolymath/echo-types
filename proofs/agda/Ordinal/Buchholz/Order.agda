@@ -17,7 +17,7 @@
 --   bzero                 │   –   │   ✓    │   ✓   │  ✓
 --   bOmega                │       │   ✓    │       │  ✓ (when μ <Ω ν)
 --   bplus                 │       │        │   ✓   │
---   bpsi                  │       │        │       │  ✓ (when μ <Ω ν)
+--   bpsi                  │       │   ✓    │       │  ✓ (when μ <Ω ν)
 --
 -- Open cases (no constructor yet; must be discharged in follow-ups
 -- before `<ᵇ`-totality and well-foundedness can land):
@@ -26,9 +26,6 @@
 --     between atomic heads and additive normal forms.
 --   * bpsi vs bplus (either direction) — same reason, mediated by
 --     the leading bpsi summand of a bplus in CNF.
---   * bpsi vs bOmega with ν ≤Ω μ — the admissibility condition makes
---     bpsi ν α ≤ᵇ bOmega μ when μ exceeds ν; the exact form is part
---     of the Buchholz 1986 comparison and is deferred.
 --   * Two same-binder sub-cases whose natural shapes run into Agda
 --     2.6.3's `--without-K` restriction on reflexive-equation
 --     elimination and are deferred pending a K-free reformulation:
@@ -43,7 +40,17 @@ module Ordinal.Buchholz.Order where
 
 open import Data.Empty using (⊥)
 
-open import Ordinal.OmegaMarkers using (OmegaIndex; _<Ω_; <Ω-irrefl; <Ω-trans)
+open import Ordinal.OmegaMarkers using
+  ( OmegaIndex
+  ; _≤Ω_
+  ; _<Ω_
+  ; <Ω-irrefl
+  ; <Ω-trans
+  ; <Ω→≤Ω
+  ; ≤Ω-trans
+  ; ≤Ω-<Ω-trans
+  ; <Ω-≤Ω-trans
+  )
 open import Ordinal.Buchholz.Syntax using (BT; bzero; bOmega; bplus; bpsi)
 
 data _<ᵇ_ : BT → BT → Set where
@@ -63,6 +70,7 @@ data _<ᵇ_ : BT → BT → Set where
   -- bpsi comparison by Ω-index only. The same-index sub-case (lex on
   -- the ψ-argument) is deferred pending a K-free formulation.
   <ᵇ-ψΩ  : ∀ {μ ν α β} → μ <Ω ν → bpsi μ α <ᵇ bpsi ν β
+  <ᵇ-ψΩ≤ : ∀ {ν μ α}   → ν ≤Ω μ → bpsi ν α <ᵇ bOmega μ
 
   -- bplus comparison by the left summand. The same-left sub-case
   -- (compare right summands when lefts agree) is deferred for the
@@ -112,8 +120,15 @@ infix 4 _<ᵇ_
 <ᵇ-trans (<ᵇ-Ωψ p)    (<ᵇ-ψΩ q)            = <ᵇ-Ωψ (<Ω-trans p q)
 -- Left leg: <ᵇ-ψΩ (x = bpsi _ _, y = bpsi _ _)
 <ᵇ-trans (<ᵇ-ψΩ p)    (<ᵇ-ψΩ q)            = <ᵇ-ψΩ (<Ω-trans p q)
+<ᵇ-trans (<ᵇ-ψΩ p)    (<ᵇ-ψΩ≤ q)           = <ᵇ-ψΩ≤ (≤Ω-trans (<Ω→≤Ω p) q)
+-- Left leg: <ᵇ-ψΩ≤ (x = bpsi _ _, y = bOmega _)
+<ᵇ-trans (<ᵇ-ψΩ≤ p)   (<ᵇ-ΩΩ q)            = <ᵇ-ψΩ≤ (≤Ω-trans p (<Ω→≤Ω q))
+<ᵇ-trans (<ᵇ-ψΩ≤ p)   (<ᵇ-Ωψ q)            = <ᵇ-ψΩ (≤Ω-<Ω-trans p q)
 -- Left leg: <ᵇ-+1 (x = bplus _ _, y = bplus _ _)
 <ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+1 q)            = <ᵇ-+1 (<ᵇ-trans p q)
+-- Right leg: <ᵇ-ψΩ≤ (y = bpsi _ _, z = bOmega _)
+<ᵇ-trans <ᵇ-0-ψ       (<ᵇ-ψΩ≤ _)           = <ᵇ-0-Ω
+<ᵇ-trans (<ᵇ-Ωψ p)    (<ᵇ-ψΩ≤ q)           = <ᵇ-ΩΩ (<Ω-≤Ω-trans p q)
 
 ----------------------------------------------------------------------------
 -- WF-2 open-case inversions (Ω vs +)
