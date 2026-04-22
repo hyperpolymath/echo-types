@@ -92,3 +92,8 @@ open import Ordinal.CNF using
   ; <ᶜ-trans
   ; cnf-trichotomy
   )
+
+open import Ordinal.PsiSimple using
+  ( psi-notin-C
+  ; psi-least
+  )
