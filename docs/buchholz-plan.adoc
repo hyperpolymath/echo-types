@@ -1,0 +1,156 @@
+= Buchholz-style Collapsing Layer: Plan and First Proof
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+
+[.lead]
+This document scopes the ordinal-notation / collapsing-function workstream
+(Workstream E in `roadmap.adoc`). It is a spec, not a theorem file.
+Its purpose is to pin down *what we are building*, in what order, and
+what counts as the first success before any ψ-value is even mentioned.
+
+toc::[]
+
+== Mission
+
+Formalize, in `--safe --without-K` Agda, a staged Buchholz-style
+collapsing notation system sufficient to eventually state a target
+such as `ψ₀(Ω_ω)` (Bachmann–Howard) and, beyond that, a compact
+reading of `ψ(Ω_Ω)`.
+
+Only when that syntactic engine exists do we add `EchoOrdinal.agda`
+to bridge collapsing steps with the existing echo/residue machinery.
+
+== Target selection
+
+`ψ(Ω_Ω)` is an ambiguous phrase without further qualification.
+We fix the following staged convention. Each stage is a gate: the
+next stage is not attempted until the current stage compiles and
+its headline lemma is established.
+
+[cols="1,3,3", options="header"]
+|===
+| Stage | Target language | Intended witness term
+
+| S0 | single-cardinal pedagogical ψ, ℕ-indexed closure stages | `ψ 0`, `ψ (ψ 0)`
+| S1 | finite-index Buchholz fragment ψ_n over Ω_n                  | `ψ₀(Ω₁)`
+| S2 | Buchholz ψ_ν for ν ≤ ω                                       | `ψ₀(Ω_ω)` (Bachmann–Howard)
+| S3 | extended fragment sufficient to denote the intended `ψ(Ω_Ω)` | see S3 note
+|===
+
+S3 note: "ψ(Ω_Ω)" is formalised in this repo as `ψ₀(Ω_{Ω_ω})`,
+i.e. Ω at the position of the Ω_ω marker in the Ω-scale. Other
+readings are possible (diagonalization fixpoint, Rathjen-style
+extensions); those are *not* what this plan targets.
+
+== Layering
+
+The workstream separates into three layers that must not be conflated.
+
+. Notation infrastructure: term syntax, normal forms, comparison.
+. Buchholz collapsing machinery: closure sets, ψ as least-gap.
+. Echo bridge: collapsing step read as non-injective map, echoes
+  retaining pre-collapse provenance.
+
+Echo-types’ existing identity claim (structured loss under
+non-injective computation) only plugs in at layer 3. Layers 1 and 2
+must stand as ordinary proof-theoretic development first.
+
+== Module layout (planned)
+
+----
+proofs/agda/Ordinal/Base.agda            -- toy OT syntax (S0)
+proofs/agda/Ordinal/CNF.agda             -- CNF fragment below ε₀
+proofs/agda/Ordinal/OmegaMarkers.agda    -- formal Ω_n symbols (no semantics yet)
+proofs/agda/Ordinal/Closure.agda         -- ℕ-staged closure family, headline: C-monotone
+proofs/agda/Ordinal/PsiSimple.agda       -- pedagogical ψ: least-gap shape
+proofs/agda/Ordinal/Buchholz/Syntax.agda -- Buchholz terms
+proofs/agda/Ordinal/Buchholz/Closure.agda -- C_ν(α)
+proofs/agda/Ordinal/Buchholz/Psi.agda    -- ψ_ν
+proofs/agda/Ordinal/Buchholz/Examples.agda -- first ten witness terms in order
+proofs/agda/Ordinal/Buchholz/Smoke.agda  -- pin load-bearing names
+proofs/agda/EchoOrdinal.agda             -- bridge to echo / residue layers
+----
+
+Modules are added to `All.agda` only as each stage compiles cleanly.
+
+== Milestone matrix
+
+[cols="1,2,4,2", options="header"]
+|===
+| ID | Layer | Goal | Headline lemma
+
+| E1 | notation | OT syntax, structural induction | —
+| E2 | notation | CNF fragment below ε₀          | `cnf-trichotomy`
+| E3 | closure  | ℕ-staged closure family         | *`C-monotone`*
+| E4 | closure  | pedagogical ψ as least gap      | `psi-notin-C`, `psi-least`
+| E5 | Buchholz | Ω_ν scale + C_ν + ψ_ν           | `Cν-monotone`, `psiν-notin-Cν`
+| E6 | Buchholz | target terms well-formed        | `BH-wf`, `psi-OmegaOmega-wf`
+| E7 | echo     | collapse as non-injective map   | `ordinal-collapse-non-injective`
+|===
+
+== The very first Agda proof: `C-monotone`
+
+Before any ψ-value is defined, we must know the closure stages form a
+coherent staged system: *increasing the stage index never removes
+previously generable terms*. This is the structural theorem every
+least-gap proof later leans on.
+
+=== Why this is first
+
+* `ψ(α)` is defined as the least ordinal *not already in `C(α)`*.
+  Without a stable closure, that definition has no ground.
+* Before attempting `psi-notin-C`, we need: closure is well-defined,
+  closure inclusion between stages is monotone, closure references
+  to earlier stages are admissible.
+* Monotonicity is provable by a clean structural induction on the
+  closure derivation, with no ordinal comparisons in sight.
+
+=== Why ℕ stages, not OT stages
+
+The first pass deliberately indexes closure stages by `ℕ`, not by
+ordinal terms. This lets the induction be direct, teaches us the
+closure-proof pattern, and avoids blocking on an OT ordering we have
+not yet formalised. Generalisation to ordinal-indexed stages is the
+point of E5.
+
+=== Statement
+
+----
+C-monotone : ∀ {m n t} → m ≤ n → C m t → C n t
+----
+
+Proof by induction on the closure derivation:
+
+* `c-zero`, `c-omega`: reconstruct at the larger stage.
+* `c-plus`: recurse on the two subderivations.
+* `c-psi k<m ck`: use `≤-trans k<m m≤n` to push the side condition
+  up. This case is the real point — it forces the closure to be
+  set up so the induction goes through.
+
+=== Acceptance criteria
+
+* `proofs/agda/Ordinal/Base.agda` compiles under `--safe --without-K`.
+* `proofs/agda/Ordinal/Closure.agda` compiles and defines `C` and
+  proves `C-monotone` *without postulates*.
+* `C-monotone` is pinned by name in `Smoke.agda`.
+* CI's full-suite and smoke jobs both pass.
+
+== What is *not* yet claimed
+
+* No ordinal semantics is asserted by these modules. `C`, `ψ`, and
+  the Ω markers are pure syntax with evidence-bearing relations.
+* Well-foundedness of the resulting notation system is a downstream
+  milestone (part of E5 / E6), not a consequence of E1–E3.
+* No connection to echo types is claimed until `EchoOrdinal.agda`
+  lands. Do not rename load-bearing echo modules in anticipation.
+
+== Operating rules (inherited)
+
+* No postulates unless explicitly isolated and justified in-line.
+* Keep universe levels explicit where needed.
+* Every edit ends with an Agda compile step; CI enforces full-suite
+  and smoke checks.
+* Claims in README / Zenodo metadata stay gated on
+  `roadmap-gates.adoc` regardless of progress on this workstream.

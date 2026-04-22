@@ -62,3 +62,20 @@ open import EchoIntegration using
   ; no-recovery-after-residue-degrade
   ; knowledge-and-controlled-degradation
   )
+
+open import Ordinal.Base using
+  ( OT
+  ; zero
+  ; omega
+  ; plus
+  ; psi
+  )
+
+open import Ordinal.Closure using
+  ( C
+  ; c-zero
+  ; c-omega
+  ; c-plus
+  ; c-psi
+  ; C-monotone
+  )
