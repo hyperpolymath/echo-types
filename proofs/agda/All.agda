@@ -20,4 +20,7 @@ open import EchoRelational
 open import EchoCategorical
 open import EchoScope
 
+open import Ordinal.Base
+open import Ordinal.Closure
+
 open import Smoke

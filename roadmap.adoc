@@ -307,6 +307,93 @@ Delivered in `proofs/agda/EchoIntegration.agda`:
 * `no-recovery-after-residue-degrade`
 * `knowledge-and-controlled-degradation`
 
+== Workstream E: Ordinal / Buchholz Infrastructure
+
+Goal: stand up a syntactic Buchholz-style collapsing notation system
+that is *separate from* the echo/fiber core, staged so that each
+milestone compiles before the next is attempted. This is the layer
+that must exist before any claim about `ψ(Ω_Ω)` is even stateable.
+
+Full plan: `docs/buchholz-plan.adoc`.
+
+E1. Ordinal syntax core (M1-equivalent for this workstream):
+
+* add `proofs/agda/Ordinal/Base.agda` — toy ordinal-term type `OT`
+  with constructors `zero`, `omega`, `plus`, `psi`
+* no semantics asserted; structural inequalities only
+
+Status: DONE (2026-04-22)
+
+Delivered in `proofs/agda/Ordinal/Base.agda`:
+
+* `OT`, `zero`, `omega`, `plus`, `psi`
+* `one`, `ω^ω`
+* `zero≢omega`, `zero≢one`, `omega≢one`
+* `psi-injective`, `plus-injective`
+
+E2. ℕ-staged closure discipline:
+
+* add `proofs/agda/Ordinal/Closure.agda` — staged closure family
+  `C : ℕ → OT → Set` with the Buchholz-style backward-referencing
+  `c-psi` rule
+* prove the headline lemma *before any ψ-value is defined*:
+  `C-monotone : ∀ {m n t} → m ≤ n → C m t → C n t`
+* pin `C-monotone` in `Smoke.agda`
+
+Status: DONE (2026-04-22)
+
+Delivered in `proofs/agda/Ordinal/Closure.agda`:
+
+* `C` with constructors `c-zero`, `c-omega`, `c-plus`, `c-psi`
+* `C-monotone` — closure monotonicity under stage increase
+* `C-refl-stage` — immediate corollary via `≤-refl`
+* `psi-omega-at-1`, `psi-omega-at-2` — worked instances
+
+Pass condition for E2:
+
+* `C-monotone` compiles without postulates
+* full-suite and smoke CI jobs both still pass
+
+E3. Cantor normal form (next):
+
+* add `proofs/agda/Ordinal/CNF.agda` — CNF fragment below ε₀
+* prove trichotomy of the CNF strict order
+
+Status: PLANNED
+
+E4. Pedagogical ψ:
+
+* add `proofs/agda/Ordinal/PsiSimple.agda`
+* prove `psi-notin-C` and `psi-least` on the ℕ-staged closure
+
+Status: PLANNED
+
+E5. Buchholz fragment (ν ≤ ω):
+
+* add `proofs/agda/Ordinal/Buchholz/{Syntax,Closure,Psi}.agda`
+* prove `Cν-monotone`, `psiν-notin-Cν`, `psiν-least-gap`
+
+Status: PLANNED
+
+E6. Target expressibility:
+
+* add `proofs/agda/Ordinal/Buchholz/Examples.agda`
+* formalise the first named milestones in order:
+  `ψ_0(0)`, `ψ_0(1)`, `ψ_0(Ω)`, `ψ_0(Ω_ω)` (Bachmann–Howard),
+  then the term corresponding to `ψ(Ω_Ω)` under the chosen reading
+
+Status: PLANNED
+
+E7. Echo bridge:
+
+* add `proofs/agda/EchoOrdinal.agda` — collapse-step as non-injective
+  map, echo-indexed retention of pre-collapse provenance
+* prove `ordinal-collapse-non-injective`,
+  `distinct-provenances-same-visible`, and a `no-section`-style
+  theorem over collapse
+
+Status: PLANNED
+
 M13. Headline-theorem smoke gate:
 
 * add `proofs/agda/Smoke.agda` pinning load-bearing names per bridge module
