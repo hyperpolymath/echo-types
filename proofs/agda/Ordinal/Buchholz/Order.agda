@@ -46,6 +46,7 @@ open import Ordinal.OmegaMarkers using
   ; _≤Ω_
   ; _<Ω_
   ; ω
+  ; ω≤ω
   ; fin
   ; <Ω-irrefl
   ; <Ω-trans
@@ -80,6 +81,7 @@ data _<ᵇ_ : BT → BT → Set where
   -- same `--without-K` reason as `<ᵇ-ψα` above: its natural shape
   -- `bplus x y₂ <ᵇ bplus x z₂` shares the binder `x` on both sides.
   <ᵇ-+ω  : ∀ {x y}     → x <ᵇ bOmega ω → bplus x y <ᵇ bOmega ω
+  <ᵇ-+ψω : ∀ {x y α}   → x <ᵇ bpsi ω α → bplus x y <ᵇ bpsi ω α
   <ᵇ-+1  : ∀ {x₁ x₂ y₁ y₂} → x₁ <ᵇ y₁ → bplus x₁ x₂ <ᵇ bplus y₁ y₂
 
 infix 4 _<ᵇ_
@@ -116,6 +118,7 @@ infix 4 _<ᵇ_
 -- Left leg: <ᵇ-0-+ (x = bzero, y = bplus _ _)
 <ᵇ-trans <ᵇ-0-+       (<ᵇ-+1 _)            = <ᵇ-0-+
 <ᵇ-trans <ᵇ-0-+       (<ᵇ-+ω _)            = <ᵇ-0-Ω
+<ᵇ-trans <ᵇ-0-+       (<ᵇ-+ψω _)           = <ᵇ-0-ψ
 -- Left leg: <ᵇ-0-ψ (x = bzero, y = bpsi _ _)
 <ᵇ-trans <ᵇ-0-ψ       (<ᵇ-ψΩ _)            = <ᵇ-0-ψ
 -- Left leg: <ᵇ-ΩΩ (x = bOmega _, y = bOmega _)
@@ -132,6 +135,9 @@ infix 4 _<ᵇ_
 -- Left leg: <ᵇ-+1 (x = bplus _ _, y = bplus _ _)
 <ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+1 q)            = <ᵇ-+1 (<ᵇ-trans p q)
 <ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+ω q)            = <ᵇ-+ω (<ᵇ-trans p q)
+<ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+ψω q)           = <ᵇ-+ψω (<ᵇ-trans p q)
+-- Left leg: <ᵇ-+ψω (x = bplus _ _, y = bpsi ω _)
+<ᵇ-trans (<ᵇ-+ψω p)   (<ᵇ-ψΩ≤ ω≤ω)         = <ᵇ-+ω (<ᵇ-trans p (<ᵇ-ψΩ≤ ω≤ω))
 -- Right leg: <ᵇ-ψΩ≤ (y = bpsi _ _, z = bOmega _)
 <ᵇ-trans <ᵇ-0-ψ       (<ᵇ-ψΩ≤ _)           = <ᵇ-0-Ω
 <ᵇ-trans (<ᵇ-Ωψ p)    (<ᵇ-ψΩ≤ q)           = <ᵇ-ΩΩ (<Ω-≤Ω-trans p q)
@@ -160,8 +166,8 @@ infix 4 _<ᵇ_
 <ᵇ-inv-ψ+ : ∀ {μ α x y} → bpsi μ α <ᵇ bplus x y → ⊥
 <ᵇ-inv-ψ+ ()
 
-<ᵇ-inv-+ψ : ∀ {x y μ α} → bplus x y <ᵇ bpsi μ α → ⊥
-<ᵇ-inv-+ψ ()
+<ᵇ-inv-+ψfin : ∀ {x y n α} → bplus x y <ᵇ bpsi (fin n) α → ⊥
+<ᵇ-inv-+ψfin ()
 
 ----------------------------------------------------------------------------
 -- Strict-below-ψ examples, for downstream ordering checks
