@@ -116,6 +116,20 @@ infix 4 _<ᵇ_
 <ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+1 q)            = <ᵇ-+1 (<ᵇ-trans p q)
 
 ----------------------------------------------------------------------------
+-- WF-2 open-case inversions (Ω vs +)
+----------------------------------------------------------------------------
+
+-- The current 7-constructor core has no witness for either direction.
+-- These inversion lemmas pin that fact explicitly for downstream case
+-- splits while the comparison rule is still deferred.
+
+<ᵇ-inv-Ω+ : ∀ {μ x y} → bOmega μ <ᵇ bplus x y → ⊥
+<ᵇ-inv-Ω+ ()
+
+<ᵇ-inv-+Ω : ∀ {x y μ} → bplus x y <ᵇ bOmega μ → ⊥
+<ᵇ-inv-+Ω ()
+
+----------------------------------------------------------------------------
 -- Strict-below-ψ examples, for downstream ordering checks
 ----------------------------------------------------------------------------
 

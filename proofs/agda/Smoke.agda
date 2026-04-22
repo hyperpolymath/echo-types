@@ -181,6 +181,8 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-+1
   ; <ᵇ-irrefl
   ; <ᵇ-trans
+  ; <ᵇ-inv-Ω+
+  ; <ᵇ-inv-+Ω
   ; bzero<Ω0
   ; Ω0<Ω1
   ; Ω1<Ωω
