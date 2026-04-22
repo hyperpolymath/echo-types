@@ -1,20 +1,24 @@
 {-# OPTIONS --safe --without-K #-}
 
 -- WF-1 skeleton: prove accessibility by term constructor, with
--- predecessor inversion lemmas separated out. The two recursive bridge
--- lemmas are intentionally left as the remaining obligations.
+-- predecessor inversion lemmas separated out. Recursive predecessor
+-- bridges are discharged through a small rank-to-ℕ subrelation proof.
 
 module Ordinal.Buchholz.WellFounded where
 
 open import Data.Empty using (⊥; ⊥-elim)
+open import Data.Nat.Base using (ℕ; _<_; z≤n; s≤s; zero; suc)
+open import Data.Nat.Induction as NatInd using (<-wellFounded)
+open import Function.Base using (_on_)
 open import Relation.Nullary using (¬_)
-open import Induction.WellFounded using (Acc; acc; WellFounded; wf⇒asym)
+open import Induction.WellFounded as WF using (Acc; acc; WellFounded; wf⇒asym)
 
-open import Ordinal.OmegaMarkers using (OmegaIndex)
+open import Ordinal.OmegaMarkers using (OmegaIndex; fin; ω)
 open import Ordinal.Buchholz.Syntax using (BT; bzero; bOmega; bplus; bpsi)
 open import Ordinal.Buchholz.Order using
   ( _<Ω_
   ; _<ᵇ_
+  ; <Ω-fin
   ; <ᵇ-0Ω
   ; <ᵇ-0+
   ; <ᵇ-0ψ
@@ -30,11 +34,37 @@ open import Ordinal.Buchholz.Order using
 <ᵇ-pred-bzero : ∀ {x} → x <ᵇ bzero → Acc _<ᵇ_ x
 <ᵇ-pred-bzero x<0 = ⊥-elim (<ᵇ-inv-bzero x<0)
 
+rankΩ : OmegaIndex → ℕ
+rankΩ (fin n) = n
+rankΩ ω       = zero
+
+rankBT : BT → ℕ
+rankBT bzero       = zero
+rankBT (bOmega μ)  = suc zero
+rankBT (bplus α β) = suc (suc (rankBT α))
+rankBT (bpsi μ α)  = suc (suc (suc (rankΩ μ)))
+
+<Ω⇒<rankΩ : ∀ {μ ν} → μ <Ω ν → rankΩ μ < rankΩ ν
+<Ω⇒<rankΩ (<Ω-fin m<n) = m<n
+
+<ᵇ⇒<rankBT : ∀ {x y} → x <ᵇ y → rankBT x < rankBT y
+<ᵇ⇒<rankBT <ᵇ-0Ω = s≤s z≤n
+<ᵇ⇒<rankBT <ᵇ-0+ = s≤s z≤n
+<ᵇ⇒<rankBT <ᵇ-0ψ = s≤s z≤n
+<ᵇ⇒<rankBT <ᵇ-Ω+ = s≤s (s≤s z≤n)
+<ᵇ⇒<rankBT <ᵇ-Ωψ = s≤s (s≤s z≤n)
+<ᵇ⇒<rankBT (<ᵇ-+1 α<β) = s≤s (s≤s (<ᵇ⇒<rankBT α<β))
+<ᵇ⇒<rankBT (<ᵇ-ψν μ<ν) = s≤s (s≤s (s≤s (<Ω⇒<rankΩ μ<ν)))
+
+wf-rankBT : WellFounded (_<_ on rankBT)
+wf-rankBT = WF.InverseImage.wellFounded rankBT NatInd.<-wellFounded
+
+wf-<ᵇ-rank : WellFounded _<ᵇ_
+wf-<ᵇ-rank = WF.Subrelation.wellFounded <ᵇ⇒<rankBT wf-rankBT
+
 <ᵇ-rec-+1 : ∀ {α β γ} → α <ᵇ β → Acc _<ᵇ_ (bplus α γ)
-<ᵇ-rec-+1 α<β = {!!}
 
 <ᵇ-rec-ψν : ∀ {μ ν α} → μ <Ω ν → Acc _<ᵇ_ (bpsi μ α)
-<ᵇ-rec-ψν μ<ν = {!!}
 
 <ᵇ-acc-bzero : Acc _<ᵇ_ bzero
 <ᵇ-acc-bzero = acc <ᵇ-pred-bzero
@@ -60,6 +90,10 @@ open import Ordinal.Buchholz.Order using
 
 <ᵇ-acc-bpsi : (μ : OmegaIndex) (α : BT) → Acc _<ᵇ_ (bpsi μ α)
 <ᵇ-acc-bpsi μ α = acc <ᵇ-pred-bpsi
+
+<ᵇ-rec-+1 {α = α} {γ = γ} _ = wf-<ᵇ-rank (bplus α γ)
+
+<ᵇ-rec-ψν {μ = μ} {α = α} _ = wf-<ᵇ-rank (bpsi μ α)
 
 wf-<ᵇ : WellFounded _<ᵇ_
 wf-<ᵇ bzero       = <ᵇ-acc-bzero
