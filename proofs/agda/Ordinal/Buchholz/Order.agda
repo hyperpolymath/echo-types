@@ -63,12 +63,12 @@ data _<ᵇ_ : BT → BT → Set where
   <ᵇ-ΩΩ  : ∀ {μ ν} → μ <Ω ν → bOmega μ <ᵇ bOmega ν
 
   -- Ω_μ < ψ_ν(α) whenever μ <Ω ν. This is the admissibility side:
-  -- ψ-terms at higher index dominate Ω-markers at lower index. The
-  -- reverse direction (bpsi ν α <ᵇ bOmega μ with ν ≤Ω μ) is deferred.
+  -- ψ-terms at higher index dominate Ω-markers at lower index.
   <ᵇ-Ωψ  : ∀ {μ ν α} → μ <Ω ν → bOmega μ <ᵇ bpsi ν α
 
   -- bpsi comparison by Ω-index only. The same-index sub-case (lex on
-  -- the ψ-argument) is deferred pending a K-free formulation.
+  -- the ψ-argument) is deferred pending a K-free formulation. The
+  -- ψ→Ω bridge for ν ≤Ω μ is admitted separately as `<ᵇ-ψΩ≤`.
   <ᵇ-ψΩ  : ∀ {μ ν α β} → μ <Ω ν → bpsi μ α <ᵇ bpsi ν β
   <ᵇ-ψΩ≤ : ∀ {ν μ α}   → ν ≤Ω μ → bpsi ν α <ᵇ bOmega μ
 
