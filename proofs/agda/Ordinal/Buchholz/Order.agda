@@ -156,6 +156,10 @@ infix 4 _<ᵇ_
 <ᵇ-inv-+Ωfin : ∀ {x y n} → bplus x y <ᵇ bOmega (fin n) → ⊥
 <ᵇ-inv-+Ωfin ()
 
+-- Inversion for the admitted top-marker bridge.
+<ᵇ-inv-+Ωω : ∀ {x y} → bplus x y <ᵇ bOmega ω → x <ᵇ bOmega ω
+<ᵇ-inv-+Ωω (<ᵇ-+ω x<ω) = x<ω
+
 ----------------------------------------------------------------------------
 -- WF-2 open-case inversions (ψ vs +)
 ----------------------------------------------------------------------------
@@ -168,6 +172,10 @@ infix 4 _<ᵇ_
 
 <ᵇ-inv-+ψfin : ∀ {x y n α} → bplus x y <ᵇ bpsi (fin n) α → ⊥
 <ᵇ-inv-+ψfin ()
+
+-- Inversion for the admitted top-marker bridge.
+<ᵇ-inv-+ψω : ∀ {x y α} → bplus x y <ᵇ bpsi ω α → x <ᵇ bpsi ω α
+<ᵇ-inv-+ψω (<ᵇ-+ψω x<ψω) = x<ψω
 
 ----------------------------------------------------------------------------
 -- Strict-below-ψ examples, for downstream ordering checks
