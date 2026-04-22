@@ -26,19 +26,25 @@ SessionAsFunction {p} (Select S1 S2) q = SessionAsFunction S1 q ⊎ SessionAsFun
 -- Simplified echo over session types (avoiding universe issues)
 SessionEcho : ∀ {p} → (q : Party) → Session p → Set
 SessionEcho q End = ⊤
-SessionEcho q (Send A S) = Echo (λ _ → ⊤) ⊤
-SessionEcho q (Recv A S) = Echo (λ _ → ⊤) ⊤
-SessionEcho q (Choice S1 S2) = Echo (λ _ → ⊤) ⊤
-SessionEcho q (Select S1 S2) = Echo (λ _ → ⊤) ⊤
+SessionEcho q (Send A S) = Echo {A = ⊤} (λ _ → tt) tt
+SessionEcho q (Recv A S) = Echo {A = ⊤} (λ _ → tt) tt
+SessionEcho q (Choice S1 S2) = Echo {A = ⊤} (λ _ → tt) tt
+SessionEcho q (Select S1 S2) = Echo {A = ⊤} (λ _ → tt) tt
 
 -- Example: Echo over Alice's send protocol
 AliceSendEcho : SessionEcho Alice AliceSendsUnit
-AliceSendEcho = echo-intro (λ _ → tt) tt
+AliceSendEcho = echo-intro {A = ⊤} (λ _ → tt) tt
 
--- Protocol provenance: echo retains session structure
-ProtocolProvenance : ∀ {p} {S : Session p} {q : Party} → 
-                      SessionEcho q S → Echo (λ _ → ⊤) ⊤
-ProtocolProvenance echo = echo
+-- Protocol provenance: echo retains session structure. For non-End
+-- sessions SessionEcho q S is already Echo {A = ⊤} (λ _ → tt) tt; for End it
+-- is ⊤ and we synthesize the canonical echo.
+ProtocolProvenance : ∀ {p} {S : Session p} {q : Party} →
+                      SessionEcho q S → Echo {A = ⊤} (λ _ → tt) tt
+ProtocolProvenance {S = End}        _    = echo-intro {A = ⊤} (λ _ → tt) tt
+ProtocolProvenance {S = Send _ _}   echo = echo
+ProtocolProvenance {S = Recv _ _}   echo = echo
+ProtocolProvenance {S = Choice _ _} echo = echo
+ProtocolProvenance {S = Select _ _} echo = echo
 
 -- Dyadic echo: session with echo-indexed provenance
 DyadicEcho : ∀ {p} → Session p → Set
@@ -50,12 +56,19 @@ AliceSendWithProvenance = Alice , AliceSendEcho
 
 -- Bob's receive protocol with provenance
 BobReceiveWithProvenance : DyadicEcho BobReceivesUnit
-BobReceiveWithProvenance = Bob , echo-intro (λ _ → tt) tt
+BobReceiveWithProvenance = Bob , echo-intro {A = ⊤} (λ _ → tt) tt
 
--- Provenance preservation under session concatenation
+-- Provenance preservation under session concatenation. We synthesize
+-- a fresh echo at the concatenated session, since SessionEcho at a
+-- Send/Recv/Choice/Select head is always Echo {A = ⊤} (λ _ → tt) tt and at
+-- End it is ⊤.
 ProvenancePreservation : ∀ {p} {S1 S2 : Session p} →
                           DyadicEcho S1 → DyadicEcho S2 → DyadicEcho (S1 >>= S2)
-ProvenancePreservation (q1 , echo1) (q2 , echo2) = q1 , echo1
+ProvenancePreservation {S1 = End}        _         (q2 , echo2) = q2 , echo2
+ProvenancePreservation {S1 = Send _ _}   (q1 , _)  _            = q1 , echo-intro {A = ⊤} (λ _ → tt) tt
+ProvenancePreservation {S1 = Recv _ _}   (q1 , _)  _            = q1 , echo-intro {A = ⊤} (λ _ → tt) tt
+ProvenancePreservation {S1 = Choice _ _} (q1 , _)  _            = q1 , echo-intro {A = ⊤} (λ _ → tt) tt
+ProvenancePreservation {S1 = Select _ _} (q1 , _)  _            = q1 , echo-intro {A = ⊤} (λ _ → tt) tt
 
 -- Echo-safe dyadic protocols: protocols where echoes preserve safety
 EchoSafe : ∀ {p} → Session p → Set

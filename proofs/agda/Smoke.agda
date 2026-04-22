@@ -6,7 +6,18 @@
 
 module Smoke where
 
-open import Echo using (Echo; echo-intro; map-over; map-over-id; map-over-comp; map-square)
+open import Echo using
+  ( Echo
+  ; echo-intro
+  ; map-over
+  ; map-over-id
+  ; map-over-comp
+  ; map-square
+  ; Echo-comp-iso-to
+  ; Echo-comp-iso-from
+  ; Echo-comp-iso-from-to
+  ; Echo-comp-iso-to-from
+  )
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
 open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)
@@ -119,12 +130,21 @@ open import Ordinal.OmegaMarkers using
   ; ω≤ω
   ; ≤Ω-refl
   ; ≤Ω-trans
+  ; _<Ω_
+  ; fin<fin
+  ; fin<ω
+  ; <Ω-irrefl
+  ; <Ω-trans
+  ; <Ω→≤Ω
   ; Omega0
   ; Omega1
   ; Omegaω
   ; Omega0≤Omega1
   ; Omega0≤Omegaω
   ; Omega1≤Omegaω
+  ; Omega0<Omega1
+  ; Omega0<Omegaω
+  ; Omega1<Omegaω
   )
 
 open import Ordinal.Buchholz.Syntax using
@@ -148,6 +168,23 @@ open import Ordinal.Buchholz.Closure using
   ; cν-omega-index
   ; cν-psi-index
   ; cν-psi-decompose
+  )
+
+open import Ordinal.Buchholz.Order using
+  ( _<ᵇ_
+  ; <ᵇ-0-Ω
+  ; <ᵇ-0-+
+  ; <ᵇ-0-ψ
+  ; <ᵇ-ΩΩ
+  ; <ᵇ-Ωψ
+  ; <ᵇ-ψΩ
+  ; <ᵇ-+1
+  ; <ᵇ-irrefl
+  ; <ᵇ-trans
+  ; bzero<Ω0
+  ; Ω0<Ω1
+  ; Ω1<Ωω
+  ; Ω0<ψ1-zero
   )
 
 open import Ordinal.Buchholz.Psi using
