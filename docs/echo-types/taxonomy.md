@@ -176,32 +176,129 @@ is load-bearing there.
 
 ---
 
+## Axis 8 — Information-theoretic vs computational access
+
+*Definition.* An echo is **information-theoretically accessible**
+when `Echo f y` is merely *inhabited* as a type — i.e. a witness
+`(x , p : f x ≡ y)` exists in the metatheory. An echo is
+**computationally accessible** when a concrete procedure produces
+such a witness in bounded resources given `y`. Information-theoretic
+accessibility is a property of the type; computational accessibility
+is a property of an accompanying algorithm.
+
+*Distinguishing test.* Does the echo's usefulness collapse when we
+restrict to witness-extraction algorithms of a fixed complexity
+class?
+
+*Example forcing the distinction.*
+- `H : {0,1}* → {0,1}ⁿ`, a cryptographically strong hash function.
+  `Echo H y` is information-theoretically inhabited for every `y ∈
+  image(H)` (pigeonhole — there exist preimages), but computationally
+  inaccessible under the standard security assumption (no
+  polynomial-time algorithm produces a witness). See `examples.md` §8.
+- `square⁻¹ : ℕ → ℕ` under the constructive square-root algorithm.
+  Same information content as `Echo square`, but the witness is
+  produced in `O(log n)` operations. Computationally accessible.
+
+*Why it is a separate axis.* Axes 1–7 are properties of the echo
+type as a mathematical object — they do not depend on any notion of
+cost, algorithm, or resource. Axis 8 does. Two echoes can be
+identical on every other axis (same extensional shadow, same
+intensional core, same proof relevance, etc.) and differ only in
+whether a witness is reachable by a feasible algorithm. The security
+of every modern cryptosystem depends on this axis being real.
+
+*Agda anchor.* None directly — Agda's type system does not express
+complexity bounds, so computational access cannot be named at the
+type level in the current formalisation. Adjacent machinery in
+stdlib:
+- `Data.Nat.Logarithm.⌊log₂⌋` and arithmetic complexity conventions
+  admit informal-level statements like "this function runs in `O(n
+  log n)`", but without a cost monad.
+- `EchoLinear.agda` and `EchoGraded.agda` restrict what one can *do*
+  with witnesses via usage modes and grades. These are proxies for
+  resource control, not full computational-access tracking.
+
+*Candidate refinements of `Echo` that would capture this axis.*
+
+1. **Cost-indexed echo.** Pair `Echo f y` with a witness-extraction
+   bound: `CEcho f y cost = Σ (Echo f y) (λ _ → Extractor f y cost)`.
+   Requires a resource monad or a cost-passing semantics.
+
+2. **Graded access modality.** `Echo^c f y` at grade `c` means
+   "witness is reachable with `≤ c` steps". A graded semiring on the
+   cost indexes gives composition. `EchoGraded.agda` is the natural
+   host; the grade would need a complexity-class interpretation
+   (e.g. polynomial vs super-polynomial).
+
+3. **Decidability-respecting echo.** `Echo⁺ f y = Dec (Echo f y)`
+   pairs the echo with a *constructive decision procedure*. Weaker
+   than full cost-tracking but enough to distinguish "feasibly
+   decidable" from "mathematically inhabited".
+
+4. **Witness-search abstract machine.** Model the extractor as a
+   term in a bounded-step abstract machine and pair it with the
+   echo. Heavier; more faithful to actual cryptographic modelling.
+
+*Open question.* Is there a single refinement that subsumes all four?
+My guess is no: (1) and (4) track asymptotic cost, (2) and (3)
+track discrete feasibility classes. They probably live on a small
+lattice of access-tracking theories.
+
+*Composition conjecture.* Computational accessibility composes
+**multiplicatively** along `g ∘ f` in the canonical case — the
+cost of extracting a `g ∘ f` witness is bounded by the product of
+component costs. This is the standard complexity composition and
+should carry over; would need to be stated carefully since the
+accumulation iso of `composition.md` §1 introduces an intermediate
+`b : B` whose extraction cost is implicit.
+
+*Worked example motivating the axis.* Hash chains in a blockchain.
+Each block's header is a pre-image echo over the previous block's
+hash. Information-theoretically, the entire chain's residue structure
+is determined by any final hash value. Computationally, reconstructing
+earlier blocks from the final hash alone is infeasible — precisely
+the property that makes the chain tamper-evident. The current Echo
+Types framework cannot name this distinction as a type-level fact.
+
+---
+
 ## Cross-classification table
 
 A first cut at placing existing modules on the axes. Entries marked
 `?` are not yet pinned down. Entries marked `·` are not applicable.
+The access column uses `Info` for information-theoretic only (typical
+for a theorem-prover module with no resource semantics) and is the
+uniform default at this stage — no module currently models
+computational access as a first-class property.
 
-| Module | Ext/Int | Exact/Approx | Local/Global | Canonical | Compositional | Static/Dynamic | Proof-rel |
-|---|---|---|---|---|---|---|---|
-| `Echo` | Int | Exact | Global | Canon | Expected | Static | Yes |
-| `EchoCharacteristic` | Both | Exact | Local | Canon | ? | Static | Yes |
-| `EchoResidue` | Int→Shadow map | Exact | Global | Canon | ? | Static | Yes |
-| `EchoIndexed` | Int | Exact | Global | Pres-dep by role | ? | Static | Yes |
-| `EchoChoreo` | Int | Exact | Local | Pres-dep | ? | Dynamic | Yes |
-| `EchoEpistemic` | Int | Exact | Global | Pres-dep by agent | ? | ? | Yes |
-| `EchoLinear` | Int | Exact | Global | Canon | ? | Static | Yes |
-| `EchoGraded` | Int | Exact | Global | Canon | Expected | Static | Yes |
-| `EchoTropical` | Int | Approx-ish | Local | Pres-dep | ? | Static | Yes |
-| `EchoOrdinal` | Int | Exact | Local | Canon | ? | Static | Yes |
+| Module | Ext/Int | Exact/Approx | Local/Global | Canonical | Compositional | Static/Dynamic | Proof-rel | Access |
+|---|---|---|---|---|---|---|---|---|
+| `Echo` | Int | Exact | Global | Canon | Expected | Static | Yes | Info |
+| `EchoCharacteristic` | Both | Exact | Local | Canon | ? | Static | Yes | Info |
+| `EchoResidue` | Int→Shadow map | Exact | Global | Canon | ? | Static | Yes | Info |
+| `EchoIndexed` | Int | Exact | Global | Pres-dep by role | ? | Static | Yes | Info |
+| `EchoChoreo` | Int | Exact | Local | Pres-dep | ? | Dynamic | Yes | Info |
+| `EchoEpistemic` | Int | Exact | Global | Pres-dep by agent | ? | ? | Yes | Info |
+| `EchoLinear` | Int | Exact | Global | Canon | ? | Static | Yes | Info (proxy) |
+| `EchoGraded` | Int | Exact | Global | Canon | Expected | Static | Yes | Info (proxy) |
+| `EchoTropical` | Int | Approx-ish | Local | Pres-dep | ? | Static | Yes | Info |
+| `EchoOrdinal` | Int | Exact | Local | Canon | ? | Static | Yes | Info |
 
 Multiple `?` entries are open research: the compositional behaviour
 of the choreographic, epistemic, and tropical echoes has not been
 systematically checked and may turn out to differ from the clean
-composition law for the base `Echo`.
+composition law for the base `Echo`. The `Info (proxy)` marks on
+`EchoLinear` and `EchoGraded` indicate modules whose usage modes and
+grade semirings *approximate* cost-tracking at the access axis but
+do not commit to an algorithmic-cost interpretation.
 
 ---
 
 ## Open: new axes worth considering
+
+Axes listed here have distinguishing examples but have not been
+developed far enough to promote to a numbered axis.
 
 - **Reversibility axis.** Does `f` admit a section? Partial section?
   No section? The shape of `Echo(f)` changes sharply across these.
@@ -213,3 +310,9 @@ composition law for the base `Echo`.
   types may themselves form a category with interesting properties
   (e.g. all morphisms factor through a residue). Currently indirect
   in `EchoCategorical.agda`; worth an explicit axis once developed.
+
+*History note.* Axis 8 (information-theoretic vs computational
+access) was promoted from this list on the same commit that added
+it as a numbered axis. The cryptographic-hash example in
+`examples.md` §8 was the case that forced the promotion: no other
+axis could distinguish "preimage exists" from "preimage is findable".

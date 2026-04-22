@@ -21,9 +21,11 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 - **[unblocked]** Axis 2 (approximate echoes): settle the formal
   definition before touching Agda. Draft in `taxonomy.md` and
   `composition.md`.
-- **[unblocked]** Axis 8 (computational-access): new taxonomy axis
-  motivated by the cryptographic-hash example (examples §8). Write
-  up separately.
+- **[landed]** Axis 8 (information-theoretic vs computational
+  access): promoted from the candidates list to a numbered axis;
+  four candidate refinements of `Echo` (cost-indexed, graded access
+  modality, decidability-respecting, witness-search abstract
+  machine) are listed. Follow-up: pick one refinement and formalise.
 - **[unblocked]** Negative / co-echoes: formulate `CoEcho(f)` and its
   relationship to `Echo(f)`. Possibly resolves the quantitative /
   structural tension hinted at by `EchoTropical`.
@@ -137,15 +139,18 @@ tractable today:
    Concrete, compiling, unblocks the composition roadmap.
 3. **Gate 1 adjacency refresh against the new taxonomy** — 1 day.
    Cheap coherence pass on existing docs.
-4. **Theory: write up computational-access axis** — 1 day.
-   Fills a gap that the current taxonomy cannot capture.
+4. **Theory: pick one axis-8 refinement and formalise it** — 1–2
+   days. Four candidates in `taxonomy.md` §8 (cost-indexed echo,
+   graded access modality, decidability-respecting echo, witness-
+   search abstract machine). Choosing commits the repo to one
+   formal handle on computational vs information-theoretic access.
 5. **Agda: `EchoApprox.agda`** — 2–3 days. First artifact of axis 2.
 6. **Applications chapter: compiler-analysis residue** — 2 days.
    Largest reader value; entirely unblocked.
 7. **Per-decoration composition lemmas** — 1 day each. Useful
    coverage.
 
-Steps 1–4 are ~4–5 days of honest work that require nothing from
+Steps 1–4 are ~5–6 days of honest work that require nothing from
 proof assistants, external repos, or the blocked Buchholz path.
 Steps 5–7 extend into Agda but depend only on infrastructure we
 already have in-suite.

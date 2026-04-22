@@ -152,13 +152,13 @@ Template used for every entry:
   enormous but enumerable (in principle) set.
 - **Extensional / intensional.** Intensional at the set-theoretic
   level (every preimage exists), but the security claim is about
-  *computational* access to the echo, not its existence. This
-  distinction is not captured by the current `Echo f y` definition
-  and is a genuine open question: what refinement of Echo Types
-  encodes computational vs information-theoretic residue?
-- **Informal.** Not in repo. Serves as the worked example for the
-  **computational-access axis** that the current taxonomy does not
-  yet include.
+  *computational* access to the echo, not its existence.
+- **Informal.** Not in repo. This is the example that forced the
+  promotion of the information-theoretic/computational access
+  axis — see `taxonomy.md` axis 8. Candidate refinements of `Echo`
+  that would capture the security claim (cost-indexed echo, graded
+  access modality, decidability-respecting echo, witness-search
+  abstract machine) are listed there.
 
 ---
 
