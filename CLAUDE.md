@@ -6,13 +6,25 @@ Adjacent projects, in one line each, for session bootstrapping:
 - PanLL — three-pane cognitive-relief HTI; Ambient/Symbolic/Neural/World panes.
   https://github.com/hyperpolymath/panll
 - Gossamer — Zig + WebKitGTK webview shell used by PanLL (~5 MB binary).
-- Burble — TODO: one-line description from operator.
+- Burble — self-hostable voice-communications platform; Zig-based SIMD
+  audio, IEEE 1588 PTP clock sync, sub-second room joining, browser-based
+  (no downloads / no accounts), configurable topology from single-server
+  to fully distributed mesh. In PanLL, used for team replication via
+  broadcast and as a switchable service alongside Gossamer.
 - Echidna (hyperpolymath) — planned high-assurance interface verification.
   NOT the Ethereum fuzzer of the same name.
 - VeriSim / VeriSimDB — identity-state capture with filesystem fallback.
-- VQL-UT — TODO: one-line description from operator.
-- Groove protocol — TODO: one-line description from operator;
-  see GROOVE_PANLL_RESEARCH_SUMMARY.md in panll.
+- VCL-UT (now VCL-total) — next-generation interaction language for
+  VeriSim; designed to satisfy all 10 levels of type safety when
+  proposing, inspecting, and verifying operations in a consonance engine
+  (rather than querying a passive database). NOTE: operator wrote
+  "VQL-UT" — confirm whether this is the same project under a different
+  spelling or a distinct one.
+- Groove protocol — HTTP-based service-discovery mechanism; lets
+  capabilities across the hyperpolymath ecosystem announce themselves
+  for automatic detection and integration (e.g. discipline-specific
+  analyzers becoming visible to PanLL without manual wiring).
+  See GROOVE_PANLL_RESEARCH_SUMMARY.md in panll.
 - ArghDA (planned) — lightweight proof-workspace manager for Agda;
   triage folders (inbox → working → proven/rejected), linter, DAG view.
   Split as `arghda-core` (language-agnostic engine) + `arghda-panll`
