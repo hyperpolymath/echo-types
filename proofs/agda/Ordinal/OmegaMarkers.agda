@@ -8,7 +8,7 @@
 
 module Ordinal.OmegaMarkers where
 
-open import Data.Nat.Base using (ℕ; _≤_; zero; suc)
+open import Data.Nat.Base using (ℕ; _≤_; z≤n; s≤s; zero; suc)
 open import Data.Nat.Properties using (≤-refl; ≤-trans)
 
 data OmegaIndex : Set where
@@ -44,3 +44,12 @@ Omega1 = fin (suc zero)
 
 Omegaω : OmegaIndex
 Omegaω = ω
+
+Omega0≤Omega1 : Omega0 ≤Ω Omega1
+Omega0≤Omega1 = fin≤fin z≤n
+
+Omega0≤Omegaω : Omega0 ≤Ω Omegaω
+Omega0≤Omegaω = fin≤ω
+
+Omega1≤Omegaω : Omega1 ≤Ω Omegaω
+Omega1≤Omegaω = fin≤ω
