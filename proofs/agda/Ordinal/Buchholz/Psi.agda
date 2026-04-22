@@ -12,9 +12,9 @@ open import Data.Nat.Base using (_≤_; z≤n; s≤s)
 open import Data.Nat.Properties using (≤-trans)
 open import Relation.Nullary using (¬_)
 
-open import Ordinal.OmegaMarkers using (OmegaIndex)
+open import Ordinal.OmegaMarkers using (OmegaIndex; _≤Ω_)
 open import Ordinal.Buchholz.Syntax using (BT; bpsi)
-open import Ordinal.Buchholz.Closure using (Cν; cν-psi)
+open import Ordinal.Buchholz.Closure using (Cν; cν-psi; cν-psi-index)
 
 psiν-notin-Cν : ∀ {ν μ β} → ¬ Cν ν 0 (bpsi μ β)
 psiν-notin-Cν (cν-psi _ () _)
@@ -23,3 +23,6 @@ psiν-notin-Cν (cν-psi _ () _)
 
 psiν-stage-lb : ∀ {ν μ β m} → Cν ν m (bpsi μ β) → 1 ≤ m
 psiν-stage-lb (cν-psi _ k<m _) = ≤-trans (s≤s z≤n) k<m
+
+psiν-index-bound : ∀ {ν μ β m} → Cν ν m (bpsi μ β) → μ ≤Ω ν
+psiν-index-bound = cν-psi-index
