@@ -121,6 +121,9 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   type infrastructure.
 - **[gated on B2]** CNO-equivalence verification across echo-types
   and `absolute-zero`. Needs cross-repo access.
+  Bridge slot now exists on the adjacent side at
+  `absolute-zero/proofs/agda/EchoBridgeScaffold.agda`; theorem-level
+  alignment remains open.
 - **[gated on B2]** Janus reversible-file-operations bridge
   verification against `januskey`'s actual API. Needs cross-repo
   access.

@@ -90,6 +90,7 @@ Note: `januskey` is not currently nested under `maa-framework` in this workspace
 Cross-repo status:
 
 - bridge formalisms live in this repo (`EchoCNOBridge`, `EchoJanusBridge`, tropical-collapse witness work in `EchoTropical`)
+- Agda-side adapter slot now exists in `maa-framework/absolute-zero` at `absolute-zero/proofs/agda/EchoBridgeScaffold.agda`
 - end-to-end conformance against upstream codebases is a separate track and is not yet fully machine-checked here
 - see `docs/echo-types/roadmap.md` for staged cross-repo verification gates
 
