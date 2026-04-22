@@ -4,7 +4,7 @@ module Echo where
 
 open import Level using (Level; _⊔_)
 open import Function.Base using (_∘_; id)
-open import Data.Product.Base using (Σ; _,_)
+open import Data.Product.Base using (Σ; _,_; _×_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; trans; cong)
 
 -- Echo_f(y) := Σ (x : A) , (f x ≡ y)
@@ -63,3 +63,35 @@ map-square :
   (square : ∀ x → f' (u x) ≡ v (f x)) {y : B} →
   Echo f y → Echo f' (v y)
 map-square f f' u v square (x , p) = u x , trans (square x) (cong v p)
+
+-- Composition isomorphism: the echo of g ∘ f at y is canonically
+-- equivalent to a Σ over an intermediate b : B of (Echo f b × g b ≡ y).
+-- This is the accumulation law from docs/echo-types/composition.md §1:
+-- composition does not weaken the intensional core, it accumulates
+-- witness structure. Both round-trips are definitional once the
+-- refl pattern has pinned the intermediate b to f x.
+
+Echo-comp-iso-to :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) {y : C} →
+  Echo (g ∘ f) y → Σ B (λ b → Echo f b × (g b ≡ y))
+Echo-comp-iso-to f g (x , p) = f x , (x , refl) , p
+
+Echo-comp-iso-from :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) {y : C} →
+  Σ B (λ b → Echo f b × (g b ≡ y)) → Echo (g ∘ f) y
+Echo-comp-iso-from f g (b , (x , refl) , p) = x , p
+
+Echo-comp-iso-from-to :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) {y : C} (e : Echo (g ∘ f) y) →
+  Echo-comp-iso-from f g (Echo-comp-iso-to f g e) ≡ e
+Echo-comp-iso-from-to f g (x , p) = refl
+
+Echo-comp-iso-to-from :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) {y : C}
+  (r : Σ B (λ b → Echo f b × (g b ≡ y))) →
+  Echo-comp-iso-to f g (Echo-comp-iso-from f g r) ≡ r
+Echo-comp-iso-to-from f g (b , (x , refl) , p) = refl
