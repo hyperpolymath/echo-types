@@ -22,6 +22,8 @@ open import EchoCategorical
 open import EchoScope
 open import EchoOrdinal
 open import EchoJanusBridge
+open import Dyadic
+open import DyadicEchoBridge
 
 open import Ordinal.Base
 open import Ordinal.Closure
