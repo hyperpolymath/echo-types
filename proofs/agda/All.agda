@@ -34,6 +34,7 @@ open import Ordinal.PsiSimple
 open import Ordinal.OmegaMarkers
 open import Ordinal.Buchholz.Syntax
 open import Ordinal.Buchholz.Closure
+open import Ordinal.Buchholz.Order
 open import Ordinal.Buchholz.Psi
 open import Ordinal.Buchholz.Examples
 open import Ordinal.Buchholz.WellFormed
