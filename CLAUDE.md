@@ -3,6 +3,11 @@
 This repo (echo-types) is one node in the hyperpolymath / PanLL ecosystem.
 Adjacent projects, in one line each, for session bootstrapping:
 
+- echo-types — constructive Agda formalization of fiber-based structured
+  loss ("echo types"); `Echo f y := Σ (x : A) , (f x ≡ y)`. Gated
+  identity-claim development; `--safe --without-K` throughout. Current
+  workstream: E (ordinal-notation / Buchholz collapsing layer).
+  https://github.com/hyperpolymath/echo-types
 - PanLL — three-pane cognitive-relief HTI; Ambient/Symbolic/Neural/World panes.
   https://github.com/hyperpolymath/panll
 - Gossamer — Zig + WebKitGTK webview shell used by PanLL (~5 MB binary).
