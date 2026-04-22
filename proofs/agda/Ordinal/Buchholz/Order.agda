@@ -130,6 +130,19 @@ infix 4 _<ᵇ_
 <ᵇ-inv-+Ω ()
 
 ----------------------------------------------------------------------------
+-- WF-2 open-case inversions (ψ vs +)
+----------------------------------------------------------------------------
+
+-- Like Ω-vs-+, these comparisons are still deferred and currently
+-- have no constructors in either direction.
+
+<ᵇ-inv-ψ+ : ∀ {μ α x y} → bpsi μ α <ᵇ bplus x y → ⊥
+<ᵇ-inv-ψ+ ()
+
+<ᵇ-inv-+ψ : ∀ {x y μ α} → bplus x y <ᵇ bpsi μ α → ⊥
+<ᵇ-inv-+ψ ()
+
+----------------------------------------------------------------------------
 -- Strict-below-ψ examples, for downstream ordering checks
 ----------------------------------------------------------------------------
 
