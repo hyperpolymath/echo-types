@@ -24,6 +24,7 @@ open import EchoOrdinal
 open import EchoJanusBridge
 open import Dyadic
 open import DyadicEchoBridge
+open import EchoThermodynamics
 
 open import Ordinal.Base
 open import Ordinal.Closure
