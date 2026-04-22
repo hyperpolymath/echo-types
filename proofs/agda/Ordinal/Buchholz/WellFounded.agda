@@ -57,7 +57,10 @@ rankBT (bpsi μ α)  = suc (suc (suc (rankΩ μ)))
 <ᵇ⇒<rankBT (<ᵇ-ψν μ<ν) = s≤s (s≤s (s≤s (<Ω⇒<rankΩ μ<ν)))
 
 wf-rankBT : WellFounded (_<_ on rankBT)
-wf-rankBT = WF.InverseImage.wellFounded rankBT NatInd.<-wellFounded
+wf-rankBT x = rank-accessible (NatInd.<-wellFounded (rankBT x))
+  where
+  rank-accessible : ∀ {t} → Acc _<_ (rankBT t) → Acc (_<_ on rankBT) t
+  rank-accessible (acc rs) = acc λ t<x → rank-accessible (rs t<x)
 
 wf-<ᵇ-rank : WellFounded _<ᵇ_
 wf-<ᵇ-rank = WF.Subrelation.wellFounded <ᵇ⇒<rankBT wf-rankBT
