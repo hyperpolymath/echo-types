@@ -46,6 +46,24 @@ open import Ordinal.Buchholz.Closure using
   ; cν-psi-decompose
   )
 
+open import Ordinal.Buchholz.Order using
+  ( _<ᵇ_
+  ; <ᵇ-0-Ω
+  ; <ᵇ-0-+
+  ; <ᵇ-0-ψ
+  ; <ᵇ-ΩΩ
+  ; <ᵇ-Ωψ
+  ; <ᵇ-ψΩ
+  ; <ᵇ-ψΩ≤
+  ; <ᵇ-+1
+  ; <ᵇ-irrefl
+  ; <ᵇ-trans
+  ; <ᵇ-inv-Ω+
+  ; <ᵇ-inv-+Ω
+  ; <ᵇ-inv-ψ+
+  ; <ᵇ-inv-+ψ
+  )
+
 open import Ordinal.Buchholz.Psi using
   ( psiν-notin-Cν
   ; psiν-stage-lb

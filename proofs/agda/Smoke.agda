@@ -136,6 +136,9 @@ open import Ordinal.OmegaMarkers using
   ; <Ω-irrefl
   ; <Ω-trans
   ; <Ω→≤Ω
+  ; ≤Ω-<Ω-trans
+  ; <Ω-≤Ω-trans
+  ; ≤Ω-split
   ; Omega0
   ; Omega1
   ; Omegaω

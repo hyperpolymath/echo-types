@@ -92,6 +92,31 @@ Note: `CLAUDE.md` currently refers to CNF trichotomy as "E3" (post-merge renumbe
 | E7 | echo     | collapse as non-injective map   | `ordinal-collapse-non-injective`
 |===
 
+== WF track status (current)
+
+The order / well-foundedness track now has an explicit staged split:
+
+* WF-0 (`Ordinal.Buchholz.Order`): partial strict order with
+  irreflexivity and transitivity over the currently admitted
+  constructors.
+* WF-1 (`Ordinal.Buchholz.WellFounded`): `WellFounded _<ᵇ_` for the
+  current core, with irreflexivity recovered as a corollary
+  (`<ᵇ-irreflexive`) instead of a direct shared-binder elimination
+  proof.
+* WF-2 (in progress): explicit inversion lemmas for the still-open
+  mixed head cases (`Ω/+`, `ψ/+`) and the newly admitted comparison
+  bridge `bpsi ν α <ᵇ bOmega μ` under `ν ≤Ω μ`.
+
+Remaining open comparison work after this update:
+
+* Constructor-level comparison rules for `bOmega` vs `bplus` (both
+  directions) in the intended normal-form discipline.
+* Constructor-level comparison rules for `bpsi` vs `bplus` (both
+  directions).
+* Shared-binder same-index/same-left sub-cases in a K-free style
+  (do not return to the blocked direct reflexive-equation elimination
+  route).
+
 == The very first Agda proof: `C-monotone`
 
 Before any ψ-value is defined, we must know the closure stages form a
