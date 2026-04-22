@@ -24,5 +24,9 @@ open import Ordinal.Base
 open import Ordinal.Closure
 open import Ordinal.CNF
 open import Ordinal.PsiSimple
+open import Ordinal.OmegaMarkers
+open import Ordinal.Buchholz.Syntax
+open import Ordinal.Buchholz.Closure
+open import Ordinal.Buchholz.Psi
 
 open import Smoke

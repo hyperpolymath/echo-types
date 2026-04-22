@@ -97,3 +97,34 @@ open import Ordinal.PsiSimple using
   ( psi-notin-C
   ; psi-least
   )
+
+open import Ordinal.OmegaMarkers using
+  ( OmegaIndex
+  ; fin
+  ; ω
+  ; Omega0
+  ; Omega1
+  ; Omegaω
+  )
+
+open import Ordinal.Buchholz.Syntax using
+  ( BT
+  ; bzero
+  ; bOmega
+  ; bplus
+  ; bpsi
+  ; psi0
+  )
+
+open import Ordinal.Buchholz.Closure using
+  ( Cν
+  ; cν-zero
+  ; cν-omega
+  ; cν-plus
+  ; cν-psi
+  ; Cν-monotone
+  )
+
+open import Ordinal.Buchholz.Psi using
+  ( psiν-notin-Cν
+  )
