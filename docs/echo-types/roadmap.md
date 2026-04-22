@@ -3,13 +3,14 @@
 **Status:** planning document. Partitions work by dependency on the
 two identified bottlenecks:
 
-- **Bottleneck B1.** The `--without-K` shared-binder irreflexivity
-  block in the Buchholz `_<ᵇ_` order (`claude/buchholz-order-def`
-  branch). Blocks full totality + WF of Buchholz notation; everything
-  downstream that needs ordinal semantics is gated on this.
+- **Bottleneck B1.** The `--without-K` shared-binder constructor
+  block in the Buchholz `_<ᵇ_` order. `wf-<ᵇ` is landed for the
+  currently admitted core, but full totality + full-constructor
+  well-foundedness remain gated on a K-free treatment of the shared-
+  binder cases.
 - **Bottleneck B2.** Tool-scope limitations on adjacent repos
-  (`maa-framework`, `januskey`, `absolute-zero`). Blocks end-to-end
-  audit of the CNO and Janus bridges.
+  (`maa-framework/absolute-zero`, `januskey`,
+  `tropical-resource-typing`). Blocks end-to-end bridge audits.
 
 Paths marked **[unblocked]** can proceed today. Paths marked
 **[gated on B1]** or **[gated on B2]** cannot.
@@ -107,9 +108,9 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   Requires the shared-binder constructors, which the current Agda
   2.6.3 `--without-K` blocks via pattern-matching. Either an Agda
   upgrade or a rank-embedding proof strategy unblocks this.
-- **[gated on B1]** Well-foundedness `WellFounded _<ᵇ_`.
-  Technically independent of irreflexivity if done via
-  rank-embedding, but conventionally proved after totality.
+- **[gated on B1]** Extension of totality + well-foundedness proofs to
+  the full constructor set (including shared-binder cases such as
+  `<ᵇ-ψα` and `<ᵇ-+2`).
 - **[gated on B1]** Ordinal semantics of BT terms: denotation
   `BT → Ordinal` preserving order. Requires a formal `Ordinal` type
   as a prerequisite, which is itself downstream of WF.
@@ -123,6 +124,10 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 - **[gated on B2]** Janus reversible-file-operations bridge
   verification against `januskey`'s actual API. Needs cross-repo
   access.
+- **[gated on B2]** Tropical-resource-typing alignment: first do a repo
+  inventory (it is currently not recently audited), then validate
+  `EchoTropical` witness/residue claims against that neighbouring
+  tropical typing development.
 - **[gated on B2]** `maa-framework` integration. Out of scope for
   the current tooling; needs scope expansion or file export.
 
