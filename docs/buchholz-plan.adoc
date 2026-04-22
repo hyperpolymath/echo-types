@@ -117,6 +117,12 @@ Remaining open comparison work after this update:
   (do not return to the blocked direct reflexive-equation elimination
   route).
 
+Risk-gated bridge currently admitted:
+
+* `bplus x y <ᵇ bOmega ω` from `x <ᵇ bOmega ω` (top-marker-only
+  directional bridge). This is intentionally narrow to avoid forcing
+  immediate `bplus` vs `bpsi` constructor commitments.
+
 == The very first Agda proof: `C-monotone`
 
 Before any ψ-value is defined, we must know the closure stages form a

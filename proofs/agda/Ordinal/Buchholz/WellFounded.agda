@@ -34,6 +34,7 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-Ωψ
   ; <ᵇ-ψΩ
   ; <ᵇ-ψΩ≤
+  ; <ᵇ-+ω
   ; <ᵇ-+1
   )
 
@@ -58,6 +59,15 @@ open import Ordinal.Buchholz.Order using
 <ᵇ-acc-bzero : Acc _<ᵇ_ bzero
 <ᵇ-acc-bzero = acc <ᵇ-pred-bzero
 
+mutual
+
+  <ᵇ-pred-bplus-from : ∀ {α β x} → Acc _<ᵇ_ α → x <ᵇ bplus α β → Acc _<ᵇ_ x
+  <ᵇ-pred-bplus-from _          <ᵇ-0-+                  = <ᵇ-acc-bzero
+  <ᵇ-pred-bplus-from (acc rsα)  (<ᵇ-+1 {x₂ = x₂} x₁<α)  = <ᵇ-acc-bplus-from (rsα x₁<α) x₂
+
+  <ᵇ-acc-bplus-from : ∀ {α} → Acc _<ᵇ_ α → (β : BT) → Acc _<ᵇ_ (bplus α β)
+  <ᵇ-acc-bplus-from aα β = acc (<ᵇ-pred-bplus-from aα)
+
 ΩBundle : OmegaIndex → Set
 ΩBundle μ = Acc _<ᵇ_ (bOmega μ) × ((α : BT) → Acc _<ᵇ_ (bpsi μ α))
 
@@ -75,6 +85,7 @@ open import Ordinal.Buchholz.Order using
     predOmega (<ᵇ-ψΩ≤ {α = α} ν≤μ) with ≤Ω-split ν≤μ
     ... | inj₁ ν<μ = proj₂ (<ᵇ-bundle-fromΩ (rsμ ν<μ)) α
     ... | inj₂ refl = psiAcc α
+    predOmega (<ᵇ-+ω {x = x} {y = y} x<ω) = <ᵇ-acc-bplus-from (predOmega x<ω) y
 
     psiAcc : (α : BT) → Acc _<ᵇ_ (bpsi μ α)
     psiAcc α = acc λ where
@@ -86,13 +97,6 @@ mutual
 
   <ᵇ-acc-bOmega : (μ : OmegaIndex) → Acc _<ᵇ_ (bOmega μ)
   <ᵇ-acc-bOmega μ = proj₁ (<ᵇ-bundle-fromΩ (<Ω-wf μ))
-
-  <ᵇ-pred-bplus-from : ∀ {α β x} → Acc _<ᵇ_ α → x <ᵇ bplus α β → Acc _<ᵇ_ x
-  <ᵇ-pred-bplus-from _          <ᵇ-0-+                  = <ᵇ-acc-bzero
-  <ᵇ-pred-bplus-from (acc rsα)  (<ᵇ-+1 {x₂ = x₂} x₁<α)  = <ᵇ-acc-bplus-from (rsα x₁<α) x₂
-
-  <ᵇ-acc-bplus-from : ∀ {α} → Acc _<ᵇ_ α → (β : BT) → Acc _<ᵇ_ (bplus α β)
-  <ᵇ-acc-bplus-from aα β = acc (<ᵇ-pred-bplus-from aα)
 
   <ᵇ-acc-bplus : (α β : BT) → Acc _<ᵇ_ (bplus α β)
   <ᵇ-acc-bplus α β = <ᵇ-acc-bplus-from (wf-<ᵇ α) β

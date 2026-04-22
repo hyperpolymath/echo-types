@@ -22,8 +22,9 @@
 -- Open cases (no constructor yet; must be discharged in follow-ups
 -- before `<ᵇ`-totality and well-foundedness can land):
 --
---   * bOmega vs bplus (either direction) — requires a comparison
---     between atomic heads and additive normal forms.
+--   * bOmega vs bplus (general case) — requires a comparison
+--     between atomic heads and additive normal forms. A narrow
+--     top-marker bridge is admitted by `<ᵇ-+ω`.
 --   * bpsi vs bplus (either direction) — same reason, mediated by
 --     the leading bpsi summand of a bplus in CNF.
 --   * Two same-binder sub-cases whose natural shapes run into Agda
@@ -44,6 +45,8 @@ open import Ordinal.OmegaMarkers using
   ( OmegaIndex
   ; _≤Ω_
   ; _<Ω_
+  ; ω
+  ; fin
   ; <Ω-irrefl
   ; <Ω-trans
   ; <Ω→≤Ω
@@ -76,6 +79,7 @@ data _<ᵇ_ : BT → BT → Set where
   -- (compare right summands when lefts agree) is deferred for the
   -- same `--without-K` reason as `<ᵇ-ψα` above: its natural shape
   -- `bplus x y₂ <ᵇ bplus x z₂` shares the binder `x` on both sides.
+  <ᵇ-+ω  : ∀ {x y}     → x <ᵇ bOmega ω → bplus x y <ᵇ bOmega ω
   <ᵇ-+1  : ∀ {x₁ x₂ y₁ y₂} → x₁ <ᵇ y₁ → bplus x₁ x₂ <ᵇ bplus y₁ y₂
 
 infix 4 _<ᵇ_
@@ -111,6 +115,7 @@ infix 4 _<ᵇ_
 <ᵇ-trans <ᵇ-0-Ω       (<ᵇ-Ωψ _)            = <ᵇ-0-ψ
 -- Left leg: <ᵇ-0-+ (x = bzero, y = bplus _ _)
 <ᵇ-trans <ᵇ-0-+       (<ᵇ-+1 _)            = <ᵇ-0-+
+<ᵇ-trans <ᵇ-0-+       (<ᵇ-+ω _)            = <ᵇ-0-Ω
 -- Left leg: <ᵇ-0-ψ (x = bzero, y = bpsi _ _)
 <ᵇ-trans <ᵇ-0-ψ       (<ᵇ-ψΩ _)            = <ᵇ-0-ψ
 -- Left leg: <ᵇ-ΩΩ (x = bOmega _, y = bOmega _)
@@ -126,6 +131,7 @@ infix 4 _<ᵇ_
 <ᵇ-trans (<ᵇ-ψΩ≤ p)   (<ᵇ-Ωψ q)            = <ᵇ-ψΩ (≤Ω-<Ω-trans p q)
 -- Left leg: <ᵇ-+1 (x = bplus _ _, y = bplus _ _)
 <ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+1 q)            = <ᵇ-+1 (<ᵇ-trans p q)
+<ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+ω q)            = <ᵇ-+ω (<ᵇ-trans p q)
 -- Right leg: <ᵇ-ψΩ≤ (y = bpsi _ _, z = bOmega _)
 <ᵇ-trans <ᵇ-0-ψ       (<ᵇ-ψΩ≤ _)           = <ᵇ-0-Ω
 <ᵇ-trans (<ᵇ-Ωψ p)    (<ᵇ-ψΩ≤ q)           = <ᵇ-ΩΩ (<Ω-≤Ω-trans p q)
@@ -141,8 +147,8 @@ infix 4 _<ᵇ_
 <ᵇ-inv-Ω+ : ∀ {μ x y} → bOmega μ <ᵇ bplus x y → ⊥
 <ᵇ-inv-Ω+ ()
 
-<ᵇ-inv-+Ω : ∀ {x y μ} → bplus x y <ᵇ bOmega μ → ⊥
-<ᵇ-inv-+Ω ()
+<ᵇ-inv-+Ωfin : ∀ {x y n} → bplus x y <ᵇ bOmega (fin n) → ⊥
+<ᵇ-inv-+Ωfin ()
 
 ----------------------------------------------------------------------------
 -- WF-2 open-case inversions (ψ vs +)

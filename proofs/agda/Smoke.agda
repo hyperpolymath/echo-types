@@ -182,11 +182,12 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-Ωψ
   ; <ᵇ-ψΩ
   ; <ᵇ-ψΩ≤
+  ; <ᵇ-+ω
   ; <ᵇ-+1
   ; <ᵇ-irrefl
   ; <ᵇ-trans
   ; <ᵇ-inv-Ω+
-  ; <ᵇ-inv-+Ω
+  ; <ᵇ-inv-+Ωfin
   ; <ᵇ-inv-ψ+
   ; <ᵇ-inv-+ψ
   ; bzero<Ω0
