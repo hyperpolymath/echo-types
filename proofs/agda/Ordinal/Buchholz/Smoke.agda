@@ -151,6 +151,8 @@ open import Ordinal.Buchholz.VeblenComparisonTarget using
   ; ≈ᶜ-+
   ; ≈ᶜ-ψ
   ; ≈ᶜ-ψ+
+  ; ≺P-trans
+  ; ≺C-trans
   ; by-first
   ; by-second
   ; ≺C-wf

@@ -14,7 +14,7 @@ open import Function.Base using (_on_)
 open import Induction.WellFounded using (WellFounded; module Subrelation)
 open import Relation.Binary.Core using (Rel; _⇒_)
 open import Relation.Binary.Construct.On as On using (wellFounded)
-open import Relation.Binary.Definitions using (_Respectsʳ_)
+open import Relation.Binary.Definitions using (_Respectsʳ_; Transitive)
 open import Relation.Binary.PropositionalEquality.Core using (_≡_; refl)
 
 open import Ordinal.OmegaMarkers using (OmegaIndex)
@@ -27,8 +27,11 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-Ωψ
   ; <ᵇ-ψ+
   ; <ᵇ-ψΩ
+  ; <ᵇ-ψΩ≤
   ; <ᵇ-+1
+  ; <ᵇ-+Ω
   ; <ᵇ-+ψ
+  ; <ᵇ-trans
   ; <ᵇ-inv-+Ω
   ; <ᵇ-inv-+ψ
   )
@@ -114,6 +117,19 @@ payload-embed (pPlusPlus y<z) = inj₂ (refl , y<z)
 <ᵇ-respʳ-≈ᶜ ≈ᶜ-ψ    (<ᵇ-+ψ x<ψ)    = <ᵇ-+ψ (<ᵇ-respʳ-≈ᶜ ≈ᶜ-ψ x<ψ)
 <ᵇ-respʳ-≈ᶜ (≈ᶜ-ψ+ ψ≈x) x<ψ       = <ᵇ-lift-plus (<ᵇ-respʳ-≈ᶜ ψ≈x x<ψ)
 
+<ᵇ-chain-≈ᶜ : ∀ {x y z} → x ≈ᶜ y → y <ᵇ z → x <ᵇ z
+<ᵇ-chain-≈ᶜ ≈ᶜ-zero y<z              = y<z
+<ᵇ-chain-≈ᶜ ≈ᶜ-Ω    y<z              = y<z
+<ᵇ-chain-≈ᶜ ≈ᶜ-+    (<ᵇ-+1 x<y)      = <ᵇ-+1 x<y
+<ᵇ-chain-≈ᶜ ≈ᶜ-+    (<ᵇ-+Ω x<Ω)      = <ᵇ-+Ω x<Ω
+<ᵇ-chain-≈ᶜ ≈ᶜ-+    (<ᵇ-+ψ x<ψ)      = <ᵇ-+ψ x<ψ
+<ᵇ-chain-≈ᶜ ≈ᶜ-ψ    (<ᵇ-ψΩ μ<ν)      = <ᵇ-ψΩ μ<ν
+<ᵇ-chain-≈ᶜ ≈ᶜ-ψ    (<ᵇ-ψΩ≤ ν≤μ)     = <ᵇ-ψΩ≤ ν≤μ
+<ᵇ-chain-≈ᶜ ≈ᶜ-ψ    (<ᵇ-ψ+ ψ<z)      = <ᵇ-ψ+ (<ᵇ-chain-≈ᶜ ≈ᶜ-ψ ψ<z)
+<ᵇ-chain-≈ᶜ (≈ᶜ-ψ+ ψ≈x) (<ᵇ-+1 x<y)  = <ᵇ-lift-plus (<ᵇ-chain-≈ᶜ ψ≈x x<y)
+<ᵇ-chain-≈ᶜ (≈ᶜ-ψ+ ψ≈x) (<ᵇ-+Ω x<Ω)  = <ᵇ-chain-≈ᶜ ψ≈x x<Ω
+<ᵇ-chain-≈ᶜ (≈ᶜ-ψ+ ψ≈x) (<ᵇ-+ψ x<ψ)  = <ᵇ-chain-≈ᶜ ψ≈x x<ψ
+
 _≺C_ : Rel ComparisonMeasure _
 _≺C_ = ×-Lex _≈ᶜ_ _<ᵇ_ _≺P_
 
@@ -131,6 +147,19 @@ by-payload-ψ+ = pPsiPlus
 
 by-payload-++ : ∀ {a y z} → y <ᵇ z → payload-plus a y ≺P payload-plus a z
 by-payload-++ = pPlusPlus
+
+≺P-trans : Transitive _≺P_
+≺P-trans (pPsiPsi α<β)   (pPsiPsi β<γ)   = pPsiPsi (<ᵇ-trans α<β β<γ)
+≺P-trans (pPsiPsi α<β)   (pPsiPlus β<γ)  = pPsiPlus (<ᵇ-trans α<β β<γ)
+≺P-trans (pPsiPlus α<β)  (pPlusPlus _)   = pPsiPlus α<β
+≺P-trans (pPlusPlus y<z) (pPlusPlus z<w) = pPlusPlus (<ᵇ-trans y<z z<w)
+
+≺C-trans : Transitive _≺C_
+≺C-trans (inj₁ x<y)           (inj₁ y<z)           = inj₁ (<ᵇ-trans x<y y<z)
+≺C-trans (inj₁ x<y)           (inj₂ (y≈z , py<qz)) = inj₁ (<ᵇ-respʳ-≈ᶜ y≈z x<y)
+≺C-trans (inj₂ (x≈y , px<qy)) (inj₁ y<z)           = inj₁ (<ᵇ-chain-≈ᶜ x≈y y<z)
+≺C-trans (inj₂ (x≈y , px<qy)) (inj₂ (y≈z , qy<rz)) =
+  inj₂ (≈ᶜ-trans x≈y y≈z , ≺P-trans px<qy qy<rz)
 
 ≺C-wf : WellFounded _≺C_
 ≺C-wf = ×-wellFounded' ≈ᶜ-trans <ᵇ-respʳ-≈ᶜ wf-<ᵇ ≺P-wf

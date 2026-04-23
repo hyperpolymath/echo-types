@@ -148,6 +148,9 @@ Current Veblen-route status after this update:
   Buchholz order.
 * `VeblenIdentityModel` and `VeblenProjectionMeasure` remain in-tree
   as explanatory scaffolds, not as live proof gaps.
+* `VeblenComparisonTarget` now also exposes target-side transitivity
+  lemmas (`≺P-trans`, `≺C-trans`) as preparation for any later
+  recursive/shared-binder internalization of the full order.
 * So there are two distinct follow-ups:
 ** editorial cleanup: decide which older intermediate scaffolds stay
    as explanatory stages and which can be demoted
