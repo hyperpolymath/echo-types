@@ -158,6 +158,11 @@ The order / well-foundedness track now has an explicit staged split:
   Every derivation yields an exact depth witness `n` together with a
   `SurfaceDepth n` derivation, hence embeds into
   `LiftedOrder (suc n)` and is irreflexive.
+* WF-1.895 (`Ordinal.Buchholz.RecursiveSurfaceBudget`): the recursive
+  surface route now has an explicit well-founded budget carrier.
+  A budgeted relation on `ℕ × BT` is well-founded by first-coordinate
+  descent and still transports each step into the iterated wrapper
+  tower.
 * WF-2 (completed for mixed-head cases): bridge layer now includes
   `bpsi ν α <ᵇ bOmega μ` (under `ν ≤Ω μ`), left-summand bridges into
   additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`), and additive-target bridges
@@ -196,6 +201,10 @@ Current Veblen-route status after this update:
   picture back into a single direct recursive candidate. The current
   theorem is per-derivation: any proof in `_ <ᵇʳᶠ _` has some finite
   depth and therefore lands in a suitable iterated wrapper.
+* `Ordinal.Buchholz.RecursiveSurfaceBudget` now supplies the accepted
+  recursion vehicle for the next theorem: once an explicit nat budget
+  is carried, recursive-surface descent is well-founded and still
+  lifts into the iterated wrappers.
 * It does *not* yet promote the historically blocked shared-binder
   shapes into actual constructors of `_ <ᵇ _`; that remains the
   missing step between the current core and the full intended
