@@ -3,6 +3,9 @@
 **Status:** planning document. Partitions work by dependency on the
 two identified bottlenecks:
 
+For current cross-repo progress snapshots, see
+`cross-repo-bridge-status.md`.
+
 - **Bottleneck B1.** The `--without-K` shared-binder constructor
   block in the Buchholz `_<ᵇ_` order. `wf-<ᵇ` is landed for the
   currently admitted core, but full totality + full-constructor
