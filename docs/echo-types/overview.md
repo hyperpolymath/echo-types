@@ -97,8 +97,9 @@ maps can admit different echo types.
   parallel, syntactic development; its relationship to Echo Types
   via `EchoOrdinal.agda` is a bridge, not a reduction. At present,
   the current admitted Buchholz core has a closed well-foundedness
-  route, while the full intended order remains open at the
-  shared-binder internalization step.
+  route, and finite same-binder depth is now handled by iterated
+  mediated wrappers, while the full intended order remains open at
+  the shared-binder internalization step.
 - **Not a completed categorical semantics.** See
   `docs/assessment.adoc` for the current M5 verdict.
 

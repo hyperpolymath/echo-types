@@ -11,7 +11,9 @@ For current cross-repo progress snapshots, see
   the historically blocked shared-binder shapes in `_<ᵇ_`.
   `wf-<ᵇ` is landed for the currently admitted core, but promoting
   those shapes back into the real order package still needs a
-  K-free mediated internalization.
+  K-free mediated internalization. Finite same-binder depth is now
+  handled by iterated mediated wrappers, but that does not yet close
+  the real order package itself.
 - **Bottleneck B2.** Tool-scope limitations on adjacent repos
   (`maa-framework/absolute-zero`, `januskey`,
   `tropical-resource-typing`). Blocks end-to-end bridge audits.
@@ -114,7 +116,8 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 - **[gated on B1]** Internalize the missing shared-binder shapes as
   actual constructors/comparison principles of the real Buchholz
   order. The current route closes well-foundedness for the admitted
-  core, but not yet for the full intended constructor package.
+  core and handles arbitrary finite same-binder depth via iterated
+  wrappers, but not yet for the full intended constructor package.
 - **[gated on B1]** Re-close totality/inversion/transitivity and
   well-foundedness for the enlarged order after that internalization,
   including shared-binder cases such as `<ᵇ-ψα` and `<ᵇ-+2`.

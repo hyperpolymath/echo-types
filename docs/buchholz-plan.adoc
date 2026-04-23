@@ -148,6 +148,11 @@ The order / well-foundedness track now has an explicit staged split:
   well-founded wrapper `_ <ᵇ⁺¹ _` lifts same-binder moves out of
   `_ <ᵇ⁺ _` and proves the first nested example
   `ψν (x + y) < ψν (x + z)` from `y <ᵇ z`.
+* WF-1.88 (`Ordinal.Buchholz.IteratedExtendedOrder`): the one-step
+  repair now scales uniformly to finite depth. `LiftedOrder n`
+  iterates the wrapper construction over `ℕ`, `LiftedOrder-lift`
+  embeds each level into the next, and `SurfaceDepth n` records exact
+  same-binder depth with an embedding into `LiftedOrder (suc n)`.
 * WF-2 (completed for mixed-head cases): bridge layer now includes
   `bpsi ν α <ᵇ bOmega μ` (under `ν ≤Ω μ`), left-summand bridges into
   additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`), and additive-target bridges
@@ -178,6 +183,10 @@ Current Veblen-route status after this update:
   well-founded wrapper `_ <ᵇ⁺¹ _`, showing that the surviving route is
   iterative wrapper lifting rather than a self-stability theorem for
   `_ <ᵇ⁺ _`.
+* `Ordinal.Buchholz.IteratedExtendedOrder` now packages that route at
+  arbitrary finite depth: the wrapper construction is iterated over
+  `ℕ`, and exact finite same-binder nesting is tracked by
+  `SurfaceDepth`.
 * It does *not* yet promote the historically blocked shared-binder
   shapes into actual constructors of `_ <ᵇ _`; that remains the
   missing step between the current core and the full intended

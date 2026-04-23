@@ -188,6 +188,23 @@ open import Ordinal.Buchholz.LiftedExtendedOrder using
   ; <ᵇ⁺¹-irreflexive
   )
 
+open import Ordinal.Buchholz.IteratedExtendedOrder using
+  ( LiftedOrder
+  ; LiftedOrder-wf
+  ; LiftedOrder-trans
+  ; LiftedOrder-lift
+  ; lift-ψα
+  ; lift-+2
+  ; lift-ψ+2
+  ; LiftedOrder-irreflexive
+  ; SurfaceDepth
+  ; surf-core
+  ; surf-ψα
+  ; surf-+2
+  ; surface⇒lifted
+  ; SurfaceDepth-irreflexive
+  )
+
 open import Ordinal.Buchholz.SurfaceOrder using
   ( _<ᵇˢ_
   ; <ᵇˢ-core
