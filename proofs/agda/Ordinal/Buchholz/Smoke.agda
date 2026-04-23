@@ -178,6 +178,16 @@ open import Ordinal.Buchholz.ExtendedOrder using
   ; <ᵇ⁺-irreflexive
   )
 
+open import Ordinal.Buchholz.SurfaceOrder using
+  ( _<ᵇˢ_
+  ; <ᵇˢ-core
+  ; <ᵇˢ-ψα
+  ; <ᵇˢ-+2
+  ; <ᵇˢ⇒<ᵇ⁺
+  ; wf-<ᵇˢ
+  ; <ᵇˢ-irreflexive
+  )
+
 open import Ordinal.Buchholz.VeblenObligations using
   ( plus-right
   ; psi-arg
