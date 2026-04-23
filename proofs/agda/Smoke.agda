@@ -132,12 +132,24 @@ open import Ordinal.OmegaMarkers using
   ; ω≤ω
   ; ≤Ω-refl
   ; ≤Ω-trans
+  ; _<Ω_
+  ; fin<fin
+  ; fin<ω
+  ; <Ω-irrefl
+  ; <Ω-trans
+  ; <Ω→≤Ω
+  ; ≤Ω-<Ω-trans
+  ; <Ω-≤Ω-trans
+  ; ≤Ω-split
   ; Omega0
   ; Omega1
   ; Omegaω
   ; Omega0≤Omega1
   ; Omega0≤Omegaω
   ; Omega1≤Omegaω
+  ; Omega0<Omega1
+  ; Omega0<Omegaω
+  ; Omega1<Omegaω
   )
 
 open import Ordinal.Buchholz.Syntax using
@@ -163,6 +175,34 @@ open import Ordinal.Buchholz.Closure using
   ; cν-psi-decompose
   )
 
+open import Ordinal.Buchholz.Order using
+  ( _<ᵇ_
+  ; <ᵇ-0-Ω
+  ; <ᵇ-0-+
+  ; <ᵇ-0-ψ
+  ; <ᵇ-ΩΩ
+  ; <ᵇ-Ωψ
+  ; <ᵇ-ψΩ
+  ; <ᵇ-ψΩ≤
+  ; <ᵇ-Ω+
+  ; <ᵇ-ψ+
+  ; <ᵇ-+ω
+  ; <ᵇ-+ψω
+  ; <ᵇ-+1
+  ; <ᵇ-irrefl
+  ; <ᵇ-trans
+  ; <ᵇ-inv-Ω+
+  ; <ᵇ-inv-+Ωfin
+  ; <ᵇ-inv-+Ωω
+  ; <ᵇ-inv-ψ+
+  ; <ᵇ-inv-+ψfin
+  ; <ᵇ-inv-+ψω
+  ; bzero<Ω0
+  ; Ω0<Ω1
+  ; Ω1<Ωω
+  ; Ω0<ψ1-zero
+  )
+
 open import Ordinal.Buchholz.Psi using
   ( psiν-notin-Cν
   ; psiν-stage-lb
@@ -181,6 +221,12 @@ open import Ordinal.Buchholz.Examples using
   ; omega1-in-Cω-at-0
   ; psi0-omega1-at-1
   ; psi0-omega1-not-at-0
+  )
+
+open import Ordinal.Buchholz.WellFounded using
+  ( <Ω-wf
+  ; wf-<ᵇ
+  ; <ᵇ-irreflexive
   )
 
 open import Ordinal.Buchholz.Smoke using ()

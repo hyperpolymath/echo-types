@@ -13,6 +13,13 @@ Decision policy:
 * If the claim can be established with precise theorems and examples, continue and scale.
 * If it cannot be established, document failure clearly and stop the identity claim.
 
+Document map (to keep status/docs aligned):
+
+* `README.md` / `readme.adoc`: current snapshot and build entry points.
+* `roadmap.adoc` (this file): canonical milestone log for the echo-theory track.
+* `docs/buchholz-plan.adoc`: canonical status for the ordinal/Buchholz WF track.
+* `docs/echo-types/roadmap.md`: gated and cross-repo follow-up queue.
+
 == Current Foundation (Established)
 
 File: `proofs/agda/Echo.agda`
@@ -118,7 +125,7 @@ Delivered in `proofs/agda/EchoCharacteristic.agda`:
 * `no-section-collapse`
 * `echo-true≢echo-false`
 * `visible-constraint`
-* `stateA≢stateB`
+* `state₁≢state₂`
 * `no-section-visible`
 * `transport-visible-not`
 

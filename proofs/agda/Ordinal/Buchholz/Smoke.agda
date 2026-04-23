@@ -46,6 +46,30 @@ open import Ordinal.Buchholz.Closure using
   ; cν-psi-decompose
   )
 
+open import Ordinal.Buchholz.Order using
+  ( _<ᵇ_
+  ; <ᵇ-0-Ω
+  ; <ᵇ-0-+
+  ; <ᵇ-0-ψ
+  ; <ᵇ-ΩΩ
+  ; <ᵇ-Ωψ
+  ; <ᵇ-ψΩ
+  ; <ᵇ-ψΩ≤
+  ; <ᵇ-Ω+
+  ; <ᵇ-ψ+
+  ; <ᵇ-+ω
+  ; <ᵇ-+ψω
+  ; <ᵇ-+1
+  ; <ᵇ-irrefl
+  ; <ᵇ-trans
+  ; <ᵇ-inv-Ω+
+  ; <ᵇ-inv-+Ωfin
+  ; <ᵇ-inv-+Ωω
+  ; <ᵇ-inv-ψ+
+  ; <ᵇ-inv-+ψfin
+  ; <ᵇ-inv-+ψω
+  )
+
 open import Ordinal.Buchholz.Psi using
   ( psiν-notin-Cν
   ; psiν-stage-lb
@@ -66,6 +90,12 @@ open import Ordinal.Buchholz.Examples using
   ; psi0-omega1-not-at-0
   )
 
+open import Ordinal.Buchholz.WellFounded using
+  ( <Ω-wf
+  ; wf-<ᵇ
+  ; <ᵇ-irreflexive
+  )
+
 open import Ordinal.Buchholz.WellFormed using
   ( WfΩ
   ; WfBT
@@ -79,4 +109,20 @@ open import Ordinal.Buchholz.WellFormed using
   ; BH-wf
   ; psi-OmegaOmega
   ; psi-OmegaOmega-wf
+  )
+
+open import Ordinal.Buchholz.VeblenInterface using
+  ( VeblenWFInterface
+  )
+
+open import Ordinal.Buchholz.VeblenIdentityModel using
+  ( identity-interface
+  ; core-wf-from-identity
+  )
+
+open import Ordinal.Buchholz.VeblenObligations using
+  ( plus-right
+  ; psi-arg
+  ; dec-+2-plus-right
+  ; dec-ψα-psi-arg
   )

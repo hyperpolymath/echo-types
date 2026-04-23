@@ -92,6 +92,47 @@ Note: `CLAUDE.md` currently refers to CNF trichotomy as "E3" (post-merge renumbe
 | E7 | echo     | collapse as non-injective map   | `ordinal-collapse-non-injective`
 |===
 
+== WF track status (current)
+
+The order / well-foundedness track now has an explicit staged split:
+
+* WF-0 (`Ordinal.Buchholz.Order`): partial strict order with
+  irreflexivity and transitivity over the currently admitted
+  constructors.
+* WF-1 (`Ordinal.Buchholz.WellFounded`): `WellFounded _<ᵇ_` for the
+  current core, with irreflexivity recovered as a corollary
+  (`<ᵇ-irreflexive`) instead of a direct shared-binder elimination
+  proof.
+* WF-1.5 (`Ordinal.Buchholz.VeblenInterface`): measure-route interface
+  pinning constructor-by-constructor decrease obligations and explicit
+  deferred same-binder obligations (`dec-ψα`, `dec-+2`) for the Veblen
+  follow-up.
+* WF-1.6 (`Ordinal.Buchholz.VeblenIdentityModel`): first concrete
+  instantiation of the interface (identity-measure bootstrap), keeping
+  `dec-ψα` and `dec-+2` as explicit assumptions.
+* WF-1.7 (`Ordinal.Buchholz.VeblenObligations`): discharge
+  same-binder obligation shapes in projection-model form; landed lemmas:
+  `dec-+2-plus-right`, `dec-ψα-psi-arg`.
+* WF-2 (in progress): mixed-head bridge layer now includes
+  `bpsi ν α <ᵇ bOmega μ` (under `ν ≤Ω μ`) and left-summand bridges
+  into additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`) with inversions.
+
+Remaining open comparison work after this update:
+
+* Constructor-level comparison rules for non-top `bplus` vs `bOmega`
+  (the `bplus → bOmega` direction beyond `<ᵇ-+ω`).
+* Constructor-level comparison rules for non-top `bplus` vs `bpsi`
+  (the `bplus → bpsi` direction beyond `<ᵇ-+ψω`).
+* Shared-binder same-index/same-left sub-cases in a K-free style
+  (do not return to the blocked direct reflexive-equation elimination
+  route).
+
+Risk-gated bridge currently admitted:
+
+* `bplus x y <ᵇ bOmega ω` from `x <ᵇ bOmega ω` (top-marker-only
+  directional bridge). This is intentionally narrow to avoid forcing
+  immediate `bplus` vs `bpsi` constructor commitments.
+
 == The very first Agda proof: `C-monotone`
 
 Before any ψ-value is defined, we must know the closure stages form a

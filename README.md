@@ -1,53 +1,154 @@
 # echo-types
 
-Constructive Agda formalization of echo types / fibers:
+Constructive Agda development for echo types as a first-class notion of structured loss:
+
+loss that is not total erasure.
+
+## Core Idea
+
+Most formalisms foreground two clean cases:
+
+- reversible / injective / linear-ish: no important loss
+- ordinary irreversible: loss occurs and is usually forgotten
+
+Echo types target a third case:
+
+- irreversible, but with a retained proof-relevant constraint on what was lost
+
+This repository treats that third case as the primary object of study.
+
+## Definition (Foundation)
+
+Given `f : A → B`, define the fiber/echo at `y : B`:
 
 `Echo f y := Σ (x : A) , (f x ≡ y)`
 
-This repository provides a minimal, explicit development in ordinary intensional dependent type theory (`--safe --without-K`) with:
+Current formal foundation is in:
 
-- fiber introduction (`echo-intro`)
-- action on fibers over a fixed base (`map-over`)
-- identity law (`map-over-id`)
-- composition law (`map-over-comp`)
-- action along commuting squares (`map-square`)
+- `proofs/agda/Echo.agda`
+- `proofs/agda/EchoCharacteristic.agda`
+- `proofs/agda/EchoResidue.agda`
+- `proofs/agda/EchoExamples.agda`
+- `proofs/agda/EchoChoreo.agda`
+- `proofs/agda/EchoEpistemic.agda`
+- `proofs/agda/EchoLinear.agda`
+- `proofs/agda/EchoGraded.agda`
+- `proofs/agda/EchoTropical.agda`
+- `proofs/agda/EchoIntegration.agda`
 
-## Controlled Scope Broadening
+with constructive proofs (`--safe --without-K`, no postulates in `proofs/agda`):
 
-The formal scope is extended in controlled phases:
+- `echo-intro` (introduction into own fiber)
+- `map-over` (action on fibers for morphisms over fixed base)
+- `map-over-id` (identity law)
+- `map-over-comp` (composition law)
+- `map-square` (action along commuting squares)
 
-- Phase A (`proofs/agda/EchoIndexed.agda`): role-indexed echoes `Echoᵢ` with trace-level witness separation.
-- Phase B (`proofs/agda/EchoEpistemicResidue.agda`): residue-based epistemic echoes `EchoR` with strict weakening/no-section results.
-- Phase C (`proofs/agda/EchoRelational.agda`): relational semantics `Step : S → O → Set` and output fibers `Σ s , Step s o`.
-- Phase D (`proofs/agda/EchoCategorical.agda`): slice/fibration packaging over the compiled deterministic and relational layers.
+Characteristic M2 results include:
+
+- explicit non-injectivity witnesses for collapse maps
+- impossibility of full reconstruction from plain visible output (`no-section-*` family)
+- distinct echoes over the same visible value (`echo-true≢echo-false`, `stateA≢stateB`)
+- retained-constraint theorem for projection-style structured loss (`visible-constraint`)
+
+Scope-broadening stages now include:
+
+- choreographic bridge (`RoleEcho` over role projections, commuting-square transport)
+- epistemic bridge (indistinguishability and echo-indexed knowledge)
+- affine/linear bridge (strict weakening from full echoes to residues)
+- graded bridge (grade order and compositional degradation law)
+- tropical bridge (argmin-style witness residues under tropical collapse)
+- integration bridge (knowledge preservation under choreography plus controlled graded degradation)
+- indexed/relational/categorical packaging (`EchoIndexed`, `EchoRelational`, `EchoCategorical`, `EchoScope`)
+- cross-ecosystem bridges (`EchoCNOBridge`, `EchoJanusBridge`, `DyadicEchoBridge`, `EchoOrdinal`)
+
+## Current Status Snapshot (2026-04-23)
+
+On `main`, the following are true:
+
+- full suite compiles: `agda -i proofs/agda proofs/agda/All.agda`
+- core echo/fiber laws are smoke-pinned (`echo-intro`, `map-over`, `map-over-id`, `map-over-comp`, `map-square`)
+- non-injectivity/no-section family is present (`collapse-non-injective`, `no-section-collapse`, `no-section-visible`, `no-section-collapse-to-residue`, `no-section-weaken`)
+- distinct-witness and retained-constraint exemplars are present (`echo-true≢echo-false`, `stateA≢stateB`, `visible-constraint`)
+
+Ordinal/Buchholz track status:
+
+- `Ordinal.Buchholz.WellFounded` provides `wf-<ᵇ : WellFounded _<ᵇ_` for the currently admitted constructor core
+- top-marker `bplus` bridges are admitted and inverted: `<ᵇ-+ω`, `<ᵇ-+ψω`, `<ᵇ-inv-+Ωω`, `<ᵇ-inv-+ψω`
+- open work remains for general `Ω/+` and `ψ/+` comparisons and shared-binder cases (`<ᵇ-ψα`, `<ᵇ-+2`) in a `--without-K`-compatible style
+
+## External Bridge Targets (local workspace)
+
+Current bridge targets in this workspace are:
+
+- `absolute-zero`: `/var/mnt/eclipse/repos/verification-ecosystem/maa-framework/absolute-zero`
+- `januskey`: `/var/mnt/eclipse/repos/developer-ecosystem/januskey`
+- `tropical-resource-typing` (potential target, not recently audited): `/var/mnt/eclipse/repos/verification-ecosystem/tropical-resource-typing` (upstream: `https://github.com/hyperpolymath/tropical-resource-typing`)
+
+Note: `januskey` is not currently nested under `maa-framework` in this workspace layout.
+
+Cross-repo status:
+
+- bridge formalisms live in this repo (`EchoCNOBridge`, `EchoJanusBridge`, tropical-collapse witness work in `EchoTropical`)
+- Agda-side adapter slot now exists in `maa-framework/absolute-zero` at `absolute-zero/proofs/agda/EchoBridgeScaffold.agda`
+- end-to-end conformance against upstream codebases is a separate track and is not yet fully machine-checked here
+- current bridge ledger: `docs/echo-types/cross-repo-bridge-status.md`
+- see `docs/echo-types/roadmap.md` for staged cross-repo verification gates
+
+## What Echo Types Are For
+
+Echo types are useful when outputs are:
+
+- insufficient to reconstruct their source exactly
+- still sufficient to constrain the source non-trivially
+
+Intended proof-use cases include:
+
+- non-injective computation
+- provenance
+- structured irreversibility
+- partial recoverability
+- classification up to equivalence
+- forensic inference from residues
+- refined taxonomies of information loss
+
+## Identity Claim and Falsifiability
+
+This repo is trying to establish echo types as a concept with its own identity.
+Since `Echo` is built from sigma/fiber machinery, identity will not come from syntax.
+It must come from role and theorems.
+
+We treat the claim as established only if all three are met:
+
+1. Distinct phenomenon: structured loss under non-injective computation.
+2. Characteristic theorem family: results that are naturally echo-shaped, not just generic sigma lemmas.
+3. Canonical examples: cases where echo type is the right explanatory unit.
+
+If these fail, we record that result and stop the identity claim.
 
 ## Build
 
 ```bash
 cd /var/mnt/eclipse/repos/echo-types
 agda -i proofs/agda proofs/agda/Echo.agda
-agda -i proofs/agda proofs/agda/All.agda
-for f in proofs/agda/*.agda; do agda -i proofs/agda "$f"; done
 ```
 
-## Bridge to Certified Null Operations (CNOs)
+Full suite:
 
-This repository now includes a theoretical bridge to **Certified Null Operations (CNOs)** from the [Absolute Zero](https://gitlab.com/maa-framework/6-the-foundation/absolute-zero) project.
+```bash
+cd /var/mnt/eclipse/repos/echo-types
+agda -i proofs/agda proofs/agda/All.agda
+```
 
-**Key Insight**: CNOs are singleton echo types over identity functions.
+## Roadmap
 
-**Bridge Modules**:
-- `proofs/agda/EchoCNO.agda` - Basic bridge with core theorems
-- `proofs/agda/EchoCNOBridge.agda` - Comprehensive bridge with full mapping
+Proof milestones and decision gates are in:
 
-**Documentation**: See `docs/ECHO-CNO-BRIDGE.adoc` for detailed explanation.
+- `roadmap.adoc`
+- `docs/buchholz-plan.adoc`
 
-**Main Theorems**:
-- `cno-echo-equivalence`: CNOs ≃ singleton echoes over identity
-- `all-cnos-are-echos`: All state-preserving programs are echoes over identity
-- `cno-composition-echo`: CNO composition preserves echo structure
+Open/gated work and cross-repo follow-ups are tracked in:
 
-This bridge enables:
-- Using echo type theory for CNO verification
-- Cross-repository theorem sharing
-- Unified foundation for structured loss and null operations
+- `docs/echo-types/roadmap.md`
+- `docs/echo-types/taxonomy.md`
+- `docs/echo-types/composition.md`
