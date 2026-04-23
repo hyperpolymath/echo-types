@@ -6,11 +6,12 @@ two identified bottlenecks:
 For current cross-repo progress snapshots, see
 `cross-repo-bridge-status.md`.
 
-- **Bottleneck B1.** The `--without-K` shared-binder constructor
-  block in the Buchholz `_<ᵇ_` order. `wf-<ᵇ` is landed for the
-  currently admitted core, but full totality + full-constructor
-  well-foundedness remain gated on a K-free treatment of the shared-
-  binder cases.
+- **Bottleneck B1.** The remaining gap between the closed
+  Veblen/current-core route and the full intended Buchholz order:
+  the historically blocked shared-binder shapes in `_<ᵇ_`.
+  `wf-<ᵇ` is landed for the currently admitted core, but promoting
+  those shapes back into the real order package still needs a
+  K-free mediated internalization.
 - **Bottleneck B2.** Tool-scope limitations on adjacent repos
   (`maa-framework/absolute-zero`, `januskey`,
   `tropical-resource-typing`). Blocks end-to-end bridge audits.
@@ -110,13 +111,13 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 
 ## Proof-assistant-dependent work — gated
 
-- **[gated on B1]** Full `_<ᵇ_` totality on Buchholz terms.
-  Requires the shared-binder constructors, which the current Agda
-  2.6.3 `--without-K` blocks via pattern-matching. Either an Agda
-  upgrade or a rank-embedding proof strategy unblocks this.
-- **[gated on B1]** Extension of totality + well-foundedness proofs to
-  the full constructor set (including shared-binder cases such as
-  `<ᵇ-ψα` and `<ᵇ-+2`).
+- **[gated on B1]** Internalize the missing shared-binder shapes as
+  actual constructors/comparison principles of the real Buchholz
+  order. The current route closes well-foundedness for the admitted
+  core, but not yet for the full intended constructor package.
+- **[gated on B1]** Re-close totality/inversion/transitivity and
+  well-foundedness for the enlarged order after that internalization,
+  including shared-binder cases such as `<ᵇ-ψα` and `<ᵇ-+2`.
 - **[gated on B1]** Ordinal semantics of BT terms: denotation
   `BT → Ordinal` preserving order. Requires a formal `Ordinal` type
   as a prerequisite, which is itself downstream of WF.
@@ -174,8 +175,8 @@ Steps 5–7 extend into Agda but depend only on infrastructure we
 already have in-suite.
 
 Everything **[gated]** waits for its unblocker. The pack above gives
-3–4 weeks of disciplined parallel work without touching blocked
-paths.
+3–4 weeks of disciplined parallel work without touching the remaining
+full-order Buchholz gap.
 
 ---
 

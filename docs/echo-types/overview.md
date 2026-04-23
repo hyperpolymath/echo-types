@@ -95,7 +95,10 @@ maps can admit different echo types.
 - **Not a theorem of ordinal analysis.** The ordinal-notation /
   Buchholz workstream in this repo (`docs/buchholz-plan.adoc`) is a
   parallel, syntactic development; its relationship to Echo Types
-  via `EchoOrdinal.agda` is a bridge, not a reduction.
+  via `EchoOrdinal.agda` is a bridge, not a reduction. At present,
+  the current admitted Buchholz core has a closed well-foundedness
+  route, while the full intended order remains open at the
+  shared-binder internalization step.
 - **Not a completed categorical semantics.** See
   `docs/assessment.adoc` for the current M5 verdict.
 
