@@ -36,8 +36,8 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-ψΩ≤
   ; <ᵇ-Ω+
   ; <ᵇ-ψ+
-  ; <ᵇ-+ω
-  ; <ᵇ-+ψω
+  ; <ᵇ-+Ω
+  ; <ᵇ-+ψ
   ; <ᵇ-+1
   )
 
@@ -90,13 +90,13 @@ mutual
     predOmega (<ᵇ-ψΩ≤ {α = α} ν≤μ) with ≤Ω-split ν≤μ
     ... | inj₁ ν<μ = proj₂ (<ᵇ-bundle-fromΩ (rsμ ν<μ)) α
     ... | inj₂ refl = psiAcc α
-    predOmega (<ᵇ-+ω {x = x} {y = y} x<ω) = <ᵇ-acc-bplus-from (predOmega x<ω) y
+    predOmega (<ᵇ-+Ω {x = x} {y = y} x<μ) = <ᵇ-acc-bplus-from (predOmega x<μ) y
 
     predPsi : (α : BT) → ∀ {x} → x <ᵇ bpsi μ α → Acc _<ᵇ_ x
     predPsi α <ᵇ-0-ψ = <ᵇ-acc-bzero
     predPsi α (<ᵇ-Ωψ κ<μ) = proj₁ (<ᵇ-bundle-fromΩ (rsμ κ<μ))
     predPsi α (<ᵇ-ψΩ {α = β} κ<μ) = proj₂ (<ᵇ-bundle-fromΩ (rsμ κ<μ)) β
-    predPsi α (<ᵇ-+ψω {x = x} {y = y} x<ψω) = <ᵇ-acc-bplus-from (predPsi α x<ψω) y
+    predPsi α (<ᵇ-+ψ {x = x} {y = y} x<ψ) = <ᵇ-acc-bplus-from (predPsi α x<ψ) y
 
     psiAcc : (α : BT) → Acc _<ᵇ_ (bpsi μ α)
     psiAcc α = acc (predPsi α)

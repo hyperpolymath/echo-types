@@ -22,10 +22,6 @@
 -- Open cases (no constructor yet; must be discharged in follow-ups
 -- before `<ᵇ`-totality and well-foundedness can land):
 --
---   * bplus vs bOmega (general case) — currently only the top-marker
---     bridge `<ᵇ-+ω` is admitted.
---   * bplus vs bpsi (general case) — currently only the top-marker
---     bridge `<ᵇ-+ψω` is admitted.
 --   * Two same-binder sub-cases whose natural shapes run into Agda
 --     2.6.3's `--without-K` restriction on reflexive-equation
 --     elimination and are deferred pending a K-free reformulation:
@@ -83,8 +79,8 @@ data _<ᵇ_ : BT → BT → Set where
   -- (compare right summands when lefts agree) is deferred for the
   -- same `--without-K` reason as `<ᵇ-ψα` above: its natural shape
   -- `bplus x y₂ <ᵇ bplus x z₂` shares the binder `x` on both sides.
-  <ᵇ-+ω  : ∀ {x y}     → x <ᵇ bOmega ω → bplus x y <ᵇ bOmega ω
-  <ᵇ-+ψω : ∀ {x y α}   → x <ᵇ bpsi ω α → bplus x y <ᵇ bpsi ω α
+  <ᵇ-+Ω  : ∀ {x y μ}   → x <ᵇ bOmega μ → bplus x y <ᵇ bOmega μ
+  <ᵇ-+ψ  : ∀ {x y ν α} → x <ᵇ bpsi ν α → bplus x y <ᵇ bpsi ν α
   <ᵇ-+1  : ∀ {x₁ x₂ y₁ y₂} → x₁ <ᵇ y₁ → bplus x₁ x₂ <ᵇ bplus y₁ y₂
 
 infix 4 _<ᵇ_
@@ -121,8 +117,8 @@ infix 4 _<ᵇ_
 <ᵇ-trans <ᵇ-0-Ω       (<ᵇ-Ω+ _)            = <ᵇ-0-+
 -- Left leg: <ᵇ-0-+ (x = bzero, y = bplus _ _)
 <ᵇ-trans <ᵇ-0-+       (<ᵇ-+1 _)            = <ᵇ-0-+
-<ᵇ-trans <ᵇ-0-+       (<ᵇ-+ω _)            = <ᵇ-0-Ω
-<ᵇ-trans <ᵇ-0-+       (<ᵇ-+ψω _)           = <ᵇ-0-ψ
+<ᵇ-trans <ᵇ-0-+       (<ᵇ-+Ω _)            = <ᵇ-0-Ω
+<ᵇ-trans <ᵇ-0-+       (<ᵇ-+ψ _)            = <ᵇ-0-ψ
 -- Left leg: <ᵇ-0-ψ (x = bzero, y = bpsi _ _)
 <ᵇ-trans <ᵇ-0-ψ       (<ᵇ-ψΩ _)            = <ᵇ-0-ψ
 <ᵇ-trans <ᵇ-0-ψ       (<ᵇ-ψ+ _)            = <ᵇ-0-+
@@ -143,57 +139,71 @@ infix 4 _<ᵇ_
 <ᵇ-trans (<ᵇ-ψΩ≤ p)   (<ᵇ-Ω+ q)            = <ᵇ-ψ+ (<ᵇ-trans (<ᵇ-ψΩ≤ p) q)
 -- Left leg: <ᵇ-+1 (x = bplus _ _, y = bplus _ _)
 <ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+1 q)            = <ᵇ-+1 (<ᵇ-trans p q)
-<ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+ω q)            = <ᵇ-+ω (<ᵇ-trans p q)
-<ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+ψω q)           = <ᵇ-+ψω (<ᵇ-trans p q)
+<ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+Ω q)            = <ᵇ-+Ω (<ᵇ-trans p q)
+<ᵇ-trans (<ᵇ-+1 p)    (<ᵇ-+ψ q)            = <ᵇ-+ψ (<ᵇ-trans p q)
 -- Left leg: <ᵇ-Ω+ (x = bOmega _, y = bplus _ _)
 <ᵇ-trans (<ᵇ-Ω+ p)    (<ᵇ-+1 q)            = <ᵇ-Ω+ (<ᵇ-trans p q)
-<ᵇ-trans (<ᵇ-Ω+ p)    (<ᵇ-+ω q)            = <ᵇ-trans p q
-<ᵇ-trans (<ᵇ-Ω+ p)    (<ᵇ-+ψω q)           = <ᵇ-trans p q
+<ᵇ-trans (<ᵇ-Ω+ p)    (<ᵇ-+Ω q)            = <ᵇ-trans p q
+<ᵇ-trans (<ᵇ-Ω+ p)    (<ᵇ-+ψ q)            = <ᵇ-trans p q
 -- Left leg: <ᵇ-ψ+ (x = bpsi _ _, y = bplus _ _)
 <ᵇ-trans (<ᵇ-ψ+ p)    (<ᵇ-+1 q)            = <ᵇ-ψ+ (<ᵇ-trans p q)
-<ᵇ-trans (<ᵇ-ψ+ p)    (<ᵇ-+ω q)            = <ᵇ-trans p q
-<ᵇ-trans (<ᵇ-ψ+ p)    (<ᵇ-+ψω q)           = <ᵇ-trans p q
-<ᵇ-trans (<ᵇ-+ω p)    (<ᵇ-Ω+ q)            = <ᵇ-+1 (<ᵇ-trans p q)
-<ᵇ-trans (<ᵇ-+ψω p)   (<ᵇ-ψ+ q)            = <ᵇ-+1 (<ᵇ-trans p q)
--- Left leg: <ᵇ-+ψω (x = bplus _ _, y = bpsi ω _)
-<ᵇ-trans (<ᵇ-+ψω p)   (<ᵇ-ψΩ≤ ω≤ω)         = <ᵇ-+ω (<ᵇ-trans p (<ᵇ-ψΩ≤ ω≤ω))
+<ᵇ-trans (<ᵇ-ψ+ p)    (<ᵇ-+Ω q)            = <ᵇ-trans p q
+<ᵇ-trans (<ᵇ-ψ+ p)    (<ᵇ-+ψ q)            = <ᵇ-trans p q
+-- Left leg: <ᵇ-+Ω (x = bplus _ _, y = bOmega _)
+<ᵇ-trans (<ᵇ-+Ω p)    (<ᵇ-ΩΩ q)            = <ᵇ-+Ω (<ᵇ-trans p (<ᵇ-ΩΩ q))
+<ᵇ-trans (<ᵇ-+Ω p)    (<ᵇ-Ωψ q)            = <ᵇ-+ψ (<ᵇ-trans p (<ᵇ-Ωψ q))
+<ᵇ-trans (<ᵇ-+Ω p)    (<ᵇ-Ω+ q)            = <ᵇ-+1 (<ᵇ-trans p q)
+-- Left leg: <ᵇ-+ψ (x = bplus _ _, y = bpsi _ _)
+<ᵇ-trans (<ᵇ-+ψ p)    (<ᵇ-ψΩ q)            = <ᵇ-+ψ (<ᵇ-trans p (<ᵇ-ψΩ q))
+<ᵇ-trans (<ᵇ-+ψ p)    (<ᵇ-ψΩ≤ q)           = <ᵇ-+Ω (<ᵇ-trans p (<ᵇ-ψΩ≤ q))
+<ᵇ-trans (<ᵇ-+ψ p)    (<ᵇ-ψ+ q)            = <ᵇ-+1 (<ᵇ-trans p q)
 -- Right leg: <ᵇ-ψΩ≤ (y = bpsi _ _, z = bOmega _)
 <ᵇ-trans <ᵇ-0-ψ       (<ᵇ-ψΩ≤ _)           = <ᵇ-0-Ω
 <ᵇ-trans (<ᵇ-Ωψ p)    (<ᵇ-ψΩ≤ q)           = <ᵇ-ΩΩ (<Ω-≤Ω-trans p q)
 
-----------------------------------------------------------------------------
--- WF-2 open-case inversions (Ω vs +)
+-- WF-2 mixed-head inversions (Ω vs +)
 ----------------------------------------------------------------------------
 
--- The Ω→+ bridge is admitted (`<ᵇ-Ω+`), while the non-top
--- bplus→Ω case remains deferred.
+-- Mixed-head bridges now run both ways between `bplus` and `bOmega`.
 
 <ᵇ-inv-Ω+ : ∀ {μ x y} → bOmega μ <ᵇ bplus x y → bOmega μ <ᵇ x
 <ᵇ-inv-Ω+ (<ᵇ-Ω+ Ω<x) = Ω<x
 
-<ᵇ-inv-+Ωfin : ∀ {x y n} → bplus x y <ᵇ bOmega (fin n) → ⊥
-<ᵇ-inv-+Ωfin ()
+<ᵇ-inv-+Ω : ∀ {x y μ} → bplus x y <ᵇ bOmega μ → x <ᵇ bOmega μ
+<ᵇ-inv-+Ω (<ᵇ-+Ω x<Ω) = x<Ω
+
+<ᵇ-inv-+Ωfin : ∀ {x y n} → bplus x y <ᵇ bOmega (fin n) → x <ᵇ bOmega (fin n)
+<ᵇ-inv-+Ωfin = <ᵇ-inv-+Ω
 
 -- Inversion for the admitted top-marker bridge.
 <ᵇ-inv-+Ωω : ∀ {x y} → bplus x y <ᵇ bOmega ω → x <ᵇ bOmega ω
-<ᵇ-inv-+Ωω (<ᵇ-+ω x<ω) = x<ω
+<ᵇ-inv-+Ωω = <ᵇ-inv-+Ω
 
-----------------------------------------------------------------------------
--- WF-2 open-case inversions (ψ vs +)
+-- WF-2 mixed-head inversions (ψ vs +)
 ----------------------------------------------------------------------------
 
--- The ψ→+ bridge is admitted (`<ᵇ-ψ+`), while the non-top
--- bplus→ψ case remains deferred.
+-- Mixed-head bridges now run both ways between `bplus` and `bpsi`.
 
 <ᵇ-inv-ψ+ : ∀ {μ α x y} → bpsi μ α <ᵇ bplus x y → bpsi μ α <ᵇ x
 <ᵇ-inv-ψ+ (<ᵇ-ψ+ ψ<x) = ψ<x
 
-<ᵇ-inv-+ψfin : ∀ {x y n α} → bplus x y <ᵇ bpsi (fin n) α → ⊥
-<ᵇ-inv-+ψfin ()
+<ᵇ-inv-+ψ : ∀ {x y ν α} → bplus x y <ᵇ bpsi ν α → x <ᵇ bpsi ν α
+<ᵇ-inv-+ψ (<ᵇ-+ψ x<ψ) = x<ψ
+
+<ᵇ-inv-+ψfin : ∀ {x y n α} → bplus x y <ᵇ bpsi (fin n) α → x <ᵇ bpsi (fin n) α
+<ᵇ-inv-+ψfin = <ᵇ-inv-+ψ
 
 -- Inversion for the admitted top-marker bridge.
 <ᵇ-inv-+ψω : ∀ {x y α} → bplus x y <ᵇ bpsi ω α → x <ᵇ bpsi ω α
-<ᵇ-inv-+ψω (<ᵇ-+ψω x<ψω) = x<ψω
+<ᵇ-inv-+ψω = <ᵇ-inv-+ψ
+
+-- Backwards-compatible specialised names for the former top-marker-only
+-- constructors.
+<ᵇ-+ω : ∀ {x y} → x <ᵇ bOmega ω → bplus x y <ᵇ bOmega ω
+<ᵇ-+ω = <ᵇ-+Ω
+
+<ᵇ-+ψω : ∀ {x y α} → x <ᵇ bpsi ω α → bplus x y <ᵇ bpsi ω α
+<ᵇ-+ψω = <ᵇ-+ψ
 
 ----------------------------------------------------------------------------
 -- Strict-below-ψ examples, for downstream ordering checks

@@ -30,8 +30,8 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-ψΩ≤
   ; <ᵇ-Ω+
   ; <ᵇ-ψ+
-  ; <ᵇ-+ω
-  ; <ᵇ-+ψω
+  ; <ᵇ-+Ω
+  ; <ᵇ-+ψ
   ; <ᵇ-+1
   )
 
@@ -57,8 +57,8 @@ record VeblenWFInterface {ℓm ℓr : Level}
     dec-ψ+   : ∀ {ν α x y} → measure (bpsi ν α) ≺ measure x →
                measure (bpsi ν α) ≺ measure (bplus x y)
 
-    dec-+ω   : ∀ {x y} → x <ᵇ bOmega ω → measure (bplus x y) ≺ measure (bOmega ω)
-    dec-+ψω  : ∀ {x y α} → x <ᵇ bpsi ω α → measure (bplus x y) ≺ measure (bpsi ω α)
+    dec-+Ω   : ∀ {x y μ} → x <ᵇ bOmega μ → measure (bplus x y) ≺ measure (bOmega μ)
+    dec-+ψ   : ∀ {x y ν α} → x <ᵇ bpsi ν α → measure (bplus x y) ≺ measure (bpsi ν α)
     dec-+1   : ∀ {x₁ x₂ y₁ y₂} → x₁ <ᵇ y₁ → measure (bplus x₁ x₂) ≺ measure (bplus y₁ y₂)
 
     -- Deferred same-binder obligations for the extended comparison layer.
@@ -75,8 +75,8 @@ record VeblenWFInterface {ℓm ℓr : Level}
   core-monotone (<ᵇ-ψΩ≤ ν≤μ) = dec-ψΩ≤ ν≤μ
   core-monotone (<ᵇ-Ω+ Ω<x) = dec-Ω+ (core-monotone Ω<x)
   core-monotone (<ᵇ-ψ+ ψ<x) = dec-ψ+ (core-monotone ψ<x)
-  core-monotone (<ᵇ-+ω x<ω) = dec-+ω x<ω
-  core-monotone (<ᵇ-+ψω x<ψω) = dec-+ψω x<ψω
+  core-monotone (<ᵇ-+Ω x<Ω) = dec-+Ω x<Ω
+  core-monotone (<ᵇ-+ψ x<ψ) = dec-+ψ x<ψ
   core-monotone (<ᵇ-+1 x₁<y₁) = dec-+1 x₁<y₁
 
   -- Generic derivation route: well-founded target + constructor monotonicity

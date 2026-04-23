@@ -23,8 +23,8 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-ψΩ≤
   ; <ᵇ-Ω+
   ; <ᵇ-ψ+
-  ; <ᵇ-+ω
-  ; <ᵇ-+ψω
+  ; <ᵇ-+Ω
+  ; <ᵇ-+ψ
   ; <ᵇ-+1
   )
 open import Ordinal.Buchholz.WellFounded using (wf-<ᵇ)
@@ -46,8 +46,8 @@ identity-interface dec-ψα dec-+2 = record
   ; dec-ψΩ≤ = <ᵇ-ψΩ≤
   ; dec-Ω+ = <ᵇ-Ω+
   ; dec-ψ+ = <ᵇ-ψ+
-  ; dec-+ω = <ᵇ-+ω
-  ; dec-+ψω = <ᵇ-+ψω
+  ; dec-+Ω = <ᵇ-+Ω
+  ; dec-+ψ = <ᵇ-+ψ
   ; dec-+1 = <ᵇ-+1
   ; dec-ψα = dec-ψα
   ; dec-+2 = dec-+2

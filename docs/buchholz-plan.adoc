@@ -113,25 +113,21 @@ The order / well-foundedness track now has an explicit staged split:
 * WF-1.7 (`Ordinal.Buchholz.VeblenObligations`): discharge
   same-binder obligation shapes in projection-model form; landed lemmas:
   `dec-+2-plus-right`, `dec-ψα-psi-arg`.
-* WF-2 (in progress): mixed-head bridge layer now includes
-  `bpsi ν α <ᵇ bOmega μ` (under `ν ≤Ω μ`) and left-summand bridges
-  into additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`) with inversions.
+* WF-2 (completed for mixed-head cases): bridge layer now includes
+  `bpsi ν α <ᵇ bOmega μ` (under `ν ≤Ω μ`), left-summand bridges into
+  additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`), and additive-target bridges
+  (`<ᵇ-+Ω`, `<ᵇ-+ψ`) with inversions.
 
 Remaining open comparison work after this update:
 
-* Constructor-level comparison rules for non-top `bplus` vs `bOmega`
-  (the `bplus → bOmega` direction beyond `<ᵇ-+ω`).
-* Constructor-level comparison rules for non-top `bplus` vs `bpsi`
-  (the `bplus → bpsi` direction beyond `<ᵇ-+ψω`).
 * Shared-binder same-index/same-left sub-cases in a K-free style
   (do not return to the blocked direct reflexive-equation elimination
   route).
 
 Risk-gated bridge currently admitted:
 
-* `bplus x y <ᵇ bOmega ω` from `x <ᵇ bOmega ω` (top-marker-only
-  directional bridge). This is intentionally narrow to avoid forcing
-  immediate `bplus` vs `bpsi` constructor commitments.
+* The original top-marker bridges remain as named specialised lemmas
+  (`<ᵇ-+ω`, `<ᵇ-+ψω`) over the now-general additive-target bridges.
 
 == The very first Agda proof: `C-monotone`
 
