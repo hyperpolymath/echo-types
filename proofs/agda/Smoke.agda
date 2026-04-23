@@ -19,6 +19,8 @@ open import Echo using
   ; Echo-comp-iso-to-from
   ; cancel-iso-to
   ; cancel-iso-from
+  ; Echo-comp-iso-pent-B
+  ; Echo-comp-iso-pent-echo
   )
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
