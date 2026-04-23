@@ -187,6 +187,12 @@ open import Ordinal.Buchholz.Order using
   ; Ω0<ψ1-zero
   )
 
+open import Ordinal.Buchholz.WellFounded using
+  ( <Ω-wf
+  ; wf-<ᵇ
+  ; <ᵇ-irreflexive
+  )
+
 open import Ordinal.Buchholz.Psi using
   ( psiν-notin-Cν
   ; psiν-stage-lb
