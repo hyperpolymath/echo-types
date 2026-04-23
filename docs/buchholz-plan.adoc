@@ -119,10 +119,11 @@ The order / well-foundedness track now has an explicit staged split:
   `proj-dec-+2` and `proj-dec-ψα`.
 * WF-1.69 (`Ordinal.Buchholz.VeblenComparisonTarget`,
   `Ordinal.Buchholz.VeblenComparisonModel`): comparison-lex target on
-  `BT × BT` with coarse same-binder side-condition; packages a
-  reduced-assumption interface model in which `dec-ψα` and `dec-+2`
-  are discharged internally, leaving one lifted same-index `ψ`-to-`+`
-  lemma as the remaining assumption.
+  `BT × Payload` with recursive `ψ`-compatibility on the first
+  coordinate and tagged payload descent on the second; now packages
+  an assumption-free interface model in which `dec-ψα`, `dec-+2`,
+  and the lifted same-index `ψ`-to-`+` comparison are all discharged
+  internally.
 * WF-1.7 (`Ordinal.Buchholz.VeblenObligations`): discharge
   same-binder obligation shapes in projection-model form; landed lemmas:
   `dec-+2-plus-right`, `dec-ψα-psi-arg`.
@@ -138,6 +139,8 @@ Current Veblen-route status after this update:
   interface without deferred assumptions.
 * `core-wf-from-comparison` now gives a concrete well-foundedness
   route for the current constructor core.
+* `VeblenIdentityModel` and `VeblenProjectionMeasure` remain in-tree
+  as explanatory scaffolds, not as live proof gaps.
 * Remaining follow-up is cleanup: decide which older intermediate
   scaffolds stay as explanatory stages and which can be demoted.
 

@@ -86,12 +86,12 @@ Ordinal/Buchholz track status:
 * General additive-target bridges are now admitted and inverted:
 ** `<ᵇ-+Ω`, `<ᵇ-+ψ`
 ** `<ᵇ-inv-+Ω`, `<ᵇ-inv-+ψ`
-* `Ordinal.Buchholz.VeblenInterface` now pins a measure-based WF interface with explicit constructor obligations and deferred same-binder obligations (`dec-ψα`, `dec-+2`) for the Veblen-route follow-up.
-* `Ordinal.Buchholz.VeblenIdentityModel` provides a first concrete instantiation of that interface (identity measure bootstrap), with `dec-ψα` / `dec-+2` kept as explicit parameters.
+* `Ordinal.Buchholz.VeblenInterface` now pins a measure-based WF interface with explicit constructor obligations. The historical same-binder fields (`dec-ψα`, `dec-+2`) remain part of the generic record, but the closed comparison route now discharges them internally.
+* `Ordinal.Buchholz.VeblenIdentityModel` is retained as a bootstrap/interface-coherence scaffold, with `dec-ψα` / `dec-+2` kept as explicit parameters on purpose.
 * `Ordinal.Buchholz.VeblenMeasureTarget` now fixes the first concrete target carrier for the Veblen route: a lexicographic order on `OmegaIndex × BT`, with `≺M-wf` proved from the existing `Ω` and Buchholz well-foundedness results.
-* `Ordinal.Buchholz.VeblenProjectionMeasure` now makes the projection-style measure into that target explicit and discharges the two deferred shared-binder obligations there (`proj-dec-ψα`, `proj-dec-+2`), along with the already index-driven strict cases.
+* `Ordinal.Buchholz.VeblenProjectionMeasure` is retained as an explanatory scaffold: it makes the projection-style measure into that target explicit and discharges the two deferred shared-binder obligations there (`proj-dec-ψα`, `proj-dec-+2`), along with the already index-driven strict cases.
 * `Ordinal.Buchholz.VeblenComparisonTarget` adds a second concrete target: a lexicographic order on `BT × Payload` whose first coordinate is relaxed by recursive `ψ`-compatibility, and whose tagged payload order handles the same-binder descent cases without introducing unstable extra comparisons.
-* `Ordinal.Buchholz.VeblenComparisonModel` now packages that target into an assumption-free Veblen interface instantiation: the original deferred obligations `dec-ψα` and `dec-+2`, and the lifted same-index `ψ`-to-`+` comparison, are all discharged internally.
+* `Ordinal.Buchholz.VeblenComparisonModel` is now the primary closed Veblen route: it packages that target into an assumption-free Veblen interface instantiation in which the original deferred obligations `dec-ψα` and `dec-+2`, and the lifted same-index `ψ`-to-`+` comparison, are all discharged internally.
 * `Ordinal.Buchholz.VeblenObligations` advances the hard-obligation discharge track with concrete projection-model lemmas for both same-binder shapes:
 ** `dec-+2-plus-right`
 ** `dec-ψα-psi-arg`

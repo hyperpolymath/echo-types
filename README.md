@@ -77,11 +77,11 @@ Ordinal/Buchholz track status:
 - top-marker `bplus` bridges are admitted and inverted: `<ᵇ-+ω`, `<ᵇ-+ψω`, `<ᵇ-inv-+Ωω`, `<ᵇ-inv-+ψω`
 - left-summand bridges into additive terms are admitted and inverted: `<ᵇ-Ω+`, `<ᵇ-ψ+`, `<ᵇ-inv-Ω+`, `<ᵇ-inv-ψ+`
 - general additive-target bridges are admitted and inverted: `<ᵇ-+Ω`, `<ᵇ-+ψ`, `<ᵇ-inv-+Ω`, `<ᵇ-inv-+ψ`
-- `Ordinal.Buchholz.VeblenInterface` pins the measure-based WF interface with explicit constructor obligations and deferred same-binder obligations (`dec-ψα`, `dec-+2`)
+- `Ordinal.Buchholz.VeblenInterface` pins the measure-based WF interface with explicit constructor obligations; the historical same-binder fields (`dec-ψα`, `dec-+2`) remain part of the generic interface, but the closed comparison route now discharges them internally
 - `Ordinal.Buchholz.VeblenMeasureTarget` fixes a first concrete target carrier: a lexicographic order on `OmegaIndex × BT`
-- `Ordinal.Buchholz.VeblenProjectionMeasure` makes the projection-style measure into that target explicit and discharges the shared-binder obligations there as target lemmas
+- `Ordinal.Buchholz.VeblenProjectionMeasure` is retained as an explanatory scaffold: it makes the projection-style measure into that target explicit and discharges the shared-binder obligations there as target lemmas
 - `Ordinal.Buchholz.VeblenComparisonTarget` adds a second concrete target: a lexicographic order on `BT × Payload` with recursive `ψ`-compatibility on the first coordinate and tagged payload descent for the same-binder follow-up cases
-- `Ordinal.Buchholz.VeblenComparisonModel` now instantiates the Veblen interface without deferred assumptions and exposes `core-wf-from-comparison : WellFounded _<ᵇ_`
+- `Ordinal.Buchholz.VeblenComparisonModel` is now the primary closed Veblen route: it instantiates the Veblen interface without deferred assumptions and exposes `core-wf-from-comparison : WellFounded _<ᵇ_`
 - the Veblen comparison route is now closed at the current constructor core; remaining work is cleanup and route consolidation rather than a live same-index proof gap
 
 ## External Bridge Targets (local workspace)
