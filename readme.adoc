@@ -92,10 +92,12 @@ Ordinal/Buchholz track status:
 * `Ordinal.Buchholz.VeblenProjectionMeasure` is retained as an explanatory scaffold: it makes the projection-style measure into that target explicit and discharges the two deferred shared-binder obligations there (`proj-dec-ψα`, `proj-dec-+2`), along with the already index-driven strict cases.
 * `Ordinal.Buchholz.VeblenComparisonTarget` adds a second concrete target: a lexicographic order on `BT × Payload` whose first coordinate is relaxed by recursive `ψ`-compatibility, and whose tagged payload order handles the same-binder descent cases without introducing unstable extra comparisons.
 * `Ordinal.Buchholz.VeblenComparisonModel` is now the primary closed Veblen route: it packages that target into an assumption-free Veblen interface instantiation in which the original deferred obligations `dec-ψα` and `dec-+2`, and the lifted same-index `ψ`-to-`+` comparison, are all discharged internally.
+* `Ordinal.Buchholz.ExtendedOrder` now packages a closed comparison-induced extension `_ <ᵇ⁺ _` of `BT`: it contains the current core, exposes the historical same-binder principles as lemmas, and is transitive and well-founded.
 * `Ordinal.Buchholz.VeblenObligations` advances the hard-obligation discharge track with concrete projection-model lemmas for both same-binder shapes:
 ** `dec-+2-plus-right`
 ** `dec-ψα-psi-arg`
 * The Veblen comparison route is now closed for the current admitted constructor core.
+* The new `_ <ᵇ⁺ _` wrapper advances the full-order line by giving a mediated closed relation on all terms.
 * This does not yet internalize the historically blocked shared-binder shapes as actual constructors of `_ <ᵇ _`; the full intended Buchholz order remains open at that step.
 * The remaining live mathematical gap is therefore not current-core well-foundedness, but mediated internalization of the shared-binder cases back into the real order package.
 
