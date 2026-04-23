@@ -132,6 +132,10 @@ The order / well-foundedness track now has an explicit staged split:
   exposing same-binder principles as derived lemmas; transitivity and
   well-foundedness now come from the closed comparison target rather
   than direct constructor recursion.
+* WF-1.85 (`Ordinal.Buchholz.SurfaceOrder`): first direct inductive
+  surface `_ <ᵇˢ _` adding the two historical same-binder shapes as
+  constructors over current-core premises; embeds into `_ <ᵇ⁺ _` and
+  therefore inherits well-foundedness immediately.
 * WF-2 (completed for mixed-head cases): bridge layer now includes
   `bpsi ν α <ᵇ bOmega μ` (under `ν ≤Ω μ`), left-summand bridges into
   additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`), and additive-target bridges
@@ -151,6 +155,10 @@ Current Veblen-route status after this update:
   relation on `BT` by pulling the comparison target back along
   `cmp-measure`; this relation includes the historical same-binder
   principles as lemmas and is transitive / well-founded.
+* `Ordinal.Buchholz.SurfaceOrder` now gives the first direct
+  constructor-level bridge candidate: the same-binder shapes exist as
+  constructors there, but still over current-core premises, and the
+  closure argument runs by embedding into `_ <ᵇ⁺ _`.
 * It does *not* yet promote the historically blocked shared-binder
   shapes into actual constructors of `_ <ᵇ _`; that remains the
   missing step between the current core and the full intended
