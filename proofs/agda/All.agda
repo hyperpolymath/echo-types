@@ -49,6 +49,7 @@ open import Ordinal.Buchholz.ExtendedOrder
 open import Ordinal.Buchholz.LiftedExtendedOrder
 open import Ordinal.Buchholz.IteratedExtendedOrder
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
+open import Ordinal.Buchholz.RecursiveSurfaceBudget
 open import Ordinal.Buchholz.SurfaceOrder
 open import Ordinal.Buchholz.VeblenObligations
 open import Ordinal.Buchholz.Smoke

@@ -218,6 +218,15 @@ open import Ordinal.Buchholz.RecursiveSurfaceOrder using
   ; <ᵇʳᶠ-irreflexive
   )
 
+open import Ordinal.Buchholz.RecursiveSurfaceBudget using
+  ( BudgetedBT
+  ; _<ᵇʳᶠᵇ_
+  ; spend
+  ; wf-<ᵇʳᶠᵇ
+  ; <ᵇʳᶠᵇ-irreflexive
+  ; <ᵇʳᶠᵇ⇒lifted
+  )
+
 open import Ordinal.Buchholz.SurfaceOrder using
   ( _<ᵇˢ_
   ; <ᵇˢ-core
