@@ -124,6 +124,14 @@ open import Ordinal.Buchholz.VeblenIdentityModel using
   ; core-wf-from-identity
   )
 
+open import Ordinal.Buchholz.VeblenMeasureTarget using
+  ( Measure
+  ; _≺M_
+  ; by-index
+  ; by-term
+  ; ≺M-wf
+  )
+
 open import Ordinal.Buchholz.VeblenObligations using
   ( plus-right
   ; psi-arg
