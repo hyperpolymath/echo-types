@@ -95,7 +95,9 @@ Ordinal/Buchholz track status:
 * `Ordinal.Buchholz.VeblenObligations` advances the hard-obligation discharge track with concrete projection-model lemmas for both same-binder shapes:
 ** `dec-+2-plus-right`
 ** `dec-ψα-psi-arg`
-* The Veblen comparison route is now closed at the current constructor core; remaining work is cleanup and route consolidation rather than a live same-index proof gap.
+* The Veblen comparison route is now closed for the current admitted constructor core.
+* This does not yet internalize the historically blocked shared-binder shapes as actual constructors of `_ <ᵇ _`; the full intended Buchholz order remains open at that step.
+* The remaining live mathematical gap is therefore not current-core well-foundedness, but mediated internalization of the shared-binder cases back into the real order package.
 
 == External Bridge Targets (local workspace)
 

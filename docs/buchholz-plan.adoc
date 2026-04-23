@@ -139,10 +139,21 @@ Current Veblen-route status after this update:
   interface without deferred assumptions.
 * `core-wf-from-comparison` now gives a concrete well-foundedness
   route for the current constructor core.
+* This closure is deliberately scoped: it closes the route for the
+  currently admitted constructors already present in
+  `Ordinal.Buchholz.Order`.
+* It does *not* yet promote the historically blocked shared-binder
+  shapes into actual constructors of `_ <ᵇ _`; that remains the
+  missing step between the current core and the full intended
+  Buchholz order.
 * `VeblenIdentityModel` and `VeblenProjectionMeasure` remain in-tree
   as explanatory scaffolds, not as live proof gaps.
-* Remaining follow-up is cleanup: decide which older intermediate
-  scaffolds stay as explanatory stages and which can be demoted.
+* So there are two distinct follow-ups:
+** editorial cleanup: decide which older intermediate scaffolds stay
+   as explanatory stages and which can be demoted
+** mathematical completion: internalize the shared-binder cases back
+   into the real order package and then re-close inversion,
+   transitivity, and well-foundedness for that enlarged order
 
 Risk-gated bridge currently admitted:
 
