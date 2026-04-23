@@ -117,3 +117,8 @@ open import Ordinal.Buchholz.VeblenIdentityModel using
   ( identity-interface
   ; core-wf-from-identity
   )
+
+open import Ordinal.Buchholz.VeblenObligations using
+  ( plus-right
+  ; dec-+2-plus-right
+  )

@@ -41,6 +41,7 @@ open import Ordinal.Buchholz.WellFormed
 open import Ordinal.Buchholz.WellFounded
 open import Ordinal.Buchholz.VeblenInterface
 open import Ordinal.Buchholz.VeblenIdentityModel
+open import Ordinal.Buchholz.VeblenObligations
 open import Ordinal.Buchholz.Smoke
 
 open import Smoke
