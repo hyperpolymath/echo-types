@@ -2,10 +2,11 @@
 
 -- Projection-style concrete measure into the current Veblen target.
 --
--- This is not yet the final single measure model for the whole
--- interface. Its role is narrower: make the target images used by the
+-- This module is retained as an explanatory scaffold, not the final
+-- route. Its role is narrower: make the target images used by the
 -- shared-binder follow-up explicit, and discharge those two deferred
--- obligations in `≺M` itself.
+-- obligations in `≺M` itself. The assumption-free closure now happens
+-- in `VeblenComparisonModel`.
 
 module Ordinal.Buchholz.VeblenProjectionMeasure where
 

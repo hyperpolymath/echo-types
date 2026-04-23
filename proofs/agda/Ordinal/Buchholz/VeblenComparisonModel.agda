@@ -74,7 +74,7 @@ cmp-dec-Ω+ :
   cmp-measure (bOmega μ) ≺C cmp-measure (bplus x y)
 cmp-dec-Ω+ (inj₁ Ω<x) = by-first (<ᵇ-Ω+ Ω<x)
 cmp-dec-Ω+ {x = bzero}      (inj₂ ())
-cmp-dec-Ω+ {x = bOmega _}   (inj₂ (≈ᶜ-Ω , ()))
+cmp-dec-Ω+ {x = bOmega _}   (inj₂ (_ , ()))
 cmp-dec-Ω+ {x = bplus _ _}  (inj₂ ())
 cmp-dec-Ω+ {x = bpsi _ _}   (inj₂ ())
 

@@ -1,7 +1,10 @@
 {-# OPTIONS --safe --without-K #-}
 
--- WF-1 skeleton: prove accessibility by term constructor, with
--- predecessor/inversion lemmas separated from the top-level theorem.
+-- Direct constructor-recursive WF proof for the current Buchholz core.
+--
+-- This remains one complete route to `wf-<ᵇ`. The closed Veblen-side
+-- comparison model now gives a second route; the two coexist so the
+-- direct recursion and the mediated measure proof can both be read.
 
 module Ordinal.Buchholz.WellFounded where
 

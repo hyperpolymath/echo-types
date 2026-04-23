@@ -2,10 +2,10 @@
 
 -- Minimal concrete instantiation of the Veblen WF interface.
 --
--- This uses the identity measure on BT as a bootstrap model to confirm
--- interface coherence. The two same-binder obligations remain explicit
--- parameters (`dec-ψα`, `dec-+2`), matching the currently deferred hard
--- cases.
+-- This bootstrap model is retained as an interface-coherence check.
+-- It is no longer the primary Veblen route: the closed comparison
+-- model now discharges the same-binder obligations internally. Here
+-- they remain explicit parameters (`dec-ψα`, `dec-+2`) on purpose.
 
 module Ordinal.Buchholz.VeblenIdentityModel where
 

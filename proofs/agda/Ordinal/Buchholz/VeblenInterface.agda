@@ -6,8 +6,10 @@
 -- measure. Instead it states, in one place, the obligations required
 -- to prove `WellFounded _<ᵇ_` via a measure into a well-founded target.
 --
--- The final two fields (`dec-ψα`, `dec-+2`) are the deferred same-binder
--- obligations corresponding to the blocked shared-binder shapes.
+-- The final two fields (`dec-ψα`, `dec-+2`) are the historical
+-- same-binder obligations corresponding to the blocked shared-binder
+-- shapes. The closed comparison route now discharges them internally;
+-- they remain here because this record packages the generic interface.
 
 module Ordinal.Buchholz.VeblenInterface where
 
