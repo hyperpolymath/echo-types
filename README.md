@@ -86,11 +86,13 @@ Ordinal/Buchholz track status:
 - `Ordinal.Buchholz.LiftedExtendedOrder` now adds the next honest wrapper `_ <ᵇ⁺¹ _`: the blocked self-lift of `_ <ᵇ⁺ _` fails, but same-binder moves from `_ <ᵇ⁺ _` into `_ <ᵇ⁺¹ _` are derivable and `_ <ᵇ⁺¹ _` is well-founded
 - `Ordinal.Buchholz.IteratedExtendedOrder` now packages that repair as a finite iteration scheme: `LiftedOrder n` gives the `n`th wrapper layer, same-binder moves lift one level at a time, and exact finite same-binder depth is tracked by `SurfaceDepth n` with an embedding into `LiftedOrder (suc n)`
 - `Ordinal.Buchholz.SurfaceOrder` now adds a direct inductive surface `_ <ᵇˢ _` for the two historical same-binder shapes, with an embedding into `_ <ᵇ⁺ _` and inherited well-foundedness
+- `Ordinal.Buchholz.RecursiveSurfaceOrder` now adds a genuinely recursive finite-closure candidate `_ <ᵇʳᶠ _`: every derivation extracts an exact finite depth and embeds into `LiftedOrder (suc n)`, so irreflexivity follows without requiring a single self-stable wrapper
 - the exact remaining recursive frontier is now explicit in code as a blocked self-lift: `SurfaceLiftInterface` is refuted by a concrete same-left `bplus` counterexample, and the surviving route is finite wrapper iteration rather than self-stability
 - the Veblen comparison route is now closed for the current admitted constructor core
 - the new `_ <ᵇ⁺ _` wrapper advances the full-order line by giving a mediated closed relation on all terms
 - the new `_ <ᵇˢ _` surface is the first direct bridge candidate between the current core presentation and that mediated wrapper
 - the new `LiftedOrder n` / `SurfaceDepth n` family shows that arbitrary finite same-binder depth can already be handled by iterated mediated wrappers
+- the new `_ <ᵇʳᶠ _` candidate shows that direct recursive derivations also reduce to those finite-depth fragments; what is still open is a single global mediated well-foundedness theorem for that union
 - this still does not internalize the historically blocked shared-binder shapes as actual constructors of `_ <ᵇ _`; the full intended Buchholz order remains open at that step
 - remaining live mathematical work is therefore not the current-core WF route, but the mediated internalization of the shared-binder cases back into the real order package
 
