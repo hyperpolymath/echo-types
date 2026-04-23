@@ -45,6 +45,7 @@ open import Ordinal.Buchholz.VeblenMeasureTarget
 open import Ordinal.Buchholz.VeblenProjectionMeasure
 open import Ordinal.Buchholz.VeblenComparisonTarget
 open import Ordinal.Buchholz.VeblenComparisonModel
+open import Ordinal.Buchholz.ExtendedOrder
 open import Ordinal.Buchholz.VeblenObligations
 open import Ordinal.Buchholz.Smoke
 

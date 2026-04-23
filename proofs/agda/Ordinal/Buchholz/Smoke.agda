@@ -168,6 +168,16 @@ open import Ordinal.Buchholz.VeblenComparisonModel using
   ; core-wf-from-comparison
   )
 
+open import Ordinal.Buchholz.ExtendedOrder using
+  ( _<ᵇ⁺_
+  ; <ᵇ⇒<ᵇ⁺
+  ; <ᵇ⁺-ψα
+  ; <ᵇ⁺-+2
+  ; <ᵇ⁺-trans
+  ; wf-<ᵇ⁺
+  ; <ᵇ⁺-irreflexive
+  )
+
 open import Ordinal.Buchholz.VeblenObligations using
   ( plus-right
   ; psi-arg
