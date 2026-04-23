@@ -1,0 +1,59 @@
+= Adjacency: Cubical Systems
+:toc: macro
+
+toc::[]
+
+== 1. Nearest existing constructions
+
+The nearest cubical-side systems for this repository are:
+
+* Cubical Agda: Agda's built-in `--cubical` mode plus the separate
+  Cubical Agda library.
+* `RedPRL`: a tactic-oriented assistant for computational Cartesian
+  cubical type theory.
+* `redtt` and `cooltt`: experimental cubical proof assistants /
+  typecheckers.
+
+For this repository, Cubical Agda is the closest operational neighbour:
+it preserves the Agda language and keeps the migration cost lower than a
+move to a different prover.
+
+== 2. What do they add?
+
+* First-class path/cubical equality and higher-dimensional structure.
+* Higher inductive and quotient-like reasoning that plain
+  `--safe --without-K` Agda does not provide directly.
+* A plausible route for roadmap item `R2` in `roadmap.adoc`: treating
+  indistinguishability with equivalence-aware identity rather than only
+  propositional/set-level relations.
+
+== 3. What do they _not_ add?
+
+* No automatic reuse guarantee for the current Buchholz work. Moving to
+  `RedPRL`, `redtt`, or `cooltt` is a prover migration, not a local
+  refactor.
+* No evidence yet that the blocked direct same-binder route in plain
+  Agda disappears automatically in a cubical setting.
+* No requirement for the current echo-types evidence base, which still
+  compiles in plain Agda with the standard library.
+
+== 4. Working decision
+
+* Active repository tooling stays Agda-first.
+* Optional exploratory extension: Agda `--cubical` plus the Cubical
+  Agda library.
+* `RedPRL`, `redtt`, and `cooltt` are tracked as adjacent references,
+  not installed or required for normal builds.
+
+== 5. Why this matters here
+
+Cubical systems may matter later for quotient-like or
+equivalence-sensitive extensions of echo types, especially roadmap item
+`R2`. They are not part of the evidential base for the current identity
+claim. That claim still stands or falls on the plain-Agda development
+already in the repository.
+
+== 6. References
+
+* Cubical Agda library: `https://github.com/agda/cubical`
+* `RedPRL` family: `https://redprl.org/`

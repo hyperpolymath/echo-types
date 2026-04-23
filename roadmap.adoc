@@ -437,6 +437,13 @@ R2. Cubical or quotient treatment of indistinguishability
   constructions commute with equivalence-class semantics.
 * Difficulty: very hard. Parked: requires moving off plain
   `--safe --without-K` into cubical agda or a heavy quotient layer.
+* Current tooling stance (2026-04-23):
+** active development remains plain Agda with the standard library
+** if `R2` is activated, the first extension to try is Agda's
+   `--cubical` mode plus the separate Cubical Agda library
+** `RedPRL`, `redtt`, and `cooltt` are tracked as adjacent cubical
+   systems, not as primary tooling for this roadmap; see
+   `docs/adjacency/cubical-systems.adoc`
 
 R3. Probabilistic epistemic echoes
 

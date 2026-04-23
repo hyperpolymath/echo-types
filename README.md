@@ -147,6 +147,13 @@ cd /var/mnt/eclipse/repos/echo-types
 agda -i proofs/agda proofs/agda/All.agda
 ```
 
+## Tooling Stance
+
+- default development stays plain Agda with the standard library
+- optional exploratory work may use Agda's built-in `--cubical` mode plus the separate Cubical Agda library
+- adjacent cubical systems such as `RedPRL`, `redtt`, and `cooltt` are tracked as references, not as active proof infrastructure for this repo
+- see `roadmap.adoc` (`R2`) and `docs/adjacency/cubical-systems.adoc`
+
 ## Roadmap
 
 Proof milestones and decision gates are in:

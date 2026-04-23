@@ -42,6 +42,9 @@ survives the test — in which case the identity claim is retracted per
 
 | link:provenance-semirings.adoc[Provenance semirings]
 | `K`-annotated tuples tracked through relational algebra.
+
+| link:cubical-systems.adoc[Cubical systems]
+| Cubical Agda, `RedPRL`, `redtt`, `cooltt` as higher-dimensional equality frameworks.
 |===
 
 == Reading order
