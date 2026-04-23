@@ -103,6 +103,10 @@ The order / well-foundedness track now has an explicit staged split:
   current core, with irreflexivity recovered as a corollary
   (`<ᵇ-irreflexive`) instead of a direct shared-binder elimination
   proof.
+* WF-1.5 (`Ordinal.Buchholz.VeblenInterface`): measure-route interface
+  pinning constructor-by-constructor decrease obligations and explicit
+  deferred same-binder obligations (`dec-ψα`, `dec-+2`) for the Veblen
+  follow-up.
 * WF-2 (in progress): explicit inversion lemmas for the still-open
   mixed head cases (`Ω/+`, `ψ/+`) and the newly admitted comparison
   bridge `bpsi ν α <ᵇ bOmega μ` under `ν ≤Ω μ`.

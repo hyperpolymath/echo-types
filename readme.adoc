@@ -80,6 +80,7 @@ Ordinal/Buchholz track status:
 * Top-marker `bplus` bridges are now admitted and inverted:
 ** `<ᵇ-+ω`, `<ᵇ-+ψω`
 ** `<ᵇ-inv-+Ωω`, `<ᵇ-inv-+ψω`
+* `Ordinal.Buchholz.VeblenInterface` now pins a measure-based WF interface with explicit constructor obligations and deferred same-binder obligations (`dec-ψα`, `dec-+2`) for the Veblen-route follow-up.
 * Open work remains for general `Ω/+` and `ψ/+` comparisons and for the shared-binder cases (`<ᵇ-ψα`, `<ᵇ-+2`) in a `--without-K`-compatible style.
 
 == External Bridge Targets (local workspace)

@@ -108,3 +108,7 @@ open import Ordinal.Buchholz.WellFormed using
   ; psi-OmegaOmega
   ; psi-OmegaOmega-wf
   )
+
+open import Ordinal.Buchholz.VeblenInterface using
+  ( VeblenWFInterface
+  )
