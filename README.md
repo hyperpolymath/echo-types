@@ -80,9 +80,9 @@ Ordinal/Buchholz track status:
 - `Ordinal.Buchholz.VeblenInterface` pins the measure-based WF interface with explicit constructor obligations and deferred same-binder obligations (`dec-ψα`, `dec-+2`)
 - `Ordinal.Buchholz.VeblenMeasureTarget` fixes a first concrete target carrier: a lexicographic order on `OmegaIndex × BT`
 - `Ordinal.Buchholz.VeblenProjectionMeasure` makes the projection-style measure into that target explicit and discharges the shared-binder obligations there as target lemmas
-- `Ordinal.Buchholz.VeblenComparisonTarget` adds a second concrete target: a lexicographic order on `BT × BT` with a coarse same-binder side-condition
-- `Ordinal.Buchholz.VeblenComparisonModel` reduces the remaining Veblen assumption set to one lifted same-index `ψ`-to-`+` lemma
-- open work is now concentrated in discharging that final lifted same-index `ψ`-to-`+` comparison so the comparison model can instantiate the Veblen interface without assumptions
+- `Ordinal.Buchholz.VeblenComparisonTarget` adds a second concrete target: a lexicographic order on `BT × Payload` with recursive `ψ`-compatibility on the first coordinate and tagged payload descent for the same-binder follow-up cases
+- `Ordinal.Buchholz.VeblenComparisonModel` now instantiates the Veblen interface without deferred assumptions and exposes `core-wf-from-comparison : WellFounded _<ᵇ_`
+- the Veblen comparison route is now closed at the current constructor core; remaining work is cleanup and route consolidation rather than a live same-index proof gap
 
 ## External Bridge Targets (local workspace)
 

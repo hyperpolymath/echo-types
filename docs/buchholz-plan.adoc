@@ -131,13 +131,15 @@ The order / well-foundedness track now has an explicit staged split:
   additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`), and additive-target bridges
   (`<ᵇ-+Ω`, `<ᵇ-+ψ`) with inversions.
 
-Remaining open Veblen-route work after this update:
+Current Veblen-route status after this update:
 
-* Discharge the remaining lifted same-index `ψ`-to-`+` lemma in the
-  comparison model.
-* Instantiate the Veblen interface without deferred assumptions.
-* Collapse the now-obsolete intermediate scaffolds if the comparison
-  model fully closes.
+* The comparison model now discharges the lifted same-index
+  `ψ`-to-`+` comparison internally and instantiates the Veblen
+  interface without deferred assumptions.
+* `core-wf-from-comparison` now gives a concrete well-foundedness
+  route for the current constructor core.
+* Remaining follow-up is cleanup: decide which older intermediate
+  scaffolds stay as explanatory stages and which can be demoted.
 
 Risk-gated bridge currently admitted:
 
