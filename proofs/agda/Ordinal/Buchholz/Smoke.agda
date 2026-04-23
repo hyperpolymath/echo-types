@@ -194,6 +194,9 @@ open import Ordinal.Buchholz.SurfaceOrder using
   ; <ᵇʳ⇒<ᵇ⁺
   ; wf-<ᵇʳ
   ; <ᵇʳ-irreflexive
+  ; <ᵇ⁺-no-ψ-bzero-plus
+  ; surfaceLiftPremise
+  ; surfaceLiftBlocked
   )
 
 open import Ordinal.Buchholz.VeblenObligations using

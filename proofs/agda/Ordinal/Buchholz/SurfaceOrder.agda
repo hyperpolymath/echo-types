@@ -16,10 +16,24 @@ module Ordinal.Buchholz.SurfaceOrder where
 open import Relation.Nullary using (¬_)
 open import Relation.Binary.Core using (_⇒_)
 open import Induction.WellFounded using (WellFounded; wf⇒asym; module Subrelation)
+open import Data.Empty using (⊥)
+open import Data.Product.Base using (_×_; proj₂)
+open import Data.Sum.Base using (inj₁; inj₂)
 
-open import Ordinal.Buchholz.Syntax using (BT; bplus; bpsi)
-open import Ordinal.Buchholz.Order using (_<ᵇ_)
+open import Ordinal.OmegaMarkers using (Omega0; _<Ω_; <Ω-irrefl)
+open import Ordinal.Buchholz.Syntax using (BT; bzero; bplus; bpsi)
+open import Ordinal.Buchholz.Order using (_<ᵇ_; <ᵇ-irrefl; <ᵇ-0-+; <ᵇ-ψΩ)
+  renaming (<ᵇ-+1 to plus1)
 open import Ordinal.Buchholz.ExtendedOrder using (_<ᵇ⁺_; <ᵇ⇒<ᵇ⁺; <ᵇ⁺-ψα; <ᵇ⁺-+2; wf-<ᵇ⁺)
+open import Ordinal.Buchholz.VeblenComparisonTarget using
+  ( by-second
+  ; ≈ᶜ-+
+  ; by-payload-++
+  ; _≈ᶜ_
+  ; payload-psi
+  ; _≺P_
+  ; pPsiPsi
+  )
 
 infix 4 _<ᵇˢ_
 infix 4 _<ᵇʳ_
@@ -71,3 +85,32 @@ wf-<ᵇʳ {L} =
 
 <ᵇʳ-irreflexive : ∀ {L x} → ¬ (_<ᵇʳ_ L x x)
 <ᵇʳ-irreflexive {L} {x} x<x = wf⇒asym (wf-<ᵇʳ {L}) x<x x<x
+
+-- The recursive frontier is not merely unfilled: the current wrapper
+-- does not support the required same-binder lifting. A same-left plus
+-- witness gives a concrete counterexample to `lift-ψα⁺`.
+
+<ᵇ-same-left-plus-impossible : ∀ {x y z} → ¬ (bplus x y <ᵇ bplus x z)
+<ᵇ-same-left-plus-impossible {x} {y} {z} p with p
+... | plus1 x<x = <ᵇ-irrefl x<x
+
+<ᵇ⁺-no-ψ-bzero-plus :
+  ∀ {ν} →
+  ¬ (bpsi ν (bplus bzero bzero) <ᵇ⁺ bpsi ν (bplus bzero (bplus bzero bzero)))
+<ᵇ⁺-no-ψ-bzero-plus-helper :
+  payload-psi (bplus bzero bzero) ≺P
+  payload-psi (bplus bzero (bplus bzero bzero)) →
+  ⊥
+<ᵇ⁺-no-ψ-bzero-plus-helper (pPsiPsi y<z) = <ᵇ-same-left-plus-impossible y<z
+
+<ᵇ⁺-no-ψ-bzero-plus p with p
+... | inj₁ (<ᵇ-ψΩ ν<ν) = <Ω-irrefl ν<ν
+... | inj₂ q = <ᵇ⁺-no-ψ-bzero-plus-helper (proj₂ q)
+
+surfaceLiftPremise : bplus bzero bzero <ᵇ⁺ bplus bzero (bplus bzero bzero)
+surfaceLiftPremise = by-second ≈ᶜ-+ (by-payload-++ <ᵇ-0-+)
+
+surfaceLiftBlocked : ¬ SurfaceLiftInterface
+surfaceLiftBlocked L =
+  <ᵇ⁺-no-ψ-bzero-plus {ν = Omega0}
+    (lift-ψα⁺ L {ν = Omega0} surfaceLiftPremise)
