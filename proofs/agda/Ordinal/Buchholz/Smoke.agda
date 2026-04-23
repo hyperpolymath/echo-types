@@ -205,6 +205,19 @@ open import Ordinal.Buchholz.IteratedExtendedOrder using
   ; SurfaceDepth-irreflexive
   )
 
+open import Ordinal.Buchholz.RecursiveSurfaceOrder using
+  ( _<ᵇʳᶠ_
+  ; <ᵇʳᶠ-core
+  ; <ᵇʳᶠ-ψα
+  ; <ᵇʳᶠ-+2
+  ; <ᵇʳᶠ-depth
+  ; <ᵇʳᶠ⇒SurfaceDepth
+  ; SurfaceDepth⇒<ᵇʳᶠ
+  ; <ᵇʳᶠ-depth-witness
+  ; <ᵇʳᶠ⇒lifted
+  ; <ᵇʳᶠ-irreflexive
+  )
+
 open import Ordinal.Buchholz.SurfaceOrder using
   ( _<ᵇˢ_
   ; <ᵇˢ-core
