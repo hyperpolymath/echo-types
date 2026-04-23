@@ -117,6 +117,12 @@ The order / well-foundedness track now has an explicit staged split:
   measure into that target made explicit; the two deferred
   shared-binder obligations now land as concrete target lemmas
   `proj-dec-+2` and `proj-dec-ψα`.
+* WF-1.69 (`Ordinal.Buchholz.VeblenComparisonTarget`,
+  `Ordinal.Buchholz.VeblenComparisonModel`): comparison-lex target on
+  `BT × BT` with coarse same-binder side-condition; packages a
+  reduced-assumption interface model in which `dec-ψα` and `dec-+2`
+  are discharged internally, leaving one lifted same-index `ψ`-to-`+`
+  lemma as the remaining assumption.
 * WF-1.7 (`Ordinal.Buchholz.VeblenObligations`): discharge
   same-binder obligation shapes in projection-model form; landed lemmas:
   `dec-+2-plus-right`, `dec-ψα-psi-arg`.
@@ -127,11 +133,11 @@ The order / well-foundedness track now has an explicit staged split:
 
 Remaining open Veblen-route work after this update:
 
-* Reconcile the projection-style same-binder measure pieces with the
-  remaining constructor obligations into one single concrete measure.
-* Cover the non-shared-binder interface fields not yet realized by the
-  current projection measure.
+* Discharge the remaining lifted same-index `ψ`-to-`+` lemma in the
+  comparison model.
 * Instantiate the Veblen interface without deferred assumptions.
+* Collapse the now-obsolete intermediate scaffolds if the comparison
+  model fully closes.
 
 Risk-gated bridge currently admitted:
 

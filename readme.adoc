@@ -90,10 +90,12 @@ Ordinal/Buchholz track status:
 * `Ordinal.Buchholz.VeblenIdentityModel` provides a first concrete instantiation of that interface (identity measure bootstrap), with `dec-ψα` / `dec-+2` kept as explicit parameters.
 * `Ordinal.Buchholz.VeblenMeasureTarget` now fixes the first concrete target carrier for the Veblen route: a lexicographic order on `OmegaIndex × BT`, with `≺M-wf` proved from the existing `Ω` and Buchholz well-foundedness results.
 * `Ordinal.Buchholz.VeblenProjectionMeasure` now makes the projection-style measure into that target explicit and discharges the two deferred shared-binder obligations there (`proj-dec-ψα`, `proj-dec-+2`), along with the already index-driven strict cases.
+* `Ordinal.Buchholz.VeblenComparisonTarget` adds a second concrete target: a lexicographic order on `BT × BT` whose equality side-condition is relaxed to “same comparison binder”, so same-left `bplus` and same-index `bpsi` cases can use the second coordinate.
+* `Ordinal.Buchholz.VeblenComparisonModel` packages that target into a reduced-assumption Veblen interface instantiation: the original deferred obligations `dec-ψα` and `dec-+2` are discharged internally, and the remaining assumption is now one lifted same-index `ψ`-to-`+` lemma.
 * `Ordinal.Buchholz.VeblenObligations` advances the hard-obligation discharge track with concrete projection-model lemmas for both same-binder shapes:
 ** `dec-+2-plus-right`
 ** `dec-ψα-psi-arg`
-* Open work is now concentrated in turning those target-level pieces into one full concrete interface instantiation: the remaining non-shared-binder constructor obligations still need to be made compatible with a single measure, in a `--without-K`-compatible way.
+* Open work is now concentrated in discharging that final lifted same-index `ψ`-to-`+` comparison, so the comparison model can instantiate the Veblen interface without assumptions.
 
 == External Bridge Targets (local workspace)
 
