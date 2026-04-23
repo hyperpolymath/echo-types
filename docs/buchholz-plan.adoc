@@ -113,6 +113,10 @@ The order / well-foundedness track now has an explicit staged split:
 * WF-1.65 (`Ordinal.Buchholz.VeblenMeasureTarget`): first concrete
   measure target fixed as a lexicographic order on `OmegaIndex × BT`,
   with well-foundedness reduced to `×-wellFounded <Ω-wf wf-<ᵇ`.
+* WF-1.68 (`Ordinal.Buchholz.VeblenProjectionMeasure`): projection
+  measure into that target made explicit; the two deferred
+  shared-binder obligations now land as concrete target lemmas
+  `proj-dec-+2` and `proj-dec-ψα`.
 * WF-1.7 (`Ordinal.Buchholz.VeblenObligations`): discharge
   same-binder obligation shapes in projection-model form; landed lemmas:
   `dec-+2-plus-right`, `dec-ψα-psi-arg`.
@@ -123,9 +127,10 @@ The order / well-foundedness track now has an explicit staged split:
 
 Remaining open Veblen-route work after this update:
 
-* Define the concrete measure into `OmegaIndex × BT`.
-* Discharge the shared-binder same-index/same-left sub-cases in that
-  target, in a K-free style.
+* Reconcile the projection-style same-binder measure pieces with the
+  remaining constructor obligations into one single concrete measure.
+* Cover the non-shared-binder interface fields not yet realized by the
+  current projection measure.
 * Instantiate the Veblen interface without deferred assumptions.
 
 Risk-gated bridge currently admitted:

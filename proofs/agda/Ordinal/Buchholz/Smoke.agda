@@ -132,6 +132,18 @@ open import Ordinal.Buchholz.VeblenMeasureTarget using
   ; ≺M-wf
   )
 
+open import Ordinal.Buchholz.VeblenProjectionMeasure using
+  ( proj-index
+  ; proj-term
+  ; proj-measure
+  ; proj-dec-+2
+  ; proj-dec-ψα
+  ; proj-dec-ΩΩ
+  ; proj-dec-Ωψ
+  ; proj-dec-ψΩ
+  ; proj-dec-ψΩ<
+  )
+
 open import Ordinal.Buchholz.VeblenObligations using
   ( plus-right
   ; psi-arg
