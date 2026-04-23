@@ -107,6 +107,9 @@ The order / well-foundedness track now has an explicit staged split:
   pinning constructor-by-constructor decrease obligations and explicit
   deferred same-binder obligations (`dec-ψα`, `dec-+2`) for the Veblen
   follow-up.
+* WF-1.6 (`Ordinal.Buchholz.VeblenIdentityModel`): first concrete
+  instantiation of the interface (identity-measure bootstrap), keeping
+  `dec-ψα` and `dec-+2` as explicit assumptions.
 * WF-2 (in progress): explicit inversion lemmas for the still-open
   mixed head cases (`Ω/+`, `ψ/+`) and the newly admitted comparison
   bridge `bpsi ν α <ᵇ bOmega μ` under `ν ≤Ω μ`.

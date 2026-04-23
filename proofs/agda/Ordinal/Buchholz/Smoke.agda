@@ -112,3 +112,8 @@ open import Ordinal.Buchholz.WellFormed using
 open import Ordinal.Buchholz.VeblenInterface using
   ( VeblenWFInterface
   )
+
+open import Ordinal.Buchholz.VeblenIdentityModel using
+  ( identity-interface
+  ; core-wf-from-identity
+  )
