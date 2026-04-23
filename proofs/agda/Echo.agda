@@ -5,7 +5,7 @@ module Echo where
 open import Level using (Level; _⊔_)
 open import Function.Base using (_∘_; id)
 open import Data.Product.Base using (Σ; _,_; _×_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; trans; cong)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; trans; cong)
 
 -- Echo_f(y) := Σ (x : A) , (f x ≡ y)
 Echo : ∀ {a b} {A : Set a} {B : Set b} (f : A → B) → B → Set (a ⊔ b)
@@ -95,3 +95,39 @@ Echo-comp-iso-to-from :
   (r : Σ B (λ b → Echo f b × (g b ≡ y))) →
   Echo-comp-iso-to f g (Echo-comp-iso-from f g r) ≡ r
 Echo-comp-iso-to-from f g (b , (x , refl) , p) = refl
+
+-- Cancellation corollary: when g is a bijection with inverse s
+-- (both s-right : g ∘ s ≡ id and s-left : s ∘ g ≡ id, pointwise),
+-- Echo (g ∘ f) y is equivalent to Echo f (s y). This is the
+-- conjecture from composition.md, restated in the corrected form
+-- (a bare section on g is not enough — you need both sides of the
+-- iso to collapse the Σ-over-intermediate in the accumulation law).
+
+cancel-iso-to :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) (s : C → B)
+  (s-left : ∀ b → s (g b) ≡ b)
+  {y : C} →
+  Echo (g ∘ f) y → Echo f (s y)
+cancel-iso-to f g s s-left (x , p) = x , trans (sym (s-left (f x))) (cong s p)
+
+cancel-iso-from :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) (s : C → B)
+  (s-right : ∀ y → g (s y) ≡ y)
+  {y : C} →
+  Echo f (s y) → Echo (g ∘ f) y
+cancel-iso-from f g s s-right {y = y} (x , q) =
+  x , trans (cong g q) (s-right y)
+
+-- The two maps above witness that `Echo (g ∘ f) y` and `Echo f (s y)`
+-- are *related* via g's section/retraction structure. To conclude
+-- they are *isomorphic* one must also prove two round-trips equal to
+-- the identity. Under `--without-K`, that requires a triangle-identity
+-- coherence between `s-left` and `s-right` (roughly:
+-- `cong g (s-left b) ≡ s-right (g b)`), which is not a consequence of
+-- the two pointwise laws alone — a bare "both-way inverse" is weaker
+-- than an equivalence / bijection in HoTT terms. The round-trip
+-- formalisation is deferred until we commit to either (a) an
+-- equivalence record that packages the triangle identity as a field,
+-- or (b) stdlib's `Function.Bundles.Inverse`.
