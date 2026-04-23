@@ -27,4 +27,17 @@ dec-+2-plus-right :
   plus-right (bplus x y₂) <ᵇ plus-right (bplus x z₂)
 dec-+2-plus-right y₂<z₂ = y₂<z₂
 
--- The sibling obligation shape (`dec-ψα`) is kept for the next step.
+-- Project the ψ argument; non-ψ heads map to bzero.
+psi-arg : BT → BT
+psi-arg bzero      = bzero
+psi-arg (bOmega _) = bzero
+psi-arg (bplus _ _) = bzero
+psi-arg (bpsi _ α) = α
+
+-- Sibling same-binder obligation shape:
+-- if α <ᵇ β then ψ-argument projection decreases across bpsi ν _.
+dec-ψα-psi-arg :
+  ∀ {ν α β} →
+  α <ᵇ β →
+  psi-arg (bpsi ν α) <ᵇ psi-arg (bpsi ν β)
+dec-ψα-psi-arg α<β = α<β

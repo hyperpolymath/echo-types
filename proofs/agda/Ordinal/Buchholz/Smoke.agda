@@ -120,5 +120,7 @@ open import Ordinal.Buchholz.VeblenIdentityModel using
 
 open import Ordinal.Buchholz.VeblenObligations using
   ( plus-right
+  ; psi-arg
   ; dec-+2-plus-right
+  ; dec-ψα-psi-arg
   )
