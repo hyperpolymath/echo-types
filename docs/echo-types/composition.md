@@ -153,19 +153,33 @@ coarser bounds.
 *Status.* Entirely speculative. Requires a formal definition of
 approximate echo first.
 
-### Q4. Associativity
+### Q4. Associativity — partially landed
 
 *Question.* Does the accumulation isomorphism above satisfy the
 pentagon coherence for three-fold composition? I.e., for
-`f : A → B`, `g : B → C`, `h : C → D`, does the two ways of
-associating `Echo((h ∘ g) ∘ f) = Echo(h ∘ (g ∘ f))` yield equivalent
+`f : A → B`, `g : B → C`, `h : C → D`, do the two ways of
+associating `Echo((h ∘ g) ∘ f) ≃ Echo(h ∘ (g ∘ f))` yield equivalent
 iso's?
 
-*Expectation.* Yes, but the proof requires the iso to land as a
-`map-over` morphism whose `commute` field is itself proved by
-pentagon-style transitivity. `Echo.map-over-comp` already bottles
-the relevant shape. Proving pentagon on top is routine but not
-written down.
+*Answer (partial).* Yes for the load-bearing projections. The two
+pentagon-style lemmas `Echo-comp-iso-pent-B` and
+`Echo-comp-iso-pent-echo` (both `refl`) confirm that the two
+natural factorings — inner-first `(f, h∘g)` versus outer-first
+`(g∘f, h)` then `(f, g)` — produce the same `f x` at the B-component
+and the same `(x , refl) : Echo f (f x)` at the Echo-f witness. The
+full Σ-associativity iso between the two nested Σ-shapes (which
+differ by whether the intermediate `c : C` with `g b ≡ c` is
+carried or absorbed) is the remaining open piece of pentagon
+coherence.
+
+*Evidence this is the right shape.* Both lemmas land as `refl`
+without any `trans-assoc` / `cong-trans` manipulation, because
+`Echo-comp-iso-to`'s body `(x , p) ↦ (f x , (x , refl) , p)` is
+structurally symmetric in the outer function — the f-component
+and witness do not depend on which outer is peeled off. If the
+iso had a `trans`-shaped body instead, pentagon would have
+required real coherence lemmas; the `refl` outcome is evidence
+the iso has the right design.
 
 ### Q5. Interaction with role-indexing, gradings, linearity
 
@@ -209,7 +223,10 @@ Collecting the above:
    `s-right`). Round-trips deferred pending a triangle-identity
    coherence or a stdlib `Function.Bundles.Inverse` shim.
 
-4. **(Open) Pentagon.** Three-fold composition associates.
+4. **(Partial) Pentagon.** Three-fold composition associates at
+   the projections. `Echo-comp-iso-pent-B` and
+   `Echo-comp-iso-pent-echo` both `refl`; full Σ-shape iso still
+   open.
 
 5. **(Open) Tolerance calculus.** For approximate echoes, tolerances
    compose with a Lipschitz-like law.
@@ -229,9 +246,10 @@ Ranked by unblock-value. (1) and (2) landed; (3) onwards is open.
 2. ~~**Cancellation corollary.**~~ Partially landed as
    `cancel-iso-to` / `cancel-iso-from`; full iso deferred pending
    triangle-identity coherence (see §3 above).
-3. **Pentagon coherence.** Three-fold composition associates.
-   Moderate proof on top of `Echo-comp-iso`, probably one more
-   lemma. Next concrete follow-up on this track.
+3. ~~**Pentagon coherence.**~~ Partially landed: the two
+   projection-level pentagon lemmas (`-pent-B`, `-pent-echo`)
+   ship as `refl`. The full Σ-associativity iso between the two
+   nested shapes remains open.
 4. **Full cancel-iso with round-trips.** Needs an equivalence
    record that packages `s-left`, `s-right`, and the triangle
    identity as three fields, or direct use of stdlib's

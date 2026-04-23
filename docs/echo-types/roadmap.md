@@ -58,8 +58,23 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   needing only the relevant half of g's iso structure. Round-trips
   are **deferred** pending a triangle-identity coherence or a stdlib
   `Function.Bundles.Inverse` shim. See `composition.md` §3.
-- **[unblocked]** Pentagon coherence for three-fold composition.
-  Routine proof on top of `Echo-comp-iso`; next concrete follow-up.
+- **[partial]** Pentagon coherence for three-fold composition.
+  `Echo-comp-iso-pent-B` and `Echo-comp-iso-pent-echo` both `refl`
+  in `Echo.agda`. The full Σ-associativity iso between the two
+  nested Σ-shapes (outer-first carries an extra intermediate
+  `c : C` with `g b ≡ c`; inner-first absorbs it) remains the open
+  piece of pentagon.
+- **[partial]** Budgeted recursive-surface WF on the ordinal track.
+  `Ordinal/Buchholz/RecursiveSurfaceBudget.agda` ships
+  `BudgetedBT = ℕ × BT`, the budgeted relation `_<ᵇʳᶠᵇ_` with its
+  `spend` constructor, `wf-<ᵇʳᶠᵇ : WellFounded _<ᵇʳᶠᵇ_` (via
+  subrelation on ℕ), and `<ᵇʳᶠᵇ⇒lifted` transporting each budgeted
+  step into the iterated-wrapper tower (`IteratedExtendedOrder`).
+  The unbudgeted global theorem — eliminate the explicit ℕ budget
+  from `wf-<ᵇʳᶠᵇ` to get `WellFounded _<ᵇʳᶠ_` — is the next
+  concrete ordinal-track milestone. Pushing that result back into
+  `Ordinal/Buchholz/Order.agda`'s main `_<ᵇ_` package is the step
+  after that.
 - **[unblocked]** `EchoApprox.agda`: new module for ε-indexed echoes
   over a metric codomain. First-class taxonomy axis 2 artifact.
 - **[unblocked]** Per-decoration composition lemmas in `EchoGraded`,
@@ -157,23 +172,32 @@ tractable today:
    iso plus both cancellation maps now live in `Echo.agda`; the full
    cancellation iso (with round-trips) is the first deferred item —
    needs a triangle-identity coherence (see composition.md §3).
-3. **Agda: pentagon coherence for `Echo-comp-iso`** — 1 day. Next
-   natural follow-up on the composition track.
-4. **Gate 1 adjacency refresh against the new taxonomy** — 1 day.
+3. ~~**Agda: pentagon coherence for `Echo-comp-iso`**~~ — projection
+   pentagon landed as `Echo-comp-iso-pent-{B, echo}`. Full
+   Σ-associativity iso between the two nested Σ-shapes is one of
+   two next composition-track follow-ups (the other is
+   full-cancel-iso round-trips, which needs a triangle identity).
+4. **Agda: unbudgeted `_<ᵇʳᶠ_` WF on the ordinal track** — eliminate
+   the explicit ℕ budget from `wf-<ᵇʳᶠᵇ` in
+   `RecursiveSurfaceBudget.agda`. Sharpest next ordinal-track move
+   since the budgeted version already ships. Keep `--safe --without-K`.
+   Pushing the result back into `Order.agda`'s `_<ᵇ_` is the step
+   after.
+5. **Gate 1 adjacency refresh against the new taxonomy** — 1 day.
    Cheap coherence pass on existing docs.
-5. **Theory: pick one axis-8 refinement and formalise it** — 1–2
+6. **Theory: pick one axis-8 refinement and formalise it** — 1–2
    days. Four candidates in `taxonomy.md` §8 (cost-indexed echo,
    graded access modality, decidability-respecting echo, witness-
    search abstract machine). Choosing commits the repo to one
    formal handle on computational vs information-theoretic access.
-6. **Agda: `EchoApprox.agda`** — 2–3 days. First artifact of axis 2.
-7. **Applications chapter: compiler-analysis residue** — 2 days.
+7. **Agda: `EchoApprox.agda`** — 2–3 days. First artifact of axis 2.
+8. **Applications chapter: compiler-analysis residue** — 2 days.
    Largest reader value; entirely unblocked.
-8. **Per-decoration composition lemmas** — 1 day each. Useful
+9. **Per-decoration composition lemmas** — 1 day each. Useful
    coverage.
 
-Steps 1–4 are ~5–6 days of honest work that require nothing from
-proof assistants, external repos, or the blocked Buchholz path.
+Steps 1 and 5–6 are ~5–6 days of honest work that require nothing
+from proof assistants, external repos, or the blocked Buchholz path.
 Steps 5–7 extend into Agda but depend only on infrastructure we
 already have in-suite.
 
