@@ -21,6 +21,8 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-Ωψ
   ; <ᵇ-ψΩ
   ; <ᵇ-ψΩ≤
+  ; <ᵇ-Ω+
+  ; <ᵇ-ψ+
   ; <ᵇ-+ω
   ; <ᵇ-+ψω
   ; <ᵇ-+1
@@ -42,6 +44,8 @@ identity-interface dec-ψα dec-+2 = record
   ; dec-Ωψ = <ᵇ-Ωψ
   ; dec-ψΩ = <ᵇ-ψΩ
   ; dec-ψΩ≤ = <ᵇ-ψΩ≤
+  ; dec-Ω+ = <ᵇ-Ω+
+  ; dec-ψ+ = <ᵇ-ψ+
   ; dec-+ω = <ᵇ-+ω
   ; dec-+ψω = <ᵇ-+ψω
   ; dec-+1 = <ᵇ-+1

@@ -113,16 +113,16 @@ The order / well-foundedness track now has an explicit staged split:
 * WF-1.7 (`Ordinal.Buchholz.VeblenObligations`): discharge
   same-binder obligation shapes in projection-model form; landed lemmas:
   `dec-+2-plus-right`, `dec-ψα-psi-arg`.
-* WF-2 (in progress): explicit inversion lemmas for the still-open
-  mixed head cases (`Ω/+`, `ψ/+`) and the newly admitted comparison
-  bridge `bpsi ν α <ᵇ bOmega μ` under `ν ≤Ω μ`.
+* WF-2 (in progress): mixed-head bridge layer now includes
+  `bpsi ν α <ᵇ bOmega μ` (under `ν ≤Ω μ`) and left-summand bridges
+  into additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`) with inversions.
 
 Remaining open comparison work after this update:
 
-* Constructor-level comparison rules for `bOmega` vs `bplus` (both
-  directions) in the intended normal-form discipline.
-* Constructor-level comparison rules for `bpsi` vs `bplus` (both
-  directions).
+* Constructor-level comparison rules for non-top `bplus` vs `bOmega`
+  (the `bplus → bOmega` direction beyond `<ᵇ-+ω`).
+* Constructor-level comparison rules for non-top `bplus` vs `bpsi`
+  (the `bplus → bpsi` direction beyond `<ᵇ-+ψω`).
 * Shared-binder same-index/same-left sub-cases in a K-free style
   (do not return to the blocked direct reflexive-equation elimination
   route).

@@ -34,6 +34,8 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-Ωψ
   ; <ᵇ-ψΩ
   ; <ᵇ-ψΩ≤
+  ; <ᵇ-Ω+
+  ; <ᵇ-ψ+
   ; <ᵇ-+ω
   ; <ᵇ-+ψω
   ; <ᵇ-+1
@@ -64,6 +66,8 @@ mutual
 
   <ᵇ-pred-bplus-from : ∀ {α β x} → Acc _<ᵇ_ α → x <ᵇ bplus α β → Acc _<ᵇ_ x
   <ᵇ-pred-bplus-from _          <ᵇ-0-+                  = <ᵇ-acc-bzero
+  <ᵇ-pred-bplus-from (acc rsα)  (<ᵇ-Ω+ Ω<α)             = rsα Ω<α
+  <ᵇ-pred-bplus-from (acc rsα)  (<ᵇ-ψ+ ψ<α)             = rsα ψ<α
   <ᵇ-pred-bplus-from (acc rsα)  (<ᵇ-+1 {x₂ = x₂} x₁<α)  = <ᵇ-acc-bplus-from (rsα x₁<α) x₂
 
   <ᵇ-acc-bplus-from : ∀ {α} → Acc _<ᵇ_ α → (β : BT) → Acc _<ᵇ_ (bplus α β)

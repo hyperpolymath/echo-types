@@ -80,12 +80,15 @@ Ordinal/Buchholz track status:
 * Top-marker `bplus` bridges are now admitted and inverted:
 ** `<ᵇ-+ω`, `<ᵇ-+ψω`
 ** `<ᵇ-inv-+Ωω`, `<ᵇ-inv-+ψω`
+* Left-summand bridges into additive terms are admitted and inverted:
+** `<ᵇ-Ω+`, `<ᵇ-ψ+`
+** `<ᵇ-inv-Ω+`, `<ᵇ-inv-ψ+`
 * `Ordinal.Buchholz.VeblenInterface` now pins a measure-based WF interface with explicit constructor obligations and deferred same-binder obligations (`dec-ψα`, `dec-+2`) for the Veblen-route follow-up.
 * `Ordinal.Buchholz.VeblenIdentityModel` provides a first concrete instantiation of that interface (identity measure bootstrap), with `dec-ψα` / `dec-+2` kept as explicit parameters.
 * `Ordinal.Buchholz.VeblenObligations` advances the hard-obligation discharge track with concrete projection-model lemmas for both same-binder shapes:
 ** `dec-+2-plus-right`
 ** `dec-ψα-psi-arg`
-* Open work remains for general `Ω/+` and `ψ/+` comparisons and for the shared-binder cases (`<ᵇ-ψα`, `<ᵇ-+2`) in a `--without-K`-compatible style.
+* Open work remains for non-top `bplus` vs `bOmega`/`bpsi` comparisons and for the shared-binder cases (`<ᵇ-ψα`, `<ᵇ-+2`) in a `--without-K`-compatible style.
 
 == External Bridge Targets (local workspace)
 

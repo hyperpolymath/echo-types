@@ -28,6 +28,8 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-Ωψ
   ; <ᵇ-ψΩ
   ; <ᵇ-ψΩ≤
+  ; <ᵇ-Ω+
+  ; <ᵇ-ψ+
   ; <ᵇ-+ω
   ; <ᵇ-+ψω
   ; <ᵇ-+1
@@ -50,6 +52,10 @@ record VeblenWFInterface {ℓm ℓr : Level}
     dec-Ωψ   : ∀ {μ ν α} → μ <Ω ν → measure (bOmega μ) ≺ measure (bpsi ν α)
     dec-ψΩ   : ∀ {μ ν α β} → μ <Ω ν → measure (bpsi μ α) ≺ measure (bpsi ν β)
     dec-ψΩ≤  : ∀ {ν μ α} → ν ≤Ω μ → measure (bpsi ν α) ≺ measure (bOmega μ)
+    dec-Ω+   : ∀ {μ x y} → measure (bOmega μ) ≺ measure x →
+               measure (bOmega μ) ≺ measure (bplus x y)
+    dec-ψ+   : ∀ {ν α x y} → measure (bpsi ν α) ≺ measure x →
+               measure (bpsi ν α) ≺ measure (bplus x y)
 
     dec-+ω   : ∀ {x y} → x <ᵇ bOmega ω → measure (bplus x y) ≺ measure (bOmega ω)
     dec-+ψω  : ∀ {x y α} → x <ᵇ bpsi ω α → measure (bplus x y) ≺ measure (bpsi ω α)
@@ -67,6 +73,8 @@ record VeblenWFInterface {ℓm ℓr : Level}
   core-monotone (<ᵇ-Ωψ μ<ν) = dec-Ωψ μ<ν
   core-monotone (<ᵇ-ψΩ μ<ν) = dec-ψΩ μ<ν
   core-monotone (<ᵇ-ψΩ≤ ν≤μ) = dec-ψΩ≤ ν≤μ
+  core-monotone (<ᵇ-Ω+ Ω<x) = dec-Ω+ (core-monotone Ω<x)
+  core-monotone (<ᵇ-ψ+ ψ<x) = dec-ψ+ (core-monotone ψ<x)
   core-monotone (<ᵇ-+ω x<ω) = dec-+ω x<ω
   core-monotone (<ᵇ-+ψω x<ψω) = dec-+ψω x<ψω
   core-monotone (<ᵇ-+1 x₁<y₁) = dec-+1 x₁<y₁
