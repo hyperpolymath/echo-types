@@ -175,3 +175,9 @@ Open/gated work and cross-repo follow-ups are tracked in:
 * `docs/echo-types/roadmap.md`
 * `docs/echo-types/taxonomy.md`
 * `docs/echo-types/composition.md`
+
+== Licensing
+
+* code, proofs, and tooling in this repository are intended to be licensed under `MPL-2.0`; see `LICENSE`
+* prose documentation in `docs/`, `README.md`, `readme.adoc`, and roadmap files is intended to be licensed under `CC-BY-4.0`; see `LICENSE-docs`
+* practical follow-up: normalize per-file SPDX headers across source files so file-level notices match the top-level licensing intent

@@ -75,7 +75,14 @@ Ordinal/Buchholz track status:
 
 - `Ordinal.Buchholz.WellFounded` provides `wf-<ᵇ : WellFounded _<ᵇ_` for the currently admitted constructor core
 - top-marker `bplus` bridges are admitted and inverted: `<ᵇ-+ω`, `<ᵇ-+ψω`, `<ᵇ-inv-+Ωω`, `<ᵇ-inv-+ψω`
-- open work remains for general `Ω/+` and `ψ/+` comparisons and shared-binder cases (`<ᵇ-ψα`, `<ᵇ-+2`) in a `--without-K`-compatible style
+- left-summand bridges into additive terms are admitted and inverted: `<ᵇ-Ω+`, `<ᵇ-ψ+`, `<ᵇ-inv-Ω+`, `<ᵇ-inv-ψ+`
+- general additive-target bridges are admitted and inverted: `<ᵇ-+Ω`, `<ᵇ-+ψ`, `<ᵇ-inv-+Ω`, `<ᵇ-inv-+ψ`
+- `Ordinal.Buchholz.VeblenInterface` pins the measure-based WF interface with explicit constructor obligations and deferred same-binder obligations (`dec-ψα`, `dec-+2`)
+- `Ordinal.Buchholz.VeblenMeasureTarget` fixes a first concrete target carrier: a lexicographic order on `OmegaIndex × BT`
+- `Ordinal.Buchholz.VeblenProjectionMeasure` makes the projection-style measure into that target explicit and discharges the shared-binder obligations there as target lemmas
+- `Ordinal.Buchholz.VeblenComparisonTarget` adds a second concrete target: a lexicographic order on `BT × BT` with a coarse same-binder side-condition
+- `Ordinal.Buchholz.VeblenComparisonModel` reduces the remaining Veblen assumption set to one lifted same-index `ψ`-to-`+` lemma
+- open work is now concentrated in discharging that final lifted same-index `ψ`-to-`+` comparison so the comparison model can instantiate the Veblen interface without assumptions
 
 ## External Bridge Targets (local workspace)
 
@@ -152,3 +159,9 @@ Open/gated work and cross-repo follow-ups are tracked in:
 - `docs/echo-types/roadmap.md`
 - `docs/echo-types/taxonomy.md`
 - `docs/echo-types/composition.md`
+
+## Licensing
+
+- code, proofs, and tooling in this repository are intended to be licensed under `MPL-2.0`; see [LICENSE](LICENSE)
+- prose documentation in `docs/`, `README.md`, `readme.adoc`, and roadmap files is intended to be licensed under `CC-BY-4.0`; see [LICENSE-docs](LICENSE-docs)
+- current practical follow-up: normalize per-file SPDX headers across source files so file-level notices match the top-level licensing intent
