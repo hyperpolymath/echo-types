@@ -55,6 +55,8 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-Ωψ
   ; <ᵇ-ψΩ
   ; <ᵇ-ψΩ≤
+  ; <ᵇ-Ω+
+  ; <ᵇ-ψ+
   ; <ᵇ-+ω
   ; <ᵇ-+ψω
   ; <ᵇ-+1
@@ -107,4 +109,20 @@ open import Ordinal.Buchholz.WellFormed using
   ; BH-wf
   ; psi-OmegaOmega
   ; psi-OmegaOmega-wf
+  )
+
+open import Ordinal.Buchholz.VeblenInterface using
+  ( VeblenWFInterface
+  )
+
+open import Ordinal.Buchholz.VeblenIdentityModel using
+  ( identity-interface
+  ; core-wf-from-identity
+  )
+
+open import Ordinal.Buchholz.VeblenObligations using
+  ( plus-right
+  ; psi-arg
+  ; dec-+2-plus-right
+  ; dec-ψα-psi-arg
   )
