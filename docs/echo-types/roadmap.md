@@ -46,14 +46,17 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 
 ## Formalisation work — Agda, no bottleneck
 
-- **[unblocked]** `Echo-comp-iso` in `Echo.agda`: the accumulation
+- **[landed]** `Echo-comp-iso` in `Echo.agda`: the accumulation
   isomorphism `Echo(g ∘ f) y ≃ Σ B (λ b → Echo(f) b × (g b ≡ y))`.
-  Sonnet-class proof; see composition.md §1.
-- **[unblocked]** `Echo-comp-cancellation`: corollary for sectioned
-  `g`. Follows from the iso plus an existing section-lemma pattern
-  (`no-section-weaken` in `EchoLinear`).
+  Shipped as `Echo-comp-iso-{to, from, from-to, to-from}`; both
+  round-trips are definitional. See `composition.md` §1.
+- **[partial]** `cancel-iso-to` / `cancel-iso-from` in `Echo.agda`:
+  forward and backward maps for the cancellation corollary, each
+  needing only the relevant half of g's iso structure. Round-trips
+  are **deferred** pending a triangle-identity coherence or a stdlib
+  `Function.Bundles.Inverse` shim. See `composition.md` §3.
 - **[unblocked]** Pentagon coherence for three-fold composition.
-  Routine.
+  Routine proof on top of `Echo-comp-iso`; next concrete follow-up.
 - **[unblocked]** `EchoApprox.agda`: new module for ε-indexed echoes
   over a metric codomain. First-class taxonomy axis 2 artifact.
 - **[unblocked]** Per-decoration composition lemmas in `EchoGraded`,
@@ -146,19 +149,23 @@ tractable today:
 
 1. **Theory: axis 2 formal definition** — 1–2 days.
    Unblocks `EchoApprox.agda`, which is required for examples 6 and 10.
-2. **Agda: `Echo-comp-iso` + cancellation** — 1 day.
-   Concrete, compiling, unblocks the composition roadmap.
-3. **Gate 1 adjacency refresh against the new taxonomy** — 1 day.
+2. ~~**Agda: `Echo-comp-iso` + cancellation**~~ — landed. Accumulation
+   iso plus both cancellation maps now live in `Echo.agda`; the full
+   cancellation iso (with round-trips) is the first deferred item —
+   needs a triangle-identity coherence (see composition.md §3).
+3. **Agda: pentagon coherence for `Echo-comp-iso`** — 1 day. Next
+   natural follow-up on the composition track.
+4. **Gate 1 adjacency refresh against the new taxonomy** — 1 day.
    Cheap coherence pass on existing docs.
-4. **Theory: pick one axis-8 refinement and formalise it** — 1–2
+5. **Theory: pick one axis-8 refinement and formalise it** — 1–2
    days. Four candidates in `taxonomy.md` §8 (cost-indexed echo,
    graded access modality, decidability-respecting echo, witness-
    search abstract machine). Choosing commits the repo to one
    formal handle on computational vs information-theoretic access.
-5. **Agda: `EchoApprox.agda`** — 2–3 days. First artifact of axis 2.
-6. **Applications chapter: compiler-analysis residue** — 2 days.
+6. **Agda: `EchoApprox.agda`** — 2–3 days. First artifact of axis 2.
+7. **Applications chapter: compiler-analysis residue** — 2 days.
    Largest reader value; entirely unblocked.
-7. **Per-decoration composition lemmas** — 1 day each. Useful
+8. **Per-decoration composition lemmas** — 1 day each. Useful
    coverage.
 
 Steps 1–4 are ~5–6 days of honest work that require nothing from
