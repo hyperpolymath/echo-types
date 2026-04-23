@@ -94,6 +94,7 @@ Ordinal/Buchholz track status:
 * `Ordinal.Buchholz.VeblenComparisonModel` is now the primary closed Veblen route: it packages that target into an assumption-free Veblen interface instantiation in which the original deferred obligations `dec-ψα` and `dec-+2`, and the lifted same-index `ψ`-to-`+` comparison, are all discharged internally.
 * `Ordinal.Buchholz.ExtendedOrder` now packages a closed comparison-induced extension `_ <ᵇ⁺ _` of `BT`: it contains the current core, exposes the historical same-binder principles as lemmas, and is transitive and well-founded.
 * `Ordinal.Buchholz.SurfaceOrder` now adds a direct inductive surface `_ <ᵇˢ _` for the two historical same-binder shapes, with an embedding into `_ <ᵇ⁺ _` and inherited well-foundedness.
+* The exact remaining recursive frontier is now explicit in code as `SurfaceLiftInterface`: if `_ <ᵇ⁺ _` can be shown stable under same-binder descent with `_ <ᵇ⁺ _` premises, then a genuinely recursive surface order `_ <ᵇʳ _` follows immediately.
 * `Ordinal.Buchholz.VeblenObligations` advances the hard-obligation discharge track with concrete projection-model lemmas for both same-binder shapes:
 ** `dec-+2-plus-right`
 ** `dec-ψα-psi-arg`

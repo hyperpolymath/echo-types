@@ -84,6 +84,7 @@ Ordinal/Buchholz track status:
 - `Ordinal.Buchholz.VeblenComparisonModel` is now the primary closed Veblen route: it instantiates the Veblen interface without deferred assumptions and exposes `core-wf-from-comparison : WellFounded _<ᵇ_`
 - `Ordinal.Buchholz.ExtendedOrder` now packages a closed comparison-induced extension `_ <ᵇ⁺ _` of `BT`: it contains the current core, exposes the historical same-binder principles as lemmas, and is transitive and well-founded
 - `Ordinal.Buchholz.SurfaceOrder` now adds a direct inductive surface `_ <ᵇˢ _` for the two historical same-binder shapes, with an embedding into `_ <ᵇ⁺ _` and inherited well-foundedness
+- the exact remaining recursive frontier is now explicit in code as `SurfaceLiftInterface`: if `_ <ᵇ⁺ _` is shown stable under same-binder descent with `_ <ᵇ⁺ _` premises, a genuinely recursive surface order `_ <ᵇʳ _` follows immediately
 - the Veblen comparison route is now closed for the current admitted constructor core
 - the new `_ <ᵇ⁺ _` wrapper advances the full-order line by giving a mediated closed relation on all terms
 - the new `_ <ᵇˢ _` surface is the first direct bridge candidate between the current core presentation and that mediated wrapper

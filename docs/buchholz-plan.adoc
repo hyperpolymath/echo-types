@@ -136,6 +136,11 @@ The order / well-foundedness track now has an explicit staged split:
   surface `_ <ᵇˢ _` adding the two historical same-binder shapes as
   constructors over current-core premises; embeds into `_ <ᵇ⁺ _` and
   therefore inherits well-foundedness immediately.
+* WF-1.86 (`SurfaceLiftInterface` / recursive `_ <ᵇʳ _` skeleton in
+  `Ordinal.Buchholz.SurfaceOrder`): the exact remaining frontier is
+  now formalized as two lifted same-binder closure obligations over
+  `_ <ᵇ⁺ _`; if those are discharged, a genuinely recursive surface
+  relation follows by subrelation into the closed wrapper.
 * WF-2 (completed for mixed-head cases): bridge layer now includes
   `bpsi ν α <ᵇ bOmega μ` (under `ν ≤Ω μ`), left-summand bridges into
   additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`), and additive-target bridges
