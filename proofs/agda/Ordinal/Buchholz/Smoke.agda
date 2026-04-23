@@ -144,6 +144,26 @@ open import Ordinal.Buchholz.VeblenProjectionMeasure using
   ; proj-dec-ψΩ<
   )
 
+open import Ordinal.Buchholz.VeblenComparisonTarget using
+  ( ComparisonMeasure
+  ; _≈ᶜ_
+  ; _≺C_
+  ; ≈ᶜ-+
+  ; ≈ᶜ-ψ
+  ; by-first
+  ; by-second
+  ; ≺C-wf
+  )
+
+open import Ordinal.Buchholz.VeblenComparisonModel using
+  ( cmp-payload
+  ; cmp-measure
+  ; cmp-dec-Ω+
+  ; cmp-dec-ψ+
+  ; comparison-interface
+  ; core-wf-from-comparison
+  )
+
 open import Ordinal.Buchholz.VeblenObligations using
   ( plus-right
   ; psi-arg
