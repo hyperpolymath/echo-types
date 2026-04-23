@@ -26,49 +26,70 @@ the shadow level but not generally at the intensional core.
 
 ---
 
-## Accumulation — Agda-backed (base case)
+## Accumulation — Agda-backed (base case, landed)
 
 *Lemma.* For `f : A → B` and `g : B → C`, the type
 `Echo(g ∘ f) y` is canonically isomorphic to
 `Σ B (λ b → Echo(f) b × (g b ≡ y))`.
 
-*Proof sketch.* Σ-associativity plus propositional-equality
-rearrangement. In Agda terms, given
+*Proof.* Σ-associativity plus propositional-equality rearrangement.
+In Agda terms, given
 ```
-Echo f b      = Σ A (λ x → f x ≡ b)
-Echo g y      = Σ B (λ b → g b ≡ y)
+Echo f b       = Σ A (λ x → f x ≡ b)
+Echo g y       = Σ B (λ b → g b ≡ y)
 Echo (g ∘ f) y = Σ A (λ x → g (f x) ≡ y)
 ```
 the iso is witnessed by
 ```
-to   : Σ A (λ x → g (f x) ≡ y) → Σ B (λ b → Σ A (λ x → f x ≡ b) × (g b ≡ y))
-to (x , p)       = (f x , (x , refl) , p)
-from : Σ B (λ b → Σ A (λ x → f x ≡ b) × (g b ≡ y)) → Σ A (λ x → g (f x) ≡ y)
+to   (x , p)              = (f x , (x , refl) , p)
 from (b , (x , refl) , p) = (x , p)
 ```
-and both round-trips are `refl`. Formalisation is routine and not
-yet in the repo; it is the cleanest candidate for the next
-composition lemma to land.
+and both round-trips reduce to `refl` definitionally once the
+`refl` pattern has pinned the intermediate `b` to `f x`. Landed
+in `proofs/agda/Echo.agda` as `Echo-comp-iso-to`, `Echo-comp-iso-from`,
+`Echo-comp-iso-from-to`, `Echo-comp-iso-to-from` (all pinned in
+`Smoke.agda`).
 
 *Agda adjacency.* `Echo.map-over-comp` proves functoriality of the
 derived action on echoes; this is the morphism side of the same
-composition law. The *object-side* isomorphism above is not yet
-proved but is a straightforward next milestone.
+composition law. The object-side iso above and the morphism-side
+composition law together give a coherent two-level story for
+composition.
 
 ---
 
-## Cancellation — expected corollary
+## Cancellation — partial (Agda-backed maps, iso deferred)
 
-*Conjecture.* If `g : B → C` has a section `s : C → B` with
-`g ∘ s ≡ id`, then `Echo(g ∘ f) y ≃ Echo(f) (s y)` for every `y`.
+*Statement.* If `g : B → C` has a two-sided inverse `s : C → B`
+with `s-left : ∀ b → s (g b) ≡ b` and `s-right : ∀ y → g (s y) ≡ y`,
+then `Echo(g ∘ f) y` and `Echo(f) (s y)` are related by a canonical
+forward and backward map.
 
-*Rationale.* Composing with an injection loses no information, so
-the intermediate factor in the accumulation law collapses to a
-single witnessed point.
+*What is landed.* Two maps in `proofs/agda/Echo.agda`, each
+requiring only the relevant half of the iso structure:
+```
+cancel-iso-to   : (s-left  : ∀ b → s (g b) ≡ b) → Echo (g ∘ f) y → Echo f (s y)
+cancel-iso-from : (s-right : ∀ y → g (s y) ≡ y) → Echo f (s y)   → Echo (g ∘ f) y
+```
+Pinned in `Smoke.agda` as `cancel-iso-to`, `cancel-iso-from`.
 
-*Status.* Not proved. Depends on the accumulation isomorphism plus
-a section lemma that the current repo has pieces of (see
-`no-section-weaken` in `EchoLinear` for the negative direction).
+*What is deferred.* The round-trips that would promote these two
+maps to a full iso are *not* proved. Under `--without-K`, the two
+round-trips require a triangle-identity coherence between `s-left`
+and `s-right` (roughly `cong g (s-left b) ≡ s-right (g b)`), which
+is not a consequence of the two pointwise inverse laws alone — a
+bare "both-way inverse" is weaker than an equivalence in HoTT
+terms. The in-file comment in `Echo.agda` flags this explicitly.
+Options for the full iso: (a) an equivalence record that packages
+the triangle identity as a field, or (b) stdlib's
+`Function.Bundles.Inverse`.
+
+*Correction to earlier wording.* A bare section on `g` (i.e.,
+`s-right` only) is not enough to collapse the Σ-over-intermediate
+in the accumulation law; the earlier version of this section
+claimed otherwise. The correction is that both `s-left` and
+`s-right` are needed, and even then the full iso needs triangle
+coherence.
 
 ---
 
@@ -175,15 +196,18 @@ hypothetical 2-category of Q1. Not attempted.
 
 Collecting the above:
 
-1. **(Agda-backed) Base accumulation iso.**
-   `Echo(g ∘ f) y ≃ Σ B (λ b → Echo(f) b × (g b ≡ y))`.
+1. **(Landed) Base accumulation iso.**
+   `Echo(g ∘ f) y ≃ Σ B (λ b → Echo(f) b × (g b ≡ y))`. Proved in
+   `Echo.agda` as `Echo-comp-iso-{to, from, from-to, to-from}`.
 
 2. **(Agda-backed) Functorial action.** `map-over` respects
    composition: `map-over (g' , c₁) ∘ map-over (f' , c₂) ≡ map-over
    ((g' ∘ f') , coherence)`. Proved in `Echo.map-over-comp`.
 
-3. **(Expected) Cancellation.** `Echo(g ∘ f) y ≃ Echo(f) (s y)` when
-   `g` has a section `s`.
+3. **(Partial) Cancellation.** Forward and backward maps landed as
+   `cancel-iso-to` (needs `s-left`) and `cancel-iso-from` (needs
+   `s-right`). Round-trips deferred pending a triangle-identity
+   coherence or a stdlib `Function.Bundles.Inverse` shim.
 
 4. **(Open) Pentagon.** Three-fold composition associates.
 
@@ -198,19 +222,27 @@ Collecting the above:
 
 ## What to formalise next
 
-Ranked by unblock-value:
+Ranked by unblock-value. (1) and (2) landed; (3) onwards is open.
 
-1. **Base accumulation iso.** Single Agda proof, no new modules
-   needed. Would add `Echo-comp-iso` to `Echo.agda`.
-2. **Cancellation corollary.** One paragraph on top of (1).
-3. **Pentagon coherence.** Moderate proof, probably one more lemma.
-4. **Approximate-echo skeleton.** New module
+1. ~~**Base accumulation iso.**~~ Landed in `Echo.agda` as
+   `Echo-comp-iso-{to, from, from-to, to-from}`.
+2. ~~**Cancellation corollary.**~~ Partially landed as
+   `cancel-iso-to` / `cancel-iso-from`; full iso deferred pending
+   triangle-identity coherence (see §3 above).
+3. **Pentagon coherence.** Three-fold composition associates.
+   Moderate proof on top of `Echo-comp-iso`, probably one more
+   lemma. Next concrete follow-up on this track.
+4. **Full cancel-iso with round-trips.** Needs an equivalence
+   record that packages `s-left`, `s-right`, and the triangle
+   identity as three fields, or direct use of stdlib's
+   `Function.Bundles.Inverse`. Then the round-trip refls go through.
+5. **Approximate-echo skeleton.** New module
    `EchoApprox.agda` defining ε-echoes and restating (1) in the
    approximate setting. This is where axis 2 of the taxonomy gets
    teeth.
-5. **Decoration commuting.** Per-decoration lemmas in the existing
+6. **Decoration commuting.** Per-decoration lemmas in the existing
    `EchoGraded`, `EchoLinear`, `EchoIndexed` modules.
 
 None of these depend on the blocked Buchholz-WF / shared-binder
-work. All are Sonnet-class proofs; (4) is Opus 4.7 design and
+work. All are Sonnet-class proofs; (5) is Opus 4.7 design and
 Sonnet execution.
