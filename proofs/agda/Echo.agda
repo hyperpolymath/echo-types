@@ -4,7 +4,7 @@ module Echo where
 
 open import Level using (Level; _⊔_)
 open import Function.Base using (_∘_; id)
-open import Data.Product.Base using (Σ; _,_; _×_)
+open import Data.Product.Base using (Σ; _,_; _×_; proj₁; proj₂)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; trans; cong)
 
 -- Echo_f(y) := Σ (x : A) , (f x ≡ y)
@@ -95,3 +95,41 @@ Echo-comp-iso-to-from :
   (r : Σ B (λ b → Echo f b × (g b ≡ y))) →
   Echo-comp-iso-to f g (Echo-comp-iso-from f g r) ≡ r
 Echo-comp-iso-to-from f g (b , (x , refl) , p) = refl
+
+-- Pentagon coherence for three-fold composition. Given
+-- f : A → B, g : B → C, h : C → D, the echo of (h ∘ g ∘ f)
+-- admits two natural factorings via `Echo-comp-iso-to`:
+--
+--   outer-first : split at outer boundary (h) then at inner (g)
+--       Echo (h ∘ (g ∘ f)) y
+--     → Σ C (λ c → Echo (g ∘ f) c × (h c ≡ y))         [iso on (g∘f, h)]
+--     → Σ C (λ c → Σ B (λ b → Echo f b × (g b ≡ c)) × (h c ≡ y))
+--
+--   inner-first : split at the inner boundary ((h∘g) as outer, f as inner)
+--       Echo ((h ∘ g) ∘ f) y
+--     → Σ B (λ b → Echo f b × ((h ∘ g) b ≡ y))         [iso on (f, h∘g)]
+--
+-- Both factorings project to the same `f x` at the B-component and
+-- the same `x , refl` at the Echo-f witness. This is the minimal
+-- pentagon-style coherence: the two natural applications of
+-- Echo-comp-iso agree on the A-origin of the composite echo.
+
+Echo-comp-iso-pent-B :
+  ∀ {a b c d} {A : Set a} {B : Set b} {C : Set c} {D : Set d}
+  (f : A → B) (g : B → C) (h : C → D) {y : D}
+  (e : Echo (h ∘ g ∘ f) y) →
+  proj₁ (Echo-comp-iso-to f g
+           (proj₁ (proj₂ (Echo-comp-iso-to (g ∘ f) h e))))
+  ≡ proj₁ (Echo-comp-iso-to f (h ∘ g) e)
+Echo-comp-iso-pent-B f g h (x , p) = refl
+
+-- Stronger statement: same `(x , refl) : Echo f (f x)` on the
+-- Echo-f component too.
+Echo-comp-iso-pent-echo :
+  ∀ {a b c d} {A : Set a} {B : Set b} {C : Set c} {D : Set d}
+  (f : A → B) (g : B → C) (h : C → D) {y : D}
+  (e : Echo (h ∘ g ∘ f) y) →
+  proj₁ (proj₂ (Echo-comp-iso-to f g
+                  (proj₁ (proj₂ (Echo-comp-iso-to (g ∘ f) h e)))))
+  ≡ proj₁ (proj₂ (Echo-comp-iso-to f (h ∘ g) e))
+Echo-comp-iso-pent-echo f g h (x , p) = refl
