@@ -178,6 +178,16 @@ open import Ordinal.Buchholz.ExtendedOrder using
   ; <ᵇ⁺-irreflexive
   )
 
+open import Ordinal.Buchholz.LiftedExtendedOrder using
+  ( _<ᵇ⁺¹_
+  ; <ᵇ⁺⇒<ᵇ⁺¹
+  ; <ᵇ⁺¹-ψα
+  ; <ᵇ⁺¹-+2
+  ; <ᵇ⁺¹-ψ+2
+  ; wf-<ᵇ⁺¹
+  ; <ᵇ⁺¹-irreflexive
+  )
+
 open import Ordinal.Buchholz.SurfaceOrder using
   ( _<ᵇˢ_
   ; <ᵇˢ-core

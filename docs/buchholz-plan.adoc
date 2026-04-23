@@ -143,6 +143,11 @@ The order / well-foundedness track now has an explicit staged split:
   recursive surface route is not the right intermediate theorem.
   The direct surface bridge `_ <ᵇˢ _` remains the proved bridge
   candidate.
+* WF-1.87 (`Ordinal.Buchholz.LiftedExtendedOrder`): the next honest
+  step is wrapper iteration rather than wrapper self-lift. A new
+  well-founded wrapper `_ <ᵇ⁺¹ _` lifts same-binder moves out of
+  `_ <ᵇ⁺ _` and proves the first nested example
+  `ψν (x + y) < ψν (x + z)` from `y <ᵇ z`.
 * WF-2 (completed for mixed-head cases): bridge layer now includes
   `bpsi ν α <ᵇ bOmega μ` (under `ν ≤Ω μ`), left-summand bridges into
   additive terms (`<ᵇ-Ω+`, `<ᵇ-ψ+`), and additive-target bridges
@@ -169,6 +174,10 @@ Current Veblen-route status after this update:
 * The attempted recursive surface lift is now explicitly blocked by a
   counterexample theorem in `Ordinal.Buchholz.SurfaceOrder`; the
   proved bridge remains `_ <ᵇˢ _`.
+* `Ordinal.Buchholz.LiftedExtendedOrder` now supplies the next
+  well-founded wrapper `_ <ᵇ⁺¹ _`, showing that the surviving route is
+  iterative wrapper lifting rather than a self-stability theorem for
+  `_ <ᵇ⁺ _`.
 * It does *not* yet promote the historically blocked shared-binder
   shapes into actual constructors of `_ <ᵇ _`; that remains the
   missing step between the current core and the full intended

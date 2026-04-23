@@ -93,8 +93,9 @@ Ordinal/Buchholz track status:
 * `Ordinal.Buchholz.VeblenComparisonTarget` adds a second concrete target: a lexicographic order on `BT × Payload` whose first coordinate is relaxed by recursive `ψ`-compatibility, and whose tagged payload order handles the same-binder descent cases without introducing unstable extra comparisons.
 * `Ordinal.Buchholz.VeblenComparisonModel` is now the primary closed Veblen route: it packages that target into an assumption-free Veblen interface instantiation in which the original deferred obligations `dec-ψα` and `dec-+2`, and the lifted same-index `ψ`-to-`+` comparison, are all discharged internally.
 * `Ordinal.Buchholz.ExtendedOrder` now packages a closed comparison-induced extension `_ <ᵇ⁺ _` of `BT`: it contains the current core, exposes the historical same-binder principles as lemmas, and is transitive and well-founded.
+* `Ordinal.Buchholz.LiftedExtendedOrder` now adds the next honest wrapper `_ <ᵇ⁺¹ _`: the blocked self-lift of `_ <ᵇ⁺ _` fails, but same-binder moves from `_ <ᵇ⁺ _` into `_ <ᵇ⁺¹ _` are derivable and `_ <ᵇ⁺¹ _` is well-founded.
 * `Ordinal.Buchholz.SurfaceOrder` now adds a direct inductive surface `_ <ᵇˢ _` for the two historical same-binder shapes, with an embedding into `_ <ᵇ⁺ _` and inherited well-foundedness.
-* The exact remaining recursive frontier is now explicit in code as a blocked candidate: `SurfaceLiftInterface` is refuted by a concrete same-left `bplus` counterexample, so the genuinely recursive surface order `_ <ᵇʳ _` does not follow from the current wrapper.
+* The exact remaining recursive frontier is now explicit in code as a blocked self-lift: `SurfaceLiftInterface` is refuted by a concrete same-left `bplus` counterexample, but the new `_ <ᵇ⁺¹ _` wrapper shows the right next direction is wrapper iteration rather than self-stability.
 * `Ordinal.Buchholz.VeblenObligations` advances the hard-obligation discharge track with concrete projection-model lemmas for both same-binder shapes:
 ** `dec-+2-plus-right`
 ** `dec-ψα-psi-arg`
