@@ -135,6 +135,32 @@ open import Ordinal.PsiSimple using
   ; psi-least
   )
 
+open import Ordinal.Brouwer using
+  ( Ord
+  ; oz
+  ; osuc
+  ; olim
+  ; _≤_
+  ; _<_
+  ; ≤-refl
+  ; ≤-suc
+  ; ≤-lim
+  ; ≤-zero
+  ; ≤-trans
+  ; ≤-osuc
+  ; f-in-lim
+  ; <-suc-self
+  ; <-trans
+  ; pred-of-osuc
+  ; pred-of-olim
+  ; wf-<
+  ; <-irrefl
+  ; oz<one
+  ; one<two
+  ; oz<two
+  ; one<ω
+  )
+
 open import Ordinal.OmegaMarkers using
   ( OmegaIndex
   ; fin

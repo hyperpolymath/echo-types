@@ -262,6 +262,37 @@ Internalisation investigation (2026-04-24):
   (`SurfaceOrder`) as before. The blocker is documented here rather
   than rediscovered.
 
+Option B programme (rank-based direct WF, 2026-04-24 onwards).
+After analysing the three unblock routes, Option B (build an
+independently well-founded rank target + transport WF via
+`Subrelation` + `InverseImage`) was chosen as the long-term path.
+It retires ~12 wrapper / surface / iterated-order modules that
+exist only to compensate for the missing direct internalisation.
+The work is layered into phases:
+
+* Phase 1.1 (DONE 2026-04-24, `proofs/agda/Ordinal/Brouwer.agda`):
+  Brouwer-style ordinal notation `data Ord = oz | osuc | olim`
+  with `_≤_`, `_<_ = osuc α ≤ β`, transitivity, and
+  `wf-< : WellFounded _<_` proved directly by structural induction
+  on `Ord`. This module is `_<ᵇ_`-independent and establishes the
+  rank target. Pinned in `Smoke.agda`.
+* Phase 1.2 (PLANNED): ordinal arithmetic — Hessenberg (natural)
+  addition, ω-exponentiation, Veblen collapse functions. Used to
+  construct ranks for `bplus α β` (Hessenberg of ranks) and
+  `bpsi μ α` (Veblen-at-μ of rank α).
+* Phase 1.3 (PLANNED): monotonicity lemmas for each operation in
+  Phase 1.2. Needed for propagating `<ᵇ`-descent into `<Ord`-descent.
+* Phase 2.1 (PLANNED): `rank : BT → Ord` interpretation.
+* Phase 2.2 (PLANNED): `rank-mono : _<ᵇ_ ⇒ (_<_ on rank)`
+  constructor-by-constructor.
+* Phase 3 (PLANNED): add `<ᵇ-ψα` + `<ᵇ-+2` to `_<ᵇ_`, extend
+  `rank-mono` with the two new cases, replace `wf-<ᵇ` in
+  `WellFounded.agda` with `Subrelation.wellFounded rank-mono
+  (InverseImage.wellFounded rank wf-<)`. At that point `<ᵇ-irrefl`
+  becomes a corollary of `wf⇒asym wf-<ᵇ`.
+* Phase 4 (PLANNED): retire the wrapper / surface / iterated-order
+  modules that become redundant.
+
 Risk-gated bridge currently admitted:
 
 * The original top-marker bridges remain as named specialised lemmas
