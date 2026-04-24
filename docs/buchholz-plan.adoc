@@ -276,12 +276,25 @@ The work is layered into phases:
   `wf-< : WellFounded _<_` proved directly by structural induction
   on `Ord`. This module is `_<ᵇ_`-independent and establishes the
   rank target. Pinned in `Smoke.agda`.
-* Phase 1.2 (PLANNED): ordinal arithmetic — Hessenberg (natural)
-  addition, ω-exponentiation, Veblen collapse functions. Used to
-  construct ranks for `bplus α β` (Hessenberg of ranks) and
-  `bpsi μ α` (Veblen-at-μ of rank α).
+* Phase 1.2 (DONE 2026-04-24, `proofs/agda/Ordinal/Brouwer/Arithmetic.agda`):
+  ordinal arithmetic *definitions*. Lands `_⊕_` (left-recursive
+  naive sum; not Hessenberg — right-monotonicity is enough for our
+  rank needs), `nat-to-ord`, `ω-rank : OmegaIndex → Ord`, and
+  `psi-rank : OmegaIndex → Ord → Ord = osuc (ω-rank ν ⊕ α)`. All
+  non-trivial monotonicity proofs are deferred to Phase 1.3 —
+  probing Phase 1.2 surfaced a design question about `_≤_`'s
+  axiomatisation (data-constructors vs recursive definition) that
+  Phase 1.3 will resolve when it attempts `osuc-mono-≤` and
+  `⊕-mono-≤-right`.
 * Phase 1.3 (PLANNED): monotonicity lemmas for each operation in
   Phase 1.2. Needed for propagating `<ᵇ`-descent into `<Ord`-descent.
+  Likely includes a small `Ordinal.Brouwer` refactor: the current
+  `data _≤_` with `≤-refl` / `≤-suc` / `≤-lim` constructors makes
+  `osuc-mono-≤ : x ≤ y → osuc x ≤ osuc y` non-trivial in the
+  `≤-lim` case (the premise `x ≤ f n` does not lift to
+  `osuc x ≤ f n`). Candidate fixes: add a `≤-lim-below` constructor
+  for `(∀ n → f n ≤ β) → olim f ≤ β`, or switch `_≤_` to a
+  recursive definition where `osuc-mono-≤` is the identity.
 * Phase 2.1 (PLANNED): `rank : BT → Ord` interpretation.
 * Phase 2.2 (PLANNED): `rank-mono : _<ᵇ_ ⇒ (_<_ on rank)`
   constructor-by-constructor.

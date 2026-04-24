@@ -161,6 +161,16 @@ open import Ordinal.Brouwer using
   ; one<ω
   )
 
+open import Ordinal.Brouwer.Arithmetic using
+  ( _⊕_
+  ; nat-to-ord
+  ; ω-rank
+  ; psi-rank
+  ; ⊕-oz-left
+  ; ω-rank-fin0
+  ; ω-rank-fin1
+  )
+
 open import Ordinal.OmegaMarkers using
   ( OmegaIndex
   ; fin
