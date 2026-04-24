@@ -426,7 +426,22 @@ E7. Echo bridge:
   `distinct-provenances-same-visible`, and a `no-section`-style
   theorem over collapse
 
-Status: PLANNED
+Status: DONE (2026-04-24)
+
+Delivered in `proofs/agda/EchoOrdinal.agda`:
+
+* `ordinal-collapse : BT → OmegaIndex` — syntactic visible-level map
+* `ordinal-collapse-non-injective`
+* `ordinal-echo-left`, `ordinal-echo-right`,
+  `ordinal-echo-left≢ordinal-echo-right`
+  (aliased as `distinct-provenances-same-visible`)
+* sharper same-Ω-index ψ-argument collapse:
+  `ordinal-psi-arg-bzero`, `ordinal-psi-arg-omega1`,
+  `ordinal-psi-args-distinct`, `ordinal-psi-arg-collapse-agree`,
+  `ordinal-echo-psi-distinct`
+* `no-section-ordinal-collapse` — no right-inverse to collapse
+* `IsZeroSource`, `ordinal-collapse-classification` —
+  Omega0-preimage classification into the four BT heads
 
 M13. Headline-theorem smoke gate:
 

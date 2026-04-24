@@ -87,6 +87,17 @@ open import EchoOrdinal using
   ; ordinal-echo-left
   ; ordinal-echo-right
   ; ordinal-echo-left≢ordinal-echo-right
+  ; distinct-provenances-same-visible
+  ; ordinal-psi-arg-bzero
+  ; ordinal-psi-arg-omega1
+  ; ordinal-psi-args-distinct
+  ; ordinal-psi-arg-collapse-agree
+  ; ordinal-echo-psi-bzero
+  ; ordinal-echo-psi-omega1
+  ; ordinal-echo-psi-distinct
+  ; no-section-ordinal-collapse
+  ; IsZeroSource
+  ; ordinal-collapse-classification
   )
 
 open import Ordinal.Base using
