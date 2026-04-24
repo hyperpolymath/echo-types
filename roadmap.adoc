@@ -393,18 +393,14 @@ E5. Buchholz fragment (ν ≤ ω):
 * add `proofs/agda/Ordinal/Buchholz/{Syntax,Closure,Psi}.agda`
 * prove `Cν-monotone`, `psiν-notin-Cν`, `psiν-least-gap`
 
-Status: PARTIAL (2026-04-24)
+Status: DONE (2026-04-24)
 
-Delivered:
+Delivered in `proofs/agda/Ordinal/Buchholz/{Closure, Psi}.agda`:
 
-* `Ordinal/Buchholz/Syntax.agda`, `Closure.agda`, `Psi.agda` all compile
 * `Cν-monotone`, `Cν-index-monotone`, `Cν-monotone-both`
 * `psiν-notin-Cν`, `psiν-stage-lb`, `psiν-index-bound`
-
-Still open:
-
-* `psiν-least-gap` — the stronger least-gap theorem (stage-lb gives `1 ≤ m`;
-  least-gap gives the sharper minimal-stage side).
+* `psiν-at-succ` — constructive entry at stage `suc k` from `Cν ν k β`
+* `psiν-least-gap` — least-gap decomposition `(k, suc k ≤ m, Cν ν k β)`
 
 E6. Target expressibility:
 

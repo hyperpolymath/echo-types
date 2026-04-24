@@ -213,6 +213,8 @@ open import Ordinal.Buchholz.Psi using
   ( psiν-notin-Cν
   ; psiν-stage-lb
   ; psiν-index-bound
+  ; psiν-at-succ
+  ; psiν-least-gap
   )
 
 open import Ordinal.Buchholz.Examples using
