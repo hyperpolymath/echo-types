@@ -221,6 +221,47 @@ Current Veblen-route status after this update:
    into the real order package and then re-close inversion,
    transitivity, and well-foundedness for that enlarged order
 
+Internalisation investigation (2026-04-24):
+
+* Adding `<ᵇ-ψα : α <ᵇ β → bpsi ν α <ᵇ bpsi ν β` and
+  `<ᵇ-+2  : y₂ <ᵇ z₂ → bplus x y₂ <ᵇ bplus x z₂` as constructors to
+  `_<ᵇ_` typechecks under `--safe --without-K` on Agda 2.8.
+* Transitivity `<ᵇ-trans` extends cleanly: every new left×right pair
+  either reduces to a strictly smaller `<ᵇ` / `<Ω` subproof, reuses a
+  head from an existing constructor, or transfers the result via the
+  existing recursive cases. No K-elimination is required for the
+  transitivity step because its inputs' shared middle term forces
+  unification against fresh implicits, not a reflexive equation.
+* `<ᵇ-irrefl` in its current direct-pattern form is blocked. Matching
+  `<ᵇ-ψα α<α : bpsi ν α <ᵇ bpsi ν α` needs the K-free unifier to
+  eliminate `ν = ν`, which it cannot. Workaround: delete the direct
+  `<ᵇ-irrefl` from `Order.agda` and rely on `<ᵇ-irreflexive` in
+  `WellFounded.agda` (derived from `wf-<ᵇ` via `wf⇒asym`). This
+  requires a working `wf-<ᵇ` for the enlarged order.
+* `wf-<ᵇ` (direct) is where the real blocker lives. The `<ᵇ-+2`
+  constructor makes `Acc _<ᵇ_ (bplus α β)` depend on Acc on the
+  right summand β, so the helper must take two Accs and descend
+  lex-wise. Agda 2.8's Foetus-style termination checker does not
+  recognise lex-Acc descent when the second Acc is obtained by
+  calling a passed-in `WellFounded _<ᵇ_` witness — even when the
+  witness enters via an anonymous-module parameter. Attempted
+  variants (standalone `<ᵇ-acc-bplus-lex` parameterised by wfB;
+  module-local `BplusLex`; inline lambda-matched `acc`) all produce
+  the same `[TerminationIssue]` diagnosis.
+* A full mechanisation therefore needs one of the heavier
+  architectural moves: (a) decouple `VeblenComparisonTarget`'s
+  `×-wellFounded'` from `wf-<ᵇ` (bootstrap the lex-WF on a
+  core-restricted `<ᵇ`), or (b) rebuild `wf-<ᵇ` over a BT-structural
+  measure known to be WF independently of `_<ᵇ_` (e.g. explicit
+  ordinal rank), or (c) enable `--sized-types` within this submodule
+  — verify compatibility with `--safe` first — and prove WF by
+  co-inductive size descent on the two-Acc helper. None of these
+  belong in a single incremental step.
+* Current landing (2026-04-24): revert the constructor additions;
+  keep the same-binder shapes in `<ᵇ⁺` (`ExtendedOrder`) and `<ᵇˢ`
+  (`SurfaceOrder`) as before. The blocker is documented here rather
+  than rediscovered.
+
 Risk-gated bridge currently admitted:
 
 * The original top-marker bridges remain as named specialised lemmas

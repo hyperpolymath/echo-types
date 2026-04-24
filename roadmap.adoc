@@ -361,26 +361,50 @@ Pass condition for E2:
 * `C-monotone` compiles without postulates
 * full-suite and smoke CI jobs both still pass
 
-E3. Cantor normal form (next):
+E3. Cantor normal form:
 
 * add `proofs/agda/Ordinal/CNF.agda` — CNF fragment below ε₀
 * prove trichotomy of the CNF strict order
 
-Status: PLANNED
+Status: DONE (2026-04-24)
+
+Delivered in `proofs/agda/Ordinal/CNF.agda`:
+
+* `CNF`, `_<ᶜ_`
+* `<ᶜ-irrefl`, `<ᶜ-trans`
+* `cnf-trichotomy`
+* worked witnesses `one<ᶜtwo`, `two<ᶜω`, `one<ᶜω`
 
 E4. Pedagogical ψ:
 
 * add `proofs/agda/Ordinal/PsiSimple.agda`
 * prove `psi-notin-C` and `psi-least` on the ℕ-staged closure
 
-Status: PLANNED
+Status: DONE (2026-04-24)
+
+Delivered in `proofs/agda/Ordinal/PsiSimple.agda`:
+
+* `psi-notin-C`
+* `psi-at-1`
+* `psi-least`
 
 E5. Buchholz fragment (ν ≤ ω):
 
 * add `proofs/agda/Ordinal/Buchholz/{Syntax,Closure,Psi}.agda`
 * prove `Cν-monotone`, `psiν-notin-Cν`, `psiν-least-gap`
 
-Status: PLANNED
+Status: PARTIAL (2026-04-24)
+
+Delivered:
+
+* `Ordinal/Buchholz/Syntax.agda`, `Closure.agda`, `Psi.agda` all compile
+* `Cν-monotone`, `Cν-index-monotone`, `Cν-monotone-both`
+* `psiν-notin-Cν`, `psiν-stage-lb`, `psiν-index-bound`
+
+Still open:
+
+* `psiν-least-gap` — the stronger least-gap theorem (stage-lb gives `1 ≤ m`;
+  least-gap gives the sharper minimal-stage side).
 
 E6. Target expressibility:
 
@@ -389,7 +413,14 @@ E6. Target expressibility:
   `ψ_0(0)`, `ψ_0(1)`, `ψ_0(Ω)`, `ψ_0(Ω_ω)` (Bachmann–Howard),
   then the term corresponding to `ψ(Ω_Ω)` under the chosen reading
 
-Status: PLANNED
+Status: DONE (2026-04-24)
+
+Delivered in `proofs/agda/Ordinal/Buchholz/Examples.agda` + `WellFormed.agda`:
+
+* `bh-psi0-omega1`, `bh-psi0-omegaω` (Bachmann–Howard target term)
+* `psi0-expands`, `psi0-Omega1-target`
+* `BH`, `BH-wf`
+* `psi-OmegaOmega`, `psi-OmegaOmega-wf` (intended `ψ(Ω_Ω)` reading)
 
 E7. Echo bridge:
 
