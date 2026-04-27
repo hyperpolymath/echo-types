@@ -47,18 +47,20 @@ and ask whether the theory still names the residue coherently.
 
 *Example.*
 - Exact: `Echo f y = Σ A (λ x → f x ≡ y)`.
-- Approximate (new, not yet in Agda):
-  `EchoR ε f y = Σ A (λ x → dist (f x) y ≤ ε)` for some metric on `B`.
+- Approximate: `EchoR ε f y = Σ A (λ x → dist (f x) y ≤ ε)` for a
+  pseudo-metric on `B`. **Formalised** in `proofs/agda/EchoApprox.agda`,
+  parametric over a `Tolerance` monoid and a `PseudoMetric`.
 
 The approximate version appears implicitly in numerical
-computation, sensor-fusion pipelines, and lossy compression. It is
-**not yet formalised** in this repo. Open question: what is the
-right universal formulation of an "ε-echo" and what do its
-composition laws look like?
+computation, sensor-fusion pipelines, and lossy compression.
 
-*Conjecture.* Approximate echoes compose with an additive error:
-`ε₁-echo(f) + ε₂-echo(g) ⊑ (ε₁ + ε₂)-echo(g ∘ f)` — roughly, tolerances
-accumulate along composition. Requires careful statement.
+*Conjecture (now a theorem).* Approximate echoes compose with an
+additive error under a non-expansive outer leg:
+`ε₁-echo(f) + ε₂-echo(g) ⊑ (ε₁ + ε₂)-echo(g ∘ f)`. Realised in
+`EchoApprox.Approx.echo-approx-compose`. The non-expansiveness
+hypothesis on the outer leg is the minimal extra assumption — without
+it an amplifying second leg can blow ε₁ up arbitrarily on the way
+through.
 
 ---
 

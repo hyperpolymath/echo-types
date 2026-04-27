@@ -75,8 +75,14 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   concrete ordinal-track milestone. Pushing that result back into
   `Ordinal/Buchholz/Order.agda`'s main `_<ᵇ_` package is the step
   after that.
-- **[unblocked]** `EchoApprox.agda`: new module for ε-indexed echoes
+- **[landed]** `EchoApprox.agda`: new module for ε-indexed echoes
   over a metric codomain. First-class taxonomy axis 2 artifact.
+  Ships `EchoR ε f y = Σ A (λ x → dist (f x) y ≤ ε)` parametric over
+  a `Tolerance` monoid and a `PseudoMetric`, with three headline
+  lemmas: `echo-approx-intro` (exact ⇒ zero-ε), `echo-approx-relax`
+  (monotone in ε), and `echo-approx-compose` (additive composition
+  under a non-expansive outer leg, realising the taxonomy §2
+  conjecture). Wired into `All.agda` and `Smoke.agda`.
 - **[unblocked]** Per-decoration composition lemmas in `EchoGraded`,
   `EchoLinear`, `EchoIndexed`, `EchoChoreo`, `EchoEpistemic`: check
   each commutes with basic composition.
