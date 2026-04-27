@@ -89,8 +89,15 @@ open import EchoLinear using
   ; no-section-weaken
   ; _≤m_
   ; ≤m-trans
+  ; ≤m-prop
+  ; _⊔m_
+  ; ≤m-⊔m-left
+  ; ≤m-⊔m-right
+  ; ≤m-⊔m-univ
   ; degradeMode
   ; degradeMode-comp
+  ; degradeMode-compose
+  ; degradeMode-via-join
   )
 
 open import EchoGraded using
