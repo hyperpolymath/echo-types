@@ -138,7 +138,38 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-04-23)
+## Current rung state (2026-04-27)
+
+Just landed: **Per-decoration composition rung** in `EchoGraded.agda`.
+The grade decoration commutes with composition. Headlines:
+
+* `≤g-prop` — the order `_≤g_` is propositional (each (g1, g2) pair
+  has at most one inhabitant). Six refl-clauses, one per constructor.
+* `≤g-⊔g-left`, `≤g-⊔g-right`, `≤g-⊔g-univ` — exhibit `_⊔g_` as the
+  categorical join in `_≤g_` (two upper bounds + universal property).
+* `degrade-compose` — per-decoration composition law: for any
+  factoring `g1 ≤g g2 ≤g g3` and any direct `p13 : g1 ≤g g3`,
+  `degrade p23 (degrade p12 e) ≡ degrade p13 e`. Corollary of
+  `degrade-comp` + `≤g-prop`.
+* `degrade-via-join` — same statement restated through the join
+  structure: `degrade p1 e ≡ degrade (≤g-⊔g-univ p1 p2) (degrade
+  (≤g-⊔g-left g1 g2) e)`.
+
+All five new headlines pinned in `Smoke.agda`. Verified post-rung:
+`agda proofs/agda/All.agda` and `agda proofs/agda/Smoke.agda` both
+exit 0 under `--safe --without-K`. No postulates introduced.
+
+Open at this rung:
+
+* Linear / indexed / role / modal cases of decoration-commuting
+  (`EchoLinear`, `EchoIndexed`, `EchoChoreo`, `EchoEpistemic`).
+  The grade case suggests the recipe in each: identify the
+  decoration's underlying order, prove it propositional, prove the
+  existing `*-comp` lemma against it.
+
+---
+
+## Previous rung state (2026-04-23)
 
 Just consolidated: **Budgeted recursive-surface rung** (on top of
 the earlier **Pentagon rung**). Folded in:

@@ -58,12 +58,17 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   needing only the relevant half of g's iso structure. Round-trips
   are **deferred** pending a triangle-identity coherence or a stdlib
   `Function.Bundles.Inverse` shim. See `composition.md` §3.
-- **[partial]** Pentagon coherence for three-fold composition.
-  `Echo-comp-iso-pent-B` and `Echo-comp-iso-pent-echo` both `refl`
-  in `Echo.agda`. The full Σ-associativity iso between the two
-  nested Σ-shapes (outer-first carries an extra intermediate
-  `c : C` with `g b ≡ c`; inner-first absorbs it) remains the open
-  piece of pentagon.
+- **[landed]** Pentagon coherence for three-fold composition.
+  Projection lemmas `Echo-comp-iso-pent-B` and `Echo-comp-iso-pent-echo`
+  both `refl` in `Echo.agda`. The full Σ-associativity iso between the
+  two nested Σ-shapes (outer-first carries an extra intermediate
+  `c : C` with `g b ≡ c`; inner-first absorbs it) now ships as
+  `Echo-comp-pent-Σ-assoc-{to, from, from-to, to-from}`. The forward
+  map collapses `c` against `g b ≡ c` and transports the outer
+  h-equation; the backward map sets `c := g b` with `refl`. Both
+  round-trips reduce definitionally once the `g b ≡ c` has been pinned,
+  so this is a strict iso (no transport coherence required) and lives
+  inside `--safe --without-K`. All four pinned in `Smoke.agda`.
 - **[partial]** Budgeted recursive-surface WF on the ordinal track.
   `Ordinal/Buchholz/RecursiveSurfaceBudget.agda` ships
   `BudgetedBT = ℕ × BT`, the budgeted relation `_<ᵇʳᶠᵇ_` with its
@@ -83,9 +88,23 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   (monotone in ε), and `echo-approx-compose` (additive composition
   under a non-expansive outer leg, realising the taxonomy §2
   conjecture). Wired into `All.agda` and `Smoke.agda`.
-- **[unblocked]** Per-decoration composition lemmas in `EchoGraded`,
+- **[partial]** Per-decoration composition lemmas in `EchoGraded`,
   `EchoLinear`, `EchoIndexed`, `EchoChoreo`, `EchoEpistemic`: check
-  each commutes with basic composition.
+  each commutes with basic composition. Grade case **landed** in
+  `EchoGraded.agda` as `degrade-compose` (any factoring of a
+  `g1 ≤g g3` transition through an intermediate `g2` collapses to
+  the same degraded echo) plus `degrade-via-join` (same statement
+  through the join `_⊔g_`), proved from `≤g-prop` (the order is
+  propositional) and `degrade-comp`. Supporting lemmas
+  `≤g-⊔g-left`, `≤g-⊔g-right`, `≤g-⊔g-univ` exhibit `_⊔g_` as the
+  categorical join. Linear case **landed** in `EchoLinear.agda` as
+  `_≤m_`, `≤m-trans`, `degradeMode`, and `degradeMode-comp`
+  (`linear ⊑ linear ⊑ affine ⊑ affine`; `degradeMode-comp` is the
+  per-decoration composition lemma; auxiliary corollaries
+  `degradeMode-id-linear`, `degradeMode-id-affine`,
+  `degradeMode-strict-is-weaken` make the relationship to the
+  existing `weaken` definitional). Indexed / role / modal cases
+  remain unblocked.
 - **[unblocked]** Add example-library Agda files matching
   `examples.md`: start with examples 1–4 already in-suite, then
   example 7 (ordinal collapse is in `EchoOrdinal`); examples 5, 6,
@@ -200,7 +219,8 @@ tractable today:
 8. **Applications chapter: compiler-analysis residue** — 2 days.
    Largest reader value; entirely unblocked.
 9. **Per-decoration composition lemmas** — 1 day each. Useful
-   coverage.
+   coverage. *Grade case landed* (`EchoGraded.degrade-compose`,
+   `degrade-via-join`); linear / indexed / role / modal still open.
 
 Steps 1 and 5–6 are ~5–6 days of honest work that require nothing
 from proof assistants, external repos, or the blocked Buchholz path.

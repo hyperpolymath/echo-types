@@ -231,9 +231,16 @@ Collecting the above:
 5. **(Open) Tolerance calculus.** For approximate echoes, tolerances
    compose with a Lipschitz-like law.
 
-6. **(Open) Decoration commuting.** Role, grade, linearity, and
+6. **(Partial) Decoration commuting.** Role, grade, linearity, and
    modal decorations commute with composition under conditions to be
-   identified.
+   identified. The grade case is **landed**: `EchoGraded.degrade-compose`
+   shows that any factoring of a `g1 ≤g g3` transition through an
+   intermediate `g2` collapses to the same degraded echo, proved as a
+   corollary of `degrade-comp` and `≤g-prop` (the order is
+   propositional). `degrade-via-join` restates this through the
+   join structure `_⊔g_`, with `≤g-⊔g-left/right/univ` exhibiting
+   `_⊔g_` as the categorical join. Linear / indexed / role / modal
+   cases remain open.
 
 ---
 
@@ -259,7 +266,11 @@ Ranked by unblock-value. (1) and (2) landed; (3) onwards is open.
    approximate setting. This is where axis 2 of the taxonomy gets
    teeth.
 6. **Decoration commuting.** Per-decoration lemmas in the existing
-   `EchoGraded`, `EchoLinear`, `EchoIndexed` modules.
+   `EchoGraded`, `EchoLinear`, `EchoIndexed` modules. *Grade case
+   landed*: `EchoGraded.degrade-compose` (per-decoration composition
+   law) and `degrade-via-join` (its join-structured restatement),
+   resting on `≤g-prop` and `degrade-comp`. Linear / indexed /
+   role / modal still open.
 
 None of these depend on the blocked Buchholz-WF / shared-binder
 work. All are Sonnet-class proofs; (5) is Opus 4.7 design and

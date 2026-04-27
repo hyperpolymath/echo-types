@@ -19,8 +19,15 @@ open import Echo using
   ; Echo-comp-iso-to-from
   ; cancel-iso-to
   ; cancel-iso-from
+  ; cancel-iso-from-to
+  ; cancel-iso-to-from
+  ; hom-natural-id
   ; Echo-comp-iso-pent-B
   ; Echo-comp-iso-pent-echo
+  ; Echo-comp-pent-Σ-assoc-to
+  ; Echo-comp-pent-Σ-assoc-from
+  ; Echo-comp-pent-Σ-assoc-from-to
+  ; Echo-comp-pent-Σ-assoc-to-from
   )
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
@@ -59,6 +66,10 @@ open import EchoLinear using
   ; weaken
   ; strict-linear-example
   ; no-section-weaken
+  ; _≤m_
+  ; ≤m-trans
+  ; degradeMode
+  ; degradeMode-comp
   )
 
 open import EchoGraded using
@@ -66,6 +77,12 @@ open import EchoGraded using
   ; degrade
   ; degrade-comp
   ; ⊔g-assoc
+  ; ≤g-prop
+  ; ≤g-⊔g-left
+  ; ≤g-⊔g-right
+  ; ≤g-⊔g-univ
+  ; degrade-compose
+  ; degrade-via-join
   )
 
 open import EchoTropical using
