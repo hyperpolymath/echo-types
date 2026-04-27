@@ -46,6 +46,36 @@ knowledge-monotone :
   Knows r Q y
 knowledge-monotone pq k e = pq (proj₁ e) (k e)
 
+-- Per-decoration composition law for the modal layer. Two successive
+-- monotonicity steps `P ⊆ Q` then `Q ⊆ R` agree pointwise with the
+-- single composite `P ⊆ R` (composed predicate transformer).
+--
+-- This is the modal analogue of `EchoGraded.degrade-compose`,
+-- `EchoLinear.degradeMode-comp`, and `EchoIndexed.map-role-indexed-comp`.
+-- Stated pointwise on each predicate-witness `e : RoleEcho r y` so the
+-- equation lives inside `--safe --without-K` without function
+-- extensionality. Both sides reduce to `qr (proj₁ e) (pq (proj₁ e)
+-- (k e))` definitionally.
+knowledge-monotone-comp :
+  ∀ {r : Role} {y : Bool} {P Q R : Global → Set}
+  (pq : ∀ g → P g → Q g)
+  (qr : ∀ g → Q g → R g)
+  (k  : Knows r P y) →
+  ∀ e →
+  knowledge-monotone qr (knowledge-monotone pq k) e
+  ≡ knowledge-monotone (λ g p → qr g (pq g p)) k e
+knowledge-monotone-comp pq qr k e = refl
+
+-- Identity-step corollary: monotonicity along the identity predicate
+-- transformer leaves knowledge unchanged. Useful when chaining with
+-- the composition lemma above to peel off no-op steps.
+knowledge-monotone-id :
+  ∀ {r : Role} {y : Bool} {P : Global → Set}
+  (k : Knows r P y) →
+  ∀ e →
+  knowledge-monotone (λ _ p → p) k e ≡ k e
+knowledge-monotone-id k e = refl
+
 ServerIsTrue : Global → Set
 ServerIsTrue g = proj₂ g ≡ true
 
