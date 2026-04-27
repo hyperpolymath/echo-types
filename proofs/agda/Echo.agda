@@ -5,7 +5,10 @@ module Echo where
 open import Level using (Level; _⊔_)
 open import Function.Base using (_∘_; id)
 open import Data.Product.Base using (Σ; _,_; _×_; proj₁; proj₂)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; trans; cong)
+open import Relation.Binary.PropositionalEquality
+  using (_≡_; refl; sym; trans; cong; module ≡-Reasoning)
+open import Relation.Binary.PropositionalEquality.Properties
+  using (trans-assoc; trans-reflʳ; trans-symˡ; sym-cong; trans-cong; cong-∘)
 
 -- Echo_f(y) := Σ (x : A) , (f x ≡ y)
 Echo : ∀ {a b} {A : Set a} {B : Set b} (f : A → B) → B → Set (a ⊔ b)
@@ -34,12 +37,6 @@ map-over-id :
   map-over (id , (λ x → refl)) e ≡ e
 map-over-id (x , p) = refl
 
-trans-assoc :
-  ∀ {a} {A : Set a} {x y z w : A}
-  (p : x ≡ y) (q : y ≡ z) (r : z ≡ w) →
-  trans (trans p q) r ≡ trans p (trans q r)
-trans-assoc refl q r = refl
-
 -- Composition law (pointwise on each fiber element).
 map-over-comp :
   ∀ {a a' a'' b}
@@ -53,7 +50,7 @@ map-over-comp :
   ≡ map-over {f = f'} {f' = f''} (u2 , c2)
       (map-over {f = f} {f' = f'} (u1 , c1) e)
 map-over-comp u1 c1 u2 c2 (x , p)
-  rewrite trans-assoc (c2 (u1 x)) (c1 x) p = refl
+  rewrite trans-assoc (c2 (u1 x)) {q = c1 x} {r = p} = refl
 
 -- Action along a commuting square: f' ∘ u = v ∘ f.
 map-square :
@@ -121,16 +118,109 @@ cancel-iso-from f g s s-right {y = y} (x , q) =
   x , trans (cong g q) (s-right y)
 
 -- The two maps above witness that `Echo (g ∘ f) y` and `Echo f (s y)`
--- are *related* via g's section/retraction structure. To conclude
--- they are *isomorphic* one must also prove two round-trips equal to
--- the identity. Under `--without-K`, that requires a triangle-identity
--- coherence between `s-left` and `s-right` (roughly:
--- `cong g (s-left b) ≡ s-right (g b)`), which is not a consequence of
--- the two pointwise laws alone — a bare "both-way inverse" is weaker
--- than an equivalence / bijection in HoTT terms. The round-trip
--- formalisation is deferred until we commit to either (a) an
--- equivalence record that packages the triangle identity as a field,
--- or (b) stdlib's `Function.Bundles.Inverse`.
+-- are *related* via g's section/retraction structure. The round-trips
+-- below upgrade that to a full isomorphism. Under `--safe --without-K`,
+-- the two pointwise laws `s-left` and `s-right` are not enough on their
+-- own — a bare "both-way inverse" is weaker than an equivalence /
+-- bijection in HoTT terms. We therefore parameterise each round-trip
+-- by the relevant triangle-identity coherence:
+--
+--   * `cancel-iso-from-to` (round-trip on `Echo (g ∘ f) y`) requires
+--     `triangle₁ : ∀ b → cong g (s-left b) ≡ s-right (g b)`.
+--   * `cancel-iso-to-from` (round-trip on `Echo f (s y)`)   requires
+--     `triangle₂ : ∀ y → cong s (s-right y) ≡ s-left (s y)`.
+--
+-- One triangle implies the other in HoTT (any quasi-inverse can be
+-- adjusted to a half-adjoint equivalence), but the adjustment needs
+-- non-trivial path algebra; we take both as explicit hypotheses to
+-- keep the proofs first-order. Callers who already have an
+-- `Inverse` record from `Function.Bundles` can derive the triangles
+-- from that record's coherence fields.
+
+-- Naturality of a homotopy `h : f ∼ id` along `p : x ≡ y`. The
+-- single load-bearing path-algebra lemma for the cancel-iso round-trips.
+hom-natural-id :
+  ∀ {a} {A : Set a} (f : A → A) (h : ∀ z → f z ≡ z)
+  {x y : A} (p : x ≡ y) →
+  trans (cong f p) (h y) ≡ trans (h x) p
+hom-natural-id f h refl = sym (trans-reflʳ (h _))
+
+-- Round-trip on `Echo (g ∘ f) y`: `cancel-iso-from ∘ cancel-iso-to ≡ id`.
+cancel-iso-from-to :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) (s : C → B)
+  (s-left  : ∀ b → s (g b) ≡ b)
+  (s-right : ∀ y → g (s y) ≡ y)
+  (triangle₁ : ∀ b → cong g (s-left b) ≡ s-right (g b))
+  {y : C} (e : Echo (g ∘ f) y) →
+  cancel-iso-from f g s s-right (cancel-iso-to f g s s-left e) ≡ e
+cancel-iso-from-to f g s s-left s-right triangle₁ {y = y} (x , p) =
+  cong (λ q → x , q) lemma
+  where
+    open ≡-Reasoning
+    lemma : trans (cong g (trans (sym (s-left (f x))) (cong s p))) (s-right y) ≡ p
+    lemma = begin
+      trans (cong g (trans (sym (s-left (f x))) (cong s p))) (s-right y)
+        ≡⟨ cong (λ z → trans z (s-right y))
+             (sym (trans-cong (sym (s-left (f x))))) ⟩
+      trans (trans (cong g (sym (s-left (f x)))) (cong g (cong s p))) (s-right y)
+        ≡⟨ cong (λ z → trans (trans z (cong g (cong s p))) (s-right y))
+             (sym (sym-cong (s-left (f x)))) ⟩
+      trans (trans (sym (cong g (s-left (f x)))) (cong g (cong s p))) (s-right y)
+        ≡⟨ cong (λ z → trans (trans (sym z) (cong g (cong s p))) (s-right y))
+             (triangle₁ (f x)) ⟩
+      trans (trans (sym (s-right (g (f x)))) (cong g (cong s p))) (s-right y)
+        ≡⟨ cong (λ z → trans (trans (sym (s-right (g (f x)))) z) (s-right y))
+             (sym (cong-∘ p)) ⟩
+      trans (trans (sym (s-right (g (f x)))) (cong (g ∘ s) p)) (s-right y)
+        ≡⟨ trans-assoc (sym (s-right (g (f x)))) ⟩
+      trans (sym (s-right (g (f x)))) (trans (cong (g ∘ s) p) (s-right y))
+        ≡⟨ cong (trans (sym (s-right (g (f x)))))
+             (hom-natural-id (g ∘ s) s-right p) ⟩
+      trans (sym (s-right (g (f x)))) (trans (s-right (g (f x))) p)
+        ≡⟨ sym (trans-assoc (sym (s-right (g (f x))))) ⟩
+      trans (trans (sym (s-right (g (f x)))) (s-right (g (f x)))) p
+        ≡⟨ cong (λ z → trans z p) (trans-symˡ (s-right (g (f x)))) ⟩
+      trans refl p
+        ≡⟨⟩
+      p
+        ∎
+
+-- Round-trip on `Echo f (s y)`: `cancel-iso-to ∘ cancel-iso-from ≡ id`.
+cancel-iso-to-from :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) (s : C → B)
+  (s-left  : ∀ b → s (g b) ≡ b)
+  (s-right : ∀ y → g (s y) ≡ y)
+  (triangle₂ : ∀ y → cong s (s-right y) ≡ s-left (s y))
+  {y : C} (e : Echo f (s y)) →
+  cancel-iso-to f g s s-left (cancel-iso-from f g s s-right e) ≡ e
+cancel-iso-to-from f g s s-left s-right triangle₂ {y = y} (x , q) =
+  cong (λ r → x , r) lemma
+  where
+    open ≡-Reasoning
+    lemma : trans (sym (s-left (f x))) (cong s (trans (cong g q) (s-right y))) ≡ q
+    lemma = begin
+      trans (sym (s-left (f x))) (cong s (trans (cong g q) (s-right y)))
+        ≡⟨ cong (trans (sym (s-left (f x))))
+             (sym (trans-cong (cong g q))) ⟩
+      trans (sym (s-left (f x))) (trans (cong s (cong g q)) (cong s (s-right y)))
+        ≡⟨ cong (λ z → trans (sym (s-left (f x))) (trans (cong s (cong g q)) z))
+             (triangle₂ y) ⟩
+      trans (sym (s-left (f x))) (trans (cong s (cong g q)) (s-left (s y)))
+        ≡⟨ cong (λ z → trans (sym (s-left (f x))) (trans z (s-left (s y))))
+             (sym (cong-∘ q)) ⟩
+      trans (sym (s-left (f x))) (trans (cong (s ∘ g) q) (s-left (s y)))
+        ≡⟨ cong (trans (sym (s-left (f x))))
+             (hom-natural-id (s ∘ g) s-left q) ⟩
+      trans (sym (s-left (f x))) (trans (s-left (f x)) q)
+        ≡⟨ sym (trans-assoc (sym (s-left (f x)))) ⟩
+      trans (trans (sym (s-left (f x))) (s-left (f x))) q
+        ≡⟨ cong (λ z → trans z q) (trans-symˡ (s-left (f x))) ⟩
+      trans refl q
+        ≡⟨⟩
+      q
+        ∎
 
 -- Pentagon coherence for three-fold composition. Given
 -- f : A → B, g : B → C, h : C → D, the echo of (h ∘ g ∘ f)
@@ -169,3 +259,52 @@ Echo-comp-iso-pent-echo :
                   (proj₁ (proj₂ (Echo-comp-iso-to (g ∘ f) h e)))))
   ≡ proj₁ (proj₂ (Echo-comp-iso-to f (h ∘ g) e))
 Echo-comp-iso-pent-echo f g h (x , p) = refl
+
+-- Pentagon Σ-associativity isomorphism. The two natural factorings of
+-- `Echo (h ∘ g ∘ f) y` from the projection-pentagon lemmas above differ
+-- only by Σ-associativity / unification of the intermediate base point:
+--
+--   outer : Σ C (λ c → Σ B (λ b → Echo f b × (g b ≡ c)) × (h c ≡ y))
+--             — the "outer-first then inner" factoring, two nested splits
+--   inner : Σ B (λ b → Echo f b × (h (g b) ≡ y))
+--             — the "inner-first" factoring, a single split with (h ∘ g)
+--
+-- The forward map collapses `c` against the intermediate witness
+-- `g b ≡ c`, transporting `h c ≡ y` to `h (g b) ≡ y`. The backward map
+-- sets `c := g b` with `refl`, leaving the outer h-equation untouched.
+-- Both round-trips reduce definitionally once the relevant `g b ≡ c`
+-- has been pinned to `refl` by pattern matching, so this is a strict
+-- iso (no transport coherence required) and lives comfortably inside
+-- `--safe --without-K`.
+
+Echo-comp-pent-Σ-assoc-to :
+  ∀ {a b c d} {A : Set a} {B : Set b} {C : Set c} {D : Set d}
+  (f : A → B) (g : B → C) (h : C → D) {y : D} →
+  Σ C (λ c → Σ B (λ b → Echo f b × (g b ≡ c)) × (h c ≡ y)) →
+  Σ B (λ b → Echo f b × (h (g b) ≡ y))
+Echo-comp-pent-Σ-assoc-to f g h (c , (b , ef , q) , p) =
+  b , ef , trans (cong h q) p
+
+Echo-comp-pent-Σ-assoc-from :
+  ∀ {a b c d} {A : Set a} {B : Set b} {C : Set c} {D : Set d}
+  (f : A → B) (g : B → C) (h : C → D) {y : D} →
+  Σ B (λ b → Echo f b × (h (g b) ≡ y)) →
+  Σ C (λ c → Σ B (λ b → Echo f b × (g b ≡ c)) × (h c ≡ y))
+Echo-comp-pent-Σ-assoc-from f g h (b , ef , p) =
+  g b , (b , ef , refl) , p
+
+Echo-comp-pent-Σ-assoc-from-to :
+  ∀ {a b c d} {A : Set a} {B : Set b} {C : Set c} {D : Set d}
+  (f : A → B) (g : B → C) (h : C → D) {y : D}
+  (r : Σ C (λ c → Σ B (λ b → Echo f b × (g b ≡ c)) × (h c ≡ y))) →
+  Echo-comp-pent-Σ-assoc-from f g h
+    (Echo-comp-pent-Σ-assoc-to f g h r) ≡ r
+Echo-comp-pent-Σ-assoc-from-to f g h (c , (b , ef , refl) , p) = refl
+
+Echo-comp-pent-Σ-assoc-to-from :
+  ∀ {a b c d} {A : Set a} {B : Set b} {C : Set c} {D : Set d}
+  (f : A → B) (g : B → C) (h : C → D) {y : D}
+  (r : Σ B (λ b → Echo f b × (h (g b) ≡ y))) →
+  Echo-comp-pent-Σ-assoc-to f g h
+    (Echo-comp-pent-Σ-assoc-from f g h r) ≡ r
+Echo-comp-pent-Σ-assoc-to-from f g h (b , ef , p) = refl

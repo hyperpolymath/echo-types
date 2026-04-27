@@ -10,6 +10,7 @@ open import Data.Bool.Base using (Bool; true; false)
 open import Data.Empty using (⊥)
 open import Data.Product.Base using (Σ; _×_; _,_; proj₁)
 open import Relation.Binary.PropositionalEquality using (_≡_; _≢_; refl; trans; cong)
+open import Relation.Binary.PropositionalEquality.Properties using (trans-assoc)
 
 -- Phase A: role-indexed echoes.
 Echoᵢ :
@@ -118,9 +119,9 @@ map-role-indexed-comp f f' f'' ι ι' ι'' u u' ρ ρ' comm-f comm-f' comm-ι co
   (x , pᵢ , p)
   rewrite cong-trans ρ' (comm-ι x) (cong ρ pᵢ)
         | cong-∘ ρ' ρ pᵢ
-        | trans-assoc (comm-ι' (u x)) (cong ρ' (comm-ι x))
-                      (cong (λ z → ρ' (ρ z)) pᵢ)
-        | trans-assoc (comm-f' (u x)) (comm-f x) p
+        | trans-assoc (comm-ι' (u x)) {q = cong ρ' (comm-ι x)}
+                                      {r = cong (λ z → ρ' (ρ z)) pᵢ}
+        | trans-assoc (comm-f' (u x)) {q = comm-f x} {r = p}
         = refl
 
 -- Forgetting the role index is natural with respect to decoration
