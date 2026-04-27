@@ -39,6 +39,17 @@ open import EchoApprox using
   ; module Approx
   )
 
+open import EchoIndexed using
+  ( Echoᵢ
+  ; echoᵢ-intro
+  ; forget-role
+  ; role-sound
+  ; map-role-indexed
+  ; map-role-indexed-id
+  ; map-role-indexed-comp
+  ; forget-role-map-role-indexed
+  )
+
 open import EchoChoreo using
   ( Role
   ; Global

@@ -65,6 +65,85 @@ map-role-indexed-id :
 map-role-indexed-id (x , pᵢ , p)
   rewrite cong-id pᵢ = refl
 
+-- Auxiliaries: `cong` distributes over `trans`, and nested `cong`
+-- factors through function composition. Both are standard
+-- propositional-equality facts but kept local to keep this module
+-- self-contained and aligned with the existing `cong-id` style.
+cong-trans :
+  ∀ {a b} {A : Set a} {B : Set b} (g : A → B) {x y z : A}
+  (p : x ≡ y) (q : y ≡ z) →
+  cong g (trans p q) ≡ trans (cong g p) (cong g q)
+cong-trans g refl q = refl
+
+cong-∘ :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (g : B → C) (f : A → B) {x y : A} (p : x ≡ y) →
+  cong g (cong f p) ≡ cong (λ z → g (f z)) p
+cong-∘ g f refl = refl
+
+-- Per-decoration composition law: applying two decoration maps in
+-- sequence gives the same result as applying their composite. This
+-- is the role-indexed analogue of `map-over-comp` (Echo.agda) and the
+-- `degrade-comp` step in the per-decoration composition rung
+-- established in EchoGraded.agda.
+--
+-- The decoration here is the (role-index, role-projection) pair
+-- (I, ι); a decoration arrow `(u, ρ, comm-f, comm-ι)` from
+-- (A, I, ι, f) to (A', I', ι', f') sits over a fixed codomain B.
+-- Composition of two such arrows is the obvious componentwise
+-- composition (u' ∘ u, ρ' ∘ ρ) with the obligatory commutation
+-- proofs glued by `trans` and `cong`. This lemma certifies that
+-- gluing is functorial.
+map-role-indexed-comp :
+  ∀ {a a' a'' b i i' i''}
+  {A : Set a} {A' : Set a'} {A'' : Set a''} {B : Set b}
+  {I : Set i} {I' : Set i'} {I'' : Set i''}
+  (f : A → B) (f' : A' → B) (f'' : A'' → B)
+  (ι : A → I) (ι' : A' → I') (ι'' : A'' → I'')
+  (u : A → A') (u' : A' → A'')
+  (ρ : I → I') (ρ' : I' → I'')
+  (comm-f : ∀ x → f' (u x) ≡ f x)
+  (comm-f' : ∀ x' → f'' (u' x') ≡ f' x')
+  (comm-ι : ∀ x → ι' (u x) ≡ ρ (ι x))
+  (comm-ι' : ∀ x' → ι'' (u' x') ≡ ρ' (ι' x'))
+  {idx : I} {y : B}
+  (e : Echoᵢ I ι f idx y) →
+  map-role-indexed f' f'' ι' ι'' u' ρ' comm-f' comm-ι'
+    (map-role-indexed f f' ι ι' u ρ comm-f comm-ι e)
+  ≡ map-role-indexed f f'' ι ι'' (λ x → u' (u x)) (λ i → ρ' (ρ i))
+      (λ x → trans (comm-f' (u x)) (comm-f x))
+      (λ x → trans (comm-ι' (u x)) (cong ρ' (comm-ι x)))
+      e
+map-role-indexed-comp f f' f'' ι ι' ι'' u u' ρ ρ' comm-f comm-f' comm-ι comm-ι'
+  (x , pᵢ , p)
+  rewrite cong-trans ρ' (comm-ι x) (cong ρ pᵢ)
+        | cong-∘ ρ' ρ pᵢ
+        | trans-assoc (comm-ι' (u x)) (cong ρ' (comm-ι x))
+                      (cong (λ z → ρ' (ρ z)) pᵢ)
+        | trans-assoc (comm-f' (u x)) (comm-f x) p
+        = refl
+
+-- Forgetting the role index is natural with respect to decoration
+-- maps: applying `forget-role` after a `map-role-indexed` is the
+-- same as applying the underlying `map-over` after forgetting. This
+-- says the role-indexed layer is a strict refinement of the bare
+-- `Echo` story — no information is silently introduced or lost
+-- when stripping the role.
+forget-role-map-role-indexed :
+  ∀ {a a' b i i'}
+  {A : Set a} {A' : Set a'} {B : Set b}
+  {I : Set i} {I' : Set i'}
+  (f : A → B) (f' : A' → B)
+  (ι : A → I) (ι' : A' → I')
+  (u : A → A') (ρ : I → I')
+  (comm-f : ∀ x → f' (u x) ≡ f x)
+  (comm-ι : ∀ x → ι' (u x) ≡ ρ (ι x))
+  {idx : I} {y : B}
+  (e : Echoᵢ I ι f idx y) →
+  forget-role (map-role-indexed f f' ι ι' u ρ comm-f comm-ι e)
+  ≡ map-over (u , comm-f) (forget-role e)
+forget-role-map-role-indexed f f' ι ι' u ρ comm-f comm-ι (x , pᵢ , p) = refl
+
 -- Trace-level role-indexed example.
 data Role : Set where
   user : Role
