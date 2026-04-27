@@ -48,6 +48,17 @@ current development:
   with no section. Refinement-type presentations usually collapse at
   the propositional level and do not admit an analogous hierarchy of
   strictly weaker certificates.
+. *Compositional structure as theorems, not as user-supplied glue.*
+  `Echo-comp-iso-{to, from, from-to, to-from}` in `proofs/agda/Echo.agda`
+  proves `Echo (g ∘ f) y ≃ Σ b. Echo f b × (g b ≡ y)` directly. With a
+  bijection on the outer leg, `cancel-iso-{to, from}` exhibits the
+  cancellation `Echo (g ∘ f) y → Echo f (s y)` and back; the projection-
+  pentagon lemmas `Echo-comp-iso-pent-{B, echo}` show two natural
+  three-fold factorings agree. None of this is standard refinement-type
+  machinery: refinement subsets have no ambient theorem stating that
+  `{ x | (g ∘ f) x = y }` is canonically isomorphic to a Σ over an
+  intermediate refinement, because the predicate carrier does not
+  isolate the intermediate point as proof-relevant data.
 
 == 3. What do echo types _not_ add?
 
@@ -71,10 +82,15 @@ echo types as such.
 The residue-based strict weakening in `EchoResidue` is the part most
 resistant to this reading: a refinement type has no natural
 counterpart to "lower to a certificate, and prove no section exists".
-That is where the identity claim, if it survives, is load-bearing.
+The composition-iso family is the second load-bearing piece: it
+states a property of the family `Echo f` that has no obvious
+refinement-subset counterpart unless one re-imports dependent-pair
+machinery, at which point the refinement reading is no longer
+faithful.
 
 == 5. Verdict for Gate 1
 
 Survives, with caveat: the distinction from refinement types rests
-materially on (a) the family indexing by `f` and (b) the residue
-hierarchy, rather than on the subset-type form itself.
+materially on (a) the family indexing by `f`, (b) the residue
+hierarchy, and (c) the composition / cancellation / pentagon iso
+family — rather than on the subset-type form itself.

@@ -35,6 +35,20 @@ on top of it.
   `map-over-comp` is a rewrite on `trans-assoc`; the square proof
   `map-square` uses only `cong` and `trans`. These are reusable
   outside of a HoTT library.
+. *Base-accumulation isomorphism, cancellation, and projection
+  pentagon, proved intensionally.* `Echo-comp-iso-{to, from, from-to,
+  to-from}` proves
+  `Echo (g ∘ f) y ≃ Σ b. Echo f b × (g b ≡ y)` with both round-trips
+  on the nose; `cancel-iso-{to, from}` give the section / retraction
+  reduction in both directions when `g` admits a pointwise inverse;
+  `Echo-comp-iso-pent-{B, echo}` show the two natural three-fold
+  factorings agree by `refl` on the A-origin and the inner echo.
+  These are not new HoTT results — they are corollaries of
+  Σ-associativity and J — but they ship as named theorems in the echo
+  development, with a deliberately minimal `--without-K` proof, and
+  feed the residue / graded / linear bridges below. A standard HoTT
+  library would re-derive them through transport; the echo version is
+  reusable wherever ordinary intensional equality is enough.
 . *Residue, graded, linear, epistemic extensions sit on top of the
   intensional core.* Modules `EchoResidue`, `EchoGraded`,
   `EchoLinear`, `EchoEpistemic`, `EchoIntegration` do not require
