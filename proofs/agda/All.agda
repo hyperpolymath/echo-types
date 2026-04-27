@@ -17,6 +17,7 @@ open import EchoCNOBridge
 
 open import EchoApprox
 open import EchoIndexed
+open import EchoDecidable
 open import EchoEpistemicResidue
 open import EchoRelational
 open import EchoCategorical

@@ -50,6 +50,16 @@ open import EchoIndexed using
   ; forget-role-map-role-indexed
   )
 
+open import EchoDecidable using
+  ( EchoDec
+  ; echo-dec-intro
+  ; echo-dec-pull
+  ; echo-dec-respect-≡
+  ; echo-dec-fin
+  ; echo-dec-compose-iso
+  ; echo-dec-compose-fin
+  )
+
 open import EchoChoreo using
   ( Role
   ; Global
