@@ -15,6 +15,7 @@ open import EchoTropical
 open import EchoIntegration
 open import EchoCNOBridge
 
+open import EchoApprox
 open import EchoIndexed
 open import EchoEpistemicResidue
 open import EchoRelational

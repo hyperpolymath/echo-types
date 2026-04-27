@@ -26,6 +26,12 @@ open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
 open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)
 
+open import EchoApprox using
+  ( Tolerance
+  ; PseudoMetric
+  ; module Approx
+  )
+
 open import EchoChoreo using
   ( Role
   ; Global
