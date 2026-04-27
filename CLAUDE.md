@@ -140,8 +140,13 @@ work to `main` and refresh all documentation:
 
 ## Current rung state (2026-04-27)
 
-Just landed: **Per-decoration composition rung** in `EchoGraded.agda`.
-The grade decoration commutes with composition. Headlines:
+Just landed: **Per-decoration composition rung** across
+`EchoGraded.agda` and `EchoLinear.agda`. Both decorations commute
+with composition under the same recipe (decoration order →
+propositionality → join → factoring-free compose → via-join
+restatement). Headlines:
+
+`EchoGraded.agda`:
 
 * `≤g-prop` — the order `_≤g_` is propositional (each (g1, g2) pair
   has at most one inhabitant). Six refl-clauses, one per constructor.
@@ -155,15 +160,29 @@ The grade decoration commutes with composition. Headlines:
   structure: `degrade p1 e ≡ degrade (≤g-⊔g-univ p1 p2) (degrade
   (≤g-⊔g-left g1 g2) e)`.
 
-All five new headlines pinned in `Smoke.agda`. Verified post-rung:
-`agda proofs/agda/All.agda` and `agda proofs/agda/Smoke.agda` both
-exit 0 under `--safe --without-K`. No postulates introduced.
+`EchoLinear.agda` (linearity-side analogue, two-mode `linear ⊑
+affine` decoration):
+
+* `_≤m_`, `≤m-trans` — mode order with three constructors
+  (`linear≤linear`, `linear≤affine`, `affine≤affine`) and
+  transitivity.
+* `degradeMode`, `degradeMode-comp` — id on reflexive cases,
+  `weaken` on the strict step; composition closes `refl` on every
+  reachable constructor pair.
+* `≤m-prop`, `_⊔m_`, `≤m-⊔m-{left, right, univ}` — propositional
+  order plus join structure (with `affine` as top).
+* `degradeMode-compose`, `degradeMode-via-join` — mirror the
+  `EchoGraded` factoring-free compose and via-join restatement.
+
+All headlines pinned in `Smoke.agda`. `EchoLinear.agda` typechecks
+clean with no warnings or errors under `--safe --without-K`. No
+postulates introduced.
 
 Open at this rung:
 
-* Linear / indexed / role / modal cases of decoration-commuting
-  (`EchoLinear`, `EchoIndexed`, `EchoChoreo`, `EchoEpistemic`).
-  The grade case suggests the recipe in each: identify the
+* Indexed / role / modal cases of decoration-commuting
+  (`EchoIndexed`, `EchoChoreo`, `EchoEpistemic`). The grade and
+  linear cases suggest the recipe in each: identify the
   decoration's underlying order, prove it propositional, prove the
   existing `*-comp` lemma against it.
 

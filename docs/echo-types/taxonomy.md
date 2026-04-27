@@ -210,10 +210,12 @@ intensional core, same proof relevance, etc.) and differ only in
 whether a witness is reachable by a feasible algorithm. The security
 of every modern cryptosystem depends on this axis being real.
 
-*Agda anchor.* None directly — Agda's type system does not express
-complexity bounds, so computational access cannot be named at the
-type level in the current formalisation. Adjacent machinery in
-stdlib:
+*Agda anchor.* `EchoDecidable.agda` formalises refinement 3 below
+(decidability-respecting echo) as the first axis-8 artifact under
+`--safe --without-K`. Full cost-tracking refinements (1, 2, 4) are
+not yet formalised — Agda's type system does not express complexity
+bounds, so asymptotic computational access cannot be named at the
+type level without further machinery. Adjacent stdlib pieces:
 - `Data.Nat.Logarithm.⌊log₂⌋` and arithmetic complexity conventions
   admit informal-level statements like "this function runs in `O(n
   log n)`", but without a cost monad.
@@ -233,10 +235,25 @@ stdlib:
    host; the grade would need a complexity-class interpretation
    (e.g. polynomial vs super-polynomial).
 
-3. **Decidability-respecting echo.** `Echo⁺ f y = Dec (Echo f y)`
+3. **Decidability-respecting echo.** `EchoDec f y = Dec (Echo f y)`
    pairs the echo with a *constructive decision procedure*. Weaker
    than full cost-tracking but enough to distinguish "feasibly
-   decidable" from "mathematically inhabited".
+   decidable" from "mathematically inhabited". **Formalised** in
+   `proofs/agda/EchoDecidable.agda` as the first axis-8 artifact.
+
+*Refinement choice (chosen first formalisation target).*
+Refinement 3 is the right starting point under `--safe --without-K`.
+It is the only one of the four candidates that lives entirely inside
+the existing type theory: no resource monad, no graded semiring with
+a complexity-class interpretation, no abstract machine. `Dec` is
+already in the standard library, and the gap between `Echo f y`
+(inhabited) and `Dec (Echo f y)` (constructively decided) is
+exactly the gap axis 8 names. Formalising 3 first lets the heavier
+refinements (1, 2, 4) be added later as orthogonal layers, each
+projecting to the decidability-respecting echo by forgetting cost
+information. Realised in `EchoDecidable.agda` with headline lemmas
+`echo-dec-intro`, `echo-dec-pull-yes`, `echo-dec-respect-≡`,
+`echo-dec-fin`, `echo-dec-compose-with-search`.
 
 4. **Witness-search abstract machine.** Model the extractor as a
    term in a bounded-step abstract machine and pair it with the
@@ -245,7 +262,9 @@ stdlib:
 *Open question.* Is there a single refinement that subsumes all four?
 My guess is no: (1) and (4) track asymptotic cost, (2) and (3)
 track discrete feasibility classes. They probably live on a small
-lattice of access-tracking theories.
+lattice of access-tracking theories. Concretely, refinement 3 (now
+formalised) gives the bottom of the lattice: every other refinement
+projects down to it by erasing cost data.
 
 *Composition conjecture.* Computational accessibility composes
 **multiplicatively** along `g ∘ f` in the canonical case — the
