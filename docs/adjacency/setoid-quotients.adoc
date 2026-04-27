@@ -38,7 +38,15 @@ be read as "quotient by the kernel of `f`".
   `degrade-comp` compose lowerings in a pre-ordered family. A
   setoid presentation would need one relation per grade and explicit
   respect proofs; the graded presentation collapses this into a
-  single function family indexed by `g₁ ≤g g₂`.
+  single function family indexed by `g₁ ≤g g₂` with composition
+  pinned by `refl`.
+. *Functorial composition for the family itself.* `Echo-comp-iso-*`
+  in `proofs/agda/Echo.agda` exhibits `Echo (g ∘ f) y` as
+  isomorphic to `Σ b. Echo f b × (g b ≡ y)`, with pentagon coherence
+  for three-fold composites. This is structure on the _family_
+  `Echo f`, not on a setoid carrier; a setoid translation would need
+  to carry the equivalence relation through the iso explicitly,
+  losing the reading "echoes glue along the intermediate visible".
 
 == 3. What do echo types _not_ add?
 
