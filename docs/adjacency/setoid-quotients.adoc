@@ -35,11 +35,15 @@ be read as "quotient by the kernel of `f`".
   residue hierarchy becomes a sequence of strict quotients. The echo
   framing takes this sequence as the primary object.
 . *Graded hierarchy of lossy maps.* `EchoGraded.degrade` and
-  `degrade-comp` compose lowerings in a pre-ordered family. A
-  setoid presentation would need one relation per grade and explicit
-  respect proofs; the graded presentation collapses this into a
-  single function family indexed by `g₁ ≤g g₂` with composition
-  pinned by `refl`.
+  `degrade-comp` compose lowerings in a pre-ordered family. The
+  per-decoration composition rung
+  (`≤g-prop`, `≤g-⊔g-{left, right, univ}`, `degrade-compose`,
+  `degrade-via-join`) further shows that any two ways of factoring a
+  degradation through the order agree on the underlying echo, and
+  that the pre-order admits a categorical join. A setoid presentation
+  would need one relation per grade and explicit respect proofs; the
+  graded presentation collapses this into a single function family
+  indexed by `g₁ ≤g g₂` with composition pinned by `refl`.
 . *Functorial composition for the family itself.* `Echo-comp-iso-*`
   in `proofs/agda/Echo.agda` exhibits `Echo (g ∘ f) y` as
   isomorphic to `Σ b. Echo f b × (g b ≡ y)`, with pentagon coherence

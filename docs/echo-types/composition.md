@@ -223,17 +223,35 @@ Collecting the above:
    `s-right`). Round-trips deferred pending a triangle-identity
    coherence or a stdlib `Function.Bundles.Inverse` shim.
 
-4. **(Partial) Pentagon.** Three-fold composition associates at
-   the projections. `Echo-comp-iso-pent-B` and
-   `Echo-comp-iso-pent-echo` both `refl`; full Σ-shape iso still
-   open.
+4. **(Landed) Pentagon.** Three-fold composition associates at
+   the projections (`Echo-comp-iso-pent-B`, `Echo-comp-iso-pent-echo`,
+   both `refl`) and at the full Σ shape
+   (`Echo-comp-pent-Σ-assoc-{to, from, from-to, to-from}`). The two
+   nested-Σ shapes differ only by Σ-associativity / unification of
+   the intermediate base point; both round-trips reduce
+   definitionally once `g b ≡ c` is pinned, so this is a strict iso
+   inside `--safe --without-K`. All four iso components pinned in
+   `Smoke.agda`.
 
-5. **(Open) Tolerance calculus.** For approximate echoes, tolerances
-   compose with a Lipschitz-like law.
+5. **(Landed) Tolerance calculus.** For approximate echoes,
+   tolerances compose additively under a non-expansive outer leg.
+   Realised as `EchoApprox.Approx.echo-approx-compose` over a
+   parametric pseudo-metric.
 
-6. **(Open) Decoration commuting.** Role, grade, linearity, and
+6. **(Partial) Decoration commuting.** Role, grade, linearity, and
    modal decorations commute with composition under conditions to be
-   identified.
+   identified. The grade case is **landed**: `EchoGraded.degrade-compose`
+   shows that any factoring of a `g1 ≤g g3` transition through an
+   intermediate `g2` collapses to the same degraded echo, proved as a
+   corollary of `degrade-comp` and `≤g-prop` (the order is
+   propositional). `degrade-via-join` restates this through the
+   join structure `_⊔g_`, with `≤g-⊔g-left/right/univ` exhibiting
+   `_⊔g_` as the categorical join. The linear case is **landed** in
+   `EchoLinear.agda` as `degradeMode-comp` along the mode order
+   `linear ⊑ linear ⊑ affine ⊑ affine`; corollaries
+   `degradeMode-id-{linear, affine}` and
+   `degradeMode-strict-is-weaken` establish the relationship to the
+   existing `weaken`. Indexed / role / modal cases remain open.
 
 ---
 
@@ -246,20 +264,35 @@ Ranked by unblock-value. (1) and (2) landed; (3) onwards is open.
 2. ~~**Cancellation corollary.**~~ Partially landed as
    `cancel-iso-to` / `cancel-iso-from`; full iso deferred pending
    triangle-identity coherence (see §3 above).
-3. ~~**Pentagon coherence.**~~ Partially landed: the two
-   projection-level pentagon lemmas (`-pent-B`, `-pent-echo`)
-   ship as `refl`. The full Σ-associativity iso between the two
-   nested shapes remains open.
-4. **Full cancel-iso with round-trips.** Needs an equivalence
-   record that packages `s-left`, `s-right`, and the triangle
-   identity as three fields, or direct use of stdlib's
-   `Function.Bundles.Inverse`. Then the round-trip refls go through.
-5. **Approximate-echo skeleton.** New module
-   `EchoApprox.agda` defining ε-echoes and restating (1) in the
-   approximate setting. This is where axis 2 of the taxonomy gets
-   teeth.
+3. ~~**Pentagon coherence.**~~ Landed: projection-level
+   (`-pent-B`, `-pent-echo` as `refl`) plus the full Σ-shape iso
+   (`Echo-comp-pent-Σ-assoc-{to, from, from-to, to-from}`).
+4. ~~**Full cancel-iso with round-trips.**~~ Landed: `Echo.cancel-iso`
+   packages the four pieces (`cancel-iso-{to, from, from-to, to-from}`)
+   plus both triangle-identity coherences as a single
+   `Function.Bundles._↔_` record. Companion `Echo.Echo-comp-iso`
+   does the same for the unconditional accumulation iso (no
+   triangles needed). Built via stdlib's `mk↔ₛ′`; both round-trips
+   close on the existing pointwise lemmas.
+5. ~~**Approximate-echo skeleton.**~~ Landed in
+   `EchoApprox.agda` with `EchoR ε f y`, `echo-approx-intro`,
+   `echo-approx-relax`, and `echo-approx-compose` (additive under
+   non-expansive outer leg).
 6. **Decoration commuting.** Per-decoration lemmas in the existing
-   `EchoGraded`, `EchoLinear`, `EchoIndexed` modules.
+   `EchoGraded`, `EchoLinear`, `EchoIndexed`, `EchoChoreo`,
+   `EchoEpistemic` modules. *Grade case landed*: `EchoGraded.degrade-compose`
+   (per-decoration composition law) and `degrade-via-join` (its
+   join-structured restatement), resting on `≤g-prop` and `degrade-comp`.
+   *Linear case landed*: `EchoLinear.degradeMode-{comp,compose,via-join}`
+   along the two-mode order. *Indexed case landed*:
+   `EchoIndexed.map-role-indexed-comp`. *Modal case landed*:
+   `EchoEpistemic.knowledge-monotone-comp` (with `knowledge-monotone-id`
+   identity-step corollary). *Role/choreo case landed*:
+   `EchoChoreo.applyChoreo-{comp,compose,via-join}` along the
+   choreographic-reachability order `_⊑c_` (`Client ⊑c Server`),
+   resting on `⊑c-prop` and the canonical `_⊔c_` join. The
+   five-decoration sweep is now closed at the per-decoration
+   composition rung.
 
 None of these depend on the blocked Buchholz-WF / shared-binder
 work. All are Sonnet-class proofs; (5) is Opus 4.7 design and

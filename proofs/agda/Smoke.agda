@@ -19,8 +19,17 @@ open import Echo using
   ; Echo-comp-iso-to-from
   ; cancel-iso-to
   ; cancel-iso-from
+  ; cancel-iso-from-to
+  ; cancel-iso-to-from
+  ; hom-natural-id
   ; Echo-comp-iso-pent-B
   ; Echo-comp-iso-pent-echo
+  ; Echo-comp-pent-Σ-assoc-to
+  ; Echo-comp-pent-Σ-assoc-from
+  ; Echo-comp-pent-Σ-assoc-from-to
+  ; Echo-comp-pent-Σ-assoc-to-from
+  ; Echo-comp-iso
+  ; cancel-iso
   )
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
@@ -30,6 +39,46 @@ open import EchoApprox using
   ( Tolerance
   ; PseudoMetric
   ; module Approx
+  )
+
+open import EchoIndexed using
+  ( Echoᵢ
+  ; echoᵢ-intro
+  ; forget-role
+  ; role-sound
+  ; map-role-indexed
+  ; map-role-indexed-id
+  ; map-role-indexed-comp
+  ; forget-role-map-role-indexed
+  )
+
+open import EchoDecidable using
+  ( EchoDec
+  ; echo-dec-intro
+  ; echo-dec-pull
+  ; echo-dec-respect-≡
+  ; echo-dec-fin
+  ; echo-dec-compose-iso
+  ; echo-dec-compose-fin
+  )
+
+open import EchoFiberCount using
+  ( FiberSize-fin
+  ; FiberSize-fin-no-hit
+  ; FiberSize-fin-all-hit
+  ; FiberSize-fin-id-zero
+  ; FiberSize-fin-const
+  ; FiberSize-fin≡0⇒no-echo
+  ; no-echo⇒FiberSize-fin≡0
+  )
+
+open import EchoThermodynamics using
+  ( landauer-bound
+  ; fiber-erasure-bound
+  ; ⌊log₂1⌋≡0
+  ; bennett-reversible
+  ; bennett-reversible-id-zero
+  ; landauer-collapse
   )
 
 open import EchoChoreo using
@@ -42,6 +91,17 @@ open import EchoChoreo using
   ; client-to-server
   ; client-stability
   ; client-preimage-class
+  ; _⊑c_
+  ; ⊑c-trans
+  ; ⊑c-prop
+  ; applyChoreo
+  ; applyChoreo-comp
+  ; _⊔c_
+  ; ⊑c-⊔c-left
+  ; ⊑c-⊔c-right
+  ; ⊑c-⊔c-univ
+  ; applyChoreo-compose
+  ; applyChoreo-via-join
   )
 
 open import EchoEpistemic using
@@ -59,6 +119,17 @@ open import EchoLinear using
   ; weaken
   ; strict-linear-example
   ; no-section-weaken
+  ; _≤m_
+  ; ≤m-trans
+  ; ≤m-prop
+  ; _⊔m_
+  ; ≤m-⊔m-left
+  ; ≤m-⊔m-right
+  ; ≤m-⊔m-univ
+  ; degradeMode
+  ; degradeMode-comp
+  ; degradeMode-compose
+  ; degradeMode-via-join
   )
 
 open import EchoGraded using
@@ -66,6 +137,12 @@ open import EchoGraded using
   ; degrade
   ; degrade-comp
   ; ⊔g-assoc
+  ; ≤g-prop
+  ; ≤g-⊔g-left
+  ; ≤g-⊔g-right
+  ; ≤g-⊔g-univ
+  ; degrade-compose
+  ; degrade-via-join
   )
 
 open import EchoTropical using
@@ -177,6 +254,24 @@ open import Ordinal.Brouwer.Arithmetic using
   ; ω-rank-fin1
   )
 
+-- Phase 1.3 (2026-04-28) — recursive `_≤′_` per Echidna SA + swarm
+-- recommendation. Bullseye lemma `osuc-mono-≤′ p = p` is identity.
+-- Limit case of `≤′-refl` deferred (see module preamble).
+open import Ordinal.Brouwer.Phase13 using
+  ( _≤′_
+  ; _<′_
+  ; osuc-mono-≤′
+  ; osuc-mono-<′
+  ; ≤′-zero
+  ; oz<′osuc
+  )
+
+-- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
+-- design search; transport theorem deferred until Phase 1.3 lemmas land.
+open import Ordinal.Buchholz.RankBrouwer using
+  ( rank
+  )
+
 open import Ordinal.OmegaMarkers using
   ( OmegaIndex
   ; fin
@@ -228,6 +323,17 @@ open import Ordinal.Buchholz.Closure using
   ; cν-omega-index
   ; cν-psi-index
   ; cν-psi-decompose
+  )
+
+open import Ordinal.Buchholz.OrderExtended using
+  ( _<ᵇ⁺_
+  ; <ᵇ⁺-base
+  ; <ᵇ⁺-ψα
+  ; <ᵇ⁺-+2
+  ; <ᵇ⁺-irrefl
+  ; <ᵇ⁺-trans
+  ; <ᵇ⁺-ψα-refl
+  ; <ᵇ⁺-+2-refl
   )
 
 open import Ordinal.Buchholz.Order using

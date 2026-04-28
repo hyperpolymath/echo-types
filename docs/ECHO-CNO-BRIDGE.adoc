@@ -65,23 +65,45 @@ cno-composition-echo : ∀ (s : ProgramState) (e : Echo cno-identity s) →
 
 **Proof**: Composing identity functions preserves echo structure.
 
-### Theorem 4: CNO Thermodynamic Optimality (NEW)
+### Theorem 4: Bennett-reversible erasure cost (FINITE DOMAIN ONLY)
 
 ```agda
-cno-thermodynamic-optimality : ∀ (s : ProgramState) (T : Temperature) → 
-                               fiber-energy cno-identity s T ≡ zero
+-- in EchoThermodynamics
+bennett-reversible :
+  (f : Fin n → B) (y : B) (_≟_ : DecidableEquality B) (T : Temperature) →
+  FiberSize-fin f y _≟_ ≡ 1 →
+  fiber-erasure-bound f y _≟_ T ≡ 0
 ```
 
-**Proof**: CNOs dissipate zero energy according to Landauer's principle.
+**Status: PROVED** for the finite-domain `Fin n → B` case. The
+identity `id : Fin (suc m) → Fin (suc m)` is a canonical instance
+discharged by `bennett-reversible-id-zero`.
 
-### Theorem 5: CNO Information Preservation
+**NOT proved**: the analogous claim over the original
+`ProgramState = ℕ → ℕ` carrier. Counting fibers of a function on
+an infinite type is not constructively meaningful without a
+heavier semantic framework (capacity, measure, equivalence-class
+quotients), and the `cno-identity : ProgramState → ProgramState`
+case stays open. The earlier `cno-thermodynamic-optimality`
+formulation rested on a hardcoded `FiberSize ≡ 1` that made the
+claim vacuous; that hardcode is gone, and the honest finite case
+is proved instead.
 
-```agda
-cno-information-preservation : ∀ (s : ProgramState) → 
-                               echo-information-loss cno-identity s ≡ zero
-```
+### Theorem 5: Information-preservation (NOT YET FORMALISED)
 
-**Proof**: CNOs preserve all information (zero information loss).
+The earlier `cno-information-preservation` headline referenced a
+function `echo-information-loss` that was never defined and a
+notion of CNO-information that has no formal analogue in the
+current Agda corpus. **No theorem of this form exists in the
+proven suite.** The closest formalised statement is the qualitative
+`FiberSize-fin ≡ 0 ⟺ ¬ Echo` bidirectional in `EchoFiberCount` —
+the count is zero exactly when no metatheoretic witness exists —
+but that is a witness-presence statement, not an
+information-preservation statement.
+
+A real Shannon-entropy / mutual-information formalisation is open
+work; see `docs/echo-types/roadmap.md` under the thermodynamic
+items.
 
 ### Theorem 6: Universal CNO Definition (NEW)
 
@@ -118,8 +140,8 @@ Absolute Zero defines CNOs with four properties:
 | `FinalState(p, σ) = σ` | `Echo p σ` contains `(σ, refl)` |
 | `NoSideEffects(p)` | `Echo p σ` is singleton (only `σ` maps to `σ`) |
 | `ThermodynamicallyReversible(p)` | `Echo p σ ≃ Echo id σ` |
-| `ThermodynamicOptimality(p)` | `fiber-energy p σ T ≡ zero` |
-| `InformationPreservation(p)` | `echo-information-loss p σ ≡ zero` |
+| `ThermodynamicOptimality(p)` | `fiber-erasure-bound p σ _≟_ T ≡ 0` _(proved at finite-domain `Fin n → B` only — see Theorem 4)_ |
+| `InformationPreservation(p)` | _no formalised analogue — `echo-information-loss` was never defined; see Theorem 5_ |
 | `UniversalCNO(p)` | `∀ σ → Echo p σ ≃ Echo id σ` (NEW) |
 | `ModelIndependence(p)` | `Echo f y ≃ Echo f' y'` across isomorphic models (NEW) |
 
@@ -164,39 +186,73 @@ ModelIndependence : ∀ {A B A' B' : Ob} (f : A → B) (f' : A' → B')
 3. **Category Theory Module**: Formalizes echo types as fibrations
 4. **Functorial Properties**: Proves echo maps preserve categorical structure
 
-## Thermodynamic Bridge
+## Thermodynamic Bridge — finite-domain Landauer/Bennett bounds
 
-The `EchoThermodynamics.agda` module establishes a critical connection between echo types and Landauer's principle, directly supporting Absolute Zero's thermodynamic formalization goals.
+The `EchoFiberCount.agda` + `EchoThermodynamics.agda` pair
+formalises the *shape* of Landauer's bound at the finite-domain
+`Fin n → B` level. The earlier draft of this section claimed
+significantly more than was proved (a `FiberSize ≡ 1` hardcode
+made `cno-zero-energy` and `cno-zero-information-loss` vacuous);
+those claims have been retracted and replaced with what is
+actually in the proven suite.
 
 ### Key Concepts
 
-1. **Fiber Energy**: `fiber-energy f y T = landauer-energy T * fiber-size f y`
-2. **Information Loss**: `echo-information-loss f x = fiber-size f (f x) - 1`
-3. **CNO Optimality**: CNOs minimize energy dissipation
+1. **Honest fiber count**:
+   `FiberSize-fin f y _≟_` enumerates `Fin n` and asks the
+   decidable equality at each index — actual preimage count, not
+   a hardcoded constant.
+2. **Landauer bound shape**:
+   `landauer-bound T n = k * T * ⌊log₂ n⌋`. Linear in T,
+   logarithmic in the alternatives count. `⌊log₂ 0⌋ = ⌊log₂ 1⌋ = 0`
+   discharges the trivial corners.
+3. **Fiber erasure bound**:
+   `fiber-erasure-bound f y _≟_ T = landauer-bound T (FiberSize-fin f y _≟_)`.
 
-### Core Theorems
+### Core Theorems (proved, finite domain only)
 
 ```agda
--- CNOs dissipate zero energy
-cno-zero-energy : ∀ (s : ProgramState) (T : Temperature) → 
-                  fiber-energy cno-identity s T ≡ zero
+-- Bennett: if the fiber size at y is 1, the erasure bound is 0
+bennett-reversible :
+  (f : Fin n → B) (y : B) (_≟_ : DecidableEquality B) (T : Temperature) →
+  FiberSize-fin f y _≟_ ≡ 1 →
+  fiber-erasure-bound f y _≟_ T ≡ 0
 
--- CNOs preserve all information
-cno-zero-information-loss : ∀ (s : ProgramState) → 
-                           echo-information-loss cno-identity s ≡ zero
+-- Identity at index zero — canonical instance
+bennett-reversible-id-zero :
+  (_≟_ : DecidableEquality (Fin (suc m))) (T : Temperature) →
+  fiber-erasure-bound (λ x → x) zero _≟_ T ≡ 0
 
--- Thermodynamic verification
-thermodynamic-cno-verification : ∀ (p : ProgramState → ProgramState) → 
-                                 (∀ σ → fiber-energy p σ T ≡ zero) → 
-                                 (∀ σ → cno-zero-energy σ T)
+-- Landauer worst case: every input maps to the same y
+landauer-collapse :
+  (f : Fin n → B) (y : B) (_≟_ : DecidableEquality B) (T : Temperature) →
+  (∀ x → f x ≡ y) →
+  fiber-erasure-bound f y _≟_ T ≡ k * T * ⌊log₂ n⌋
 ```
+
+### What is NOT proved
+
+* `cno-zero-energy` over the original `ProgramState = ℕ → ℕ`
+  carrier — counting fibers on an infinite type is not
+  constructively meaningful here.
+* `echo-information-loss` and `cno-zero-information-loss` —
+  `echo-information-loss` was never defined in any module;
+  the prior claims rested on undeclared identifiers.
+* `cno-energy-hierarchy`, `thermodynamic-cno-verification` —
+  no proven analogue exists.
 
 ### Connection to Absolute Zero Goals
 
-1. **Landauer's Principle**: Formalized via `fiber-energy` and `landauer-energy`
-2. **Thermodynamic Reversibility**: Proven via `cno-zero-energy`
-3. **Energy Hierarchy**: Established via `cno-energy-hierarchy`
-4. **Information Theory**: Bridged via `echo-information-loss`
+1. **Landauer's Principle (shape)**: formalised via `landauer-bound`
+   and `fiber-erasure-bound` at the finite-domain level.
+2. **Thermodynamic Reversibility (shape)**: `bennett-reversible` is
+   proved as a corollary of `FiberSize-fin ≡ 1` and `⌊log₂ 1⌋ ≡ 0`.
+   `bennett-reversible-id-zero` is the proved instance for
+   `id : Fin (suc m) → Fin (suc m)` at index zero. The general
+   "all CNOs dissipate zero energy" claim over `ProgramState` is
+   open.
+4. **Information Theory**: not bridged. Open work — see
+   `docs/echo-types/roadmap.md`.
 
 ## Practical Implications
 

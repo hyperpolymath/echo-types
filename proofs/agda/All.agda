@@ -17,6 +17,8 @@ open import EchoCNOBridge
 
 open import EchoApprox
 open import EchoIndexed
+open import EchoDecidable
+open import EchoFiberCount
 open import EchoEpistemicResidue
 open import EchoRelational
 open import EchoCategorical
@@ -35,9 +37,11 @@ open import Ordinal.PsiSimple
 open import Ordinal.OmegaMarkers
 open import Ordinal.Brouwer
 open import Ordinal.Brouwer.Arithmetic
+open import Ordinal.Brouwer.Phase13
 open import Ordinal.Buchholz.Syntax
 open import Ordinal.Buchholz.Closure
 open import Ordinal.Buchholz.Order
+open import Ordinal.Buchholz.OrderExtended
 open import Ordinal.Buchholz.Psi
 open import Ordinal.Buchholz.Examples
 open import Ordinal.Buchholz.WellFormed
@@ -51,6 +55,7 @@ open import Ordinal.Buchholz.VeblenComparisonModel
 open import Ordinal.Buchholz.ExtendedOrder
 open import Ordinal.Buchholz.LiftedExtendedOrder
 open import Ordinal.Buchholz.IteratedExtendedOrder
+open import Ordinal.Buchholz.RankBrouwer
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
 open import Ordinal.Buchholz.RecursiveSurfaceBudget
 open import Ordinal.Buchholz.SurfaceOrder

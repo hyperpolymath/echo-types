@@ -64,8 +64,9 @@ theorem is called out as conjectural.
 
 == Compositional evidence (load-bearing across notes)
 
-Two families of theorems in `proofs/agda/Echo.agda` are cited across
-multiple notes as content distinguishing echo types from neighbours:
+Three families of theorems in `proofs/agda/Echo.agda` and
+`proofs/agda/EchoGraded.agda` are cited across multiple notes as
+content distinguishing echo types from neighbours:
 
 * *Base-accumulation iso.* `Echo-comp-iso-{to, from, from-to, to-from}`
   proves `Echo (g ∘ f) y ≃ Σ b. Echo f b × (g b ≡ y)` with both
@@ -75,6 +76,11 @@ multiple notes as content distinguishing echo types from neighbours:
   exhibit `Echo (g ∘ f) y → Echo f (s y)` and back when `g` admits a
   pointwise inverse `s`, without needing a triangle-identity coherence
   for the partial maps.
+* *Per-decoration composition for grades.* `≤g-prop`,
+  `≤g-⊔g-{left, right, univ}`, `degrade-compose`, `degrade-via-join`
+  in `EchoGraded.agda` exhibit the grade order as a propositional
+  pre-order with a categorical join, with degradation composing
+  uniquely up to `refl`.
 
 Each adjacency note flags whichever of these is load-bearing for its
 particular framework comparison.

@@ -33,10 +33,15 @@ collapsing computation" is in the same genre.
   types indexed by observer.
 . *Graded degradation with composition.* `EchoGraded.degrade-comp`
   in `proofs/agda/EchoGraded.agda` composes lowerings along
-  `_≤g_`. K-provenance has a natural homomorphism story ("evaluate
-  in a simpler semiring"), but a homomorphism between semirings is
-  a different mathematical object from a typed lowering of witnesses
-  indexed over a pre-order on grades.
+  `_≤g_`. The per-decoration composition rung adds `≤g-prop` (the
+  order is propositional), `≤g-⊔g-{left, right, univ}` (the order
+  has a categorical join), and `degrade-compose` /
+  `degrade-via-join` — any two ways of degrading through a common
+  upper bound agree on the underlying echo. K-provenance has a
+  natural homomorphism story ("evaluate in a simpler semiring"),
+  but a semiring homomorphism is a different mathematical object
+  from a propositional pre-order with a typed lowering family
+  indexed over its proofs.
 . *Strict non-recoverability as a theorem.*
   `no-section-collapse-to-residue` in `EchoResidue` _proves_ that the
   lowering from echo to residue has no inverse. Provenance
