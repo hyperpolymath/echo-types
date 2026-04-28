@@ -96,10 +96,14 @@ maps can admit different echo types.
   Buchholz workstream in this repo (`docs/buchholz-plan.adoc`) is a
   parallel, syntactic development; its relationship to Echo Types
   via `EchoOrdinal.agda` is a bridge, not a reduction. At present,
-  the current admitted Buchholz core has a closed well-foundedness
-  route, and finite same-binder depth is now handled by iterated
-  mediated wrappers, while the full intended order remains open at
-  the shared-binder internalization step.
+  the current K-free Buchholz core (`Ordinal.Buchholz.Order._<ᵇ_`)
+  has a closed well-foundedness route, finite same-binder depth is
+  handled by iterated mediated wrappers, and the shared-binder lex
+  cases (`<ᵇ⁺-ψα`, `<ᵇ⁺-+2`) are now internalised in the extended
+  relation `Ordinal.Buchholz.OrderExtended._<ᵇ⁺_` with proven
+  irrefl + trans; well-foundedness for `_<ᵇ⁺_` is the next open
+  step, with two design routes documented in
+  `docs/echo-types/buchholz-extended-wf.md`.
 - **Not a completed categorical semantics.** See
   `docs/assessment.adoc` for the current M5 verdict.
 
