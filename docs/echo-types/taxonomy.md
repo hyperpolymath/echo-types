@@ -210,15 +210,29 @@ intensional core, same proof relevance, etc.) and differ only in
 whether a witness is reachable by a feasible algorithm. The security
 of every modern cryptosystem depends on this axis being real.
 
-*Agda anchor.* `EchoDecidable.agda` formalises refinement 3 below
-(decidability-respecting echo) as the first axis-8 artifact under
-`--safe --without-K`. Full cost-tracking refinements (1, 2, 4) are
-not yet formalised — Agda's type system does not express complexity
-bounds, so asymptotic computational access cannot be named at the
-type level without further machinery. Adjacent stdlib pieces:
-- `Data.Nat.Logarithm.⌊log₂⌋` and arithmetic complexity conventions
-  admit informal-level statements like "this function runs in `O(n
-  log n)`", but without a cost monad.
+*Agda anchor.* Two artifacts now live at this axis:
+- `EchoDecidable.agda` formalises refinement 3 below
+  (decidability-respecting echo) as the first axis-8 artifact under
+  `--safe --without-K` — the *qualitative* "yes / no" layer.
+- `EchoFiberCount.agda` (companion) provides the *quantitative*
+  layer for the finite-domain regime: `FiberSize-fin f y _≟_ : ℕ`
+  enumerates `Fin n` and asks the decidable equality at each
+  index, returning the actual preimage count. Headlines:
+  `FiberSize-fin-id-zero` (id has fiber 1), `FiberSize-fin-const`
+  (constant collapse: fiber n), and the bidirectional
+  `FiberSize-fin ≡ 0 ⟺ ¬ Echo`. This is the count
+  `EchoThermodynamics.fiber-erasure-bound` runs on, replacing the
+  earlier `FiberSize ≡ 1` hardcode that rendered all
+  Landauer/Bennett claims vacuous.
+
+Full cost-tracking refinements (1, 2, 4) remain unformalised —
+Agda's type system does not express complexity bounds, so
+asymptotic computational access cannot be named at the type level
+without further machinery. Adjacent stdlib pieces:
+- `Data.Nat.Logarithm.⌊log₂⌋` (now imported by
+  `EchoThermodynamics`) and arithmetic complexity conventions admit
+  informal-level statements like "this function runs in `O(n log n)`",
+  but without a cost monad.
 - `EchoLinear.agda` and `EchoGraded.agda` restrict what one can *do*
   with witnesses via usage modes and grades. These are proxies for
   resource control, not full computational-access tracking.
