@@ -5,8 +5,31 @@
 
 This document captures the output of running Echidna's new
 `design search` strategy against two open targets in the Buchholz /
-Brouwer programme. It is a *recommendation handoff*, not a proof —
-the Agda translation is the next session's work.
+Brouwer programme.
+
+== Status (updated 2026-04-28 EOD)
+
+The recommendations *were* applied in commit `e0f67cb` on `main`:
+
+* `proofs/agda/Ordinal/Brouwer/Phase13.agda` — recursive `_≤′_` plus
+  the bullseye lemma `osuc-mono-≤′ p = p`. Compiles under
+  `--safe --without-K`. `≤′-refl` for the `olim f` case is open
+  (the `f-in-lim′` obstacle).
+* `proofs/agda/Ordinal/Buchholz/RankBrouwer.agda` — the recommended
+  rank function. Compiles. The transport theorem `rank-mono` is
+  open (couples to Phase 1.3 + Phase 2.2 lemmas).
+
+Both modules are pinned in `Smoke.agda` and wired into `All.agda`.
+The full suite (`agda proofs/agda/All.agda`) exits 0 under
+`--safe --without-K`. No postulates introduced.
+
+A prior session attempted the recursive `_≤_` *replacing* the data
+definition (visible in dropped stash@\{1\}, message: "both fail
+compile under Agda 2.8.0") and hit the same `f-in-lim′` obstacle plus
+an implicit-arg-inference issue with downstream lemmas. The current
+landing avoids the inference issue by defining `_≤′_` *alongside*
+the data `_≤_` rather than replacing — existing downstream proofs
+are unaffected at the cost of needing a future `≤ ↔ ≤′` bridge.
 
 == Background
 
