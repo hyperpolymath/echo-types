@@ -1,0 +1,208 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= Echidna design-search findings — Phase 1.3 + unbudgeted wf-<ᵇʳᶠ_
+:date: 2026-04-28
+:toc:
+
+This document captures the output of running Echidna's new
+`design search` strategy against two open targets in the Buchholz /
+Brouwer programme. It is a *recommendation handoff*, not a proof —
+the Agda translation is the next session's work.
+
+== Background
+
+Two open milestones in `docs/buchholz-plan.adoc`:
+
+* **Phase 1.3** — monotonicity lemmas for `Ordinal.Brouwer.Arithmetic`
+  (`osuc-mono-≤`, `⊕-mono-≤-right`). Blocked because the current
+  `data _≤_` axiomatisation makes `osuc-mono-≤` non-trivial in the
+  `≤-lim` case.
+* **Unbudgeted `wf-<ᵇʳᶠ_`** — `Ordinal.Buchholz.RecursiveSurfaceBudget`
+  carries a `BudgetedBT = ℕ × BT` budget alongside each derivation;
+  the goal is `WellFounded _<ᵇʳᶠ_` directly without the budget.
+
+These were attacked using a new Echidna capability stack (built in
+this session):
+
+. `echidna corpus ingest` — structural index of every named
+  declaration in `proofs/agda/Ordinal/**.agda`, plus dependency DAG
+  and axiom-hazard flags.
+. `echidna design search <problem>` — simulated annealing over
+  *design space* (axiomatisation shapes / rank shapes), not tactic
+  space. Energy is symbolic, computed from the corpus + heuristic
+  predicates.
+. `echidna design swarm <problem>` — N parallel SA agents with
+  cross-pollination through a coordinator. Used to validate that the
+  single-chain SA result was robust.
+
+== Phase 1.3 — recommended `_≤_` redesign
+
+=== What Echidna found
+
+`echidna design search brouwer-leq --top 12 --iterations 2000`
+agrees across all top candidates: switch `_≤_` to a *recursive*
+definition.
+
+Energy `[0, 0, 1, 0]` — zero monotonicity blockers, zero K-elim
+hazards, single seed constructor, recursive style.
+
+Data-style alternatives (with `LimBelow` added) score `[2, 0, 4, 1]`
+or worse; my hand-trace of `osuc-mono-≤` under `data + LimBelow`
+confirms the SA's verdict — in the `≤-lim n q` case, neither
+`≤-suc → ≤-lim k` nor `LimBelow` recovers a path from
+`q : x ≤ f n` to `osuc x ≤ osuc (olim f)`. The recursive form makes
+`osuc-mono-≤ p = p` because the equation
+`osuc α ≤ osuc β = α ≤ β` reduces the goal definitionally.
+
+=== Recommended axiomatisation
+
+Sketched (proof bodies omitted — see "Proof obligations" below):
+
+[source,agda]
+----
+_≤_ : Ord → Ord → Set
+oz      ≤ _        = ⊤
+osuc α  ≤ oz       = ⊥
+osuc α  ≤ osuc β   = α ≤ β
+osuc α  ≤ olim f   = Σ ℕ λ n → osuc α ≤ f n
+olim f  ≤ β        = ∀ n → f n ≤ β
+----
+
+=== Proof obligations under this axiomatisation
+
+. `≤-refl : ∀ {α} → α ≤ α` — structural induction on `α`.
+. `≤-step : ∀ {α β} → α ≤ β → α ≤ osuc β` — non-trivial; case-splits on
+  both arguments.
+. `≤-trans : ∀ {α β γ} → α ≤ β → β ≤ γ → α ≤ γ` — induct on `γ` first
+  (most reductions branch on the right argument).
+. `f-in-lim : ∀ f n → f n ≤ olim f` — pattern on `f n`; for the
+  successor case, supply `Σ` witness `(n , ≤-refl)`.
+. `osuc-mono-≤ p = p` — *identity* by definitional reduction. **The
+  whole point of the redesign.**
+. `⊕-mono-≤-right : ∀ {α} {x y} → x ≤ y → α ⊕ x ≤ α ⊕ y` — structural
+  on `α` (since `_⊕_` is left-recursive).
+. `wf-< : WellFounded _<_` — needs re-proof under the recursive
+  definition. The structural-induction proof in the current
+  `Brouwer.agda` uses `Acc _<_` constructed from
+  `pred-of-osuc`/`pred-of-olim`; adapt those to the recursive `_≤_`.
+
+=== Risks I noticed during hand-tracing
+
+* The `≤-step` lemma — currently a single line `≤-step = ≤-suc` — is
+  non-trivial under recursive `_≤_`. Specifically the case
+  `α = osuc α', β = olim f` requires `α' ≤ osuc (olim f)`, which
+  case-splits to `Σ n. osuc α' ≤ f n` — needs careful witness picking.
+* `pred-of-olim` — currently uses pattern match on `≤-lim n q`; under
+  recursive `_≤_`, the relation isn't pattern-matchable, so this
+  becomes a structural fact about `Σ`-elimination.
+
+These don't block the redesign — they're well-trodden constructive
+ordinal proofs in literature — but they represent real proof work,
+not a one-line refactor.
+
+== Unbudgeted `wf-<ᵇʳᶠ_` — recommended rank shape
+
+=== What Echidna found
+
+`echidna design search buchholz-rank --top 5` and
+`echidna design swarm buchholz-rank --agents 4` both converge on the
+same minimal-blocker shape with energy `[3, 0, 1]`:
+
+[source,agda]
+----
+rank : BT → Ord
+rank bzero        = oz
+rank (bOmega ν)   = ω-rank ν
+rank (bplus x y)  = rank x ⊕ rank y
+rank (bpsi ν α)   = psi-rank ν (rank α)
+----
+
+The three blockers are the three `_<ᵇʳᶠ_` constructor cases of
+`rank-mono`. Two of them (`<ᵇʳᶠ-ψα`, `<ᵇʳᶠ-+2`) reduce to the same
+new lemma `⊕-mono-<-right` (a Phase-1.3 deliverable). The third
+(`<ᵇʳᶠ-core`) reduces to Phase-2.2's `rank-mono-<ᵇ` for the base
+Buchholz order.
+
+=== Closing the goal
+
+Once Phase-1.3 monotonicity and Phase-2.2 rank-mono land:
+
+[source,agda]
+----
+rank-mono : ∀ {x y} → x <ᵇʳᶠ y → rank x < rank y
+rank-mono (<ᵇʳᶠ-core p) = rank-mono-<ᵇ p
+rank-mono (<ᵇʳᶠ-ψα   p) = -- ψ-strict-mono via osuc-strict-mono
+                          --   on (ω-rank ν ⊕ rank α)
+                          --   ⟹ ⊕-mono-<-right
+rank-mono (<ᵇʳᶠ-+2   p) = ⊕-mono-<-right p
+
+wf-<ᵇʳᶠ : WellFounded _<ᵇʳᶠ_
+wf-<ᵇʳᶠ = Subrelation.wellFounded rank-mono
+            (InverseImage.wellFounded rank wf-<)
+----
+
+(`Subrelation`, `InverseImage` from `Induction.WellFounded`. `wf-<`
+is the existing Brouwer well-foundedness — itself unchanged by the
+Phase-1.3 redesign so long as the redesign keeps it well-founded.)
+
+== Proof-obligation graph
+
+The two milestones share dependencies. In the order I'd attack them:
+
+. **`osuc-mono-<` (strict version) and `⊕-mono-<-right`** in
+  `Ordinal.Brouwer` + `Ordinal.Brouwer.Arithmetic`. Phase-1.3
+  deliverables. Recursive `_≤_` makes `osuc-mono-<` trivial; `⊕-mono-<-
+  right` is structural on `α`.
+. **Re-prove `wf-<` under the recursive `_≤_`.** Structural on `Ord`
+  with adapted `pred-of-osuc` / `pred-of-olim`.
+. **`rank-mono-<ᵇ : x <ᵇ y → rank x < rank y`** in a new
+  `Ordinal.Buchholz.Rank` module. Phase-2.2 deliverable. Constructor-
+  by-constructor induction over the 13-shape admitted core of `_<ᵇ_`.
+. **Drop `RecursiveSurfaceBudget`** in favour of direct
+  `wf-<ᵇʳᶠ : WellFounded _<ᵇʳᶠ_` via the `Subrelation` chain. The
+  budget infrastructure becomes vestigial.
+
+== SA energy assumptions (for sanity-checking)
+
+The SA's energy is symbolic, not from running Agda. Two predicates
+might be wrong; spot-check before fully trusting the recommendation:
+
+* **`mono_osuc_ok` (in `learning/design_search.rs`)**: claims that
+  `_≤_` is `Recursive` *or* contains `≤-cong-suc` ⟹ `osuc-mono-≤`
+  is trivial. I verified by hand for the `Recursive` case. The
+  `≤-cong-suc` claim is also straightforward (apply the constructor).
+  No data-style + `LimBelow` path is recognised — confirmed by hand
+  trace.
+* **`blockers` (in `learning/buchholz_rank.rs`)**: claims that
+  `<ᵇʳᶠ-+2` always needs `⊕-mono-<-right`, regardless of whether
+  `bplus` rank is `LeftSum` or `OsucSum`. The `OsucSum` case
+  technically needs `osuc-strict-mono ∘ ⊕-mono-<-right` — the outer
+  `osuc` is still strict-monotonic, so the dependency reduces to
+  `⊕-mono-<-right` either way. Confirmed.
+
+== References
+
+* `data/synonyms/agda.toml` (in `echidna`) — the vocabulary table the
+  follow-up agent should consult for tactic-name alternatives.
+* `data/corpus/agda.json` (in `echidna`, gitignored — regenerate with
+  `echidna corpus ingest --root proofs/agda` from this repo) — the
+  full dependency DAG over the project.
+* `src/rust/learning/design_search.rs` — Brouwer-leq problem.
+* `src/rust/learning/buchholz_rank.rs` — rank-function problem.
+* `src/rust/agent/swarm.rs` — parallel-search dispatcher.
+
+== Repro
+
+[source,bash]
+----
+# In the echidna repo:
+cargo run --bin echidna -- corpus ingest \
+    --root /path/to/echo-types/proofs/agda
+
+cargo run --bin echidna -- design search brouwer-leq --top 12
+
+cargo run --bin echidna -- design search buchholz-rank --top 5
+
+cargo run --bin echidna -- design swarm brouwer-leq --agents 6
+
+cargo run --bin echidna -- design swarm buchholz-rank --agents 4
+----
