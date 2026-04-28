@@ -60,6 +60,25 @@ open import EchoDecidable using
   ; echo-dec-compose-fin
   )
 
+open import EchoFiberCount using
+  ( FiberSize-fin
+  ; FiberSize-fin-no-hit
+  ; FiberSize-fin-all-hit
+  ; FiberSize-fin-id-zero
+  ; FiberSize-fin-const
+  ; FiberSize-fin≡0⇒no-echo
+  ; no-echo⇒FiberSize-fin≡0
+  )
+
+open import EchoThermodynamics using
+  ( landauer-bound
+  ; fiber-erasure-bound
+  ; ⌊log₂1⌋≡0
+  ; bennett-reversible
+  ; bennett-reversible-id-zero
+  ; landauer-collapse
+  )
+
 open import EchoChoreo using
   ( Role
   ; Global

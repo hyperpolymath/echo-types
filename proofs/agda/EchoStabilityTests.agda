@@ -15,20 +15,28 @@
 
 module EchoStabilityTests where
 
-open import Data.Nat.Base using (ℕ; zero)
+open import Data.Nat.Base using (ℕ; zero; suc; _*_)
+open import Data.Nat.Logarithm using (⌊log₂_⌋)
+open import Data.Fin.Base using (Fin) renaming (zero to fzero)
+open import Data.Fin.Properties using (_≟_)
 open import Data.Product.Base using (Σ; _,_; proj₁; proj₂)
 open import Function.Base using (id; _∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Echo using (Echo; echo-intro; MapOver; map-over; map-over-id; map-over-comp)
+open import EchoFiberCount using
+  ( FiberSize-fin
+  ; FiberSize-fin-id-zero
+  ; FiberSize-fin-const
+  )
 open import EchoThermodynamics using
   ( Temperature
-  ; fiber-energy
-  ; echo-energy-cost
-  ; cno-identity
-  ; cno-fiber-size
-  ; cno-zero-energy-at-zero
-  ; echo-cost-at-zero
+  ; k
+  ; landauer-bound
+  ; fiber-erasure-bound
+  ; bennett-reversible
+  ; bennett-reversible-id-zero
+  ; landauer-collapse
   )
 
 ----------------------------------------------------------------------------
@@ -60,23 +68,48 @@ map-over-id-check e = map-over-id e
 
 ----------------------------------------------------------------------------
 -- Section 2: Thermodynamic stability
+--
+-- This section was rewritten when EchoThermodynamics was redeemed
+-- against the honest finite-domain Landauer/Bennett bounds. The
+-- earlier `cno-fiber-size`, `fiber-energy`, and `cno-zero-energy-*`
+-- API tested vacuous theorems built on top of `FiberSize = 1` —
+-- those names are gone, and these tests now pin the new shape:
+-- `fiber-erasure-bound`, `bennett-reversible`, `landauer-collapse`.
 ----------------------------------------------------------------------------
 
--- Test 4. The CNO fiber has size one.
-cno-fiber-is-one : ∀ (s : ℕ → ℕ) → cno-fiber-size s ≡ refl
-cno-fiber-is-one s = refl
+private
+  -- Pin Fin 1 / Fin 3 decision procedures so Agda can resolve the
+  -- implicit `n` argument of `Data.Fin.Properties._≟_` in the
+  -- thermodynamic tests below.
+  _≟₁_ : (a b : Fin 1) → _
+  a ≟₁ b = a ≟ b
 
--- Test 5. At temperature zero, a CNO dissipates zero energy.
-cno-zero-T-check : ∀ (s : ℕ → ℕ) →
-                   fiber-energy cno-identity s 0 ≡ 0
-cno-zero-T-check s = cno-zero-energy-at-zero s
+  _≟₃_ : (a b : Fin 3) → _
+  a ≟₃ b = a ≟ b
 
--- Test 6. At temperature zero, *any* echo-energy-cost is zero. Locks
--- the shape of the cost function against changes to FiberSize.
-echo-cost-zero-T-check : ∀ {a b} {A : Set a} {B : Set b}
-                        (f : A → B) (x : A) →
-                        echo-energy-cost f x 0 ≡ 0
-echo-cost-zero-T-check f x = echo-cost-at-zero f x
+-- Test 4. id : Fin 1 → Fin 1 at index zero is the canonical
+-- Bennett-reversible single-step computation: erasure bound 0.
+bennett-id-zero-check : ∀ (T : Temperature) →
+                       fiber-erasure-bound {n = suc zero} (λ x → x) fzero _≟₁_ T ≡ 0
+bennett-id-zero-check T = bennett-reversible-id-zero _≟₁_ T
+
+-- Test 5. The constant map (λ _ → fzero) on Fin 3 collapses every
+-- domain index onto fzero, so its erasure bound is the full
+-- Landauer cost k * T * ⌊log₂ 3⌋.
+landauer-const3-check :
+  ∀ (T : Temperature) →
+  fiber-erasure-bound {n = 3} (λ _ → fzero {2}) (fzero {2}) _≟₃_ T
+  ≡ k * T * ⌊log₂ 3 ⌋
+landauer-const3-check T =
+  landauer-collapse {n = 3} (λ _ → fzero {2}) (fzero {2}) _≟₃_ T (λ _ → refl)
+
+-- Test 6. The bennett corollary itself: any function whose fiber
+-- size at y is 1 dissipates zero on the bound. Pinned at the
+-- id-zero instance so the test is closed.
+bennett-corollary-check : ∀ (T : Temperature) →
+                          fiber-erasure-bound {n = suc zero} (λ x → x) fzero _≟₁_ T ≡ 0
+bennett-corollary-check T =
+  bennett-reversible (λ x → x) fzero _≟₁_ T (FiberSize-fin-id-zero _≟₁_)
 
 ----------------------------------------------------------------------------
 -- What is deliberately not tested here
@@ -89,6 +122,8 @@ echo-cost-zero-T-check f x = echo-cost-at-zero f x
 --   was a duplicate of EchoCNOBridge and has been deleted. Add
 --   stability tests against EchoCNOBridge's CNOEcho / nullop-echo
 --   lemmas in a follow-up pass.
--- * Thermodynamic optimality / energy hierarchy: needs a real fiber
---   count and a `≤` relation on energies, neither of which the
---   simplified EchoThermodynamics yet provides.
+-- * Infinite-domain (`ProgramState = ℕ → ℕ`) erasure bounds:
+--   `FiberSize-fin` is finite-domain only; the infinite case
+--   needs measure-theoretic or capacity arguments and is open.
+-- * Shannon-entropy / mutual-information formalisations: not yet
+--   present in the repo. See `docs/echo-types/roadmap.md`.
