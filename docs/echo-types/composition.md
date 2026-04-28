@@ -267,10 +267,13 @@ Ranked by unblock-value. (1) and (2) landed; (3) onwards is open.
 3. ~~**Pentagon coherence.**~~ Landed: projection-level
    (`-pent-B`, `-pent-echo` as `refl`) plus the full Σ-shape iso
    (`Echo-comp-pent-Σ-assoc-{to, from, from-to, to-from}`).
-4. **Full cancel-iso with round-trips.** Needs an equivalence
-   record that packages `s-left`, `s-right`, and the triangle
-   identity as three fields, or direct use of stdlib's
-   `Function.Bundles.Inverse`. Then the round-trip refls go through.
+4. ~~**Full cancel-iso with round-trips.**~~ Landed: `Echo.cancel-iso`
+   packages the four pieces (`cancel-iso-{to, from, from-to, to-from}`)
+   plus both triangle-identity coherences as a single
+   `Function.Bundles._↔_` record. Companion `Echo.Echo-comp-iso`
+   does the same for the unconditional accumulation iso (no
+   triangles needed). Built via stdlib's `mk↔ₛ′`; both round-trips
+   close on the existing pointwise lemmas.
 5. ~~**Approximate-echo skeleton.**~~ Landed in
    `EchoApprox.agda` with `EchoR ε f y`, `echo-approx-intro`,
    `echo-approx-relax`, and `echo-approx-compose` (additive under

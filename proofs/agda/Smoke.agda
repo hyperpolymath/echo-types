@@ -28,6 +28,8 @@ open import Echo using
   ; Echo-comp-pent-Σ-assoc-from
   ; Echo-comp-pent-Σ-assoc-from-to
   ; Echo-comp-pent-Σ-assoc-to-from
+  ; Echo-comp-iso
+  ; cancel-iso
   )
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
