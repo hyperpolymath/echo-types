@@ -308,3 +308,64 @@ Echo-comp-pent-Σ-assoc-to-from :
   Echo-comp-pent-Σ-assoc-to f g h
     (Echo-comp-pent-Σ-assoc-from f g h r) ≡ r
 Echo-comp-pent-Σ-assoc-to-from f g h (b , ef , p) = refl
+
+----------------------------------------------------------------------
+-- Equivalence-record packaging
+--
+-- The `cancel-iso-{to,from,from-to,to-from}` and
+-- `Echo-comp-iso-{to,from,from-to,to-from}` quartets above each
+-- pair into a stdlib `Function.Bundles._↔_` (bijection /
+-- bi-invertible map). The `cancel-iso` packager takes the two
+-- triangle-identity coherences as hypotheses (one per round-trip),
+-- as the round-trip lemmas themselves require; the
+-- `Echo-comp-iso` packager is unconditional (the round-trips
+-- there are pure pattern-matching).
+--
+-- The `↔` record from `Function.Bundles` is the standard
+-- categorical-equivalence object in stdlib v2: `to`, `from`,
+-- congruences (trivial under `_≡_`), and the two strict-inverse
+-- laws. Building this here gives downstream consumers a single
+-- structured object instead of a quintuple of named lemmas, and
+-- means the cancel-iso closes `composition.md` §4 ("Full
+-- cancel-iso with round-trips") cleanly.
+
+open import Function.Bundles using (_↔_; mk↔ₛ′)
+
+-- Per-fiber Echo-comp iso, packaged as a ↔. The accumulation
+-- iso is unconditional, so no extra hypotheses are needed.
+
+Echo-comp-iso :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) (y : C) →
+  Echo (g ∘ f) y ↔ Σ B (λ b → Echo f b × (g b ≡ y))
+Echo-comp-iso f g y =
+  mk↔ₛ′
+    (λ e → Echo-comp-iso-to   f g {y = y} e)
+    (λ r → Echo-comp-iso-from f g {y = y} r)
+    (λ r → Echo-comp-iso-to-from f g r)
+    (λ e → Echo-comp-iso-from-to f g e)
+
+-- Per-fiber cancel iso, packaged as a ↔. Requires both triangle
+-- identities; one triangle implies the other in HoTT but the
+-- adjustment is non-trivial path algebra, so both are taken as
+-- explicit hypotheses (matching `cancel-iso-from-to` and
+-- `cancel-iso-to-from`).
+--
+-- Closes `docs/echo-types/composition.md` §4 ("Full cancel-iso
+-- with round-trips") via the stdlib equivalence record.
+
+cancel-iso :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) (s : C → B)
+  (s-left  : ∀ b → s (g b) ≡ b)
+  (s-right : ∀ y → g (s y) ≡ y)
+  (triangle₁ : ∀ b → cong g (s-left b) ≡ s-right (g b))
+  (triangle₂ : ∀ y → cong s (s-right y) ≡ s-left (s y))
+  (y : C) →
+  Echo (g ∘ f) y ↔ Echo f (s y)
+cancel-iso f g s s-left s-right triangle₁ triangle₂ y =
+  mk↔ₛ′
+    (λ e → cancel-iso-to   f g s s-left  {y = y} e)
+    (λ e → cancel-iso-from f g s s-right {y = y} e)
+    (λ e → cancel-iso-to-from f g s s-left s-right triangle₂ e)
+    (λ e → cancel-iso-from-to f g s s-left s-right triangle₁ e)
