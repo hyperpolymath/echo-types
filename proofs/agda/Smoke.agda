@@ -254,6 +254,24 @@ open import Ordinal.Brouwer.Arithmetic using
   ; ω-rank-fin1
   )
 
+-- Phase 1.3 (2026-04-28) — recursive `_≤′_` per Echidna SA + swarm
+-- recommendation. Bullseye lemma `osuc-mono-≤′ p = p` is identity.
+-- Limit case of `≤′-refl` deferred (see module preamble).
+open import Ordinal.Brouwer.Phase13 using
+  ( _≤′_
+  ; _<′_
+  ; osuc-mono-≤′
+  ; osuc-mono-<′
+  ; ≤′-zero
+  ; oz<′osuc
+  )
+
+-- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
+-- design search; transport theorem deferred until Phase 1.3 lemmas land.
+open import Ordinal.Buchholz.RankBrouwer using
+  ( rank
+  )
+
 open import Ordinal.OmegaMarkers using
   ( OmegaIndex
   ; fin
@@ -305,6 +323,17 @@ open import Ordinal.Buchholz.Closure using
   ; cν-omega-index
   ; cν-psi-index
   ; cν-psi-decompose
+  )
+
+open import Ordinal.Buchholz.OrderExtended using
+  ( _<ᵇ⁺_
+  ; <ᵇ⁺-base
+  ; <ᵇ⁺-ψα
+  ; <ᵇ⁺-+2
+  ; <ᵇ⁺-irrefl
+  ; <ᵇ⁺-trans
+  ; <ᵇ⁺-ψα-refl
+  ; <ᵇ⁺-+2-refl
   )
 
 open import Ordinal.Buchholz.Order using
