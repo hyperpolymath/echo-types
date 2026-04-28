@@ -276,13 +276,20 @@ Ranked by unblock-value. (1) and (2) landed; (3) onwards is open.
    `echo-approx-relax`, and `echo-approx-compose` (additive under
    non-expansive outer leg).
 6. **Decoration commuting.** Per-decoration lemmas in the existing
-   `EchoGraded`, `EchoLinear`, `EchoIndexed` modules. *Grade case
-   landed*: `EchoGraded.degrade-compose` (per-decoration composition
-   law) and `degrade-via-join` (its join-structured restatement),
-   resting on `≤g-prop` and `degrade-comp`. *Linear case landed*:
-   `EchoLinear.degradeMode-comp` along the mode order with
-   `degradeMode-id-{linear, affine}` corollaries. Indexed / role /
-   modal still open.
+   `EchoGraded`, `EchoLinear`, `EchoIndexed`, `EchoChoreo`,
+   `EchoEpistemic` modules. *Grade case landed*: `EchoGraded.degrade-compose`
+   (per-decoration composition law) and `degrade-via-join` (its
+   join-structured restatement), resting on `≤g-prop` and `degrade-comp`.
+   *Linear case landed*: `EchoLinear.degradeMode-{comp,compose,via-join}`
+   along the two-mode order. *Indexed case landed*:
+   `EchoIndexed.map-role-indexed-comp`. *Modal case landed*:
+   `EchoEpistemic.knowledge-monotone-comp` (with `knowledge-monotone-id`
+   identity-step corollary). *Role/choreo case landed*:
+   `EchoChoreo.applyChoreo-{comp,compose,via-join}` along the
+   choreographic-reachability order `_⊑c_` (`Client ⊑c Server`),
+   resting on `⊑c-prop` and the canonical `_⊔c_` join. The
+   five-decoration sweep is now closed at the per-decoration
+   composition rung.
 
 None of these depend on the blocked Buchholz-WF / shared-binder
 work. All are Sonnet-class proofs; (5) is Opus 4.7 design and

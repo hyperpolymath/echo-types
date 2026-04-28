@@ -89,6 +89,17 @@ open import EchoChoreo using
   ; client-to-server
   ; client-stability
   ; client-preimage-class
+  ; _⊑c_
+  ; ⊑c-trans
+  ; ⊑c-prop
+  ; applyChoreo
+  ; applyChoreo-comp
+  ; _⊔c_
+  ; ⊑c-⊔c-left
+  ; ⊑c-⊔c-right
+  ; ⊑c-⊔c-univ
+  ; applyChoreo-compose
+  ; applyChoreo-via-join
   )
 
 open import EchoEpistemic using
