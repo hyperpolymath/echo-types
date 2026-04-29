@@ -65,6 +65,40 @@ fiber) vs. propositionally-truncated fiber". HoTT *contains*
 both; the win is over a specific applied use of HoTT, not over
 HoTT itself.
 
+== Composition-iso evidence
+
+Beyond the `echo-not-prop` witness-loss certificate, the iso
+family in `proofs/agda/Echo.agda` provides structural evidence
+for the proof-relevant-vs-truncated distinction under
+composition:
+
+* `Echo-comp-iso-{to, from, from-to, to-from}` exhibits
+  `Echo (g ∘ f) y ≃ Σ b. Echo f b × (g b ≡ y)` with both
+  round-trips on the nose.
+* `cancel-iso-{to, from}` reduce composition through a section
+  to composition through the underlying fiber, when the outer
+  step admits a pointwise inverse.
+* `Echo-comp-iso-pent-{B, echo}` show two natural three-fold
+  factorings agree by `refl` on the A-origin and the inner
+  echo.
+
+These are not new HoTT results — they are corollaries of
+Σ-associativity and J — but they ship as named theorems in plain
+Agda with a deliberately minimal `--without-K` proof. Under
+propositional truncation the family collapses (Σ becomes ∃, and
+the round-trip equations become automatic since the targets are
+propositions); in the un-truncated form, the family preserves
+witness identity under composition. Together with
+`echo-not-prop`, this is the second structural distinction
+between proof-relevant fibres and truncated fibres: not just
+that the witness data is present, but that it composes without
+intermediate higher-equalities.
+
+The fact is structural about Echo-as-fiber and is independent
+of EI-2's negative termination — it distinguishes proof-relevant
+fibres from truncated fibres regardless of what the integration
+recipe does or doesn't do.
+
 == 2-cell argument
 
 In HoTT (or cubical Agda), 2-cells between parallel fibers are

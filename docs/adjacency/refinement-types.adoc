@@ -63,6 +63,45 @@ This is the right shape of claim for this neighbour: explicitly
 acknowledge the tied case; carry the win against the
 propositional case as the formal exhibit.
 
+== Composition-iso evidence
+
+Beyond the `echo-not-prop` witness-loss certificate, the iso
+family in `proofs/agda/Echo.agda` provides a structural analogue
+that strengthens the truncation argument specifically against
+propositional-predicate refinement:
+
+* `Echo-comp-iso-{to, from, from-to, to-from}` proves
+  `Echo (g ∘ f) y ≃ Σ b. Echo f b × (g b ≡ y)` directly.
+* With a bijection on the outer leg, `cancel-iso-{to, from}`
+  exhibit the cancellation `Echo (g ∘ f) y → Echo f (s y)` and
+  back; the projection-pentagon lemmas
+  `Echo-comp-iso-pent-{B, echo}` show two natural three-fold
+  factorings agree.
+
+None of this is standard refinement-type machinery. Refinement
+subsets have no ambient theorem stating that
+`{ x | (g ∘ f) x = y }` is canonically isomorphic to a Σ over
+an intermediate refinement, because the predicate carrier does
+not isolate the intermediate point as proof-relevant data.
+
+Under Σ-relevant refinement (Agda, Coq), the predicate IS the
+refinement type and the iso family is the same family, not a
+separate result — the tied case acknowledged in "Distinctness
+claim" above. Under propositional-predicate refinement, the
+predicate cannot isolate the intermediate `b` as data without
+becoming type-relevant, at which point it has left propositional
+refinement. So the iso family is structural evidence that the
+truncation argument is tracking the right axis: what
+propositionally-truncated refinement loses under composition is
+not a corner case but a load-bearing structural property of
+Echo-as-Σ-family.
+
+The fact is structural about Echo-as-Σ and is independent of
+EI-2's negative termination — it strengthens the truncation
+argument's distinctness against propositional-predicate
+refinement regardless of what the integration recipe does or
+doesn't do.
+
 == 2-cell argument
 
 Not directly applicable. Refinement-type systems do not, in
