@@ -26,9 +26,9 @@ open import Relation.Nullary using (¬_)
 
 private
   variable
-    a b : Level
-    A : Set a
-    B : Set b
+    ℓa ℓb : Level
+    A : Set ℓa
+    B : Set ℓb
 
 -- A type is propositional ("a mere proposition") when any two
 -- inhabitants are equal. Standard HoTT terminology, kept universe-
