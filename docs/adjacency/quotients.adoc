@@ -1,0 +1,136 @@
+= Adjacency: quotient types / setoid quotients
+:toc: macro
+
+[.lead]
+*Verdict: distinct.* Both the truncation and 2-cell arguments are
+active and formalised against this neighbour. This is the gate-1
+case argued in most depth.
+
+toc::[]
+
+== Nearest existing construction
+
+For surjective `f : A → B`, the kernel `ker f` is an equivalence
+relation and `B ≅ A / ker f`. The equivalence class of `x` under
+`ker f` is the same data as `Echo f (f x)`. The construction is
+the same; the *stance* differs:
+
+* Quotient theory studies the *codomain that results from
+  collapse*. The quotient `A / ker f` is a set whose elements are
+  classes; individual witnesses are projected away.
+* Echo theory studies the *witnesses to collapse*. `Echo f y` is
+  a type whose elements are concrete `(x, p)` pairs; the
+  individual `x` is preserved.
+
+This is the duality that makes both arguments fire.
+
+== Distinctness claim
+
+[quote]
+Echo types carry witness data that quotient theory discards by
+construction (truncation argument), and the natural 2-cells in
+sophisticated quotient encodings are themselves Σ-over-preimages-
+shaped (2-cell argument).
+
+== Truncation argument
+
+Quotients identify witnesses by definition: the quotient class of
+`x` is `[x]`, with no remembered witness identity. Echo retains
+witness identity as the first component of the Σ.
+
+Formal exhibits (gate-3 examples):
+
+* `EpistemicUpdate.refine-injective` uses individual world
+  identity, which the quotient does not provide.
+* `EpistemicUpdate.distinct-w₁-w₃` exhibits two distinct worlds
+  in the same quotient class, formally distinguishable in Echo.
+* `EpistemicUpdate.echo-not-prop` certifies the knowledge type is
+  not a mere proposition, so propositional-class accounts cannot
+  reproduce it.
+
+The general truncation theorem (Q2.1): for non-injective `f` with
+multiple preimages of `y`, `is-prop (Echo f y) → ⊥`. Quotients
+*are* the proposition that loses what this theorem certifies.
+
+== 2-cell argument
+
+Naive quotient stacking fails on the simplest cross-axis
+non-commutation:
+
+* `EchoVsQuotient.Miniature.kernel-disagreement` — concrete
+  witness in the two-bit setting: `ker(g₁∘rL) ≠ ker(rL∘g₁)` at
+  the witness pair `((true, true), (false, true))`.
+
+Sophisticated quotient encodings have been attempted and sealed:
+
+* *2-categorical encoding* (most plausible sophisticated route):
+  `EchoVsQuotient.Sophisticated.equalizer→echo-pair` shows the
+  natural 2-cell (StrictComparison = equalizer of two parallel
+  maps) is structurally Σ-over-preimages — i.e., already
+  echo-shaped. Any 2-cell witness decomposes mechanically into
+  two Echo witnesses sharing a preimage.
+* *Joins of kernels* (S-1):
+  `EchoVsQuotient.Sophisticated.Joins.join-universal` shows the
+  join of the two non-commuting kernels is the universal
+  relation on the carrier, so `A / Join` is a singleton — joins
+  collapse and lose all integration content.
+* *Indexed families with coherence laws* (S-2):
+  `EchoVsQuotient.Sophisticated.IndexedFamilies.s-2-reduction`
+  shows coherence-law data unfolds definitionally to
+  `StrictComparison`, so the same `equalizer→echo-pair`
+  conversion applies. The argument generalises mechanically to
+  larger indices.
+
+Two further sub-cases (S-3 axiomatic 2-cells, S-4 HoTT/HiTs)
+have informal arguments only — see Q1.6 in `next-questions.adoc`.
+
+== What echo adds
+
+Witness identity (the first projection of the Σ) and the natural
+2-cell as data rather than a free-floating coherence axiom.
+
+== What echo does not add
+
+The *equivalence relation* itself is the same. If the only
+operation needed is "are these two things in the same class?",
+quotients suffice and echo is overkill. Gate-3's framing makes
+this explicit: echo wins for *dynamic / programmable* knowledge
+update; the two are tied for *static / classical* knowledge
+analysis.
+
+== Retraction conditions
+
+Either of the following retracts gate-1's distinctness claim
+against quotient types:
+
+. A quotient encoding of the characteristic-family commutation
+  theorem (`RoleGraded.choreo-grade-commute` or its successor) that
+  uses no echo machinery.
+. A demonstration that the 2-cell argument's Σ-shape conclusion
+  is itself derivable from generic stdlib lemmas about quotients
+  (i.e., the structural argument is a fiber-lemma in disguise).
+
+Neither has been exhibited.
+
+== Status
+
+* Truncation argument: *formalised* on three domains via
+  `echo-not-prop`. General theorem awaits Q2.1.
+* 2-cell argument: *formalised* via `EchoVsQuotient.Sophisticated`
+  with three sub-cases sealed (core + S-1 + S-2). S-3 and S-4
+  have informal closures.
+
+This is the strongest gate-1 case in the directory. Other
+neighbours have weaker formalisation; this is the template.
+
+== References
+
+* Bishop, "Foundations of Constructive Analysis" (1967) for
+  setoid quotients.
+* The Cubical Agda primitives for higher-inductive quotients
+  (out of scope for `--safe --without-K` here; relevant for the
+  S-4 sub-case).
+* `proofs/agda/EchoVsQuotient.agda` for the formal exhibits
+  cited above.
+* `gate-1-distinct-phenomenon.adoc` § "Falsification tests" for
+  the T2 retraction protocol this note instantiates.

@@ -1,103 +1,193 @@
-= Adjacency: HoTT Fibers
+= Adjacency: HoTT homotopy fibers
 :toc: macro
+
+[.lead]
+*Verdict: not distinct from HoTT homotopy fibers — echo IS the
+homotopy fiber.* The win is over the *propositional truncation
+modality* applied to fibers, not over fibers themselves. This is
+the most-coincident neighbour in the directory.
+
+This note exists to state the coincidence plainly rather than
+gloss over it. Overstating distinctness here would be the
+clearest way to lose credibility on gate #1.
 
 toc::[]
 
-== 1. Nearest existing construction
+== The honest claim, up front
 
-In homotopy type theory the fiber of `f : A → B` over `y : B` is
+`Echo f y := Σ A (λ x → f x ≡ y)` *is* the homotopy fiber of `f`
+at `y`, by definition. There is no syntactic or semantic
+difference. Anyone fluent in HoTT will recognise the construction
+on first sight.
 
-[source]
-----
-fib f y := Σ (x : A) , (f x = y)
-----
+Distinctness against HoTT-fiber-as-construction is *not* a
+defensible claim. Distinctness against HoTT-fiber-as-construction-
+post-truncation *is*, but the truncation is an applied modality,
+not part of the fiber's primitive definition.
 
-This is _definitionally_ the echo construction. On that reading, this
-note is where the identity claim is most directly at risk. Everything
-below is an argument that the interesting content is not in the
-definition but in the intensional setting and the development built
-on top of it.
+== Distinctness claim (narrow)
 
-== 2. What do echo types add?
+[quote]
+Echo coincides with the HoTT homotopy fiber definitionally. The
+distinctness claim against HoTT is not against the construction
+itself, but against accounts that *truncate* the fiber to a
+proposition before further analysis. `echo-not-prop` certifies
+the truncation loses witness data.
 
-. *Plain intensional setting, no univalence.* The Agda development
-  uses `--safe --without-K` and `Relation.Binary.PropositionalEquality`.
-  The `Echo` type family is therefore not claimed to be a ∞-groupoid
-  or to satisfy function extensionality. Its equalities are the
-  ordinary intensional ones, and theorems like
-  `EchoCharacteristic.echo-true≢echo-false` rely on that. A HoTT
-  reader who treats `fib f y` up to homotopy would _not_ get this
-  disequality for free; the distinction is intensional.
-. *Explicit functorial laws without path induction gymnastics.*
-  `map-over-id`, `map-over-comp`, `map-square` in
-  `proofs/agda/Echo.agda` are proved by `refl` and `trans-assoc`, not
-  by transporting along higher paths. The composition proof
-  `map-over-comp` is a rewrite on `trans-assoc`; the square proof
-  `map-square` uses only `cong` and `trans`. These are reusable
-  outside of a HoTT library.
-. *Base-accumulation isomorphism, cancellation, and projection
-  pentagon, proved intensionally.* `Echo-comp-iso-{to, from, from-to,
-  to-from}` proves
-  `Echo (g ∘ f) y ≃ Σ b. Echo f b × (g b ≡ y)` with both round-trips
-  on the nose; `cancel-iso-{to, from}` give the section / retraction
-  reduction in both directions when `g` admits a pointwise inverse;
-  `Echo-comp-iso-pent-{B, echo}` show the two natural three-fold
-  factorings agree by `refl` on the A-origin and the inner echo.
-  These are not new HoTT results — they are corollaries of
-  Σ-associativity and J — but they ship as named theorems in the echo
-  development, with a deliberately minimal `--without-K` proof, and
-  feed the residue / graded / linear bridges below. A standard HoTT
-  library would re-derive them through transport; the echo version is
-  reusable wherever ordinary intensional equality is enough.
-. *Residue, graded, linear, epistemic extensions sit on top of the
-  intensional core.* Modules `EchoResidue`, `EchoGraded`,
-  `EchoLinear`, `EchoEpistemic`, `EchoIntegration` do not require
-  univalence. They reason about loss in terms of lowerings and
-  no-section theorems, not in terms of (n-)truncations.
+This is genuinely the right framing. The previous consolidated
+doc said "Cubical fibers are the same construction with stricter
+equality. Different setting, same shape." This was correct as a
+description but understated how completely the constructions
+coincide.
 
-== 3. What do echo types _not_ add?
+== Truncation argument
 
-* *No new mathematical object.* `Echo f y` and `fib f y` are the same
-  sigma. Anything stated purely about the type former, with no further
-  structure, is already a HoTT fiber result.
-* *No univalent / higher-path content.* The development does not prove
-  equivalences between fibers in the HoTT sense, does not consider
-  truncation levels, and does not use higher inductive types.
-* *No contractibility-of-fibers style characterisation of
-  equivalences.* That is a HoTT theorem and remains one.
+The HoTT framework provides a propositional-truncation modality
+`‖ - ‖`. Some HoTT-flavoured uses of fibers apply this modality
+("there merely exists a witness" rather than "here is a witness
+type"), at which point the witness-type data is lost.
 
-== 4. Honest risk to the distinction
+`echo-not-prop` certifies that echo types (= homotopy fibers)
+are *not invariant* under this truncation when the underlying
+function is non-injective. So:
 
-This is the sharpest adjacency. The honest reading is:
+* `Echo f y` (= `fib f y`) — *not* a mere proposition for
+  non-injective `f` with multiple preimages of `y`.
+* `‖ Echo f y ‖` (= truncation of the fiber) — a mere
+  proposition by construction.
 
-> `Echo = fib`; the identity claim is an _editorial_ claim that
-> studying fibers in the intensional, non-univalent setting with an
-> emphasis on structured loss is worthwhile in its own right.
+Echo wins against the truncated form by definition (it's
+literally the un-truncated form). This is true for both
+HoTT-as-foundations and HoTT-as-applied-tool.
 
-Gate 2 (characteristic theorems) and Gate 3 (canonical examples) are
-where that editorial claim has to pay its way. If the theorems and
-examples turn out to all be corollaries of standard HoTT fiber
-results, then this gate fails retrospectively even though the
-definitions live in plain Agda.
+The win is therefore not "echo vs. HoTT" but "echo (= bare
+fiber) vs. propositionally-truncated fiber". HoTT *contains*
+both; the win is over a specific applied use of HoTT, not over
+HoTT itself.
 
-Two specific stress tests:
+== 2-cell argument
 
-. `strict-weakening-collapse` in `EchoResidue`: is there a HoTT
-  presentation of "certificate with no section back to the fiber"
-  that subsumes this result? If yes, the residue hierarchy is
-  renamed HoTT content.
-. The epistemic/choreographic/graded bridges: are these specialisations
-  of HoTT sliced constructions, or are they new compositions?
+In HoTT (or cubical Agda), 2-cells between parallel fibers are
+*paths between path-types*, structurally an iterated equalizer.
+The `Sophisticated.equalizer→echo-pair` argument from
+`quotients.adoc` applies trivially: HoTT 2-cells *are* equalizers
+definitionally.
 
-The current development asserts the former answer is "no" and the
-latter is "new composition", but this is the gate most likely to
-fail on careful scrutiny.
+So the 2-cell argument doesn't separately fire against HoTT — it
+fires *through* HoTT, using HoTT's own primitives. Echo's
+distinctness on the 2-cell axis is against neighbours that *don't*
+have HoTT-style equalizers natively (quotients before HIT, AI
+without lattice meets, etc.); HoTT itself is the framework in
+which the argument is most natural.
 
-== 5. Verdict for Gate 1
+== What echo adds (over bare HoTT fibers)
 
-Marginal pass. The type former is not new. The distinction rests on
-the intensional setting, the residue/degradation hierarchy, and the
-bridge modules. If Gate 2 or Gate 3 fails, this gate should be
-revisited and likely flipped to fail, because the HoTT reader
-would be right to treat the whole development as renamed fiber
-theory.
+Nothing structural. Echo is an *organising vocabulary* for
+fiber-shaped reasoning — it gives names to things HoTT users
+already work with under different names ("homotopy fiber",
+"path-space over a point", etc.). The benefit is in the *systematic
+treatment of the recipe* (custom decoration order + echo-indexed
+family + transport action) on multiple axes; HoTT users can do
+each of these but typically don't have a unified vocabulary for
+them.
+
+This is a genuine contribution at the *exposition* level, not at
+the *foundations* level. Worth being explicit about.
+
+== What echo adds (over propositionally-truncated fibers)
+
+* Witness identity (the Σ's first projection, retained).
+* The ability to define functions on the witness type.
+* Non-truncatability for non-injective functions
+  (`echo-not-prop`).
+
+This is the same `echo-not-prop`-shaped win as against
+propositional refinement and relational IFC. The neighbour-
+specific fact is that HoTT contains the truncation as a
+*modality* rather than as a baked-in choice — so a HoTT user can
+*choose* not to truncate, recovering echo's data automatically.
+
+== Recipe-level distinctness
+
+The recipe (decoration order + echo-indexed family + transport
+action) is fully expressible in HoTT and cubical type theory.
+Cubical Agda in particular makes the transport part definitionally
+nice. There is no recipe-level distinctness against HoTT.
+
+What HoTT users *typically don't do* is apply the recipe
+systematically across the five (or six) axes echo identifies.
+The recipe is not natively named or studied as a unit in the HoTT
+literature; this is what echo organises. Again, an exposition
+contribution, not a foundational one.
+
+== Cubical Agda specifically
+
+The S-4 sub-case in `next-questions.adoc` Q1.6 — higher inductive
+types in cubical Agda — is the case where HoTT's added strength
+*could* cleanly express echo-shaped 2-cells natively, at the cost
+of importing the full HoTT framework. The S-4 closure (informal)
+is: importing HoTT exceeds "pure quotient theory" by a much wider
+margin than echo types, so this isn't a win for the neighbour.
+
+The HoTT-side framing is just the converse: HoTT contains echo
+machinery (= fibers) trivially, plus a great deal more. For a HoTT
+user, echo is a tiny corner of an existing framework; for an
+echo user, HoTT is overkill.
+
+== Retraction conditions
+
+This is the one neighbour where retraction is essentially
+guaranteed: echo *is* the homotopy fiber. The narrow distinctness
+claim — against the propositionally-truncated form — is the only
+defensible position.
+
+Specific retraction triggers:
+
+. *Any* claim that echo is "different from" the homotopy fiber
+  rather than "different from the truncated homotopy fiber"
+  should be retracted on sight. The previous consolidated doc
+  did not contain such a claim, but this note exists partly to
+  prevent one creeping in.
+. A demonstration that `echo-not-prop` follows trivially from a
+  HoTT lemma about fibers of non-injective functions. This would
+  not retract distinctness against truncated fibers (the
+  truncation still loses data) but would mean the echo-side
+  formalisation is just re-deriving a known HoTT lemma. Worth
+  acknowledging if it turns out to be the case.
+
+== Open obligation
+
+There is no dedicated `proofs/agda/adjacency/HoTT.agda`. There
+likely shouldn't be — formalising "echo IS the homotopy fiber"
+is just `refl` after unfolding definitions. The truncation
+argument is already formalised via gate-3's `echo-not-prop`
+family.
+
+The open work here is *exposition*, not formalisation: making
+sure the README, the gate-1 distinctness doc, and any future
+papers are honest about the coincidence rather than overclaiming.
+
+== Status
+
+* Coincidence with bare HoTT fibers: *acknowledged as coincidence*,
+  not a distinctness claim.
+* Truncation argument (against truncated fibers): *formalised*
+  via gate-3's `echo-not-prop` family.
+* Recipe-level distinctness: *N/A* (HoTT can express the recipe
+  natively; the exposition contribution is acknowledged as
+  exposition).
+* No dedicated Agda formalisation needed.
+
+== References
+
+* The HoTT Book ("Homotopy Type Theory: Univalent Foundations of
+  Mathematics", Univalent Foundations Program, 2013), §4.2 for
+  the homotopy fiber; §3.7 for propositional truncation.
+* Cubical Agda — Vezzosi, Mörtberg, Abel, "Cubical Agda: a
+  dependently typed programming language with univalence and
+  higher inductive types" (ICFP 2019).
+* `proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda`
+  for the formal `echo-not-prop` exhibits, which are the concrete
+  certificates of non-truncatability.
+* `quotients.adoc` for the lattice-side 2-cell argument that
+  HoTT contains natively.

@@ -1,96 +1,170 @@
-= Adjacency: Refinement Types
+= Adjacency: refinement types
 :toc: macro
+
+[.lead]
+*Verdict: distinct against propositional-predicate variants;
+co-extensive with Σ-relevant variants.* The honest claim is
+narrower than the consolidated doc previously suggested. Truncation
+argument formalised on three domains via `echo-not-prop`.
 
 toc::[]
 
-== 1. Nearest existing construction
+== The narrow claim, up front
 
-Refinement types carve out a subset of an ambient type by a predicate:
+The previous consolidated doc said: "Refinement types refine
+inputs; Echo refines outputs. Different direction." This is *not*
+the load-bearing distinction. The load-bearing distinction is
+between two implementations of refinement:
 
-[source]
-----
-{ x : A | P x }
-----
+* *Σ-relevant refinement.* In Agda, Coq, and other dependently-
+  typed languages where the predicate is a `Set`, the refinement
+  type `{ x : A | P x }` literally *is* `Σ A P`. With
+  `P x := f x ≡ y`, this is `Echo f y`. **No win for echo.**
+* *Propositional-predicate refinement.* In F\*, Liquid Haskell,
+  and other systems where the predicate is a propositional / SMT
+  constraint, the refinement type is the propositional truncation
+  of `Σ A P`. The truncation discards individual witness identity.
+  **Echo wins here, formally certified by `echo-not-prop`.**
 
-Inhabitants are values of `A` together with (in practice, erased) proof
-that `P x` holds. The paradigmatic developments are LiquidHaskell,
-F*, Stainless, and Dafny. In a dependently typed setting the refinement
-subset type is definitionally `Σ (x : A) , P x` with `P x : Prop`.
+Stating the claim narrowly is *stronger* than overstating it.
+The narrow claim survives scrutiny; the overstated claim doesn't.
 
-== 2. What do echo types add?
+== Distinctness claim
 
-The echo construction is _also_ a sigma, but the right component is an
-equation against a _named_ output:
+[quote]
+Echo coincides with Σ-relevant refinement types and is therefore
+not distinct from them. Echo wins against propositional-predicate
+refinement types via the truncation argument: `echo-not-prop`
+certifies that propositional truncation loses what echo retains.
 
-[source, agda]
-----
-Echo f y := Σ (x : A) , (f x ≡ y)
-----
+== Truncation argument
 
-Three features separate it from the refinement-type reading in the
-current development:
+Formalised on three domains by gate-3's canonical examples, each
+of which tests against refinement types explicitly:
 
-. *Extensional indexing by a post-image rather than by an arbitrary
-  predicate.* The constraint is `f x ≡ y`, tied to the function whose
-  loss is being studied. This yields a family `Echo f : B → Set`, not a
-  single subset. The family structure is what makes `map-over` and
-  `map-square` in `proofs/agda/Echo.agda` type-check as transport along
-  morphisms between families, rather than as weakening of a single
-  predicate.
-. *Proof-relevant distinctions over the same visible output.*
-  `echo-true≢echo-false` in `proofs/agda/EchoCharacteristic.agda` shows
-  two inhabitants of `Echo collapse tt` that are _not_ equal. In a
-  refinement-type reading the proposition `P` would typically be
-  proof-irrelevant, and `{ x : ⊤ | ⊤ }` would be contractible. The
-  echo layer deliberately retains the source witness.
-. *Strict weakening to residue.* `strict-weakening-collapse` in
-  `proofs/agda/EchoResidue.agda` exhibits a lowering `Echo → EchoR`
-  with no section. Refinement-type presentations usually collapse at
-  the propositional level and do not admit an analogous hierarchy of
-  strictly weaker certificates.
-. *Compositional structure as theorems, not as user-supplied glue.*
-  `Echo-comp-iso-{to, from, from-to, to-from}` in `proofs/agda/Echo.agda`
-  proves `Echo (g ∘ f) y ≃ Σ b. Echo f b × (g b ≡ y)` directly. With a
-  bijection on the outer leg, `cancel-iso-{to, from}` exhibits the
-  cancellation `Echo (g ∘ f) y → Echo f (s y)` and back; the projection-
-  pentagon lemmas `Echo-comp-iso-pent-{B, echo}` show two natural
-  three-fold factorings agree. None of this is standard refinement-type
-  machinery: refinement subsets have no ambient theorem stating that
-  `{ x | (g ∘ f) x = y }` is canonically isomorphic to a Σ over an
-  intermediate refinement, because the predicate carrier does not
-  isolate the intermediate point as proof-relevant data.
+* `TropicalArgmin` — tie multiplicity at the optimum. Two argmin
+  paths exist; truncation collapses them. `echo-not-prop`
+  certifies non-truncatability.
+* `EpistemicUpdate` — multiple consistent worlds. Truncation
+  loses individual world identity, breaking
+  `refine-injective`.
+* `LinearErasure` — multiple mode annotations consistent with one
+  erasure. Truncation loses the linearity distinction.
 
-== 3. What do echo types _not_ add?
+Gate-3's framing per example: "in Σ-relevant refinement (Agda,
+Coq), refinement types literally *are* `Σ Path (λ p → cost p ≡ 5)`
+and coincide with Echo on the type level. No win. In
+propositional-predicate refinement (F\*, Liquid Haskell), the
+predicate is a mere proposition and the refinement type is the
+truncation; Echo wins, and `echo-not-prop` is the formal
+certificate."
 
-* No new subset-type discipline. Refinement types already subsume the
-  pattern "value of `A` plus certificate".
-* No new predicate logic. The echo equation `f x ≡ y` is a single
-  intensional equality; refinement types support arbitrary decidable
-  predicates, and are strictly more expressive at that level.
-* No automation. Tools like LiquidHaskell emphasise SMT-backed
-  inference; this development is manual Agda proofs.
+This is the right shape of claim for this neighbour: explicitly
+acknowledge the tied case; carry the win against the
+propositional case as the formal exhibit.
 
-== 4. Honest risk to the distinction
+== 2-cell argument
 
-The sharpest adversarial reading is: "an echo type is just the
-refinement `{ x : A | f x = y }`, and your proof-relevance claim only
-survives because you chose an intensional equality as the predicate."
-Under that reading, the "addition" of proof-relevant distinctions is
-a property of how equality behaves in `--without-K` Agda, not of
-echo types as such.
+Not directly applicable. Refinement-type systems do not, in
+general, formalise their own 2-cells — refinement-type theory is
+about *single* indexed types, not about transport between
+parallel pairs of them.
 
-The residue-based strict weakening in `EchoResidue` is the part most
-resistant to this reading: a refinement type has no natural
-counterpart to "lower to a certificate, and prove no section exists".
-The composition-iso family is the second load-bearing piece: it
-states a property of the family `Echo f` that has no obvious
-refinement-subset counterpart unless one re-imports dependent-pair
-machinery, at which point the refinement reading is no longer
-faithful.
+In Σ-relevant refinement (which is just Σ-typed Agda/Coq), the
+quotient-case 2-cell argument applies trivially because the
+refinement *is* the Σ. So the 2-cell argument from
+`quotients.adoc` and the meet argument from
+`galois-connections.adoc` apply, but at that point we're using
+Echo machinery anyway and the win is against the surface syntax
+("refinement types") rather than against an additional structural
+neighbour.
 
-== 5. Verdict for Gate 1
+In propositional-predicate refinement, there's no 2-cell to argue
+about — the propositional predicate is opaque to the refinement-
+type system's term language.
 
-Survives, with caveat: the distinction from refinement types rests
-materially on (a) the family indexing by `f`, (b) the residue
-hierarchy, and (c) the composition / cancellation / pentagon iso
-family — rather than on the subset-type form itself.
+== Recipe-level distinctness
+
+The recipe (custom propositional decoration order + echo-indexed
+family + transport action — see `gate-2-handoff.adoc` Observation
+G) is *expressible* in Σ-relevant refinement types if the
+refinement-type system supports indexed predicates and dependent
+transport. Most do; this is part of why echo coincides with
+Σ-relevant refinement.
+
+In propositional-predicate refinement, the recipe is *not*
+expressible: the predicate cannot be parameterised by the
+echo-indexed family without making the predicate itself
+type-relevant, at which point you're back in Σ-relevant
+refinement. This is the recipe-level form of the same
+truncation/non-truncation split.
+
+== What echo adds (over propositional-predicate refinement)
+
+* Witness identity (the first projection of the Σ).
+* The ability to define functions on the witness type, not just
+  truth-values about it.
+* The ability to distinguish multiple inhabitants of the
+  refinement type.
+
+== What echo does not add (over Σ-relevant refinement)
+
+* Anything. They're the same construction with different surface
+  syntax. The refinement-types camp is correct that echo is "a
+  parameterised family of refinements indexed by the output" —
+  in their (Σ-relevant) language, echo is exactly that, and they
+  could implement the recipe without naming it.
+
+== Retraction conditions
+
+Either of the following retracts the narrow distinctness claim
+against propositional-predicate refinement types:
+
+. A propositional-predicate refinement-type system that recovers
+  individual witness identity through some non-truncating
+  mechanism (refinement-with-evidence, dependent refinement
+  predicates, etc.).
+. A demonstration that `echo-not-prop` follows from a generic
+  refinement-type lemma in some specific propositional system,
+  i.e., the truncation argument is itself a refinement-type
+  lemma in disguise.
+
+Neither has been exhibited. The first is somewhat plausible —
+hybrid refinement systems exist that selectively retain witness
+data — but they would themselves move toward the Σ-relevant
+camp, not away from it.
+
+== Open obligation
+
+There is no dedicated `proofs/agda/adjacency/Refinement.agda`
+formalisation specific to refinement-type comparison. The three
+gate-3 `echo-not-prop` exhibits implicitly cover the
+propositional-truncation case (since refinement types are one
+of the truncation-vulnerable neighbours), but a *general*
+formalisation of "refinement-type-with-propositional-predicate
+≡ propositional truncation of echo" would make the narrow
+distinctness claim sharper.
+
+This is forwarded to Q2.1 (the general `echo-not-prop`
+generalisation) — closing Q2.1 also discharges this open
+obligation.
+
+== Status
+
+* Truncation argument: *formalised* on three domains via
+  `echo-not-prop`. Specific refinement-type formalisation
+  awaits Q2.1.
+* Recipe-level distinctness: *argued* in prose; not
+  formalised.
+* Honest tied case (Σ-relevant refinement): *acknowledged
+  explicitly*, not glossed.
+
+== References
+
+* The dependent type theory tradition (Martin-Löf type theory,
+  Agda's `Σ`, Coq's `sig`) — these are Σ-relevant refinement.
+* F\* and Liquid Haskell — propositional-predicate refinement.
+* `proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda`
+  for the formal `echo-not-prop` exhibits.
+* `quotients.adoc` — the closely related neighbour on the
+  truncation axis.

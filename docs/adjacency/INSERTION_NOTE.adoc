@@ -1,0 +1,104 @@
+= Doc surgery: replace the consolidated neighbour section in gate-1-distinct-phenomenon.adoc
+
+[.lead]
+This file contains the replacement text for the consolidated
+neighbour-theory section in `docs/gate-1-distinct-phenomenon.adoc`.
+After applying, the consolidated doc points to the per-neighbour
+adjacency directory rather than duplicating the analysis.
+
+== What to remove
+
+In `docs/gate-1-distinct-phenomenon.adoc`, the entire section
+titled "Neighbouring theories that already do 'fibers of
+non-injective maps'" — including all five sub-sections (Galois,
+quotients, IFC, refinements, provenance). This section is
+superseded by the per-neighbour adjacency directory.
+
+== What to insert in its place
+
+[source,asciidoc]
+----
+== Neighbouring theories
+
+Per-neighbour distinctness comparisons live in
+`docs/adjacency/`. Each neighbour gets its own file with an
+explicit (narrow) distinctness claim, which structural argument
+(truncation, 2-cell, multiplicity) is load-bearing, formal
+exhibit pointers, and explicit retraction conditions.
+
+The two argument families that emerged from working through the
+neighbours individually are framed in `docs/adjacency/README.adoc`.
+Briefly:
+
+* *Truncation arguments* (refinement, IFC, provenance, quotients):
+  echo wins by carrying type-data where the neighbour carries
+  propositional or single-witness content. Formal certificate is
+  the family of `echo-not-prop` lemmas in
+  `proofs/agda/examples/`.
+* *2-cell arguments* (quotients, Galois): echo wins because the
+  natural 2-cell in the neighbour's framework is
+  Σ-over-preimages-shaped. Formal certificates are
+  `EchoVsQuotient.Sophisticated.equalizer→echo-pair` and
+  `EchoVsGalois.Sophisticated.meet→echo-intersection`.
+
+Two neighbours not in the original five-neighbour list are now
+also covered:
+
+* *Modal type theories* (QTT, Reed-Pfenning, etc.) — co-extensive
+  with echo on bare echo in QTT-class systems; recipe-level
+  distinctness is an open question. See
+  `docs/adjacency/modal-type-theories.adoc`.
+* *HoTT homotopy fibers* — echo IS the homotopy fiber; the win
+  is over the propositional truncation modality, not over fibers
+  themselves. See `docs/adjacency/hott-fibers.adoc`.
+
+The files:
+
+[cols="2,3", options="header"]
+|===
+| File | Neighbour
+| `docs/adjacency/quotients.adoc`            | Quotient types / setoid quotients
+| `docs/adjacency/galois-connections.adoc`   | Galois connections / abstract interpretation
+| `docs/adjacency/refinement-types.adoc`     | Refinement types
+| `docs/adjacency/information-flow.adoc`     | IFC (Goguen-Meseguer lineage)
+| `docs/adjacency/provenance.adoc`           | Provenance / data lineage
+| `docs/adjacency/modal-type-theories.adoc`  | QTT, Reed-Pfenning, adjoint modalities
+| `docs/adjacency/hott-fibers.adoc`          | HoTT homotopy fibers
+|===
+
+The honest summary: gate #1 has a strong consolidated argument
+plus formalised obstructions against the two strongest neighbours
+(quotients, Galois) plus formalised truncation wins on three
+domains (tropical, epistemic, linear). The remaining neighbours
+have framed but only-partially-formalised distinctness claims;
+see each file for what's done and what's open.
+----
+
+== Why this surgery
+
+The consolidated section gave the impression of five symmetric
+comparisons, when in fact two neighbours had hundreds of lines of
+formalised obstruction work and three had a paragraph each. The
+per-neighbour split makes the gaps visible (refinement, IFC,
+provenance need their own dedicated formalisation work; modal
+type theories and HoTT fibers need to be acknowledged honestly).
+
+The replacement also enforces the *narrow claim* discipline: the
+consolidated section's framings of refinement types and HoTT
+fibers in particular were broader than the formal exhibits
+support. The per-neighbour notes state the narrow defensible
+claims and acknowledge the tied/coincident cases explicitly.
+
+== Cross-cutting consequences
+
+After the surgery:
+
+* `roadmap-gates.adoc` already specifies `docs/adjacency/` as the
+  gate-1 artefact path; the directory now exists. No
+  `roadmap-gates.adoc` change required.
+* `next-questions.adoc` QC.1 (which proposed the split and
+  asked whether to do it) is closed by the existence of this
+  directory. The QC.1 entry should be updated in
+  `next-questions.adoc` to reflect closure.
+* The `gate-1-handoff.adoc` cross-lane observations remain as
+  evidence of how the split was reached; no edit needed.

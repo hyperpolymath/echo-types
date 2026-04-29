@@ -1,0 +1,215 @@
+= Adjacency: provenance / data lineage
+:toc: macro
+
+[.lead]
+*Verdict: distinct against single-witness provenance variants by
+the multiplicity argument.* Transitive provenance under composition
+reduces structurally to the indexed-families case (S-2).
+Multi-witness provenance variants approach echo and may be
+co-extensive with it, similar to Σ-relevant refinement.
+
+toc::[]
+
+== Why this neighbour deserves its own note
+
+Working through this neighbour individually surfaced an observation
+that the consolidated framing was hiding: *provenance is not a
+truncation argument*, even though it ends up in the same
+`echo-not-prop`-flavoured certificate space. The structural shape
+of the failure is different.
+
+* *Truncation argument* (refinement, IFC, quotients): the
+  neighbour collapses the witness type to a proposition. The
+  neighbour's failure mode is "is-prop-too-easily".
+* *Multiplicity argument* (provenance): the neighbour selects
+  *one* witness per output rather than collapsing to a
+  proposition. The neighbour's failure mode is "single-witness
+  arbitrariness".
+
+Both are forms of "loses witness data" but the *mechanism* is
+different, and a reviewer who attacks the truncation argument
+might not attack the multiplicity argument and vice versa.
+
+This note states the multiplicity argument explicitly.
+
+== Nearest existing construction
+
+Provenance / data lineage tracks "which input produced this
+output". The database-systems literature (Buneman, Cheney, Tan
+and successors) and the security-systems literature (provenance
+graphs for forensic analysis) formalise this in slightly
+different ways, but the core data is:
+
+* *Why-provenance:* for an output `y`, a witness `x` such that
+  `f x ≡ y`. Typically *one* witness, even if multiple exist.
+* *Where-provenance:* the location in the input from which `y`
+  derives.
+* *How-provenance:* the operations that produced `y`. Usually
+  formalised via *provenance semirings* (Green, Karvounarakis,
+  Tannen, "Provenance Semirings", PODS 2007).
+
+The structural shape of why-provenance is `Σ A (λ x → f x ≡ y)`
+— the same as `Echo f y`. The difference is that provenance
+typically *picks* one inhabitant rather than carrying the type.
+
+== Distinctness claim
+
+[quote]
+Echo carries the *type* of consistent witnesses; single-witness
+provenance carries *one*. At unique-source outputs (injective
+points of `f`), the two coincide. At multi-source outputs
+(non-injective points), echo wins by carrying multiplicity.
+Transitive provenance under composition reduces structurally to
+the indexed-families case (S-2).
+
+== Multiplicity argument
+
+Gate-3's three canonical examples test against provenance
+explicitly and consistently report the same shape:
+
+* `TropicalArgmin`: "provenance is sufficient when there is a
+  unique optimal input (single witness). At a *tied* optimum,
+  provenance must either record one witness arbitrarily (losing
+  the others) or the entire type of compatible witnesses (which
+  is exactly Echo). Echo wins for degenerate optima; the two
+  coincide for unique ones."
+* `EpistemicUpdate`: "provenance is single-witness; Echo is the
+  *type* of compatible worlds. After refinement, provenance
+  would need to track multiple witnesses jointly — which is
+  Echo. At non-degenerate observations (one compatible world),
+  the two agree; at non-trivial knowledge (multiple compatible
+  worlds), Echo's multiplicity is what's needed."
+* `LinearErasure`: "Provenance for an erased type tracks which
+  annotated type produced it. Single-witness vs. type. At
+  ambiguous erasures (multiple modes possible), Echo's full
+  witness type is what's needed; provenance must either pick
+  one mode arbitrarily or produce the same type Echo gives."
+
+The pattern is uniform: *single-witness provenance is fine when
+the underlying function is locally injective; multi-witness
+provenance is echo*.
+
+The formal certificate is the same `echo-not-prop` family from
+gate-3, but the failure mode it points at is different from the
+truncation case. Truncation says "the predicate was reduced to a
+proposition"; multiplicity says "one witness was selected and
+the others were discarded *as data*".
+
+== 2-cell argument
+
+*Transitive provenance under composition* is where the 2-cell
+argument applies, with a twist.
+
+For a composition `f ∘ g`, the natural transitive-provenance
+construction is: for each output `z`, the chain
+`x → g x → f (g x)` plus equality `f (g x) ≡ z`. This is *not*
+a single fiber — it's a fiber-of-fiber, structurally
+`Σ A (λ x → Σ B (λ y → (g x ≡ y) × (f y ≡ z)))`.
+
+This unfolds, in the indexed-families framing of S-2, to the
+2-stage version of the coherence-law data type. By the
+`s-2-reduction` argument from
+`EchoVsQuotient.Sophisticated.IndexedFamilies`, the same
+`equalizer→echo-pair`-shaped conclusion applies: transitive
+provenance data is structurally Σ-over-preimages and unfolds to
+echo machinery.
+
+The argument is parallel to S-2 and not separately formalised;
+the formal exhibit cited is `s-2-reduction` itself.
+
+== Truncation argument (degenerate form)
+
+A defender might propose a *propositional* provenance variant:
+"there exists a source for this output". This is the truncation
+of why-provenance. It is propositional by construction and loses
+to `echo-not-prop` exactly as in the refinement and IFC cases.
+This variant is uncommon (most provenance systems prefer
+single-witness over propositional), but worth noting for
+completeness.
+
+== Recipe-level distinctness
+
+Provenance semirings (Green-Karvounarakis-Tannen) formalise
+*how-provenance* as semiring-valued annotations. The recipe
+(custom propositional decoration order + echo-indexed family +
+transport action) is *not* native to provenance semirings: the
+semiring annotations are quantitative, not type-relevant, and
+do not naturally support echo-indexed families that change type
+per decoration.
+
+A multi-witness provenance variant *with* type-relevant indexed
+annotations would approach the recipe; at that point the
+distinction between provenance and echo would be a vocabulary
+choice, not a structural one. This is the same shape as the
+"co-extensive with Σ-relevant refinement" case.
+
+== What echo adds (over single-witness provenance)
+
+* The full witness type, not an arbitrary single witness.
+* The ability to reason about non-injective points without
+  losing data.
+* `echo-not-prop` certifies that the witness type is genuinely
+  multi-element at non-injective points.
+
+== What echo adds (over how-provenance / semirings)
+
+* Type-relevant rather than quantitative annotations.
+* Indexed families that change type per annotation.
+* The recipe is expressible in echo; not natively in semirings.
+
+== What echo does not add (over multi-witness type-relevant provenance)
+
+If such a system were built — multi-witness provenance with
+indexed type-relevant annotations and dependent transport — it
+would be co-extensive with echo. The vocabulary would be
+"provenance"; the structure would be echo. The honest framing
+mirrors the modal-type-theory and Σ-relevant refinement cases.
+
+== Retraction conditions
+
+. A single-witness provenance encoding that recovers full
+  witness multiplicity through some external mechanism (e.g.,
+  tagged unions of provenance witnesses). Plausible but would
+  amount to "use a list/set of witnesses", at which point the
+  distinction is data structure choice, not structural.
+. A how-provenance semiring formulation that reproduces
+  `RoleGraded.choreo-grade-commute` — i.e., the recipe — as a
+  semiring identity. Not exhibited; would require type-relevant
+  semiring extensions that depart from the standard definition.
+
+== Open obligation
+
+There is no dedicated `proofs/agda/adjacency/Provenance.agda`
+formalisation. The three gate-3 `echo-not-prop` exhibits cover
+the multiplicity case implicitly (each example has a
+provenance-comparison paragraph that reports the same
+single-witness-vs-type framing).
+
+A formal proof that *transitive provenance is structurally
+S-2-shaped* would solidify the 2-cell argument against this
+neighbour and unify it with the quotient-side and Galois-side
+arguments. This is forwarded to Q2.x for gate-2 evaluation
+(adding "transitive provenance reduction" as a candidate
+characteristic theorem).
+
+== Status
+
+* Multiplicity argument: *formalised* on three domains via
+  gate-3's `echo-not-prop` family (with the multiplicity-vs-
+  truncation distinction made explicit in this note).
+* 2-cell argument (transitive provenance): *argued* via
+  reduction to S-2; not separately formalised.
+* Recipe-level distinctness: *argued* in prose; not formalised.
+
+== References
+
+* Buneman, Khanna, Tan, "Why and Where: A Characterization of
+  Data Provenance" (ICDT 2001).
+* Green, Karvounarakis, Tannen, "Provenance Semirings"
+  (PODS 2007).
+* Cheney, Chiticariu, Tan, "Provenance in Databases: Why,
+  How, and Where" (Foundations and Trends in Databases, 2009).
+* `proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda`
+  for the gate-3 multiplicity-comparison paragraphs.
+* `quotients.adoc` for the closely related S-2 reduction
+  argument.
