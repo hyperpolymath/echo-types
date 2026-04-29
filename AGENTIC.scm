@@ -1,0 +1,261 @@
+;;; ============================================================
+;;; AGENTIC.scm — gating rules for echo-types operational requests
+;;; ============================================================
+;;;
+;;; Format: agentic-a2ml (S-expression, SRFI-30 conventions)
+;;; Schema reference:
+;;;   github.com/hyperpolymath/standards/blob/main/agentic-a2ml/spec/abnf/agentic.abnf
+;;; Pipeline position (per playbook spec § 8.1):
+;;;   META validate → AGENTIC gate → NEUROSYM discharge →
+;;;   PLAYBOOK execute → STATE update → ECOSYSTEM check
+;;;
+;;; Purpose: gate operational requests against the standing decisions
+;;; in META.scm and STATE.scm so a future session does not re-investigate
+;;; closed questions, redo superseded work, or violate forbidden
+;;; rebrandings.
+;;;
+;;; SPDX-License-Identifier: PMPL-1.0-or-later
+;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+
+(define-module (echo-types agentic)
+  #:export (entropy-budget
+            gate-rules
+            redo-traps
+            escalation
+            pre-action-checks
+            post-action-checks))
+
+;;; ============================================================
+;;; Entropy budget
+;;; ============================================================
+;;;
+;;; The entropy budget is a coarse measure of "how much exploration
+;;; should this session do before consulting STATE/META?". Low budget
+;;; = consult first; high budget = explore freely.
+;;;
+;;; Post-EI-2-termination, the budget for EI-2-adjacent investigations
+;;; is essentially zero — the question is closed.
+
+(define entropy-budget
+  '((session-default . moderate)
+    (ei-2-adjacent
+     (level . zero)
+     (rationale . "EI-2 is terminated. Any reopen attempt triggers the do-not-reopen gate; exploration here violates the standing decision."))
+    (gate-1-falsification-tests
+     (level . moderate)
+     (rationale . "T3 (informativeness collapse) is unstubbed and worth attempting; T1, T2 are closed by Sophisticated submodules."))
+    (gate-2-falsifier-attempts
+     (level . moderate)
+     (rationale . "Each surviving nominee has an unattempted falsifier; explore freely."))
+    (recipe-extension-v0.2
+     (level . high)
+     (rationale . "Genuinely new work; not constrained by EI-2's negative finding because it is a different question."))))
+
+;;; ============================================================
+;;; Gate rules (pre-execution checks)
+;;; ============================================================
+
+(define gate-rules
+  '(;; Rule G-001: do-not-reopen-EI-2
+    ((id . g-001)
+     (name . "do-not-reopen-EI-2")
+     (severity . critical)
+     (trigger
+      (any-of
+       . ("user request to 'investigate the recipe further'"
+          "user request to 'try a different family choice for ModeGrade'"
+          "user request to 'see if Choreo × Choreo works with shared state'"
+          "user request to 'narrow gate-1 with NLO precondition'"
+          "user request that matches any forbidden-rebrandings entry in STATE.scm"
+          "context implies treating EI-2 as still open")))
+     (action . refuse-with-citation)
+     (citation
+      . ("STATE.scm > terminated-questions > EI-2"
+         "META.scm > adr-002 (Drop READING 2 as the EI-2 closure framing)"
+         "META.scm > adr-004 (Recipe extension scope: v0.2+, not v0.1.x)"))
+     (escape-hatch . "User can override by explicitly stating 'I'm reopening EI-2 with [specific structural justification not in forbidden-rebrandings]'. Trigger only on rare, well-justified reopens."))
+
+    ;; Rule G-002: do-not-redo-superseded-readings
+    ((id . g-002)
+     (name . "do-not-redo-superseded-readings")
+     (severity . high)
+     (trigger
+      (any-of
+       . ("user request to draft READING 1 patches"
+          "user request to draft READING 2 patches"
+          "user request to compare candidate readings for EI-2 closure")))
+     (action . refuse-with-citation)
+     (citation
+      . ("STATE.scm > standing-decisions > sd-006"
+         "docs/EI2_READING1_PATCHES.adoc > SUPERSEDED banner"
+         "docs/EI2_READING2_PATCHES.adoc > SUPERSEDED banner"
+         "docs/EI2_READINGS_COMPARISON.adoc > SUPERSEDED notice"))
+     (escape-hatch . "None — these readings are factually wrong per RoleRole.agda's findings."))
+
+    ;; Rule G-003: do-not-recreate-ModeGrade-without-trailing-d
+    ((id . g-003)
+     (name . "do-not-create-ModeGrade-without-trailing-d")
+     (severity . medium)
+     (trigger
+      (any-of
+       . ("creating proofs/agda/characteristic/ModeGrade.agda (without trailing 'd')")))
+     (action . redirect-to-canonical)
+     (redirect . "Use proofs/agda/characteristic/ModeGraded.agda (canonical, prior-session). The non-trailing-d variant was a duplicate created and removed in the current session.")
+     (citation . "STATE.scm > do-not-redo entry on ModeGrade vs ModeGraded."))
+
+    ;; Rule G-004: do-not-attempt-full-2D-iff-in-safe-Agda
+    ((id . g-004)
+     (name . "do-not-attempt-full-2D-iff-recipe-non-triviality-theorem")
+     (severity . high)
+     (trigger
+      (any-of
+       . ("user request to formalise the full 2D iff theorem"
+          "user request to prove recipe-non-triviality as a generic theorem")))
+     (action . redirect-to-PATH-B)
+     (redirect . "Documented as not formalisable in safe Agda without postulates (decidable equality, F-collapses axioms, extensionality). PATH B accepted partial formalisation. See RecipeTheorem.agda header.")
+     (citation . "META.scm > adr-003 (Accept partial formalisation (PATH B) for EI-2 closure)")
+     (escape-hatch . "If the user has identified specific postulates they're willing to admit, this can proceed under explicit acknowledgment of the postulates."))
+
+    ;; Rule G-005: do-not-rebrand-recipe-as-distinctness-locus
+    ((id . g-005)
+     (name . "do-not-rebrand-recipe-as-distinctness-locus")
+     (severity . critical)
+     (trigger
+      (any-of
+       . ("documentation that says recipe carries gate-1's distinctness load"
+          "documentation that says five axes simultaneously is the distinctness claim"
+          "any formulation that puts the integration argument back into the gate-1 distinctness story")))
+     (action . refuse-with-citation)
+     (citation
+      . ("STATE.scm > forbidden-rebrandings"
+         "STATE.scm > standing-decisions > sd-001"
+         "STATE.scm > standing-decisions > sd-002"
+         "META.scm > adr-001"))
+     (escape-hatch . "None — this is a load-bearing standing decision."))
+
+    ;; Rule G-006: do-not-modify-superseded-files-content
+    ((id . g-006)
+     (name . "do-not-modify-superseded-files-content")
+     (severity . medium)
+     (trigger
+      (any-of
+       . ("editing docs/EI2_READING1_PATCHES.adoc body"
+          "editing docs/EI2_READING2_PATCHES.adoc body"
+          "editing docs/EI2_READINGS_COMPARISON.adoc body")))
+     (action . redirect-to-banner-update)
+     (redirect . "These files are historical record only. Do not modify their body content. If new context emerges that would change the SUPERSEDED reasoning, update the banner at the top of the file but leave the body intact.")
+     (citation . "STATE.scm > standing-decisions > sd-006"))
+
+    ;; Rule G-007: do-not-skip-INDEX-on-session-entry
+    ((id . g-007)
+     (name . "read-INDEX-first-on-session-entry")
+     (severity . medium)
+     (trigger
+      (any-of
+       . ("session entering audit-output/ for the first time"
+          "session asking 'what's the state of echo-types EI-2'"
+          "session asking 'what's been done'"
+          "user requesting summary of work")))
+     (action . enforce-reading-order)
+     (reading-order
+      . ("audit-output/INDEX.adoc"
+         "audit-output/STATE.scm"
+         "audit-output/META.scm"
+         "audit-output/AGENTIC.scm (this file, for further gating context)"
+         "audit-output/PLAYBOOK.scm (for procedure to follow)"
+         "audit-output/ECOSYSTEM.scm (only if cross-repo context needed)"
+         "audit-output/NEUROSYM.scm (only if formal-evidence context needed)"))
+     (rationale . "Reading INDEX.adoc + STATE.scm + META.scm covers ~95% of context for any operational request without re-deriving anything. Skipping these is the most common redo trap."))))
+
+;;; ============================================================
+;;; Redo traps (patterns that have caused or threatened to cause
+;;; the same work to be done twice)
+;;; ============================================================
+
+(define redo-traps
+  '(((trap . "STATE-format-bikeshed")
+     (description . "Two STATE files exist (STATE.scm and .machine_readable/6a2/STATE.a2ml) in different surface shapes. Resist the temptation to convert one into the other; the secondary file's banner explains the situation.")
+     (mitigation . "STATE.a2ml has a SECONDARY/COMPANION banner; STATE.scm is canonical."))
+
+    ((trap . "EI-2-reopening-under-new-framing")
+     (description . "Multiple framings exist that effectively reopen EI-2: 'try a different family', 'NLO is sufficient with the right reading', 'Mode×Grade was just a bad pair'. All are listed as forbidden-rebrandings.")
+     (mitigation . "Gate G-001 + G-005 reject these. Citation cascade points to RoleRole.agda's findings, the seven-data-point table, and adr-001..adr-004."))
+
+    ((trap . "Recipe-extension-as-EI-2-continuation")
+     (description . "The v0.2+ recipe extension work is genuinely interesting and superficially looks like 'finishing EI-2'. It is not. Treating it as EI-2 continuation reopens a closed question and confuses scope.")
+     (mitigation . "Gate G-001 catches this; adr-004 explicitly parks recipe extension as v0.2+ work, separate question (e.g., EI-3) when filed."))
+
+    ((trap . "Documentation-cascade-incompleteness")
+     (description . "EI-2's narrowing applies in five doc locations. Updating only some of them creates inconsistency and invites a future session to 'fix' the unupdated ones, doing the work again.")
+     (mitigation . "STATE.scm > cascade-applied lists exactly the five locations. Verify all five are at the post-EI-2 narrowing before declaring any related task done."))
+
+    ((trap . "Cite-from-memory-instead-of-from-files")
+     (description . "Future sessions might cite the EI-2 finding from memory or from a summary, getting nuances wrong (e.g., saying NLO is sufficient when it's only necessary). The authoritative source is the seven data-point table in STATE.scm or EI2_REPORT.adoc.")
+     (mitigation . "Gate G-005 + G-007 redirect to the authoritative files. AGENTIC.scm gate rules carry citation lists pointing back to the canonical record."))))
+
+;;; ============================================================
+;;; Escalation
+;;; ============================================================
+
+(define escalation
+  '((on-gate-violation
+     (severity-critical . "Refuse the action. Cite the rule and the standing decision. Do not bypass.")
+     (severity-high     . "Refuse by default. If user provides explicit override with structural justification, allow with full citation in the response.")
+     (severity-medium   . "Redirect to the canonical alternative. Do not just refuse; offer the right action.")
+     (severity-low      . "Note the gate, proceed with caveat in the response."))
+
+    (on-gate-uncertainty
+     (when-rule-fits-loosely . "Default to refusal + ask for clarification. Better to ask than to redo.")
+     (when-no-rule-fits . "Proceed; log the case as a candidate new gate rule for STATE.scm next-actions if the situation recurs."))))
+
+;;; ============================================================
+;;; Pre-action checks (run before executing any non-trivial request)
+;;; ============================================================
+
+(define pre-action-checks
+  '((check-1
+     (name . "STATE-and-META-fresh-in-context")
+     (assertion . "Have STATE.scm and META.scm been read in this session?")
+     (on-fail . "Read them before proceeding. Reading them is cheap; not reading them is the redo trap."))
+
+    (check-2
+     (name . "no-forbidden-rebranding")
+     (assertion . "Does the proposed action match any STATE.forbidden-rebrandings entry?")
+     (on-fail . "Refuse via Gate G-005."))
+
+    (check-3
+     (name . "not-EI-2-reopen")
+     (assertion . "Does the proposed action implicitly or explicitly reopen EI-2?")
+     (on-fail . "Refuse via Gate G-001."))
+
+    (check-4
+     (name . "not-superseded-document-rework")
+     (assertion . "Does the proposed action edit the body of a superseded document?")
+     (on-fail . "Redirect via Gate G-006."))))
+
+;;; ============================================================
+;;; Post-action checks (run after executing non-trivial requests)
+;;; ============================================================
+
+(define post-action-checks
+  '((check-1
+     (name . "STATE-update-needed?")
+     (assertion . "Did this action add a new artefact, close a question, or change a decision? If yes, STATE.scm must be updated.")
+     (on-pass . "STATE.scm fresh.")
+     (on-fail . "Update STATE.scm before declaring task done."))
+
+    (check-2
+     (name . "META-update-needed?")
+     (assertion . "Did this action establish a new architectural decision? If yes, an ADR entry in META.scm is required.")
+     (on-pass . "META.scm fresh.")
+     (on-fail . "Add adr-NNN entry; bump META.scm."))
+
+    (check-3
+     (name . "cascade-still-consistent?")
+     (assertion . "Did this action edit any of the five cascade-applied locations in STATE.scm? If so, do all five still agree?")
+     (on-pass . "Cascade consistent.")
+     (on-fail . "Update remaining cascade locations before declaring done."))))
+
+;;; ============================================================
+;;; END OF AGENTIC
+;;; ============================================================

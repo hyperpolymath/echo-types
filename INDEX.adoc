@@ -1,0 +1,249 @@
+= echo-types audit-output: index
+:toc: macro
+:source-highlighter: rouge
+
+[.lead]
+*Read this first.* This file maps which fact lives where across
+the 6a2 capture and the supporting documents. A new session
+should read this in under 60 seconds before doing anything
+else.
+
+toc::[]
+
+== Why this file exists
+
+The user spent three sessions producing the work in this directory.
+Without an index, a fourth session would re-derive findings, redraft
+superseded patches, and re-investigate terminated questions. Reading
+this index + STATE.scm + META.scm covers ~95% of what's needed for
+any operational request.
+
+== One-paragraph status (April 29, 2026)
+
+EI-2 is *expressly terminated* — negative verdict, via PATH B.
+The integration recipe with the existing five named axes does
+not carry substantive simultaneous cross-axis content. Distinctness
+in gate-1 has been rerouted to the truncation argument and the
+2-cell argument, which stand independently. Seven integration
+commits are staged; commit 7 is the EI-2 termination. No commits
+are pushed yet.
+
+== Reading order for a new session
+
+. *INDEX.adoc* (this file) — map.
+. *STATE.scm* — current authoritative state. Includes
+  terminated-questions, do-not-redo register, forbidden-rebrandings,
+  next-actions.
+. *META.scm* — architectural decisions (six ADRs). Permanent
+  record of what's been settled.
+. *AGENTIC.scm* — gating rules. Read before responding to any
+  EI-2-adjacent request.
+. *PLAYBOOK.scm* — operational procedures. Includes
+  on-session-entry, on-EI-2-mention, integration-push.
+. *ECOSYSTEM.scm* — cross-repo dependencies. Read only if
+  cross-repo context is needed.
+. *NEUROSYM.scm* — formal-evidence semantics. Read only if formal
+  certificates are needed for citation.
+. *EI2_REPORT.adoc* — the human-readable EI-2 working record.
+  Top "Status" section is the authoritative termination text.
+
+After this reading, no operational request requires re-deriving
+anything that's been established.
+
+== The 6a2 capture (six core files)
+
+[cols="1,2,3", options="header"]
+|===
+| File | Surface shape | What it carries
+
+| `STATE.scm`
+| `(define-module ...)` + `(define ...)` (playbook-spec shape)
+| Current state. Project identity, session metadata, terminated
+questions (with seven-data-point evidence table), standing
+decisions, artefacts list, cascade-applied locations, do-not-redo
+register, forbidden rebrandings, next actions.
+
+| `META.scm`
+| Same shape as STATE.scm
+| Architecture decision records (ADRs). Six entries: distinctness
+load (adr-001), drop READING 2 (adr-002), accept PATH B (adr-003),
+park recipe extension as v0.2+ (adr-004), forge workflow (adr-005),
+cross-platform builds (adr-006).
+
+| `AGENTIC.scm`
+| Same shape as STATE.scm
+| Pre-execution gating rules. Seven gate rules (G-001 to G-007),
+entropy-budget per topic, redo-traps catalogue, escalation
+guidance, pre-action and post-action checks.
+
+| `NEUROSYM.scm`
+| Same shape as STATE.scm
+| Formal-evidence semantics. 14 formal certificates with locations
+and what they imply, seven canonical data points, three structural
+arguments (truncation, 2-cell, recipe-as-vocabulary), three unproved
+obligations (deliberately deferred under PATH B), one-paragraph and
+one-line evidence summaries.
+
+| `PLAYBOOK.scm`
+| Same shape as STATE.scm
+| Operational procedures. Five procedures (on-session-entry,
+on-EI-2-mention, integration-push, capture-new-EI-finding,
+respond-to-status-query), five alert types, contact info.
+
+| `ECOSYSTEM.scm`
+| Same shape as STATE.scm
+| Cross-repo relationships. Constellation membership, schema
+dependencies (incl. references to standards/a2ml, standards/meta-a2ml,
+standards/playbook-a2ml), sibling projects, cross-repo conventions,
+integrity checks.
+|===
+
+== Secondary files (not part of the canonical 6a2)
+
+[cols="1,3", options="header"]
+|===
+| File | Status
+
+| `.machine_readable/6a2/STATE.a2ml`
+| *Secondary / short-form companion.* Different surface shape
+(atomic top-level `(state ...)` form). Body content overlaps
+STATE.scm; unique contribution is the `(lifecycle (on-enter ...)
+(on-exit ...))` block. STATE.scm wins on conflict. Migration to a
+single canonical surface is parked. Banner at top of file
+explains.
+
+| `docs/EI2_REPORT.adoc`
+| *Authoritative human-readable EI-2 record.* Top "Status" section
+is the termination text. Bottom historical-criteria section has a
+NOTE marking it superseded.
+
+| `docs/EI2_READING1_PATCHES.adoc`
+| *SUPERSEDED.* Original strict-reading candidate for EI-2 closure.
+Refuted by RoleRole.agda findings. Banner at top of file. Do not
+modify body content.
+
+| `docs/EI2_READING2_PATCHES.adoc`
+| *SUPERSEDED.* Original refined-reading candidate for EI-2 closure.
+Refuted by RoleRole.agda findings. Banner at top of file. Do not
+modify body content.
+
+| `docs/EI2_READINGS_COMPARISON.adoc`
+| *SUPERSEDED.* Decision aid between READING 1 and READING 2.
+Both refuted; document is historical record. Banner at top.
+
+| `INTEGRATION_COMMITS.adoc`
+| Seven-commit integration sequence. Commit 7 is the EI-2
+termination. None of the seven commits has been pushed yet.
+|===
+
+== What's been DONE (do not redo)
+
+. *EI-2 investigation* — eight phases, seven data points, all
+  consistent with the negative finding. See STATE.terminated-questions
+  and NEUROSYM.data-points.
+. *EI-2 doc cascade* — applied across five locations
+  (gate-1-distinct-phenomenon, gate-2-handoff, roadmap-gates,
+  adjacency README, top-level README) plus next-questions.adoc.
+  See STATE.cascade-applied.
+. *EI-2 termination notice* — added to all 10 EI-2 phase Agda files
+  in `proofs/agda/characteristic/`. The historical "EI-2 IS NOT
+  TERMINATED" comments are preserved with banners at the top
+  pointing to the terminated state.
+. *6a2 capture* — this directory. STATE.scm, META.scm, AGENTIC.scm,
+  NEUROSYM.scm, PLAYBOOK.scm, ECOSYSTEM.scm.
+. *Reading 1 / Reading 2 patches* — drafted, then superseded by
+  RoleRole.agda findings. Both files have SUPERSEDED banners.
+  Do not redraft.
+. *Choreo non-loss-only certificate* — formalised in
+  `proofs/agda/characteristic/ChoreoInjective.agda`. Uses
+  swap-injective via involutivity. Do not reattempt full
+  Σ-injectivity (K-issue under `--without-K`).
+
+== What's NEXT (open work, NOT EI-2 follow-up)
+
+From STATE.next-actions:
+
+[cols="1,2,3,1", options="header"]
+|===
+| ID | Title | Relevance | Priority
+
+| q2-1
+| Generalisation of `echo-not-prop`
+| Strengthens the truncation argument (one of the two load-bearing
+distinctness arguments post-EI-2). High leverage.
+| high
+
+| integration
+| Apply the seven-commit integration sequence
+| Push the work currently staged in audit-output/. Once pushed,
+echo-types v0.1.1 has the EI-2 termination integrated.
+| high
+
+| t-3
+| Gate-1 falsification test 3 (informativeness collapse)
+| Now better-targeted post-EI-2.
+| medium
+
+| q2-4
+| Falsifier attempts for surviving gate-2 nominees
+| Hardens gate-2 beyond "no successful reduction has been
+attempted".
+| medium
+
+| q2-3
+| Adopt RoleGraded.choreo-grade-commute as nominee N5
+| Mostly bookkeeping post-EI-2 (recipe is no longer the
+distinctness locus).
+| low
+
+| v0-2-recipe-extension
+| Recipe extension exploration
+| New module work; coupled state across axes; multiple live
+positions per axis. *Not EI-2 reopen.* Will be filed as EI-3 or
+later when v0.2 begins.
+| deferred
+|===
+
+== Forbidden moves (these will trigger AGENTIC gates)
+
+. Reopening EI-2 under any framing in STATE.forbidden-rebrandings
+  (gate G-001).
+. Drafting READING 1 or READING 2 patches (gate G-002).
+. Creating `proofs/agda/characteristic/ModeGrade.agda` without
+  trailing 'd' (gate G-003) — `ModeGraded.agda` is canonical.
+. Attempting full 2D iff recipe-non-triviality theorem in safe
+  Agda (gate G-004) — PATH B accepted partial formalisation.
+. Putting the recipe back into the gate-1 distinctness story
+  (gate G-005) — distinctness lives in truncation + 2-cell now.
+. Modifying body content of superseded documents (gate G-006).
+. Skipping INDEX/STATE/META on session entry (gate G-007).
+
+== Schema references
+
+. *a2ml surface markup spec*:
+  github.com/hyperpolymath/standards/blob/main/a2ml/SPEC-v1.0.adoc
+. *meta-a2ml ABNF (governs all six type files)*:
+  github.com/hyperpolymath/standards/blob/main/meta-a2ml/spec/abnf/meta.abnf
+. *playbook spec (concrete shape exemplar)*:
+  github.com/hyperpolymath/standards/blob/main/playbook-a2ml/spec/PLAYBOOK-FORMAT-SPEC.adoc
+
+The .scm files in this directory follow the playbook spec's
+concrete shape: SPDX header, `(define-module ...)` declaration
+with `#:export` list, then `(define section-name ...)` blocks.
+
+== Structural argument summary (one paragraph for citation)
+
+Distinctness against neighbour frameworks rests on the *truncation
+argument* (`echo-not-prop` family in `proofs/agda/examples/`,
+formalising that for non-injective `f` with multiple preimages of
+`y`, `Echo f y` is constructively not a mere proposition) and the
+*2-cell argument* (Sophisticated submodules of `EchoVsQuotient.agda`
+and `EchoVsGalois.agda`, formalising that natural 2-cells in
+neighbour frameworks are Σ-over-preimages-shaped). The integration
+recipe is *organising vocabulary*, not the locus of distinctness.
+
+== End of index
+
+Last updated: 2026-04-29 (post-EI-2 termination, post-6a2 capture).
+Next update expected: when integration commits are pushed and the
+state moves from "staged" to "pushed".

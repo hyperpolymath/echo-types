@@ -1,0 +1,160 @@
+;;; ============================================================
+;;; ECOSYSTEM.scm — echo-types relationships across the
+;;; hyperpolymath repository constellation
+;;; ============================================================
+;;;
+;;; Format: ecosystem-a2ml (S-expression, SRFI-30 conventions)
+;;; Schema reference:
+;;;   github.com/hyperpolymath/standards/blob/main/ecosystem-a2ml/spec/abnf/ecosystem.abnf
+;;; Sibling reference (cached pattern):
+;;;   github.com/hyperpolymath/standards/blob/main/playbook-a2ml/spec/PLAYBOOK-FORMAT-SPEC.adoc
+;;;
+;;; Purpose: record cross-repo dependencies and conventions so a future
+;;; session understands echo-types' position in the constellation
+;;; without re-deriving it.
+;;;
+;;; SPDX-License-Identifier: PMPL-1.0-or-later
+;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+
+(define-module (echo-types ecosystem)
+  #:export (constellation-membership
+            schema-dependencies
+            sibling-projects
+            cross-repo-conventions
+            integrity-checks))
+
+;;; ============================================================
+;;; Constellation membership
+;;; ============================================================
+
+(define constellation-membership
+  '((primary-constellation . governance)
+    (constellation-rationale
+     . "echo-types is a formal-verification library but its docs are governed by RSR 2026 / 6SCM Architecture, placing it under the governance constellation for operational purposes.")
+    (other-constellations-touched
+     . ((languages . "Imports from agda-stdlib; conceptual proximity to formal-methods work in nextgen-languages.")
+        (research . "Theoretical artefact; downstream consumer of HoTT and category-theoretic concepts.")))))
+
+;;; ============================================================
+;;; Schema dependencies (other hyperpolymath repos echo-types relies on)
+;;; ============================================================
+
+(define schema-dependencies
+  '(((repo . "github.com/hyperpolymath/standards")
+     (subpath . "a2ml/SPEC-v1.0.adoc")
+     (consumes-as . "a2ml surface markup spec (Djot-like)")
+     (consumed-by . "documentation files (.adoc)")
+     (status . current))
+
+    ((repo . "github.com/hyperpolymath/standards")
+     (subpath . "meta-a2ml/spec/abnf/meta.abnf")
+     (consumes-as . "ABNF metalanguage governing all six *-a2ml types")
+     (consumed-by . "META.scm, STATE.scm, ECOSYSTEM.scm, AGENTIC.scm, NEUROSYM.scm, PLAYBOOK.scm in this audit-output/")
+     (status . current))
+
+    ((repo . "github.com/hyperpolymath/standards")
+     (subpath . "playbook-a2ml/spec/PLAYBOOK-FORMAT-SPEC.adoc")
+     (consumes-as . "Concrete shape exemplar for module-form S-expression files")
+     (consumed-by . "All .scm files in audit-output/")
+     (status . current))
+
+    ((repo . "github.com/hyperpolymath/standards")
+     (subpath . "k9-svc/")
+     (consumes-as . "Service definition format (not yet inspected)")
+     (consumed-by . "n/a yet — would govern any k9 service descriptors")
+     (status . unread)
+     (note . "URL was provided but not yet fetched; if k9-svc descriptors are added to echo-types in future, this entry must be filled in."))
+
+    ((repo . "github.com/hyperpolymath/rhodium-standard-repositories")
+     (subpath . "RSR-2026/")
+     (consumes-as . "Repository compliance standard")
+     (consumed-by . "echo-types repository structure conventions (e.g., docs/ layout, MAINTAINERS.md, CODE_OF_CONDUCT.md)")
+     (status . current))))
+
+;;; ============================================================
+;;; Sibling projects (same constellation or close conceptual relation)
+;;; ============================================================
+
+(define sibling-projects
+  '(((name . "echidna")
+     (relation . "Conceptual sibling — neurosymbolic theorem-proving platform; echo-types is a single-domain formal verification library, echidna is the broader prover ecosystem.")
+     (cross-references . none-yet))
+
+    ((name . "affinescript")
+     (relation . "Languages-constellation sibling — affine-typed WASM language. Conceptually downstream of echo-types' formal-loss reasoning if cross-disciplinary tie-ins are pursued.")
+     (cross-references . none-yet))
+
+    ((name . "my-lang")
+     (relation . "Conceptual neighbour — Me/Solo/Duet/Ensemble dialect family. Could consume echo-types-style fiber reasoning in a future axis but no current dependency.")
+     (cross-references . none-yet))
+
+    ((name . "manifesto")
+     (relation . "Constellation overview document referencing all hyperpolymath projects. echo-types is one of 275+ governed by RSR 2026.")
+     (cross-references . "Listed under Research / Formal Verification."))))
+
+;;; ============================================================
+;;; Cross-repo conventions echo-types follows
+;;; ============================================================
+
+(define cross-repo-conventions
+  '(((convention . "Forge workflow: GitHub canonical, GitLab and Codeberg as mirrors")
+     (source . "Standing decision sd-003 in STATE.scm")
+     (artefacts . (".github/workflows/mirror.yml" "MIRROR_SETUP.adoc")))
+
+    ((convention . "License: PMPL-1.0-or-later for code and docs")
+     (source . "META.scm SPDX header pattern; constellation default")
+     (artefacts . ("LICENSE-PMPL-1.0.txt" ; if present
+                   "SPDX headers in all .scm files")))
+
+    ((convention . "Cross-platform builds: Linux primary, Windows secondary")
+     (source . "Standing decision sd-004 in STATE.scm")
+     (artefacts . (".gitattributes")))
+
+    ((convention . "Documentation: AsciiDoc, not Markdown")
+     (source . "User preference (avoid Python-adjacent ecosystems where possible; AsciiDoc preferred over Markdown for technical docs)")
+     (note . "README.md is the exception per GitHub default-render convention; everything in docs/ is AsciiDoc."))
+
+    ((convention . "Configuration: Nickel/CUE/Dhall preferred over YAML")
+     (source . "User standing preference")
+     (note . "echo-types currently uses YAML only for GitHub Actions (no choice); no other config files."))
+
+    ((convention . "Containers: Podman > Docker")
+     (source . "User preference")
+     (note . "echo-types has no current container needs; if added in v0.2+, must be Podman-first."))
+
+    ((convention . "justfile over Makefile, AsciiDoc over Markdown")
+     (source . "User standing preference")
+     (note . "echo-types has neither justfile nor Makefile currently; uses agda --compile direct invocation. If a build-driver is added, justfile."))))
+
+;;; ============================================================
+;;; Integrity checks (cross-file invariants ECOSYSTEM enforces)
+;;; ============================================================
+
+(define integrity-checks
+  '(((check . "STATE.scm and META.scm referenced ADRs must exist")
+     (assertion . "Every standing-decision sd-NNN in STATE.scm should have a corresponding adr-NNN in META.scm or a clear rationale embedded.")
+     (current-status . pass)
+     (note . "sd-001..sd-006 in STATE.scm align with adr-001..adr-006 in META.scm."))
+
+    ((check . "Forbidden rebrandings list is non-empty post-EI-2")
+     (assertion . "STATE.forbidden-rebrandings must contain at least the six EI-2-related entries.")
+     (current-status . pass))
+
+    ((check . "do-not-redo register coverage")
+     (assertion . "Every artefact in artefacts.agda-characteristic-lane must appear either in cascade-applied or in do-not-redo, or be flagged as 'still active work'.")
+     (current-status . pass-by-inspection)
+     (note . "All EI-2 phase files are referenced in either artefacts list or via do-not-redo entries."))
+
+    ((check . "Schema dependency completeness")
+     (assertion . "All a2ml-family files must reference their schema (meta-a2ml ABNF) in their header comment.")
+     (current-status . pass)
+     (note . "All .scm files in audit-output/ reference meta-a2ml ABNF in header comments."))
+
+    ((check . "Reading order alignment")
+     (assertion . "INDEX.adoc reading order must be consistent across STATE.scm header, STATE.a2ml header, and INDEX.adoc itself.")
+     (current-status . pass)
+     (verification . "Cross-checked at last update."))))
+
+;;; ============================================================
+;;; END OF ECOSYSTEM
+;;; ============================================================
