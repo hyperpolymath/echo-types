@@ -1,0 +1,407 @@
+= Gate #1: distinct phenomenon
+:toc: macro
+:source-highlighter: rouge
+
+This document carries the falsifiable argument for Gate #1 of the
+echo-types identity claim, per the README:
+
+[quote]
+____
+Distinct phenomenon: structured loss under non-injective computation.
+____
+
+The gate is treated as established only if the argument here survives
+the falsification tests in <<falsification>>. It is retracted in
+writing if any test succeeds.
+
+toc::[]
+
+== The honest problem
+
+The construction `Echo f y := Σ (x : A) , (f x ≡ y)` is the homotopy
+fiber of `f` at `y`. There is no syntactic novelty. Distinctness
+therefore cannot be claimed at the level of the construction. It can
+only be claimed at the level of *role*, *composition*, and
+*theorems-that-do-not-restate*.
+
+This is the bar Gate #1 actually has to clear. Any informed reviewer
+will press on it first, and any defence that conflates "Echo is well-
+founded" with "Echo is distinct" should be rejected.
+
+== Neighbouring theories
+
+Per-neighbour distinctness comparisons live in `docs/adjacency/`.
+Each neighbour gets its own file with an explicit (narrow)
+distinctness claim, identification of which structural argument
+(truncation, 2-cell, multiplicity) is load-bearing, formal exhibit
+pointers, and explicit retraction conditions.
+
+The two argument families that emerged from working through the
+neighbours individually are framed in `docs/adjacency/README.adoc`.
+Briefly:
+
+* *Truncation arguments* (refinement, IFC, provenance, quotients):
+  echo wins by carrying type-data where the neighbour carries
+  propositional or single-witness content. Formal certificate is
+  the family of `echo-not-prop` lemmas in
+  `proofs/agda/examples/`.
+* *2-cell arguments* (quotients, Galois): echo wins because the
+  natural 2-cell in the neighbour's framework is
+  Σ-over-preimages-shaped. Formal certificates are
+  `EchoVsQuotient.Sophisticated.equalizer→echo-pair` and
+  `EchoVsGalois.Sophisticated.meet→echo-intersection`.
+
+Two neighbours not in the original five-neighbour list are now
+also covered:
+
+* *Modal type theories* (QTT, Reed-Pfenning, etc.) — co-extensive
+  with echo on bare echo in QTT-class systems; recipe-level
+  distinctness is an open question. See
+  `docs/adjacency/modal-type-theories.adoc`.
+* *HoTT homotopy fibers* — echo IS the homotopy fiber; the win
+  is over the propositional truncation modality, not over fibers
+  themselves. See `docs/adjacency/hott-fibers.adoc`.
+
+The per-neighbour files:
+
+[cols="2,3", options="header"]
+|===
+| File | Neighbour
+| `docs/adjacency/quotients.adoc`            | Quotient types / setoid quotients
+| `docs/adjacency/galois-connections.adoc`   | Galois connections / abstract interpretation
+| `docs/adjacency/refinement-types.adoc`     | Refinement types
+| `docs/adjacency/information-flow.adoc`     | IFC (Goguen-Meseguer lineage)
+| `docs/adjacency/provenance.adoc`           | Provenance / data lineage
+| `docs/adjacency/modal-type-theories.adoc`  | QTT, Reed-Pfenning, adjoint modalities
+| `docs/adjacency/hott-fibers.adoc`          | HoTT homotopy fibers
+|===
+
+The honest summary: gate #1 has a strong consolidated argument
+plus formalised obstructions against the two strongest neighbours
+(quotients, Galois) plus formalised truncation wins on three
+domains (tropical, epistemic, linear). The remaining neighbours
+have framed but only-partially-formalised distinctness claims;
+see each file for what's done and what's open.
+
+== Where distinctness can live
+
+Not in the object. In the *integration of structured-loss across
+orthogonal axes*.
+
+The bridge modules in `proofs/agda/` already span:
+
+* choreographic — role projection (`EchoChoreo`)
+* epistemic — indistinguishability and knowledge (`EchoEpistemic`)
+* affine/linear — strict weakening to residues (`EchoLinear`)
+* graded — compositional degradation (`EchoGraded`)
+* tropical — argmin-style witnesses (`EchoTropical`)
+
+None of the five neighbour traditions span this breadth natively.
+Galois lives in lattices. IFC lives in security policies. Quotients
+are usually fixed (no native graded-chain construction). Refinements
+have no native grading or choreography. Provenance has no tropical
+version.
+
+The integration theorem now in the repository is
+`characteristic.RoleGraded.choreo-grade-commute`: a single theorem
+on a 2D family `RoleGEcho : Role → Grade → Set` carrying both a
+choreographic role decoration and a graded loss decoration, with
+two independent actions (`applyRole`, `applyGrade`) that commute.
+Both decoration witnesses appear on both sides of the equation,
+satisfying the same-data test that the previous nominee
+(`EchoIntegration.knowledge-and-controlled-degradation`, which gate-2's
+audit exhibited as a literal product of disjoint facts —
+see `proofs/agda/characteristic/IntegrationAudit.agda`) failed.
+
+This combination is not native to any one neighbour tradition. Each
+neighbour would have to import machinery from at least two others to
+express it.
+
+[#claim]
+=== The Gate #1 claim
+
+[quote]
+____
+Echo types are not novel as a construction. Distinctness against
+neighbouring frameworks rests on two structural arguments:
+
+. *Truncation argument.* For non-injective `f` with multiple
+  preimages of `y`, `Echo f y` is constructively not a mere
+  proposition (`echo-not-prop` family in
+  `proofs/agda/examples/`). Neighbour theories that propositionally
+  truncate the witness type (preimage subset, equivalence class,
+  IFC equivalence relation, propositional-predicate refinement
+  type) lose what echo retains.
+
+. *2-cell argument.* The natural 2-cells in neighbour frameworks
+  (quotient equalizers, Galois meets) are structurally
+  Σ-over-preimages-shaped — i.e., already echo-shaped. Formal
+  certificates in
+  `proofs/agda/EchoVsQuotient.Sophisticated.equalizer→echo-pair`
+  and
+  `proofs/agda/EchoVsGalois.Sophisticated.meet→echo-intersection`,
+  with diagonal correspondence via
+  `meet-on-diagonal→equalizer`.
+
+The earlier framing — distinctness as the *coherent integration
+of structured loss across five orthogonal axes simultaneously* —
+is *narrower* than originally stated. The EI-2 investigation
+(`docs/EI2_REPORT.adoc`, plus the sibling constructions in
+`proofs/agda/characteristic/`) establishes that the recipe
+(decoration order + echo-indexed family + transport action)
+exhibits one-axis-at-a-time cross-axis content embedded in 2D
+families, not substantive simultaneous cross-axis interaction.
+This holds across all attempted axis pairings, including the
+self-pairing of the only non-loss-only axis (`RoleRole.agda`).
+
+The integration argument therefore *does not* carry the
+distinctness load. The truncation and 2-cell arguments do, and
+they stand independently. The integration recipe remains useful as
+organising vocabulary for fiber-shaped reasoning across multiple
+axes; it is not the locus of distinctness.
+____
+
+This is the claim that has to survive falsification.
+
+[#falsification]
+== Falsification tests
+
+Three concrete tests. Each carries an explicit retraction condition.
+If any one test succeeds against echo types, Gate #1 is retracted or
+substantially weakened.
+
+=== T1 — Galois reduction
+
+Take the characteristic-family commutation theorem (currently `RoleGraded.choreo-grade-commute`). Rewrite it in pure
+abstract-interpretation terms — Galois connection between concrete
+and abstract domains, with grading expressed as a chain of
+approximations.
+
+PASSES (gate falsified) if::
+The rewrite preserves all proof-relevant content with no machinery
+imported from outside abstract interpretation.
+
+FAILS (gate supported) if::
+The rewrite cannot express the cross-axis composition without
+importing graded or choreographic primitives that AI does not
+natively contain.
+
+Attempt scaffolded in `proofs/agda/EchoVsGalois.agda`.
+
+=== T2 — Quotient reduction
+
+Same theorem, restated as a statement about the quotient
+`B = A / ker f` plus a quotient-of-quotients construction for the
+graded chain.
+
+PASSES (gate falsified) if::
+The restatement goes through cleanly using only quotient operations.
+
+FAILS (gate supported) if::
+The graded composition or choreographic action does not commute with
+the quotient stacking, leaving a residue that quotient theory cannot
+express.
+
+Attempt scaffolded in `proofs/agda/EchoVsQuotient.agda`.
+
+=== T3 — Informativeness collapse
+
+Show that `EchoEpistemic`'s indistinguishability-and-knowledge
+results are derivable from `EchoLinear` plus a forgetful functor —
+i.e., that the epistemic axis is not pulling its weight.
+
+PASSES (gate weakened) if::
+Derivation goes through. The "five axes" claim shrinks to four or
+fewer; the integration argument weakens correspondingly.
+
+FAILS (gate supported) if::
+Derivation fails at a specific point where epistemic structure
+carries content not present in linear structure.
+
+This test is currently unstubbed; see <<open-questions>>.
+
+== Status of attempts
+
+T1 (Galois)::
+Scaffolded in `proofs/agda/EchoVsGalois.agda`. The basic reduction
+holds for the foundation module. The non-monotone-grade obstruction
+is now *witnessed* by the `Sophisticated` submodule, which attacks
+the natural AI 2-cell candidate — the MEET in the abstraction
+lattice — and shows its data is Σ-over-preimages with a paired
+equality predicate (i.e., the intersection of two Echo types).
++
+The Galois argument runs through a different lattice operation
+(meet of abstractions) than the quotient argument (equalizer of
+functions), unfolding to a different but structurally equivalent
+shape. The two arguments factor through the same underlying type
+at the diagonal: `meet-on-diagonal→equalizer` shows the AI meet
+specialises to the quotient equalizer when the output values
+coincide.
++
+The combined T1+T2 conclusion: the obstruction is AXIS-PAIR-
+SPECIFIC, not an artifact of any one neighbour theory's framework.
+A reviewer who wants to falsify gate #1 must find a 2-cell
+construction that lives outside both lattice traditions.
+
+T2 (Quotient)::
+Scaffolded in `proofs/agda/EchoVsQuotient.agda`. Foundation reduces
+cleanly. The naive-quotient-stacking obstruction is now *witnessed*
+by the `Miniature` submodule: a concrete two-element-type setting
+(A = Bool × Bool, one grade step, one role projection) where role
+and grade demonstrably do not commute, and their kernel relations
+differ at a specific witness pair. Naive quotient stacking is
+therefore proved to fail. The 2-categorical encoding — the most
+plausible sophisticated quotient construction — is attacked in the
+`Sophisticated` submodule, which establishes:
++
+--
+* Kernels of the two compositions can be made *incomparable* in
+  a non-degenerate two-bit setting (parity vs. first-bit), so a
+  true 2-cell is needed rather than a refinement map.
+* The natural 2-cell (StrictComparison = equalizer of the two
+  compositions) has the shape of an Echo type by definition.
+* Any StrictComparison witness yields a pair of Echo witnesses
+  over a shared output value (`equalizer→echo-pair`).
+--
++
+The 2-categorical encoding therefore cannot avoid importing echo
+machinery at the level of its 2-cell data. Remaining T2 sub-cases
+are listed in Q1.6.
+
+T3 (Informativeness collapse)::
+No scaffold yet. Awaiting stable signatures from `EchoEpistemic` and
+`EchoLinear` before attempting. Status: open obligation.
+
+[#open-questions]
+== Open questions
+
+These should be promoted into `docs/next-questions.adoc` when the
+gate-1 work is integrated. They are written here in the form they
+should appear there.
+
+Q1.1::
+Does there exist a Galois-theoretic construction that expresses
+`RoleGraded.choreo-grade-commute` without importing graded or
+choreographic primitives? If yes, Gate #1 is falsified by T1.
+
+Q1.2::
+Does quotient stacking commute with role projection in enough cases
+to express the choreographic-graded composition? If yes, Gate #1 is
+falsified by T2.
+
+Q1.3::
+Is `EchoEpistemic.knowledge-preservation` derivable from
+`EchoLinear.weakening` plus a forgetful functor? If yes, Gate #1 is
+weakened by T3.
+
+Q1.4::
+Are there axes beyond the current five (choreo, epistemic, linear,
+graded, tropical) that should be in the integration picture? Each
+candidate axis must come with its own characteristic theorem
+(Gate #2) and canonical example (Gate #3) before being adopted.
+
+Q1.5 [partial answer]::
+The smallest counter-example for naive quotient stacking has been
+constructed: see `proofs/agda/EchoVsQuotient.agda` § `Miniature`.
++
+The full T2 obligation is now decomposed into three claims:
++
+--
+(C1) Naive quotient stacking fails — *proved* in `Miniature` via
+`kernel-disagreement`.
+
+(C2) Sophisticated quotient constructions (joins of kernels,
+2-categorical structures over kernels, indexed families of quotients
+with coherence laws, ...) can in principle be attempted — *true,
+requires survey*.
+
+(C3) Every sophisticated quotient construction either fails on
+the characteristic-family commutation theorem (currently `RoleGraded.choreo-grade-commute`), or imports machinery equivalent to
+echo types (Σ over preimages with cross-axis transport) — *open*.
+This is the real claim of gate #1; (C1) is necessary but not
+sufficient evidence. Partial closure: the 2-categorical encoding
+case is attacked in `Sophisticated`, with the structural argument
+running through the equalizer characterisation. Remaining sub-cases
+listed in Q1.6.
+--
+
+Q1.6::
+C3 sub-cases remaining for full closure. Each is a separate
+falsification sub-test, attackable independently. From most to
+least concerning:
++
+--
+* (S-1) *Joins of kernels.* — *closed* in
+  `Sophisticated.Joins`. The join is defined inductively as the
+  smallest equivalence relation containing both kernels;
+  `join-universal` proves every pair of elements is identified
+  (via spanning lemma `all-joined-to-TT`, which establishes that
+  every element joins to (true, true) in at most two steps).
+  Quotients by the join therefore collapse A to a singleton and
+  lose all integration content.
+
+* (S-2) *Indexed families of quotients with coherence laws.* —
+  *closed* in `Sophisticated.IndexedFamilies`. Two-element index
+  (Grade vs Role); `CoherenceLaw Grade Role` unfolds
+  definitionally to `StrictComparison`, so the identity gives a
+  bijection. `s-2-reduction` runs the conversion through
+  `equalizer→echo-pair`, inheriting the structural identification
+  with Σ-over-preimages. Generalisation to larger indices is
+  mechanical: the same argument applies pointwise to each pair
+  of parallel 1-cells in the index.
+
+* (S-3) *Strict 2-categories with primitive 2-cells.* 2-cells
+  given axiomatically rather than constructed from underlying
+  data. Such 2-cells carry no specific information and cannot
+  capture the characteristic-family commutation theorem's specific
+  content. Status: short
+  argument in module comments.
+
+* (S-4) *Higher inductive types / HoTT.* Admit echo-shaped 2-
+  cells natively, but at the cost of importing the entire HoTT
+  framework. By the conservative reading of "pure quotient
+  theory", this counts as importing machinery far in excess of
+  echo types. Gate #1 supported by reductio: any sufficiently
+  expressive sophisticated encoding either uses Σ-over-preimages
+  directly or imports HoTT, which subsumes Σ-over-preimages.
+
+If any of (S-1)–(S-4) admits a faithful encoding of
+the characteristic-family commutation theorem (currently `RoleGraded.choreo-grade-commute`) without importing echo machinery,
+gate #1 is falsified by that sub-case. Each requires its own
+focused attempt.
+--
+
+Q1.7 [partial answer]::
+Does the Galois reduction (T1) admit a 2-cell construction
+escaping the Σ-over-preimages shape?
++
+--
+The natural AI 2-cell candidate is the MEET in the abstraction
+lattice. `EchoVsGalois.Sophisticated.meet→echo-intersection` shows
+the meet's data unpacks directly into two Echo witnesses sharing
+a preimage. The meet operation in AI's lattice has the same
+Σ-over-preimages shape as the quotient equalizer, just with a
+paired predicate instead of a single one.
+
+The diagonal correspondence (`meet-on-diagonal→equalizer`)
+establishes that the AI meet specialises to the quotient
+equalizer when output values coincide; off the diagonal, the
+meet is strictly more general but structurally identical.
+
+Remaining open: the abstraction-lattice analog of S-1 (lattice
+operations degenerate), formally an instance of the
+`Joins.join-universal` argument in opposite direction; and
+higher-order Galois constructions (functor-category insertions,
+Galois-of-Galois) which reduce structurally to the indexed-
+families case (S-2). Both omitted to avoid duplication; arguments
+sketched in `EchoVsGalois.Sophisticated`'s status block.
+--
+
+== Distinctness commitment
+
+If T1, T2, or T3 succeeds, the README's identity claim is retracted
+or weakened correspondingly, and this document is updated to record
+the result. The commitment is not "we will explain why the test
+doesn't really apply"; it is "we will retract".
+
+The repo's identity is gated. That is the point of having gates.

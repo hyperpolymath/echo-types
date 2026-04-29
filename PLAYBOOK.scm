@@ -1,0 +1,270 @@
+;;; ============================================================
+;;; PLAYBOOK.scm — operational procedures for echo-types sessions
+;;; ============================================================
+;;;
+;;; Format: playbook-a2ml (S-expression, SRFI-30 conventions)
+;;; Schema reference:
+;;;   github.com/hyperpolymath/standards/blob/main/playbook-a2ml/spec/PLAYBOOK-FORMAT-SPEC.adoc
+;;;
+;;; Pipeline position (per playbook spec § 8.1):
+;;;   META validate → AGENTIC gate → NEUROSYM discharge →
+;;;   PLAYBOOK execute → STATE update → ECOSYSTEM check
+;;;
+;;; Purpose: machine-executable procedures derived from META.scm
+;;; (architectural decisions) and gated by AGENTIC.scm. PLAYBOOKs
+;;; introduce no new authority; they execute permitted plans.
+;;;
+;;; SPDX-License-Identifier: PMPL-1.0-or-later
+;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+
+(define-module (echo-types playbook)
+  #:export (derivation-source
+            procedures
+            alerts
+            contacts))
+
+;;; ============================================================
+;;; Derivation declaration (per playbook spec § 6.4)
+;;; ============================================================
+
+(define derivation-source
+  '((type . "derived")
+    (meta-rules . (adr-001 adr-002 adr-003 adr-004 adr-005 adr-006))
+    (state-context . "EI-2 terminated; integration commits 1-7 staged but not yet pushed.")
+    (agentic-gate . "AGENTIC.scm pre-action-checks; redo-traps active.")
+    (user-intent . "Capture EI-2 termination in 6a2 format; produce next options.")
+    (timestamp . "2026-04-29")))
+
+;;; ============================================================
+;;; Procedures
+;;; ============================================================
+
+(define procedures
+  '(;; ----------------------------------------------------------
+    ;; on-session-entry — the most important procedure. Runs when
+    ;; a new session enters audit-output/.
+    ;; ----------------------------------------------------------
+    (on-session-entry
+     (description . "Procedure for any new session entering audit-output/. Establishes context without re-deriving anything.")
+     (preconditions . ("audit-output/ directory exists"
+                       "INDEX.adoc exists"
+                       "STATE.scm exists"
+                       "META.scm exists"))
+     (steps
+      ((step 1)
+       (action . "Read audit-output/INDEX.adoc")
+       (purpose . "Map of which fact lives where; ~1 minute of reading covers ~80% of context.")
+       (timeout . 60))
+
+      ((step 2)
+       (action . "Read audit-output/STATE.scm in full")
+       (purpose . "Current authoritative state. Includes terminated-questions, do-not-redo register, forbidden-rebrandings, next-actions.")
+       (timeout . 120))
+
+      ((step 3)
+       (action . "Read audit-output/META.scm")
+       (purpose . "Architectural decisions; permanent record of what's been settled.")
+       (timeout . 90))
+
+      ((step 4)
+       (action . "Skim audit-output/AGENTIC.scm gate-rules")
+       (purpose . "Know which classes of requests trigger refusal or redirection.")
+       (timeout . 60))
+
+      ((step 5)
+       (action . "Cite specific entries (not summaries) when discussing EI-2 with the user")
+       (purpose . "Forbidden-rebrandings include 'cite from memory and lose nuance'. Always cite the file path.")
+       (timeout . 0)))
+     (postconditions . ("Session has fresh context"
+                        "No redo-trap was triggered during entry"))
+     (on-failure . "If any step fails (file missing, malformed), STOP. Do not proceed with operational requests until the file system is reconciled."))
+
+    ;; ----------------------------------------------------------
+    ;; on-EI-2-mention — what to do when the user mentions EI-2
+    ;; or any topic in its forbidden-rebrandings list.
+    ;; ----------------------------------------------------------
+    (on-EI-2-mention
+     (description . "Procedure for any request that touches EI-2 territory.")
+     (preconditions . ("on-session-entry has run"
+                       "STATE.scm has been read"))
+     (steps
+      ((step 1)
+       (action . "Check the request against AGENTIC.scm gate G-001 (do-not-reopen-EI-2)")
+       (purpose . "Most EI-2 mentions are not reopens; some are. Distinguish carefully.")
+       (timeout . 0))
+
+      ((step 2)
+       (action . "Check the request against AGENTIC.scm gate G-005 (do-not-rebrand-recipe-as-distinctness-locus)")
+       (purpose . "Catch implicit attempts to put the recipe back into the distinctness story.")
+       (timeout . 0))
+
+      ((step 3)
+       (action . "If the request is asking ABOUT EI-2 (status, finding, evidence), respond using the evidence-summary in NEUROSYM.scm with citations. Do not paraphrase from memory.")
+       (purpose . "Cite-from-files, not from memory.")
+       (timeout . 0))
+
+      ((step 4)
+       (action . "If the request is asking to DO something EI-2-adjacent, run pre-action-checks from AGENTIC.scm")
+       (purpose . "Refuse, redirect, or proceed-with-caveat per gate severity.")
+       (timeout . 0)))
+     (postconditions . ("Request was handled per gate rules"
+                        "No forbidden-rebranding was produced"))
+     (on-failure . "Refuse with citation. Do not produce content that contradicts STATE.forbidden-rebrandings even if the user requests it; this is a critical gate."))
+
+    ;; ----------------------------------------------------------
+    ;; integration-push — apply the seven staged commits
+    ;; ----------------------------------------------------------
+    (integration-push
+     (description . "Apply the seven-commit integration sequence from INTEGRATION_COMMITS.adoc.")
+     (preconditions . ("audit-output/ has all seven commits' content staged"
+                       "User explicitly confirms the push"
+                       "Working tree of echo-types repo is clean"
+                       "Branch integrate-parallel-work does not exist or is safe to overwrite"))
+     (requires-confirmation . #t)
+     (steps
+      ((step 1)
+       (action . "Confirm with user: 'Push seven commits to integrate-parallel-work branch on github.com/hyperpolymath/echo-types?'")
+       (timeout . 0))
+
+      ((step 2)
+       (action . "Run the commit sequence from INTEGRATION_COMMITS.adoc, commits 1-6 (gate-1, adjacency, gate-2, gate-3, polish)")
+       (timeout . 600))
+
+      ((step 3)
+       (action . "Run commit 7 (EI-2 termination)")
+       (timeout . 300))
+
+      ((step 4)
+       (action . "Push to origin (GitHub canonical)")
+       (timeout . 60))
+
+      ((step 5)
+       (action . "Verify mirror workflow ran (GitLab and Codeberg)")
+       (timeout . 300)))
+     (postconditions . ("All seven commits on origin/integrate-parallel-work"
+                        "Mirror workflow either completed or silently skipped tokens"
+                        "STATE.scm session.commits-pushed updated to 7"))
+     (on-failure . "Rollback: keep the branch but inform user of the failure point. Do not force-push."))
+
+    ;; ----------------------------------------------------------
+    ;; capture-new-EI-finding — when actually new EI-territory
+    ;; work happens (not EI-2 reopen, but e.g. EI-3 recipe extension)
+    ;; ----------------------------------------------------------
+    (capture-new-EI-finding
+     (description . "Capture a new EI-style investigation result that is NOT an EI-2 reopen.")
+     (preconditions . ("Verified via AGENTIC G-001 that this is genuinely new work, not EI-2 reopen"
+                       "Investigation has produced concrete data points or formal certificates"))
+     (steps
+      ((step 1)
+       (action . "Assign new ID (EI-3, EI-4, ...). Never reuse EI-2.")
+       (timeout . 0))
+
+      ((step 2)
+       (action . "Add entry to next-questions.adoc Open section.")
+       (timeout . 0))
+
+      ((step 3)
+       (action . "If new structural decision made, add adr-NNN to META.scm.")
+       (timeout . 0))
+
+      ((step 4)
+       (action . "If finding affects standing decisions, add or update sd-NNN in STATE.scm.")
+       (timeout . 0))
+
+      ((step 5)
+       (action . "Add formal certificates to NEUROSYM.scm if applicable.")
+       (timeout . 0))
+
+      ((step 6)
+       (action . "Add gate rule to AGENTIC.scm if a new redo-trap is identified.")
+       (timeout . 0)))
+     (postconditions . ("New investigation has its own record"
+                        "EI-2 record is not modified"
+                        "All six 6a2 files are consistent"))
+     (on-failure . "If any of the 6a2 files becomes inconsistent, STOP and report. Inconsistency is worse than incomplete capture."))
+
+    ;; ----------------------------------------------------------
+    ;; respond-to-status-query — the most common request: "what's
+    ;; the state of echo-types?"
+    ;; ----------------------------------------------------------
+    (respond-to-status-query
+     (description . "Procedure for answering 'what's the state of X?' queries.")
+     (preconditions . ("STATE.scm has been read"))
+     (steps
+      ((step 1)
+       (action . "Identify what 'X' is (EI-2, integration, gate-1, ...)")
+       (timeout . 0))
+
+      ((step 2)
+       (action . "If X is EI-2: cite NEUROSYM.evidence-summary one-line + offer the paragraph form.")
+       (timeout . 0))
+
+      ((step 3)
+       (action . "If X is integration: cite STATE.session.commits-staged and STATE.session.commits-pushed.")
+       (timeout . 0))
+
+      ((step 4)
+       (action . "If X is one of gates 1/2/3: cite the corresponding adjacency README + gate-N-handoff.adoc + the standing-decisions in STATE.scm.")
+       (timeout . 0))
+
+      ((step 5)
+       (action . "Always offer next-actions from STATE.scm if the user wants concrete forward motion.")
+       (timeout . 0)))
+     (postconditions . ("User has the current state with citations"
+                        "No paraphrasing from memory")))))
+
+;;; ============================================================
+;;; Alerts
+;;; ============================================================
+
+(define alerts
+  '((forbidden-rebranding-detected
+     (severity . critical)
+     (channel . user)
+     (message . "Refused: this matches STATE.forbidden-rebrandings entry: {{which-entry}}. Citation: {{file-path}}. To override: justify with structural argument not in the forbidden list.")
+     (escalation . 0))
+
+    (EI-2-reopen-detected
+     (severity . critical)
+     (channel . user)
+     (message . "Refused: AGENTIC gate G-001. EI-2 is terminated. Citations: STATE.scm > terminated-questions > EI-2; META.scm > adr-002. Reopen requires explicit user override with structural justification.")
+     (escalation . 0))
+
+    (cascade-inconsistency-detected
+     (severity . high)
+     (channel . user)
+     (message . "Inconsistency: {{location-A}} says X but {{location-B}} says Y. Five-doc cascade is in STATE.scm > cascade-applied. Reconcile before proceeding.")
+     (escalation . 60))
+
+    (file-missing-on-entry
+     (severity . high)
+     (channel . user)
+     (message . "Missing expected file: {{path}}. on-session-entry procedure cannot proceed without {{INDEX,STATE,META}}. STOP and reconcile.")
+     (escalation . 0))
+
+    (PATH-B-violation-attempt
+     (severity . medium)
+     (channel . user)
+     (message . "Detected attempt to formalise full 2D iff theorem in safe Agda (AGENTIC G-004). PATH B accepted partial formalisation; obstacles documented. Citation: META adr-003.")
+     (escalation . 60))))
+
+;;; ============================================================
+;;; Contacts
+;;; ============================================================
+
+(define contacts
+  '((author
+     (name . "Jonathan D.A. Jewell (hyperpolymath)")
+     (channel . "j.d.a.jewell@open.ac.uk")
+     (role . "Project owner; standing decisions traceable to.")
+     (hours . "asynchronous"))
+
+    (escalation
+     (name . "Hyperpolymath constellation maintainers")
+     (channel . "via standards repo discussions")
+     (role . "If a 6a2 schema question arises that this PLAYBOOK doesn't resolve.")
+     (hours . "asynchronous"))))
+
+;;; ============================================================
+;;; END OF PLAYBOOK
+;;; ============================================================

@@ -1,0 +1,515 @@
+= Gate #3: Canonical Examples
+:toc: left
+:source-highlighter: rouge
+
+== Mandate
+
+From `README.md`:
+
+____
+*Canonical examples:* cases where "echo type" is the right
+explanatory unit.  If these fail, we record that result and stop
+the identity claim.
+____
+
+== Bar
+
+An example E qualifies as canonical iff *all three* hold:
+
+. *(a) Forced.*  The echo-type structure is forced by the domain --- a
+  faithful formalisation naturally produces echo-typed values, rather
+  than echo being retrofitted onto a domain that already had a clean
+  account.
+. *(b) Bridge axis.*  At least one bridge axis (choreo / epistemic /
+  linear / graded / tropical) is genuinely active in the example.
+. *(c) Distinctness.*  Replacing "echo type" with "preimage of f" or
+  "fibre of f at y" or any of the neighbour theories below loses
+  pedagogic or technical force.
+
+If any of (a)–(c) fails, the example is *applicable*, not *canonical*.
+
+Each example must be tested against five neighbour theories:
+
+* Galois connections / abstract interpretation
+* Quotient types / setoid quotients
+* Refinement types
+* Information-flow non-interference (Goguen-Meseguer lineage)
+* Provenance / data lineage
+
+For each, the example must state explicitly: "this stops being
+canonical if [neighbour theory] gives an equally good account.
+Comparison: [specific reduction or non-reduction]."
+
+This document delivers three examples meeting the bar.  *Three
+strong examples beat ten weak ones.*
+
+== Example 1: Tropical argmin with tie multiplicity
+
+*File:* `proofs/agda/examples/TropicalArgmin.agda`
+
+=== Domain
+
+In a tropical (min, +) optimisation, the meaningful invariant is
+not just the optimum value but the *type* of optima: how many
+distinct candidates achieve it.  Tropical sensitivity analysis ---
+counting optimal paths, behaviour at degenerate optima, perturbation
+under cost changes --- needs the *type* of argmin witnesses, not
+merely the existence of one.
+
+The miniature here is three candidate paths with costs
+`[5, 5, 7]`: the optimum is `5`, achieved by two distinct paths.
+
+=== Formalisation summary
+
+[source,agda]
+----
+data Path : Set where p₁ p₂ p₃ : Path
+cost : Path → ℕ
+cost p₁ = 5; cost p₂ = 5; cost p₃ = 7
+----
+
+Echo `cost` at `5` is the type of argmin witnesses.  Two distinct
+inhabitants (`optimum`, `optimum′`) and a constructive proof that
+`Echo cost 5` is not even a mere proposition (`echo-not-prop`).
+Bridge axis: tropical (argmin-style witness residues, listed in
+the README under "tropical bridge").
+
+=== Why (a) (b) (c) hold
+
+*(a)* Forced.  In computational tropical geometry, the natural object
+is the type of optima --- not a propositional "an optimum exists".
+Path-counting algorithms construct the witness type directly, and
+Σ-typed witnesses are the standard formal encoding of "the type of
+argmins".  The truncated / proposition account requires an extra
+truncation step over what the formalisation naturally produces.
+
+*(b)* Tropical bridge axis is genuinely active: the example IS the
+argmin under tropical (min) collapse.
+
+*(c)* `echo-not-prop` proves `is-prop (Echo cost 5) → ⊥`
+constructively.  Any account that represents knowledge of the
+argmin set as a mere proposition (truncated existence,
+membership-only subset) loses what `Echo cost 5` records.
+
+=== Neighbour-theory tests
+
+*Galois connections / abstract interpretation.*  Argmin in tropical
+algebra is the lower adjoint of a Galois connection between paths
+ordered by cost and the cost lattice.  This stops being canonical
+if Galois gives an equally good account.  *Comparison:* Galois
+captures the optimum value but not the type of optima --- the
+adjoint maps to a single best cost, not to the witness type.
+Echo wins when multiplicity matters.  Specific non-reduction:
+`echo-not-prop` is a property of the witness type that the Galois
+adjoint does not formulate at all.
+
+*Quotient types / setoid quotients.*  The relation "p ~ q iff
+cost p = cost q" gives a quotient `Path / ~`; the equivalence
+class at `5` is the propositional version of `Echo cost 5`.  This
+stops being canonical if quotients give an equally good account.
+*Comparison:* quotients identify the two argmins as a single
+equivalence class, *losing the distinguishing witness data*.
+`tie-witness` (constructive proof that `proj₁ optimum ≢
+proj₁ optimum′`) is exactly the data quotients discard.
+
+*Refinement types.*  `{ p : Path | cost p ≡ 5 }` is a refinement type.
+This stops being canonical if refinement types give an equally good
+account.  *Comparison: depends on which refinement-type discipline.*
+In Σ-relevant refinement (Agda, Coq), refinement types literally
+*are* `Σ Path (λ p → cost p ≡ 5)` and coincide with Echo on the
+type level.  No win.  In propositional-predicate refinement
+(F\*, Liquid Haskell), the predicate is a mere proposition and the
+refinement type is the truncation; Echo wins, and `echo-not-prop`
+is the formal certificate.  *Honest negative result:* this example
+does not distinguish Echo from refinement types in Σ-relevant type
+theories.  It does distinguish them in propositional-refinement
+type theories.
+
+*Information-flow non-interference.*  Not a natural neighbour for
+tropical argmin --- the domain is computational structure, not
+information leakage between security levels.  Skipping with note.
+
+*Provenance / data lineage.*  Provenance tracks which input produced
+which output --- typically a single witness per output.  This stops
+being canonical if provenance gives an equally good account.
+*Comparison:* provenance is sufficient when there is a unique optimal
+input (single witness).  At a *tied* optimum, provenance must either
+record one witness arbitrarily (losing the others) or the entire
+type of compatible witnesses (which is exactly Echo).  Echo wins for
+degenerate optima; the two coincide for unique ones.
+
+=== Explicit falsifier
+
+This example stops being canonical if `Echo cost 5` is provably
+contractible / a mere proposition / equivalent in technical force
+to `‖ Echo cost 5 ‖`.  Refuted constructively by `echo-not-prop`.
+
+== Example 2: Epistemic knowledge update
+
+*File:* `proofs/agda/examples/EpistemicUpdate.agda`
+
+=== Domain
+
+An agent with imperfect observation tracks the set of compatible
+worlds.  After a *second* observation, the compatible set
+*refines*.  Two questions matter for any account of agent
+knowledge:
+
+* Does refinement *preserve identities* of consistent worlds?
+* Does refinement *gain information* (drop worlds)?
+
+Echo answers both constructively.  In a propositional /
+equivalence-class account, the answers are at best derivable
+from a relation-meet, not directly from the data.
+
+The miniature here has three latent Boolean variables (eight
+worlds), with the agent observing the first two.
+
+=== Formalisation summary
+
+[source,agda]
+----
+World = Bool × Bool × Bool
+obs  : World → Bool        -- observe variable 1
+obs' : World → Bool        -- observe variable 2
+JointObs : World → Bool × Bool
+----
+
+After observing `obs w = false`, four worlds are consistent
+(`w₁..w₄`).  After also observing `obs' w = false`, only two
+remain (`w₁`, `w₂`).  The refinement map `refine : Echo JointObs
+(false, false) → Echo obs false` is constructively *injective*
+(`refine-injective`) and constructively *not surjective*
+(`not-in-image`: the world `(false, true, false)` is in the
+initial knowledge but not in the refined image).
+`echo-not-prop` certifies that the initial knowledge is not even
+a mere proposition.
+
+Bridge axis: epistemic (the README lists "epistemic bridge ---
+indistinguishability and echo-indexed knowledge"; this example
+concretely instantiates echo-indexed knowledge for a finite
+world).
+
+=== Why (a) (b) (c) hold
+
+*(a)* Forced.  In type-theoretic epistemic logic --- where agents
+are programs and knowledge is a type --- the agent's knowledge
+of a world after observing an output is *exactly* `Σ World (λ w →
+obs w ≡ output)`.  This is Echo by definition.  Not retrofitted:
+it falls out of the type-theoretic encoding of indistinguishability.
+
+The propositional / Kripke account (knowledge = equivalence class)
+is the *alternative* account; it requires either powersets or
+quotients to recover what Echo encodes natively.  Forced therefore
+holds in the type-theoretic setting; in propositional epistemic
+logic Echo is not forced (Kripke gives a clean account).  Honest
+caveat: this example is *canonical in type-theoretic epistemic
+logic, applicable in propositional epistemic logic*.
+
+*(b)* Epistemic bridge axis genuinely active: the example IS
+agent-knowledge under refinement.
+
+*(c)* Two non-reductions formalised:
+
+* `refine-injective`: refinement preserves world identity.  The
+  Σ-projection that defines `refine` is a function on individual
+  witnesses.  Equivalence-class accounts cannot formulate this
+  because individual identity is quotiented out.
+* `not-in-image`: refinement is not surjective.  The constructive
+  exhibition of `(false, true, false)` as a non-image element is
+  the type-theoretic form of "second observation gave information".
+  In a relation-meet account, the analogous statement is
+  "intersection of equivalence relations is strictly contained";
+  same propositional content, but no constructive witness.
+
+`echo-not-prop` adds the certificate that `Echo obs false` is not
+a mere proposition --- so Echo cannot be replaced by its truncation.
+
+=== Neighbour-theory tests
+
+*Galois connections / abstract interpretation.*  The observation
+function is an abstraction (concrete worlds → abstract observations).
+Galois adjoints exist between worlds and observations.  This stops
+being canonical if Galois gives an equally good account.
+*Comparison:* the Galois concretisation of an observation is a *set*
+of worlds (the equivalence class) --- propositional, not type-data.
+Refinement is intersection of concretisations.  Galois loses
+witness preservation through refinement; Echo's `refine-injective`
+has no Galois counterpart on individual worlds.
+
+*Quotient types / setoid quotients.*  The "indistinguishable to
+agent" relation gives a quotient `World / ~`.  This stops being
+canonical if quotients give an equally good account.  *Comparison:*
+the quotient class at observation `false` and the Echo type at
+`false` agree on which worlds are present, but the quotient erases
+which world is which.  `refine-injective` and `distinct-w₁-w₃`
+formally use individual world identity, which the quotient does
+not provide.
+
+*Refinement types.*  `{ w : World | obs w = r }` is a refinement
+type.  This stops being canonical if refinement types give an
+equally good account.  *Comparison: same as for TropicalArgmin.*
+In Σ-relevant refinement, refinement types coincide with Echo
+(no win for Echo).  In propositional-predicate refinement, refinement
+loses what `echo-not-prop` certifies (Echo wins).  Honest negative
+result preserved.
+
+*Information-flow non-interference (Goguen-Meseguer).*  This is the
+*strongest* neighbour for this example.  Goguen-Meseguer accounts
+agent observation as an equivalence relation on states; "agent
+cannot distinguish high-level differences" is non-interference.
+This stops being canonical if Goguen-Meseguer gives an equally good
+account.  *Comparison:* Goguen-Meseguer captures the same
+propositional content (which worlds are indistinguishable) but is
+*relational*, not *type-theoretic*.  For *static* knowledge analysis
+(does agent know P?), the two accounts are tied: classical Kripke
+semantics suffices.  For *dynamic* / *programmable* knowledge update
+--- where you compute with the knowledge type, define functions on
+witnesses, take sub-Σ refinements --- Echo's type-data is what the
+formalisation needs.  *Honest assessment:* this example is canonical
+specifically in the type-theoretic / dynamic setting; in the
+classical / static setting it is applicable but not strictly
+canonical over Goguen-Meseguer.
+
+*Provenance / data lineage.*  Provenance for an observed value
+tracks which world produced it, typically as a single witness.
+This stops being canonical if provenance gives an equally good
+account.  *Comparison:* provenance is single-witness; Echo is the
+*type* of compatible worlds.  After refinement, provenance would
+need to track multiple witnesses jointly --- which is Echo.  At
+non-degenerate observations (one compatible world), the two agree;
+at non-trivial knowledge (multiple compatible worlds), Echo's
+multiplicity is what's needed.
+
+=== Explicit falsifier
+
+This example stops being canonical if any of:
+
+* The propositional / Kripke equivalence-class account reproduces
+  the *programmable refinement* (`refine`, `refine-injective`,
+  `not-in-image`) without truncation.  Refuted by the constructive
+  exhibition of these as functions on individual witnesses.
+* `Echo obs false` is provably equivalent to its propositional
+  truncation.  Refuted by `echo-not-prop`.
+
+== Example 3: Linear-mode erasure
+
+*File:* `proofs/agda/examples/LinearErasure.agda`
+
+=== Domain
+
+In a linearly-typed source language, function types carry mode
+annotations: linear (use exactly once) or unrestricted.  Compilation
+to an unannotated target erases the mode while preserving the
+structural shape (functions remain functions, base types remain
+base types).  The inverse question --- "given an erased type, what
+was the source annotation?" --- is the question Echo answers as a
+type, not a propositional "some annotation existed".
+
+The miniature here is the smallest non-trivial instance: Mode is
+two-point (linear, unrestricted), the base type has no further
+structure, and erasure forgets only the mode.  The Hello World of
+linearity tracking through erasure.
+
+=== Formalisation summary
+
+[source,agda]
+----
+data Mode  : Set where lin unr : Mode
+data Type  : Set where base : Type
+                       fn   : Mode → Type → Type → Type
+data Plain : Set where base : Plain
+                       fn   : Plain → Plain → Plain
+erase : Type → Plain
+----
+
+Two distinct annotated types (`linearF`, `unrestrictedF`) erase to
+the same plain type (`erasedF`).  `distinct` and `echo-not-prop`
+formalise non-triviality and non-truncatability.  `retained-shape`
+proves that the *structural shape* of the source (function vs. base)
+is preserved through Echo --- this is the "residue" the linear axis
+names.
+
+Bridge axis: linear (README: "affine/linear bridge --- strict
+weakening from full echoes to residues").  The mode annotation is
+the unique data discarded by erasure; the type-shape is what
+survives the strict weakening.
+
+=== Why (a) (b) (c) hold
+
+*(a)* Forced.  In type-preserving compilation of linearly-typed
+languages (Linear Haskell, QTT-style Idris, CompCert-style mechanised
+compilation), the inverse problem "given erased term/type, what was
+the linear annotation?" is natively a Σ-type.  Echo is the direct
+encoding --- it falls out of the typing relation in the source
+language, not retrofitted onto a domain that already had a clean
+account.
+
+In propositional / classical compiler-correctness settings, the
+question is propositional ("does some valid mode annotation
+exist?"), and Echo is not forced.  Honest caveat (same shape as
+Examples 1 and 2): canonical in the type-theoretic setting,
+applicable in the classical / model-theoretic setting.
+
+*(b)* Linear bridge axis genuinely active.  The example structurally
+exhibits the loss type the axis names: the mode annotation is the
+unique data discarded by erasure, the structural shape is the
+residue.
+
+*(c)* Two non-reductions formalised:
+
+* `retained-shape`: the source's structural shape (`is-fn-type`) is
+  recoverable from the Echo by *pattern matching on the source
+  type*.  This proof is *not* `proj₂` of the Σ --- it is a genuine
+  inversion lemma.  The handoff observed that retained-constraint
+  theorems in the dropped examples reduced to `proj₂`; this one
+  does not, which is what the handoff was hunting for.
+* `echo-not-prop`: the witness type is not a mere proposition;
+  truncation loses the mode annotation.
+
+=== Neighbour-theory tests
+
+*Galois connections / abstract interpretation.*  Erasure is an
+abstraction in the abstract-interpretation sense; lifts (e.g.,
+"always linear", "always unrestricted") are Galois adjoints.  This
+stops being canonical if Galois gives an equally good account.
+*Comparison:* the Galois adjoint produces a *single* lifted mode,
+not the *type* of compatible modes.  Echo wins on multiplicity
+exactly as in TropicalArgmin.  Specific non-reduction:
+`echo-not-prop` is a property of the witness type the Galois
+adjoint does not formulate.
+
+*Quotient types / setoid quotients.*  The relation "T ~ T' iff
+erase T = erase T'" gives a quotient `Type / ~`.  This stops being
+canonical if quotients give an equally good account.  *Comparison:*
+the equivalence class at `erasedF` contains both `linearF` and
+`unrestrictedF` but identifies them; the *distinguishing mode
+annotation* is the data quotients discard.  `distinct` is exactly
+the data lost.
+
+*Refinement types.*  `{ T : Type | erase T ≡ U }` is a refinement
+type.  Same outcome as in Examples 1 and 2: in Σ-relevant
+refinement (Agda, Coq) refinement types literally are Echo, no
+win; in propositional-predicate refinement (F\*, Liquid Haskell)
+refinement loses what `echo-not-prop` certifies.  *Honest negative
+result preserved across the lane.*
+
+*Information-flow non-interference.*  Linear / unrestricted modes
+are structurally similar to security levels in an information-flow
+type system (must-use-once vs. can-share / classified vs.
+unclassified).  This stops being canonical if information-flow
+gives an equally good account.  *Comparison:* information-flow is
+relational / propositional ("does the program respect the policy?");
+Echo is type-data ("what was the mode?").  For *static* analysis
+(does the erased program admit a valid mode?), information-flow
+suffices.  For *constructive recovery* (give me the mode as data),
+Echo wins.  Same shape as the Goguen-Meseguer comparison in
+Example 2.
+
+*Provenance / data lineage.*  Provenance for an erased type tracks
+which annotated type produced it.  Single-witness vs. type.  At
+ambiguous erasures (multiple modes possible), Echo's full witness
+type is what's needed; provenance must either pick one mode
+arbitrarily or produce the same type Echo gives.
+
+*Modal type theories (additional neighbour for this example).*
+QTT, Reed-Pfenning modal calculi, adjoint modalities all carry
+mode annotations as first-class type-theoretic data.  This stops
+being canonical if modal type theories reproduce Echo natively.
+*Comparison:* in those systems, the Σ-type formulation of
+erasure-inverse coincides with Echo *exactly*.  No win for Echo;
+no loss either.  This example is canonical *over* propositional
+accounts; *coextensive with* native modal Σ-type accounts.  The
+honest framing: Echo is the right unit in any setting that lacks
+a richer modal type theory --- it gives the same answer that QTT
+gives, but does not require committing to QTT's full apparatus.
+
+=== Explicit falsifier
+
+This example stops being canonical if any of:
+
+* `erase` is injective on Type, so no genuine erasure.  Refuted by
+  `linearF`, `unrestrictedF`, `distinct`.
+* `Echo erase erasedF` is provably contractible.  Refuted by
+  `echo-not-prop`.
+* `Echo erase` does not preserve function-shape (the residue claim
+  collapses).  Refuted by `retained-shape`.
+* A modal type theory reproduces the type-data of Echo natively.
+  Honest tied result: in QTT-class systems Echo coincides with
+  the native object; the win is over *propositional* accounts of
+  mode erasure, recorded above.
+
+== Honest assessment
+
+Three things should be said plainly.
+
+. *Three examples, not four.*  Differential privacy with a graded
+  budget and lossy compression with bounded reconstruction were
+  considered.  Both fail (a) without postulates: faithful
+  formalisation of DP requires probability and faithful formalisation
+  of bounded-error compression requires real arithmetic, neither
+  available in `--safe` Agda without scaffolding that would itself
+  need to be reviewed for canonicality.  Including them as toys
+  would test "is the toy canonical?", not "is the domain canonical?",
+  and would be padding.
+
+. *All three surviving examples are canonical conditional on a
+  type-theoretic context.*  In propositional / classical settings
+  (Kripke epistemic logic; pure-algebraic tropical; classical
+  compiler-correctness), each has a neighbour theory that gives an
+  equally good account.  Type-data is the discriminator;
+  `echo-not-prop` is the formal certificate in each case.  This is
+  a *real* canonicality claim --- type-data is exactly what Echo
+  carries that fibre-as-truncation does not --- but it is
+  conditional, and the doc says so explicitly.
+
+  LinearErasure adds one further class of neighbour: *modal type
+  theories*.  Echo coincides with these on the type level (no win,
+  no loss).  The win against propositional accounts is preserved.
+
+. *Examples previously delivered have been dropped.*  The earlier
+  iteration of this lane delivered `DigestEcho.agda` and
+  `ChoreographyProjection.agda` against an older bar.  Under the
+  re-scoped (a)/(b)/(c) bar with neighbour-theory tests:
+
+** `DigestEcho` fails (a): faithful formalisation of digests gives
+   a preimage subset; Echo is retrofitted.  Fails (b): no bridge
+   axis active.  Fails (c): the witness type does no work the
+   subset cannot do.  *Dropped.*
+** `ChoreographyProjection` fails (c) on its own strongest axis.
+   The joint-Echo collapse (`JointEcho ℓA ℓB ≃ ⊤`) is a property
+   of pullbacks of fibres in any locally-cartesian-closed category,
+   not specifically of Echo.  The choreographic axis is genuinely
+   active, but Echo does not earn canonicality there.  *Dropped.*
+
+== Build
+
+[source,sh]
+----
+agda -i proofs/agda -i $AGDA_STDLIB proofs/agda/examples/All.agda
+----
+
+Verified locally with Agda 2.6.3 + agda-stdlib 1.7.3 under
+`LC_ALL=C.UTF-8`.  Both files plus `All.agda` produce `.agdai`
+interface files from a clean state with exit code 0.  The
+"Cubical Agda" warnings in stdout are stdlib-internal noise from
+the Debian-packaged stdlib build flags; nothing in this lane.
+
+=== Pragma and import constraints
+
+Both files use `{-# OPTIONS --safe --without-K #-}`.  The new brief
+restricts imports to "only existing `Echo*.agda` and stdlib".  Both
+files satisfy this (they import only stdlib; no custom modules).
+Each defines `Echo` locally.  Rationale: keeping each example
+readable on its own and robust to API drift in `Echo*.agda` during
+parallel work on the other gates.  If the maintainer prefers
+`open import Echo`, the local definition can be deleted (one-line
+edit per file), modulo `--without-K` coinfectivity.
+
+=== Module naming
+
+The lane uses lowercase `proofs/agda/examples/` per the spec.
+Module declarations are correspondingly `module examples.X where`.
+If Pascal-cased directory matching the existing top-level modules
+is preferred, renaming and updating module declarations is a
+one-line edit per file.

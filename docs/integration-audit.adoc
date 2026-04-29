@@ -1,0 +1,487 @@
+= echo-types: integration audit (gate-1 + parallel gate-2 + parallel gate-3)
+:toc: macro
+:source-highlighter: rouge
+
+This document audits the parallel work delivered by three instances
+(one gate-2, two gate-3 attempts of the same lane) and re-audits the
+gate-1 work from the orchestrating session. Verdict per file, lane
+discipline, cross-lane consistency, and an integration recommendation.
+
+Audit performed in a sandbox with Agda 2.6.3 + agda-stdlib 1.7.x.
+The user's repo targets agda-stdlib 2.x. Implications for typecheck
+verification are noted per file.
+
+toc::[]
+
+== Summary verdict
+
+Three of the four artefact bundles are integration-ready with
+adjustments. One (gate-3 attempt #1, `two.zip`) is superseded by
+its companion (`three.zip`) and should be discarded.
+
+[cols="1,2,2,1", options="header"]
+|===
+| Bundle | Lane | Quality | Verdict
+
+| gate-1 (this session)
+| docs, proofs (EchoVs*, gate-1-*)
+| Strong; structural arguments formalised in two completed Sophisticated modules. *Post-EI-2 (READING 2 adopted): claim narrowed with non-loss-only precondition stated explicitly.*
+| ✅ Integrate
+
+| `one.zip` (gate-2)
+| docs/gate-2-*, proofs/agda/characteristic/
+| Strong; 4-of-4 nominees survive, withdrawn nominees formally exhibited, new RoleGraded construction
+| ⚠️ Integrate with adjustments (see §<<gate-2,Gate 2>>)
+
+| `two.zip` (gate-3 attempt #1)
+| same content as `three.zip`, packaged as patch + shell script
+| Same content as three.zip, but delivery mechanism violates "no commit/no push"
+| ❌ Discard, use `three.zip`
+
+| `three.zip` (gate-3 attempt #2)
+| docs/gate-3-*, proofs/agda/examples/
+| Strong; 3 examples surviving (2 dropped honestly), `echo-not-prop` as load-bearing distinctness signal
+| ✅ Integrate (one minor stylistic adjustment optional)
+|===
+
+The combined integration produces a repository in substantively
+better shape than v0.1.0: gate-1 distinctness argued and partially
+formalised, gate-2 nominees re-audited with formal falsifier
+exhibits and a new genuine cross-decoration integration theorem,
+gate-3 with three canonical examples carrying the cleanest
+distinctness signal (non-truncatability) on three different bridge
+axes.
+
+== Lane discipline audit
+
+Per the parallel-instance protocol the prompts established, certain
+files were declared read-only and certain output formats were
+required. Findings:
+
+[cols="2,3,1", options="header"]
+|===
+| Rule | Compliance | Verdict
+
+| gate-2 owns docs/gate-2-* and proofs/agda/characteristic/
+| ✅ All gate-2 files in correct paths
+| Pass
+
+| gate-2 NOT to touch the eight existing Echo*.agda modules
+| ✅ No edits; only imports
+| Pass
+
+| gate-2 NOT to touch roadmap-gates.adoc (read-only)
+| ⚠️ Modified roadmap-gates.adoc to amend the Gate-2 nominee table. *Honestly flagged* in NOTEs in both gate-2-characteristic.adoc and gate-2-handoff.adoc; modified file included for the integrator's review rather than silently changed.
+| Acceptable; integrator decision
+
+| gate-2 NOT to git add/commit/push
+| ⚠️ Wrote `COMMIT_MSG_GATE2_R4.txt` containing a prepared commit message. *Did not commit*. Provided as reference for the integrator.
+| Acceptable
+
+| gate-2 produces drop-in items, not patches
+| ⚠️ Produced loose files AND a 53KB patch. The two are equivalent content; the patch is a convenience offering.
+| Acceptable
+
+| gate-3 attempt #2 (three.zip) owns docs/gate-3-* and proofs/agda/examples/
+| ✅ All files in correct paths
+| Pass
+
+| gate-3 attempt #2 NOT to touch existing Echo*.agda
+| ✅ Self-contained: defines Echo locally, imports only stdlib
+| Pass
+
+| gate-3 attempt #2 produces drop-in items
+| ✅ Six loose files
+| Pass
+
+| gate-3 attempt #1 (two.zip) produces drop-in items
+| ❌ 72KB shell script that does `git checkout -B`, `git add`, `git commit`, and prompts for `git push`. Plus a patch. No loose files at all.
+| Fail
+
+| gate-3 attempt #1 NOT to commit/push
+| ❌ Shell script auto-commits and prompts for push.
+| Fail
+|===
+
+The two gate-3 attempts deliver _byte-identical_ Agda and prose
+content (verified by `git apply` then `diff -q` on all six files —
+zero differences). The deliveries differ only in packaging.
+Accordingly, three.zip is selected and two.zip is discarded; no
+content is lost.
+
+== Quality audit
+
+[#gate-2]
+=== Gate 2 (`one.zip`)
+
+==== Strengths
+
+The audit does what audits should do: states a falsifier, applies
+it to each nominee, and *reports the negative results*. Two
+original nominees were withdrawn after the audit found them
+reducible:
+
+* `EchoCharacteristic.visible-constraint` reduces to `proj₂` of the
+  underlying Σ once `visible := proj₁` is unfolded. Formalised in
+  `VisibleConstraintAudit.agda` as `visible-constraint-is-proj₂`,
+  proved by `refl`.
+* `EchoIntegration.knowledge-and-controlled-degradation` is `_×_`
+  of two facts over disjoint frameworks (the conjuncts are over
+  different functions, sharing no data, with the second consuming
+  no hypotheses). Formalised in `IntegrationAudit.agda` as
+  `N3-is-product` and `split-merging-uses-no-hypotheses`.
+
+These withdrawals are the right call. They also exposed a real hole
+in the repository: there was no genuine cross-decoration integration
+theorem. Rather than leave the hole, the gate-2 instance built one:
+`characteristic.RoleGraded`. The new module:
+
+* Defines `RoleGEcho : Role → Grade → Set` — a 2D family that
+  varies non-trivially in both axes (`RoleEcho Client true` vs.
+  `RoleEcho Server true` at keep grade).
+* Defines two independent actions `applyRole`, `applyGrade`.
+* Proves `choreo-grade-commute` — both decoration witnesses appear
+  on both sides of the conclusion.
+
+The headline theorem is honest about its limits: 18 cases, 17
+trivial collapses to `tt` (residue/forget grades degenerate to ⊤)
+or `e` (reflexive cases), with the load-bearing case being
+`(c⊑s, keep≤keep)` reducing to `client-to-server e`. The instance
+acknowledges this in their own falsifier discussion.
+
+==== Recipe insight (cross-lane impact)
+
+`gate-2-handoff.adoc` Observation G frames all four surviving
+nominees as instances of a single recipe: custom propositional
+decoration order + echo-indexed family + transport action. This
+is _exactly the integration-flavoured heuristic_ from gate-1's
+`gate-1-handoff.adoc`. Cross-lane consistency: ✅. The two lanes
+converged independently on the same structural insight.
+
+==== Issues to address at integration
+
+. *roadmap-gates.adoc was modified.* Per the parallel-instance
+  protocol it was read-only, but the audit's negative findings
+  required either updating the nominee table or letting it stand
+  in contradiction to the audit. The instance chose to update and
+  *flag the change explicitly* in two places. Integrator decision:
+  accept the amendment (consistent with the audit), or revert the
+  modification and note the discrepancy.
+. *Path mismatch.* `roadmap-gates.adoc` names the artefact path as
+  `docs/characteristic.adoc`; the audit lives at
+  `docs/gate-2-characteristic.adoc`. Flagged in a NOTE at the top
+  of the audit doc. Resolution: rename, symlink, or update
+  `roadmap-gates.adoc` to match.
+. *Stale comment in IntegrationAudit.agda.* The closing comment
+  block says "A genuine integration theorem ... is not currently
+  present in the repository. Building one is open work" — this
+  was true before R4 but is now stale (RoleGraded.agda exists).
+  One-line fix.
+. *The `.Base` import path is correct* for the user's stdlib 2.x
+  but cannot be verified in this audit sandbox (sandbox has 1.7.x).
+  Sandbox-patched typecheck (substituting `.Base` paths for the
+  1.7.x equivalents) shows the *logic* compiles modulo a
+  pre-existing `sym-cong` issue in the repo's own `Echo.agda`
+  against 1.7.x. No issues introduced by gate-2.
+
+==== Verdict
+
+Integrate. Apply the three small fixes above. The work demonstrably
+improves the gate-2 case from "two original nominees that don't
+survive scrutiny" to "four nominees that do, plus a genuine
+cross-decoration integration construction".
+
+[#gate-3]
+=== Gate 3 (`three.zip`)
+
+==== Strengths
+
+Three examples, each on a different bridge axis (tropical,
+epistemic, linear), each with five neighbour-theory tests run
+explicitly. The pattern is uniform and disciplined:
+
+. Domain prose with concrete miniature.
+. Formalisation summary with actual Agda excerpt.
+. (a) forced + (b) bridge-axis + (c) distinctness check.
+. Five neighbour-theory comparisons (Galois, quotients,
+  refinement types, IFC, provenance), with explicit non-reduction
+  arguments and *honest negative results* where the comparison is
+  tied (e.g., Σ-relevant refinement types coincide with Echo on
+  the type level — flagged as a no-win for echo there, while the
+  win against propositional refinement is preserved).
+. Explicit falsifiers tied to formal Agda.
+
+Two earlier examples were dropped honestly: `DigestEcho` failed
+all three of (a)/(b)/(c); `ChoreographyProjection` failed (c)
+because joint-Echo collapse is a pullback-of-fibres property in
+any LCCC, not echo-specific. Two further candidates (differential
+privacy, lossy compression) were considered and *not attempted*
+because faithful formalisation requires probability or real
+arithmetic that `--safe` Agda doesn't admit without scaffolding
+that would itself need canonicality review. Including them as toys
+would test the toy, not the domain. This is exactly the discipline
+the prompt asked for.
+
+==== The load-bearing insight: `echo-not-prop`
+
+All three examples carry a constructive proof that the relevant
+Echo type is *not a mere proposition*. This is the cleanest
+distinctness signal the lane found:
+
+* `TropicalArgmin.echo-not-prop` : `is-prop (Echo cost 5) → ⊥`
+* `EpistemicUpdate.echo-not-prop` : `is-prop (Echo obs false) → ⊥`
+* `LinearErasure.echo-not-prop` : `is-prop (Echo erase erasedF) → ⊥`
+
+These are formal certificates that propositional-truncation
+neighbours (preimage subset, equivalence class, IFC equivalence
+relation, propositional-predicate refinement type) lose what Echo
+retains. *Cross-lane impact:* this is a stronger distinctness
+signal than gate-1 has currently formalised. See
+§<<integration,Integration recommendation>> for how to fold it in.
+
+==== Verification
+
+All four files (three examples + `examples.All`) typecheck cleanly
+in the audit sandbox (Agda 2.6.3 + agda-stdlib 1.7.x). The
+generated `.agdai` files match the instance's claim of clean
+verification. Exit code 0 on each.
+
+==== Issues to address at integration
+
+. *Stylistic import inconsistency.* The example files use
+  `Data.Product`, `Data.Bool` (1.7.x style) while the user's
+  existing `Echo*.agda` modules use `Data.Product.Base`,
+  `Data.Bool.Base` (2.x modular style). Both work in 2.x because
+  `Data.Product` re-exports from `Data.Product.Base`; they break
+  in 1.7.x in the other direction. This is *not a correctness
+  issue* — gate-3's files compile in both versions. It is a
+  *house-style* issue. The instance flagged it in their handoff:
+  "If the maintainer prefers... open import Echo... one-line edit
+  per file." Integrator decision; either is fine.
+. *Lowercase module path.* `module examples.X where` matches the
+  directory `proofs/agda/examples/`. The instance flagged that if
+  Pascal-cased directory matching the existing top-level modules
+  is preferred, renaming is a one-line edit per file. Integrator
+  decision.
+. *Self-contained Echo definition.* Each file defines `Echo`
+  locally rather than importing the repo's `Echo.agda`. Per the
+  brief "imports: only existing Echo*.agda and stdlib" this is a
+  technicality that goes the *less-coupled* way; the file uses
+  *only* stdlib, no echo modules. Rationale flagged in the
+  handoff: "robust to API drift in Echo*.agda during parallel
+  work". Acceptable as-is; one-line replacement to use repo's
+  `Echo` is trivial if the integrator prefers tight coupling.
+
+==== Verdict
+
+Integrate. The three small adjustments above are stylistic, not
+substantive. The work delivers exactly what the prompt asked for:
+canonical examples that survive a falsifier-driven bar, with
+honest negative results recorded for examples that didn't survive.
+
+== Cross-lane consistency
+
+=== Convergent insights (no conflicts found)
+
+. *The "recipe" pattern.* Gate-2's Observation G (custom
+  propositional decoration order + echo-indexed family + transport
+  action) matches gate-1's integration-flavoured heuristic
+  exactly. The lanes converged on the same structural framing
+  independently.
+. *The composition axis is not the distinctness signal.* Gate-3's
+  dropped `ChoreographyProjection` showed joint-Echo collapse is a
+  generic pullback-of-fibres property in any LCCC. Gate-1's
+  Sophisticated arguments accordingly do *not* claim composition
+  per se as the distinctness signal; they claim the natural 2-cell
+  data is Σ-over-preimages-shaped. These are consistent.
+. *Type-data vs. propositional truncation.* Gate-3's
+  `echo-not-prop` isolates non-truncatability as the cleanest
+  distinctness signal. This *strengthens* gate-1: the
+  `equalizer→echo-pair` and `meet→echo-intersection` results show
+  the 2-cell data is Σ-over-preimages (= echo-shaped); gate-3's
+  `echo-not-prop` shows that Σ-over-preimages with multiple
+  inhabitants is genuinely non-propositional.
+
+=== Tension worth flagging (not a contradiction)
+
+Gate-2's audit revealed that the existing
+`EchoIntegration.knowledge-and-controlled-degradation` is
+*not actually a cross-decoration integration theorem*; it is `_×_`
+of disjoint facts. Gate-1's `T1-obligation` and `T2-obligation`
+stubs in `EchoVsQuotient.agda` and `EchoVsGalois.agda` paraphrase
+"EchoIntegration's main theorem" as a cross-decoration integration.
+
+This isn't a contradiction — gate-1's *structural arguments* (that
+2-cell data is Σ-over-preimages-shaped in both quotient and Galois
+encodings) hold regardless of what specific theorem is being
+attacked. But the *target* of the obligation needs adjustment:
+
+* The theorem gate-1 actually needs to attack is now the new
+  `characteristic.RoleGraded.choreo-grade-commute` (or whatever
+  candidate N5 the integrator settles on), *not* the withdrawn
+  `knowledge-and-controlled-degradation`.
+* Doc fix: in `gate-1-distinct-phenomenon.adoc`, the references
+  to "EchoIntegration's main theorem" should be replaced by
+  "the characteristic-family commutation theorem (currently
+  `RoleGraded.choreo-grade-commute`)" or similar.
+* Code fix: the commented-out `T1-obligation` and `T2-obligation`
+  stubs should reference `choreo-grade-commute`'s signature when
+  filled in.
+
+This is integration polish, not a structural problem. Gate-1's
+arguments, the Miniature/Sophisticated witnesses, and the Joins/
+IndexedFamilies sub-cases all stand. They were attacking the
+*shape* of an integration theorem; the actual integration theorem
+is now `choreo-grade-commute` rather than the paraphrase.
+
+=== Axis count (Q1.4 from gate-1)
+
+Neither gate-2 nor gate-3 surfaced a sixth axis. Both stayed
+within the five named axes (choreographic, epistemic, linear,
+graded, tropical). Gate-2 explicitly reasoned about a four-axis
+breadth in their nominee table (graded, choreo, linear, plus the
+Role×Grade product); gate-3 covers three axes in their three
+examples. Gate-1's "five axes" claim stands.
+
+=== Neighbour theory list
+
+Gate-1 uses: Galois, quotients, IFC, refinements, provenance.
+Gate-3 uses: identical list (with modal type theories added as a
+sixth neighbour for the LinearErasure example only). The match is
+exact for the five core neighbours.
+
+Gate-3 introduces *modal type theories* as a sixth neighbour for
+LinearErasure specifically. Per gate-1's handoff: "If gate-3 finds
+a neighbour theory not on this list that subsumes echo-types-as-
+applied, it should flag back". Gate-3 *did* flag back: the
+neighbour is "co-extensive with" echo, not "subsumes". The
+integrator should add modal type theories to the canonical
+neighbour list for completeness, with the noted caveat that it's
+co-extensive in QTT-class systems.
+
+[#integration]
+== Integration recommendation
+
+=== Order of integration commits
+
+Recommend five commits, in this order:
+
+. *Infrastructure* (already prepared in earlier session output):
+  `.gitattributes`, `.github/workflows/mirror.yml`,
+  `MIRROR_SETUP.adoc`, README path-fix.
+
+. *Gate-1 standing argument and falsification scaffolds* (already
+  prepared): `docs/gate-1-distinct-phenomenon.adoc`,
+  `docs/gate-1-handoff.adoc`,
+  `proofs/agda/EchoVsQuotient.agda`,
+  `proofs/agda/EchoVsGalois.agda`.
+  Apply the doc fix flagged in §<<tension-worth-flagging-not-a-contradiction,cross-lane tension>>:
+  replace "EchoIntegration's main theorem" with "the
+  characteristic-family commutation theorem".
+
+. *Gate-2 audit and new construction* (from `one.zip`):
++
+--
+* `docs/gate-2-characteristic.adoc` (rename to
+  `docs/characteristic.adoc` if matching `roadmap-gates.adoc`'s
+  named path is preferred; otherwise update `roadmap-gates.adoc`).
+* `docs/gate-2-handoff.adoc` (rename to `docs/handoffs/gate-2.adoc`
+  or similar at integrator discretion).
+* `proofs/agda/characteristic/RoleGraded.agda`
+* `proofs/agda/characteristic/IntegrationAudit.agda` (with the
+  one-line stale-comment fix).
+* `proofs/agda/characteristic/VisibleConstraintAudit.agda`
+* `roadmap-gates.adoc` (the modified version, with the integrator's
+  approval of the nominee-table amendment).
+--
+
+. *Gate-3 examples and handoff* (from `three.zip` only;
+  `two.zip` discarded):
++
+--
+* `docs/gate-3-canonical.adoc`
+* `docs/gate-3-handoff.adoc`
+* `proofs/agda/examples/TropicalArgmin.agda`
+* `proofs/agda/examples/EpistemicUpdate.agda`
+* `proofs/agda/examples/LinearErasure.agda`
+* `proofs/agda/examples/All.agda`
+--
+
+. *Integration polish* (this audit recommends, not from any single
+  lane):
++
+--
+* Update `gate-1-distinct-phenomenon.adoc` to reference
+  `RoleGraded.choreo-grade-commute` as the gate-1 attack target.
+* Promote gate-3's `echo-not-prop` candidate (the general theorem
+  for non-injective `f` with multiple preimages) into
+  `docs/next-questions.adoc` as Q2.x (gate-2's territory) — this
+  is gate-3's flagged candidate that gate-2 should evaluate as a
+  potential characteristic-family member.
+* Add modal type theories to the canonical neighbour list in
+  `gate-1-distinct-phenomenon.adoc` with the QTT-coextensivity
+  caveat from gate-3's handoff.
+* Add `*.agdai` to `.gitignore` if not already present (gate-3
+  flagged this).
+* Promote any remaining open questions from each handoff into a
+  unified `docs/next-questions.adoc`.
+--
+
+=== Files to discard
+
+* `two.zip/apply-gate-3.sh` — discard (lane violation, would commit
+  and push)
+* `two.zip/gate-3-canonical-examples.patch` — discard (content
+  duplicated as loose files in `three.zip`)
+* `two.zip/README.adoc` — discard (delivery instructions, not a
+  repo file)
+* `one.zip/gate-2-audit-revision-4.patch` — optional discard
+  (content duplicated as loose files in `one.zip`; the patch is a
+  convenience, not a deliverable)
+* `one.zip/COMMIT_MSG_GATE2_R4.txt` — optional retain as commit
+  message reference, not as a file in the repo
+
+=== Open obligations after integration
+
+. *T3 (informativeness collapse) still unstubbed* — gate-1's third
+  falsification test. Now better targeted: with `RoleGraded` in
+  place, the question becomes "is the role-or-grade axis derivable
+  from the other plus a forgetful functor?"
+. *Falsifier attempts for gate-2 nominees* — each surviving
+  nominee has an unattempted falsifier (gate-2 doc §11 honest
+  qualifications #3). Worth attempting at least one to harden
+  the gate-2 case beyond "no successful reduction has been
+  attempted".
+. *Generalisation of `echo-not-prop`* — the n=2 special-case
+  proofs in the three gate-3 examples should generalise to "for
+  non-injective f with at least two distinct preimages of y,
+  `is-prop (Echo f y) → ⊥`" — gate-3 flagged this as Q2.x for
+  gate-2 to evaluate.
+. *RoleGraded as N5* — gate-2's audit flags
+  `choreo-grade-commute` as a candidate fifth nominee but does
+  not adopt it. Integrator decision: adopting it pushes the audit
+  count to 5-of-5 across four constructions; not adopting leaves
+  it as a worked example without nomination.
+
+== Self-audit note
+
+This audit was performed by the same Claude session that produced
+the gate-1 work being audited. To mitigate self-favouritism, gate-1
+output was checked against the same lane-discipline and
+quality-bar criteria applied to the parallel work. Findings:
+
+* Gate-1's lane discipline is clean (no edits to read-only files).
+* Gate-1's "EchoIntegration's main theorem" paraphrase is
+  generous to the existing module — the actual existing theorem is
+  `_×_` of disjoint facts. Integration polish required to retarget
+  the obligations.
+* Gate-1's structural arguments (equalizer/meet → Σ-over-preimages)
+  are independent of which specific theorem is being attacked, so
+  the retarget is not a structural revision.
+* Gate-1 did not surface gate-3's `echo-not-prop` insight on its
+  own. This is a real strengthening contribution from gate-3, not
+  redundant with gate-1's work.
+
+The audit recommends integration of all four bundles with the
+adjustments noted. No bundle should be rejected outright (apart
+from `two.zip`, superseded by `three.zip`).

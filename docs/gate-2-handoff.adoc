@@ -1,0 +1,304 @@
+= Gate 2 → Other Lanes: Handoff Notes
+:toc: macro
+:sectnums:
+:icons: font
+
+[.lead]
+This file collects observations from the Gate 2 audit
+(`docs/gate-2-characteristic.adoc`) that affect the other gates' work.
+Per parallel-instance lane discipline, this lane does not edit Gate 1's
+or Gate 3's files; this is the channel for cross-lane information.
+
+This is *Revision 4*, mirroring the audit revision. The amendments to
+`roadmap-gates.adoc` recommended in Revisions 2 and 3 have been adopted;
+the nominee list now stands at four theorems across three modules.
+The genuine cross-decoration integration theorem flagged as open work
+in earlier revisions is now constructed
+(`proofs/agda/characteristic/RoleGraded.agda`); Observation E is
+*closed*.
+
+toc::[]
+
+== To Gate 1 (distinct phenomenon)
+
+The Gate 2 audit pinpoints *where* Echo's distinctness, if any, lives.
+
+=== Observation A — distinctness lives in the layered decorations
+
+* Plain `Echo f y = Σ A (λ x → f x ≡ y)` is the homotopy fiber.
+  Theorems about plain Echo reduce to fiber theorems (the original
+  N1 failure: `visible-constraint = proj₂`).
+* The *layered echo decorations* — graded (`Grade`, `_≤g_`, `GEcho`),
+  choreographic (`Role`, `_⊑c_`, `RoleEcho`), linearity-mode
+  (`Mode`, `_≤m_`, `LEcho`), and their products
+  (e.g. `RoleGEcho : Role → Grade → Set` from
+  `characteristic.RoleGraded`) — are where echo-shaped theorems with
+  non-trivial content appear.
+* Each decoration follows the same recipe: a custom propositional
+  order on a finite set of decorations, an echo-indexed family that
+  *changes type* per decoration, and an action that transports
+  echoes along the order. The recipe is what generates echo-shaped
+  theorems.
+
+This recipe is the actual locus of echo-shape, not the basic Echo
+type. The Gate 2 audit confirms this with four nominees, all
+recipe-shaped, on three different decorations, plus a 2D product
+construction.
+
+Implication for Gate 1:
+
+* The adjacency comparisons in `docs/adjacency/` should target the
+  *recipe*, not the bare Echo type. Plain Echo trivially matches HoTT
+  fibers. The live question: do refinement types, lenses, provenance
+  semirings, setoid quotients, or cubical fibers, *with their own
+  custom decoration orders applied*, deliver structurally identical
+  theorems?
+
+=== Observation B — the right point of comparison per neighbour
+
+[cols="1,2,2", options="header"]
+|===
+| Neighbouring framework (in `docs/adjacency/`) | Plain Echo comparison | Layered Echo comparison
+
+| HoTT fibers (`hott-fibers.adoc`)
+| Identical (Echo *is* the homotopy fiber)
+| Open: do HoTT fibers, when graded by an explicit loss order, give the same theorems as `EchoGraded`? Same questions for choreographic role transport (`EchoChoreo`), linearity-mode weakening (`EchoLinear`), and 2D combinations (`characteristic.RoleGraded`).
+
+| Refinement types (`refinement-types.adoc`)
+| Refinement types refine inputs; Echo refines outputs. Different direction.
+| Open: graded refinement types — do they parallel `EchoGraded`? Mode-refined types — do they parallel `EchoLinear`?
+
+| Lenses / optics (`lenses-and-optics.adoc`)
+| Lenses are bidirectional; Echo is one-direction-with-residue. Different shape.
+| Open: do graded/partial lenses (with a forget grade) deliver `EchoGraded` content? Do role-asymmetric lenses parallel `EchoChoreo`?
+
+| Setoid quotients (`setoid-quotients.adoc`)
+| Quotients identify; Echo retains. Different polarity.
+| Open: graded quotient theory may match `EchoGraded` more closely than plain quotients match plain Echo.
+
+| Provenance semirings (`provenance-semirings.adoc`)
+| Semirings are propositional / quantitative; Echo is proof-relevant. Different category.
+| Open: provenance with an explicit loss order — does it match the `degrade-compose` family? Multiple decorations together?
+
+| Cubical systems (`cubical-systems.adoc`)
+| Cubical fibers are the same construction with stricter equality. Different setting, same shape.
+| Open: cubical generalisation of the recipe — would the same composition lemmas hold with stricter (cubical) equalities?
+|===
+
+These remain *open questions for Gate 1*, not findings.
+
+=== Observation C — three decoration axes now in scope
+
+The current N3 (`applyChoreo-compose`) and N4 (`degradeMode-compose`)
+bring choreographic role transport and linearity-mode weakening into
+the Gate 2 family alongside information-loss grading. Three
+distinct decoration axes are now exhibited as Gate 2 survivors. Gate
+1 should consider whether neighbouring frameworks reproduce *any* of
+these three decorations (or their analogues) under their own
+recipes.
+
+== To Gate 3 (canonical examples)
+
+The Revision-4 nominee list opens up additional canonical-example
+targets.
+
+=== Observation D — concrete target list (revised)
+
+. *Pure graded-loss example* (exercises N1, N2). Staged
+  computation — typed pipeline with explicit intermediate-erasure
+  points, or a memory-clearing procedure with declared erasure
+  stages — where `degrade`, `degrade-compose`, and
+  `degrade-via-join` earn their keep.
+
+. *Pure choreographic example* (exercises N3). Two-party setting
+  where role transitions are formalised as `_⊑c_`-steps and
+  `applyChoreo-compose` rules out a buggy trace.
+
+. *Pure linearity example* (exercises N4). Linear-affine resource
+  tracking with explicit weakening points, where
+  `degradeMode-compose` enforces consistency between two routes
+  through the resource lattice.
+
+. *Cross-decoration integration example* (exercises
+  `characteristic.RoleGraded.choreo-grade-commute`). A setting in
+  which a single piece of data carries both a role and a grade, and
+  the canonical-example argument depends on the two actions
+  commuting. This was previously flagged as open work; the
+  construction is now in place.
+
+The first four targets are *currently reachable*: the lemmas exist,
+the audit credits them.
+
+=== Observation E — *closed*: genuine cross-decoration integration
+
+Earlier revisions of this handoff flagged the genuine integration
+theorem as open work. The work is now done:
+
+* `proofs/agda/characteristic/RoleGraded.agda` defines the 2D family
+  `RoleGEcho : Role → Grade → Set` with two independent actions
+  (`applyRole`, `applyGrade`).
+* The headline theorem `choreo-grade-commute` shows the actions
+  commute on the 2D family.
+* The construction satisfies all three Observation-E tests
+  (single 2D family, single combined action `applyBoth`,
+  same-data conclusion).
+
+This closes the open recommendation. Cross-decoration integration is
+no longer an open problem for Gate 3 to wait on; it is a usable
+construction. The recipe also generalises to other 2D products
+(Role × Mode, Mode × Grade, etc.) by parallel construction.
+
+== Cross-cutting observations
+
+=== Observation F — the family now spans three modules and a 2D product
+
+Previously (Revision 3), the surviving Gate 2 nominees lived in two
+modules (EchoGraded and EchoChoreo). Revision 4 added
+`EchoLinear.degradeMode-compose` (N4), bringing the family to three
+modules. The audit-derived 2D construction
+`characteristic.RoleGraded` adds a fourth distinct construction.
+
+The single-module concentration concern from Revision 2 is
+comprehensively resolved.
+
+=== Observation G — the recipe as a unit of analysis
+
+All four current survivors (and the candidate-N5 from
+characteristic.RoleGraded) are instances of the same recipe.
+
+The recipe consists of: a custom propositional decoration order
+on a finite type, an echo-indexed family that varies type per
+decoration, and a transport action along the order. The recipe is
+useful as organising vocabulary for fiber-shaped reasoning across
+multiple axes. *It does not, however, carry substantive
+simultaneous cross-axis integration content* — see the EI-2
+finding below.
+
+The four current recipe instances classify as follows
+(non-loss-only-ness of an axis is determined by whether at least
+one strict transport is injective on inhabitants — see
+`proofs/agda/characteristic/ChoreoInjective.agda` for the formal
+criterion):
+
+[cols="1,2,2,2,1,2", options="header"]
+|===
+| Decoration | Order | Family | Action | NLO? | Witness
+
+| Information loss (`EchoGraded`)
+| `keep ≤g residue ≤g forget` (3-element)
+| `GEcho : Grade → Set` (varies type per grade)
+| `degrade : (g1 ≤g g2) → GEcho g1 → GEcho g2`
+| No
+| `degrade keep≤residue = collapse-to-residue`; collapses to ⊤-shaped residue
+
+| Choreographic role (`EchoChoreo`)
+| `Client ⊑c Server` (2-element)
+| `RoleEcho : Role → Bool → Set` (varies underlying function per role)
+| `applyChoreo : (r1 ⊑c r2) → RoleEcho r1 y → RoleEcho r2 y`
+| Yes
+| `client-to-server-injective-on-proj₁` in `ChoreoInjective.agda`
+
+| Linearity mode (`EchoLinear`)
+| `linear ≤m affine` (2-element)
+| `LEcho : Mode → Set` (varies type per mode)
+| `degradeMode : (m1 ≤m m2) → LEcho m1 → LEcho m2`
+| No
+| `degradeMode linear≤affine = weaken`; same shape as graded collapse
+
+| Role × Grade (2D product) (`characteristic.RoleGraded`)
+| `(_⊑c_) × (_≤g_)` (6-element product)
+| `RoleGEcho : Role → Grade → Set` (varies type per cell)
+| `applyRole`, `applyGrade`, `applyBoth` (commuting on the 2D family)
+| Yes (inherited)
+| Inherits non-loss-only-ness from Choreo
+|===
+
+[NOTE]
+====
+*EI-2 finding (recorded in `docs/EI2_REPORT.adoc`).* The 2D
+combinations of recipe-instances exhibit ONE-AXIS-AT-A-TIME
+cross-axis content embedded in 2D families, not substantive
+simultaneous cross-axis interaction.
+
+Concretely, across seven data points (`RoleGraded`, `RoleMode`,
+`ModeGraded`, the 3D `RoleModeGrade` with three pairwise
+commutations and a triple, and `RoleRole`):
+
+* In every "non-trivial" cell, exactly *one* axis acts
+  non-trivially while the other axis acts as identity. The non-
+  trivial action is always Choreo's `client-to-server` at the
+  c⊑s strict step.
+* In `RoleRole` (the only axis-pair with both axes non-loss-only
+  — Choreo paired with itself), two designs were tried.
+  Independent-product `RREcho-pair` produced trivial commutation
+  by categorical-product structure (no substantive cross-axis
+  content). Shared-state `RREcho-shared` doesn't admit a uniform
+  per-axis transport (the recipe doesn't apply).
+* The non-loss-only criterion (formally certified for Choreo in
+  `ChoreoInjective.agda`) is *necessary but not sufficient* for
+  non-trivial cross-axis content. Even with two non-loss-only
+  axes, the recipe doesn't produce substantive simultaneous
+  interaction.
+
+Implication: the recipe is *not* the locus of distinctness. The
+distinctness load is carried by the *truncation argument* (echo
+types are non-truncatable, formalised by the `echo-not-prop`
+family in `proofs/agda/examples/`) and the *2-cell argument*
+(natural 2-cells in neighbour frameworks are
+Σ-over-preimages-shaped, formalised in
+`EchoVsQuotient.Sophisticated` and `EchoVsGalois.Sophisticated`).
+
+`gate-1-distinct-phenomenon.adoc` § The Gate #1 claim has been
+updated to reflect this narrowing.
+====
+
+Each recipe instance produces the same lemma family — composition
+law, join law (where applicable), propositionality of order —
+with the same proof structure. The 2D product produces a
+commutation law on the two independent actions; that commutation
+law is *not* the integration content the original recipe framing
+suggested.
+
+This is the practical question that has been resolved-against
+gate-1 distinctness: *the integration recipe does not carry the
+distinctness load.* Truncation and 2-cell arguments do, and are
+documented in `docs/adjacency/`.
+
+=== Observation H — joint-gate dependency (eased)
+
+The Gate 2 audit reports a 4-of-4 pass (margin two over the threshold
+of two). This is more comfortable than earlier revisions' margin-of-one
+result. Joint-gate dependencies:
+
+* If Gate 1 fails outright, the identity claim is retracted regardless,
+  per `roadmap-gates.adoc` resolution table.
+* If Gate 1 reveals that the recipe is present in a neighbouring
+  framework with no echo-specific content, all Gate 2 survivors weaken
+  in parallel. The 4-survivor margin gives some room: even a partial
+  weakening (e.g. one decoration matched by a neighbour, three not)
+  preserves the 2-survivor threshold.
+* If Gate 3 fails to produce examples exercising the survivors,
+  the layered decorations remain theoretical scaffolding. The
+  Revision-4 target list (Observation D) is broader than earlier
+  revisions; producing *any* one of the four targets establishes
+  Gate 3's minimum.
+
+== Process notes (for whoever integrates the lanes)
+
+* This file lives in the Gate 2 lane. It does not edit Gate 1 or
+  Gate 3 lanes' files.
+* The audit is reproducible. Falsifier exhibits are in
+  `proofs/agda/characteristic/VisibleConstraintAudit.agda` and
+  `proofs/agda/characteristic/IntegrationAudit.agda`. The genuine
+  integration construction is in
+  `proofs/agda/characteristic/RoleGraded.agda`. Prose audits cite
+  concrete lemma names from `proofs/agda/`.
+* Two amendments to `roadmap-gates.adoc` have been adopted: the
+  Revision-2 swap (in Revision 3) and the Revision-3 fourth nominee
+  addition (in Revision 4). A potential third amendment — adding
+  `characteristic.RoleGraded.choreo-grade-commute` as N5 — is
+  flagged in the audit doc but not executed. That decision is left
+  to the integrator.
+* If `characteristic.RoleGraded.choreo-grade-commute` is adopted as
+  N5, the audit count becomes 5-of-5 across four constructions
+  (EchoGraded, EchoChoreo, EchoLinear, characteristic.RoleGraded).

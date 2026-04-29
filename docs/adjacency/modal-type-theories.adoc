@@ -1,0 +1,203 @@
+= Adjacency: modal type theories
+:toc: macro
+
+[.lead]
+*Verdict: co-extensive with QTT-class systems on bare echo.* Not
+distinct from native modal type theories on the type level; the
+win is over propositional / classical accounts of modes.
+Integration recipe is an open question against modal type
+theories with sufficient ambient structure.
+
+This neighbour was identified during gate-3's `LinearErasure`
+analysis. It was not on the original five-neighbour list in the
+consolidated `gate-1-distinct-phenomenon.adoc`. Adding it here is
+recommended by the integration audit (Q1.8 in
+`next-questions.adoc`).
+
+toc::[]
+
+== Nearest existing construction
+
+Several traditions formalise mode-bearing types as first-class
+data:
+
+* *QTT (Quantitative Type Theory)*, Atkey 2018. Quantities
+  (0, 1, ω) annotate types; the elimination rule is sensitive to
+  the quantity.
+* *Reed-Pfenning modal calculi* (e.g., judgmental S4). Modalities
+  are first-class type-formers; transport between modal worlds
+  is governed by adjunctions.
+* *Adjoint modalities* (Birkedal-Møgelberg-Schwinghammer-Støvring
+  and successors). Pairs of adjoint functors structure the type
+  system; modes index the categorical structure.
+* *Reactive type theory*, *cohesive type theory*, and other
+  modal extensions of MLTT.
+
+In any of these systems with sufficient ambient mode structure,
+the inverse problem "given erased term/type at mode μ, what was
+the source annotation?" is natively a Σ-type with a mode
+predicate. This *is* `Echo erase ν` for the appropriate erasure
+function and target value.
+
+Gate-3's `LinearErasure` framing: "in those systems, the Σ-type
+formulation of erasure-inverse coincides with Echo *exactly*. No
+win for Echo; no loss either."
+
+== Distinctness claim
+
+[quote]
+Echo coincides with native modal type theories on the type level
+in QTT-class systems. The win is over *propositional* / *classical*
+accounts of mode erasure, not over modal type theories themselves.
+Integration recipe distinctness against modal type theories with
+sufficient ambient mode structure is an *open question*.
+
+== Truncation argument (against propositional accounts)
+
+Formalised in `LinearErasure.echo-not-prop`: the witness type for
+"which mode produced this erased type" is not a mere proposition.
+Propositional / classical accounts (mode-erasing semantics that
+report only "some mode existed") lose the linearity distinction
+that `LinearErasure.distinct` exhibits.
+
+This argument is the same shape as the refinement-types,
+information-flow, and provenance cases. The wins coincide on
+`echo-not-prop`.
+
+== 2-cell argument
+
+*Not directly applicable.* Modal type theories typically make
+2-cells syntactic primitives — the modal transport rules are
+part of the type system, not derived from underlying lattice
+operations on a kernel poset. There is no equalizer or meet to
+argue against.
+
+This is structurally different from quotients and Galois: those
+neighbours have lattice operations that one can argue about; modal
+type theories have rules that one accepts or rejects.
+
+The right comparison here is *recipe-level*, not 2-cell.
+
+== Recipe-level distinctness (open question)
+
+The substantive question:
+
+[quote]
+Does any modal type theory carry the recipe (custom propositional
+decoration order + echo-indexed family + transport action) natively?
+
+In QTT, the quantity ordering `0 ≤ 1 ≤ ω` is the
+decoration order; quantity-indexed types carry the family;
+quantity-respecting transport is the action. So *yes*, QTT
+appears to carry a version of the recipe — but whether it
+expresses `RoleGraded.choreo-grade-commute` (the actual
+characteristic-family commutation theorem) without further
+machinery is an unanswered question.
+
+Reed-Pfenning modal calculi have a richer mode structure (modes
+form a 2-category in the general case) and might carry a 2D
+analog of the recipe natively. Or might not. Genuinely open.
+
+A worked formalisation would:
+
+. Pick a specific modal type theory (QTT is the best candidate
+  because of its established formalisation status).
+. Express the recipe in its syntax.
+. Attempt to prove `RoleGraded.choreo-grade-commute` (or its
+  modal-type-theory analog) using only the modal type theory's
+  primitives.
+. Either succeed (gate-1 weakens against that variant — modal
+  type theories become co-extensive on the integration recipe,
+  not just on bare echo) or extract a stuck point (gate-1
+  holds, with the modal-type-theory specific stuck point as a
+  distinctness witness).
+
+== What echo adds (over propositional mode accounts)
+
+* Witness identity for the source mode.
+* The ability to define functions on the witness type.
+* `echo-not-prop` certifies non-truncatability.
+
+== What echo does not add (over QTT-class modal type theories)
+
+On *bare echo* (the basic Σ-typed inverse-of-erasure
+construction), nothing. They coincide.
+
+On *the recipe* (custom decoration order + echo-indexed family
++ transport action), it is unknown whether modal type theories
+carry it natively. This is the open question.
+
+== A note on framing
+
+This is the *strongest* neighbour for echo, in the sense that
+the win is the narrowest. With Σ-relevant refinement, echo
+*coincides* on a single construction. With modal type theories,
+echo *coincides* on bare echo but it's open whether the
+coincidence extends to the recipe.
+
+Stating this plainly is more honest than overstating
+distinctness. The win against propositional mode accounts is
+real and formalised; the bare-echo coincidence with QTT is real
+and acknowledged; the recipe-level question is open and flagged
+as such.
+
+== Retraction conditions
+
+. A QTT (or other modal type theory) encoding of
+  `RoleGraded.choreo-grade-commute` that uses only modal type
+  theory primitives and does not introduce echo machinery.
+  *Genuinely open.* Likely outcome unknown.
+. A demonstration that the modal type theory's mode-indexed
+  Σ-types are *strictly* the same as echo even at the
+  integration-recipe level. Would weaken gate-1 against modal
+  type theories from "co-extensive on bare echo" to "co-extensive
+  on the integration recipe", a substantial reframing.
+
+== Open obligation
+
+This is the most under-formalised neighbour in the directory.
+The truncation case is closed via `LinearErasure.echo-not-prop`.
+Everything else is open:
+
+* No `proofs/agda/adjacency/Modal.agda` formalisation exists.
+* The recipe-level test against QTT has not been performed.
+* The recipe-level test against Reed-Pfenning modal calculi has
+  not been performed.
+* The diagonal-correspondence-style unification (whether modal
+  type theory primitives reduce to the lattice arguments from
+  `quotients.adoc` or `galois-connections.adoc`) has not been
+  attempted.
+
+Forwarding to:
+
+* QC.3 (in `next-questions.adoc`) — evaluating the gate-2
+  nominees against modal type theories specifically.
+* Q1.8 — adding modal type theories to the canonical neighbour
+  list (this note is the addition).
+
+This is the most leveraged open work in the adjacency
+directory: closing the recipe-level QTT question would
+substantially sharpen the gate-1 distinctness claim either way
+(by retraction or by formalisation).
+
+== Status
+
+* Truncation argument: *formalised* via `LinearErasure.echo-not-prop`.
+* Recipe-level argument: *open*. Most under-formalised case in
+  this directory.
+* No dedicated Agda formalisation.
+
+== References
+
+* Atkey, "Syntax and Semantics of Quantitative Type Theory"
+  (LICS 2018).
+* Reed, "A Judgmental Deconstruction of Modal Logic" (CMU
+  technical report, 2009); related Pfenning-Davies "A
+  Judgmental Reconstruction of Modal Logic" (MSCS 2001).
+* Birkedal, Møgelberg, Schwinghammer, Støvring, "First Steps in
+  Synthetic Guarded Domain Theory" (LICS 2011) and successors
+  for adjoint modalities.
+* Shulman, "Brouwer's fixed-point theorem in real-cohesive
+  homotopy type theory" (2017) for cohesive modal HoTT.
+* `proofs/agda/examples/LinearErasure.agda` for the formal
+  exhibit on the truncation-vs-modal-types case.

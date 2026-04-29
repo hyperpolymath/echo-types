@@ -1,0 +1,262 @@
+; SPDX-License-Identifier: PMPL-1.0-or-later
+; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath)
+;
+; ============================================================
+; STATUS: SECONDARY / SHORT-FORM COMPANION
+; ============================================================
+;
+; CANONICAL STATE FILE: ../../STATE.scm (top of audit-output/)
+;   That file uses the (define-module ...) + (define ...) shape
+;   matching standards/playbook-a2ml/spec/PLAYBOOK-FORMAT-SPEC.adoc.
+;   It is the authoritative state record.
+;
+; This file (STATE.a2ml) uses a different surface shape (atomic
+; top-level (state ...) form). Both files capture overlapping
+; content; THIS file's unique contribution is the
+; (lifecycle (on-enter ...) (on-exit ...)) block at the end
+; — operational session-handover procedure. The (state ...) body
+; itself duplicates content in STATE.scm and should be considered
+; SECONDARY: if STATE.scm and STATE.a2ml conflict, STATE.scm wins.
+;
+; To migrate to a single canonical surface in a future session,
+; the (lifecycle ...) block should be moved into PLAYBOOK.scm
+; (a sibling of STATE.scm, in the (define ...) module shape) and
+; this file then deleted. That migration is parked, not blocking.
+;
+; Reading order for a new session entering audit-output/:
+;   1. INDEX.adoc                  ← map of which fact lives where
+;   2. STATE.scm                    ← current state (authoritative)
+;   3. META.scm                     ← architecture decisions (permanent)
+;   4. AGENTIC.scm                  ← gating rules (do not bypass)
+;   5. (other 6a2 files as needed)
+;   6. THIS file                    ← only for the lifecycle block
+;
+; ============================================================
+
+; SPDX-License-Identifier: PMPL-1.0-or-later
+; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (hyperpolymath)
+;
+; STATE.a2ml — current authoritative state of echo-types integration work
+; Media-Type: application/a2ml
+; Read by AI agents on session entry; updated on session exit.
+;
+; Companion files in this directory:
+;   META.a2ml       — what's been decided, what's permanent, what's parked
+;   ECOSYSTEM.a2ml  — relationships to other hyperpolymath repos
+
+(state
+  (identity
+    (name "echo-types")
+    (full-name "Echo Types: structured loss under non-injective computation")
+    (version "0.1.0+integration-pending")
+    (target-version "0.1.1")
+    (repo "https://github.com/hyperpolymath/echo-types")
+    (mirrors ("gitlab.com/hyperpolymath/echo-types" "codeberg.org/hyperpolymath/echo-types"))
+    (license "PMPL-1.0-or-later")
+    (author "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"))
+
+  ;; ===================================================================
+  ;; CURRENT STATUS (as of last session exit)
+  ;; ===================================================================
+  (status
+    (phase "integration-ready, not yet pushed")
+    (branch-pending "integrate-parallel-work")
+    (commits-staged 7)
+    (commits-pushed 0)
+    (work-location "/mnt/user-data/outputs/audit-output/")
+    (next-action "review patches, apply commits 1-7, push to GitHub origin"))
+
+  ;; ===================================================================
+  ;; EI-2 — TERMINATED
+  ;; ===================================================================
+  ;; The integration robustness investigation. Closed negatively via
+  ;; PATH B. Do NOT reopen under any framing without explicit prior
+  ;; review of the closure record below.
+  (ei-2
+    (status terminated)
+    (verdict negative)
+    (route "PATH B")
+    (route-rationale
+      "Full 2D iff theorem not formalisable in safe Agda without postulates
+       (decidable equality, F-collapses axioms, extensionality). Per-axis
+       halves proved in RecipeTheorem.agda; concrete halves in
+       RecipeNonTriviality.agda; structural argument that even two
+       non-loss-only axes don't help in RoleRole.agda. Empirical evidence
+       overwhelming across seven data points.")
+
+    (finding
+      "The integration recipe with the existing five named axes does NOT
+       carry substantive simultaneous cross-axis content. Distinctness
+       against neighbour frameworks rests on the truncation argument
+       (echo-not-prop family in proofs/agda/examples/) and the 2-cell
+       argument (Sophisticated submodules of EchoVsQuotient.agda and
+       EchoVsGalois.agda), NOT on the integration argument.")
+
+    (data-points-evidence
+      ((construction "RoleGraded")        (axes "Role × Grade")
+       (cells 18) (non-trivial 1) (note "1 NLO axis"))
+      ((construction "RoleMode")          (axes "Role × Mode")
+       (cells 9)  (non-trivial 1) (note "1 NLO axis"))
+      ((construction "ModeGraded")        (axes "Mode × Grade")
+       (cells 18) (non-trivial 0) (note "0 NLO axes"))
+      ((construction "RoleModeGrade @ 3D pairwise") (axes "R×M, G free")
+       (cells 27) (non-trivial 1) (note "1 NLO axis"))
+      ((construction "RoleModeGrade @ 3D pairwise") (axes "R×G, M free")
+       (cells 36) (non-trivial 1) (note "1 NLO axis"))
+      ((construction "RoleModeGrade @ 3D pairwise") (axes "M×G, R free")
+       (cells 36) (non-trivial 0) (note "0 NLO axes; preserves 2D result"))
+      ((construction "RoleModeGrade triple") (axes "R×M×G")
+       (cells 54) (non-trivial 1) (note "1 NLO axis"))
+      ((construction "RoleRole independent-product") (axes "Role × Role")
+       (cells 9)  (non-trivial 0)
+       (note "Both NLO; trivial by categorical product structure"))
+      ((construction "RoleRole shared-state") (axes "Role × Role")
+       (cells "—") (non-trivial "—")
+       (note "Per-axis transport not uniformly definable; recipe doesn't apply")))
+
+    (key-insight
+      "Non-loss-only criterion is NECESSARY but NOT SUFFICIENT. Even two
+       non-loss-only axes paired together produce trivial coordinate-product
+       commutation or break per-axis transport. The recipe is useful as
+       organising vocabulary; it is not the locus of distinctness.")
+
+    (closure-cascade-applied-to
+      ("docs/gate-1-distinct-phenomenon.adoc — § The Gate #1 claim narrowed"
+       "docs/gate-2-handoff.adoc — § Observation G updated with NOTE block"
+       "roadmap-gates.adoc — § Gate 1 Claim narrowed"
+       "docs/adjacency/README.adoc — EI-2 cascade note added"
+       "README.md — integration-bridge bullet rewritten"
+       "docs/next-questions.adoc — moved from open to closed section"))
+
+    (formal-artefacts-in
+      ("proofs/agda/characteristic/RoleGraded.agda"
+       "proofs/agda/characteristic/RoleMode.agda"
+       "proofs/agda/characteristic/ModeGraded.agda  ; canonical, with trailing 'd'"
+       "proofs/agda/characteristic/RoleModeGrade.agda"
+       "proofs/agda/characteristic/RoleRole.agda"
+       "proofs/agda/characteristic/InteractionTest.agda"
+       "proofs/agda/characteristic/RecipeSpec.agda"
+       "proofs/agda/characteristic/RecipeTheorem.agda"
+       "proofs/agda/characteristic/RecipeNonTriviality.agda"
+       "proofs/agda/characteristic/ChoreoInjective.agda"))
+
+    (working-record "docs/EI2_REPORT.adoc")
+
+    (superseded-drafts
+      ((file "docs/EI2_READING1_PATCHES.adoc")
+       (reason "Drafted before RoleRole.agda findings; assumed simple gate-1 weakening sufficient"))
+      ((file "docs/EI2_READING2_PATCHES.adoc")
+       (reason "Drafted before RoleRole.agda findings; assumed NLO sufficient as recipe precondition"))
+      ((file "docs/EI2_READINGS_COMPARISON.adoc")
+       (reason "Decision aid; both readings refuted by stronger negative finding"))
+      (note "Files retained as historical record; banners on each marking SUPERSEDED."))
+
+    (do-not
+      ("Reopen EI-2 under any of these framings:"
+       "  - 'recipe non-triviality might hold for axis combinations we haven't tried'"
+       "  - 'NLO is the precondition' (ruled out by RoleRole)"
+       "  - 'gate-1 distinctness still rests on integration' (rerouted)"
+       "Re-derive the seven data points (formalised, typechecked)"
+       "Add a third standalone ModeGrade variant (canonical is ModeGraded.agda with trailing d)"
+       "Pursue the full 2D iff theorem in safe Agda (proved infeasible without postulates)")))
+
+  ;; ===================================================================
+  ;; INTEGRATION COMMIT SEQUENCE — 7 COMMITS, NOT YET PUSHED
+  ;; ===================================================================
+  (integration
+    (commits-doc "INTEGRATION_COMMITS.adoc")
+    (commits
+      ((seq 1) (name "infra")
+       (purpose "cross-platform support and hub-and-spoke mirroring")
+       (status staged))
+      ((seq 2) (name "gate-1: distinct-phenomenon argument and falsification scaffolds")
+       (status staged))
+      ((seq 3) (name "docs(adjacency): per-neighbour distinctness notes")
+       (status staged))
+      ((seq 4) (name "gate-2: characteristic theorem family audit, revision 4")
+       (status staged))
+      ((seq 5) (name "gate-3: three canonical examples — tropical, epistemic, linear")
+       (status staged))
+      ((seq 6) (name "integrate: polish from cross-lane audit + EI-2 obligation")
+       (status staged))
+      ((seq 7) (name "EI-2: terminate negatively via PATH B; narrow gate-1 distinctness load")
+       (status staged))))
+
+  ;; ===================================================================
+  ;; OPEN QUESTIONS REMAINING (from next-questions.adoc)
+  ;; ===================================================================
+  ;; These are the live open work items after the 7-commit integration
+  ;; lands. None of them is EI-2; EI-2 is terminated.
+  (open-questions
+    ((id "Q1.3 / T3") (gate 1)
+     (name "Informativeness collapse — gate-1's third falsification test")
+     (notes "Now better-targeted post-RoleGraded: ask whether the role-or-grade axis is derivable from the other plus a forgetful functor"))
+
+    ((id "Q2.1") (gate 2)
+     (name "Generalisation of echo-not-prop")
+     (notes "n=2 special-case proofs generalise to: for non-injective f with at least two distinct preimages of y, is-prop (Echo f y) → ⊥. Closing this also discharges the truncation-argument gap for refinement, IFC, provenance adjacency notes."))
+
+    ((id "Q2.4") (gate 2)
+     (name "Falsifier attempts for the four surviving gate-2 nominees")
+     (notes "Each surviving nominee has an unattempted falsifier; worth attempting at least one to harden the case beyond 'no successful reduction has been attempted'"))
+
+    ((id "Q2.3") (gate 2)
+     (name "Adopt RoleGraded.choreo-grade-commute as gate-2 nominee N5")
+     (notes "Audit doc currently flags as candidate but does not adopt; adoption pushes the count to 5-of-5 across four constructions"))
+
+    ((id "QC.1") (cross-cutting)
+     (name "Promote integration audit findings into adjacency notes — done in commit 3")
+     (status closed-by-commit-3))
+
+    ((id "v0.2-recipe-extension") (parked)
+     (name "Recipe extension: coupled state across axes OR multiple live positions per axis")
+     (notes "Genuinely separate work from EI-2. The substantive question shifts to: does the extended recipe match anything in modal type theories, HoTT bundles, or refinement-type families, or is it genuinely echo-specific? Park for v0.2; do not conflate with EI-2."))
+
+    ((id "Q3.x-prov") (gate 3)
+     (name "Additional bridge-axis examples — provenance, IFC, refinement")
+     (notes "Gate-3 dropped DigestEcho and ChoreographyProjection honestly; differential privacy and lossy compression deferred due to safe-Agda real-number formalisation cost")))
+
+  ;; ===================================================================
+  ;; KNOWN NAMING TRAPS — READ BEFORE TOUCHING THE REPO
+  ;; ===================================================================
+  (naming-traps
+    ((trap "ModeGraded vs ModeGrade")
+     (canonical "characteristic.ModeGraded — with trailing 'd'")
+     (trap-detail "An earlier session created characteristic.ModeGrade (no 'd'). It was a duplicate of ModeGraded with the same content. ModeGrade has been deleted; ModeGraded is canonical. Match the project naming style (RoleGraded, RoleModeGrade)."))
+
+    ((trap "EI-1 vs EI-2 confusion")
+     (canonical "EI-1 = closed (protocol, narrow); EI-2 = closed (negatively, PATH B)")
+     (trap-detail "Both are closed but for different reasons. EI-1 is protocol-closed (the Observation E test passes) but substantively narrow (1 of 18 non-trivial cells). EI-2 closes the substantive question with negative verdict. Never describe either as 'open' in new docs."))
+
+    ((trap "READING 1 / READING 2 patches")
+     (canonical "Both superseded; do not apply")
+     (trap-detail "EI2_READING1_PATCHES.adoc and EI2_READING2_PATCHES.adoc were drafted before RoleRole.agda's findings. Both assumed something the data refutes. Banners on each file mark SUPERSEDED. Do not regenerate or reapply them.")))
+
+  ;; ===================================================================
+  ;; SESSION LIFECYCLE
+  ;; ===================================================================
+  (lifecycle
+    (on-enter
+      (step "Read THIS file (.machine_readable/6a2/STATE.a2ml) first")
+      (step "Read META.a2ml for permanent decisions")
+      (step "Check current-status.phase before starting any work")
+      (step "If user asks about EI-2: state TERMINATED; refer to ei-2 block above"))
+    (on-exit
+      (step "Update status.phase if changed")
+      (step "Update commits-pushed if any commits actually pushed")
+      (step "If new questions opened, add to open-questions block")
+      (step "If naming-traps encountered, add to naming-traps block")
+      (step "Never remove the ei-2 block; it is permanent record")))
+
+  (format-meta
+    (version "1.0.0")
+    (media-type "application/a2ml")
+    (created "2026-04-29")
+    (last-updated "2026-04-29")
+    (last-session-summary
+      "Integration commits 1-7 staged; EI-2 terminated negatively via PATH B;
+       gate-1 distinctness rerouted to truncation + 2-cell arguments; 
+       documentation cascade applied across five locations;
+       6a2 manifest files created.")
+    (maintained-by "Jonathan D.A. Jewell / hyperpolymath")
+    (protocol "https://github.com/hyperpolymath/0-ai-gatekeeper-protocol")))

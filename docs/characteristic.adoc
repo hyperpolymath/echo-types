@@ -1,0 +1,547 @@
+= Gate 2: Characteristic Theorem Family — Audit
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 3
+:icons: font
+
+[.lead]
+This file is the artefact the README and `roadmap-gates.adoc` require for
+Gate 2 of the identity claim. It audits the nominees against the gate's
+falsifier — "naturally echo-shaped, not reducible to generic sigma/fiber
+lemmas" — and reports the threshold outcome.
+
+This is *Revision 4*. It adds a fourth nominee (`EchoLinear.degradeMode-compose`),
+introduces a new construction in this lane (`characteristic.RoleGraded`)
+that closes the open recommendation from the handoff's Observation E,
+and proposes a candidate fifth nominee. See §<<revision,Revision notes>>
+for the diff.
+
+toc::[]
+
+[NOTE]
+====
+The artefact path named in `roadmap-gates.adoc` is `docs/characteristic.adoc`.
+This file is at `docs/gate-2-characteristic.adoc` because of the
+parallel-instance lane discipline used to produce it. Rename or symlink
+at integration time.
+====
+
+== Inherited spec
+
+`roadmap-gates.adoc` Gate 2:
+
+.Claim
+****
+There exist theorems whose statements are naturally echo-shaped and are
+not reducible to generic sigma/fiber lemmas.
+****
+
+.Test
+For each nominated theorem, answer in writing:
+
+[quote]
+Would this theorem be stated, or stated in this form, without the
+echo framing?
+
+A theorem that survives only as "fiber lemma X with renamed
+components" does not count.
+
+.Threshold
+At least two of three nominees must survive. (The current revision
+of `roadmap-gates.adoc` lists four nominees; the threshold scales
+proportionally — a comfortable pass requires at least 3 of 4 to
+survive, an honest minimum requires at least 2 of 4.)
+
+== The nominee list (current)
+
+Per the amended `roadmap-gates.adoc` Gate 2 table:
+
+[cols="1,3,4", options="header"]
+|===
+| Tag | Module / lemma | Claim
+| N1 | `EchoGraded.degrade-via-join` | Categorical join law on the loss-grade lattice.
+| N2 | `EchoGraded.degrade-compose` | Compositional degradation along the grade lattice.
+| N3 | `EchoChoreo.applyChoreo-compose` | Compositional choreographic transport along the role-reachability lattice.
+| N4 | `EchoLinear.degradeMode-compose` | Compositional weakening along the linearity-mode lattice.
+|===
+
+The audit below treats each in turn. §<<threshold,Threshold check>>
+reports the gate outcome. §<<rolegraded,New construction>> documents
+the audit-derived module that closes the handoff's Observation E.
+
+== Audit of N1: `EchoGraded.degrade-via-join`
+
+=== The lemma
+
+[source,agda]
+----
+degrade-via-join :
+  ∀ {g1 g2 g}
+  (p1 : g1 ≤g g) (p2 : g2 ≤g g) (e : GEcho g1) →
+  degrade p1 e
+  ≡ degrade (≤g-⊔g-univ p1 p2) (degrade (≤g-⊔g-left g1 g2) e)
+----
+
+=== Reduction analysis
+
+The lemma states a categorical join law on the loss-grade lattice:
+degrading directly to a common upper bound `g` agrees with degrading
+first to the join `g1 ⊔g g2` and then onward via the universal arrow.
+
+Substantive ingredients:
+
+* `≤g-⊔g-left`, `≤g-⊔g-right`, `≤g-⊔g-univ` — the join structure.
+  These exhibit `_⊔g_` as the categorical join in `_≤g_`.
+* `≤g-prop` — propositionality of the order.
+* The `GEcho` family — different types per grade (`Echo collapse tt` at
+  keep, residue certificate at residue, `⊤` at forget).
+
+A naïve reduction: "this is a generic categorical join law on graded
+families." Correct in shape, lossy in content. The lemma is *about* the
+specific lattice modeling information loss.
+
+[FALSIFIER]
+====
+Exhibit a non-loss-ordered three-element propositional join-semilattice
+where the same lemma is also load-bearing for a structurally unrelated
+reason. We currently have no such exhibition.
+====
+
+=== Verdict
+
+*N1: SURVIVES.*
+
+== Audit of N2: `EchoGraded.degrade-compose`
+
+=== The lemma
+
+[source,agda]
+----
+degrade-compose :
+  ∀ {g1 g2 g3}
+  (p12 : g1 ≤g g2) (p23 : g2 ≤g g3) (p13 : g1 ≤g g3)
+  (e : GEcho g1) →
+  degrade p23 (degrade p12 e) ≡ degrade p13 e
+----
+
+=== Reduction analysis
+
+Same structural ingredients as N1: `degrade-comp` (associativity along
+a chosen factoring) and `≤g-prop` (propositionality of the order). The
+lemma's content: any factoring of a degradation through an intermediate
+grade equals the direct degradation.
+
+[FALSIFIER]
+====
+Same as for N1.
+====
+
+=== Verdict
+
+*N2: SURVIVES.*
+
+== Audit of N3: `EchoChoreo.applyChoreo-compose`
+
+=== The lemma
+
+[source,agda]
+----
+applyChoreo-compose :
+  ∀ {r1 r2 r3 : Role}
+  (p12 : r1 ⊑c r2) (p23 : r2 ⊑c r3) (p13 : r1 ⊑c r3)
+  {y : Bool} (e : RoleEcho r1 y) →
+  applyChoreo p23 (applyChoreo p12 e) ≡ applyChoreo p13 e
+----
+
+=== Reduction analysis
+
+The structurally-parallel theorem to N2, on the *choreographic*
+decoration. Substantive ingredients:
+
+* `applyChoreo-comp` — decomposition of choreographic transport.
+* `⊑c-prop` — propositionality of the role-reachability order.
+* `RoleEcho r y` is `Echo (obs r) y` — a *family of echoes indexed by
+  role*, with each role giving a different observation function.
+* The transport `applyChoreo c⊑s = client-to-server` factors through
+  `map-square` over a role-changing commuting square (`swap-square`).
+
+[FALSIFIER]
+====
+Two-stage falsifier:
+
+. Exhibit a non-choreographic two-element propositional reachability
+  order where the same lemma is also load-bearing.
+. Exhibit a different commuting square (i.e. a different role
+  embedding) under which the lemma fails.
+
+We currently have no such exhibitions.
+====
+
+=== Verdict
+
+*N3: SURVIVES.*
+
+== Audit of N4: `EchoLinear.degradeMode-compose`
+
+=== The lemma
+
+[source,agda]
+----
+degradeMode-compose :
+  ∀ {m1 m2 m3}
+  (p12 : m1 ≤m m2) (p23 : m2 ≤m m3) (p13 : m1 ≤m m3)
+  (e : LEcho m1) →
+  degradeMode p23 (degradeMode p12 e) ≡ degradeMode p13 e
+----
+
+=== Reduction analysis
+
+The third instance of the same recipe, on the *linearity-mode*
+decoration. Substantive ingredients:
+
+* `degradeMode-comp` — associativity of mode weakening.
+* `≤m-prop` — propositionality of the mode order. Two-element lattice
+  (`linear ≤m affine`) with three constructors; same propositional
+  structure as the role lattice and same general shape as the grade
+  lattice.
+* `LEcho m` — a family that varies type per mode: `Echo collapse tt`
+  at linear, `EchoR ⊤ TrivialCert tt` at affine. Same per-decoration
+  type variation as `GEcho`.
+* The strict step `degradeMode linear≤affine` is `weaken`, which
+  factors through `collapse-to-residue` from `EchoResidue`. This is
+  *specific* content — the weakening is not the identity, and it has
+  the irreversibility witness `no-section-collapse-to-residue`
+  attached.
+
+A naïve reduction: "this is associativity of weakening in any
+two-element propositional order." Correct in shape, lossy in content.
+The lemma is about the specific propositional order on linearity
+modes, with the strict weakening `weaken` having concrete
+non-recoverability content.
+
+[FALSIFIER]
+====
+Same two-stage falsifier as N3, with mode-lattice substituted for
+role-lattice and `weaken` substituted for `client-to-server`:
+
+. Exhibit a non-linearity two-element propositional order where the
+  same lemma is load-bearing for a structurally unrelated reason.
+. Exhibit a different choice of strict-step weakening under which
+  the lemma fails — i.e. show the lemma depends on the specific
+  `weaken` and not on a generic two-element order action.
+
+We currently have no such exhibitions. The lemma is the third
+instance of the same recipe (custom propositional decoration order +
+echo-indexed family + transport action), confirming that the recipe
+is not unique to a single decoration.
+====
+
+=== Verdict
+
+*N4: SURVIVES.*
+
+[[threshold]]
+== Threshold check
+
+[cols="1,2,2,3", options="header"]
+|===
+| Nominee | Module | Status | Reason
+| N1 | `EchoGraded` | SURVIVES | Categorical join law on the loss-grade lattice; not a fiber lemma.
+| N2 | `EchoGraded` | SURVIVES | Compositional degradation on the loss-grade lattice; not a fiber lemma.
+| N3 | `EchoChoreo` | SURVIVES | Compositional transport on the role-reachability lattice; specific commuting-square content.
+| N4 | `EchoLinear` | SURVIVES | Compositional weakening on the linearity-mode lattice; specific irreversibility content.
+|===
+
+`roadmap-gates.adoc` threshold:
+
+[quote]
+Gate 2 fails if fewer than two candidates survive.
+
+Survivors: N1, N2, N3, N4. Count: 4. Threshold: ≥ 2. *Met by margin of two.*
+
+*Gate 2 passes — 4-of-4 surviving across three modules.*
+
+[[rolegraded]]
+== New construction: `characteristic.RoleGraded` (closes handoff Observation E)
+
+The Revision-3 handoff document recorded the following open
+recommendation in Observation E:
+
+[quote]
+A genuine integration theorem — one in which a single Echo carries
+both a role/choreographic decoration and a graded decoration, and the
+two conjuncts share data — is not currently in the repository.
+Building one is open work.
+
+This revision closes that recommendation.
+
+=== The construction
+
+`proofs/agda/characteristic/RoleGraded.agda` defines:
+
+* `RoleGEcho : Role → Grade → Set` — a 2D family that varies
+  non-trivially in both axes. At keep grade,
+  `RoleGEcho r keep = RoleEcho r true`; at residue and forget grades,
+  `⊤`.
+* `applyRole : (r1 ⊑c r2) → RoleGEcho r1 g → RoleGEcho r2 g` — role
+  transport. At keep grade it does real work
+  (`client-to-server` for `c⊑s`); past keep, identity on `⊤`.
+* `applyGrade : (g1 ≤g g2) → RoleGEcho r g1 → RoleGEcho r g2` — grade
+  degradation, parametric in the role.
+
+=== The headline theorem
+
+[source,agda]
+----
+choreo-grade-commute :
+  ∀ {r1 r2 g1 g2}
+  (rp : r1 ⊑c r2) (gp : g1 ≤g g2)
+  (e : RoleGEcho r1 g1) →
+  applyGrade gp (applyRole rp e) ≡ applyRole rp (applyGrade gp e)
+----
+
+The two actions commute: applying them in either order on a
+RoleGEcho yields the same result. Eighteen cases, each closing by
+`refl` after pattern matching. The non-trivial case is
+`(c⊑s, keep≤keep)` where both sides reduce to `client-to-server e`.
+
+A combined two-decoration action `applyBoth` is also provided, with
+its agreement under either factoring proved as a corollary.
+
+=== Why this passes the Observation-E tests
+
+[cols="1,4", options="header"]
+|===
+| Test | Verdict
+| 1. Single 2D family on which both decorations act. | Pass: `RoleGEcho` varies in both `Role` and `Grade`.
+| 2. Single combined action consuming both decoration witnesses. | Pass: `applyBoth rp gp e` consumes both `rp` and `gp`.
+| 3. Same-data test: both sides of the conclusion mention both decoration witnesses. | Pass: both `rp` and `gp` appear on both sides of `choreo-grade-commute`.
+|===
+
+The withdrawn `knowledge-and-controlled-degradation` nominee failed
+test 3 (its conjuncts were over different functions and shared no
+data). `choreo-grade-commute` passes all three.
+
+=== Honest qualification: protocol pass, narrow content (EI-2)
+
+The three Observation-E tests are *protocol tests*: they ask whether
+the construction has the right shape (single 2D family, single
+combined action, same-data conclusion). `RoleGraded` passes by
+construction.
+
+What the protocol tests do *not* ask: how much of the 2D family's
+content is non-trivial. Of `choreo-grade-commute`'s 18 cases (3
+role constructors × 6 grade constructors), exactly one carries
+non-trivial cross-decoration content (`(c⊑s, keep≤keep)`, reducing
+to `client-to-server e`). The other 17 close trivially because
+residue/forget grades collapse `RoleGEcho` to `⊤` (12 cases) or
+because the role-reachability constructors are reflexive (5 cases).
+The 2D family is asymmetric — the role parameter is only live at
+keep grade.
+
+This is a *protocol-correct* closure of EI-1. It is *substantively
+narrow*. The follow-up question — is the recipe robust across
+other 2D combinations (Role × Mode, Mode × Grade, etc.), or did
+`RoleGraded` benefit from a fortunate axis pair? — is tracked as
+EI-2 in `docs/next-questions.adoc`. EI-2 is a sharpening question,
+not a survival question; its negative resolution would weaken
+EI-1's closure to "closed-but-narrow" but would not invalidate it.
+
+Do not relabel EI-1 as open. The protocol pass is the protocol
+pass. EI-2 records what's still substantively open without moving
+the goalposts.
+
+=== Status as a candidate Gate 2 nominee
+
+`choreo-grade-commute` is a candidate fifth Gate 2 nominee. Its
+audit, were it nominated:
+
+[FALSIFIER]
+====
+Exhibit a 2D propositional family with two independent actions where
+the same commutation holds for structurally unrelated reasons. The
+candidate falsifier is: any 2D family where one or both decorations
+collapse to a degenerate type (here, `⊤` at residue/forget) admits a
+trivial commutation. The non-trivial commutation case is at
+`(c⊑s, keep≤keep)`, where both sides reduce to `client-to-server e`
+— this is *not* trivial; it depends on the specific role-action
+content of `client-to-server`.
+
+A complete falsifier would need to exhibit a non-echo construction
+where the keep-grade row of the 2D family carries a non-trivial role
+action under which the commutation also holds. We do not currently
+have such a construction.
+====
+
+*Verdict (if nominated): SURVIVES.*
+
+The lemma is not currently in `roadmap-gates.adoc` Gate 2's nominee
+table. Whether to add it is a separate decision; this audit flags it
+as a candidate without recommending the amendment. Adding it would
+push the audit count to 5-of-5 surviving across four constructions
+(EchoGraded, EchoChoreo, EchoLinear, characteristic.RoleGraded).
+
+== Withdrawn nominees (historical record)
+
+Two nominees in earlier roadmap revisions did not survive. The audits
+are retained here for the historical record; the lemmas remain in
+their original modules for whatever value they carry.
+
+=== Withdrawn — `EchoCharacteristic.visible-constraint`
+
+==== The lemma
+
+[source,agda]
+----
+visible : State → Bool       -- State = Bool × Bool
+visible = proj₁
+
+visible-constraint :
+  ∀ {y : Bool} (e : Echo visible y) → proj₁ (proj₁ e) ≡ y
+visible-constraint (_ , p) = p
+----
+
+==== Why withdrawn
+
+`visible := proj₁` definitionally, so `Echo visible y` is
+`Σ State (λ s → proj₁ s ≡ y)`. The standard `proj₂` on this Σ has the
+same type as `visible-constraint`, and both compute by `refl` on every
+inhabitant. The reduction `visible-constraint ≡ proj₂` is formalised
+in `proofs/agda/characteristic/VisibleConstraintAudit.agda`.
+
+Per the Gate 2 test, "fiber lemma X with renamed components does not
+count." `visible-constraint` is `proj₂` with renamed components.
+
+==== Why retained in EchoCharacteristic
+
+The lemma has expository value as a worked-example illustration. The
+withdrawal is from *the Gate 2 nominee list only*.
+
+=== Withdrawn — `EchoIntegration.knowledge-and-controlled-degradation`
+
+==== The theorem
+
+[source,agda]
+----
+knowledge-and-controlled-degradation :
+  ∀ {y : Bool} {P : Global → Set} →
+  (∀ g → P g → P (scramble-server g)) →
+  Knows Client P y →
+  (∀ e → P (proj₁ (client-stability e)))
+  × (degrade keep≤residue echo-true ≡ degrade keep≤residue echo-false)
+----
+
+==== Why withdrawn (sharpened falsifier)
+
+The two conjuncts are over different functions: conjunct 1 over
+`obs Client : Global → Bool`; conjunct 2 over `collapse : Bool → ⊤`.
+The proof closes by literally pairing the two facts. The hypotheses
+flow only into conjunct 1.
+
+The formal exhibit is in
+`proofs/agda/characteristic/IntegrationAudit.agda`:
+
+* `split-knowledge`, `split-merging` — the two conjuncts in isolation.
+* `N3-is-product : knowledge-and-controlled-degradation inv k ≡
+  (split-knowledge inv k , split-merging)`, by `refl`.
+* `split-merging-uses-no-hypotheses` — confirming no shared data.
+
+The "integration" is `_×_` with no logical link. The named theorem
+does not integrate; it pairs.
+
+==== Why retained in EchoIntegration
+
+The theorem stands as a true proposition. It marks the slot where a
+genuine integration theorem would live. As of Revision 4, that slot
+is filled by `characteristic.RoleGraded.choreo-grade-commute`; the
+withdrawn lemma can be left in place as a historical signpost.
+
+== Honest qualifications
+
+. The pass is 4-of-4, distributed across three modules (EchoGraded
+  carries N1 and N2; EchoChoreo carries N3; EchoLinear carries N4).
+  This is a comfortable pass; the threshold of 2 surviving is met
+  by margin of two.
+. All four survivors are instances of the same recipe: a custom
+  propositional decoration order, an echo-indexed family that varies
+  per decoration, an action transporting echoes along the order. If
+  Gate 1 finds that this recipe is not echo-specific (e.g. found in
+  plain refinement-type theory or any propositionally-ordered graded
+  action setting), all four would weaken in parallel.
+. Each survivor has at least one unattempted concrete falsifier
+  (§<<audit-of-n1-echograded-degrade-via-join,§3.2>>,
+  §<<audit-of-n2-echograded-degrade-compose,§4.2>>,
+  §<<audit-of-n3-echochoreo-applychoreo-compose,§5.2>>,
+  §<<audit-of-n4-echolinear-degrademode-compose,§6.2>>). The pass is
+  conditional on those falsifiers being attempted and not succeeding.
+. The new construction `characteristic.RoleGraded` exhibits a
+  *fourth* decoration combination (Role × Grade), demonstrating the
+  recipe extends to 2D products. Its headline theorem
+  `choreo-grade-commute` is not currently nominated; its addition as
+  a fifth nominee would push the audit count to 5-of-5 across four
+  constructions.
+
+== Open work and recommendations
+
+. *Try the falsifiers.* Each survivor has an unattempted falsifier.
+  Attempting them would either harden the pass or expose hidden
+  generality.
+. *Consider nominating `characteristic.RoleGraded.choreo-grade-commute`.*
+  The construction closes Observation E and provides a concrete
+  exhibit of cross-decoration integration that the withdrawn N3 was
+  trying but failing to provide.
+. *Consider further decorations.* The recipe extends to additional
+  axes (e.g., epistemic level, indexed step, tropical valuation —
+  see `EchoEpistemic`, `EchoIndexed`, `EchoTropical`). Each gives an
+  analogous composition law. Diminishing returns set in past
+  three or four examples; the family does not need padding.
+
+[[revision]]
+== Revision notes (what changed across audit revisions)
+
+[cols="1,3", options="header"]
+|===
+| Revision | Substance
+
+| 1 | Original audit. 3 nominees: `visible-constraint`, "compositional degradation law", `knowledge-and-controlled-degradation`. Reported 2/3 surviving (N2, N3 with caveat), N1 failing.
+
+| 2 | Sharpened the N3 falsifier; N3 retracted. Withdrew N1; replaced with `degrade-via-join`. Reported 2/3 surviving. Both survivors single-module. Recommended amendment to `roadmap-gates.adoc`.
+
+| 3 | Amendment to `roadmap-gates.adoc` adopted. Nominee list: `degrade-via-join`, `degrade-compose`, `applyChoreo-compose`. 3/3 surviving across two modules. Recommended further work: genuine integration theorem; fourth nominee for diversification.
+
+| 4 | Added `EchoLinear.degradeMode-compose` as N4 (per the Revision-3 recommendation; user-explicit). Built `characteristic.RoleGraded` and `choreo-grade-commute` (closes handoff Observation E). 4/4 surviving across three modules. Proposed adding `choreo-grade-commute` as N5 (left to integrator's discretion).
+|===
+
+== Cross-lane observations
+
+See `docs/gate-2-handoff.adoc`.
+
+== Pointers
+
+* The current nominees:
+** `proofs/agda/EchoGraded.agda` — `degrade-via-join` (N1),
+   `degrade-compose` (N2), supporting `≤g-prop`, `≤g-⊔g-univ`,
+   `≤g-⊔g-left`, `degrade-comp`, `GEcho`.
+** `proofs/agda/EchoChoreo.agda` — `applyChoreo-compose` (N3),
+   supporting `⊑c-prop`, `applyChoreo-comp`, `applyChoreo`,
+   `RoleEcho`, `client-to-server`, `swap-square`.
+** `proofs/agda/EchoLinear.agda` — `degradeMode-compose` (N4),
+   supporting `≤m-prop`, `degradeMode-comp`, `weaken`, `LEcho`.
+* The audit-derived new construction:
+** `proofs/agda/characteristic/RoleGraded.agda` —
+   `RoleGEcho`, `applyRole`, `applyGrade`, `choreo-grade-commute`,
+   `applyBoth`. Candidate N5 if amended into the roadmap.
+* Withdrawn nominees, retained for expository value in their
+  original modules:
+** `proofs/agda/EchoCharacteristic.agda` (`visible-constraint`).
+** `proofs/agda/EchoIntegration.agda`
+   (`knowledge-and-controlled-degradation`).
+* Falsifier exhibits in this lane:
+** `proofs/agda/characteristic/VisibleConstraintAudit.agda` —
+   formalises the reduction `visible-constraint ≡ proj₂`.
+** `proofs/agda/characteristic/IntegrationAudit.agda` —
+   formalises that `knowledge-and-controlled-degradation` is `_×_`
+   of independent facts.
+* The gate spec: `roadmap-gates.adoc` §<<gate-2,Gate 2>>.
+* The neighbouring frameworks (Gate 1's territory): `docs/adjacency/`.

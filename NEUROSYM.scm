@@ -1,0 +1,309 @@
+;;; ============================================================
+;;; NEUROSYM.scm — formal-evidence semantics for EI-2 termination
+;;; ============================================================
+;;;
+;;; Format: neurosym-a2ml (S-expression, SRFI-30 conventions)
+;;; Schema reference:
+;;;   github.com/hyperpolymath/standards/blob/main/neurosym-a2ml/spec/abnf/neurosym.abnf
+;;; Pipeline position (per playbook spec § 8.1):
+;;;   META validate → AGENTIC gate → NEUROSYM discharge → ...
+;;;
+;;; Purpose: encode the formal evidence backing EI-2's negative
+;;; verdict in machine-checkable form — what was proved, where, what
+;;; it implies, and what was deliberately NOT proved (PATH B
+;;; obligations).
+;;;
+;;; SPDX-License-Identifier: PMPL-1.0-or-later
+;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+
+(define-module (echo-types neurosym)
+  #:export (formal-certificates
+            data-points
+            structural-arguments
+            unproved-obligations
+            evidence-summary))
+
+;;; ============================================================
+;;; Formal certificates (theorems proved, with location and
+;;; what they imply)
+;;; ============================================================
+
+(define formal-certificates
+  '(((id . cert-001)
+     (name . "client-to-server-injective-on-proj₁")
+     (location . "proofs/agda/characteristic/ChoreoInjective.agda")
+     (statement . "client-to-server preserves proj₁-distinctness. Distinct globals ↦ distinct images.")
+     (implies . "Choreo satisfies the non-loss-only criterion at strict step c⊑s.")
+     (used-in . "AGENTIC G-001 citation; STATE terminated-questions EI-2 criterion-status.")
+     (license . "Proved by direct construction from swap-injective and involutivity."))
+
+    ((id . cert-002)
+     (name . "client-to-server-preserves-distinction")
+     (location . "proofs/agda/characteristic/ChoreoInjective.agda")
+     (statement . "Corollary: if proj₁ e₁ ≢ proj₁ e₂, then client-to-server e₁ ≢ client-to-server e₂.")
+     (implies . "Multiplicity preservation under Choreo's strict-step transport.")
+     (depends-on . cert-001))
+
+    ((id . cert-003)
+     (name . "RoleGraded.choreo-grade-commute")
+     (location . "proofs/agda/characteristic/RoleGraded.agda")
+     (statement . "Commutation of applyRole and applyGrade on RoleGEcho. 18 cases, 1 non-trivial (c⊑s, keep≤keep) reducing to client-to-server e.")
+     (implies . "EI-1 closure (protocol-correct) and EI-2 data point 1 (substantively narrow).")
+     (used-in . "EI-2 evidence; EI-1 closure record."))
+
+    ((id . cert-004)
+     (name . "RoleMode.choreo-mode-commute")
+     (location . "proofs/agda/characteristic/RoleMode.agda")
+     (statement . "Commutation of applyRole and applyMode on RoleMEcho. 9 cases, 1 non-trivial.")
+     (implies . "EI-2 data point 2 — Role × Mode same-shape pattern as Role × Grade."))
+
+    ((id . cert-005)
+     (name . "ModeGraded.mode-grade-commute")
+     (location . "proofs/agda/characteristic/ModeGraded.agda")
+     (statement . "Commutation of applyMode and applyGrade on ModeGEcho. 18 cases, 0 non-trivial.")
+     (implies . "EI-2 data point 3 — loss-only-pair commutation is vacuous on the strict reading.")
+     (note . "File has trailing 'd' — ModeGraded.agda is canonical. Do not create ModeGrade.agda."))
+
+    ((id . cert-006)
+     (name . "RoleModeGrade.role-mode-commute")
+     (location . "proofs/agda/characteristic/RoleModeGrade.agda")
+     (statement . "3D pairwise: 27 cases, 1 non-trivial. Inherits from RoleMode + Grade-spectator triviality.")
+     (implies . "EI-2 data point 4 — n=3 inherits n=2 pattern."))
+
+    ((id . cert-007)
+     (name . "RoleModeGrade.role-grade-commute")
+     (location . "proofs/agda/characteristic/RoleModeGrade.agda")
+     (statement . "3D pairwise: 36 cases, 1 non-trivial. Inherits from RoleGraded + Mode-spectator triviality.")
+     (implies . "EI-2 data point 5."))
+
+    ((id . cert-008)
+     (name . "RoleModeGrade.mode-grade-commute")
+     (location . "proofs/agda/characteristic/RoleModeGrade.agda")
+     (statement . "3D pairwise: 36 cases, 0 non-trivial. Inherits from ModeGraded.")
+     (implies . "EI-2 data point 6 — loss-only-pair commutation is vacuous in 3D context too."))
+
+    ((id . cert-009)
+     (name . "RoleModeGrade.applyAll + trace-non-trivial-cell")
+     (location . "proofs/agda/characteristic/RoleModeGrade.agda")
+     (statement . "3D triple commutation: 54 cases, 1 non-trivial at (c⊑s, linear≤linear, keep≤keep), reducing to client-to-server e.")
+     (implies . "EI-2 data point 7 — triple inherits the same single-cell pattern."))
+
+    ((id . cert-010)
+     (name . "RoleRole.RREcho-pair commutation")
+     (location . "proofs/agda/characteristic/RoleRole.agda")
+     (statement . "Self-pairing of Choreo via independent product: 9 cases, 0 non-trivial. Trivial by categorical product structure.")
+     (implies . "EI-2 critical finding — even two non-loss-only axes paired don't produce substantive simultaneous content. NLO is necessary but NOT sufficient.")
+     (used-in . "AGENTIC G-001; META adr-002; STATE forbidden-rebrandings."))
+
+    ((id . cert-011)
+     (name . "RoleRole.RREcho-shared (negative result)")
+     (location . "proofs/agda/characteristic/RoleRole.agda")
+     (statement . "Self-pairing of Choreo via shared state: per-axis transport not uniformly definable.")
+     (implies . "EI-2 critical finding — alternative design also fails. The recipe doesn't apply.")
+     (used-in . "Same citation chain as cert-010."))
+
+    ((id . cert-012)
+     (name . "InteractionTest.no-simultaneous-non-trivial-cell")
+     (location . "proofs/agda/characteristic/InteractionTest.agda")
+     (statement . "P3: in any cell of the existing recipe families, at most one axis acts non-trivially; the other is identity.")
+     (implies . "Formal statement of the one-axis-at-a-time pattern. Discharges EI-2's structural argument as Agda-level."))
+
+    ((id . cert-013)
+     (name . "RecipeTheorem per-axis halves (forward and backward)")
+     (location . "proofs/agda/characteristic/RecipeTheorem.agda")
+     (statement . "Per-axis: for an NLO axis, the recipe contributes a non-trivial cell; for a loss-only axis, the recipe contributes only trivial cells.")
+     (implies . "Half of the recipe-non-triviality theorem (for individual axes). Combining into a 2D iff requires postulates not available in safe Agda.")
+     (status . "Proved per-axis; not lifted to 2D iff. PATH B accepted."))
+
+    ((id . cert-014)
+     (name . "RecipeNonTriviality concrete construction halves")
+     (location . "proofs/agda/characteristic/RecipeNonTriviality.agda")
+     (statement . "For each of the existing recipe constructions (RoleGraded, RoleMode, ModeGraded, RoleModeGrade, RoleRole), the non-trivial cell count matches the prediction of the per-axis halves.")
+     (implies . "Concrete-construction half of the recipe-non-triviality theorem. PATH B route to EI-2 termination."))))
+
+;;; ============================================================
+;;; Data points (the seven canonical EI-2 measurements)
+;;; ============================================================
+
+(define data-points
+  '(((id . dp-1)
+     (construction . RoleGraded)
+     (axes . "Role × Grade")
+     (axis-non-loss-only . (Role))
+     (axis-loss-only . (Grade))
+     (cells . 18)
+     (non-trivial-cells . 1)
+     (non-trivial-location . "(c⊑s, keep≤keep)")
+     (non-trivial-content . "client-to-server e (Choreo's transport at c⊑s)")
+     (certificate . cert-003))
+
+    ((id . dp-2)
+     (construction . RoleMode)
+     (axes . "Role × Mode")
+     (axis-non-loss-only . (Role))
+     (axis-loss-only . (Mode))
+     (cells . 9)
+     (non-trivial-cells . 1)
+     (non-trivial-location . "(c⊑s, linear≤linear)")
+     (non-trivial-content . "client-to-server e")
+     (certificate . cert-004))
+
+    ((id . dp-3)
+     (construction . ModeGraded)
+     (axes . "Mode × Grade")
+     (axis-non-loss-only . ())
+     (axis-loss-only . (Mode Grade))
+     (cells . 18)
+     (non-trivial-cells . 0)
+     (non-trivial-location . none)
+     (non-trivial-content . none)
+     (certificate . cert-005)
+     (note . "Falsifier-positive on the strict reading of the recipe."))
+
+    ((id . dp-4)
+     (construction . "RoleModeGrade.role-mode-commute (3D pairwise)")
+     (cells . 27)
+     (non-trivial-cells . 1)
+     (certificate . cert-006))
+
+    ((id . dp-5)
+     (construction . "RoleModeGrade.role-grade-commute (3D pairwise)")
+     (cells . 36)
+     (non-trivial-cells . 1)
+     (certificate . cert-007))
+
+    ((id . dp-6)
+     (construction . "RoleModeGrade.mode-grade-commute (3D pairwise)")
+     (cells . 36)
+     (non-trivial-cells . 0)
+     (certificate . cert-008)
+     (note . "Loss-only-pair commutation is vacuous in 3D context too."))
+
+    ((id . dp-7)
+     (construction . "RoleModeGrade.applyAll (3D triple)")
+     (cells . 54)
+     (non-trivial-cells . 1)
+     (certificate . cert-009)
+     (note . "Single load-bearing cell at (c⊑s, linear≤linear, keep≤keep)."))
+
+    ((id . dp-7a)
+     (construction . "RoleRole.RREcho-pair (independent product)")
+     (axes . "Role × Role (Choreo self-pair)")
+     (axis-non-loss-only . (Role Role))
+     (axis-loss-only . ())
+     (cells . 9)
+     (non-trivial-cells . 0)
+     (certificate . cert-010)
+     (note . "*** CRITICAL FINDING: even two non-loss-only axes paired don't produce substantive simultaneous content. NLO is NECESSARY but NOT SUFFICIENT. ***"))
+
+    ((id . dp-7b)
+     (construction . "RoleRole.RREcho-shared (shared-state design)")
+     (cells . n/a)
+     (non-trivial-cells . n/a)
+     (certificate . cert-011)
+     (note . "Per-axis transport not uniformly definable; recipe doesn't apply."))))
+
+;;; ============================================================
+;;; Structural arguments (the load-bearing distinctness arguments
+;;; that survive EI-2's negative finding)
+;;; ============================================================
+
+(define structural-arguments
+  '(((id . sa-1)
+     (name . "Truncation argument")
+     (claim . "For non-injective f with multiple preimages of y, Echo f y is constructively not a mere proposition. Neighbour theories that propositionally truncate the witness type lose what echo retains.")
+     (formal-certificates
+      . (echo-not-prop-Tropical
+         echo-not-prop-Epistemic
+         echo-not-prop-Linear))
+     (formal-locations
+      . ("proofs/agda/examples/TropicalArgmin.agda"
+         "proofs/agda/examples/EpistemicUpdate.agda"
+         "proofs/agda/examples/LinearErasure.agda"))
+     (gap . "Q2.1 (generalisation to all non-injective f) is open.")
+     (status . "Pointwise certified across three bridge axes; generalisation pending."))
+
+    ((id . sa-2)
+     (name . "2-cell argument")
+     (claim . "Natural 2-cells in neighbour frameworks (quotient equalizers, Galois meets) are structurally Σ-over-preimages-shaped — i.e., already echo-shaped.")
+     (formal-certificates
+      . (Sophisticated.equalizer→echo-pair
+         Sophisticated.meet→echo-intersection
+         meet-on-diagonal→equalizer))
+     (formal-locations
+      . ("proofs/agda/EchoVsQuotient.agda § Sophisticated"
+         "proofs/agda/EchoVsGalois.agda § Sophisticated"))
+     (status . "Closed by both Sophisticated submodules. Diagonal correspondence between the two arguments also formalised."))
+
+    ((id . sa-3)
+     (name . "Recipe is organising vocabulary, NOT distinctness load")
+     (claim . "Post-EI-2: the integration recipe is useful for organising fiber-shaped reasoning across multiple axes but does NOT produce substantive simultaneous cross-axis content. It is not the locus of distinctness.")
+     (negative-evidence . (cert-005 cert-008 cert-010 cert-011))
+     (positive-evidence . "All seven data points support sa-3; no data point refutes it.")
+     (alternatives-ruled-out
+      . ("recipe carries cross-axis distinctness uniformly"
+         "non-loss-only is sufficient for substantive integration"
+         "different family choice for ModeGrade would change the result"
+         "Choreo × Choreo would carry substantive content with the right design"))
+     (status . "Standing decision sd-002 in STATE.scm. ADR adr-001 in META.scm."))))
+
+;;; ============================================================
+;;; Unproved obligations (deliberately deferred under PATH B)
+;;; ============================================================
+
+(define unproved-obligations
+  '(((id . unp-1)
+     (name . "Full 2D iff for recipe-non-triviality")
+     (statement . "(NLO at least one of axis₁, axis₂) iff (non-trivial-cell-count(axis₁ × axis₂) ≥ 1)")
+     (status . "Not formalised in safe Agda.")
+     (obstacle . "Requires postulates: decidable equality on decoration types, F-collapses axioms, extensionality on cell actions.")
+     (workaround . "Per-axis halves (cert-013) + concrete construction halves (cert-014) + RoleRole structural argument (cert-010, cert-011) accepted as PATH B evidence.")
+     (under-PATH-B-status . "Accepted as deliberately-deferred. Do NOT attempt to close in safe Agda; doing so triggers AGENTIC gate G-004."))
+
+    ((id . unp-2)
+     (name . "Recipe extension: coupled state across axes")
+     (statement . "If the recipe permits a family RREcho with shared state across axes, does it produce substantive simultaneous cross-axis content?")
+     (status . "Open as v0.2+ work, NOT as EI-2 unfinished business.")
+     (under-EI-2-scope? . no)
+     (filed-as . "Will be EI-3 or later when v0.2 work begins; not part of EI-2's record."))
+
+    ((id . unp-3)
+     (name . "Generalisation of echo-not-prop")
+     (statement . "For arbitrary non-injective f with at least two distinct preimages of y, is-prop (Echo f y) → ⊥.")
+     (status . "Open as Q2.1 in next-questions.adoc.")
+     (priority . high)
+     (rationale . "Truncation argument is one of the two load-bearing distinctness arguments post-EI-2; strengthening it has high leverage. Listed in STATE.scm next-actions."))))
+
+;;; ============================================================
+;;; Evidence summary (one-paragraph form for citation)
+;;; ============================================================
+
+(define evidence-summary
+  '((paragraph
+     . "EI-2 closes negatively via PATH B. Across seven data points
+        (RoleGraded 18:1, RoleMode 9:1, ModeGraded 18:0, RoleModeGrade
+        3D pairwise 27:1, 36:1, 36:0, triple 54:1, plus RoleRole
+        9:0 / non-applicable), the integration recipe with the
+        existing five named axes does not produce substantive
+        simultaneous cross-axis content. Every non-trivial cell
+        carries one-axis-at-a-time content; the load-bearing
+        transport is always Choreo's client-to-server at c⊑s. The
+        non-loss-only criterion (formally certified for Choreo in
+        ChoreoInjective.agda) is necessary but not sufficient: even
+        the only NLO self-pairing (Role × Role) degenerates to
+        coordinate-product commutation under independent-product
+        design or breaks per-axis transport under shared-state
+        design. Distinctness against neighbour frameworks therefore
+        rests on the truncation argument (echo-not-prop family)
+        and the 2-cell argument (Sophisticated submodules), both
+        formalised independently of the recipe. Gate-1 has been
+        narrowed across five doc locations to reflect this. The
+        full 2D iff theorem is not formalisable in safe Agda
+        without postulates; PATH B accepts the per-axis halves
+        and concrete construction halves as sufficient evidence.")
+    (one-line
+     . "EI-2 negative; recipe is organising vocabulary, not distinctness load; truncation + 2-cell carry gate-1 instead.")))
+
+;;; ============================================================
+;;; END OF NEUROSYM
+;;; ============================================================
