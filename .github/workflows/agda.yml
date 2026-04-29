@@ -48,3 +48,9 @@ jobs:
 
       - name: Smoke-check headline theorems
         run: agda -i proofs/agda proofs/agda/Smoke.agda
+
+      - name: Typecheck characteristic lane (Gate #2 audit modules)
+        run: agda -i proofs/agda proofs/agda/characteristic/All.agda
+
+      - name: Typecheck examples lane (Gate #3 canonical examples)
+        run: agda -i proofs/agda proofs/agda/examples/All.agda
