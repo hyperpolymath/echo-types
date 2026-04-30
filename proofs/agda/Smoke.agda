@@ -161,6 +161,16 @@ open import EchoIntegration using
   ; knowledge-and-controlled-degradation
   )
 
+open import EchoCNOBridge using
+  ( program-to-unit
+  ; ProgramEcho
+  ; cno-program-echo
+  ; empty-cno-echo
+  ; halt-cno-echo
+  ; absolute-zero-echo
+  ; cno-compose-echo
+  )
+
 open import EchoOrdinal using
   ( ordinal-collapse
   ; ordinal-left
