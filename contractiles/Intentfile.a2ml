@@ -1,0 +1,30 @@
+; SPDX-License-Identifier: PMPL-1.0-or-later
+; Intentfile.a2ml — declared future intent for echo-types.
+
+(contractile :kind intent :version 1)
+
+(intent :group "rsr-conformance"
+  :items
+    (("Pin @sha256: digests on stapeln + Containerfile base images.")
+     ("Author flake.nix + guix.scm so the toolchain is reproducible.")
+     ("Resolve readme.adoc / README.md duplication (canonical: README.adoc).")
+     ("Resolve roadmap.adoc / roadmap-gates.adoc lowercase (canonical: ROADMAP.adoc).")
+     ("Convert remaining doc-format-rule .md files to .adoc (DOCUMENTATION_STATUS.md, docs/*.md).")))
+
+(intent :group "proofs"
+  :items
+    (("Close the Buchholz/Veblen track (Ordinal.Buchholz.* — currently admitted in places).")
+     ("Discharge truncation-argument generalisation (Q2.1) — n=2 special-case proofs generalise.")
+     ("Falsifier attempts for the four surviving gate-2 nominees (Q2.4).")
+     ("Adopt RoleGraded.choreo-grade-commute as gate-2 nominee N5 (Q2.3).")))
+
+(intent :group "process"
+  :items
+    (("Land first green CI run on hypatia-scan / mirror / scorecard / rsr-antipattern (4 mandatory workflows).")
+     ("Push the seven-commit integration sequence (per STATE.a2ml § integration).")
+     ("Cut v0.1.1 release once integration commits land.")))
+
+(intent :group "explicitly-parked"
+  :items
+    (("Recipe extension scope: v0.2+, not v0.1.x (genuinely separate work from EI-2).")
+     ("Full 2D iff theorem (recipe non-triviality ↔ NLO criterion) — formally infeasible in safe Agda without postulates; parked as future work.")))

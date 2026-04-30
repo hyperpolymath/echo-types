@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= QUICKSTART-DEV: echo-types
+:toc:
+
+== Toolchain
+
+Required:
+
+* `just`
+* `agda` (per `.tool-versions` — currently floats; pinning pending)
+* `ghc` + `cabal` (Agda runtime)
+* `rust` (for `arghda-core/`)
+* `podman` (for container builds, when `stapeln.toml` is wired)
+
+== First build
+
+[source,bash]
+----
+git clone https://github.com/hyperpolymath/echo-types.git
+cd echo-types
+just verify     # full clean + build + test cycle
+----
+
+== Iteration loop
+
+[source,bash]
+----
+just build-echo            # type-check the Echo* modules
+just test-core             # core echo theorems
+just test-cno              # CNO bridge
+just test-thermo           # thermodynamic bridge
+just test-cat              # categorical bridge
+just test-stability        # stability suite (target 97/100)
+----
+
+== Common failures
+
+* *Banned-pattern detection.* If you've introduced `believe_me`, `assert_total`, `postulate`, `sorry`, `Admitted`, `unsafeCoerce`, or `Obj.magic`, CI will reject. Discharge the proof properly or open an ADR.
+* *Naming-trap check.* `ModeGraded` (trailing `d`) is canonical; `ModeGrade` is forbidden. See `.machine_readable/6a2/STATE.a2ml § naming-traps`.
+* *EI-2 reopen.* Any work that looks like it's reinstating the integration-recipe as the locus of distinctness will be rejected at review per `.machine_readable/6a2/AGENTIC.a2ml § gate-rules`. Read STATE § ei-2 first.

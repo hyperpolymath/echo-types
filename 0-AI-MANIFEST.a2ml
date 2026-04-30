@@ -1,0 +1,15 @@
+; SPDX-License-Identifier: PMPL-1.0-or-later
+; 0-AI-MANIFEST.a2ml — echo-types
+
+[ai-contract]
+purpose = "Constructive Agda formalisation of echo types — proof-relevant fibers / loss-with-residue. Foundation library."
+agent-may = "edit proofs/agda/, arghda-core/, docs/, CHANGELOG.md, contractiles/, .machine_readable/6a2/"
+agent-may-not = "edit LICENSE / SECURITY.md / [security.signing] without explicit user confirmation; introduce believe_me/assert_total/postulate/sorry/Admitted/unsafeCoerce/Obj.magic; reopen EI-2 under any framing in .machine_readable/6a2/STATE.a2ml § forbidden-rebrandings; rename ModeGraded -> ModeGrade (the trailing d is canonical)"
+agent-must-after = "code-edit -> 'just verify'"
+
+[escalation]
+breaking-changes = "open ADR; respect META.a2ml § architecture-decisions"
+ei-2-mention = "Run PLAYBOOK.a2ml § on-EI-2-mention. Cite from STATE; do not paraphrase."
+banned-pattern-relapse = "Hard reject. Discharge the proof properly or open ADR."
+naming-trap-relapse = "Hard reject. Match the canonical naming."
+schema-drift-in-6a2 = "Open issue against hyperpolymath/standards; do not silently reshape this repo's 6a2 files."

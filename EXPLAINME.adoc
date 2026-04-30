@@ -1,0 +1,31 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= echo-types: explain me
+:icons: font
+
+== One paragraph
+
+`echo-types` is a constructive Agda formalisation of *echo types* — a way of treating "loss that is not total erasure" as a first-class object. Given a function `f : A -> B`, the *echo* at `y : B` is `Σ (x : A), (f x ≡ y)`: the proof-relevant set of inputs that map to `y`. Echo types target the third case between fully reversible (no loss) and fully irreversible (forgotten): irreversible-but-with-retained-proof-relevant-constraint-on-what-was-lost. Bridges connect echoes to affine/linear types, graded modalities, tropical semirings, choreographic projections, and epistemic indistinguishability.
+
+== One sentence
+
+echo-types is part of the hyperpolymath ecosystem; it serves the *foundation* role for proof-relevant lossy computation.
+
+== Why does this exist?
+
+Many real-world transforms lose information but not all of it: a checkpoint hash retains a constraint on its preimage, a privacy projection retains a constraint on the original record, a choreographic role-projection retains a constraint on the global state. Without echo types, formal arguments about these constructions either pretend the loss is total (over-strong) or pretend the loss is reversible (under-strong). Echo types give the middle case a precise treatment.
+
+== Who is this for?
+
+* Authors of formally-verified protocols where role projections / privacy collapses / lossy aggregations need typed witnesses for what was retained.
+* Authors of refinement-typed and graded type systems looking for a foundational vocabulary for loss-with-residue.
+* Anyone designing audit / provenance / hash-chain systems who wants a proof-relevant account of what the audit step preserves.
+
+== Status snapshot
+
+Per `.machine_readable/6a2/STATE.a2ml`:
+
+* Core echo / fiber theorems present (`echo-intro`, `map-over`, `map-over-id`, `map-over-comp`, `map-square`).
+* Characteristic non-injectivity / no-section family present.
+* Bridges: linear, graded, tropical, choreographic, epistemic, CNO, Janus, Dyadic, Ordinal, Indexed, Relational, Categorical, Scope.
+* Investigation EI-2 (integration-recipe distinctness) terminated negatively via PATH B.
+* `.machine_readable/6a2/STATE.a2ml § ei-2` is the authoritative record; do not reopen.
