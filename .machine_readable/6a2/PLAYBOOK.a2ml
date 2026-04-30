@@ -1,5 +1,5 @@
 ;;; ============================================================
-;;; PLAYBOOK.scm — operational procedures for echo-types sessions
+;;; PLAYBOOK.a2ml — operational procedures for echo-types sessions
 ;;; ============================================================
 ;;;
 ;;; Format: playbook-a2ml (S-expression, SRFI-30 conventions)
@@ -264,6 +264,26 @@
      (channel . "via standards repo discussions")
      (role . "If a 6a2 schema question arises that this PLAYBOOK doesn't resolve.")
      (hours . "asynchronous"))))
+
+;;; ============================================================
+;;; Session lifecycle (migrated from former .machine_readable/6a2/STATE.a2ml
+;;; "secondary short-form companion" file as part of the 2026-04-30
+;;; .scm -> .a2ml migration. The original file's own header marked this
+;;; block as the only unique contribution it carried.)
+;;; ============================================================
+
+(define lifecycle
+  '((on-enter
+     (step . "Read .machine_readable/6a2/STATE.a2ml first")
+     (step . "Read .machine_readable/6a2/META.a2ml for permanent decisions")
+     (step . "Check status.phase before starting any work")
+     (step . "If user asks about EI-2: state TERMINATED; refer to ei-2 block in STATE"))
+    (on-exit
+     (step . "Update status.phase if changed")
+     (step . "Update commits-pushed if any commits actually pushed")
+     (step . "If new questions opened, add to open-questions block in STATE")
+     (step . "If naming-traps encountered, add to naming-traps block in STATE")
+     (step . "Never remove the ei-2 block; it is permanent record"))))
 
 ;;; ============================================================
 ;;; END OF PLAYBOOK

@@ -1,5 +1,5 @@
 ;;; ============================================================
-;;; AGENTIC.scm — gating rules for echo-types operational requests
+;;; AGENTIC.a2ml — gating rules for echo-types operational requests
 ;;; ============================================================
 ;;;
 ;;; Format: agentic-a2ml (S-expression, SRFI-30 conventions)

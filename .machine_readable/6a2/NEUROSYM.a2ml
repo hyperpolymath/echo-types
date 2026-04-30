@@ -1,5 +1,5 @@
 ;;; ============================================================
-;;; NEUROSYM.scm — formal-evidence semantics for EI-2 termination
+;;; NEUROSYM.a2ml — formal-evidence semantics for EI-2 termination
 ;;; ============================================================
 ;;;
 ;;; Format: neurosym-a2ml (S-expression, SRFI-30 conventions)
