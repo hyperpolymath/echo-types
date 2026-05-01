@@ -46,11 +46,16 @@ Two active workstreams:
 
 1. **Composition track (Echo.agda + echo-types theory docs).** Base
    accumulation iso `Echo-comp-iso-{to, from, from-to, to-from}`
-   landed. Cancellation forward/backward maps `cancel-iso-{to, from}`
-   landed; full iso deferred pending triangle-identity coherence.
-   Pentagon coherence partial: projection-pentagon lemmas
-   `Echo-comp-iso-pent-{B, echo}` landed as `refl`; full
-   Σ-associativity iso between the two nested Σ-shapes open.
+   landed and packaged as `Echo-comp-iso : ... ↔ ...`. Cancellation
+   iso landed: `cancel-iso-{to, from, from-to, to-from}` plus the
+   `cancel-iso : ... ↔ ...` packaging (PR #25), parameterised by
+   `s-left`, `s-right`, and both triangle identities. Pentagon
+   coherence complete: projection-pentagon lemmas
+   `Echo-comp-iso-pent-{B, echo}` land as `refl`, the full
+   Σ-associativity iso between the two nested Σ-shapes lands as
+   `Echo-comp-pent-Σ-assoc-{to, from, from-to, to-from}`, and
+   the equivalence-record packaging `Echo-comp-pent-Σ-assoc :
+   ... ↔ ...` (stdlib `Function.Bundles._↔_`) is in place.
 
 2. **Ordinal track (buchholz-plan.adoc).** Target remains Bachmann–
    Howard (ψ₀(Ω_ω)) as first credible milestone, stretch to ψ(Ω_Ω)
@@ -225,10 +230,16 @@ and `agda proofs/agda/Smoke.agda` both exit 0 under
   `wf-<ᵇ`. Rank-embedding (Route B) into Brouwer ordinals is the
   recommended next attempt — needs a `rank : BT → Ord` function
   plus the strict-monotonicity lemmas listed in the design note.
-* Brouwer Phase 1.3 (recursive `_≤′_` and `_<′_`) — drafted by
-  the parallel session with `osuc-mono-≤′ p = p` and the limit
-  case of `≤′-refl` deferred; module reverted pending the
-  limit-case discharge.
+* Brouwer Phase 1.3 (recursive `_≤′_` and `_<′_`) — landed
+  2026-04-30. `osuc-mono-≤′ p = p` collapses to identity, and
+  the deferred `olim f` case of `≤′-refl` is now discharged via
+  a source-side `≤′-lim` lemma (recursion on the source α, not
+  on `f n`, sidesteps the original `with`-loses-equation
+  obstacle). `≤′-refl`, `≤′-lim`, `f-in-lim′` pinned in
+  `Smoke.agda`. Open arithmetic-side Phase-1.3 lemmas
+  (`⊕-mono-<-right` etc., per `RankBrouwer.agda`'s preamble) are
+  still required before `rank-mono` and the unbudgeted
+  `wf-<ᵇʳᶠ` chain close.
 * Unbudgeted `_<ᵇʳᶠ_` global WF (see Previous rung state).
 * Push the surface-route WF back into `Order.agda`'s main
   `_<ᵇ_` package once `_<ᵇ⁺_` WF lands.

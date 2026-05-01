@@ -30,6 +30,7 @@ open import Echo using
   ; Echo-comp-pent-Σ-assoc-to-from
   ; Echo-comp-iso
   ; cancel-iso
+  ; Echo-comp-pent-Σ-assoc
   )
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
@@ -266,7 +267,9 @@ open import Ordinal.Brouwer.Arithmetic using
 
 -- Phase 1.3 (2026-04-28) — recursive `_≤′_` per Echidna SA + swarm
 -- recommendation. Bullseye lemma `osuc-mono-≤′ p = p` is identity.
--- Limit case of `≤′-refl` deferred (see module preamble).
+-- Limit case of `≤′-refl` discharged via `≤′-lim` (2026-04-30).
+-- WF for the recursive order landed 2026-05-01: `wf-<′` mirrors
+-- `wf-<` with predecessor lemmas reducing through computed shapes.
 open import Ordinal.Brouwer.Phase13 using
   ( _≤′_
   ; _<′_
@@ -274,6 +277,13 @@ open import Ordinal.Brouwer.Phase13 using
   ; osuc-mono-<′
   ; ≤′-zero
   ; oz<′osuc
+  ; ≤′-lim
+  ; ≤′-refl
+  ; f-in-lim′
+  ; ≤′-trans
+  ; pred-of-osuc-<′
+  ; pred-of-olim-<′
+  ; wf-<′
   )
 
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's

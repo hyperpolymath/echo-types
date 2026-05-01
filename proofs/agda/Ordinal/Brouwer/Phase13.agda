@@ -1,71 +1,52 @@
 {-# OPTIONS --safe --without-K #-}
 
--- Phase 1.3 — STATUS: scaffolding only.  The recursive `_≤′_`
--- definition lands here, plus `osuc-mono-≤′ p = p` (the bullseye
--- lemma).  `≤′-refl` for the `olim f` case requires `f-in-lim′`,
--- which is the documented obstacle described below.
---
--- This module compiles under `--safe --without-K`.  Anything that
--- depends on the open `f-in-lim′` is left out so the file is honest:
--- what's here is provable, what's not here is exactly the work
--- remaining.
---
--- ## Background
---
--- Echidna's SA design-search recommended switching `Ordinal.Brouwer._≤_`
--- to a fully-recursive shape (energy [0, 0, 1, 0]; both single-chain
--- and 4-agent swarm unanimous).  The data-style alternative
--- (`data + ≤-cong-suc`) was tested by hand-trace and rejected — the
--- new constructor cascades into mutually-recursive `pred-of-osuc`
--- proofs that need to be redesigned alongside.
+-- Phase 1.3 — recursive `_≤′_` per Echidna's SA + 4-agent swarm
+-- recommendation (energy [0, 0, 1, 0]; both unanimous).  Replaces
+-- the data-style `Ordinal.Brouwer._≤_` for the cases where
+-- `osuc-mono` and structural shape matter, while leaving the
+-- data-style intact so the existing `wf-<` proof keeps composing.
 --
 -- See `echidna/docs/decisions/2026-04-28-corpus-and-design-search.md`
 -- and `echo-types/docs/echidna-design-search-2026-04-28.adoc` for
 -- the full design-search log.
 --
--- ## What's done
+-- ## What's here
 --
--- * Recursive `_≤′_` defined; passes Agda's coverage + termination
---   checks under `--safe --without-K`.
--- * `osuc-mono-≤′ p = p` — the Phase-1.3 bullseye is identity.
--- * `≤′-zero` — definitional from the `oz ≤ _ = ⊤` clause.
--- * `osuc-mono-<′` — strict version, also identity-shaped.
+-- * Recursive `_≤′_` and derived `_<′_`.
+-- * `osuc-mono-≤′ p = p`, `osuc-mono-<′ p = p` — the Phase-1.3
+--   bullseyes collapse to identity under the recursive shape.
+-- * `≤′-zero`, `oz<′osuc` — trivial corollaries.
+-- * `≤′-lim` — the source-side limit-introduction lemma.
+-- * `≤′-refl` — reflexivity, with the `olim f` case discharged by
+--   `≤′-lim n (≤′-refl {f n})`.  The recursive call on `f n` is
+--   structurally smaller than `olim f` per Agda's subterm relation
+--   for higher-order inductive constructors.
+-- * `f-in-lim′` — direct corollary `f n ≤′ olim f`, the recursive
+--   analogue of `Ordinal.Brouwer.f-in-lim`.
+-- * `≤′-trans` — transitivity, by lex structural recursion on
+--   `(α, β, γ)`.  Together with `≤′-refl` this makes `_≤′_` a
+--   preorder; `_<′_` strict-order companions follow downstream.
+-- * `wf-<′` — well-foundedness of `_<′_`, by structural induction
+--   on `Ord` mirroring `Ordinal.Brouwer.wf-<`.  Predecessor lemmas
+--   `pred-of-osuc-<′` and `pred-of-olim-<′` reduce through the
+--   computed shape of `_<′_` rather than constructor pattern-match.
 --
--- ## What's open
+-- ## Closure of the original obstacle
 --
--- * `≤′-refl` for the `olim f` case is `(n : ℕ) → f n ≤′ olim f`,
---   which requires `f-in-lim′ : ∀ f n → f n ≤′ olim f`.  The
---   `f-in-lim′` proof has three sub-cases (per `f n`'s constructor);
---   the `oz` and `osuc α` cases are routine, but the `olim g` case
---   (where `f n = olim g`) is the documented obstacle.
---
---   The `olim g` case wants `(m : ℕ) → g m ≤′ olim f`.  Termination is
---   fine — `g m` is strictly smaller than `f n = olim g`, so structural
---   recursion goes through — but Agda's `with f n` pattern loses the
---   equation `f n ≡ olim g`, leaving the goal in a shape Foetus can't
---   verify is decreasing.
---
---   Two viable closure paths:
---
---   1.  Mutual definition with `≤′-trans`.  Then the `olim g` case
---       becomes `≤′-trans (f-in-lim′ g m) (f-in-lim′ f n)` — both
---       calls are structurally smaller, and Foetus accepts mutual
---       structural recursion when each call shrinks one of the
---       lex-ordered measures.
---
---   2.  Strengthen `f-in-lim′` to carry an accessibility witness for
---       the limit — `(∀ k → Acc _<′_ (f k)) → f n ≤′ olim f`.  This
---       makes the recursion structure visible to Foetus directly.
---
--- The Phase-1.3 follow-up commit lands either path; for now the
--- recursive shape stands up + the bullseye lemma compiles.
+-- The earlier draft deferred `≤′-refl` for `olim f` because the
+-- naïve `f-in-lim′` recursion on `f n`'s constructor lost the
+-- equation `f n ≡ olim g` under `with`, blocking Foetus.  The
+-- closure here factors through `≤′-lim`, which recurses on the
+-- source α (not on `f n`).  Termination is then immediate: `α`
+-- shrinks structurally on each recursive call, independent of `f`.
 
 module Ordinal.Brouwer.Phase13 where
 
 open import Data.Nat.Base using (ℕ)
-open import Data.Product.Base using (Σ)
+open import Data.Product.Base using (Σ; _,_)
 open import Data.Unit.Base using (⊤; tt)
-open import Data.Empty using (⊥)
+open import Data.Empty using (⊥; ⊥-elim)
+open import Induction.WellFounded using (Acc; acc; WellFounded)
 
 open import Ordinal.Brouwer using (Ord; oz; osuc; olim)
 
@@ -116,3 +97,95 @@ osuc-mono-<′ p = p
 
 oz<′osuc : ∀ {α} → oz <′ osuc α
 oz<′osuc {α} = ≤′-zero {α}
+
+----------------------------------------------------------------------------
+-- Limit-introduction and reflexivity (Phase-1.3 closure)
+----------------------------------------------------------------------------
+
+-- Source-side limit introduction.  Any α that is `≤′`-below some
+-- branch `f n` is also `≤′`-below the limit `olim f`.  Structural
+-- recursion on the source α; the implicit `f` is threaded
+-- unchanged.
+--
+-- This is the lemma that breaks the original obstacle.  The blocked
+-- attempt recursed on `f n`'s constructor, which loses the equation
+-- under `with`.  Recursing on α is fine: each constructor of the
+-- source admits a direct construction of the limit-shaped result.
+
+-- `f` is explicit because Agda can't infer it from the value `f n`
+-- (the unification problem `_f_ n = f n` is non-unique — many
+-- functions agree at a single point).  Each call site passes the
+-- intended `f` directly.
+
+≤′-lim : ∀ {α} (f : ℕ → Ord) (n : ℕ) → α ≤′ f n → α ≤′ olim f
+≤′-lim {oz}     f n p = tt
+≤′-lim {osuc α} f n p = n , p
+≤′-lim {olim g} f n p = λ m → ≤′-lim {α = g m} f n (p m)
+
+-- Reflexivity.  Structural recursion on α; the `olim f` case
+-- threads through `≤′-lim` at each branch.
+
+≤′-refl : ∀ {α} → α ≤′ α
+≤′-refl {oz}     = tt
+≤′-refl {osuc α} = ≤′-refl {α}
+≤′-refl {olim f} = λ n → ≤′-lim {α = f n} f n (≤′-refl {f n})
+
+-- Each branch of a limit sits at-or-below it.  Recursive analogue
+-- of `Ordinal.Brouwer.f-in-lim`.  Falls out of `≤′-lim` plus
+-- reflexivity at the branch.
+
+f-in-lim′ : ∀ f n → f n ≤′ olim f
+f-in-lim′ f n = ≤′-lim {α = f n} f n (≤′-refl {f n})
+
+----------------------------------------------------------------------------
+-- Transitivity (Phase-1.3 round-out)
+----------------------------------------------------------------------------
+
+-- Recursion on (α, β, γ) under the lex order.  Each non-base case
+-- either terminates immediately on a ⊥ leg or recurses with one of
+-- the three positions a strict structural subterm and the others
+-- syntactically unchanged.  Agda's structural-recursion checker
+-- accepts this as lex-decreasing; no explicit measure annotation
+-- needed.
+
+≤′-trans : ∀ {α β γ} → α ≤′ β → β ≤′ γ → α ≤′ γ
+≤′-trans {oz}                                 _       _       = tt
+≤′-trans {osuc _} {oz}                        p       _       = ⊥-elim p
+≤′-trans {osuc _} {osuc _} {oz}               _       q       = ⊥-elim q
+≤′-trans {osuc α} {osuc β} {osuc γ}           p       q       = ≤′-trans {α} {β} {γ} p q
+≤′-trans {osuc α} {osuc β} {olim h}           p       (k , q) = k , ≤′-trans {osuc α} {osuc β} {h k} p q
+≤′-trans {osuc α} {olim g} {γ}                (n , p) q       = ≤′-trans {osuc α} {g n} {γ} p (q n)
+≤′-trans {olim f} {β} {γ}                     p       q       = λ n → ≤′-trans {f n} {β} {γ} (p n) q
+
+----------------------------------------------------------------------------
+-- Well-foundedness of `_<′_` (path (a) of the handoff)
+----------------------------------------------------------------------------
+
+-- The data-style `wf-<` proof recurses on the three constructors of
+-- `_≤_`.  Here `_≤′_` is recursive — there are no constructors to
+-- pattern-match on — so the predecessor lemmas reduce predecessors
+-- through the computed shape of `_<′_`:
+--
+--   β <′ osuc α  ≡  osuc β ≤′ osuc α  ≡  β ≤′ α
+--   β <′ olim f  ≡  Σ ℕ (λ n → β <′ f n)
+--   β <′ oz      ≡  ⊥
+--
+-- so the `osuc` case is "lift hypothetical predecessors of β through
+-- ≤′-trans to predecessors of α", and the `olim` case is the same
+-- branch-selection move as the data-style `pred-of-olim`.
+
+pred-of-osuc-<′ : ∀ {α} → Acc _<′_ α → ∀ {β} → β <′ osuc α → Acc _<′_ β
+pred-of-osuc-<′ {α} (acc rsα) {β} p =
+  acc (λ {γ} q → rsα (≤′-trans {osuc γ} {β} {α} q p))
+
+pred-of-olim-<′ : ∀ {f} → (∀ n → Acc _<′_ (f n)) → ∀ {β} → β <′ olim f → Acc _<′_ β
+pred-of-olim-<′ wfs (n , q) with wfs n
+... | acc rs = rs q
+
+-- Top-level WF: structural induction on `Ord`.  Mirrors `wf-<`'s
+-- shape; differs only in the predecessor lemmas above.
+
+wf-<′ : WellFounded _<′_
+wf-<′ oz       = acc (λ {β} ())
+wf-<′ (osuc α) = acc (pred-of-osuc-<′ (wf-<′ α))
+wf-<′ (olim f) = acc (pred-of-olim-<′ (λ n → wf-<′ (f n)))

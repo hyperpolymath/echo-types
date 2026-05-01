@@ -153,7 +153,7 @@ coarser bounds.
 *Status.* Entirely speculative. Requires a formal definition of
 approximate echo first.
 
-### Q4. Associativity — partially landed
+### Q4. Associativity — landed
 
 *Question.* Does the accumulation isomorphism above satisfy the
 pentagon coherence for three-fold composition? I.e., for
@@ -161,16 +161,19 @@ pentagon coherence for three-fold composition? I.e., for
 associating `Echo((h ∘ g) ∘ f) ≃ Echo(h ∘ (g ∘ f))` yield equivalent
 iso's?
 
-*Answer (partial).* Yes for the load-bearing projections. The two
-pentagon-style lemmas `Echo-comp-iso-pent-B` and
-`Echo-comp-iso-pent-echo` (both `refl`) confirm that the two
-natural factorings — inner-first `(f, h∘g)` versus outer-first
-`(g∘f, h)` then `(f, g)` — produce the same `f x` at the B-component
-and the same `(x , refl) : Echo f (f x)` at the Echo-f witness. The
-full Σ-associativity iso between the two nested Σ-shapes (which
-differ by whether the intermediate `c : C` with `g b ≡ c` is
-carried or absorbed) is the remaining open piece of pentagon
-coherence.
+*Answer.* Yes, at both levels. The two projection-pentagon lemmas
+`Echo-comp-iso-pent-B` and `Echo-comp-iso-pent-echo` (both `refl`)
+confirm that the two natural factorings — inner-first `(f, h∘g)`
+versus outer-first `(g∘f, h)` then `(f, g)` — produce the same
+`f x` at the B-component and the same `(x , refl) : Echo f (f x)`
+at the Echo-f witness. The full Σ-associativity iso between the
+two nested Σ-shapes (which differ by whether the intermediate
+`c : C` with `g b ≡ c` is carried or absorbed) lands as
+`Echo-comp-pent-Σ-assoc-{to, from, from-to, to-from}` and is
+packaged as a stdlib `Function.Bundles._↔_` via
+`Echo-comp-pent-Σ-assoc`. Both round-trips reduce definitionally
+once `g b ≡ c` has been pinned, so this is a strict iso inside
+`--safe --without-K`.
 
 *Evidence this is the right shape.* Both lemmas land as `refl`
 without any `trans-assoc` / `cong-trans` manipulation, because
