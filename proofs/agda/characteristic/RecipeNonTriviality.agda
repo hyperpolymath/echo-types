@@ -141,12 +141,12 @@ open import characteristic.RoleMode               using
   ( applyRole to applyRoleM
   ; applyMode to applyModeRM
   )
-open import characteristic.ModeGrade              using
-  ( ModeGEcho
-  ; applyMode
+open import characteristic.ModeGraded             using
+  ( applyMode
   )
   renaming
-  ( applyGrade to applyGradeM
+  ( MGEcho     to ModeGEcho
+  ; applyGrade to applyGradeM
   )
 
 ------------------------------------------------------------------------
