@@ -369,3 +369,24 @@ cancel-iso f g s s-left s-right triangle₁ triangle₂ y =
     (λ e → cancel-iso-from f g s s-right {y = y} e)
     (λ e → cancel-iso-to-from f g s s-left s-right triangle₂ e)
     (λ e → cancel-iso-from-to f g s s-left s-right triangle₁ e)
+
+-- Pentagon Σ-associativity iso, packaged as a ↔. The four
+-- directional pieces (`Echo-comp-pent-Σ-assoc-{to, from, from-to,
+-- to-from}`) form a strict iso under `--safe --without-K`; the
+-- round-trips reduce definitionally once `g b ≡ c` has been pinned
+-- to `refl`, so no extra hypotheses are needed.
+--
+-- Closes `docs/echo-types/composition.md` §A4 ("Pentagon
+-- coherence — full Σ-associativity iso").
+
+Echo-comp-pent-Σ-assoc :
+  ∀ {a b c d} {A : Set a} {B : Set b} {C : Set c} {D : Set d}
+  (f : A → B) (g : B → C) (h : C → D) (y : D) →
+  Σ C (λ c → Σ B (λ b → Echo f b × (g b ≡ c)) × (h c ≡ y)) ↔
+  Σ B (λ b → Echo f b × (h (g b) ≡ y))
+Echo-comp-pent-Σ-assoc f g h y =
+  mk↔ₛ′
+    (λ r → Echo-comp-pent-Σ-assoc-to      f g h {y = y} r)
+    (λ r → Echo-comp-pent-Σ-assoc-from    f g h {y = y} r)
+    (λ r → Echo-comp-pent-Σ-assoc-to-from f g h r)
+    (λ r → Echo-comp-pent-Σ-assoc-from-to f g h r)
