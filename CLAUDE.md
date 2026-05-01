@@ -94,12 +94,13 @@ for f in proofs/agda/*.agda proofs/agda/Ordinal/*.agda proofs/agda/Ordinal/Buchh
 done
 ```
 
-Requires Agda ≥ 2.6.3 with stdlib ≥ 2.0. On Ubuntu 24.04 with apt's
+Requires Agda ≥ 2.6.3 with stdlib ≥ 2.3 (CI installs v2.3; see
+`.github/workflows/agda.yml`). On Ubuntu 24.04 with apt's
 `agda`/`agda-stdlib` (which ships stdlib 1.7.3 and lacks
-`Data.Product.Base`), check out stdlib 2.0 from source:
+`Data.Product.Base`), check out stdlib 2.3 from source:
 ```
-git clone --depth 1 --branch v2.0 https://github.com/agda/agda-stdlib.git /opt/agda-stdlib
-sed -i 's/^name: standard-library-2.0$/name: standard-library/' /opt/agda-stdlib/standard-library.agda-lib
+git clone --depth 1 --branch v2.3 https://github.com/agda/agda-stdlib.git /opt/agda-stdlib
+sed -i 's/^name: standard-library-2.3$/name: standard-library/' /opt/agda-stdlib/standard-library.agda-lib
 mkdir -p ~/.agda && echo /opt/agda-stdlib/standard-library.agda-lib > ~/.agda/libraries
 ```
 Then `LC_ALL=C.UTF-8 agda proofs/agda/All.agda` exits 0.
