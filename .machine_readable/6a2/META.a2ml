@@ -1,5 +1,5 @@
 ;;; ============================================================
-;;; META.scm — echo-types architecture decisions from EI-2
+;;; META.a2ml — echo-types architecture decisions from EI-2
 ;;; ============================================================
 ;;;
 ;;; Format: meta-a2ml (S-expression, SRFI-30 conventions)
