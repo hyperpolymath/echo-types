@@ -1,0 +1,19 @@
+; SPDX-License-Identifier: PMPL-1.0-or-later
+; Dustfile.a2ml — recovery & rollback for echo-types.
+
+(contractile :kind dust :version 1)
+
+(dust source-rollback
+  :doc "Revert all source changes to last commit."
+  :tag "rollback"
+  :cmd "git checkout HEAD -- .")
+
+(dust clean-build
+  :doc "Remove all build artifacts (Agda .agdai files, Rust target/)."
+  :tag "clean"
+  :cmd "find proofs -name '*.agdai' -delete; rm -rf arghda-core/target")
+
+(dust resync-from-template
+  :doc "Re-run scaffold-component.{py,my} to restore drifted boilerplate."
+  :tag "scaffold"
+  :cmd "echo 'Manual: run scaffold-component for echo-types resync.'")

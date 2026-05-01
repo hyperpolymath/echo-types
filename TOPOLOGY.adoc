@@ -1,0 +1,63 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= echo-types: topology
+:toc:
+
+== What this repo contains
+
+[source]
+----
+echo-types/
+├── proofs/
+│   └── agda/                    # Agda proofs — the heart of the library
+│       ├── Echo.agda            # core fiber type + morphism action
+│       ├── EchoCharacteristic.agda
+│       ├── EchoExamples.agda
+│       ├── Echo*Bridge.agda     # cross-system bridges (linear/graded/tropical/etc.)
+│       ├── Ordinal/             # Buchholz / Veblen track
+│       ├── examples/            # concrete usage demos
+│       └── characteristic/      # characteristic-style results (RoleGraded, etc.)
+├── arghda-core/                 # Rust crate — companion tooling (TBD scope)
+├── docs/                        # supplementary documentation
+│   ├── EI2_REPORT.adoc          # investigation EI-2 working record
+│   ├── gate-1-distinct-phenomenon.adoc
+│   ├── gate-2-handoff.adoc
+│   └── ...
+├── .machine_readable/
+│   └── 6a2/                     # STATE/META/ECOSYSTEM/AGENTIC/NEUROSYM/PLAYBOOK.a2ml
+├── contractiles/                # Dust/Intent/Must/Trust source files
+├── .github/workflows/           # CI workflows
+├── .devcontainer/               # Codespaces / VS Code container (TBD)
+├── echo-types.agda-lib          # Agda library declaration
+├── stapeln.toml                 # layered Chainguard container build
+├── Containerfile                # podman-build fallback
+├── Justfile                     # primary command runner
+├── INDEX.adoc                   # legacy file map (parallel to this TOPOLOGY)
+├── readme.adoc + README.md      # legacy duplicate; canonical is README.adoc (rename pending)
+├── roadmap.adoc + roadmap-gates.adoc  # legacy lowercase; canonical is ROADMAP.adoc (rename pending)
+├── flake.nix + flake.lock       # (pending)
+├── guix.scm                     # (pending)
+└── (RSR template files at root)
+----
+
+== Cross-repo dependencies
+
+* `hyperpolymath/standards` — schema references for 6a2 file formats (consumed at the *spec* level, not as code).
+
+== Cross-repo consumers
+
+This is a foundation library; consumers are downstream Agda formalisations and design docs that cite the echo construction. Currently none formally wire `echo-types` as a dependency, though `coord-mcp` has a TODO for dogfooding it (per `hyperpolymath/standards/docs/archive/provenance/coord-mcp/COORD-MCP-TODO.md`).
+
+== Verification posture
+
+[cols="2,1,3"]
+|===
+| Track | Soundness | Notes
+
+| Core echo theorems | constructive Agda, no postulates | `echo-intro`, `map-over`, `map-over-id`, `map-over-comp`, `map-square`
+| Characteristic family | constructive | `collapse-non-injective`, `no-section-*`, `echo-true≢echo-false`, `visible-constraint`
+| Bridge modules | constructive (per bridge) | linear / graded / tropical / choreo / epistemic / CNO / Janus / Dyadic / Ordinal
+| Ordinal Buchholz track | mostly admitted, some closed | `WellFounded`, extended-order tower; closure pending
+| EI-2 (integration recipe) | TERMINATED NEGATIVELY (PATH B) | Per-axis halves proved; full 2D iff theorem parked as not formalisable in safe Agda without postulates
+|===
+
+See `.machine_readable/6a2/STATE.a2ml` for the authoritative per-feature status.

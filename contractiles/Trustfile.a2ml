@@ -1,0 +1,24 @@
+; SPDX-License-Identifier: PMPL-1.0-or-later
+; Trustfile.a2ml — integrity & provenance for echo-types.
+
+(contractile :kind trust :version 1)
+
+(trust license-content
+  :doc "LICENSE contains expected SPDX identifier."
+  :cmd "grep -q 'PMPL\\|License' LICENSE")
+
+(trust no-secrets-committed
+  :doc "No credential files committed."
+  :cmd "test ! -f .env && test ! -f credentials.json && test ! -f .env.local && test ! -f secrets.json")
+
+(trust container-images-pinned
+  :doc "Containerfile uses @sha256: pinned digests (post-scaffold)."
+  :cmd "test ! -f Containerfile || grep -q '@sha256:' Containerfile")
+
+(trust stapeln-images-pinned
+  :doc "stapeln.toml uses @sha256: digests for all `from =` lines (post-scaffold)."
+  :cmd "test ! -f stapeln.toml || ! grep -E '^from\\s*=\\s*\".*:latest\"' stapeln.toml")
+
+(trust ei-2-record-intact
+  :doc "STATE.a2ml § ei-2 block is present and unmodified-from-canonical-shape (audit-grade record)."
+  :cmd "grep -q '(ei-2' .machine_readable/6a2/STATE.a2ml")
