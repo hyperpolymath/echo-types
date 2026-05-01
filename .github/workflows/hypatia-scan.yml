@@ -36,8 +36,8 @@ jobs:
           git clone --depth 1 https://github.com/hyperpolymath/hypatia.git "$HOME/hypatia"
 
       - name: Build Hypatia scanner
-        working-directory: ${{ env.HOME }}/hypatia
         run: |
+          cd "$HOME/hypatia"
           if [ ! -f hypatia-v2 ]; then
             cd scanner && mix deps.get && mix escript.build && mv hypatia ../hypatia-v2
           fi
