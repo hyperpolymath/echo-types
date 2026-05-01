@@ -30,7 +30,14 @@ jobs:
           git clone --depth 1 --branch v2.3 https://github.com/agda/agda-stdlib.git "$STDLIB_DIR"
           echo "stdlib_dir=$STDLIB_DIR" >> "$GITHUB_OUTPUT"
 
-      - name: Register standard library for Agda
+      - name: Fetch absolute-zero library
+        id: absz
+        run: |
+          ABSZ_DIR="$RUNNER_TEMP/absolute-zero"
+          git clone --depth 1 https://github.com/hyperpolymath/absolute-zero.git "$ABSZ_DIR"
+          echo "absz_dir=$ABSZ_DIR" >> "$GITHUB_OUTPUT"
+
+      - name: Register libraries for Agda
         run: |
           mkdir -p "$HOME/.agda"
 
@@ -40,7 +47,13 @@ jobs:
           include: ${{ steps.stdlib.outputs.stdlib_dir }}/src
           EOF
 
-          printf '%s\n' "$STDLIB_LIB" > "$HOME/.agda/libraries"
+          ABSZ_LIB="$RUNNER_TEMP/absolute-zero.agda-lib"
+          cat > "$ABSZ_LIB" <<EOF
+          name: absolute-zero
+          include: ${{ steps.absz.outputs.absz_dir }}/proofs/agda
+          EOF
+
+          printf '%s\n%s\n' "$STDLIB_LIB" "$ABSZ_LIB" > "$HOME/.agda/libraries"
           printf '%s\n' "standard-library" > "$HOME/.agda/defaults"
 
       - name: Typecheck full suite
