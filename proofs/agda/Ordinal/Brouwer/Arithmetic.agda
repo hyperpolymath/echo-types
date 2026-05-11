@@ -3,21 +3,16 @@
 -- Phase 1.2 of the Option B programme (see `docs/buchholz-plan.adoc`).
 --
 -- Ordinal arithmetic on Brouwer notations: *definitions* only.
--- All non-trivial monotonicity proofs are scheduled for Phase 1.3,
--- where they may drive a small redesign of `_≤_` in the base
--- `Ordinal.Brouwer` module (the current data-type axiomatisation
--- proves key lemmas like `osuc-mono-≤` only with some care, and
--- the Phase 1.3 work will decide whether to add constructors or
--- switch to a recursive `_≤_`).
+-- All non-trivial monotonicity proofs are in Phase 1.3 (Phase13.agda).
 --
 -- Contents:
 --
--- * `_⊕_` — left-recursive naive ordinal sum. Not Hessenberg; the
---   full natural-sum definition (commutative + bi-monotonic) needs
---   more machinery than pays off for the rank we actually need.
---   This is the cheapest sum that still lets `psi-rank` propagate
---   ordinal-argument descent via right-monotonicity, which is the
---   only direction we need for Phase 2.2.
+-- * `_⊕_` — right-recursive ordinal sum. Recursion is on the right
+--   argument, mirroring `_≤′_`'s second-argument structure, so that
+--   `⊕-mono-<-right` and `⊕-mono-≤-right` are provable by structural
+--   induction on `γ` (see issue #34 for the counterexample that ruled
+--   out the original left-recursive form). Right-unit `α ⊕ oz = α` is
+--   definitional; left-unit `oz ⊕ β = β` is propositional (Phase 1.3).
 -- * `nat-to-ord` — the standard successor-stack encoding of ℕ.
 -- * `ω-rank : OmegaIndex → Ord` — rank for Ω-markers. `fin n` maps
 --   to `osuc^(n+1) oz`, `ω` maps to the canonical Brouwer ω.
@@ -35,19 +30,20 @@ open import Ordinal.OmegaMarkers using (OmegaIndex; fin; ω)
 open import Ordinal.Brouwer using (Ord; oz; osuc; olim)
 
 ----------------------------------------------------------------------------
--- Naive ordinal sum
+-- Ordinal sum (right-recursive)
 ----------------------------------------------------------------------------
 
--- Left-recursive: zero on the left is the unit definitionally,
--- successor on the left lifts the successor past the sum, limit on
--- the left distributes under the sum.
+-- Right-recursive: right-unit `α ⊕ oz = α` is definitional; successor
+-- on the right lifts past the sum; limit on the right distributes.
+-- This direction aligns with `_≤′_`'s second-argument recursion and
+-- makes `⊕-mono-<-right` provable by induction on γ (Phase 1.3).
 
 infixl 6 _⊕_
 
 _⊕_ : Ord → Ord → Ord
-oz      ⊕ β = β
-osuc α  ⊕ β = osuc (α ⊕ β)
-olim f  ⊕ β = olim (λ n → f n ⊕ β)
+α ⊕ oz      = α
+α ⊕ osuc β  = osuc (α ⊕ β)
+α ⊕ olim f  = olim (λ n → α ⊕ f n)
 
 ----------------------------------------------------------------------------
 -- Rank target for Ω-indices
@@ -95,10 +91,7 @@ open import Ordinal.Brouwer using (one; two)
 ω-rank-fin1 : ω-rank (fin 1) ≡ two
 ω-rank-fin1 = refl
 
--- `psi-rank ν oz = osuc (ω-rank ν ⊕ oz)`. Since `⊕`'s right-identity
--- is only up to `≤` (proved in Phase 1.3), we don't state `≡` here.
+-- Right-unit of `⊕` is definitional.
 
--- Left-unit of `⊕` is definitional.
-
-⊕-oz-left : ∀ β → oz ⊕ β ≡ β
-⊕-oz-left _ = refl
+⊕-oz-right : ∀ α → α ⊕ oz ≡ α
+⊕-oz-right _ = refl

@@ -30,6 +30,13 @@
 --   on `Ord` mirroring `Ordinal.Brouwer.wf-<`.  Predecessor lemmas
 --   `pred-of-osuc-<′` and `pred-of-olim-<′` reduce through the
 --   computed shape of `_<′_` rather than constructor pattern-match.
+-- * `≤′-self-osuc` — every ordinal is below its successor: x ≤′ osuc x.
+-- * `≤′-weaken-osuc` — weakening: x ≤′ y → x ≤′ osuc y.
+-- * `⊕-left-≤-sum` — left addend ≤ sum: α ≤′ α ⊕ γ.
+-- * `⊕-mono-≤-right` — `_⊕_` is monotone on the right w.r.t. `≤′`.
+-- * `⊕-mono-<-right` — `_⊕_` is strictly monotone on the right
+--   w.r.t. `<′`.  Closes the `<ᵇʳᶠ-ψα` and `<ᵇʳᶠ-+2` cases of
+--   `rank-mono` in `Ordinal.Buchholz.RankBrouwer` (issue #34).
 --
 -- ## Closure of the original obstacle
 --
@@ -49,6 +56,7 @@ open import Data.Empty using (⊥; ⊥-elim)
 open import Induction.WellFounded using (Acc; acc; WellFounded)
 
 open import Ordinal.Brouwer using (Ord; oz; osuc; olim)
+open import Ordinal.Brouwer.Arithmetic using (_⊕_)
 
 ----------------------------------------------------------------------------
 -- Recursive `_≤′_` per the Echidna SA recommendation
@@ -189,3 +197,69 @@ wf-<′ : WellFounded _<′_
 wf-<′ oz       = acc (λ {β} ())
 wf-<′ (osuc α) = acc (pred-of-osuc-<′ (wf-<′ α))
 wf-<′ (olim f) = acc (pred-of-olim-<′ (λ n → wf-<′ (f n)))
+
+----------------------------------------------------------------------------
+-- x ≤′ osuc x (every ordinal is strictly below its successor)
+----------------------------------------------------------------------------
+
+-- Structural recursion on x.  The `olim f` case uses f-in-lim′ to
+-- route through the branch: f n ≤′ osuc (f n) ≤′ osuc (olim f).
+-- The last step holds because `osuc (f n) ≤′ osuc (olim f)` reduces
+-- definitionally to `f n ≤′ olim f`, which is f-in-lim′.
+
+≤′-self-osuc : ∀ x → x ≤′ osuc x
+≤′-self-osuc oz       = tt
+≤′-self-osuc (osuc x) = ≤′-self-osuc x
+≤′-self-osuc (olim f) = λ n →
+  ≤′-trans {f n} {osuc (f n)} {osuc (olim f)}
+    (≤′-self-osuc (f n))
+    (f-in-lim′ f n)
+
+-- Weakening: x ≤′ y → x ≤′ osuc y.  One-liner via transitivity and
+-- ≤′-self-osuc; no case analysis needed.
+
+≤′-weaken-osuc : ∀ {x y} → x ≤′ y → x ≤′ osuc y
+≤′-weaken-osuc {x} {y} p = ≤′-trans {x} {y} {osuc y} p (≤′-self-osuc y)
+
+----------------------------------------------------------------------------
+-- α ≤′ α ⊕ γ (left addend is always ≤ the sum)
+----------------------------------------------------------------------------
+
+-- Structural recursion on γ.  Right-recursive `_⊕_` is essential:
+-- each case of γ reduces `α ⊕ γ` to a form whose `_≤′_` target is
+-- immediately dischargeable.
+
+⊕-left-≤-sum : ∀ {α} γ → α ≤′ α ⊕ γ
+⊕-left-≤-sum {α}        oz       = ≤′-refl {α}
+⊕-left-≤-sum {α}        (osuc γ') = ≤′-weaken-osuc {α} {α ⊕ γ'} (⊕-left-≤-sum {α} γ')
+⊕-left-≤-sum {α}        (olim g)  =
+  ≤′-trans {α} {α ⊕ g 0} {α ⊕ olim g}
+    (⊕-left-≤-sum {α} (g 0))
+    (f-in-lim′ (λ n → α ⊕ g n) 0)
+
+----------------------------------------------------------------------------
+-- Right monotonicity of `_⊕_` (issue #34 fix)
+----------------------------------------------------------------------------
+
+-- `⊕-mono-<-right` and `⊕-mono-≤-right` are mutually recursive.
+-- Both induct primarily on γ (for <) or β (for ≤), with the other
+-- position decreasing in cross-calls.  Agda's termination checker
+-- accepts the lex pair (β, γ) as the measure.
+--
+-- Right-recursive `_⊕_` is the enabling change: each constructor of
+-- γ in `⊕-mono-<-right` matches exactly one clause of `_≤′_`'s
+-- second-argument computation, giving a direct proof path.
+
+mutual
+
+  ⊕-mono-<-right : ∀ {α β γ} → β <′ γ → α ⊕ β <′ α ⊕ γ
+  ⊕-mono-<-right {_} {_} {oz}      ()
+  ⊕-mono-<-right {α} {β} {osuc γ'} p       = ⊕-mono-≤-right {α} {β}  {γ'} p
+  ⊕-mono-<-right {α} {β} {olim g}  (n , p) = n , ⊕-mono-<-right {α} {β} {g n} p
+
+  ⊕-mono-≤-right : ∀ {α β γ} → β ≤′ γ → α ⊕ β ≤′ α ⊕ γ
+  ⊕-mono-≤-right {α} {oz}      {γ}       _       = ⊕-left-≤-sum {α} γ
+  ⊕-mono-≤-right {_} {osuc _}  {oz}      ()
+  ⊕-mono-≤-right {α} {osuc β'} {osuc γ'} p       = ⊕-mono-≤-right {α} {β'} {γ'} p
+  ⊕-mono-≤-right {α} {osuc β'} {olim g}  (n , p) = n , ⊕-mono-<-right {α} {β'} {g n} p
+  ⊕-mono-≤-right {α} {olim f}  {γ}       p       = λ n → ⊕-mono-≤-right {α} {f n} {γ} (p n)
