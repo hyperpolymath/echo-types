@@ -1,23 +1,71 @@
 {-# OPTIONS --safe --without-K #-}
 
--- Echo thermodynamics: minimum viable compile.
+-- EchoThermodynamics: honest finite-domain Landauer / Bennett bounds.
 --
--- Bridge module expressing Landauer-style bit-erasure cost in terms
--- of a (simplified, singleton) fiber size. This is pedagogical, not a
--- quantitative physics claim: FiberSize is always 1 and fiber-energy
--- of identity functions is zero. The load-bearing content is just
--- that CNOs (identity-preserving programs) have fiber-energy = 0.
+-- This module replaces an earlier draft in which `FiberSize` was
+-- hardcoded to 1, which collapsed the Landauer factor `⌊log₂ N⌋`
+-- to zero everywhere and rendered the headline claims vacuous.
+-- The current module imports the actual fiber count
+-- `FiberSize-fin` from `EchoFiberCount` and states the two
+-- extremal bounds — the Bennett (reversible) zero-cost case at
+-- `FiberSize = 1`, and the Landauer (full collapse) worst case
+-- at `FiberSize = n`.
+--
+-- Scope and honesty.
+--
+-- * Domain is `Fin n` only. The earlier `ProgramState = ℕ → ℕ`
+--   carrier is gone: counting fibers of a function on an
+--   infinite type is not constructively meaningful here, and
+--   pretending otherwise was the original sin of the deleted
+--   `ECHO-CNO-BRIDGE-SUMMARY.md`.
+--
+-- * The Boltzmann constant `k` and temperature `T` live in
+--   arbitrary natural-number units. Quantitative physics is not
+--   the goal — the goal is an honest *shape* for the bound:
+--   linear in `k`, linear in `T`, logarithmic in the fiber
+--   count.
+--
+-- * `bennett-reversible` is stated as a corollary of
+--   `FiberSize-fin ≡ 1` (the `EchoFiberCount.FiberSize-fin-id-zero`
+--   instance discharges this for `id : Fin (suc m) → Fin (suc m)`
+--   at index zero) and `⌊log₂ 1 ⌋ ≡ 0`. The Bennett intuition —
+--   reversible computations preserve all information, hence
+--   erasure cost is zero — is captured exactly at the points
+--   where the count is one.
+--
+-- * `landauer-collapse` is the worst-case shape:
+--   `(∀ x → f x ≡ y) → bound ≡ k · T · ⌊log₂ n⌋`. Constant maps
+--   are the canonical instance.
+--
+-- Headlines (pinned in Smoke.agda):
+--
+--   * landauer-bound                  -- the bound shape itself
+--   * fiber-erasure-bound             -- bound applied at a fiber
+--   * bennett-reversible              -- FiberSize ≡ 1 ⇒ bound ≡ 0
+--   * bennett-reversible-id-zero      -- id at zero: bound ≡ 0
+--   * landauer-collapse               -- constant map: bound = k·T·⌊log₂ n⌋
 
 module EchoThermodynamics where
 
-open import Data.Nat.Base using (ℕ; zero; suc; _+_; _*_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Function.Base                         using (_∘_)
+import      Data.Nat.Base                         as ℕ
+open        ℕ                                     using (ℕ; _*_)
+open import Data.Nat.Properties                   using (*-zeroʳ)
+open import Data.Nat.Logarithm                    using (⌊log₂_⌋; ⌊log₂[2^n]⌋≡n)
+open import Data.Fin.Base                         using (Fin; zero)
+open import Relation.Nullary.Decidable.Core       using (Dec)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym; trans)
 
-open import Echo using (Echo; echo-intro)
+open import EchoFiberCount                        using
+  ( FiberSize-fin
+  ; FiberSize-fin-id-zero
+  ; FiberSize-fin-const
+  ; FiberSize-fin-all-hit
+  )
 
-----------------------------------------------------------------------------
+----------------------------------------------------------------------
 -- Thermodynamic types (simplified units)
-----------------------------------------------------------------------------
+----------------------------------------------------------------------
 
 Temperature : Set
 Temperature = ℕ
@@ -25,65 +73,113 @@ Temperature = ℕ
 Energy : Set
 Energy = ℕ
 
-Information : Set
-Information = ℕ
-
-Entropy : Set
-Entropy = ℕ
-
 -- Boltzmann constant in arbitrary units.
 k : ℕ
 k = 1
 
--- Landauer's principle: minimum energy to erase one bit at temperature T.
-landauer-energy : Temperature → Energy
-landauer-energy T = k * T
+----------------------------------------------------------------------
+-- The bound
+----------------------------------------------------------------------
 
-----------------------------------------------------------------------------
--- Simplified fiber size
-----------------------------------------------------------------------------
+-- Landauer's bound for erasing log₂ n bits at temperature T.
+-- Linear in T, logarithmic (floor) in n. The `⌊log₂ 0 ⌋ = 0`
+-- and `⌊log₂ 1 ⌋ = 0` corner cases naturally give zero — there
+-- is nothing to erase when the alternatives count is below 2.
 
--- Fiber size as a natural number. Deliberately simplified to 1 at this
--- stage; a real count would require decidable equality on the codomain
--- plus an enumeration of preimages, which this module does not yet have.
-FiberSize : ∀ {a b} {A : Set a} {B : Set b} (f : A → B) (y : B) → ℕ
-FiberSize f y = 1
+landauer-bound : Temperature → ℕ → Energy
+landauer-bound T n = k * T * ⌊log₂ n ⌋
 
--- Energy dissipation for a single-bit erasure at given temperature,
--- scaled by the simplified fiber size (= 1).
-fiber-energy : ∀ {a b} {A : Set a} {B : Set b} (f : A → B) (y : B) → Temperature → Energy
-fiber-energy f y T = landauer-energy T * FiberSize f y
+-- Erasure bound for the fiber of `f : Fin n → B` over `y`.
+-- The erasure cost is set by how many domain points are
+-- collapsed onto `y` — exactly the fiber count.
 
--- Thermodynamic cost of computing f on input x at temperature T.
-echo-energy-cost : ∀ {a b} {A : Set a} {B : Set b} (f : A → B) (x : A) → Temperature → Energy
-echo-energy-cost f x T = fiber-energy f (f x) T
+fiber-erasure-bound :
+  ∀ {b} {B : Set b} {n : ℕ}
+  (f : Fin n → B) (y : B) →
+  ((y₁ y₂ : B) → Dec (y₁ ≡ y₂)) →
+  Temperature → Energy
+fiber-erasure-bound f y _≟_ T = landauer-bound T (FiberSize-fin f y _≟_)
 
-----------------------------------------------------------------------------
--- CNO (identity-preserving) thermodynamic properties
-----------------------------------------------------------------------------
+----------------------------------------------------------------------
+-- Auxiliary: ⌊log₂ 1⌋ ≡ 0.
+--
+-- Specialisation of `⌊log₂[2^n]⌋≡n` at `n = 0`, exploiting that
+-- `2 ^ 0 = 1` definitionally. Bennett's reversible-computation
+-- bound runs on this lemma plus `*-zeroʳ`.
+----------------------------------------------------------------------
 
--- Abstract program state.
-ProgramState : Set
-ProgramState = ℕ → ℕ
+⌊log₂1⌋≡0 : ⌊log₂ 1 ⌋ ≡ 0
+⌊log₂1⌋≡0 = ⌊log₂[2^n]⌋≡n 0
 
--- CNO modelled as identity on ProgramState.
-cno-identity : ProgramState → ProgramState
-cno-identity s = s
+----------------------------------------------------------------------
+-- bennett-reversible
+--
+-- If the fiber over `y` has size 1 — exactly one preimage —
+-- then the erasure bound is zero at every temperature. This is
+-- the constructive content of the Bennett picture: a reversible
+-- computation has no fan-in, hence no thermodynamically
+-- mandatory dissipation under Landauer. Stated as a clean
+-- corollary of `FiberSize-fin ≡ 1` and `⌊log₂ 1⌋ ≡ 0`.
+----------------------------------------------------------------------
 
--- CNOs have unit fiber size (trivially, by FiberSize's simplification).
-cno-fiber-size : ∀ (s : ProgramState) → FiberSize cno-identity s ≡ 1
-cno-fiber-size s = refl
+bennett-reversible :
+  ∀ {b} {B : Set b} {n : ℕ}
+  (f : Fin n → B) (y : B) (_≟_ : (y₁ y₂ : B) → Dec (y₁ ≡ y₂))
+  (T : Temperature) →
+  FiberSize-fin f y _≟_ ≡ 1 →
+  fiber-erasure-bound f y _≟_ T ≡ 0
+bennett-reversible f y _≟_ T fs1
+  rewrite fs1 | ⌊log₂1⌋≡0 = *-zeroʳ (k * T)
 
--- CNOs at temperature zero dissipate zero energy. This is the only
--- strong-form zero-energy statement the simplified FiberSize lets us
--- prove: landauer-energy 0 = 0 * FiberSize = 0. The stronger claim
--- "CNOs dissipate zero energy at every temperature" is not yet
--- discharged — it needs FiberSize to track actual preimages.
-cno-zero-energy-at-zero : ∀ (s : ProgramState) →
-                          fiber-energy cno-identity s 0 ≡ 0
-cno-zero-energy-at-zero s = refl
+----------------------------------------------------------------------
+-- bennett-reversible-id-zero
+--
+-- Concrete instance of `bennett-reversible` for the identity map
+-- on `Fin (suc m)` at index `zero`. The fiber size is 1 by
+-- `FiberSize-fin-id-zero`, hence the erasure bound is 0.
+----------------------------------------------------------------------
 
--- Echo-cost at temperature zero is likewise zero, for any function.
-echo-cost-at-zero : ∀ {a b} {A : Set a} {B : Set b} (f : A → B) (x : A) →
-                    echo-energy-cost f x 0 ≡ 0
-echo-cost-at-zero f x = refl
+bennett-reversible-id-zero :
+  ∀ {m : ℕ} (_≟_ : (a b : Fin (ℕ.suc m)) → Dec (a ≡ b))
+  (T : Temperature) →
+  fiber-erasure-bound {n = ℕ.suc m} (λ x → x) zero _≟_ T ≡ 0
+bennett-reversible-id-zero {m} _≟_ T =
+  bennett-reversible (λ x → x) zero _≟_ T (FiberSize-fin-id-zero _≟_)
+
+----------------------------------------------------------------------
+-- landauer-collapse
+--
+-- The worst-case shape: if every input maps to the same `y`,
+-- the fiber size is exactly `n`, and the erasure bound is the
+-- full Landauer cost `k · T · ⌊log₂ n⌋`. The constant function
+-- `(λ _ → y₀)` is the canonical instance — every Fin-index is
+-- collapsed onto a single output.
+----------------------------------------------------------------------
+
+landauer-collapse :
+  ∀ {b} {B : Set b} {n : ℕ}
+  (f : Fin n → B) (y : B) (_≟_ : (y₁ y₂ : B) → Dec (y₁ ≡ y₂))
+  (T : Temperature) →
+  (∀ x → f x ≡ y) →
+  fiber-erasure-bound f y _≟_ T ≡ k * T * ⌊log₂ n ⌋
+landauer-collapse f y _≟_ T h =
+  cong (λ z → k * T * ⌊log₂ z ⌋) (FiberSize-fin-all-hit f y _≟_ h)
+
+----------------------------------------------------------------------
+-- Companion remark on what is NOT claimed.
+--
+-- This module proves *bound-shape* lemmas at the finite-domain
+-- `Fin n` level. It does NOT claim:
+--
+--   * that any specific physical computation realises the bound
+--     (the bound is a lower bound; physical reality may dissipate
+--     more);
+--   * that arbitrary "CNO" programs (state-preserving programs
+--     over `ProgramState = ℕ → ℕ`) have zero erasure cost — that
+--     would require either a finite-state restriction or an
+--     extension of `FiberSize-fin` to a measure-theoretic count
+--     on infinite types, neither of which is available here;
+--   * that Shannon-entropy / informational arguments are
+--     formalised — they are not. See `docs/echo-types/roadmap.md`
+--     for the open thermodynamic items.
+----------------------------------------------------------------------

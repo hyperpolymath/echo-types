@@ -1,0 +1,60 @@
+; SPDX-License-Identifier: PMPL-1.0-or-later
+; Mustfile.a2ml — physical state invariants for echo-types.
+
+(contractile :kind must :version 1)
+
+(must license-present
+  :doc "LICENSE file must exist."
+  :cmd "test -f LICENSE")
+
+(must readme-present
+  :doc "README.adoc (or readme.adoc legacy) must exist."
+  :cmd "test -f README.adoc || test -f readme.adoc")
+
+(must security-md
+  :doc "SECURITY.md must exist."
+  :cmd "test -f SECURITY.md")
+
+(must changelog-present
+  :doc "CHANGELOG.md must exist."
+  :cmd "test -f CHANGELOG.md")
+
+(must spdx-headers
+  :doc "Every Agda / Rust source file carries SPDX-License-Identifier."
+  :cmd "find proofs arghda-core -type f \\( -name '*.agda' -o -name '*.rs' \\) | xargs -r grep -L 'SPDX-License-Identifier' | wc -l | grep -q '^0$'")
+
+(must stapeln-config
+  :doc "stapeln.toml must exist."
+  :cmd "test -f stapeln.toml")
+
+(must containerfile-present
+  :doc "Containerfile fallback must exist."
+  :cmd "test -f Containerfile")
+
+(must no-banned-files
+  :doc "No Dockerfile, Makefile, package-lock.json, node_modules, .env."
+  :cmd "test ! -f Dockerfile && test ! -f Makefile && test ! -f package-lock.json && test ! -d node_modules && test ! -f .env && test ! -f .env.local")
+
+(must agda-typechecks
+  :doc "All Agda proofs typecheck (proofs/agda/All.agda is the import-everything target)."
+  :cmd "agda -i proofs/agda proofs/agda/All.agda")
+
+(must no-believe-me
+  :doc "No believe_me in any Agda file (estate-wide ban)."
+  :cmd "find proofs -name '*.agda' | xargs -r grep -l 'believe_me' | wc -l | grep -q '^0$'")
+
+(must no-postulates
+  :doc "No postulate declarations in load-bearing tracks (the user's stated convention)."
+  :cmd "find proofs -name '*.agda' -not -path '*/Ordinal/*' | xargs -r grep -lE '^postulate' | wc -l | grep -q '^0$'")
+
+(must no-sorry
+  :doc "No 'sorry' / 'Admitted' / 'unsafeCoerce' / 'Obj.magic' in source."
+  :cmd "find proofs -name '*.agda' | xargs -r grep -lE 'sorry|Admitted|unsafeCoerce|Obj.magic' | wc -l | grep -q '^0$'")
+
+(must mode-graded-canonical
+  :doc "ModeGraded (with trailing d) is canonical; ModeGrade is forbidden."
+  :cmd "test ! -f proofs/agda/characteristic/ModeGrade.agda")
+
+(must rust-compiles
+  :doc "arghda-core (Rust companion crate) compiles cleanly."
+  :cmd "test ! -d arghda-core || (cd arghda-core && cargo build --release)")

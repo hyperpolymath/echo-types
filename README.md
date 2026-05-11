@@ -65,7 +65,7 @@ Scope-broadening stages now include:
 - affine/linear bridge (strict weakening from full echoes to residues)
 - graded bridge (grade order and compositional degradation law)
 - tropical bridge (argmin-style witness residues under tropical collapse)
-- integration bridge (knowledge preservation under choreography plus controlled graded degradation)
+- integration bridge (cross-decoration commutation via the recipe; the recipe is useful as organising vocabulary but does not carry substantive simultaneous integration content — see `docs/EI2_REPORT.adoc`. Distinctness rests on truncation and 2-cell arguments)
 - indexed/relational/categorical packaging (`EchoIndexed`, `EchoRelational`, `EchoCategorical`, `EchoScope`)
 - cross-ecosystem bridges (`EchoCNOBridge`, `EchoJanusBridge`, `DyadicEchoBridge`, `EchoOrdinal`)
 

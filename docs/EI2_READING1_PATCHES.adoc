@@ -1,0 +1,253 @@
+= EI-2 Obligation 2: READING 1 candidate patches
+[NOTE]
+====
+*SUPERSEDED.* This document is the *original* candidate text for
+this reading. It was drafted before `RoleRole.agda`'s finding (in
+the prior session's phase-5 work) revealed that the non-loss-only
+criterion is necessary but *not* sufficient — even two non-loss-only
+axes paired together don't produce substantive simultaneous
+cross-axis content.
+
+The EI-2 verdict (PATH B) is therefore stronger-negative than this
+reading assumed. See `EI2_REPORT.adoc` for the authoritative
+termination record. This file is kept for historical record of the
+original drafted alternative.
+====
+
+:toc: macro
+
+[.lead]
+*READING 1: strict — accept ModeGrade as falsifier, weaken
+gate-1's claim accordingly.* This document is the candidate
+text for the doc surgery if READING 1 is adopted.
+
+If READING 1 is adopted, three texts change: the gate-1 claim,
+Observation G, and the gate-1 retraction note. Each is a *honest
+narrowing*, not a wholesale retraction — the integration recipe
+is still distinctive, just not uniformly so across all axis
+combinations.
+
+toc::[]
+
+== Patch 1: gate-1-distinct-phenomenon.adoc § The Gate #1 claim
+
+The current claim asserts coherent cross-axis content across all
+five axes "simultaneously". The EI-2 data shows this is too
+strong: the recipe carries non-trivial cross-axis content only
+when at least one axis is non-loss-only.
+
+=== Old text
+
+[quote]
+____
+Echo types are not novel as a construction. They are the
+integration point of fiber-loss reasoning across choreographic,
+epistemic, linear, graded, and tropical structure.
+
+The distinct phenomenon is not "structured irreversibility" —
+that has been studied extensively. It is the *coherent family
+of laws connecting structured irreversibility to those five
+orthogonal axes simultaneously*. The integration theorems are
+echo-shaped because they require fiber-indexing, residue
+tracking, and cross-axis transport in the same statement, and
+no neighbour theory has all three as primitives.
+____
+
+=== New text (READING 1)
+
+[quote]
+____
+Echo types are not novel as a construction. They name a
+*partial* integration point of fiber-loss reasoning across the
+five named axes (choreographic, epistemic, linear, graded,
+tropical). The integration is partial in a structurally
+specific way: cross-axis content is non-trivial only at axis
+combinations involving at least one *non-loss-only* axis (an
+axis with a non-trivial information-preserving transport on
+some strict step). At present, the choreographic axis is the
+only non-loss-only one in the repository.
+
+The distinct phenomenon is the *family of laws connecting
+structured irreversibility to those non-loss-only-anchored
+combinations*. The integration theorems are echo-shaped because
+they require fiber-indexing, residue tracking, and cross-axis
+transport in the same statement, and no neighbour theory has
+all three as primitives. The honest qualification: the recipe's
+coverage is bounded by the non-loss-only axis count; pairs
+without any non-loss-only axis (currently only Mode × Grade)
+yield vacuous commutation theorems and do not contribute to the
+distinctness case.
+____
+
+=== Why this change is consistent with what's been formalised
+
+The seven EI-2 data points (RoleGraded, RoleMode, ModeGrade,
+plus four within RoleModeGrade) show:
+
+* Non-trivial commutation count = 1 in any combination with at
+  least one non-loss-only axis.
+* Non-trivial commutation count = 0 in any combination of only
+  loss-only axes.
+
+The new claim states this directly rather than letting "five
+axes simultaneously" suggest that all C(5,2) = 10 axis pairs
+carry equal weight. Under READING 1, only the pairs containing
+Choreo are currently load-bearing.
+
+== Patch 2: gate-2-handoff.adoc § Observation G
+
+The recipe statement currently presents four "instances" of the
+same recipe without distinguishing their structural roles.
+READING 1 amends this to call out the non-loss-only criterion
+explicitly.
+
+=== Old text (selected portion)
+
+[quote]
+____
+All four current survivors (and the candidate-N5 from
+characteristic.RoleGraded) are instances of the same recipe:
+
+| Decoration | Order | Family | Action
+| ... [table] ...
+
+Each instance produces the same lemma family — composition law,
+join law (where applicable), propositionality of order — with
+the same proof structure. The 2D product additionally produces
+a commutation law on the two independent actions.
+
+This is the practical question to forward to Gate 1: *does any
+neighbouring framework produce the recipe (1D and/or 2D)?*
+____
+
+=== New text (READING 1)
+
+[quote]
+____
+All four current survivors (and the candidate-N5 from
+characteristic.RoleGraded) are instances of the same recipe:
+
+| Decoration | Order | Family | Action | Non-loss-only?
+| ... [table extended with new column] ...
+
+* Choreographic role (EchoChoreo): non-loss-only via
+  client-to-server (formal certificate in
+  proofs/agda/characteristic/ChoreoInjective.agda).
+* Information loss (EchoGraded), Linearity mode (EchoLinear):
+  loss-only — non-reflexive transports collapse witnesses.
+
+Each instance produces the same lemma family — composition law,
+join law (where applicable), propositionality of order — with
+the same proof structure. *The 2D product produces a commutation
+law on the two independent actions, but the law's non-trivial
+content is bounded:* the EI-2 investigation
+(`docs/EI2_REPORT.adoc`) establishes that 2D and 3D commutations
+yield exactly 1 non-trivial cell when at least one axis is
+non-loss-only, and 0 non-trivial cells otherwise.
+
+This is the practical question to forward to Gate 1: *does any
+neighbouring framework produce the recipe with the non-loss-only
+qualification (1D and/or 2D)?*
+____
+
+=== Why this change is consistent
+
+Observation G originally listed four instances without
+distinguishing their structural roles. The EI-2 investigation
+revealed two of them (Graded, Linear) are loss-only and one
+(Choreo) is non-loss-only. The 2D product (RoleGraded) inherits
+non-loss-only from Choreo. The amendment makes explicit what
+was previously implicit, with formal certificates pointing back
+to the relevant Agda files.
+
+== Patch 3: roadmap-gates.adoc § Gate 1 Claim
+
+The high-level claim is brief and broad. READING 1 keeps it
+broad but adds an honest scoping note in the test section.
+
+=== Old text (selected portion)
+
+[quote]
+____
+.Claim
+****
+Echo types name structured loss under non-injective computation
+as a phenomenon distinct from existing treatments — refinement
+types, lens/optic theory, HoTT fibers, setoid quotients,
+provenance semirings.
+****
+____
+
+=== New text (READING 1)
+
+[quote]
+____
+.Claim
+****
+Echo types name structured loss under non-injective computation
+as a phenomenon distinct from existing treatments — refinement
+types, lens/optic theory, HoTT fibers, setoid quotients,
+provenance semirings — for axis combinations satisfying the
+*non-loss-only* criterion. The criterion is documented in
+docs/EI2_REPORT.adoc; in brief, an axis combination satisfies it
+iff at least one of its axes has a non-trivial
+information-preserving transport on a strict step.
+
+For combinations that do not satisfy the criterion, the
+distinctness claim is *not* made. The recipe still applies as a
+formal pattern, but does not yield non-trivial commutation
+content; under those conditions, neighbour theories typically
+also yield vacuous content, and the distinctness comparison is
+a tie.
+****
+____
+
+=== Why this change is consistent
+
+The retraction action currently says: "Drop identity claim;
+retain as Agda exposition." Under READING 1, this action remains
+the right response to a *full* gate-1 failure (no neighbour
+survives the test even for non-loss-only-anchored combinations).
+The narrowed claim only changes when distinctness is *claimed*,
+not what to do when distinctness fails.
+
+== Cascade effects
+
+If READING 1 is adopted, four downstream texts also need
+updating:
+
+. *README.md* — the README's identity statement should mirror
+  the narrowed claim. Currently the README says "echo types
+  name structured irreversibility under non-injective computation
+  with explicit residue tracking, integrated across multiple
+  loss axes." The "multiple loss axes" phrase should be
+  "axis combinations including a non-loss-only axis" or similar.
+
+. *docs/adjacency/README.adoc* — the framing of the two argument
+  families is unchanged, but the "Where the wins live" table
+  should note the bounded scope of 2-cell wins for loss-only
+  pair cases.
+
+. *docs/integration-audit.adoc* — the "what this leaves you with"
+  section currently lists gate-1 as "established"; under
+  READING 1 it should be "narrowed-and-established".
+
+. *next-questions.adoc* — EI-2's status moves from "open" to
+  "closed (READING 1 adopted)". A new entry tracks the
+  cascade-effect adoptions above.
+
+== Verdict (under READING 1)
+
+Gate-1: *passes narrowly*. The recipe is distinct from neighbour
+theories at non-loss-only-anchored axis combinations. The
+distinctness does not extend uniformly across all axis pairs.
+
+This is honest. It is also weaker than the current claim. The
+weakening is structurally specific: it identifies *which*
+combinations carry the distinctness load, leaving the load
+visible.
+
+The cost: a reviewer can now ask "what's the second non-loss-only
+axis?" and the answer is "we don't have one yet". This invites
+the natural follow-up: build a second non-loss-only axis and
+re-test. That's tracked as obligation 3 in `EI2_REPORT.adoc`.

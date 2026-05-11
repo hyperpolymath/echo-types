@@ -1,0 +1,158 @@
+= Adjacency: Galois connections / abstract interpretation
+:toc: macro
+
+[.lead]
+*Verdict: distinct, by 2-cell argument.* The natural 2-cell in the
+abstraction lattice is the meet, which is structurally
+Σ-over-preimages with a paired predicate. Formal exhibit in
+`EchoVsGalois.Sophisticated`. Truncation argument applies in a
+modified form (Galois is propositional about the abstract domain).
+
+toc::[]
+
+== Nearest existing construction
+
+Cousot & Cousot's abstract interpretation framework formalises
+structured loss with retained constraints via abstraction-
+concretization pairs `(α, γ)` between concrete and abstract
+domains.
+
+* `α : ℘(A) → B` abstracts a set of concrete elements to an
+  abstract value.
+* `γ : B → ℘(A)` concretises an abstract value back to the set of
+  concrete elements consistent with it.
+* The Galois insertion conditions: `α ∘ γ = id` (no spurious
+  abstraction loss) and `γ ∘ α ⊇ id` (concretization is sound).
+
+The closure operator `γ ∘ α` is *exactly* the closure of an echo
+class. For a function `f : A → B`, taking `α(S) = f(S)` and
+`γ(y) = { x | f x = y }` recovers `Echo f y` as the
+concretization of a singleton abstract value.
+
+Fifty-plus years of infrastructure exist for what echo types are
+reaching for, just in a lattice setting rather than a
+type-theoretic one.
+
+== Distinctness claim
+
+[quote]
+The natural 2-cell in the abstraction lattice — the meet of two
+abstractions — is structurally Σ-over-preimages with a paired
+equality predicate. AI's lattice operations cannot avoid echo
+machinery when comparing non-monotone / incomparable abstractions.
+
+== 2-cell argument
+
+The natural AI 2-cell candidate when comparing two abstractions
+α₁, α₂ at output values (a₁, a₂) is the *meet*: the type of
+common-preimage witnesses.
+
+[source,agda]
+----
+Meet α₁ α₂ a₁ a₂ = Σ[ x ∈ A ] ((α₁ x ≡ a₁) × (α₂ x ≡ a₂))
+----
+
+This is the *simultaneous fiber* of α₁ over a₁ and α₂ over a₂.
+It is the *intersection of two Echo types*: a witness x that is
+simultaneously in both echoes.
+
+Formal exhibit in `EchoVsGalois.Sophisticated`:
+
+* `meet→echo-intersection` — any meet witness `(x, p₁, p₂)`
+  decomposes mechanically into `((x, p₁), (x, p₂))`: a pair of
+  Echo witnesses sharing the *same* preimage `x`.
+* `meet-on-diagonal→equalizer` — when the meet is at matching
+  output values (`a₁ = a₂ = y`), it specialises to the
+  quotient-case equalizer. This makes the "different proof, same
+  conclusion" claim structurally precise: the two arguments
+  factor through the same underlying type at the diagonal.
+
+Two further sub-cases:
+
+* *Lattice-degeneracy analog of S-1.* In the abstraction lattice,
+  the JOIN of α-grade and α-role corresponds to the MEET of
+  kernels = identity relation in our setting. The MEET of
+  abstractions corresponds to the JOIN of kernels = universal
+  relation, already proved degenerate by
+  `Sophisticated.Joins.join-universal`. Both lattice operations
+  therefore degenerate; the formal Agda for the abstraction-side
+  is the same proof in opposite direction, omitted to avoid
+  duplication.
+* *Higher-order Galois constructions* (functor-category
+  insertions, Galois-of-Galois). Reduce structurally to the
+  `Sophisticated.IndexedFamilies` (S-2) case: each pair of
+  parallel insertions gives a Meet-shaped comparison, and the
+  same `meet→echo-intersection` applies pointwise.
+
+== Truncation argument (modified)
+
+Galois connections operate on the *powerset* of A on the concrete
+side. The concrete side is therefore propositional with respect
+to set membership, but type-theoretic with respect to individual
+elements.
+
+* Galois loses witness preservation through refinement on the
+  abstract side: the abstract value `y` does not record which
+  concrete witness produced it.
+* Echo retains witness identity by construction.
+
+Gate-3's `EpistemicUpdate` example tests this: "the Galois
+concretisation of an observation is a *set* of worlds (the
+equivalence class) — propositional, not type-data... Galois loses
+witness preservation through refinement; Echo's `refine-injective`
+has no Galois counterpart on individual worlds."
+
+`echo-not-prop` certifies that the witness type is not a mere
+proposition, so the powerset-on-the-concrete-side framing of
+Galois cannot reproduce it.
+
+== What echo adds
+
+* The 2-cell is data, not a free-floating closure axiom.
+* Witness identity on the concrete side, recoverable through
+  arbitrary chains of compositions.
+* The meet's Σ-shape makes echo machinery implicit even when the
+  user doesn't reach for it deliberately.
+
+== What echo does not add
+
+The *closure operator* `γ ∘ α` is identical. Echo types are
+*pointed* (a specific `y` is fixed); Galois operates on the full
+lattice of abstract values. For lattice-wide reasoning Galois is
+the right tool; for individual fiber reasoning echo is.
+
+== Retraction conditions
+
+Either of the following retracts gate-1's distinctness claim
+against Galois connections:
+
+. A Galois encoding of the characteristic-family commutation
+  theorem that uses no echo machinery and operates only on
+  lattice operations.
+. A demonstration that the meet's Σ-shape conclusion is
+  derivable from generic stdlib lemmas about Galois insertions
+  (i.e., the structural argument is an AI-lemma in disguise).
+
+Neither has been exhibited.
+
+== Status
+
+* 2-cell argument: *formalised* via `EchoVsGalois.Sophisticated`.
+  Diagonal correspondence with the quotient case formalised.
+* Truncation argument: applies via the powerset-on-concrete-side
+  framing; formal exhibit lives in gate-3's `EpistemicUpdate`
+  example which tests Galois explicitly.
+
+Together with `quotients.adoc`, this establishes that the
+obstruction to echo-elimination is *axis-pair-specific*, not an
+artefact of any one neighbour theory's framework.
+
+== References
+
+* Cousot & Cousot, "Abstract Interpretation: A Unified Lattice
+  Model for Static Analysis of Programs by Construction or
+  Approximation of Fixpoints" (POPL 1977).
+* `proofs/agda/EchoVsGalois.agda` for the formal exhibits cited
+  above.
+* `quotients.adoc` for the parallel quotient-side argument with
+  which the diagonal correspondence holds.

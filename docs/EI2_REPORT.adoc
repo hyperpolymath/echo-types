@@ -1,0 +1,453 @@
+= EI-2 progress report
+:toc: macro
+:source-highlighter: rouge
+
+This document is the working record for EI-2. It will be updated as
+data points accumulate. EI-2 is *not terminated* until expressly
+declared terminated in this document or in `next-questions.adoc`.
+
+toc::[]
+
+== The question
+
+EI-2 (from `next-questions.adoc`):
+
+[quote]
+Does the integration recipe (decoration order + echo-indexed family
++ transport action) produce non-trivial content across other 2D
+combinations, or did `RoleGraded` benefit from a fortunate
+choreographic-and-grade pair?
+
+The internal falsifier: if the trivial-case dominance is *uniform*
+across all 2D combinations and gets *worse* in 3D, the recipe is
+more like "vacuously holds in degenerate cases" than "load-bearing
+integration content".
+
+== Status
+
+*EI-2 TERMINATED — negative verdict, via PATH B.*
+
+The integration recipe with the existing five named axes does not
+carry substantive simultaneous cross-axis content. The original
+question — "does the recipe produce non-trivial content across
+other 2D combinations, or did `RoleGraded` benefit from a fortunate
+choreographic-and-grade pair?" — resolves negatively: the recipe
+does not produce substantive simultaneous content in *any* of the
+attempted axis pairings, including the self-pairing of the only
+non-loss-only axis (`RoleRole.agda`).
+
+Eight phases of investigation. Seven data points (sibling 2D
+constructions, the 3D `RoleModeGrade` with three pairwise
+commutations and a triple, and the self-pairing `RoleRole`). Across
+all of them, every "non-trivial" cell carries one-axis-at-a-time
+content; the load-bearing transport is always Choreo's
+`client-to-server` at the c⊑s strict step, with the other axis
+acting as identity. The non-loss-only criterion (formalised for
+Choreo in `ChoreoInjective.agda`) is necessary but not sufficient
+for substantive simultaneous interaction.
+
+*Consequences for gate-1.* Distinctness against neighbour
+frameworks rests on the *truncation argument* (`echo-not-prop`
+family in `proofs/agda/examples/`) and the *2-cell argument*
+(`Sophisticated.equalizer→echo-pair` and
+`Sophisticated.meet→echo-intersection`), not on the integration
+argument. Both arguments stand independently and are unaffected
+by EI-2's negative resolution. The gate-1 claim has been narrowed
+to reflect this across five doc locations (see "Documentation
+cascade" below).
+
+*Why PATH B (partial formalisation accepted as sufficient).* The
+full 2D iff theorem is not formalisable in safe Agda without
+postulates (decidable equality on decoration types, F-collapses
+axioms, extensionality on cell actions). `RecipeTheorem.agda`
+proves the per-axis halves; `RecipeNonTriviality.agda` proves the
+concrete construction-by-construction halves; `RoleRole.agda`
+provides the structural argument that even two non-loss-only
+axes don't produce substantive simultaneous interaction.
+Together with the seven data points, the empirical and structural
+evidence is overwhelming. The formal generic theorem is documented
+as future work; it is not required to settle the gate-1
+distinctness question, since the negative finding *removes* the
+integration recipe from the distinctness load.
+
+The positive-termination route (extending the recipe to allow
+coupled state across axes or multiple live positions per axis)
+is parked for v0.2 and beyond. A new question will track this
+if/when it becomes active. EI-2 itself is closed.
+
+*Documentation cascade applied:*
+
+* `docs/gate-1-distinct-phenomenon.adoc` § The Gate #1 claim —
+  narrowed.
+* `docs/gate-2-handoff.adoc` § Observation G — narrowed with the
+  EI-2 finding noted.
+* `roadmap-gates.adoc` § Gate 1 Claim — narrowed.
+* `docs/adjacency/README.adoc` — EI-2 cascade note added.
+* `README.md` — integration-bridge bullet updated.
+* `docs/next-questions.adoc` — EI-2 moved to closed section.
+
+*Note on composition-iso evidence (`5d1e679` on main).* The
+per-neighbour composition isomorphism, `cancel-iso`, and
+projection-pentagon results introduced in `5d1e679` remain
+load-bearing as evidence for the per-neighbour distinctness
+arguments (truncation and 2-cell). They are *not* load-bearing
+for cross-axis integration claims, which EI-2 has terminated.
+The `5d1e679` framing positioned them as cross-axis evidence
+(the README's "Compositional evidence (load-bearing across
+notes)" section header); the post-EI-2 framing repositions
+them as per-neighbour structural evidence. The formal results
+are unchanged; only the role they play in the gate-1 argument
+has shifted.
+
+Concretely: the cross-cutting README section was dropped by
+the `e8b11fb` adjacency restructure (its content consisted of
+per-neighbour citations that also live independently in
+`cubical-systems.adoc`, `lenses-and-optics.adoc`,
+`provenance-semirings.adoc`, and `setoid-quotients.adoc` —
+those four files were unaffected by `e8b11fb`). The
+per-neighbour citations in `hott-fibers.adoc` and
+`refinement-types.adoc` — which were dropped along with the
+rest of those files' `5d1e679` content — are reinstated under
+"Composition-iso evidence" sections that frame the iso family
+as structural evidence supporting the truncation argument.
+
+== Data points
+
+[cols="1,1,1,1,3", options="header"]
+|===
+| Construction | Axes | Cells | Non-trivial | Notes
+
+| `RoleGraded`
+| Role × Grade
+| 18 (3 × 6)
+| 1
+| Non-trivial cell at `(c⊑s, keep≤keep)`, content
+`client-to-server e`. Original EI-1 closure construction.
+
+| `RoleMode`
+| Role × Mode
+| 9 (3 × 3)
+| 1
+| Non-trivial cell at `(c⊑s, linear≤linear)`, content
+`client-to-server e`. Same structural pattern as RoleGraded —
+non-trivial cell at (non-reflexive role transport, live
+second-axis cell).
+
+| `ModeGrade`
+| Mode × Grade
+| 18 (3 × 6)
+| 0
+| *Falsifier-positive on strict reading.* No non-trivial cell. The
+closest-to-non-trivial cell is `(linear≤linear, keep≤keep)`, which
+reduces to `e ≡ e` — identity-on-data, no cross-axis interaction.
+All other 17 cells reduce to `tt ≡ tt`.
+
+| `RoleModeGrade.role-mode-commute`
+| 3D pairwise (R×M, G free)
+| 27
+| 1
+| Non-trivial cell at `(c⊑s, linear≤linear, keep)`. Adding the
+Grade dimension to the n=2 RoleMode adds 18 trivial cells; no new
+non-trivial content.
+
+| `RoleModeGrade.role-grade-commute`
+| 3D pairwise (R×G, M free)
+| 36
+| 1
+| Non-trivial cell at `(c⊑s, keep≤keep, linear)`. Adding the Mode
+dimension to the n=2 RoleGraded adds 18 trivial cells; no new
+non-trivial content.
+
+| `RoleModeGrade.mode-grade-commute`
+| 3D pairwise (M×G, R free)
+| 36
+| 0
+| *Preserves the n=2 ModeGrade falsifier outcome.* Adding the
+Role dimension does not introduce non-trivial content because Role
+is not active under either of the cross-axes here. Confirms the
+hypothesis at n=3.
+
+| `RoleModeGrade.applyAll` (triple)
+| 3D triple (R×M×G)
+| 54
+| 1
+| Non-trivial cell at `(c⊑s, linear≤linear, keep≤keep)`, with
+`applyAll c⊑s linear≤linear keep≤keep e ≡ client-to-server e`
+witnessed formally by `trace-non-trivial-cell`.
+|===
+
+Files:
+
+* `proofs/agda/characteristic/RoleGraded.agda` (already integrated)
+* `proofs/agda/characteristic/RoleMode.agda`
+* `proofs/agda/characteristic/ModeGrade.agda`
+* `proofs/agda/characteristic/ChoreoInjective.agda`
+* `proofs/agda/characteristic/RoleModeGrade.agda` (this update)
+
+== Pattern observed
+
+Across the three data points: the number of non-trivial cells
+correlates with whether at least one axis has a *non-trivial
+information-preserving transport* on at least one of its strict
+(non-reflexive) steps.
+
+* *Choreo* has `client-to-server` (the strict step `c⊑s`) — a
+  witness-rearrangement that preserves cardinality. Non-loss-only.
+* *Mode* has `weaken` (the strict step `linear≤affine`) — collapses
+  to `EchoR ⊤ TrivialCert tt`. Loss-only.
+* *Grade* has `collapse-to-residue` (the strict step `keep≤residue`)
+  and several `tt`-collapses. All loss-only.
+
+The constructions:
+
+* Role × Grade: Role is non-loss-only, Grade is loss-only. Non-loss
+  count: 1. Non-trivial cells: 1.
+* Role × Mode: Role is non-loss-only, Mode is loss-only. Non-loss
+  count: 1. Non-trivial cells: 1.
+* Mode × Grade: Both are loss-only. Non-loss count: 0. Non-trivial
+  cells: 0.
+
+The correlation is exact across the three data points. Hypothesis:
+
+[quote]
+*Recipe non-triviality hypothesis:* the integration recipe
+produces non-trivial commutation content iff at least one of the
+two axes has a non-trivial information-preserving transport on at
+least one strict step.
+
+If this hypothesis holds in general, the recipe is *not* uniformly
+non-trivial across all 2D combinations. It is non-trivial across
+combinations satisfying a structural precondition that
+Observation G in `gate-2-handoff.adoc` did not state explicitly.
+
+== Step A: re-reading Observation G
+
+Performed. Findings:
+
+. Observation G does *not* explicitly require non-loss-only as a
+  recipe precondition.
+. The instances Observation G lists are *mixed*: Choreo is
+  non-loss-only on `c⊑s`, while Graded and Linear are loss-only on
+  their strict steps. Observation G groups them as instances of
+  "the recipe" without distinguishing.
+. Therefore: the recipe statement is silent on non-loss-only, and
+  ModeGrade's 0-non-trivial result is not a violation of the
+  *stated* recipe — it is a falsifier of an *unstated* uniformity
+  expectation.
+
+Conclusion: EI-2 has surfaced an implicit assumption in Observation
+G that needs to be made explicit. Either:
+
+* The recipe is *uniformly applicable* to any 2D combination of
+  recipe-shaped axes (the strict reading), and ModeGrade falsifies
+  this uniformity. Gate-1 weakens.
+* The recipe is *applicable to non-loss-only-containing
+  combinations*, and ModeGrade is outside the recipe's scope rather
+  than a falsifier. Observation G needs amendment to state this
+  precondition. Gate-1 narrows but holds.
+
+== Step B: third data point with two non-loss-only axes
+
+*Not feasible from existing modules.* Survey of the five named
+axes:
+
+* Choreographic — has `client-to-server`, `client-stability`. Both
+  non-loss-only (information-preserving transports).
+* Epistemic — `Knows` is parameterised by a *predicate*, not a
+  finite enumeration. The recipe (in its Observation-G form) does
+  not directly apply.
+* Linear — `degradeMode linear≤affine = weaken`, loss-only.
+* Graded — `degrade keep≤residue = collapse-to-residue`,
+  loss-only. All other strict steps also loss-only.
+* Tropical — score-indexed, no propositional decoration order on a
+  finite type. Not recipe-shaped.
+
+Of the five, only Choreo has natively non-trivial information-
+preserving transports. The two-non-loss-only data point would
+require either:
+
+* Building a *new* axis (e.g., a "secure transport" axis with a
+  non-trivial role-preserving action analogous to Choreo's
+  `client-to-server`). New work, not a recipe test.
+* Using two different Choreo transports on the same axis (e.g.,
+  Choreo-via-`client-to-server` × Choreo-via-`client-stability`).
+  This is a 1D × 1D self-product, not a true cross-axis test.
+
+Neither is a clean answer.
+
+== Step C: sharpen the non-loss-only criterion
+
+In progress. The criterion in informal form:
+
+[quote]
+An axis (D, _≤_, F, t) is *non-loss-only* iff for at least one
+strict step `d1 < d2`, the transport `t (d1≤d2) : F d1 → F d2`
+is *injective on inhabitants*.
+
+For the existing axes:
+
+* Choreo: `client-to-server` is `map-square` applied to `swap`,
+  which is a bijection on `Global = Bool × Bool`. `map-square`
+  on a bijection is itself a bijection on the fiber type. So
+  `client-to-server` is injective. *Non-loss-only confirmed.*
+* Mode: `weaken = collapse-to-residue`. Collapses
+  `Echo collapse tt` (multi-element) to `EchoR ⊤ TrivialCert tt`
+  (singleton-or-near-singleton). Not injective. *Loss-only confirmed.*
+* Grade: same as Mode for the corresponding strict step.
+
+A formal Agda exhibit of `client-to-server-injective` would tighten
+this argument. Open obligation:
+
+[source,agda]
+----
+client-to-server-injective :
+  ∀ {y : Bool} {e₁ e₂ : RoleEcho Client y} →
+  client-to-server e₁ ≡ client-to-server e₂ →
+  e₁ ≡ e₂
+client-to-server-injective = ?
+----
+
+Once formalised, the criterion can be stated as a generic predicate
+on axes and the recipe-non-triviality hypothesis can be sharpened
+into a (provable or refutable) general theorem.
+
+[#open]
+== Open obligations
+
+These are the concrete next steps. None of them terminates EI-2 by
+itself; each addresses a specific gap.
+
+. *Formalise `client-to-server-injective`.* — *closed* in
+  `proofs/agda/characteristic/ChoreoInjective.agda`. The lemma
+  `client-to-server-injective-on-proj₁` proves the first-projection
+  injectivity directly from `swap`'s involutivity. The corollary
+  `client-to-server-preserves-distinction` is the formal
+  multiplicity-preservation statement. Note: only first-projection
+  injectivity is proved; full Σ-injectivity for fibers requires
+  K-style reasoning, which `--without-K` precludes. For the EI-2
+  criterion, first-projection-injective is sufficient (the criterion
+  is about cardinality preservation, which lives at proj₁).
+
+. *Decide between READING 1 and READING 2.* — *partial:* candidate
+  patches written for both readings.
++
+* `docs/EI2_READING1_PATCHES.adoc` — strict reading: gate-1 narrows
+  to non-loss-only-anchored combinations; admission-style framing.
+* `docs/EI2_READING2_PATCHES.adoc` — refined reading: non-loss-only
+  is made an explicit precondition of the recipe; refinement-style
+  framing. Requires obligation 5 closed for full intellectual
+  honesty.
+* `docs/EI2_READINGS_COMPARISON.adoc` — side-by-side comparison
+  with decision criterion (depends on willingness to attempt
+  obligation 5 next).
++
+Decision pending. Until a reading is *adopted* (patches applied to
+the live docs), obligation 2 remains open.
+
+. *Build a fourth data point.* If a new non-loss-only axis is added
+  to the repository (candidates: a secure-transport axis, a
+  proof-relevant indexed axis), the four-data-point pattern would
+  be either three-non-trivial (recipe-non-triviality hypothesis
+  confirmed for this case) or mixed (would need a fifth point).
+
+. *Examine the n=3 case.* — *closed* in
+  `proofs/agda/characteristic/RoleModeGrade.agda`. Three pairwise
+  commutations and one triple. Non-trivial cell counts: 1, 1, 0
+  respectively for the pairwise, 1 for the triple. Hypothesis
+  survives the n=3 test: each commutation's non-trivial count
+  matches its n=2 analog (role-mode-commute matches RoleMode,
+  role-grade-commute matches RoleGraded, mode-grade-commute matches
+  ModeGrade). Non-loss-only axes contribute 1 non-trivial cell;
+  loss-only axis pairs contribute 0; loss-only third axes do not
+  add non-trivial content. The 3D test confirms monotonicity:
+  adding loss-only axes does not produce qualitatively new patterns.
+
+. *Write the recipe-non-triviality theorem.* — *partially closed*
+  in `proofs/agda/characteristic/RecipeTheorem.agda`. Both
+  directions of the iff are proved as per-axis lemmas:
++
+--
+* *Theorem 1* (`collapsing-loss-only`): every CollapsingAxis is
+  loss-only at strict steps. Strict transports send everything to
+  the same value in the collapsed codomain. This is the formal
+  certificate behind ModeGrade's 0-of-18 result.
+* *Theorem 2* (`carrier-NLO-distinguishes`): a CarrierAxis with
+  NLO has a strict step preserving distinguishability. This is
+  what makes RoleGraded's `(c⊑s, keep≤keep)` cell non-trivial.
+--
++
+The full 2D iff theorem is *not* formalised. Reasons documented in
+the file header: the existing 2D constructions are hand-written,
+each making pattern-match-on-data choices that don't lift to a
+generic record framework; the natural generic 2D family
+`F12 d_A d_B = (if d_B = top_B then F_A d_A else ⊤)` requires
+decidable equality and collapse axioms as fields, and even then
+the `with`-abstraction blocks reduction in dependent positions,
+making proofs about specific cells require manual rewriting that
+defeats the generic intent.
++
+The conjectured full theorem is sketched as a Set₁-level
+proposition without proof. The per-axis content of the
+hypothesis is structurally certified by the two theorems above;
+the global iff remains conjectured and supported by the seven
+empirical data points in §<<data-points,Data points>>.
++
+*Status of obligation 5:* partially closed. Full closure requires
+formalising the conjectured 2D iff (technical work, structural
+obstructions known and documented) or declaring partial closure
+acceptable.
+
+== Termination criteria for EI-2
+
+EI-2 will be declared *terminated* if and only if one of the
+following holds, with explicit formalised evidence:
+
+* *Strict-reading falsifier sustained:* multiple data points show
+  that the recipe is uniformly trivial across loss-only axis
+  pairs, with no recipe-internal explanation. Gate-1's
+  distinctness claim is weakened, this report records the
+  weakening, the corresponding section in
+  `gate-1-distinct-phenomenon.adoc` is updated.
+
+* *Recipe refinement formalised:* the non-loss-only criterion is
+  formalised, the recipe-non-triviality theorem is proved, and
+  Observation G is amended to state the precondition explicitly.
+  Gate-1's distinctness claim is narrowed to "the recipe is
+  distinct *for axis pairs satisfying the non-loss-only criterion*".
+
+* *Recipe-internal explanation found:* a non-trivial result emerges
+  from a 2D loss-only-pair construction with a different framing
+  (e.g., a different choice of family `F : D₁ → D₂ → Set`), and
+  ModeGrade's 0-non-trivial result is shown to be artefactual.
+
+Until one of these is satisfied, *EI-2 is open*. This document is
+updated when new data points are added; the status line at the top
+is the authoritative current state.
+
+[NOTE]
+====
+*This section's termination criteria were superseded by the
+PATH B route from `RecipeNonTriviality.agda`.* PATH B accepted
+the partial formalisation as sufficient given the empirical
+evidence and the `RoleRole.agda` structural argument that even
+two non-loss-only axes don't produce substantive simultaneous
+interaction. The "recipe refinement" route (READING 2 above) was
+considered and rejected as overstrong: the data showed a stronger
+negative trajectory than READING 2 assumed (NLO necessary but not
+sufficient). The gate-1 weakening route (READING 1 above) was
+adopted in revised form, with distinctness rerouted to the
+truncation and 2-cell arguments. See top-of-file Status section
+for the authoritative final verdict.
+====
+
+== Status line (authoritative)
+
+*EI-2 TERMINATED — negative verdict, via PATH B.* The integration
+recipe with the existing five named axes does not carry substantive
+simultaneous cross-axis content. Distinctness rests on truncation
+and 2-cell arguments. Documentation cascade applied across five
+locations (see Status section at top). All formal artefacts in
+lane `proofs/agda/characteristic/`. Future-work positive-termination
+route (recipe extension) is parked for v0.2.
+
+Last updated: at termination. No further updates expected.

@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= QUICKSTART-USER: echo-types
+:toc:
+
+== Use as a library dependency
+
+Echo-types is a foundation for downstream formalisations. To depend on it from another Agda project:
+
+[source]
+----
+# In your project's <name>.agda-lib
+include: <path-to-echo-types>/proofs/agda
+depend: echo-types
+----
+
+The library exposes:
+
+* `Echo` — core fiber type and morphism action.
+* `EchoCharacteristic` — non-injectivity / no-section family.
+* `EchoExamples` — concrete examples.
+* Bridge modules: `EchoLinear`, `EchoGraded`, `EchoTropical`, `EchoChoreo`, `EchoEpistemic`, `EchoCNOBridge`, `EchoJanusBridge`, `DyadicEchoBridge`, `EchoOrdinal`, `EchoIndexed`, `EchoRelational`, `EchoCategorical`, `EchoScope`.
+
+== Cite the formalism
+
+When citing the foundational construction in a paper or design doc:
+
+[source]
+----
+Echo f y := Σ (x : A) , (f x ≡ y)
+
+— hyperpolymath/echo-types, proofs/agda/Echo.agda
+  https://github.com/hyperpolymath/echo-types
+----
+
+== If a proof you wanted is missing
+
+Open an issue against `hyperpolymath/echo-types`. Note the bridge or characteristic family the missing result would extend.

@@ -1,0 +1,93 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# stapeln.toml — layered Chainguard container build for echo-types.
+# Echo-types is a proof library, not a service. The container is an artefact carrier:
+# it bundles type-checked Agda artefacts (.agdai) for downstream consumers to mount.
+
+[metadata]
+name = "echo-types"
+version = "0.1.0-alpha"
+description = "Constructive Agda formalisation of echo types"
+author = "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"
+license = "PMPL-1.0-or-later"
+registry = "ghcr.io/hyperpolymath"
+
+[build]
+containerfile = "Containerfile"
+context = "."
+runtime = "podman"
+
+[layers.echo-types-base]
+description = "Chainguard wolfi-base base"
+from = "cgr.dev/chainguard/wolfi-base:latest"  # TODO(scaffold): pin @sha256
+cache = true
+verify = true
+
+[layers.echo-types-toolchain]
+description = "Agda + GHC build toolchain"
+extends = "echo-types-base"
+packages = ["agda", "ghc", "cabal"]
+cache = true
+
+[layers.echo-types-build]
+description = "Type-check all proofs."
+extends = "echo-types-toolchain"
+copy = [
+    { src = "proofs/", dst = "/build/proofs/" },
+    { src = "echo-types.agda-lib", dst = "/build/echo-types.agda-lib" },
+]
+commands = [
+    "agda -i proofs/agda proofs/agda/All.agda",
+]
+artifacts = [
+    { src = "/build/proofs/agda/", dst = "/app/proofs/agda/" },
+]
+
+[layers.echo-types-runtime]
+description = "Minimal artefact carrier."
+from = "cgr.dev/chainguard/static:latest"  # TODO(scaffold): pin @sha256
+copy-from = [
+    { layer = "echo-types-build", src = "/app/", dst = "/app/" },
+]
+user = "nonroot"
+
+[security]
+non-root = true
+read-only-root = true
+no-new-privileges = true
+cap-drop = ["ALL"]
+seccomp-profile = "default"
+
+[security.signing]
+algorithm = "ML-DSA-87"
+provider = "cerro-torre"
+
+[security.sbom]
+format = "spdx-json"
+output = "sbom.spdx.json"
+include-deps = true
+
+[verify]
+vordr = true
+svalinn = true
+scan-on-build = true
+fail-on = ["critical", "high"]
+
+[targets.development]
+description = "Local development."
+layers = ["echo-types-runtime"]
+env = { LOG_LEVEL = "debug" }
+
+[targets.staging]
+description = "Staging."
+layers = ["echo-types-runtime"]
+env = { LOG_LEVEL = "debug" }
+
+[targets.production]
+description = "Production."
+layers = ["echo-types-runtime"]
+env = { LOG_LEVEL = "warning" }
+
+[targets.test]
+description = "Test."
+layers = ["echo-types-runtime"]
+env = { LOG_LEVEL = "debug" }

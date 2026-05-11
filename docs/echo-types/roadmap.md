@@ -53,17 +53,26 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   isomorphism `Echo(g ∘ f) y ≃ Σ B (λ b → Echo(f) b × (g b ≡ y))`.
   Shipped as `Echo-comp-iso-{to, from, from-to, to-from}`; both
   round-trips are definitional. See `composition.md` §1.
-- **[partial]** `cancel-iso-to` / `cancel-iso-from` in `Echo.agda`:
-  forward and backward maps for the cancellation corollary, each
-  needing only the relevant half of g's iso structure. Round-trips
-  are **deferred** pending a triangle-identity coherence or a stdlib
-  `Function.Bundles.Inverse` shim. See `composition.md` §3.
-- **[partial]** Pentagon coherence for three-fold composition.
-  `Echo-comp-iso-pent-B` and `Echo-comp-iso-pent-echo` both `refl`
-  in `Echo.agda`. The full Σ-associativity iso between the two
-  nested Σ-shapes (outer-first carries an extra intermediate
-  `c : C` with `g b ≡ c`; inner-first absorbs it) remains the open
-  piece of pentagon.
+- **[landed]** `cancel-iso-to` / `cancel-iso-from` /
+  `cancel-iso-from-to` / `cancel-iso-to-from` in `Echo.agda`,
+  packaged as `Echo.cancel-iso : ... → Echo (g ∘ f) y ↔ Echo f (s y)`
+  via stdlib's `Function.Bundles._↔_` and `mk↔ₛ′`. Both round-trips
+  parameterised by their respective triangle identities (one
+  triangle implies the other in HoTT but the adjustment is
+  non-trivial path algebra, so both stay explicit). Companion
+  `Echo.Echo-comp-iso` packages the unconditional accumulation iso
+  the same way. See `composition.md` §3 + §4.
+- **[landed]** Pentagon coherence for three-fold composition.
+  Projection lemmas `Echo-comp-iso-pent-B` and `Echo-comp-iso-pent-echo`
+  both `refl` in `Echo.agda`. The full Σ-associativity iso between the
+  two nested Σ-shapes (outer-first carries an extra intermediate
+  `c : C` with `g b ≡ c`; inner-first absorbs it) now ships as
+  `Echo-comp-pent-Σ-assoc-{to, from, from-to, to-from}`. The forward
+  map collapses `c` against `g b ≡ c` and transports the outer
+  h-equation; the backward map sets `c := g b` with `refl`. Both
+  round-trips reduce definitionally once the `g b ≡ c` has been pinned,
+  so this is a strict iso (no transport coherence required) and lives
+  inside `--safe --without-K`. All four pinned in `Smoke.agda`.
 - **[partial]** Budgeted recursive-surface WF on the ordinal track.
   `Ordinal/Buchholz/RecursiveSurfaceBudget.agda` ships
   `BudgetedBT = ℕ × BT`, the budgeted relation `_<ᵇʳᶠᵇ_` with its
@@ -75,11 +84,45 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   concrete ordinal-track milestone. Pushing that result back into
   `Ordinal/Buchholz/Order.agda`'s main `_<ᵇ_` package is the step
   after that.
-- **[unblocked]** `EchoApprox.agda`: new module for ε-indexed echoes
+- **[landed]** `EchoApprox.agda`: new module for ε-indexed echoes
   over a metric codomain. First-class taxonomy axis 2 artifact.
-- **[unblocked]** Per-decoration composition lemmas in `EchoGraded`,
-  `EchoLinear`, `EchoIndexed`, `EchoChoreo`, `EchoEpistemic`: check
-  each commutes with basic composition.
+  Ships `EchoR ε f y = Σ A (λ x → dist (f x) y ≤ ε)` parametric over
+  a `Tolerance` monoid and a `PseudoMetric`, with three headline
+  lemmas: `echo-approx-intro` (exact ⇒ zero-ε), `echo-approx-relax`
+  (monotone in ε), and `echo-approx-compose` (additive composition
+  under a non-expansive outer leg, realising the taxonomy §2
+  conjecture). Wired into `All.agda` and `Smoke.agda`.
+- **[landed]** Per-decoration composition lemmas across the
+  five-decoration family — **sweep complete** (2026-04-28):
+  `EchoGraded.degrade-compose`, `EchoLinear.degradeMode-compose`,
+  `EchoIndexed.map-role-indexed-comp`,
+  `EchoChoreo.applyChoreo-{comp, compose, via-join}` along the
+  choreographic-reachability order `_⊑c_`, and
+  `EchoEpistemic.knowledge-monotone-{comp, id}`. Each follows the
+  same recipe (decoration order → propositionality → join →
+  factoring-free compose → via-join restatement). All headlines
+  pinned in `Smoke.agda`.
+- **[landed]** Honest finite-domain Landauer/Bennett bounds
+  (2026-04-28). `EchoFiberCount.agda` provides the actual fiber
+  count `FiberSize-fin : (Fin n → B) → B → DecEq → ℕ` plus four
+  headline lemmas (`FiberSize-fin-id-zero`, `FiberSize-fin-const`,
+  bidirectional `FiberSize-fin ≡ 0 ⟺ ¬ Echo`).
+  `EchoThermodynamics.agda` rewritten against
+  `Data.Nat.Logarithm.⌊log₂_⌋`: `bennett-reversible`,
+  `bennett-reversible-id-zero`, `landauer-collapse`. Replaces the
+  earlier `FiberSize = 1` hardcode that rendered the prior
+  CNO-zero-energy claims vacuous. Infinite-domain
+  (`ProgramState = ℕ → ℕ`) case explicitly out of scope.
+  `docs/ECHO-CNO-BRIDGE.adoc` swept to remove four overclaim sites.
+- **[partial]** Buchholz extended order `_<ᵇ⁺_` (2026-04-28).
+  `Ordinal.Buchholz.OrderExtended.agda` adds the two K-restricted
+  shared-binder lex constructors (`<ᵇ⁺-ψα`, `<ᵇ⁺-+2`) on top of
+  the K-free core `_<ᵇ_`, with explicit equality witnesses to
+  keep implicits pairwise distinct. `<ᵇ⁺-irrefl` and `<ᵇ⁺-trans`
+  proved (mixed cases via four `extend-{lhs, rhs}` helpers).
+  Well-foundedness for `_<ᵇ⁺_` is **OPEN** — see
+  `docs/echo-types/buchholz-extended-wf.md` for the two design
+  routes (single-mutual or rank-embedding via Brouwer).
 - **[unblocked]** Add example-library Agda files matching
   `examples.md`: start with examples 1–4 already in-suite, then
   example 7 (ordinal collapse is in `EchoOrdinal`); examples 5, 6,
@@ -128,22 +171,30 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 
 ## Proof-assistant-dependent work — gated
 
-- **[gated on B1]** Internalize the missing shared-binder shapes as
-  actual constructors/comparison principles of the real Buchholz
-  order. The current route closes well-foundedness for the admitted
-  core and handles arbitrary finite same-binder depth via iterated
-  wrappers, but not yet for the full intended constructor package.
-- **[gated on B1]** Re-close totality/inversion/transitivity and
-  well-foundedness for the enlarged order after that internalization,
-  including shared-binder cases such as `<ᵇ-ψα` and `<ᵇ-+2`.
+- **[partial]** Internalize the missing shared-binder shapes as
+  actual constructors of the Buchholz order. **Done** for the
+  irrefl + trans layer in `Ordinal.Buchholz.OrderExtended._<ᵇ⁺_`
+  with `<ᵇ⁺-ψα` and `<ᵇ⁺-+2` (2026-04-28). Well-foundedness for
+  the enlarged order is open — see the gated entry below.
+- **[gated on `_<ᵇ⁺_` WF]** Re-close well-foundedness for the
+  enlarged order. Two design routes documented in
+  `docs/echo-types/buchholz-extended-wf.md`: single-mutual block
+  with widened bundle (Route A — attempted, blocked on Agda
+  termination) or rank-embedding into Brouwer ordinals (Route B
+  — recommended next-attempt; scaffolded by
+  `Ordinal.Buchholz.RankBrouwer.agda` from the parallel session).
 - **[gated on B1]** Ordinal semantics of BT terms: denotation
   `BT → Ordinal` preserving order. Requires a formal `Ordinal` type
   as a prerequisite, which is itself downstream of WF.
-- **[gated on B1]** Landauer / Shannon rigorous bridge (separate
-  handoff pack in `docs/echo-types/roadmap.md` would cross-reference
-  this). The current `EchoThermodynamics.agda` is a stub; genuine
-  content requires a preimage-count that itself needs ordinal / finite
-  type infrastructure.
+- **[partial]** Landauer / Shannon rigorous bridge. **Done** for
+  the finite-domain Landauer/Bennett shape in
+  `EchoThermodynamics.agda` (rewritten 2026-04-28 against
+  `EchoFiberCount.FiberSize-fin` and `Data.Nat.Logarithm.⌊log₂_⌋`).
+  Open: infinite-domain `ProgramState = ℕ → ℕ` extension (needs a
+  capacity / measure / equivalence-class-quotient framework);
+  Shannon-entropy formalisation (no probability-monad in stdlib v2
+  at the level needed); physical heat-dissipation realisation
+  (the bound is information-theoretic, not a physical claim).
 - **[gated on B2]** CNO-equivalence verification across echo-types
   and `absolute-zero`. Needs cross-repo access.
   Bridge slot now exists on the adjacent side at
@@ -194,7 +245,8 @@ tractable today:
 8. **Applications chapter: compiler-analysis residue** — 2 days.
    Largest reader value; entirely unblocked.
 9. **Per-decoration composition lemmas** — 1 day each. Useful
-   coverage.
+   coverage. *Grade case landed* (`EchoGraded.degrade-compose`,
+   `degrade-via-join`); linear / indexed / role / modal still open.
 
 Steps 1 and 5–6 are ~5–6 days of honest work that require nothing
 from proof assistants, external repos, or the blocked Buchholz path.

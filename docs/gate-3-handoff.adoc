@@ -1,0 +1,180 @@
+= Gate #3: Cross-Lane Handoffs
+:toc: left
+
+This document records observations made while building the Gate #3
+canonical examples that may be useful to the Gate #1 and Gate #2
+instances, plus a few maintainer notes.  Reflects the post-rescope
+state of the lane: three examples (`TropicalArgmin`,
+`EpistemicUpdate`, `LinearErasure`), two earlier examples dropped
+under the (a)/(b)/(c) bar (`DigestEcho`, `ChoreographyProjection`).
+
+== Observations for Gate #1 (distinct phenomenon)
+
+=== `echo-not-prop` is the cleanest distinctness signal found
+
+All three surviving examples carry a constructive proof that the
+relevant Echo type is *not a mere proposition*:
+
+* `TropicalArgmin.echo-not-prop`   : `is-prop (Echo cost 5) → ⊥`
+* `EpistemicUpdate.echo-not-prop`  : `is-prop (Echo obs false) → ⊥`
+* `LinearErasure.echo-not-prop`    : `is-prop (Echo erase erasedF) → ⊥`
+
+These are the formal certificates for the (c) clause of canonicality
+on three different bridge axes (tropical, epistemic, linear):
+neighbour theories that propositionally truncate the witness type
+(preimage subset, equivalence class, propositional-predicate
+refinement type, Goguen-Meseguer equivalence relation) lose what
+Echo retains.  If Gate #1 is hunting for a property Echo has that
+fibre-as-truncation does not, this is the property, and the lane
+exhibits it on three axes.
+
+What this lane does *not* provide is the general theorem.  The
+shape of that theorem would be something like: for non-injective
+`f : A → B` with at least two distinct preimages of `y`,
+`is-prop (Echo f y) → ⊥`.  That is straightforward but is properly
+Gate #2's territory (a characteristic-family member) or a Gate #1
+distinctness lemma.
+
+=== Pulled-out negative result on composition
+
+The dropped `ChoreographyProjection` showed that joint-Echo collapse
+(`Echo πA ℓA ×_Choreo Echo πB ℓB ≃ ⊤` for an embedding `(πA, πB)`)
+is *also* a fibre fact: it is the standard pullback-of-fibres in any
+locally-cartesian-closed category.  Composition under projection-
+pairing therefore does *not* distinguish Echo from fibre.
+
+Gate #1 should not pursue composition as the distinctness axis.
+The cardinality-as-data / non-truncatability axis (above) is the
+direction the lane found tractable.
+
+=== Retained-constraint and retained-shape: two distinct patterns
+
+The dropped `DigestEcho` demonstrated retained-constraint via the
+proof structure `∀ (e : Echo f y) → P (proj₁ e)` returning `proj₂ e`
+directly.  This pattern is uniformly `proj₂` of the Σ.  It is true
+of *any* Σ-type and so is not echo-specific.  `TropicalArgmin.retained-cost`
+follows the same trivial pattern.
+
+`LinearErasure.retained-shape` is genuinely different:
+
+[source,agda]
+----
+retained-shape :
+  ∀ {P Q} (e : Echo erase (fn P Q)) → is-fn-type (proj₁ e)
+retained-shape (base     , ())
+retained-shape (fn m A B , _) = fn-shape
+----
+
+The proof is *pattern matching on the source type*, not extraction
+of `proj₂`.  It is an inversion lemma: from "erasure of T equals
+this function-shape", recover that "T itself is a function-shape".
+This is a non-trivial echo-shaped fact about the relationship
+between source structure and erased structure.
+
+Gate #2 may want to consider `retained-shape` as a candidate
+characteristic theorem family member.  Internal falsifier: if the
+inversion follows from a generic stdlib lemma about Σ-types of the
+form `Σ A (λ a → f a ≡ y)` admitting case-analysis on `a`, it is
+not echo-specific.  But the *content* of the lemma --- "structural
+properties of the source survive erasure" --- is echo-shaped in a
+way `retained-cost`-style `proj₂` extractions are not.
+
+== Observations for Gate #2 (characteristic theorems)
+
+=== Candidate: non-truncatability for non-injective `f`
+
+The most natural generalisation of the two `echo-not-prop` proofs:
+
+____
+For `f : A → B` and `y : B`, if there exist `x₁ ≠ x₂ : A` with
+`f x₁ ≡ y` and `f x₂ ≡ y`, then `is-prop (Echo f y) → ⊥`.
+____
+
+This is straightforward to state and prove (the existing
+`echo-not-prop` proofs in both files are the n=2 special case).
+It is naturally echo-shaped because it is about the *type* `Echo f y`,
+not about a single inhabitant.  Whether it earns characteristic
+status depends on Gate #2's bar.
+
+Internal falsifier for this candidate: if it follows by routine
+unfolding from a stdlib lemma about Σ-types having distinct elements,
+it is not echo-specific; it is just "a Σ with two distinct
+inhabitants is not propositional".
+
+=== Candidate: refinement injectivity
+
+`EpistemicUpdate.refine-injective` is the n=2 special case of:
+
+____
+For `f : A → B` and `g : A → C`, the projection
+`Echo ⟨f , g⟩ (b , c) → Echo f b` defined by composing `proj₁`
+with `cong proj₁` is injective on first projections.
+____
+
+This is the type-level form of "refinement preserves witness
+identity".  Gate #2 may consider whether this is a candidate
+characteristic theorem.  Falsifier: if it follows from a stdlib
+lemma about pullbacks, it is not echo-specific.
+
+== Observations for the maintainer
+
+=== Lane state after re-scope
+
+Three surviving Agda files: `TropicalArgmin.agda`, `EpistemicUpdate.agda`,
+`LinearErasure.agda`, plus aggregator `All.agda`.  Two doc files:
+`gate-3-canonical.adoc` (per the new brief filename),
+`gate-3-handoff.adoc` (this file).
+
+Two files dropped from an earlier iteration of the lane:
+`DigestEcho.agda` and `ChoreographyProjection.agda`.  The previous
+main doc filename `gate-3-canonical-examples.adoc` was also dropped
+in favour of the new `gate-3-canonical.adoc`.
+
+=== Bridge-axis coverage
+
+The three examples cover three of the five named axes:
+
+* `TropicalArgmin`   --- tropical (argmin / multiplicity)
+* `EpistemicUpdate`  --- epistemic (knowledge / refinement)
+* `LinearErasure`    --- linear (mode / residue)
+
+Choreographic and graded are not covered.  Choreographic was
+attempted (`ChoreographyProjection`) and failed (c) at its strongest
+axis; see the dropped-examples note in `gate-3-canonical.adoc`.
+Graded was rejected unattempted: faithful formalisation of graded
+budgets (e.g., differential-privacy ε) needs probability or
+quantitative-grade machinery beyond what is in `--safe` Agda
+without scaffolding that would itself need canonicality review.
+Honest negative result.
+
+=== Verification status
+
+[source,sh]
+----
+LC_ALL=C.UTF-8 agda -i proofs/agda -i /usr/share/agda-stdlib \
+                proofs/agda/examples/All.agda
+----
+
+Verified with Agda 2.6.3 + agda-stdlib 1.7.3.  All four files
+(three examples + aggregator) produce `.agdai` from a clean state
+with exit code 0.  Cubical-Agda warnings in stdout are stdlib-internal
+(Debian package build flags), unrelated to anything in this lane.
+
+=== Imports
+
+Per the new brief, imports are restricted to existing `Echo*.agda`
+and stdlib.  All three files import only stdlib (no custom modules)
+and define `Echo` locally.  Rationale carried over from the
+previous iteration: each example reads as a standalone demonstration
+and survives any API drift in the existing modules during parallel
+work on Gates #1 and #2.
+
+If the maintainer prefers the existing modules to be imported, the
+local `Echo` definition can be replaced with `open import Echo` in
+each file (one-line edit), modulo `--without-K` coinfectivity.
+
+=== `.agdai` files
+
+Interface files are produced by typechecking but are not part of
+this delivery.  If the top-level `.gitignore` does not already
+exclude them, consider adding `*.agdai`.

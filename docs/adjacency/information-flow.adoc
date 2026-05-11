@@ -1,0 +1,190 @@
+= Adjacency: information-flow non-interference
+:toc: macro
+
+[.lead]
+*Verdict: distinct against relational IFC (Goguen-Meseguer
+lineage); open question against type-theoretic IFC.* The
+relational/propositional case loses to `echo-not-prop`. The
+type-theoretic IFC family has not been formally compared.
+
+toc::[]
+
+== Nearest existing construction
+
+Goguen and Meseguer (1982, "Security Policies and Security
+Models") formalised non-interference as an equivalence relation
+on system states: low-equivalence partitions states into classes
+that a low-clearance observer cannot distinguish. The agent's
+"knowledge" of high-level state, given low observations, is the
+equivalence class.
+
+For a projection function `obs : State → LowView`, the
+low-equivalence relation is `s₁ ∼ s₂ iff obs s₁ ≡ obs s₂`. The
+equivalence class of `s` under this relation is *exactly*
+`Echo obs (obs s)`. Same construction, different stance:
+
+* IFC studies the *relation* and the policies it enforces.
+* Echo studies the *witnesses* that satisfy the relation at a
+  given output.
+
+The IFC literature has been formalising this since 1982, with a
+substantial proof corpus across Coq, Agda, Isabelle, and other
+systems.
+
+== Distinctness claim (relational variants)
+
+[quote]
+Echo wins against *relational / propositional* IFC by the
+truncation argument: knowledge as an equivalence relation is
+propositional in the witness; knowledge as Echo is type-data.
+For dynamic / programmable knowledge update, type-data is
+required.
+
+== Distinctness claim (type-theoretic variants)
+
+*Open.* Type-theoretic IFC variants exist (e.g., type-system
+formulations of non-interference where the security level is a
+type-system phenomenon, not a relational property). Whether any
+of them carry the recipe (custom propositional decoration order
++ echo-indexed family + transport action) natively is an
+unanswered question.
+
+== Truncation argument
+
+Formalised in gate-3's `EpistemicUpdate` example, which tests
+explicitly against IFC: "Goguen-Meseguer captures the same
+propositional content (which worlds are indistinguishable) but
+is *relational*, not *type-theoretic*. For *static* knowledge
+analysis (does agent know P?), the two accounts are tied:
+classical Kripke semantics suffices. For *dynamic* / *programmable*
+knowledge update — where you compute with the knowledge type,
+define functions on witnesses, take sub-Σ refinements — Echo's
+type-data is what the formalisation needs."
+
+The formal certificate: `EpistemicUpdate.echo-not-prop` proves
+the knowledge type is not a mere proposition. Relational IFC's
+equivalence-class formulation is propositional by construction,
+so it cannot reproduce this.
+
+`EpistemicUpdate.refine-injective` is the type-data version of
+"refining knowledge does not collapse worlds." The relational
+analog ("intersection of equivalence relations is strictly
+contained") has the same propositional content but no
+constructive witness on individual states.
+
+== 2-cell argument
+
+Not directly applicable to relational IFC — the relations are
+the primitive object; there are no parallel transports between
+classes to compare. Type-theoretic IFC variants might admit a
+2-cell argument; this is part of the open question.
+
+== Recipe-level distinctness (open question)
+
+The substantive question this neighbour raises:
+
+[quote]
+Does any type-theoretic IFC variant carry the recipe (custom
+propositional decoration order + echo-indexed family + transport
+action) natively?
+
+If yes, gate-1 weakens against that variant — type-theoretic IFC
+becomes a co-extensive neighbour, like Σ-relevant refinement and
+QTT-class modal type theories. If no, the recipe is genuinely
+echo-specific against this neighbour.
+
+I do not know the answer. Type-theoretic IFC includes a wide
+family: dependent-type-system non-interference (e.g., Coq
+formalisations), security-typed lambda calculi (Volpano-Smith
+and successors), parameterised security types (Pottier-Simonet
+and successors). Each would need its own recipe-test.
+
+A worked formalisation would:
+
+. For each type-theoretic IFC variant in scope, sketch whether
+  it admits indexed predicates and dependent transport along a
+  custom propositional order.
+. If yes, write the recipe in that variant's syntax and check
+  whether the resulting "characteristic" theorem family (in
+  the gate-2 sense) is non-trivial.
+. If non-trivial, weaken the gate-1 distinctness claim against
+  that variant; if trivial or impossible, retain.
+
+== What echo adds (over relational IFC)
+
+* Witness identity (the agent's knowledge is a *type* of
+  consistent worlds, not just a class).
+* Programmable refinement (the `refine` function in
+  `EpistemicUpdate`).
+* The ability to define new functions on the knowledge type
+  (sub-Σ projections, observation-aware analysis).
+
+== What echo does not add (over relational IFC)
+
+The *equivalence relation itself* is identical. For
+non-interference *policy verification* — does the system respect
+the policy? — relational IFC is the right tool; echo provides no
+additional verification power on this axis. The win is on
+*knowledge representation* and *programmable update*, not on
+policy enforcement.
+
+== What echo may not add (over type-theoretic IFC)
+
+This is the open question. If a type-theoretic IFC variant
+carries the recipe natively, the win against that variant
+weakens. The honest framing would then mirror the modal-type-
+theory case: "co-extensive with type-theoretic IFC variant X;
+distinct from relational variants."
+
+== Retraction conditions
+
+Either of the following weakens the distinctness claim against
+IFC:
+
+. *Relational variants:* a relational IFC encoding that recovers
+  individual witness identity through some non-truncating
+  mechanism (extended equivalence relations, witness-tagged
+  classes, etc.). Plausible but would push toward type-theoretic
+  IFC, not away from it.
+. *Type-theoretic variants:* a type-theoretic IFC variant that
+  carries the recipe natively. *Genuinely open.*
+
+== Open obligation
+
+The under-formalised gap. The truncation case is closed via
+`EpistemicUpdate.echo-not-prop`. The recipe-level test against
+type-theoretic IFC variants has not been performed.
+
+Forwarding to:
+
+* Q2.x — adding "evaluate the four gate-2 nominees against
+  type-theoretic IFC variants" to the gate-2 nominee evaluation
+  list. If any nominee reduces in any IFC variant, the gate-2
+  nominee weakens; the gate-1 distinctness claim against that
+  variant correspondingly weakens.
+* Q3.1 — gate-3's open canonical example for the choreographic
+  axis, which is the axis closest to IFC. A canonical example
+  there would be the most direct test of distinctness against
+  type-theoretic IFC.
+
+== Status
+
+* Truncation argument (relational IFC): *formalised* via
+  `EpistemicUpdate.echo-not-prop`.
+* Recipe-level argument (type-theoretic IFC): *open*. Genuinely
+  open work, not boilerplate.
+* No dedicated `proofs/agda/adjacency/IFC.agda` formalisation.
+
+== References
+
+* Goguen and Meseguer, "Security Policies and Security Models"
+  (IEEE Symposium on Security and Privacy, 1982).
+* Volpano, Irvine, Smith, "A Sound Type System for Secure Flow
+  Analysis" (Journal of Computer Security, 1996) — foundational
+  type-theoretic IFC.
+* Pottier and Simonet, "Information Flow Inference for ML"
+  (POPL 2002) — parameterised security types.
+* `proofs/agda/examples/EpistemicUpdate.agda` for the formal
+  exhibit on the relational-IFC case.
+* `quotients.adoc` for the closely related quotient argument
+  (relational IFC is, structurally, quotient-by-low-equivalence).

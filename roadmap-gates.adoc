@@ -49,6 +49,25 @@ toc::[]
 Echo types name structured loss under non-injective computation as a
 phenomenon distinct from existing treatments — refinement types,
 lens/optic theory, HoTT fibers, setoid quotients, provenance semirings.
+
+Distinctness rests on two structural arguments: the *truncation
+argument* (echo types are non-truncatable for non-injective
+functions with multiple preimages, formally certified by the
+`echo-not-prop` family in `proofs/agda/examples/`) and the *2-cell
+argument* (neighbour-framework natural 2-cells are
+Σ-over-preimages-shaped, formally certified by
+`Sophisticated.equalizer→echo-pair` in `EchoVsQuotient.agda` and
+`Sophisticated.meet→echo-intersection` in `EchoVsGalois.agda`).
+
+The integration recipe (decoration order + echo-indexed family +
+transport action) is useful as organising vocabulary across the
+five named axes (choreographic, epistemic, linear, graded,
+tropical) but does NOT carry the distinctness load: the EI-2
+investigation (`docs/EI2_REPORT.adoc`) establishes that recipe
+commutations exhibit one-axis-at-a-time cross-axis content
+embedded in 2D families, not substantive simultaneous interaction.
+This holds across all attempted axis pairings including the
+non-loss-only self-pairing (`RoleRole.agda`).
 ****
 
 === Test
@@ -103,15 +122,49 @@ does not count.
 |===
 | Module | Candidate theorem
 
-| `EchoCharacteristic`
-| `visible-constraint` — retained-constraint under projection.
+| `EchoGraded`
+| `degrade-via-join` — categorical join law on the loss-grade lattice.
 
 | `EchoGraded`
-| Compositional degradation law.
+| `degrade-compose` — compositional degradation along the grade lattice.
 
-| `EchoIntegration`
-| Knowledge preservation under choreography with graded degradation.
+| `EchoChoreo`
+| `applyChoreo-compose` — compositional choreographic transport along the role-reachability lattice.
+
+| `EchoLinear`
+| `degradeMode-compose` — compositional weakening along the linearity-mode lattice.
 |===
+
+[NOTE]
+====
+This table was amended on the basis of the audit in
+`docs/gate-2-characteristic.adoc`. The previous nominees —
+`EchoCharacteristic.visible-constraint`, the same `EchoGraded` lemma
+(then named only descriptively as "compositional degradation law"),
+and `EchoIntegration.knowledge-and-controlled-degradation` — were
+replaced because:
+
+* `visible-constraint` reduces to `proj₂` after unfolding
+  `visible := proj₁` (formal exhibit:
+  `proofs/agda/characteristic/VisibleConstraintAudit.agda`). It
+  remains in `EchoCharacteristic.agda` for expository value but is
+  not nominated.
+* `knowledge-and-controlled-degradation` is `_×_` of two facts over
+  disjoint frameworks (formal exhibit:
+  `proofs/agda/characteristic/IntegrationAudit.agda`). It remains
+  in `EchoIntegration.agda` but is not nominated. A genuine
+  cross-decoration integration theorem is now constructed in
+  `proofs/agda/characteristic/RoleGraded.agda`
+  (`choreo-grade-commute`); whether to add it as a fifth nominee is
+  left to a future amendment.
+* `EchoLinear.degradeMode-compose` was added as the fourth nominee
+  to broaden the family beyond two modules. It is the linearity-mode
+  analogue of `degrade-compose` and `applyChoreo-compose`, exhibiting
+  the same recipe (custom propositional decoration order + echo-indexed
+  family + transport action) on a third decoration.
+* The current four-entry table spans three modules and survives the
+  audit 4-of-4.
+====
 
 [IMPORTANT]
 ====

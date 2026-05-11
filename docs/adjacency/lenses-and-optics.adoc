@@ -42,6 +42,16 @@ the "first projection lens" `_1 : Lens (A × B) A`.
   square `f' ∘ u ≡ v ∘ f`. This is adjacent to lens composition but
   the morphism data is different: morphisms of source and target
   codomains plus a coherence, not a get/put pair at each step.
+  Sequential composition has its own theorem:
+  `Echo-comp-iso-{to, from, from-to, to-from}` exhibits
+  `Echo (g ∘ f) y ≃ Σ b. Echo f b × (g b ≡ y)`, with the projection-
+  pentagon lemmas `Echo-comp-iso-pent-{B, echo}` enforcing coherence
+  for three-fold composites. Lenses ship the analogous "compose two
+  lenses to get a lens" as a definition; echoes ship it as an
+  isomorphism theorem in plain Agda. `cancel-iso-{to, from}`
+  additionally captures the optic intuition "if the outer step is
+  invertible, peel it off" as `Echo (g ∘ f) y → Echo f (s y)` and
+  back, _without_ requiring a `put` half.
 . *Residue as first-class lowering.* `EchoResidue.echo-to-residue`
   lowers a full echo to a certificate, with
   `no-section-collapse-to-residue` witnessing strict loss. Lenses

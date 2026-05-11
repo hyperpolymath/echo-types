@@ -1,0 +1,40 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= QUICKSTART-MAINTAINER: echo-types
+:toc:
+
+== Cutting a release
+
+[source,bash]
+----
+# 1. Ensure CI is green and proofs typecheck.
+just verify
+
+# 2. Update CHANGELOG: move [Unreleased] entries under a new dated heading.
+
+# 3. Bump version in:
+#      - .machine_readable/6a2/STATE.a2ml § identity.version
+#      - echo-types.agda-lib (if applicable)
+
+# 4. Commit, tag, push.
+git commit -am "release: vX.Y.Z"
+git tag -s vX.Y.Z -m "release: vX.Y.Z"
+git push origin main --tags
+
+# 5. CI mirrors to GitLab and Codeberg via mirror.yml.
+----
+
+== Coordinating new bridges
+
+A new `Echo<Domain>Bridge.agda` module joins the bridge family. To add one:
+
+. Author the module under `proofs/agda/`. Convention: `Echo<Domain>Bridge` for cross-system bridges (linear, graded, tropical, etc.); `Echo<Construct>` for direct extensions (Indexed, Relational, Categorical).
+. Add a `test-<domain>` recipe to the `Justfile` mirroring the existing pattern.
+. Add the new module to `proofs/agda/All.agda` (the import-everything compile target).
+. Update `.machine_readable/6a2/STATE.a2ml § core-results` with the new module path.
+. Update `EXPLAINME.adoc` § Status snapshot if the bridge changes the load-bearing distinctness story.
+
+== Escalation
+
+* Banned-pattern relapse: stop the merge; discharge or open ADR.
+* EI-2 reopen attempt: follow `.machine_readable/6a2/PLAYBOOK.a2ml § on-EI-2-mention` procedure exactly. Cite from STATE; do not paraphrase.
+* Schema drift in the 6a2 files relative to `hyperpolymath/standards`: open issue against standards; do not silently re-shape echo-types' files.

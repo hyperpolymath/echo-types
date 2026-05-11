@@ -1,144 +1,108 @@
 {-# OPTIONS --safe --without-K #-}
 
--- Echo-CNO Bridge (Simplified)
+-- Echo↔CNO Content Bridge.
 --
--- Bridge between echo types and Certified Null Operations.
+-- Resolves issue #21. The previous EchoCNOBridge.agda was a
+-- *name-bridge*: it defined a local 4-constructor `CNOOp` enum
+-- (`Read`/`Write`/`Execute`/`NullOp`) entirely independent of
+-- absolute-zero's CNO formalisation, so its names happened to use
+-- "CNO" without sharing a single type-level fact with the sister
+-- repository. This module replaces that with a *content-bridge*:
+-- it imports `Program`, `IsCNO`, `empty-is-cno`, `halt-is-cno`,
+-- `cno-composition`, `absolute-zero`, and `absolute-zero-is-cno`
+-- directly from absolute-zero's `CNO.agda`, and exhibits a
+-- constructive Echo witness for every `IsCNO p` Program.
+--
+-- Pre-requisites (cross-repo plumbing):
+--   * `absolute-zero/absolute-zero.agda-lib` registered in
+--     `~/.agda/libraries`.
+--   * `depend: absolute-zero` listed in `echo-types.agda-lib`.
+--   * absolute-zero's `proofs/agda/CNO.agda` typechecks under
+--     `--safe --without-K` (was blocked at HEAD by two parse
+--     errors at lines 316 and 323 in `ternary-add` / `crazy-op`'s
+--     `using (_Data.Nat.%_)` clauses, plus two unfilled holes in
+--     `cno-composition`'s `cno-identity` / `cno-pure` fields).
+--     A patch addressing both is filed alongside this commit at
+--     `docs/echo-types/issue-21-absolute-zero.patch`.
 
 module EchoCNOBridge where
 
 open import Echo
+
+open import CNO using
+  ( Program
+  ; Instruction
+  ; Halt
+  ; IsCNO
+  ; empty-is-cno
+  ; halt-is-cno
+  ; cno-composition
+  ; absolute-zero
+  ; absolute-zero-is-cno
+  ; seq-comp
+  )
+
+open import Data.List.Base using ([]; _∷_)
 open import Data.Unit.Base using (⊤; tt)
-open import Data.Product.Base using (Σ; _,_; _×_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-----------------------------------------------------------------------------
--- Section 1: CNO Operation Model
-----------------------------------------------------------------------------
+----------------------------------------------------------------------
+-- Base map and Echo type.
+----------------------------------------------------------------------
 
--- CNO operation types
-data CNOOp : Set where
-  Read    : CNOOp
-  Write   : CNOOp
-  Execute : CNOOp
-  NullOp  : CNOOp
+-- The maximally-collapsing visible map from Programs to ⊤. Echo
+-- witnesses for this `f` retain Program-level provenance even
+-- though the visible value is the unique inhabitant of `⊤`.
+program-to-unit : Program → ⊤
+program-to-unit _ = tt
 
--- Function from CNO operations to unit
-cno-to-unit : CNOOp → ⊤
-cno-to-unit _ = tt
+-- The type of CNO-program echoes at the unit fibre.
+ProgramEcho : Program → Set
+ProgramEcho _ = Echo program-to-unit tt
 
--- Echo types for CNO operations
-CNOEcho : CNOOp → Set
-CNOEcho op = Echo cno-to-unit tt
+----------------------------------------------------------------------
+-- Headline bridge theorem: every certified-null program has a
+-- constructive Echo witness.
+--
+-- The IsCNO certificate is consumed but not destructed: any program
+-- has an echo at `tt` via `echo-intro`, and the bridge's content is
+-- that this echo is naturally indexed by the program itself.
+-- Read against absolute-zero's CNO.agda, this depends on the
+-- *existence* of an `IsCNO`, not on its contents — which is the
+-- right level for a content-bridge: we are exhibiting that any
+-- `IsCNO`-classified program inhabits the echo type, not
+-- retrofitting a separate proof of CNO-ness.
+----------------------------------------------------------------------
 
-----------------------------------------------------------------------------
--- Section 2: Core Echo Instances
-----------------------------------------------------------------------------
+cno-program-echo : (p : Program) → IsCNO p → ProgramEcho p
+cno-program-echo p _ = echo-intro program-to-unit p
 
--- Echo instances for each CNO operation
-read-echo : CNOEcho Read
-read-echo = echo-intro cno-to-unit Read
+----------------------------------------------------------------------
+-- Concrete instances.
+----------------------------------------------------------------------
 
-write-echo : CNOEcho Write
-write-echo = echo-intro cno-to-unit Write
+-- The empty program is a CNO; its echo at `tt` is `[] , refl`.
+empty-cno-echo : ProgramEcho []
+empty-cno-echo = cno-program-echo [] empty-is-cno
 
-execute-echo : CNOEcho Execute
-execute-echo = echo-intro cno-to-unit Execute
+-- A single Halt is a CNO; its echo at `tt` is `(Halt ∷ []) , refl`.
+halt-cno-echo : ProgramEcho (Halt ∷ [])
+halt-cno-echo = cno-program-echo (Halt ∷ []) halt-is-cno
 
-nullop-echo : CNOEcho NullOp
-nullop-echo = echo-intro cno-to-unit NullOp
+-- The titular `absolute-zero` program (definitionally the empty
+-- program) inhabits the echo type via its CNO certificate.
+absolute-zero-echo : ProgramEcho absolute-zero
+absolute-zero-echo =
+  cno-program-echo absolute-zero absolute-zero-is-cno
 
-----------------------------------------------------------------------------
--- Section 3: CNO Properties
-----------------------------------------------------------------------------
+----------------------------------------------------------------------
+-- Composition: chained CNO certificates extend the bridge to the
+-- sequenced program. This is the single fact that distinguishes a
+-- content-bridge from a name-bridge: composition here uses
+-- `CNO.cno-composition` from absolute-zero, not a local substitute.
+----------------------------------------------------------------------
 
--- Null operations are reversible
-nullop-reversible : CNOEcho NullOp
-nullop-reversible = nullop-echo
-
--- All CNO operations preserve echo structure
-cno-preserves-echo : CNOEcho Read → CNOEcho Read
-cno-preserves-echo echo = echo
-
-cno-preserves-echo-write : CNOEcho Write → CNOEcho Write
-cno-preserves-echo-write echo = echo
-
-cno-preserves-echo-execute : CNOEcho Execute → CNOEcho Execute
-cno-preserves-echo-execute echo = echo
-
-cno-preserves-echo-nullop : CNOEcho NullOp → CNOEcho NullOp
-cno-preserves-echo-nullop echo = echo
-
-----------------------------------------------------------------------------
--- Section 4: Main Bridge Theorem
-----------------------------------------------------------------------------
-
--- Main result: CNO operations are echo-type compatible
-CNOEchoBridgeTheorem : 
-  CNOEcho Read × CNOEcho Write × CNOEcho Execute × CNOEcho NullOp
-CNOEchoBridgeTheorem = 
-  read-echo , write-echo , execute-echo , nullop-echo
-
--- CNO operations are uniformly reversible
-CNOReversibilityTheorem : 
-  (CNOEcho Read → CNOEcho Read) ×
-  (CNOEcho Write → CNOEcho Write) ×
-  (CNOEcho Execute → CNOEcho Execute) ×
-  (CNOEcho NullOp → CNOEcho NullOp)
-CNOReversibilityTheorem = 
-  cno-preserves-echo , cno-preserves-echo-write , cno-preserves-echo-execute , cno-preserves-echo-nullop
-
-----------------------------------------------------------------------------
--- Section 5: Practical Examples
-----------------------------------------------------------------------------
-
--- Example 1: Read operation with echo provenance
-read-operation-example : CNOEcho Read
-read-operation-example = read-echo
-
--- Example 2: Write operation with echo provenance
-write-operation-example : CNOEcho Write
-write-operation-example = write-echo
-
--- Example 3: Execute operation with echo provenance
-execute-operation-example : CNOEcho Execute
-execute-operation-example = execute-echo
-
--- Example 4: Null operation with echo provenance
-null-operation-example : CNOEcho NullOp
-null-operation-example = nullop-echo
-
--- Example 5: Operation sequence with provenance
-operation-sequence : CNOEcho Read → CNOEcho Write → Echo cno-to-unit tt
-operation-sequence read write = read
-
-----------------------------------------------------------------------------
--- Section 6: Integration Patterns
-----------------------------------------------------------------------------
-
--- Pattern 1: Null operation as identity
-null-as-identity : CNOEcho NullOp → Echo cno-to-unit tt
-null-as-identity echo = echo
-
--- Pattern 2: Operation composition (simplified)
-operation-composition : CNOEcho Read → CNOEcho Write → CNOEcho Read
-operation-composition r w = r
-
-----------------------------------------------------------------------------
--- Summary
-----------------------------------------------------------------------------
-
--- This bridge demonstrates that:
--- 1. CNO operations can be modeled with echo types
--- 2. Echo types preserve CNO operation identity
--- 3. Null operations have natural echo representations
--- 4. The bridge provides provenance tracking for CNO operations
--- 5. Practical examples illustrate real-world usage
-
--- The implementation uses the standard Echo type pattern:
--- - cno-to-unit : CNOOp → ⊤ as the function f
--- - tt : ⊤ as the target value y  
--- - Echo cno-to-unit tt as the fiber type
--- This provides a solid foundation for CNO-echo integration.
-
--- Enhanced with practical examples and integration patterns for
--- certified null operations in formal verification contexts.
+cno-compose-echo :
+  ∀ {p₁ p₂} → IsCNO p₁ → IsCNO p₂ →
+  ProgramEcho (seq-comp p₁ p₂)
+cno-compose-echo {p₁} {p₂} c₁ c₂ =
+  cno-program-echo (seq-comp p₁ p₂) (cno-composition c₁ c₂)

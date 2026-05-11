@@ -3,57 +3,97 @@
 
 toc::[]
 
-== 1. Nearest existing constructions
+== 1. Nearest existing construction
 
 The nearest cubical-side systems for this repository are:
 
 * Cubical Agda: Agda's built-in `--cubical` mode plus the separate
-  Cubical Agda library.
+  Cubical Agda library, supplying first-class path types, higher
+  inductive types, and a definitional univalence principle.
 * `RedPRL`: a tactic-oriented assistant for computational Cartesian
   cubical type theory.
 * `redtt` and `cooltt`: experimental cubical proof assistants /
-  typecheckers.
+  typecheckers in the same family.
 
 For this repository, Cubical Agda is the closest operational neighbour:
-it preserves the Agda language and keeps the migration cost lower than a
-move to a different prover.
+it preserves the Agda language and would keep the migration cost lower
+than a move to a different prover. The relevant cubical construction
+itself is the same sigma-of-equation, `Σ x , (f x = y)`, but read
+against path equality rather than `Relation.Binary.PropositionalEquality`.
 
-== 2. What do they add?
+== 2. What do echo types add?
 
-* First-class path/cubical equality and higher-dimensional structure.
-* Higher inductive and quotient-like reasoning that plain
-  `--safe --without-K` Agda does not provide directly.
-* A plausible route for roadmap item `R2` in `roadmap.adoc`: treating
-  indistinguishability with equivalence-aware identity rather than only
-  propositional/set-level relations.
+. *Plain intensional setting, deliberately.* The Agda development uses
+  `--safe --without-K` and keeps `_≡_` as ordinary
+  propositional equality. `EchoCharacteristic.echo-true≢echo-false`
+  exploits exactly that: it is a disequality of two inhabitants of the
+  same fiber that a cubical reader, working up to higher equivalence,
+  would not recover automatically. The retained witness is meaningful
+  because the equality is _not_ identifying it.
+. *Composition machinery proved by `refl`/`cong`/`trans`.* The
+  recently-landed `Echo-comp-iso-{to, from, from-to, to-from}` in
+  `proofs/agda/Echo.agda` gives a base-accumulation isomorphism
+  `Echo (g ∘ f) y ≃ Σ b. Echo f b × (g b ≡ y)` directly in plain
+  Agda. `cancel-iso-{to, from}` and the projection-pentagon lemmas
+  `Echo-comp-iso-pent-{B, echo}` follow the same pattern. A cubical
+  setting would supply more powerful tools (path induction, transport
+  along univalence) but is not _required_ for these statements; they
+  hold without higher-dimensional machinery.
+. *Residue / graded / linear / epistemic stack.* `EchoResidue`,
+  `EchoGraded`, `EchoLinear`, `EchoEpistemic`, `EchoIntegration` build
+  the structured-loss hierarchy without HITs, truncations, or path
+  algebra. A cubical reformulation would not, by itself, supply this
+  stack; it would be a re-host of content that already lives in plain
+  Agda.
 
-== 3. What do they _not_ add?
+== 3. What do echo types _not_ add?
 
-* No automatic reuse guarantee for the current Buchholz work. Moving to
-  `RedPRL`, `redtt`, or `cooltt` is a prover migration, not a local
-  refactor.
-* No evidence yet that the blocked direct same-binder route in plain
-  Agda disappears automatically in a cubical setting.
-* No requirement for the current echo-types evidence base, which still
-  compiles in plain Agda with the standard library.
+* No path/cubical equality, no higher-dimensional structure, no HITs.
+* No quotient _types_, no automatic respect-of-relations through
+  univalence.
+* No direct route for roadmap item `R2` of `roadmap.adoc`
+  (equivalence-aware indistinguishability), which is plausibly best
+  expressed cubically. That work is tracked as a future migration, not
+  as a current claim.
+* No reuse guarantee for the Buchholz / ordinal track if the prover
+  changes. Moving to `RedPRL`, `redtt`, or `cooltt` would be a prover
+  migration rather than a local refactor.
 
-== 4. Working decision
+== 4. Honest risk to the distinction
 
-* Active repository tooling stays Agda-first.
-* Optional exploratory extension: Agda `--cubical` plus the Cubical
-  Agda library.
-* `RedPRL`, `redtt`, and `cooltt` are tracked as adjacent references,
-  not installed or required for normal builds.
+The sharpest cubical-side reading is: "every echo theorem is a
+shadow of a cubical statement; what you call an `_≡_` proof is a
+0-dimensional path, and your insistence on intensional equality is a
+self-imposed restriction without mathematical content." Under that
+reading, echo types are just fibers in plain Agda, awaiting a port to
+a cubical assistant where the proofs would be cleaner.
 
-== 5. Why this matters here
+The reply is that the deliberately-intensional setting is _what
+generates the structured-loss content_:
+`echo-true≢echo-false`, `state₁≢state₂`, and
+`no-section-collapse-to-residue` rely on intensional equality being
+non-trivial. A cubical port would have to add explicit truncation
+levels to recover the same proof-relevance distinctions, at which
+point the echo development reappears as a 0-truncated specialisation
+of the cubical theory. The framing question — "study fibers in plain
+Agda with structured loss" vs. "study fibers cubically with chosen
+truncation" — is editorial; both are coherent.
 
-Cubical systems may matter later for quotient-like or
-equivalence-sensitive extensions of echo types, especially roadmap item
-`R2`. They are not part of the evidential base for the current identity
-claim. That claim still stands or falls on the plain-Agda development
-already in the repository.
+The current development asserts that the plain-Agda framing is the
+right base camp, with cubical extensions as an optional later step.
 
-== 6. References
+== 5. Verdict for Gate 1
+
+Survives. Cubical systems are an _extensional richer_ neighbour rather
+than a refutation: they could host an echo development with stronger
+equality, but they do not subsume the structured-loss machinery, and
+the bare type former `Σ x , f x = y` is identical content under either
+reading. The identity claim does not stand on cubical avoidance; it
+stands on the residue / graded / linear / epistemic stack and on the
+composition / cancellation / pentagon rungs proved without higher-path
+machinery.
+
+== References
 
 * Cubical Agda library: `https://github.com/agda/cubical`
 * `RedPRL` family: `https://redprl.org/`

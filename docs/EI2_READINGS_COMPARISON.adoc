@@ -1,0 +1,44 @@
+= EI-2 readings comparison — SUPERSEDED
+:toc:
+
+[.lead]
+This document is *superseded*. The EI-2 decision was settled by the
+prior session's `RoleRole.agda` finding, which showed a stronger
+negative trajectory than either originally-drafted reading
+assumed.
+
+== What happened
+
+This document was originally drafted to compare two candidate
+gate-1 amendments:
+
+* READING 1 (strict): accept ModeGrade as falsifier, weaken gate-1.
+* READING 2 (refined): make non-loss-only an explicit recipe
+  precondition, gate-1 narrows but holds.
+
+Both readings assumed the non-loss-only criterion was *sufficient*
+for substantive simultaneous cross-axis interaction. The prior
+session's `RoleRole.agda` work refuted this: even two non-loss-only
+axes paired together (Choreo × Choreo) produce trivial coordinate-
+product commutation in the independent-product design, and break
+per-axis transport in the shared-state design. NLO is *necessary
+but not sufficient* for substantive simultaneous interaction; in
+fact, no axis pairing within the existing recipe produces
+substantive simultaneous content.
+
+== The actual termination
+
+*EI-2 TERMINATED — negative verdict, via PATH B.*
+
+The integration recipe with the existing five named axes does not
+carry substantive simultaneous cross-axis content. Distinctness
+against neighbour frameworks rests on the truncation argument
+(`echo-not-prop` family in `proofs/agda/examples/`) and the
+2-cell argument (Sophisticated submodules in `EchoVsQuotient.agda`
+and `EchoVsGalois.agda`), not on the integration argument.
+
+See `EI2_REPORT.adoc` for the authoritative termination record.
+The companion files `EI2_READING1_PATCHES.adoc` and
+`EI2_READING2_PATCHES.adoc` are also superseded as decision aids
+but kept for historical record of the alternatives that were
+considered.

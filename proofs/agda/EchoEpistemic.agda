@@ -26,12 +26,12 @@ indist-trans :
 indist-trans = trans
 
 -- Knowledge at visible value y: P holds for every witness compatible with y.
+-- Spelt out as `(e : RoleEcho r y) → ...` rather than `∀ e → ... ∋ e` so
+-- Agda 2.8.0's unifier can see the role and value parameters through
+-- downstream lemmas (knowledge-monotone-comp etc.) without a
+-- type-ascription indirection.
 Knows : Role → (Global → Set) → Bool → Set
-Knows r P y = ∀ e → P (proj₁ (RoleEcho r y ∋ e))
-  where
-    infix 4 _∋_
-    _∋_ : ∀ {ℓ} (A : Set ℓ) → A → A
-    _ ∋ x = x
+Knows r P y = (e : RoleEcho r y) → P (proj₁ e)
 
 knows-from-preimage :
   ∀ {r : Role} {y : Bool} {P : Global → Set} →
@@ -45,6 +45,43 @@ knowledge-monotone :
   Knows r P y →
   Knows r Q y
 knowledge-monotone pq k e = pq (proj₁ e) (k e)
+
+-- Per-decoration composition law for the modal layer. Two successive
+-- monotonicity steps `P ⊆ Q` then `Q ⊆ R` agree pointwise with the
+-- single composite `P ⊆ R` (composed predicate transformer).
+--
+-- This is the modal analogue of `EchoGraded.degrade-compose`,
+-- `EchoLinear.degradeMode-comp`, and `EchoIndexed.map-role-indexed-comp`.
+-- Stated pointwise on each predicate-witness `e : RoleEcho r y` so the
+-- equation lives inside `--safe --without-K` without function
+-- extensionality. Both sides reduce to `qr (proj₁ e) (pq (proj₁ e)
+-- (k e))` definitionally.
+-- Implicit args to `knowledge-monotone` are annotated explicitly at every
+-- call site. Under Agda 2.8.0 the unifier won't infer the implicit role
+-- `r` from `obs _r x = obs r x` (obs isn't injective), so the
+-- decoration's role+value+predicate parameters must be supplied directly.
+knowledge-monotone-comp :
+  ∀ {r : Role} {y : Bool} {P Q R : Global → Set}
+  (pq : ∀ g → P g → Q g)
+  (qr : ∀ g → Q g → R g)
+  (k  : Knows r P y) →
+  (e : RoleEcho r y) →
+    knowledge-monotone {r = r} {y = y} {P = Q} {Q = R} qr
+      (knowledge-monotone {r = r} {y = y} {P = P} {Q = Q} pq k) e
+  ≡ knowledge-monotone {r = r} {y = y} {P = P} {Q = R}
+      (λ g p → qr g (pq g p)) k e
+knowledge-monotone-comp pq qr k e = refl
+
+-- Identity-step corollary: monotonicity along the identity predicate
+-- transformer leaves knowledge unchanged. Useful when chaining with
+-- the composition lemma above to peel off no-op steps.
+knowledge-monotone-id :
+  ∀ {r : Role} {y : Bool} {P : Global → Set}
+  (k : Knows r P y) →
+  (e : RoleEcho r y) →
+    knowledge-monotone {r = r} {y = y} {P = P} {Q = P} (λ _ p → p) k e
+  ≡ k e
+knowledge-monotone-id k e = refl
 
 ServerIsTrue : Global → Set
 ServerIsTrue g = proj₂ g ≡ true

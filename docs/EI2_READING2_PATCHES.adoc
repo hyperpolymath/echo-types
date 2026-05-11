@@ -1,0 +1,331 @@
+= EI-2 Obligation 2: READING 2 candidate patches
+[NOTE]
+====
+*SUPERSEDED.* This document is the *original* candidate text for
+this reading. It was drafted before `RoleRole.agda`'s finding (in
+the prior session's phase-5 work) revealed that the non-loss-only
+criterion is necessary but *not* sufficient — even two non-loss-only
+axes paired together don't produce substantive simultaneous
+cross-axis content.
+
+The EI-2 verdict (PATH B) is therefore stronger-negative than this
+reading assumed. See `EI2_REPORT.adoc` for the authoritative
+termination record. This file is kept for historical record of the
+original drafted alternative.
+====
+
+:toc: macro
+
+[.lead]
+*READING 2: refined — Observation G implicitly required the
+non-loss-only criterion all along; ModeGrade is outside the
+recipe's scope, not a falsifier.* This document is the
+candidate text for the doc surgery if READING 2 is adopted.
+
+If READING 2 is adopted, three texts change: Observation G
+(amended to state the precondition), the gate-1 claim (narrows
+but holds), and the recipe-non-triviality theorem becomes
+formalisable as a closed mathematical statement. The change is
+*more substantive* than READING 1 because it requires a positive
+formal argument for the criterion, not just an admission of
+limited scope.
+
+toc::[]
+
+== Patch 1: gate-2-handoff.adoc § Observation G — most substantial change
+
+The recipe statement is the *primary* text under READING 2. The
+amendment makes the non-loss-only criterion an explicit recipe
+precondition, with the formal certificate in
+`ChoreoInjective.agda` cited directly.
+
+=== Old text (selected portion)
+
+[quote]
+____
+All four current survivors (and the candidate-N5 from
+characteristic.RoleGraded) are instances of the same recipe:
+
+| Decoration | Order | Family | Action
+| ... [table] ...
+
+Each instance produces the same lemma family — composition law,
+join law (where applicable), propositionality of order — with
+the same proof structure. The 2D product additionally produces
+a commutation law on the two independent actions.
+____
+
+=== New text (READING 2)
+
+[quote]
+____
+The integration recipe consists of: a custom propositional
+decoration order on a finite type, an echo-indexed family that
+varies type per decoration, and a transport action along the
+order. *Recipe non-triviality* — the property that 2D
+combinations of recipe-instances produce non-trivial commutation
+content — requires an additional structural condition:
+
+____
+
+[NOTE]
+====
+*Non-loss-only criterion* (formalised in
+`proofs/agda/characteristic/ChoreoInjective.agda` for the
+Choreographic axis):
+
+An axis (D, _≤_, F : D → Set, t : ∀ {d1 d2} → d1 ≤ d2 → F d1 → F d2)
+is *non-loss-only* iff for at least one strict step `d1 < d2`,
+the transport `t (d1≤d2)` is injective on inhabitants of F d1.
+====
+
+[quote]
+____
+The four current recipe instances classify as follows:
+
+| Instance | Non-loss-only? | Strict-step transport | Witness
+| Choreographic (`EchoChoreo`)
+| Yes
+| `client-to-server`
+| `ChoreoInjective.client-to-server-injective-on-proj₁`
+| Information loss (`EchoGraded`)
+| No
+| `degrade keep≤residue = collapse-to-residue`
+| Collapses Echo collapse tt to ⊤-shaped residue
+| Linearity mode (`EchoLinear`)
+| No
+| `degradeMode linear≤affine = weaken`
+| Same shape as Graded
+| Role × Grade (2D product, `characteristic.RoleGraded`)
+| Yes (inherited from Choreo)
+| Composite of applyRole and applyGrade
+| Inherited
+
+The recipe-non-triviality result (theorem
+`recipe-non-triviality` in
+`proofs/agda/characteristic/RecipeNonTriviality.agda`, when
+formalised — currently EI-2 obligation 5):
+
+For any 2D recipe-pair (Axis₁, Axis₂), the commutation theorem
+on their product family carries non-trivial content iff at
+least one of Axis₁ and Axis₂ is non-loss-only. Equivalently, the
+non-trivial cell count is 1 when one or both is non-loss-only,
+and 0 when neither is.
+
+The bidirectional implication holds at n=2 and n=3 across all
+seven data points formalised in
+`proofs/agda/characteristic/{RoleGraded,RoleMode,ModeGrade,RoleModeGrade}.agda`.
+The general theorem is obligation 5 of
+`docs/EI2_REPORT.adoc`.
+
+This is the practical question to forward to Gate 1: *does any
+neighbouring framework produce a non-loss-only-anchored
+recipe-instance, and if so does it carry the recipe-non-triviality
+content natively?*
+____
+
+=== Why this change is consistent
+
+The original Observation G listed four instances without
+distinguishing structural roles, and stated "the 2D product
+produces a commutation law" without qualifying when the
+commutation law is non-trivial. The amendment makes the implicit
+precondition explicit. Crucially, the seven EI-2 data points
+*verify* the bidirectional implication; the formal theorem
+(obligation 5) is the next step but the data supports the
+amendment now.
+
+== Patch 2: gate-1-distinct-phenomenon.adoc § The Gate #1 claim
+
+Under READING 2, the gate-1 claim narrows to refer to
+non-loss-only-anchored combinations, but the *structural
+character* of the claim is preserved: distinctness still lives
+at the recipe's coherent cross-axis content.
+
+=== Old text
+
+[quote]
+____
+Echo types are not novel as a construction. They are the
+integration point of fiber-loss reasoning across choreographic,
+epistemic, linear, graded, and tropical structure.
+
+The distinct phenomenon is not "structured irreversibility" —
+that has been studied extensively. It is the *coherent family
+of laws connecting structured irreversibility to those five
+orthogonal axes simultaneously*. The integration theorems are
+echo-shaped because they require fiber-indexing, residue
+tracking, and cross-axis transport in the same statement, and
+no neighbour theory has all three as primitives.
+____
+
+=== New text (READING 2)
+
+[quote]
+____
+Echo types are not novel as a construction. They are the
+integration point of fiber-loss reasoning across the five named
+axes (choreographic, epistemic, linear, graded, tropical) —
+specifically, at axis combinations satisfying the *non-loss-only
+criterion* (see `docs/adjacency/README.adoc` and
+`docs/EI2_REPORT.adoc` for the formal statement and certificates).
+
+The distinct phenomenon is not "structured irreversibility" —
+that has been studied extensively. It is the *coherent family of
+laws connecting structured irreversibility to those orthogonal
+axes via the recipe*, where the recipe carries non-trivial
+cross-axis content at non-loss-only-anchored intersections. The
+integration theorems are echo-shaped because they require
+fiber-indexing, residue tracking, and cross-axis transport in
+the same statement, and no neighbour theory has all three as
+primitives, *with the recipe-non-triviality precondition stated
+explicitly*.
+____
+
+=== Why this change is consistent
+
+The original claim implied uniform coverage across the five
+axes simultaneously. The EI-2 data ruled this out for loss-only
+pairs. The new claim preserves the *structure* of the original
+(integration of multiple axes via a coherent recipe) but states
+the precondition that distinguishes load-bearing pairs from
+vacuous ones.
+
+The phrase "no neighbour theory has all three as primitives" is
+preserved because it remains true: even in the non-loss-only-
+anchored cases, the relevant fiber-indexing, residue tracking,
+and cross-axis transport machinery is not native to any of the
+five neighbour theories simultaneously.
+
+== Patch 3: roadmap-gates.adoc § Gate 1 Claim
+
+Under READING 2, the high-level claim picks up an explicit
+reference to the criterion. The retraction action is unchanged.
+
+=== Old text
+
+[quote]
+____
+.Claim
+****
+Echo types name structured loss under non-injective computation
+as a phenomenon distinct from existing treatments — refinement
+types, lens/optic theory, HoTT fibers, setoid quotients,
+provenance semirings.
+****
+____
+
+=== New text (READING 2)
+
+[quote]
+____
+.Claim
+****
+Echo types name structured loss under non-injective computation
+as a phenomenon distinct from existing treatments — refinement
+types, lens/optic theory, HoTT fibers, setoid quotients,
+provenance semirings.
+
+The integration recipe (decoration order + echo-indexed family +
+transport action) carries non-trivial cross-axis content at
+*non-loss-only-anchored* axis combinations, where at least one
+axis has an information-preserving transport. The recipe's
+non-triviality criterion is documented in
+`docs/EI2_REPORT.adoc` and formalised against the Choreographic
+axis in `proofs/agda/characteristic/ChoreoInjective.agda`. The
+distinctness claim is made over recipe-instances satisfying the
+criterion; outside the criterion, the recipe applies as a formal
+pattern but commutation content is vacuous (which is also true
+of the neighbour theories' analogous patterns).
+****
+____
+
+=== Why this change is consistent
+
+The original claim is brief and doesn't condition on axis
+combinations at all. The amendment is a *positive narrowing*: it
+states the criterion under which distinctness applies, with
+formal certificates linked. The retraction action remains
+unchanged because the retraction triggers on *complete* gate-1
+failure (no neighbour passes any test) rather than partial
+narrowing.
+
+== Cascade effects
+
+If READING 2 is adopted, four downstream texts also need
+updating:
+
+. *README.md* — the README's identity statement should mention
+  the recipe non-triviality precondition. Currently the README
+  says "echo types name structured irreversibility under
+  non-injective computation with explicit residue tracking,
+  integrated across multiple loss axes." Under READING 2 this
+  should become "integrated across multiple axes via the
+  recipe-non-triviality precondition (`docs/EI2_REPORT.adoc`)."
+
+. *docs/adjacency/README.adoc* — the framing of the two argument
+  families is unchanged, but the "Where the wins live" table
+  should reference the formalised criterion and link to
+  `ChoreoInjective.agda`.
+
+. *docs/integration-audit.adoc* — the "what this leaves you
+  with" section's gate-1 entry should add a "with non-loss-only
+  precondition" qualification.
+
+. *next-questions.adoc* — EI-2's status moves from "open" to
+  "open (READING 2 adopted; obligation 5 still required for
+  formal closure)". The READING-2 amendment is partial: it
+  adopts the criterion documentationally, but the formal
+  theorem (obligation 5) is what fully closes EI-2 under
+  READING 2.
+
+== Verdict (under READING 2)
+
+Gate-1: *passes with formalised precondition*. The recipe is
+distinct from neighbour theories at non-loss-only-anchored axis
+combinations, with the criterion stated explicitly and the
+certificate for Choreo's non-loss-only-ness formalised.
+
+This is honest in a different way from READING 1. Where READING
+1 is "we narrowed the claim because data forced us to", READING
+2 is "we identified a structural precondition that was implicit
+in the original recipe and made it explicit". Both are
+defensible; the choice depends on whether the original recipe
+*intended* the precondition (READING 2 reading) or merely *got
+lucky* in choice of instances (READING 1 reading).
+
+== The genuine open question between them
+
+This is the substantive choice point.
+
+If you believe the original Observation G *intended* a structural
+distinction between non-loss-only and loss-only axes that wasn't
+articulated, READING 2 is right: the amendment makes the implicit
+explicit. The seven data points support this; the formal theorem
+(obligation 5) would close it.
+
+If you believe Observation G *did not anticipate* this
+distinction and was overstating uniformity, READING 1 is right:
+the amendment is a narrowing forced by data, and pretending the
+criterion was always there is revisionist.
+
+My read: Observation G as written is *neutral* on the question.
+It listed instances that happened to vary in non-loss-only-ness
+without distinguishing them. Both readings are defensible
+post-hoc. The decision is which framing serves the project
+better:
+
+* *READING 1* is more conservative — it admits the data forced a
+  narrowing. It invites the reviewer to push for a second
+  non-loss-only axis (obligation 3) and the recipe-non-triviality
+  theorem (obligation 5).
+* *READING 2* is more ambitious — it identifies a structural
+  property as the criterion and treats the data as evidence for
+  it. It requires obligation 5 to be closed for full intellectual
+  honesty (without the formal theorem, the criterion is
+  hypothesis-grade).
+
+Recommendation: if obligation 5 can be closed, go with READING 2.
+If obligation 5 stays open, READING 1 is more honest. The choice
+is really about whether you want to commit to closing obligation
+5 next.

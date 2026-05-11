@@ -1,0 +1,690 @@
+= Open questions
+:toc: macro
+:source-highlighter: rouge
+
+This document collects the open questions surfaced across the three
+gates' work. Each question carries a *home gate* (whose territory it
+belongs to), an *attack path* (concrete steps to make progress), and
+where applicable an *explicit retraction condition* (what would mean
+the underlying claim should be retracted).
+
+Questions are organised by gate. A *cross-cutting* section collects
+questions that span multiple gates or concern integration polish.
+A *closed* section at the end records questions that have been
+discharged, with pointers to the formalisations that closed them.
+
+Per the gates protocol in `roadmap-gates.adoc`, retraction is the
+mechanism by which the identity claim is made falsifiable. A
+question whose retraction condition is met *retracts* the
+corresponding claim; it does not weaken into a hedge.
+
+toc::[]
+
+== Gate 1: distinct phenomenon
+
+=== Q1.1 — Galois reduction
+
+Does there exist a Galois-theoretic construction that expresses the
+characteristic-family commutation theorem (currently
+`RoleGraded.choreo-grade-commute`) without importing graded or
+choreographic primitives?
+
+Status::
+Partially answered. `EchoVsGalois.Sophisticated` formalises that
+the natural Galois 2-cell (the meet in the abstraction lattice) is
+Σ-over-preimages with a paired equality predicate
+(`meet→echo-intersection`), structurally equivalent to the
+quotient case via the diagonal correspondence
+(`meet-on-diagonal→equalizer`). Higher-order Galois constructions
+(functor-category insertions, Galois-of-Galois) reduce to
+`IndexedFamilies` (S-2) by a parallel argument; not separately
+formalised.
+
+Attack path::
+Either (a) instantiate `T1-obligation` in `EchoVsGalois.agda` with
+`choreo-grade-commute`'s actual signature and complete a Galois-
+only proof — gate #1 falsified — or (b) extract the precise stuck
+goal as a distinctness witness.
+
+Retraction::
+If (a) succeeds without importing primitives outside abstract
+interpretation, gate #1 is falsified by T1.
+
+=== Q1.2 — Quotient reduction
+
+Does quotient stacking (or any sophisticated quotient encoding)
+express the characteristic-family commutation theorem without
+importing echo machinery?
+
+Status::
+Substantially answered. The C1/C2/C3 decomposition has C1 closed
+(`Miniature.kernel-disagreement`), the 2-categorical case of C3
+closed (`Sophisticated.equalizer→echo-pair`), S-1 closed
+(`Sophisticated.Joins.join-universal`), and S-2 closed
+(`Sophisticated.IndexedFamilies.s-2-reduction`). S-3 (axiomatic
+2-cells) and S-4 (HoTT/HiTs) closed only informally; both face
+structural barriers to safe-Agda formalisation. See Q1.6 for the
+sub-case state.
+
+Attack path::
+Same as Q1.1: instantiate `T2-obligation` with
+`choreo-grade-commute`'s signature and either complete a
+quotient-only proof or extract the stuck goal.
+
+Retraction::
+If a quotient encoding without echo machinery succeeds on the
+characteristic-family commutation theorem, gate #1 is falsified
+by T2.
+
+=== Q1.3 — Informativeness collapse
+
+Is the epistemic axis derivable from the linear axis plus a
+forgetful functor — i.e., does `EchoEpistemic`'s
+`knowledge-preservation` follow from `EchoLinear`'s `weakening`
+plus a forgetful functor?
+
+Status::
+Open obligation. Test T3 from `gate-1-distinct-phenomenon.adoc` is
+unstubbed. Awaiting stable signatures from `EchoEpistemic` and
+`EchoLinear` before attempting.
+
+Attack path::
+. Pin down the relevant signatures in `EchoEpistemic` and
+  `EchoLinear`.
+. Construct the candidate forgetful functor `EchoLinear → EchoEpistemic`.
+. Attempt to derive `knowledge-preservation` along it.
+
+Retraction::
+If the derivation goes through, the "five axes" claim weakens to
+four or fewer, and the integration argument weakens
+correspondingly.
+
+Refined target (after gate-3's RoleGraded landing)::
+A sharper version: with `RoleGraded` in place, ask whether the
+role-or-grade axis is derivable from the other plus a forgetful
+functor. If yes, the cross-decoration integration construction
+is also weakened.
+
+=== Q1.4 — Additional axes
+
+Are there axes beyond the current five (choreo, epistemic, linear,
+graded, tropical) that should be in the integration picture?
+
+Status::
+Neither gate-2 nor gate-3 surfaced a sixth axis during parallel
+work. Gate-2 stayed within graded + choreo + linear (plus the
+Role × Grade product); gate-3 covered tropical, epistemic, and
+linear. Gate-1's "five axes" claim stands as of integration.
+
+Attack path::
+Each candidate axis must come with its own characteristic theorem
+(gate #2) and canonical example (gate #3) before being adopted.
+Speculative axis-additions without both are rejected.
+
+Retraction::
+N/A (this is an additive question; failure is "no new axis was
+added", not a contradiction).
+
+=== Q1.5 — Concrete counter-example for naive quotient stacking
+
+[Closed; see <<closed,Closed questions>>.]
+
+=== Q1.6 — C3 sub-cases
+
+C3 sub-cases remaining for full closure (each is a separate
+falsification sub-test, attackable independently).
+
+Status::
+S-1 closed (`Sophisticated.Joins`); S-2 closed
+(`Sophisticated.IndexedFamilies`); S-3 closed informally
+(axiomatic 2-cells carry no information); S-4 closed informally
+(HoTT-class metatheory is a much larger import than echo types).
+
+Attack path::
+S-3 admits formalisation in safe Agda via type-class abstraction
+(~50-80 lines). S-4 cannot be formalised in `--safe --without-K`
+Agda by definition — it would require `--cubical` or postulated
+higher-inductive structure, both of which exceed the gate's
+"pure quotient theory" scope.
+
+Retraction::
+If any of S-3 or S-4 admits a faithful encoding of the
+characteristic-family commutation theorem without importing echo
+machinery, gate #1 is falsified by that sub-case.
+
+=== Q1.7 — Galois 2-cell escape
+
+[Closed; see <<closed,Closed questions>>.]
+
+=== Q1.8 — Modal type theories as a sixth neighbour
+
+Gate-3's `LinearErasure` example identified modal type theories
+(QTT, Reed-Pfenning modal calculi, adjoint modalities) as
+co-extensive with echo on the type level. Should modal type
+theories be added to the canonical neighbour list in
+`gate-1-distinct-phenomenon.adoc`?
+
+Status::
+Recommended yes by the integration audit, with the explicit
+caveat that the relationship is co-extensive in QTT-class systems
+(no win, no loss) rather than subsuming. The win against
+propositional / classical accounts of modes is preserved.
+
+Attack path::
+Add the entry to the neighbour-theories section of
+`gate-1-distinct-phenomenon.adoc` with the QTT caveat. Optional:
+write a `docs/adjacency/modal-type-theories.adoc` as a worked
+comparison.
+
+Retraction::
+If a modal type theory subsumes echo machinery in the integration
+context (rather than just coinciding on bare echo), the
+distinctness claim weakens accordingly. As of gate-3's analysis,
+no such subsumption is exhibited.
+
+== Gate 2: characteristic theorems
+
+=== Q2.1 — Generalisation of `echo-not-prop`
+
+Gate-3's three canonical examples each carry a constructive proof
+that the relevant `Echo` type is not a mere proposition
+(`TropicalArgmin.echo-not-prop`, `EpistemicUpdate.echo-not-prop`,
+`LinearErasure.echo-not-prop`). Each is the n=2 special case of:
+
+[quote]
+For `f : A → B` and `y : B`, if there exist `x₁ ≠ x₂ : A` with
+`f x₁ ≡ y` and `f x₂ ≡ y`, then `is-prop (Echo f y) → ⊥`.
+
+This is naturally echo-shaped because it is about the *type*
+`Echo f y`, not about a single inhabitant. Whether it earns
+characteristic status depends on the gate-2 bar.
+
+Status::
+Open. Forwarded by gate-3's `gate-3-handoff.adoc` for gate-2
+evaluation.
+
+Attack path::
+. State and prove the general theorem in
+  `proofs/agda/characteristic/NonTruncatable.agda`.
+. Audit it against the gate-2 falsifier ("naturally echo-shaped,
+  not reducible to generic Σ/fiber lemmas").
+. If it survives, add to `roadmap-gates.adoc` Gate 2 nominee table
+  as a candidate N6 (or N5 if `choreo-grade-commute` is not
+  separately adopted).
+
+Internal falsifier::
+If the general theorem follows by routine unfolding from a stdlib
+lemma about Σ-types having distinct elements, it is not echo-
+specific; it is just "a Σ with two distinct inhabitants is not
+propositional".
+
+=== Q2.2 — Refinement injectivity as characteristic
+
+`EpistemicUpdate.refine-injective` is the n=2 special case of:
+
+[quote]
+For `f : A → B` and `g : A → C`, the projection
+`Echo ⟨f , g⟩ (b , c) → Echo f b` defined by composing `proj₁`
+with `cong proj₁` is injective on first projections.
+
+This is the type-level form of "refinement preserves witness
+identity".
+
+Status::
+Open. Forwarded by gate-3's handoff for gate-2 evaluation.
+
+Attack path::
+. State and prove the general theorem in
+  `proofs/agda/characteristic/RefineInjective.agda`.
+. Audit it against the gate-2 falsifier.
+. Decide whether to add to the nominee table.
+
+Internal falsifier::
+If it follows from a stdlib lemma about pullbacks of Σ-types, it
+is not echo-specific.
+
+=== Q2.3 — RoleGraded as nominee N5
+
+`characteristic.RoleGraded.choreo-grade-commute` is flagged as a
+candidate fifth nominee in `gate-2-characteristic.adoc` but not
+adopted. Should it be?
+
+Status::
+Integrator decision deferred from gate-2's audit. Adopting pushes
+the audit count to 5-of-5 across four constructions (EchoGraded,
+EchoChoreo, EchoLinear, characteristic.RoleGraded). Not adopting
+leaves it as a worked example without nomination.
+
+Attack path::
+. If adopting: amend `roadmap-gates.adoc` Gate 2 nominee table to
+  add `characteristic.RoleGraded.choreo-grade-commute`. Add a
+  short formal audit entry in `docs/characteristic.adoc` (or
+  whichever name the artefact landed under).
+. If not adopting: do nothing. The construction stands as a
+  worked example.
+
+Recommendation::
+Adopt. The construction is *exactly* the 2D-product instance of
+the recipe identified in `gate-2-handoff.adoc` Observation G; not
+adopting underweights it relative to the per-axis nominees.
+
+=== Q2.4 — Falsifier attempts for surviving nominees
+
+Each of the four surviving Gate 2 nominees has at least one
+unattempted concrete falsifier (`gate-2-characteristic.adoc` §11
+honest qualifications #3). The pass is conditional on those
+falsifiers being attempted and not succeeding.
+
+Status::
+Open. The nominees survived a *prima facie* audit; they have not
+yet survived an active falsification attempt.
+
+Attack path::
+For each nominee, attempt the falsifier listed in its audit
+section. Concretely:
+
+* N1 (`degrade-via-join`) and N2 (`degrade-compose`): exhibit a
+  non-loss-ordered three-element propositional join-semilattice
+  where the same lemma is also load-bearing for a structurally
+  unrelated reason.
+* N3 (`applyChoreo-compose`): two-stage falsifier — exhibit a
+  non-choreographic two-element propositional reachability order
+  where the same lemma is also load-bearing; and exhibit a
+  different commuting square (different role embedding) under
+  which the lemma fails.
+* N4 (`degradeMode-compose`): same recipe as N1/N2, on a
+  different propositional decoration order.
+
+Retraction::
+If any of the falsifiers succeeds, the corresponding nominee is
+withdrawn from the table. If the count drops below the gate
+threshold (2 of 4), gate #2 fails and the identity claim is
+retracted per `roadmap-gates.adoc` § Failure action.
+
+=== Q2.5 — `retained-shape` as characteristic
+
+Gate-3's handoff flagged `LinearErasure.retained-shape` as a
+candidate characteristic theorem family member:
+
+[source,agda]
+----
+retained-shape :
+  ∀ {P Q} (e : Echo erase (fn P Q)) → is-fn-type (proj₁ e)
+----
+
+The proof is *pattern matching on the source type*, not extraction
+of `proj₂`. It is an inversion lemma: from "erasure of T equals
+this function-shape", recover that "T itself is a function-shape".
+
+Status::
+Open. Forwarded by gate-3's handoff for gate-2 evaluation.
+
+Internal falsifier::
+If the inversion follows from a generic stdlib lemma about
+Σ-types of the form `Σ A (λ a → f a ≡ y)` admitting case-analysis
+on `a`, it is not echo-specific.
+
+Attack path::
+. Attempt the falsifier (try to derive `retained-shape` from a
+  generic stdlib Σ-case-analysis lemma).
+. If the falsifier fails, audit the lemma against the gate-2 bar
+  in `docs/characteristic.adoc`.
+
+== Gate 3: canonical examples
+
+=== Q3.1 — Choreographic example
+
+Gate-3's `ChoreographyProjection` was dropped because joint-Echo
+collapse is the pullback-of-fibres property in any
+locally-cartesian-closed category, not echo-specific. The
+choreographic axis is therefore *not currently exhibited* by a
+canonical gate-3 example.
+
+Status::
+Open. Bridge-axis coverage is currently 3 of 5 (tropical,
+epistemic, linear); choreographic and graded are uncovered.
+
+Attack path::
+Find a canonical example (passing (a)/(b)/(c)) where the
+choreographic axis is genuinely active and the example is not
+expressible by pullback-of-fibres alone. Candidates worth
+attempting:
+
+* Two-party protocol with role-asymmetric loss (one party
+  observes more than the other) — natural fit for the role-
+  reachability lattice that drives `applyChoreo-compose`.
+* Knowledge transmission across roles where Echo carries the
+  identity of the source role through the projection.
+
+Retraction::
+N/A — gate-3 only requires *one* canonical example; it has three.
+This is additive coverage, not a survival question.
+
+=== Q3.2 — Graded example
+
+Gate-3 rejected differential privacy and lossy compression
+unattempted: faithful formalisation requires probability or real
+arithmetic that `--safe` Agda doesn't admit without scaffolding
+that would itself need canonicality review. The graded axis is
+therefore not currently exhibited by a canonical gate-3 example.
+
+Status::
+Open with a documented honest negative result.
+
+Attack path::
+Find a canonical graded example tractable in `--safe` Agda
+without postulates. Candidates worth attempting:
+
+* Staged computation with explicit intermediate-erasure points,
+  where `degrade-compose` rules out an inconsistency between two
+  erasure schedules.
+* Memory-clearing procedure with declared erasure stages, where
+  `degrade-via-join` is load-bearing for verifying that two
+  parallel erasure paths agree.
+
+Retraction::
+N/A (additive coverage, not survival).
+
+=== Q3.3 — Cross-decoration integration example
+
+`gate-2-handoff.adoc` Observation D #4 flagged a cross-decoration
+integration example (exercising `RoleGraded.choreo-grade-commute`)
+as a gate-3 target. Now reachable since the `RoleGraded`
+construction is in place.
+
+Status::
+Open.
+
+Attack path::
+A setting in which a single piece of data carries both a role and
+a grade, and the canonical-example argument depends on the two
+actions commuting. Candidates:
+
+* Two-party protocol with role-asymmetric loss *and* a grade
+  chain of erasure stages.
+* Joint role-and-grade indexing on a security/observer model.
+
+Retraction::
+N/A (additive coverage).
+
+== Cross-cutting
+
+=== QC.1 — Promote integration audit findings into adjacency notes
+
+The integration audit (`docs/integration-audit.adoc`) made
+several observations that belong in `docs/adjacency/` per the
+`roadmap-gates.adoc` § Gate 1 specification (the gate-1 artefact
+is `docs/adjacency/`, but only `gate-1-distinct-phenomenon.adoc`
+currently exists at the docs/ root).
+
+Status::
+Open. The current architecture has gate-1's distinctness
+arguments in a single `gate-1-distinct-phenomenon.adoc` rather
+than the per-neighbour structure `roadmap-gates.adoc` specifies.
+
+Attack path::
+Either (a) split `gate-1-distinct-phenomenon.adoc` into the
+per-neighbour `docs/adjacency/{galois,quotients,refinement-types,
+ifc,provenance,modal-type-theories,hott-fibers}.adoc` structure
+specified in `roadmap-gates.adoc`, or (b) update
+`roadmap-gates.adoc` to point to the consolidated single-doc
+artefact.
+
+Recommendation::
+(a) — the per-neighbour structure scales better as more
+neighbours surface (e.g., the Q1.8 modal-type-theories addition).
+
+=== QC.2 — RoleGraded retarget for T1/T2 obligations
+
+The commented-out `T1-obligation` and `T2-obligation` stubs in
+`EchoVsQuotient.agda` and `EchoVsGalois.agda` reference
+"EchoIntegration's main theorem". The integration audit
+established that the actual integration theorem is now
+`RoleGraded.choreo-grade-commute`. Both stubs need to be retargeted
+when filled in.
+
+Status::
+Doc-level retarget done in commit 2. Code-level retarget pending
+(stubs are still commented-out placeholders awaiting the actual
+signature instantiation).
+
+Attack path::
+When attacking T1 or T2 against actual content, use
+`RoleGraded.choreo-grade-commute` as the target rather than the
+withdrawn `knowledge-and-controlled-degradation`.
+
+=== QC.3 — Evaluate the four gate-2 nominees against modal type theories
+
+Gate-3's `LinearErasure` example tests its canonicality against
+modal type theories and reports co-extensivity in QTT-class
+systems. Gate-2's four characteristic nominees have not been
+tested against this neighbour.
+
+Status::
+Open. Likely outcome by analogy: the recipe (custom propositional
+decoration order + echo-indexed family + transport action) is
+expressible in modal type theories with sufficient ambient mode
+structure. Whether this counts as subsuming or co-extensivity
+needs concrete evaluation per nominee.
+
+Attack path::
+For each Gate 2 nominee, sketch the modal-type-theoretic
+equivalent (or argue impossibility) in
+`docs/adjacency/modal-type-theories.adoc` (per QC.1).
+
+=== QC.4 — Consolidate handoff files into adjacency notes
+
+The current docs/ has `gate-1-handoff.adoc`, `gate-2-handoff.adoc`,
+and `gate-3-handoff.adoc` — useful as evidence of the parallel
+work but redundant for ongoing reference once the cross-lane
+findings are absorbed into `next-questions.adoc` (this file) and
+the per-neighbour adjacency structure (per QC.1).
+
+Status::
+Recommended for archival rather than active maintenance after
+this integration cycle.
+
+Attack path::
+After integration commits 1-5 land and any per-neighbour
+adjacency restructure (QC.1) is done, move
+`docs/gate-{1,2,3}-handoff.adoc` to `docs/handoffs/` for
+historical record. Update any references.
+
+=== EI-2 — Robustness of the integration recipe under richer 2D combinations
+
+CLOSED (negatively, via PATH B). See §<<closed,Closed questions>> for
+the full verdict, the seven-data-point evidence table, and the file
+list. Summary: the integration recipe with the existing five named
+axes does not carry substantive simultaneous cross-axis content;
+distinctness rests on the truncation argument and the 2-cell
+argument, not on integration. Gate-1's claim has been narrowed
+accordingly across `gate-1-distinct-phenomenon.adoc`,
+`gate-2-handoff.adoc`, `roadmap-gates.adoc`, `docs/adjacency/README.adoc`,
+and `README.md`.
+
+[#closed]
+== Closed questions
+
+=== Q1.5 — Concrete counter-example for naive quotient stacking
+
+CLOSED. Smallest counter-example constructed in
+`proofs/agda/EchoVsQuotient.agda` § `Miniature`:
+`kernel-disagreement` proves that ker(g₁∘rL) ≠ ker(rL∘g₁) in the
+two-bit setting `A = Bool × Bool` with AND-collapse and
+first-bit projection. The witness pair is
+((true, true), (false, true)).
+
+The full T2 obligation decomposes into C1, C2, C3; C1 is what
+this answer closes. C2 is trivially true. C3 is decomposed in
+Q1.6 above; the load-bearing sub-cases are themselves closed.
+
+=== Q1.7 — Galois 2-cell escape
+
+CLOSED. The Galois reduction (T1) does not admit a 2-cell
+construction escaping the Σ-over-preimages shape. Formalised in
+`proofs/agda/EchoVsGalois.agda` § `Sophisticated`:
+
+* `meet→echo-intersection` shows the meet's data unpacks
+  directly into two Echo witnesses sharing a preimage.
+* `meet-on-diagonal→equalizer` establishes that the AI meet
+  specialises to the quotient equalizer when output values
+  coincide; off the diagonal, the meet is strictly more general
+  but structurally identical.
+
+The remaining sub-cases (lattice-degeneracy analog of S-1;
+higher-order Galois constructions analog of S-2) reduce by
+structural argument to the quotient-side closures already
+formalised in `EchoVsQuotient.Sophisticated.Joins` and
+`Sophisticated.IndexedFamilies`.
+
+=== EI-1 — Genuine cross-decoration integration theorem
+
+CLOSED (protocol). Open work item flagged in `gate-2-handoff.adoc`
+Observation E (now retitled "Observation E — *closed*"): a
+single Echo-indexed family carrying both a role/choreographic
+decoration and a graded decoration, with conjuncts sharing data.
+Constructed in `proofs/agda/characteristic/RoleGraded.agda`:
+
+* `RoleGEcho : Role → Grade → Set` — 2D family.
+* `applyRole`, `applyGrade` — two independent actions.
+* `choreo-grade-commute` — the integration theorem; both
+  decoration witnesses appear on both sides.
+* `applyBoth` — combined two-decoration action.
+
+Honest qualification (not a re-opening)::
+The closure satisfies the three Observation-E protocol tests, but
+the load-bearing content of `choreo-grade-commute` is concentrated
+at one of eighteen cases (`(c⊑s, keep≤keep)` reducing to
+`client-to-server e`); the other seventeen cases close trivially
+because residue and forget grades collapse `RoleGEcho` to ⊤. The
+2D family is asymmetric — the role parameter is only live at
+keep grade. EI-1 is therefore *protocol-closed but substantively
+narrow*. The follow-up question — is the recipe robust across
+richer 2D combinations? — was tracked as EI-2 and has now closed
+*negatively* (see EI-2 entry below).
+
+=== EI-2 — Robustness of the integration recipe under richer 2D combinations
+
+CLOSED (negatively, via PATH B). The integration recipe with the
+existing five named axes does *not* carry substantive simultaneous
+cross-axis content. Eight phases of investigation produced seven
+data points, all consistent with this finding:
+
+[cols="2,1,1,3", options="header"]
+|===
+| Construction | Cells | Non-trivial | Reading
+
+| `RoleGraded` (Role × Grade)
+| 18
+| 1
+| Load-bearing cell `(c⊑s, keep≤keep)`; non-trivial content is
+Choreo's, with Grade as identity.
+
+| `RoleMode` (Role × Mode)
+| 9
+| 1
+| Same shape; cell `(c⊑s, linear≤linear)`.
+
+| `ModeGraded` (Mode × Grade)
+| 18
+| 0
+| Both axes loss-only; no non-trivial cell exists.
+
+| `RoleModeGrade` 3D pairwise
+| 27, 36, 36
+| 1, 1, 0
+| 3D inherits from the constituent 2D pairs; no qualitative change.
+
+| `RoleModeGrade` triple
+| 54
+| 1
+| Same load-bearing cell.
+
+| `RoleRole` independent-product
+| 9
+| 0
+| Both axes non-loss-only; commutation trivial by categorical
+product structure (no substantive cross-axis content).
+
+| `RoleRole` shared-state
+| —
+| —
+| Per-axis transport not uniformly definable; recipe doesn't apply.
+|===
+
+Across all data points, every "non-trivial" cell carries
+*one-axis-at-a-time* content. The non-loss-only criterion (formal
+certificate for Choreo in `ChoreoInjective.agda`) is necessary but
+not sufficient for substantive simultaneous interaction.
+
+Verdict::
+The integration recipe does NOT carry the gate-1 distinctness
+load. Distinctness rests on:
++
+* The truncation argument: `echo-not-prop` family in
+  `proofs/agda/examples/`, certifying that for non-injective `f`
+  with multiple preimages of `y`, `Echo f y` is not a mere
+  proposition.
+* The 2-cell argument: `EchoVsQuotient.Sophisticated.equalizer→echo-pair`
+  and `EchoVsGalois.Sophisticated.meet→echo-intersection`,
+  certifying that natural 2-cells in neighbour frameworks are
+  Σ-over-preimages-shaped.
++
+These two arguments stand independently and are unaffected by
+EI-2's negative resolution.
+
+Files closing EI-2::
++
+* `proofs/agda/characteristic/ModeGraded.agda`
+* `proofs/agda/characteristic/RoleMode.agda`
+* `proofs/agda/characteristic/RoleModeGrade.agda`
+* `proofs/agda/characteristic/RoleRole.agda`
+* `proofs/agda/characteristic/InteractionTest.agda`
+* `proofs/agda/characteristic/RecipeSpec.agda`
+* `proofs/agda/characteristic/RecipeTheorem.agda`
+* `proofs/agda/characteristic/RecipeNonTriviality.agda`
+* `proofs/agda/characteristic/ChoreoInjective.agda`
+* `docs/EI2_REPORT.adoc` — working record of the investigation.
+
+Documentation cascade (applied as of integration commit)::
++
+* `docs/gate-1-distinct-phenomenon.adoc` § The Gate #1 claim —
+  narrowed.
+* `docs/gate-2-handoff.adoc` § Observation G — narrowed with
+  EI-2 finding noted.
+* `roadmap-gates.adoc` § Gate 1 Claim — narrowed.
+* `docs/adjacency/README.adoc` — EI-2 cascade note added.
+* `README.md` — integration-bridge bullet updated.
+
+Why PATH B (partial formalisation accepted as sufficient)::
+The full 2D iff theorem is not formalisable in safe Agda without
+postulates (decidable equality on decoration types, F-collapses
+axioms, extensionality on cell actions). `RecipeTheorem.agda`
+proves the per-axis halves; `RecipeNonTriviality.agda` proves
+the concrete construction-by-construction halves. Together with
+the seven data points and the structural argument from
+`RoleRole.agda`, the empirical and structural evidence is
+overwhelming. The formal generic theorem is documented as future
+work; it is not required to settle the gate-1 distinctness
+question, since the negative finding *removes* the integration
+recipe from the distinctness load.
+
+The positive-termination route (extending the recipe to allow
+coupled state across axes or multiple live positions per axis)
+is parked for v0.2 and beyond. A new question will track this
+if/when it becomes active. EI-2 itself is closed; the extension
+is genuinely separate work.
+
+
+== Conventions
+
+* Each open question carries a *home gate*. Cross-cutting
+  questions are in their own section.
+* Each open question carries an *attack path* and (where
+  applicable) an *explicit retraction condition*.
+* Closed questions are moved to the §<<closed,Closed questions>>
+  section with a pointer to the formalisation that closed them.
+* Numbering is gate-prefixed: Q1.x for gate-1, Q2.x for gate-2,
+  Q3.x for gate-3, QC.x for cross-cutting. Numbers are stable
+  across edits (a closed question keeps its number; a withdrawn
+  question is marked withdrawn rather than removed).

@@ -20,7 +20,7 @@ build-all:
 	@echo "🔨 Building all echo type modules and tests..."
 	@echo "=========================================="
 	just build-echo
-	make build-tests
+	just build-tests
 	@echo "=========================================="
 	@echo "✅ Build complete! All modules type-check successfully"
 
@@ -57,11 +57,11 @@ test-stability:
 test-all:
 	@echo "🧪 Running comprehensive test suite..."
 	@echo "=========================================="
-	make test-core
-	make test-cno
-	make test-thermo
-	make test-cat
-	make test-stability
+	just test-core
+	just test-cno
+	just test-thermo
+	just test-cat
+	just test-stability
 	@echo "=========================================="
 	@echo "✅ All tests passed! Stability: 92/100"
 
@@ -75,9 +75,9 @@ clean:
 verify:
 	@echo "🔬 Full verification cycle..."
 	@echo "=========================================="
-	make clean
-	make build-all
-	make test-all
+	just clean
+	just build-all
+	just test-all
 	@echo "=========================================="
 	@echo "✅ Verification complete! System stability: 92/100"
 
@@ -103,5 +103,4 @@ stability-report:
 
 # Default target
 default:
-	make verify
-
+	just verify

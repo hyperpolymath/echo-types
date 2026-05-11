@@ -1,0 +1,9 @@
+﻿* text=auto eol=lf
+*.agda text eol=lf
+*.adoc text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.scm text eol=lf
+*.a2ml text eol=lf
+*.agdai binary
