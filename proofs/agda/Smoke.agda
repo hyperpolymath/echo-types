@@ -260,7 +260,7 @@ open import Ordinal.Brouwer.Arithmetic using
   ; nat-to-ord
   ; ω-rank
   ; psi-rank
-  ; ⊕-oz-left
+  ; ⊕-oz-right
   ; ω-rank-fin0
   ; ω-rank-fin1
   )
@@ -432,3 +432,4 @@ open import Ordinal.Buchholz.WellFormed using
   ; psi-OmegaOmega
   ; psi-OmegaOmega-wf
   )
+
