@@ -19,17 +19,17 @@
 -- ## What's deferred
 --
 -- The transport theorem `rank-mono : ∀ {x y} → x <ᵇʳᶠ y → rank x <
--- rank y` requires three downstream lemmas, all of which are open:
+-- rank y` requires three downstream lemmas:
 --
---   * `<ᵇʳᶠ-core x<ᵇy` ⟹ Phase-2.2 `rank-mono-<ᵇ`
---   * `<ᵇʳᶠ-ψα α<ᵇʳᶠβ`  ⟹ Phase-1.3 `⊕-mono-<-right`
---   * `<ᵇʳᶠ-+2 y<ᵇʳᶠz`  ⟹ Phase-1.3 `⊕-mono-<-right`
+--   * `<ᵇʳᶠ-core x<ᵇy` ⟹ Phase-2.2 `rank-mono-<ᵇ`  (open)
+--   * `<ᵇʳᶠ-ψα α<ᵇʳᶠβ`  ⟹ `⊕-mono-<-right`           (landed, Phase13.agda)
+--   * `<ᵇʳᶠ-+2 y<ᵇʳᶠz`  ⟹ `⊕-mono-<-right`           (landed, Phase13.agda)
 --
--- Once those land, the closing chain is:
+-- Once `rank-mono-<ᵇ` lands, the closing chain is:
 --
 --   wf-<ᵇʳᶠ : WellFounded _<ᵇʳᶠ_
 --   wf-<ᵇʳᶠ = Subrelation.wellFounded rank-mono
---               (InverseImage.wellFounded rank wf-<)
+--               (InverseImage.wellFounded rank wf-<′)
 
 module Ordinal.Buchholz.RankBrouwer where
 
