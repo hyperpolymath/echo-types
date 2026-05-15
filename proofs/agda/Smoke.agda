@@ -270,6 +270,9 @@ open import Ordinal.Brouwer.Arithmetic using
 -- Limit case of `≤′-refl` discharged via `≤′-lim` (2026-04-30).
 -- WF for the recursive order landed 2026-05-01: `wf-<′` mirrors
 -- `wf-<` with predecessor lemmas reducing through computed shapes.
+-- Right-monotonicity of `_⊕_` landed (issue #34): `⊕-mono-<-right`
+-- and `⊕-mono-≤-right` by induction on γ; helpers `≤′-self-osuc`,
+-- `≤′-weaken-osuc`, `⊕-left-≤-sum` also pinned.
 open import Ordinal.Brouwer.Phase13 using
   ( _≤′_
   ; _<′_
@@ -284,6 +287,11 @@ open import Ordinal.Brouwer.Phase13 using
   ; pred-of-osuc-<′
   ; pred-of-olim-<′
   ; wf-<′
+  ; ≤′-self-osuc
+  ; ≤′-weaken-osuc
+  ; ⊕-left-≤-sum
+  ; ⊕-mono-≤-right
+  ; ⊕-mono-<-right
   )
 
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
