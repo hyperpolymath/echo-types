@@ -1,17 +1,27 @@
 {-# OPTIONS --safe --without-K #-}
 
--- Phase 1.1 of the WF-track "Option B" programme.
--- `_≤_` is now a recursive predicate (switched from inductive data type
--- in Phase 1.3) so that `osuc-mono-≤` is definitionally the identity and
--- all monotonicity lemmas in `Ordinal.Brouwer.Monotonicity` go through
--- without termination headaches. External names are unchanged.
+-- Phase 1.1 of the WF-track "Option B" programme in
+-- `docs/buchholz-plan.adoc`. Establishes a constructive
+-- Brouwer-style ordinal notation with a direct well-foundedness
+-- proof. This file does NOT depend on `Ordinal.Buchholz.Order`
+-- or any `<ᵇ` infrastructure — that independence is the whole
+-- point. Later phases (2+) will embed the Buchholz order into
+-- this rank target and derive `wf-<ᵇ` for the enlarged order via
+-- `Subrelation.wellFounded`.
+--
+-- Representation: zero, successor, ℕ-indexed supremum. This already
+-- exhausts countable ordinals below ω₁; for Buchholz rank up to
+-- ψ(Ω_ω) it is far more than we need.
+--
+-- The strict order `_<_` is defined as `osuc α ≤ β`. WF is proved by
+-- structural induction on `Ord` directly; the higher-order `olim`
+-- branch is accepted by Agda's structural recursion on subterms of
+-- the function-indexed inductive.
 
 module Ordinal.Brouwer where
 
-open import Data.Empty   using (⊥; ⊥-elim)
+open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Nat.Base using (ℕ; zero; suc)
-open import Data.Product using (∃; _,_)
-open import Data.Unit    using (⊤; tt)
 open import Induction.WellFounded using (Acc; acc; WellFounded; wf⇒asym)
 open import Relation.Nullary using (¬_)
 
@@ -25,42 +35,135 @@ data Ord : Set where
   olim : (ℕ → Ord) → Ord
 
 ----------------------------------------------------------------------------
--- Non-strict order (recursive predicate)
+-- Strict and non-strict orders
 ----------------------------------------------------------------------------
 
 infix 4 _≤_ _<_
 
--- oz ≤ anything; osuc compares pointwise; olim on the left
--- universally-quantifies over branches; osuc/olim into a limit picks
--- a branch witness.
+-- Reflexive closure. Three generators:
+--   * identity,
+--   * one-step successor on the right-hand side,
+--   * selecting a specific branch inside a limit on the right.
 
-_≤_ : Ord → Ord → Set
-oz      ≤ _      = ⊤
-osuc α  ≤ oz     = ⊥
-osuc α  ≤ osuc β = α ≤ β
-osuc α  ≤ olim f = ∃ λ n → osuc α ≤ f n
-olim f  ≤ β      = ∀ n → f n ≤ β
+data _≤_ : Ord → Ord → Set where
+  ≤-refl : ∀ {α}     → α ≤ α
+  ≤-suc  : ∀ {α β}   → α ≤ β → α ≤ osuc β
+  ≤-lim  : ∀ {α f} n → α ≤ f n → α ≤ olim f
 
--- Strict order: α < β  iff  osuc α ≤ β.
+-- Strict order: successor of α still fits at-or-below β.
 
 _<_ : Ord → Ord → Set
 α < β = osuc α ≤ β
 
 ----------------------------------------------------------------------------
--- Compatibility lemmas with the old constructor names
--- (Smoke.agda imports these by name; types are identical)
+-- Basic structural properties
 ----------------------------------------------------------------------------
 
-≤-refl : ∀ {α} → α ≤ α
-≤-refl {oz}     = tt
-≤-refl {osuc α} = ≤-refl {α}
-≤-refl {olim f} = λ n → ≤-lim n (≤-refl {f n})
+-- Zero is minimum. Structural on the right-hand side.
+
+≤-zero : ∀ {α} → oz ≤ α
+≤-zero {oz}     = ≤-refl
+≤-zero {osuc α} = ≤-suc ≤-zero
+≤-zero {olim f} = ≤-lim 0 ≤-zero
+
+-- Weakening into successor.
+
+≤-step : ∀ {α β} → α ≤ β → α ≤ osuc β
+≤-step = ≤-suc
+
+-- Each branch of a limit sits at-or-below it. Strict-below is not
+-- available in general — a constant sequence has `f n ≡ olim f` —
+-- but the ≤ witness is enough for rank bookkeeping.
+
+f-in-lim : ∀ f n → f n ≤ olim f
+f-in-lim f n = ≤-lim n ≤-refl
+
+-- Successor strictly above its predecessor.
+
+<-suc-self : ∀ {α} → α < osuc α
+<-suc-self = ≤-refl
+
+----------------------------------------------------------------------------
+-- Transitivity
+----------------------------------------------------------------------------
+
+-- Transitivity of ≤ by induction on the right leg. `≤-refl` case
+-- returns the left leg unchanged; `≤-suc` / `≤-lim` cases propagate.
+
+≤-trans : ∀ {α β γ} → α ≤ β → β ≤ γ → α ≤ γ
+≤-trans p ≤-refl       = p
+≤-trans p (≤-suc q)    = ≤-suc (≤-trans p q)
+≤-trans p (≤-lim n q)  = ≤-lim n (≤-trans p q)
+
+-- β ≤ osuc β, the canonical one-step witness.
+
+≤-osuc : ∀ {β} → β ≤ osuc β
+≤-osuc = ≤-suc ≤-refl
+
+-- Transitivity of <: osuc α ≤ β ≤ osuc β ≤ osuc β... ≤ γ.
+
+<-trans : ∀ {α β γ} → α < β → β < γ → α < γ
+<-trans {α} {β} p q = ≤-trans (≤-trans p ≤-osuc) q
+
+----------------------------------------------------------------------------
+-- Well-foundedness
+----------------------------------------------------------------------------
+
+-- Predecessor of osuc α is either α itself (≤-refl case) or a
+-- strictly smaller β with β < α (≤-suc case). Both yield Acc.
+
+pred-of-osuc : ∀ {α} → Acc _<_ α → ∀ {β} → β < osuc α → Acc _<_ β
+pred-of-osuc (acc rsα) ≤-refl    = acc rsα
+pred-of-osuc (acc rsα) (≤-suc q) = rsα q
+
+-- Predecessor of olim f: must come via ≤-lim with a branch index `n`,
+-- giving β < f n. Inductive accessibility of f n gives Acc β.
+
+pred-of-olim :
+  ∀ {f} → (∀ n → Acc _<_ (f n)) →
+  ∀ {β} → β < olim f → Acc _<_ β
+pred-of-olim wfs (≤-lim n q) with wfs n
+... | acc rs = rs q
+
+-- Top-level WF: structural induction on Ord.
+
+wf-< : WellFounded _<_
+wf-< oz       = acc λ ()
+wf-< (osuc α) = acc (pred-of-osuc (wf-< α))
+wf-< (olim f) = acc (pred-of-olim (λ n → wf-< (f n)))
+
+----------------------------------------------------------------------------
+-- Derived corollaries
+----------------------------------------------------------------------------
+
+-- Irreflexivity via wf⇒asym; no direct pattern match is needed.
+
+<-irrefl : ∀ {α} → ¬ (α < α)
+<-irrefl {α} p = wf⇒asym wf-< p p
+
+-- Worked small witnesses.
+
+one : Ord
+one = osuc oz
+
+two : Ord
+two = osuc one
+
+ω : Ord
+ω = olim nat-to-ord
   where
-  ≤-lim : ∀ {α f} n → α ≤ f n → α ≤ olim f
-  ≤-lim {α} {f} n p = n , transport p
-    where
-    transport : α ≤ f n → osuc α ≤ olim f  -- needed only for ≤-refl on olim
-    transport _ = {!!}  -- placeholder; see below
+  nat-to-ord : ℕ → Ord
+  nat-to-ord zero    = oz
+  nat-to-ord (suc n) = osuc (nat-to-ord n)
 
--- The above is getting circular. Let me rewrite ≤-refl cleanly:
+oz<one : oz < one
+oz<one = <-suc-self
 
+one<two : one < two
+one<two = <-suc-self
+
+oz<two : oz < two
+oz<two = <-trans oz<one one<two
+
+one<ω : one < ω
+one<ω = ≤-lim 2 ≤-refl
