@@ -1,6 +1,22 @@
 # SPDX-License-Identifier: PMPL-1.0-or-later
 # Hypatia Neurosymbolic CI/CD Security Scan — SELF-SCAN (dogfooding)
 # The standards repo that defines Hypatia scans itself with Hypatia.
+#
+# Non-gating by design: this job exists to surface compliance gaps, not to
+# block merges. Two failure classes are handled distinctly:
+#
+#   1. External-infrastructure failure (BEAM provisioning, cloning or
+#      building the upstream hyperpolymath/hypatia scanner). These are
+#      outages in dependencies we do not control. They MUST NOT turn the
+#      check red — a contributor's unrelated PR cannot be held hostage to
+#      an upstream outage. We emit a ::warning:: annotation and exit green
+#      so the signal is visible without being a gate.
+#
+#   2. Scan findings (the scanner ran and reported issues). Per the
+#      "fix forward" policy these are warnings, never hard failures.
+#
+# Net effect: this job is green unless the scanner itself runs AND we
+# deliberately decide a finding class should gate (currently none do).
 name: Hypatia Self-Scan
 
 on:
@@ -26,24 +42,48 @@ jobs:
           fetch-depth: 0
 
       - name: Setup Elixir for Hypatia scanner
+        id: beam
+        continue-on-error: true
         uses: erlef/setup-beam@fc68ffb90438ef2936bbb3251622353b3dcb2f93 # v1.24.0
         with:
           elixir-version: '1.19.4'
           otp-version: '28.3'
 
-      - name: Clone Hypatia
+      - name: Provision Hypatia scanner (clone + build)
+        id: scanner
         run: |
-          git clone --depth 1 https://github.com/hyperpolymath/hypatia.git "$HOME/hypatia"
+          # Any external-infra failure here is tolerated: we record
+          # ready=false and let downstream steps skip cleanly.
+          set +e
 
-      - name: Build Hypatia scanner
-        run: |
+          if [ "${{ steps.beam.outcome }}" != "success" ]; then
+            echo "::warning title=Hypatia self-scan skipped::Elixir/BEAM provisioning failed (upstream setup-beam). Non-gating; scanner not run."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          git clone --depth 1 https://github.com/hyperpolymath/hypatia.git "$HOME/hypatia"
+          if [ $? -ne 0 ]; then
+            echo "::warning title=Hypatia self-scan skipped::Could not clone hyperpolymath/hypatia (upstream outage). Non-gating; scanner not run."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
           cd "$HOME/hypatia"
           if [ ! -f hypatia-v2 ]; then
-            cd scanner && mix deps.get && mix escript.build && mv hypatia ../hypatia-v2
+            ( cd scanner && mix deps.get && mix escript.build && mv hypatia ../hypatia-v2 )
+            if [ $? -ne 0 ]; then
+              echo "::warning title=Hypatia self-scan skipped::Hypatia scanner build failed (upstream). Non-gating; scanner not run."
+              echo "ready=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
           fi
+
+          echo "ready=true" >> "$GITHUB_OUTPUT"
 
       - name: Run Hypatia scan
         id: scan
+        if: steps.scanner.outputs.ready == 'true'
         run: |
           echo "Scanning standards repo (dogfooding)"
           HYPATIA_FORMAT=json "$HOME/hypatia/hypatia-cli.sh" scan . > hypatia-findings.json
@@ -70,7 +110,22 @@ jobs:
           echo "| Medium   | $MEDIUM |" >> $GITHUB_STEP_SUMMARY
           echo "| **Total**| $FINDING_COUNT |" >> $GITHUB_STEP_SUMMARY
 
+      - name: Note skipped scan
+        if: steps.scanner.outputs.ready != 'true'
+        run: |
+          {
+            echo "## Hypatia Self-Scan: SKIPPED (non-gating)"
+            echo ""
+            echo "The upstream Hypatia scanner could not be provisioned"
+            echo "(BEAM setup, clone, or build failed). This is an external"
+            echo "infrastructure outage, not a finding in this repo. The"
+            echo "check is intentionally green so unrelated PRs are not"
+            echo "blocked. Re-run once upstream is healthy, or wait for the"
+            echo "weekly scheduled scan."
+          } >> "$GITHUB_STEP_SUMMARY"
+
       - name: Run panic-attack assail
+        if: steps.scanner.outputs.ready == 'true'
         run: |
           # Install panic-attack if available
           if command -v panic-attack >/dev/null 2>&1; then
@@ -82,6 +137,7 @@ jobs:
           fi
 
       - name: Upload findings artifacts
+        if: steps.scanner.outputs.ready == 'true'
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: standards-self-scan
