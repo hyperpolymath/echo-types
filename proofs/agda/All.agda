@@ -29,6 +29,7 @@ open import Dyadic
 open import DyadicEchoBridge
 open import EchoThermodynamics
 open import EchoStabilityTests
+open import VecRotation
 
 open import Ordinal.Base
 open import Ordinal.Closure

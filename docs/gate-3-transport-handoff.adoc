@@ -1,0 +1,134 @@
+= Gate 3 Example: Transport-Echo — Handoff Notes
+:toc: macro
+:sectnums:
+:icons: font
+
+[.lead]
+Worked Gate 3 example: structured loss under transport (explicit-Euler
+diffusion) and coarse-graining (block averaging) on rational-valued
+fields over a periodic grid. Subject file:
+`proofs/agda/examples/Transport.agda`.
+
+*Status:* Gate 3 example, complete; both former gaps now *closed*.
+5(a) (the `∀ n` generalisation) via the extracted `VecRotation`
+module; 5(b) (the rank-1 characterisation at n = 4) via the ℚ ring
+solver. Compiles `--safe --without-K`, no postulates.
+
+toc::[]
+
+== What this example demonstrates
+
+The example exhibits structured loss from two distinguishable sources
+on `Field n = Vec ℚ n` over a periodic grid. (i) The explicit-Euler
+diffusion step `step` at `λ = ¼` is *singular at the Nyquist mode* on
+even grids: the alternating vector is annihilated. (ii) Block
+averaging `avg` is non-injective (rung 2). (iii) Their composition
+`avg ∘ step` has a kernel that *strictly enlarges* beyond either
+source taken alone. It is a worked instance of `EchoGraded`'s
+base-Echo structure — rung 4's `echoStep-is-Echo` shows the
+transport-echo family is definitionally `Echo (avg …)` — and it
+introduces no new bridge axis.
+
+== Load-bearing theorems
+
+* `step-kernel-nontrivial` — explicit-Euler diffusion at `λ = ¼` on a
+  periodic n-cycle is singular at the Nyquist mode for even `n`:
+  an explicit nonzero field `f` with `step f ≡ 0` at `n = 2`.
+* `step-kernel-contains-nyquist-multiples` — every scalar multiple of
+  the Nyquist mode is annihilated:
+  `∀ c → step (map (c *_) (nyquist 2)) ≡ replicate 4 0ℚ`
+  (containment, at the fixed even size).
+* `nyquist-in-step-kernel` — the `∀ n` form:
+  `∀ n → step (nyquist n) ≡ replicate (2·n) 0ℚ` (closes former gap
+  (a), via the extracted `VecRotation` module).
+* `step-kernel-at-4-is-nyquist-line` — the rank-1 converse at n = 4:
+  `step f ≡ 0 → Σ[ c ] f ≡ map (c *_) (nyquist 2)` (closes former
+  gap (b), 4×4 ℚ solve via the ring solver).
+* `compose-kernel-strictly-larger` — the kernel of `avg ∘ step`
+  strictly contains both the step-then-`avg` loss and `ker step`
+  alone. Witness `g6 = [1, -1, -1, 1]` at `n = 4`, block size 2
+  (`step-then-avg = avg {1} {2} ∘ step`): `g6` lies in
+  `ker (avg ∘ step)`, is not a scalar multiple of `nyquist 2`, and
+  has `step g6 ≠ 0`.
+
+== Infrastructure
+
+The `step`-specific algebra below stays local to this file. The one
+genuinely reusable Vec-rotation fact has been *extracted* to the
+top-level `VecRotation` module (polymorphic over any carrier with an
+involutive negation): `rotL-alternating` / `rotR-alternating`, plus
+the `map-alternating` corollary. That module is what closes gap (a).
+
+* `step-homog` — `step (map (c *_) v) ≡ map (c *_) (step v)`
+  (ℚ-scalar homogeneity of `step`).
+* `step-additive` — `step (v + w) ≡ step v + step w` (additivity).
+  Together with `step-homog` this is the ℚ-linearity of `step`.
+* `StepKernelSubspace` — record bundling `closed-+` and `closed-*ₗ`;
+  with the `StepKernel` predicate and witness `step-kernel-subspace`,
+  it packages the kernel as a ℚ-subspace.
+
+Eight Vec-over-ℚ lemmas, reusable for future Vec-valued-field work:
+
+[cols="1,3", options="header"]
+|===
+| Lemma | One-line statement
+
+| `zip-interchange`  | `(A+B)+(C+D) ≡ (A+C)+(B+D)` pointwise on vectors
+| `zip-sub-exchange` | `(A+C)-(B+D) ≡ (A-B)+(C-D)` pointwise on vectors
+| `++∷ʳ`             | `zipWith _+_` distributes over snoc `_∷ʳ_`
+| `reverse-zipWith`  | `reverse` distributes over `zipWith _+_`
+| `add-rotL`         | left rotation distributes over `zipWith _+_`
+| `add-rotR`         | right rotation distributes over `zipWith _+_`
+| `scale-+`          | `map (c *_)` distributes over `zipWith _+_`
+| `scale-zero`       | `map (c *_)` annihilates the zero vector
+|===
+
+== Former gaps (both closed)
+
+=== (a) `∀ n` generalisation of `nyquist-in-step-kernel` — CLOSED
+
+The general `nyquist-in-step-kernel : ∀ n → step (nyquist n) ≡
+replicate (2·n) 0ℚ` now lands (no postulate, no size restriction).
+The Vec-rotation fact stdlib does not provide —
+`rotL (nyquist n) ≡ map -_ (nyquist n)`, and the `rotR` twin —
+was extracted to the `VecRotation` module as the polymorphic
+`rotL-alternating` / `rotR-alternating` (each requiring an
+involution hypothesis, discharged for ℚ by the ring solver). The
+in-file wiring (Rung 5a (closed)) bridges `step`'s local rotations
+to the module, lifts the per-entry Nyquist eigenvalue-0 identity
+pointwise, and transports across the `vcast ∘ concat ∘ replicate`
+builder. `nyquist-in-step-kernel-1` / `-2` are retained as fast
+`refl` sanity checks at the smallest sizes.
+
+=== (b) `step-kernel-at-4-is-nyquist-line` (rank-1 characterisation) — CLOSED
+
+`step-kernel-at-4-is-nyquist-line : ∀ (f : Field 4) → step f ≡
+replicate 4 0ℚ → Σ[ c ∈ ℚ ] f ≡ map (c *_) (nyquist 2)` now lands.
+The subspace closures (`step-additive`, `step-homog`,
+`StepKernelSubspace`) establish that `ker step` is a ℚ-subspace; this
+pins *which* subspace — the Nyquist line. The rank-1 fact is the 4×4
+ℚ system `step [a,b,c,d] ≡ 0`, whose only solution is
+`[a,−a,a,−a] = a·(nyquist 2)`. It is discharged with the stdlib ℚ
+ring solver (`Data.Rational.Solver`): constant folding does the
+linear algebra (4·¼ = 1, ½·2 = 1), so no cancellation lemma, nonzero
+side condition, or matrix module is needed. The containment result
+`step-kernel-contains-nyquist-multiples` remains as the easy
+direction.
+
+== Why this stays in Gate 3
+
+The example is a concrete worked instance demonstrating existing echo
+machinery on a real domain (rational fields over a periodic grid). It
+introduces no new bridge axis; it does not claim transport and
+coarse-graining are independent decorations producing substantive
+cross-axis content (the EI-2 investigation settled that question
+negatively); and it does not reach toward Gate 2's
+characteristic-theorem-family criteria. The strictly-larger kernel of
+`avg ∘ step` is *structured loss* — two distinguishable annihilation
+sources composing — not bridge-axis interaction.
+
+== Build and verification
+
+`proofs/agda/examples/Transport.agda` compiles under Agda 2.8.0 with
+agda-stdlib v2.3, `--safe --without-K`, no postulates, no
+`{-# TERMINATING #-}` pragmas, no `--rewriting`.
