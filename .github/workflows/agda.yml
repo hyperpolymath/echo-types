@@ -26,15 +26,16 @@ jobs:
       - name: Fetch Agda standard library (v2.3)
         id: stdlib
         run: |
-          STDLIB_DIR="$RUNNER_TEMP/agda-stdlib"
+          STDLIB_DIR="$HOME/agda-stdlib"
           git clone --depth 1 --branch v2.3 https://github.com/agda/agda-stdlib.git "$STDLIB_DIR"
           echo "stdlib_dir=$STDLIB_DIR" >> "$GITHUB_OUTPUT"
 
       - name: Fetch absolute-zero library
         id: absz
         run: |
-          ABSZ_DIR="$RUNNER_TEMP/absolute-zero"
+          ABSZ_DIR="$HOME/absolute-zero"
           git clone --depth 1 https://github.com/hyperpolymath/absolute-zero.git "$ABSZ_DIR"
+          echo "absz_commit=$(git -C "$ABSZ_DIR" rev-parse HEAD)" >> "$GITHUB_OUTPUT"
           echo "absz_dir=$ABSZ_DIR" >> "$GITHUB_OUTPUT"
 
       - name: Register libraries for Agda
@@ -55,6 +56,25 @@ jobs:
 
           printf '%s\n%s\n' "$STDLIB_LIB" "$ABSZ_LIB" > "$HOME/.agda/libraries"
           printf '%s\n' "standard-library" > "$HOME/.agda/defaults"
+
+      # Cache Agda interface (.agdai) files. A fresh runner otherwise
+      # recompiles the entire stdlib subset + the whole proof development
+      # from scratch every run (the multi-minute cold pass). Agda validates
+      # each .agdai against its source, so a stale cache is always safe —
+      # it just means more modules recompile. The key rotates on any proof
+      # source change or absolute-zero bump; restore-keys give a warm
+      # partial cache even when it does.
+      - name: Cache Agda interface files
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/agda-stdlib/**/*.agdai
+            ~/absolute-zero/**/*.agdai
+            proofs/agda/**/*.agdai
+          key: agdai-${{ runner.os }}-agda2.6.3-stdlib2.3-absz${{ steps.absz.outputs.absz_commit }}-${{ hashFiles('proofs/agda/**/*.agda') }}
+          restore-keys: |
+            agdai-${{ runner.os }}-agda2.6.3-stdlib2.3-absz${{ steps.absz.outputs.absz_commit }}-
+            agdai-${{ runner.os }}-agda2.6.3-stdlib2.3-
 
       - name: Typecheck full suite
         run: agda -i proofs/agda proofs/agda/All.agda
