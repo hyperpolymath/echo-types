@@ -50,6 +50,9 @@ open import Relation.Binary.PropositionalEquality
   using (_≡_; _≢_; refl; sym; trans; cong; cong₂; subst; module ≡-Reasoning)
 open import Relation.Nullary using (¬_)
 open import Data.Empty using (⊥)
+open import Data.Rational.Solver using (module +-*-Solver)
+open +-*-Solver using (solve; con; _:+_; _:*_; _:-_; :-_; _:=_)
+import VecRotation as VR
 
 ------------------------------------------------------------------------
 -- Rung 1 — definitions.
@@ -308,39 +311,29 @@ nyquist-in-step-kernel-1 = refl
 nyquist-in-step-kernel-2 : step (nyquist 2) ≡ replicate (2 *ℕ 2) 0ℚ
 nyquist-in-step-kernel-2 = refl
 
--- Factored general case (reported, not postulated).  The headline
---
---   nyquist-in-step-kernel : ∀ n →
---     step (nyquist n) ≡ replicate (2 * n) 0ℚ
---
--- does not land here.  It factors into the single Vec lemma
+-- These two concrete instances are now corollaries of the general
+-- `nyquist-in-step-kernel` (proved below, Rung 5a (closed)).  They
+-- are kept as fast `refl` sanity checks at the smallest sizes.  The
+-- general case factored, as anticipated, through the single Vec fact
 --
 --   rotL (nyquist n) ≡ map -_ (nyquist n)   (and the same for rotR)
 --
--- after which `stepKills` (below, proved general) closes it.  That
--- rotation-invariance of the alternating vector through stdlib's
--- `reverse`/`_∷ʳ_`-based `rotL`/`rotR`, composed with the
--- `vcast ∘ concat ∘ replicate` builder, needs a Vec-rotation lemma
--- library not in scope; the lane forbids postulating it, so the
--- general case is delivered only at n = 1 and n = 2 above.  The
--- *homogeneity* infrastructure that the general case would also use
--- IS proved generally (see `step-homog`), and is what makes Rung 5b
--- land at the fixed even size below.
+-- which the lane forbade postulating; it was instead extracted to
+-- the `VecRotation` module (polymorphic, involution-typed) and is
+-- wired in below.  The *homogeneity* infrastructure (`step-homog`)
+-- remains what makes Rung 5b land at the fixed even size.
 
 ------------------------------------------------------------------------
--- Rung 5b — kernel characterisation (downgrade taken).
+-- Rung 5b — kernel characterisation.
 --
--- The full span `step f ≡ 0 → f ≡ c · nyquist` at n = 4 is a
--- symbolic 4×4 linear solve over ℚ (well past the ~150-line / type-
--- fighting threshold the spec flags).  We take the ALLOWED DOWNGRADE
--- to the containment half: every scalar multiple of the Nyquist mode
--- is in the kernel.  It is delivered at the rung's fixed even size
--- (n = 2, i.e. Field 4 — the same size Rung 6 uses).  The `∀ n`
--- form reduces, via the *general* `step-homog` proved here, to the
--- factored general `nyquist-in-step-kernel` above (same blocker as
--- 5a); only that one Vec-rotation lemma is missing.  No third
--- downgrade is invented — this is the sanctioned containment, at
--- the rung size.
+-- The containment half (every scalar multiple of the Nyquist mode is
+-- in the kernel) is delivered immediately below at the rung's fixed
+-- even size (n = 2, i.e. Field 4).  Its `∀ n` form reduces, via the
+-- *general* `step-homog` proved here, to the now-general
+-- `nyquist-in-step-kernel` (Rung 5a (closed) below).  The full span
+-- `step f ≡ 0 → f ≡ c · nyquist` at n = 4 — once a flagged downgrade
+-- — is now also discharged: see `step-kernel-at-4-is-nyquist-line`
+-- (Rung 5b (closed)), the 4×4 ℚ solve closed by the ring solver.
 
 -- step is ℚ-homogeneous: it commutes with scalar multiplication.
 -- This is genuine general linearity content, not a size hack.
@@ -745,12 +738,267 @@ step-kernel-subspace = record
   }
 
 ------------------------------------------------------------------------
--- Step C — see report.  The subspace closures (Steps A, B) say the
--- kernel is *a* ℚ-subspace but not *which* one; pinning it to the
--- Nyquist line at n = 4 is the rank-1 fact, which is the symbolic
--- 4×4 ℚ solve the rung-5b spec already flagged as past the
--- ~150-line / type-fighting threshold.  Per the allowed outcome
--- (iii) it is not pursued past that threshold; the containment
--- result `step-kernel-contains-nyquist-multiples` above stands, and
--- Steps A and B are the genuine deliverable of this run.
+-- Step C.  The subspace closures (Steps A, B) say the kernel is *a*
+-- ℚ-subspace but not *which* one.  Pinning it to the Nyquist line at
+-- n = 4 — the rank-1 fact, once flagged as past the ~150-line /
+-- type-fighting threshold — is now discharged with the ℚ ring solver
+-- (constant folding does the linear algebra): see
+-- `step-kernel-at-4-is-nyquist-line` (Rung 5b (closed), end of file).
+-- Steps A and B remain the structural framing it specialises.
 
+------------------------------------------------------------------------
+-- Rung 5a (closed) — the ∀ n nyquist-in-step-kernel.
+--
+-- The Vec-rotation fact the Rung 5a comment named as the blocker is
+-- now discharged by the extracted `VecRotation` infrastructure:
+-- left/right rotation of the alternating mode equals its pointwise
+-- negation, proved generally there (polymorphic, involution-typed).
+-- Wiring it in closes `step (nyquist n) ≡ 0` for every n — no
+-- postulate, no size restriction.
+
+-- ℚ negation is involutive (the involution hypothesis VecRotation's
+-- rotation lemmas require); discharged by the ℚ ring solver.
+ℚ-neg-inv : ∀ x → - (- x) ≡ x
+ℚ-neg-inv = solve 1 (λ x → :- (:- x) := x) refl
+
+-- `step`'s local rotL/rotR agree with VecRotation's.  The defining
+-- clauses are identical; the bridge is needed only because they are
+-- distinct top-level symbols (Agda does not identify them up to
+-- definition, only up to reduction on concrete spines).
+rotL≗ : ∀ {m} (v : Field m) → rotL v ≡ VR.rotL v
+rotL≗ []       = refl
+rotL≗ (x ∷ xs) = refl
+
+rotR≗ : ∀ {m} (v : Field m) → rotR v ≡ VR.rotR v
+rotR≗ v = cong reverse (rotL≗ (reverse v))
+
+-- `concat (replicate n blk)` is exactly `VR.alternating -_ n 1ℚ`
+-- (blk = 1ℚ ∷ - 1ℚ ∷ [], so the 2-block builders coincide).  The
+-- coincidence is definitional but stated explicitly: relying on the
+-- unifier to discover it through `trans` leaves it blocked.
+W≡ : ∀ n → concat (replicate n blk) ≡ VR.alternating (-_) n 1ℚ
+W≡ n = refl
+
+rotL-W : ∀ n → rotL (concat (replicate n blk))
+             ≡ map (-_) (concat (replicate n blk))
+rotL-W n = begin
+  rotL (concat (replicate n blk))
+    ≡⟨ rotL≗ (concat (replicate n blk)) ⟩
+  VR.rotL (concat (replicate n blk))
+    ≡⟨ cong VR.rotL (W≡ n) ⟩
+  VR.rotL (VR.alternating (-_) n 1ℚ)
+    ≡⟨ VR.rotL-alternating (-_) ℚ-neg-inv n 1ℚ ⟩
+  map (-_) (VR.alternating (-_) n 1ℚ)
+    ≡⟨ cong (map (-_)) (sym (W≡ n)) ⟩
+  map (-_) (concat (replicate n blk))
+    ∎
+  where open ≡-Reasoning
+
+rotR-W : ∀ n → rotR (concat (replicate n blk))
+             ≡ map (-_) (concat (replicate n blk))
+rotR-W n = begin
+  rotR (concat (replicate n blk))
+    ≡⟨ rotR≗ (concat (replicate n blk)) ⟩
+  VR.rotR (concat (replicate n blk))
+    ≡⟨ cong VR.rotR (W≡ n) ⟩
+  VR.rotR (VR.alternating (-_) n 1ℚ)
+    ≡⟨ VR.rotR-alternating (-_) ℚ-neg-inv n 1ℚ ⟩
+  map (-_) (VR.alternating (-_) n 1ℚ)
+    ≡⟨ cong (map (-_)) (sym (W≡ n)) ⟩
+  map (-_) (concat (replicate n blk))
+    ∎
+  where open ≡-Reasoning
+
+-- Per-entry cancellation: where both rotations equal the negation,
+-- each `step` entry is x + ¼·(−x − 2x − x) = x − x = 0.  The scalar
+-- identity is the Nyquist eigenvalue-0 computation, closed by the
+-- ring solver; the vector statement is its pointwise lift.
+pointwise-zero : ∀ {m} (v : Field m) →
+  zipWith _+_ v
+    (map (λ d → ¼ * d)
+      (zipWith _+_ (zipWith _-_ (map (-_) v) (map (λ c → 2ℚ * c) v))
+                   (map (-_) v)))
+  ≡ replicate m 0ℚ
+pointwise-zero []       = refl
+pointwise-zero (x ∷ xs) = cong₂ _∷_ (head-zero x) (pointwise-zero xs)
+  where
+    head-zero : ∀ y → y + ¼ * (((- y) - (2ℚ * y)) + (- y)) ≡ 0ℚ
+    head-zero =
+      solve 1 (λ y → y :+ con ¼ :* (((:- y) :- (con 2ℚ :* y)) :+ (:- y))
+                       := con 0ℚ) refl
+
+-- Any field on which both rotations act as negation is in ker step.
+step-on-anti : ∀ {m} (v : Field m) →
+  rotL v ≡ map (-_) v → rotR v ≡ map (-_) v →
+  step v ≡ replicate m 0ℚ
+step-on-anti v hL hR = begin
+  step v
+    ≡⟨ cong (λ z → zipWith _+_ v
+              (map (λ d → ¼ * d)
+                (zipWith _+_ (zipWith _-_ z (map (λ c → 2ℚ * c) v))
+                             (rotL v)))) hR ⟩
+  zipWith _+_ v
+    (map (λ d → ¼ * d)
+      (zipWith _+_ (zipWith _-_ (map (-_) v) (map (λ c → 2ℚ * c) v))
+                   (rotL v)))
+    ≡⟨ cong (λ z → zipWith _+_ v
+              (map (λ d → ¼ * d)
+                (zipWith _+_ (zipWith _-_ (map (-_) v) (map (λ c → 2ℚ * c) v))
+                             z))) hL ⟩
+  zipWith _+_ v
+    (map (λ d → ¼ * d)
+      (zipWith _+_ (zipWith _-_ (map (-_) v) (map (λ c → 2ℚ * c) v))
+                   (map (-_) v)))
+    ≡⟨ pointwise-zero v ⟩
+  replicate _ 0ℚ
+    ∎
+  where open ≡-Reasoning
+
+-- `step` commutes with the length-relabelling cast (same `subst`
+-- elimination shape as the existing `sum-vcast`).
+step-subst : ∀ {m n} (eq : m ≡ n) (v : Field m) →
+  step (subst (Vec ℚ) eq v) ≡ subst (Vec ℚ) eq (step v)
+step-subst refl v = refl
+
+step-vcast : ∀ {m n} (eq : m ≡ n) (v : Field m) →
+  step (vcast eq v) ≡ vcast eq (step v)
+step-vcast eq v =
+  trans (cong step (sym (subst-is-cast eq v)))
+        (trans (step-subst eq v) (subst-is-cast eq (step v)))
+
+vcast-replicate : ∀ {m n} (eq : m ≡ n) →
+  vcast eq (replicate m 0ℚ) ≡ replicate n 0ℚ
+vcast-replicate {m} eq =
+  trans (sym (subst-is-cast eq (replicate m 0ℚ))) (vr eq)
+  where
+    vr : ∀ {p q} (e : p ≡ q) →
+         subst (Vec ℚ) e (replicate p 0ℚ) ≡ replicate q 0ℚ
+    vr refl = refl
+
+-- Headline (closed; supersedes the n = 1, 2 instances above).
+nyquist-in-step-kernel : ∀ n → step (nyquist n) ≡ replicate (2 *ℕ n) 0ℚ
+nyquist-in-step-kernel n = begin
+  step (nyquist n)
+    ≡⟨ step-vcast (*-comm n 2) (concat (replicate n blk)) ⟩
+  vcast (*-comm n 2) (step (concat (replicate n blk)))
+    ≡⟨ cong (vcast (*-comm n 2))
+         (step-on-anti (concat (replicate n blk)) (rotL-W n) (rotR-W n)) ⟩
+  vcast (*-comm n 2) (replicate (n *ℕ 2) 0ℚ)
+    ≡⟨ vcast-replicate (*-comm n 2) ⟩
+  replicate (2 *ℕ n) 0ℚ
+    ∎
+  where open ≡-Reasoning
+
+------------------------------------------------------------------------
+-- Rung 5b (closed) — rank-1 kernel characterisation at n = 4.
+--
+-- The Rung 5b downgrade is now redeemed: `ker step` at `Field 4` is
+-- *exactly* the Nyquist line.  step [a,b,c,d] has components
+-- a + ¼·((d−2a)+b), …; the four = 0 equations are a 4×4 ℚ system
+-- whose only solution is [a,−a,a,−a] = a·(nyquist 2).  The linear
+-- algebra is discharged with the ℚ ring solver — constant folding
+-- handles 4·¼ = 1 and ½·2 = 1, so no cancellation lemma, nonzero
+-- side condition, or matrix module is needed.  This supersedes the
+-- containment-only `step-kernel-contains-nyquist-multiples` (which
+-- stands as the easy direction).
+
+½ : ℚ
+½ = (+ 1) / 2
+
+4ℚ : ℚ
+4ℚ = (+ 4) / 1
+
+private
+  pr0 pr1 pr2 pr3 : Field 4 → ℚ
+  pr0 (x ∷ _)         = x
+  pr1 (_ ∷ x ∷ _)     = x
+  pr2 (_ ∷ _ ∷ x ∷ _) = x
+  pr3 (_ ∷ _ ∷ _ ∷ x ∷ _) = x
+
+-- 2·z = 0 ⟹ z = 0 (multiply by ½; ½·2 = 1 by constant folding).
+hc : ∀ z → 2ℚ * z ≡ 0ℚ → z ≡ 0ℚ
+hc z p =
+  trans (solve 1 (λ z → z := con ½ :* (con 2ℚ :* z)) refl z)
+        (trans (cong (½ *_) p) (ℚP.*-zeroʳ ½))
+
+-- x − y = 0 ⟹ x = y.
+de : ∀ x y → x - y ≡ 0ℚ → x ≡ y
+de x y p =
+  trans (solve 2 (λ x y → x := (x :- y) :+ y) refl x y)
+        (trans (cong (_+ y) p) (ℚP.+-identityˡ y))
+
+-- x + y = 0 ⟹ y = − x.
+negFrom : ∀ x y → x + y ≡ 0ℚ → y ≡ - x
+negFrom x y p =
+  trans (solve 2 (λ x y → y := (x :+ y) :+ (:- x)) refl x y)
+        (trans (cong (_+ (- x)) p) (ℚP.+-identityˡ (- x)))
+
+step-kernel-at-4-is-nyquist-line :
+  ∀ (f : Field 4) → step f ≡ replicate 4 0ℚ →
+  Σ[ c ∈ ℚ ] f ≡ map (c *_) (nyquist 2)
+step-kernel-at-4-is-nyquist-line (a ∷ b ∷ c ∷ d ∷ []) H = a , veq
+  where
+    e1 : a + ¼ * ((d - 2ℚ * a) + b) ≡ 0ℚ
+    e1 = cong pr0 H
+    e2 : b + ¼ * ((a - 2ℚ * b) + c) ≡ 0ℚ
+    e2 = cong pr1 H
+    e3 : c + ¼ * ((b - 2ℚ * c) + d) ≡ 0ℚ
+    e3 = cong pr2 H
+
+    z- : 4ℚ * 0ℚ - 4ℚ * 0ℚ ≡ 0ℚ
+    z- = trans (cong₂ _-_ (ℚP.*-zeroʳ 4ℚ) (ℚP.*-zeroʳ 4ℚ))
+               (ℚP.+-inverseʳ 0ℚ)
+    z+ : 4ℚ * 0ℚ + 0ℚ ≡ 0ℚ
+    z+ = trans (cong (_+ 0ℚ) (ℚP.*-zeroʳ 4ℚ)) (ℚP.+-identityʳ 0ℚ)
+    z–0 : 4ℚ * 0ℚ - 0ℚ ≡ 0ℚ
+    z–0 = trans (cong (_- 0ℚ) (ℚP.*-zeroʳ 4ℚ)) (ℚP.+-inverseʳ 0ℚ)
+
+    -- 4·e1 − 4·e3 = 2(a−c)  ⟹  a ≡ c.
+    g-ac : 2ℚ * (a - c) ≡ 0ℚ
+    g-ac =
+      trans (solve 4 (λ a b c d →
+               con 2ℚ :* (a :- c)
+               := con 4ℚ :* (a :+ con ¼ :* ((d :- con 2ℚ :* a) :+ b))
+                  :- con 4ℚ :* (c :+ con ¼ :* ((b :- con 2ℚ :* c) :+ d)))
+               refl a b c d)
+            (trans (cong₂ _-_ (cong (4ℚ *_) e1) (cong (4ℚ *_) e3)) z-)
+    a≡c : a ≡ c
+    a≡c = de a c (hc (a - c) g-ac)
+    ac0 : a - c ≡ 0ℚ
+    ac0 = hc (a - c) g-ac
+
+    -- 4·e2 + (a−c) = 2(a+b)  ⟹  b ≡ −a.
+    g-ab : 2ℚ * (a + b) ≡ 0ℚ
+    g-ab =
+      trans (solve 4 (λ a b c d →
+               con 2ℚ :* (a :+ b)
+               := con 4ℚ :* (b :+ con ¼ :* ((a :- con 2ℚ :* b) :+ c))
+                  :+ (a :- c))
+               refl a b c d)
+            (trans (cong₂ _+_ (cong (4ℚ *_) e2) ac0) z+)
+    b≡-a : b ≡ - a
+    b≡-a = negFrom a b (hc (a + b) g-ab)
+    ab0 : a + b ≡ 0ℚ
+    ab0 = hc (a + b) g-ab
+
+    -- 4·e1 − (a+b) = a+d  ⟹  d ≡ −a.
+    g-ad : a + d ≡ 0ℚ
+    g-ad =
+      trans (solve 4 (λ a b c d →
+               (a :+ d)
+               := con 4ℚ :* (a :+ con ¼ :* ((d :- con 2ℚ :* a) :+ b))
+                  :- (a :+ b))
+               refl a b c d)
+            (trans (cong₂ _-_ (cong (4ℚ *_) e1) ab0) z–0)
+    d≡-a : d ≡ - a
+    d≡-a = negFrom a d g-ad
+
+    negA : - a ≡ a * (- 1ℚ)
+    negA = solve 1 (λ a → (:- a) := a :* con (- 1ℚ)) refl a
+
+    veq : a ∷ b ∷ c ∷ d ∷ [] ≡ map (a *_) (nyquist 2)
+    veq =
+      cong₂ _∷_ (sym (ℚP.*-identityʳ a))
+        (cong₂ _∷_ (trans b≡-a negA)
+          (cong₂ _∷_ (trans (sym a≡c) (sym (ℚP.*-identityʳ a)))
+            (cong₂ _∷_ (trans d≡-a negA) refl)))

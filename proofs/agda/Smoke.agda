@@ -35,6 +35,7 @@ open import Echo using
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
 open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)
+open import VecRotation using (rotL-alternating; rotR-alternating; map-alternating)
 
 open import EchoApprox using
   ( Tolerance

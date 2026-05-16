@@ -9,8 +9,10 @@ diffusion) and coarse-graining (block averaging) on rational-valued
 fields over a periodic grid. Subject file:
 `proofs/agda/examples/Transport.agda`.
 
-*Status:* Gate 3 example, complete with two documented gaps
-(section 5). Compiles `--safe --without-K`, no postulates.
+*Status:* Gate 3 example, complete; both former gaps now *closed*.
+5(a) (the `∀ n` generalisation) via the extracted `VecRotation`
+module; 5(b) (the rank-1 characterisation at n = 4) via the ℚ ring
+solver. Compiles `--safe --without-K`, no postulates.
 
 toc::[]
 
@@ -36,6 +38,12 @@ introduces no new bridge axis.
   the Nyquist mode is annihilated:
   `∀ c → step (map (c *_) (nyquist 2)) ≡ replicate 4 0ℚ`
   (containment, at the fixed even size).
+* `nyquist-in-step-kernel` — the `∀ n` form:
+  `∀ n → step (nyquist n) ≡ replicate (2·n) 0ℚ` (closes former gap
+  (a), via the extracted `VecRotation` module).
+* `step-kernel-at-4-is-nyquist-line` — the rank-1 converse at n = 4:
+  `step f ≡ 0 → Σ[ c ] f ≡ map (c *_) (nyquist 2)` (closes former
+  gap (b), 4×4 ℚ solve via the ring solver).
 * `compose-kernel-strictly-larger` — the kernel of `avg ∘ step`
   strictly contains both the step-then-`avg` loss and `ker step`
   alone. Witness `g6 = [1, -1, -1, 1]` at `n = 4`, block size 2
@@ -45,9 +53,11 @@ introduces no new bridge axis.
 
 == Infrastructure
 
-Factored locally and scoped to this file by design (not promoted to a
-utilities module). Future Vec-valued-field examples may want to
-extract them.
+The `step`-specific algebra below stays local to this file. The one
+genuinely reusable Vec-rotation fact has been *extracted* to the
+top-level `VecRotation` module (polymorphic over any carrier with an
+involutive negation): `rotL-alternating` / `rotR-alternating`, plus
+the `map-alternating` corollary. That module is what closes gap (a).
 
 * `step-homog` — `step (map (c *_) v) ≡ map (c *_) (step v)`
   (ℚ-scalar homogeneity of `step`).
@@ -73,29 +83,37 @@ Eight Vec-over-ℚ lemmas, reusable for future Vec-valued-field work:
 | `scale-zero`       | `map (c *_)` annihilates the zero vector
 |===
 
-== Documented gaps
+== Former gaps (both closed)
 
-=== (a) `∀ n` generalisation of `nyquist-in-step-kernel`
+=== (a) `∀ n` generalisation of `nyquist-in-step-kernel` — CLOSED
 
-`nyquist-in-step-kernel-1` and `-2` stand (computed by `refl` at
-`n = 1` and `n = 2`). The general
-`∀ n → step (nyquist n) ≡ replicate (2·n) 0ℚ` is blocked on a
-Vec-rotation fact stdlib does not provide: that
-`rotL (nyquist n) ≡ map -_ (nyquist n)` (and the same for `rotR`) —
-rotation of the alternating vector equals its negation. With that
-lemma the general case closes via `step-homog`. The lane forbade
-postulating it, so the general statement is documented in-file
-rather than asserted.
+The general `nyquist-in-step-kernel : ∀ n → step (nyquist n) ≡
+replicate (2·n) 0ℚ` now lands (no postulate, no size restriction).
+The Vec-rotation fact stdlib does not provide —
+`rotL (nyquist n) ≡ map -_ (nyquist n)`, and the `rotR` twin —
+was extracted to the `VecRotation` module as the polymorphic
+`rotL-alternating` / `rotR-alternating` (each requiring an
+involution hypothesis, discharged for ℚ by the ring solver). The
+in-file wiring (Rung 5a (closed)) bridges `step`'s local rotations
+to the module, lifts the per-entry Nyquist eigenvalue-0 identity
+pointwise, and transports across the `vcast ∘ concat ∘ replicate`
+builder. `nyquist-in-step-kernel-1` / `-2` are retained as fast
+`refl` sanity checks at the smallest sizes.
 
-=== (b) `step-kernel-at-4-is-nyquist-line` (rank-1 characterisation)
+=== (b) `step-kernel-at-4-is-nyquist-line` (rank-1 characterisation) — CLOSED
 
-Not attempted past the ~150-line threshold. The subspace closures
-(`step-additive`, `step-homog`, `StepKernelSubspace`) establish that
-`ker step` is a ℚ-subspace, but not *which* subspace. Pinning it to
-the Nyquist line at `n = 4` is the rank-1 fact, requiring either a
-symbolic 4×4 ℚ linear solve or a ℚ-linear-algebra module carrying a
-rank-1 characterisation — neither in scope. The containment result
-`step-kernel-contains-nyquist-multiples` stands in its place.
+`step-kernel-at-4-is-nyquist-line : ∀ (f : Field 4) → step f ≡
+replicate 4 0ℚ → Σ[ c ∈ ℚ ] f ≡ map (c *_) (nyquist 2)` now lands.
+The subspace closures (`step-additive`, `step-homog`,
+`StepKernelSubspace`) establish that `ker step` is a ℚ-subspace; this
+pins *which* subspace — the Nyquist line. The rank-1 fact is the 4×4
+ℚ system `step [a,b,c,d] ≡ 0`, whose only solution is
+`[a,−a,a,−a] = a·(nyquist 2)`. It is discharged with the stdlib ℚ
+ring solver (`Data.Rational.Solver`): constant folding does the
+linear algebra (4·¼ = 1, ½·2 = 1), so no cancellation lemma, nonzero
+side condition, or matrix module is needed. The containment result
+`step-kernel-contains-nyquist-multiples` remains as the easy
+direction.
 
 == Why this stays in Gate 3
 
