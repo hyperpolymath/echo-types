@@ -158,9 +158,16 @@ Authority is conferred socially, not internally. In cost/payoff order:
 
 . TYPES abstract (low bar, fast expert feedback) — "Echo: a
   definitionally-grounded graded comonad of structured loss".
+  *Drafted 2026-05-17:* `docs/echo-types/types-abstract.adoc`,
+  submission-ready content (logistics offline).
 . A mechanised-metatheory paper at CPP or ITP (natural venue for a
   `--safe --without-K` Agda artefact; these venues reward the
-  retraction/gate discipline).
+  retraction/gate discipline). *Draft started 2026-05-17:*
+  `docs/echo-types/paper.adoc` — a *living* full-paper draft,
+  written now while the result is fresh, with sections explicitly
+  marked for expansion as more context (extended examples,
+  comparison depth, the ordinal consumer-evidence) accrues. Not for
+  submission until those land; see its own status banner.
 . Zenodo DOI + installable library packaging (stable module API so
   others can `import echo-types`).
 . Circulate the strongest adjacency note (HoTT fibres / QTT-modal)
@@ -242,7 +249,9 @@ stands and is *strengthened*; no honest rewrite is required.
 | C | `EchoSeparating.agda` (`sep-degrade-compose-fails` + Σ-laws hold) | Landed
 | D | `EchoRelModel.agda` (`GradedLossModel`/`GCLaws`, 2 models, `model-agreement`) | Landed
 | D | `docs/echo-types/conservativity.adoc` (metatheorem + 3-clause anchor) | Landed
-| E | TYPES abstract / CPP-ITP paper / Zenodo / library packaging | Not started
+| E | `docs/echo-types/types-abstract.adoc` (TYPES extended abstract) | Drafted (content submission-ready)
+| E | `docs/echo-types/paper.adoc` (full CPP/ITP paper) | Living draft (sections tagged [EXPAND])
+| E | Zenodo DOI / installable library packaging / outreach | Not started (offline / author-driven)
 |===
 
 Pillars A, B, C and D are fully landed (`EchoFiberBridge`,
@@ -295,3 +304,12 @@ reason.
   conservative/definitional metatheorem with a three-clause formal
   anchor to checked modules. *Pillars A–D all complete; no scaffold
   modules remain.* Only Pillar E (external validation) is left.
+* *2026-05-17 — trigger: Pillar E started (write-up).* TYPES
+  extended abstract drafted (`types-abstract.adoc`, content
+  submission-ready). Full CPP/ITP mechanised-metatheory paper
+  started as a *living draft* (`paper.adoc`) — written now while the
+  result is fresh, with sections tagged *[EXPAND]* (background,
+  evaluation, related work, ordinal consumer-evidence appendix) to
+  be filled as more context accrues; not for submission until those
+  clear. Remaining Pillar E (Zenodo DOI, library packaging,
+  submission logistics, outreach) is offline / author-driven.

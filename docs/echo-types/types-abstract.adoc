@@ -1,0 +1,121 @@
+= Echo: a definitionally-grounded graded comonad of structured loss
+:toc: macro
+:toclevels: 2
+:sectnums:
+:icons: font
+
+[.lead]
+Pillar E, artefact 1 of `establishment-plan.adoc`: a TYPES-style
+extended abstract (≈2 pp). Submission-ready draft; the social steps
+(submission, reviewing, DOI) remain offline and require the author.
+Every claim below is mechanised in the accompanying
+`--safe --without-K` Agda artefact and pinned in `Smoke.agda`.
+
+toc::[]
+
+== Context and the honest verdict
+
+Define, for `f : A → B` and `y : B`,
+`Echo f y := Σ (x : A) , (f x ≡ y)`. This is *definitionally* the
+homotopy fibre `fib f y` (HoTT book Def. 4.2.4); the bridge
+`echo↔fib` is mechanised with `refl` round-trips.
+
+We do **not** claim echo as a new judgmental type strength. Dependent
+types are a formation discipline; linear / substructural types are a
+structural-rule discipline; both alter the judgmental apparatus.
+`Echo` introduces no new judgement, context structure, or formation
+rule — it is a derived Σ-type. Comparing it to "linear or dependent"
+strength is a category error, and we own that loudly: it pre-empts a
+reviewer's first objection and is the foundation of the result, not a
+hedge.
+
+The strength that *does* befit echo is a **graded comonadic modality
+of structured loss**, in the coeffect / quantitative lineage
+(Petriček–Orchard–Mycroft; Brunel–Gaboardi–Mazza–Zdancewic; Atkey's
+QTT; Orchard–Liepelt–Eades / Granule). The contribution is to
+*characterise* echo there: a universal property, a graded comonad,
+two independent models, a separating model, and a conservativity
+metatheorem — all mechanised, with a falsifiable retraction
+discipline.
+
+== Contributions
+
+. *Pinned identity (Pillar A).* `echo↔fib : Echo f y ↔ fiber f y`,
+  definitional, `refl` round-trips. The project's most deflationary
+  admission, made a machine-checked artefact.
+. *Universal property (Pillar B-1).* `Echo f y` is the pullback of
+  `f` along the point `y : ⊤ → B`. A `SliceHom (λ _ → y) f` *is* a
+  cone (bridge round-trips `refl`); `echo-pullback-univ` gives the
+  terminal-cone property with existence and *funext-free, K-free*
+  pointwise uniqueness (the witness-transport leg makes uniqueness
+  provable without UIP).
+. *Graded comonad (Pillar B-2).* Over the loss-grade join-semilattice
+  `(Grade, ⊔, keep)`, with counit `gextract` (zero-loss echo = bare
+  echo, the Pillar-A move reused) and comultiplication `gduplicate`
+  (loss-budget splitting along the join), all three graded-comonad
+  laws hold.
++
+[#h2]
+*Key technical insight (the H2 verdict).* Stated in the
+*common-upper-bound idiom* — post-compose each (co)multiplication
+with the universal map into an arbitrary common grade — every law,
+*including coassociativity*, collapses to one path-independence lemma
+(`degrade-compose`) plus propositionality of the loss order
+(`≤g-prop`). No path algebra, no `subst`, no transport. The naive
+grade-equality phrasing would force a `subst` along `⊔`-associativity;
+the universal-arrow phrasing eliminates it entirely. This is what
+makes the modality cheap and model-independent.
+. *Separating model (Pillar C).* The model = our graded model with
+  its *single* hypothesis `≤g-prop` removed (two distinct `lo→hi`
+  arrows; a reindexing distinguishing them). Generic Σ-functoriality
+  (`map-over` id/comp) and the functorial unit still hold; the
+  characteristic composition law is *refuted* at a concrete decidable
+  witness (checked `true ≢ false`). Hence the loss law is genuine
+  structure, carried *precisely* by order-propositionality — not
+  Σ-bookkeeping. (A positive countermodel, extending the project's
+  negative-exhibit discipline.)
+. *Model-independence + conservativity (Pillar D).* An abstract model
+  interface `GradedLossModel` with the comonad laws proved *once*
+  generically (`GCLaws`); two instances (Set / `EchoGraded` and a
+  relational `EchoStep`/`map-rel` model) shown to agree under the
+  graph = fibration bridge (`model-agreement`, round-trips `refl`;
+  `bridge-natural`). A conservativity metatheorem: because
+  `Echo = Σ` and the whole development is postulate-free under
+  `--safe --without-K`, the loss modality is a *conservative,
+  definitional* extension of MLTT+Σ — structure without strength.
+
+== The artefact and its discipline
+
+The Agda development is `--safe --without-K` throughout, with **zero
+postulates and zero escape pragmas**; conservativity is discharged
+operationally by the build, CI-enforced. Every headline theorem is
+pinned in a `Smoke.agda` manifest so a silent rename fails CI fast.
+Development is governed by *falsifiable gates* with explicit
+retraction actions and a public retraction log (one identity claim,
+EI-2, was settled negatively and is recorded as such — having cleanly
+killed it is part of the authority story). The funext boundary is
+real, known, and quarantined behind an isolated module.
+
+== Related work and position
+
+Echo sits beside, not within, the linear/dependent ladder. The
+nearest neighbours are graded / coeffect modalities (Granule, QTT)
+and the HoTT treatment of fibres. The novelty is not a new object —
+it is the *characterisation package*: a definitional identity, a
+universal property, a graded-comonad law-set that provably reduces to
+order-propositionality, a separating model, model-independence, and a
+mechanised conservativity metatheorem, all under a falsifiable-gate
+methodology.
+
+== Author / artefact statement
+
+Mechanised in Agda (stdlib 2.3), `--safe --without-K`, no postulates.
+Source: `hyperpolymath/echo-types`; headline manifest `Smoke.agda`;
+plan and gates in `docs/echo-types/establishment-plan.adoc` /
+`roadmap-gates.adoc`; conservativity metatheorem in
+`docs/echo-types/conservativity.adoc`.
+
+NOTE: Submission logistics (venue deadline, formatting to the TYPES
+template, author metadata, Zenodo DOI minting, arXiv cross-post) are
+*offline and author-driven* — this document is the content draft, not
+the submission.

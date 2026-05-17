@@ -118,10 +118,16 @@ Two active workstreams:
    remain; the entire internal programme is done.
 
    Open pieces on this track:
-   * Pillar E only — external validation: TYPES abstract → CPP/ITP
-     mechanised-metatheory paper → Zenodo DOI + installable library
-     packaging → adjacency-note outreach. (Social, not internal;
-     not started.)
+   * Pillar E only. TYPES extended abstract DRAFTED
+     (`docs/echo-types/types-abstract.adoc`, content
+     submission-ready). Full CPP/ITP paper is a LIVING DRAFT
+     (`docs/echo-types/paper.adoc`) with sections tagged *[EXPAND]*
+     (background primer, evaluation, related work, ordinal
+     consumer-evidence appendix) — fill as more context accrues; do
+     NOT submit until [EXPAND] tags clear and a venue/template is
+     chosen. Remaining: clear [EXPAND]s, then Zenodo DOI +
+     installable library packaging + outreach (offline /
+     author-driven — flag to user, don't auto-run).
 
 Cross-repo bridge status lives in `docs/echo-types/cross-repo-bridge-status.md`.
 
@@ -247,25 +253,32 @@ fibration bridge). `conservativity.adoc` states the
 conservative/definitional metatheorem with a 3-clause formal anchor.
 `All.agda` + `Smoke.agda` exit 0, no postulates / no escape pragmas.
 
-Smallest useful next advance — **Pillar E (external validation)
-only**; the internal programme is complete:
+**Pillar E STARTED (2026-05-17): write-up drafted.**
+`docs/echo-types/types-abstract.adoc` (TYPES extended abstract,
+content submission-ready) and `docs/echo-types/paper.adoc` (full
+CPP/ITP mechanised-metatheory paper, LIVING DRAFT, status banner +
+*[EXPAND]* tags) both landed. The decision (user, 2026-05-17): write
+the full paper *now* while the result is fresh, expand the tagged
+sections later as context accrues.
 
-1. Draft the TYPES abstract: "Echo: a definitionally-grounded graded
-   comonad of structured loss" (low bar, fast expert feedback).
-   Material is ready: thesis + H2 verdict + separating model +
-   conservativity metatheorem.
-2. Then a CPP/ITP mechanised-metatheory paper (natural venue for a
-   `--safe --without-K` Agda artefact with the gate/retraction
-   discipline).
-3. Zenodo DOI + installable library packaging (stable module API);
-   adjacency-note outreach (HoTT fibres / QTT-modal).
+Smallest useful next advance — clear the `paper.adoc` *[EXPAND]*
+tags as material becomes available, in this order:
 
-Rationale: Pillars A (pin-identity), B (universal property + graded
-comonad), C (separating model) and D (second model +
-conservativity) are all complete and verified. Authority is now
-conferred socially — Pillar E is write-up / packaging / outreach,
-not internal proof work. Note: E is partly an offline/external
-task (submissions, DOIs); flag to the user rather than auto-running.
+1. Background/notation primer (graded comonads + HoTT fibres) — can
+   be written now; low-context.
+2. Related work — needs a literature pass (Granule/QTT, Uustalu–Vene
+   comonads, coeffects, lens/optic laws vs the witness-transport
+   leg).
+3. Evaluation — proof-size/cost table; quantify
+   common-upper-bound-idiom vs naive `subst`.
+4. Ordinal consumer-evidence appendix — gated on that track hitting
+   its Bachmann–Howard milestone (firewalled per roadmap.md).
+5. THEN offline/author-driven: venue+template, Zenodo DOI, library
+   packaging, outreach — flag to user, do NOT auto-run.
+
+Rationale: internal programme (A–D) complete and verified. Authority
+is conferred socially; the paper is the vehicle. Capturing the
+narrative now (while fresh) then expanding is the chosen strategy.
 
 ---
 
