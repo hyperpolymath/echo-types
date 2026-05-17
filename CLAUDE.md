@@ -94,19 +94,23 @@ Two active workstreams:
    scaffolds in `All.agda` (`EchoPullback`, `EchoGradedComonad`,
    `EchoSeparating`, `EchoRelModel`) carrying intended signatures.
 
-   Pillar B `EchoGradedComonad` THIN SLICE LANDED (2026-05-17):
-   `gextract`, `gduplicate`, `gcomonad-counit-{l,r}`,
-   `gcomonad-coassoc` — real module, pinned in `Smoke.agda`. The
-   pivotal de-risk question is answered: graded coassociativity
-   needs NO path algebra beyond `≤g-prop` (common-upper-bound idiom
-   eliminates the `⊔g-assoc` transport; pure `degrade-compose` +
-   `≤g-prop`). Thesis strengthened, unchanged. See
-   establishment-plan.adoc §"H2 verdict".
+   **Pillar B COMPLETE (2026-05-17).** Both artefacts real:
+   * `EchoGradedComonad` — `gextract`, `gduplicate`,
+     `gcomonad-counit-{l,r}`, `gcomonad-coassoc`. De-risk verdict:
+     graded coassociativity needs NO path algebra beyond `≤g-prop`
+     (common-upper-bound idiom kills the `⊔g-assoc` transport).
+   * `EchoPullback` — `EchoCone`/`echo-cone`, `SliceHom`↔cone bridge
+     (`refl` round-trips), `IsMediator`, `echo-pullback-univ`
+     (existence + funext-free pointwise uniqueness via stdlib
+     `Σ-≡,≡→≡`; no K). Pillars A and B both complete; thesis
+     strengthened, unchanged. See establishment-plan.adoc §"H2
+     verdict" + revision history.
 
    Open pieces on this track:
-   * Pillar B `EchoPullback.echo-pullback-univ` — start by relating
-     `EchoCategorical.SliceHom` to a pullback cone.
-   * Pillars C/D and Pillar E (TYPES/CPP-ITP/Zenodo) not started.
+   * Pillar C — `EchoSeparating.agda` (separating model: generic
+     Σ-functoriality holds while `degrade-compose` fails).
+   * Pillar D — `EchoRelModel.agda` + `conservativity.adoc`.
+   * Pillar E (TYPES/CPP-ITP/Zenodo) not started.
 
 Cross-repo bridge status lives in `docs/echo-types/cross-repo-bridge-status.md`.
 
@@ -187,15 +191,16 @@ new judgment — it is definitionally `fib`).
   `echo↔fib : Echo f y ↔ fiber f y` via `mk↔ₛ′`, `refl` round-trips.
   Pinned in `Smoke.agda` (`fiber; echo→fib; fib→echo; echo↔fib`),
   wired into `All.agda`.
-* **Pillar B (real, verified — H2 thin slice, 2026-05-17):**
-  `EchoGradedComonad.agda` — `gextract`, `gduplicate`,
-  `gcomonad-counit-{l,r}`, `gcomonad-coassoc` over the loss-grade
-  lattice; pinned in `Smoke.agda`. Coassoc needs no path algebra
-  beyond `≤g-prop` (common-upper-bound idiom). No postulates.
-* **Pillars B/C/D (scaffolds):** `EchoPullback`, `EchoSeparating`,
-  `EchoRelModel` — declaration-free doc modules (no postulates, no
-  holes), tracked in `All.agda`, carrying intended signatures as
-  commented specs.
+* **Pillar B (real, verified — COMPLETE, 2026-05-17):**
+  `EchoGradedComonad.agda` (`gextract`, `gduplicate`,
+  `gcomonad-counit-{l,r}`, `gcomonad-coassoc` — coassoc needs no
+  path algebra beyond `≤g-prop`) and `EchoPullback.agda`
+  (`EchoCone`/`echo-cone`, `SliceHom`↔cone bridge, `IsMediator`,
+  `echo-pullback-univ` — funext-free pointwise uniqueness, no K).
+  Both pinned in `Smoke.agda`. No postulates.
+* **Pillars C/D (scaffolds):** `EchoSeparating`, `EchoRelModel` —
+  declaration-free doc modules (no postulates, no holes), tracked
+  in `All.agda`, carrying intended signatures as commented specs.
 
 `agda proofs/agda/All.agda` and `agda proofs/agda/Smoke.agda` both
 exit 0 under `--safe --without-K`. No postulates introduced.
@@ -211,19 +216,29 @@ used by `EchoGraded.degrade-via-join`) makes the `subst GEcho
 `≤g-prop`. Thesis unchanged and strengthened (establishment-plan
 §"H2 verdict"). `All.agda` + `Smoke.agda` exit 0, no postulates.
 
+**H1 LANDED (2026-05-17). Pillar B COMPLETE.** `EchoPullback.agda`
+real: `Echo f y` is the pullback of `f` along `y : ⊤ → B`;
+`SliceHom (λ _ → y) f` IS a cone (bridge round-trips `refl`);
+`echo-pullback-univ` gives existence + funext-free pointwise
+uniqueness (stdlib `Σ-≡,≡→≡`, no K). `All.agda` + `Smoke.agda`
+exit 0, no postulates.
+
 Smallest useful next advance:
 
-1. **Backfill H1 — `EchoPullback.echo-pullback-univ`.** Now safe
-   consolidation: present `Echo f y` as the pullback of `f` along
-   `y : ⊤ → B`; start by relating `EchoCategorical.SliceHom` to the
-   pullback cone, then the terminal-cone universal property.
-2. Then Pillar C — `EchoSeparating.agda` (separating model: generic
-   Σ-functoriality holds while `degrade-compose` fails).
-3. Then Pillar D — `EchoRelModel.agda` + `conservativity.adoc`.
+1. **Pillar C — `EchoSeparating.agda`.** A *separating model*: a
+   structure satisfying generic Σ-functoriality in which the
+   loss-grade composition law (`degrade-compose` / `degrade-via-join`)
+   fails — a concrete finite witness. Answers "isn't this all
+   Σ-lemmas?" with a model, not an argument.
+2. Then Pillar D — `EchoRelModel.agda` (transport the Pillar-B
+   graded-comonad laws into the relational/fibration model) +
+   `docs/echo-types/conservativity.adoc`.
+3. Then Pillar E — TYPES abstract / CPP-ITP / Zenodo.
 
-Rationale: the pivotal bet (H2) is settled positively, so the
-remaining Pillar-B/C/D work is now narrative consolidation in the
-clean order, no further de-risking needed.
+Rationale: Pillars A and B are complete and the pivotal thesis bet
+settled positively. The credibility core now needs the separating
+model (C) — the gold-standard "this structure is real, not
+bookkeeping" artefact — before model-independence (D).
 
 ---
 

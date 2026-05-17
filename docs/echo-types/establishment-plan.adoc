@@ -84,7 +84,13 @@ the composition iso, cancel-iso, pentagon — but no _characterisation_.
 
 * Artefact 1: `EchoPullback.agda` — `Echo f y` as the pullback of `f`
   along `y : ⊤ → B`, with the terminal-cone universal property
-  `echo-pullback-univ`. The categorical-semantics anchor.
+  `echo-pullback-univ`. The categorical-semantics anchor. *Landed
+  2026-05-17:* `EchoCone`/`echo-cone`, the `SliceHom`↔cone bridge
+  (`cone→slice`/`slice→cone` with `refl` round-trips — the "in
+  disguise" claim is now a checked fact), `IsMediator`, and
+  `echo-pullback-univ` (existence + funext-free pointwise
+  uniqueness, no K — uniqueness uses stdlib `Σ-≡,≡→≡` on the
+  `factor`/`coherent` legs).
 * Artefact 2: `EchoGradedComonad.agda` (headline new family) — reuse
   `EchoGraded._≤g_`, `_⊔g_`, `≤g-prop`; define the graded counit /
   comultiplication and prove the three graded-comonad laws over the
@@ -142,13 +148,16 @@ Authority is conferred socially, not internally. In cost/payoff order:
 
 == Sequencing and guardrails
 
-*Order (revised 2026-05-17 — de-risk first):* A → **B(graded comonad,
-thin slice) → B(pullback)** → B(graded comonad, remainder) →
+*Order (revised 2026-05-17 — de-risk first):* A ✓ →
+**B(graded comonad, thin slice) ✓ → B(pullback) ✓** →
 C(separating model) → D(second model + conservativity) → E(write-up).
-The graded-comonad result is the pivotal bet, so a minimal slice is
-attempted _before_ the safe pullback work to test the thesis early
-(fail fast). A–C are the credibility core and need no external
-unblocker. The ordinal / Buchholz
+The graded-comonad result was the pivotal bet, so a minimal slice
+was attempted _before_ the safe pullback work to test the thesis
+early (fail fast); it settled positively and over-delivered all
+three laws, after which the pullback landed as planned. *Pillars A
+and B are now complete.* Next: C(separating model). A–C are the
+credibility core and need no external unblocker. The ordinal /
+Buchholz
 track is impressive _consumer evidence_, not foundation — keep it
 firewalled from the identity claim exactly as `roadmap.md` already does.
 
@@ -203,7 +212,7 @@ stands and is *strengthened*; no honest rewrite is required.
 | Pillar | Artefact | State
 
 | A | `EchoFiberBridge.agda` (`echo↔fib`, pinned in `Smoke.agda`) | Landed
-| B | `EchoPullback.agda` | Scaffolded (doc-only module, in `All.agda`)
+| B | `EchoPullback.agda` (`echo-pullback-univ` + SliceHom↔cone) | Landed
 | B | `EchoGradedComonad.agda` (`gextract`/`gduplicate` + 3 laws) | Thin slice landed (verdict <<h2-verdict>>)
 | C | `EchoSeparating.agda` | Scaffolded (doc-only module, in `All.agda`)
 | D | `EchoRelModel.agda` | Scaffolded (doc-only module, in `All.agda`)
@@ -211,12 +220,13 @@ stands and is *strengthened*; no honest rewrite is required.
 | E | TYPES abstract / CPP-ITP paper / Zenodo / library packaging | Not started
 |===
 
-`EchoGradedComonad.agda` is now a real module (thin slice — see
-<<h2-verdict>>). The remaining Pillar B–D entries (`EchoPullback`,
-`EchoSeparating`, `EchoRelModel`) are still documentation-only Agda
-modules (no declarations, hence no postulates or holes — they
-typecheck under `--safe --without-K` and are tracked in `All.agda`
-per the rung-consolidation policy). They carry the intended theorem
+Pillar B is fully landed: both `EchoPullback.agda` (universal
+property) and `EchoGradedComonad.agda` (graded comonad, <<h2-verdict>>)
+are real modules. The remaining Pillar C–D entries (`EchoSeparating`,
+`EchoRelModel`) are still documentation-only Agda modules (no
+declarations, hence no postulates or holes — they typecheck under
+`--safe --without-K` and are tracked in `All.agda` per the
+rung-consolidation policy). They carry the intended theorem
 signatures as commented specifications so a fresh session can start
 filling them without re-deriving the design.
 
@@ -238,3 +248,10 @@ reason.
   `≤g-prop`?" is answered *no* (<<h2-verdict>>); the thesis is
   unchanged and strengthened — no honest rewrite required. Next per
   the revised sequencing: backfill H1 (`EchoPullback`).
+* *2026-05-17 — trigger: Pillar B artefact state change.* H1 landed:
+  `EchoPullback.agda` is real — `EchoCone`/`echo-cone`, the
+  `SliceHom`↔cone bridge (`refl` round-trips), `IsMediator`, and
+  `echo-pullback-univ` (existence + funext-free pointwise uniqueness,
+  no K). *Pillar B is now complete* (universal property + graded
+  comonad). Next per sequencing: Pillar C — `EchoSeparating.agda`
+  (separating model).

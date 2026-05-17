@@ -162,6 +162,19 @@ open import EchoGradedComonad using
   ; gcomonad-coassoc
   )
 
+-- Pillar B (part 1): Echo as the pullback of f along y : ⊤ → B,
+-- with the terminal-cone universal property. SliceHom IS a cone.
+open import EchoPullback using
+  ( EchoCone
+  ; echo-cone
+  ; cone→slice
+  ; slice→cone
+  ; cone→slice→cone
+  ; slice→cone→slice
+  ; IsMediator
+  ; echo-pullback-univ
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
