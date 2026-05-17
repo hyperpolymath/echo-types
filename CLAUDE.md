@@ -106,19 +106,22 @@ Two active workstreams:
      strengthened, unchanged. See establishment-plan.adoc §"H2
      verdict" + revision history.
 
-   **Pillar C COMPLETE (2026-05-17).** `EchoSeparating.agda` real:
-   a separating model = `EchoGraded` minus `≤g-prop`
-   (`sep-order-not-prop`); generic Σ-functoriality
-   (`sep-map-over-{id,comp}`) + functorial unit hold, but
-   `SepDegradeCompose` is refuted (`sep-degrade-compose-fails`, via
-   checked `true ≢ false`). Pillars A/B/C done — credibility core
-   complete.
+   **Pillars A–D ALL COMPLETE (2026-05-17).** Pillar C:
+   `EchoSeparating.agda` (separating model = `EchoGraded` minus
+   `≤g-prop`; `sep-degrade-compose-fails`). Pillar D artefact 1:
+   `EchoRelModel.agda` — abstract `GradedLossModel` + generic
+   `GCLaws` (comonad laws proved once for ANY model = the
+   model-independence theorem), `set-model`/`rel-model` instances,
+   `model-agreement` + `bridge-natural`. Pillar D artefact 2:
+   `docs/echo-types/conservativity.adoc` — conservative/definitional
+   metatheorem with a 3-clause formal anchor. No scaffold modules
+   remain; the entire internal programme is done.
 
    Open pieces on this track:
-   * Pillar D — `EchoRelModel.agda` (transport the Pillar-B
-     graded-comonad laws into the relational/fibration model) +
-     `docs/echo-types/conservativity.adoc`.
-   * Pillar E (TYPES/CPP-ITP/Zenodo) not started.
+   * Pillar E only — external validation: TYPES abstract → CPP/ITP
+     mechanised-metatheory paper → Zenodo DOI + installable library
+     packaging → adjacency-note outreach. (Social, not internal;
+     not started.)
 
 Cross-repo bridge status lives in `docs/echo-types/cross-repo-bridge-status.md`.
 
@@ -211,9 +214,12 @@ new judgment — it is definitionally `fib`).
   `≤g-prop`); `sep-order-not-prop`, `sep-map-over-{id,comp}` (generic
   Σ-laws hold), `sep-degrade-compose-fails` (characteristic law
   refuted at `true ≢ false`). Pinned in `Smoke.agda`. No postulates.
-* **Pillar D (scaffold):** `EchoRelModel` — declaration-free doc
-  module (no postulates, no holes), tracked in `All.agda`, carrying
-  intended signatures as commented specs.
+* **Pillar D (real, verified — COMPLETE, 2026-05-17):**
+  `EchoRelModel.agda` — `GradedLossModel`/`GCLaws` (model-independence
+  theorem), `set-model`/`rel-model`, `model-agreement`,
+  `bridge-natural`; pinned in `Smoke.agda`, no postulates.
+  `docs/echo-types/conservativity.adoc` — metatheorem + 3-clause
+  formal anchor. No scaffold modules remain.
 
 `agda proofs/agda/All.agda` and `agda proofs/agda/Smoke.agda` both
 exit 0 under `--safe --without-K`. No postulates introduced.
@@ -229,34 +235,37 @@ used by `EchoGraded.degrade-via-join`) makes the `subst GEcho
 `≤g-prop`. Thesis unchanged and strengthened (establishment-plan
 §"H2 verdict"). `All.agda` + `Smoke.agda` exit 0, no postulates.
 
-**Pillar C LANDED (2026-05-17). Credibility core (A+B+C) COMPLETE.**
-`EchoSeparating.agda` real: a separating model = `EchoGraded` minus
-its sole hypothesis `≤g-prop`. `sep-order-not-prop` (non-prop loss
-order), `sep-map-over-{id,comp}` + functorial unit (generic
-Σ-functoriality survives), `sep-degrade-compose-fails` (the
-characteristic composition law is refuted, checked via
-`true ≢ false`). Verdict: `degrade-compose` is carried *precisely*
-by propositionality of the loss order — genuine structure, not
-Σ-bookkeeping. `All.agda` + `Smoke.agda` exit 0, no postulates.
+**Pillar D LANDED (2026-05-17). Pillars A–D ALL COMPLETE — the
+entire internal programme is done.** `EchoRelModel.agda` real:
+abstract `GradedLossModel` interface + generic `GCLaws` proving the
+comonad laws ONCE for any model (the model-independence theorem
+itself); `set-model` (EchoGraded) and `rel-model` (relational
+`EchoStep`/`map-rel`; composition from `map-rel-comp` +
+`degrade-comp`) instances; `model-agreement` (round-trips `refl`)
+and `bridge-natural` (`map-over` ↔ `map-rel` under the graph =
+fibration bridge). `conservativity.adoc` states the
+conservative/definitional metatheorem with a 3-clause formal anchor.
+`All.agda` + `Smoke.agda` exit 0, no postulates / no escape pragmas.
 
-Smallest useful next advance:
+Smallest useful next advance — **Pillar E (external validation)
+only**; the internal programme is complete:
 
-1. **Pillar D — `EchoRelModel.agda`.** Second model: transport the
-   Pillar-B graded-comonad laws into the relational / fibration
-   model (`EchoCategorical.Fibration`, `EchoRelational`). Two
-   independent models = model-independence (robustness). Then a
-   `model-agreement` lemma (Set vs relational under
-   `fiber-to-echo`/`echo-to-fiber`).
-2. Pillar D artefact 2 — `docs/echo-types/conservativity.adoc`:
-   because `Echo = Σ`, a small graded calculus with a loss modality
-   embeds conservatively + definitionally into MLTT+Σ. State as a
-   metatheorem.
-3. Pillar E — TYPES abstract / CPP-ITP / Zenodo.
+1. Draft the TYPES abstract: "Echo: a definitionally-grounded graded
+   comonad of structured loss" (low bar, fast expert feedback).
+   Material is ready: thesis + H2 verdict + separating model +
+   conservativity metatheorem.
+2. Then a CPP/ITP mechanised-metatheory paper (natural venue for a
+   `--safe --without-K` Agda artefact with the gate/retraction
+   discipline).
+3. Zenodo DOI + installable library packaging (stable module API);
+   adjacency-note outreach (HoTT fibres / QTT-modal).
 
-Rationale: the credibility core (A pin-identity, B universal
-property + graded comonad, C separating model) is complete. What
-remains for "established" standing is model-independence (D) — the
-property reviewers actually check — then external validation (E).
+Rationale: Pillars A (pin-identity), B (universal property + graded
+comonad), C (separating model) and D (second model +
+conservativity) are all complete and verified. Authority is now
+conferred socially — Pillar E is write-up / packaging / outreach,
+not internal proof work. Note: E is partly an offline/external
+task (submissions, DOIs); flag to the user rather than auto-running.
 
 ---
 

@@ -130,12 +130,25 @@ A notion is established only if it is model-independent.
 * Artefact 1: `EchoRelModel.agda` — extend
   `EchoCategorical.Fibration` / `EchoRelational`; show the
   graded-comonad laws of Pillar B transport into the relational /
-  presheaf model. Two independent models = robustness.
+  presheaf model. Two independent models = robustness. *Landed
+  2026-05-17:* the H2 verdict is leveraged into the strongest
+  model-independence form — an abstract `GradedLossModel` interface
+  with the comonad laws proved *once* generically (`module GCLaws`),
+  instantiated at `set-model` (EchoGraded) and `rel-model`
+  (relational `EchoStep`/`map-rel`, composition from `map-rel-comp`
+  + `degrade-comp`), with `model-agreement` (round-trips `refl`) and
+  `bridge-natural` (`map-over` ↔ `map-rel` under the graph bridge).
 * Artefact 2: `docs/echo-types/conservativity.adoc` (+ formal anchor)
   — because `Echo = Σ`, a small graded calculus with a loss modality
   embeds *conservatively and definitionally* into MLTT+Σ. State this
   as a metatheorem. "Conservative, definitionally-grounded extension"
-  is exactly the clean result that earns trust.
+  is exactly the clean result that earns trust. *Landed 2026-05-17:*
+  the metatheorem is stated with a three-clause formal anchor —
+  definitional (`EchoFiberBridge`), conservative (postulate-free
+  `--safe --without-K` suite, operationally enforced by CI greps),
+  modality-not-axiom (`EchoRelModel`/`EchoGradedComonad`/
+  `EchoSeparating`). Scope and non-claims explicit; funext boundary
+  quarantined.
 * Authority effect: model-independence + a conservativity theorem turn
   the deflation into a published positive result.
 
@@ -160,15 +173,16 @@ Authority is conferred socially, not internally. In cost/payoff order:
 
 *Order (revised 2026-05-17 — de-risk first):* A ✓ →
 **B(graded comonad, thin slice) ✓ → B(pullback) ✓** →
-C(separating model) ✓ → D(second model + conservativity) →
+C(separating model) ✓ → D(second model + conservativity) ✓ →
 E(write-up). The graded-comonad result was the pivotal bet, so a
 minimal slice was attempted _before_ the safe pullback work to test
 the thesis early (fail fast); it settled positively and
-over-delivered all three laws, after which the pullback and the
-separating model landed as planned. *Pillars A, B and C are now
-complete — the credibility core is done.* Next: D(second model +
-conservativity). A–C were the credibility core and needed no
-external unblocker. The ordinal / Buchholz
+over-delivered all three laws, after which the pullback, the
+separating model and the second model + conservativity landed as
+planned. *Pillars A–D are now complete — the entire internal
+programme is done; only Pillar E (external validation) remains.*
+A–C were the credibility core and needed no external unblocker. The
+ordinal / Buchholz
 track is impressive _consumer evidence_, not foundation — keep it
 firewalled from the identity claim exactly as `roadmap.md` already does.
 
@@ -226,21 +240,17 @@ stands and is *strengthened*; no honest rewrite is required.
 | B | `EchoPullback.agda` (`echo-pullback-univ` + SliceHom↔cone) | Landed
 | B | `EchoGradedComonad.agda` (`gextract`/`gduplicate` + 3 laws) | Thin slice landed (verdict <<h2-verdict>>)
 | C | `EchoSeparating.agda` (`sep-degrade-compose-fails` + Σ-laws hold) | Landed
-| D | `EchoRelModel.agda` | Scaffolded (doc-only module, in `All.agda`)
-| D | `docs/echo-types/conservativity.adoc` | Not started
+| D | `EchoRelModel.agda` (`GradedLossModel`/`GCLaws`, 2 models, `model-agreement`) | Landed
+| D | `docs/echo-types/conservativity.adoc` (metatheorem + 3-clause anchor) | Landed
 | E | TYPES abstract / CPP-ITP paper / Zenodo / library packaging | Not started
 |===
 
-Pillars A, B and C are fully landed (`EchoFiberBridge`,
-`EchoPullback`, `EchoGradedComonad`, `EchoSeparating` — all real,
-verified, no postulates). The remaining Pillar D entry
-`EchoRelModel` is still a documentation-only Agda module (no
-declarations, hence no postulates or holes — it typechecks under
-`--safe --without-K` and is tracked in `All.agda` per the
-rung-consolidation policy), carrying the intended theorem signatures
-as commented specifications so a fresh session can start filling it
-without re-deriving the design. `conservativity.adoc` (Pillar D
-artefact 2) and Pillar E are not started.
+Pillars A, B, C and D are fully landed (`EchoFiberBridge`,
+`EchoPullback`, `EchoGradedComonad`, `EchoSeparating`,
+`EchoRelModel` — all real, verified, no postulates;
+`conservativity.adoc` stated with formal anchor). There are no
+remaining scaffold modules. Only Pillar E (external validation)
+is not started.
 
 == Revision policy
 
@@ -276,3 +286,12 @@ reason.
   precisely by propositionality of the loss order. *Pillars A, B, C
   complete* — the credibility core is done. Next per sequencing:
   Pillar D — `EchoRelModel.agda` (second model) + `conservativity.adoc`.
+* *2026-05-17 — trigger: Pillar D artefact state change (both
+  artefacts).* Pillar D landed. Artefact 1: `EchoRelModel.agda`
+  is real — abstract `GradedLossModel` + generic `GCLaws` (the
+  model-independence theorem: comonad laws proved once for any
+  model), instances `set-model`/`rel-model`, `model-agreement` and
+  `bridge-natural`. Artefact 2: `conservativity.adoc` — the
+  conservative/definitional metatheorem with a three-clause formal
+  anchor to checked modules. *Pillars A–D all complete; no scaffold
+  modules remain.* Only Pillar E (external validation) is left.

@@ -188,6 +188,20 @@ open import EchoSeparating using
   ; sep-degrade-compose-fails
   )
 
+-- Pillar D: second model + model-independence. The graded-comonad
+-- laws proved once for any GradedLossModel; Set and relational
+-- instances; they agree under the graph/fibration bridge.
+open import EchoRelModel using
+  ( GradedLossModel
+  ; set-model
+  ; rel-model
+  ; rel-gcomonad-counit-l
+  ; rel-gcomonad-counit-r
+  ; rel-gcomonad-coassoc
+  ; model-agreement
+  ; bridge-natural
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
