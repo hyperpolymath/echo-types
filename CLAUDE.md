@@ -193,6 +193,56 @@ work to `main` and refresh all documentation:
 
 ## Current rung state (2026-05-17)
 
+### Session arc 2026-05-17 (read this first)
+
+*Where we started today (commit `8a2b908`):* the establishment
+track was a plan plus scaffolds — Pillar A landed; Pillars B–D were
+declaration-free doc modules; Pillar E untouched. The session opened
+with the attack-order decision already recorded ("de-risk H2
+first").
+
+*Where we ended today (commit `200b1eb`, pushed to `origin/main`):*
+the **entire internal programme is complete and verified**. Seven
+consolidated rungs:
+
+1. `8a2b908` — attack-order decision recorded (de-risk H2 first).
+2. `d1c5938` — Pillar B H2 thin slice: `EchoGradedComonad` real;
+   over-delivered all three laws. *H2 verdict: graded coassociativity
+   needs NO path algebra beyond `≤g-prop` (common-upper-bound idiom
+   kills the transport).* The keystone result.
+3. `f3f4719` — Pillar B H1: `EchoPullback` real (pullback +
+   funext-free, K-free terminal-cone universal property). Pillar B
+   complete.
+4. `1daad01` — Pillar C: `EchoSeparating` real (separating model =
+   EchoGraded minus `≤g-prop`; characteristic law refuted at a
+   checked `true ≢ false`). Credibility core (A+B+C) complete.
+5. `17429c8` — Pillar D: `EchoRelModel` real (abstract
+   `GradedLossModel` + generic `GCLaws` = the model-independence
+   theorem; two agreeing models) + `conservativity.adoc`. Pillars
+   A–D all complete; no scaffolds remain.
+6. `200b1eb` — Pillar E started: `types-abstract.adoc`
+   (submission-ready) + `paper.adoc` (LIVING DRAFT, `[EXPAND]` tags).
+
+Build invariant held every rung: `All.agda` + `Smoke.agda` exit 0
+under `--safe --without-K`, zero postulates, zero escape pragmas.
+
+*Plan for the next Claude:* the internal proof programme is DONE —
+do not reopen Pillars A–D or the EI-2 negative. The only open work
+is Pillar E write-up. Clear the `paper.adoc` *[EXPAND]* tags in this
+order: (1) background/notation primer — low-context, do this first;
+(2) related-work pass (Granule/QTT, Uustalu–Vene comonads,
+coeffects, lens/optic vs the witness-transport leg); (3) evaluation
+(proof-size/cost table; quantify common-upper-bound idiom vs naive
+`subst`); (4) ordinal consumer-evidence appendix — GATED on the
+ordinal track hitting Bachmann–Howard, keep firewalled per
+`roadmap.md`. THEN offline/author-driven only (venue+template,
+Zenodo DOI, library packaging, outreach) — flag to the user, do NOT
+auto-run. Strategy (user decision 2026-05-17): the paper was written
+now at full narrative strength while fresh; expand the tagged
+sections as context accrues — do not rewrite the spine.
+
+### Establishment-track opening rung (the original 2026-05-17 entry)
+
 Just landed: **Establishment-track opening rung.** New third
 workstream (`docs/echo-types/establishment-plan.adoc`): the path to
 recognised type-theoretic standing as a characterised *graded comonad
