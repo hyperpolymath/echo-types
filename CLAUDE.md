@@ -188,10 +188,22 @@ new judgment — it is definitionally `fib`).
 `agda proofs/agda/All.agda` and `agda proofs/agda/Smoke.agda` both
 exit 0 under `--safe --without-K`. No postulates introduced.
 
-Smallest useful next advance: Pillar B `EchoPullback.echo-pullback-univ`
-— relate `EchoCategorical.SliceHom` to a pullback cone and prove the
-terminal-cone universal property; it unblocks the graded-comonad
-framing (`EchoGradedComonad`).
+Smallest useful next advance (attack order DECIDED 2026-05-17:
+**de-risk H2 first**, do not start with the pullback):
+
+1. **H2 thin slice — `EchoGradedComonad.agda`.** Graded counit +
+   exactly ONE law (counit-left) over `EchoGraded._≤g_`/`_⊔g_`,
+   reusing `≤g-prop`. The load-bearing question to answer NOW: does
+   graded *coassociativity* need path algebra beyond `≤g-prop`? A
+   "no" supports the graded-comonad thesis; a "yes/lax" is a real
+   result that rewrites the thesis honestly (per establishment-plan
+   revision policy) — not a failure.
+2. Backfill H1 — `EchoPullback.echo-pullback-univ` (relate
+   `EchoCategorical.SliceHom` to a pullback cone).
+3. Finish remaining graded laws, or record the lax verdict.
+
+Rationale: H1 is safe consolidation; H2 is the pivotal bet. Test the
+thesis early (fail fast) rather than build the clean narrative order.
 
 ---
 

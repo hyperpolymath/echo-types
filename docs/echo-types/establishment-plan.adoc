@@ -140,9 +140,13 @@ Authority is conferred socially, not internally. In cost/payoff order:
 
 == Sequencing and guardrails
 
-*Order:* A → B(pullback) → B(graded comonad) → C(separating model) →
-D(second model + conservativity) → E(write-up). A–C are the
-credibility core and need no external unblocker. The ordinal / Buchholz
+*Order (revised 2026-05-17 — de-risk first):* A → **B(graded comonad,
+thin slice) → B(pullback)** → B(graded comonad, remainder) →
+C(separating model) → D(second model + conservativity) → E(write-up).
+The graded-comonad result is the pivotal bet, so a minimal slice is
+attempted _before_ the safe pullback work to test the thesis early
+(fail fast). A–C are the credibility core and need no external
+unblocker. The ordinal / Buchholz
 track is impressive _consumer evidence_, not foundation — keep it
 firewalled from the identity claim exactly as `roadmap.md` already does.
 
