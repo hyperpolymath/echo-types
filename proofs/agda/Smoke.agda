@@ -151,6 +151,17 @@ open import EchoGraded using
   ; degrade-via-join
   )
 
+-- Pillar B of docs/echo-types/establishment-plan.adoc: echo as a
+-- graded comonad of structured loss. Thin slice — counit + the
+-- coassociativity verdict (no path algebra beyond ≤g-prop).
+open import EchoGradedComonad using
+  ( gextract
+  ; gduplicate
+  ; gcomonad-counit-l
+  ; gcomonad-counit-r
+  ; gcomonad-coassoc
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score

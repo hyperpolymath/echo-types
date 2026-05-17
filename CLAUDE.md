@@ -94,11 +94,18 @@ Two active workstreams:
    scaffolds in `All.agda` (`EchoPullback`, `EchoGradedComonad`,
    `EchoSeparating`, `EchoRelModel`) carrying intended signatures.
 
+   Pillar B `EchoGradedComonad` THIN SLICE LANDED (2026-05-17):
+   `gextract`, `gduplicate`, `gcomonad-counit-{l,r}`,
+   `gcomonad-coassoc` — real module, pinned in `Smoke.agda`. The
+   pivotal de-risk question is answered: graded coassociativity
+   needs NO path algebra beyond `≤g-prop` (common-upper-bound idiom
+   eliminates the `⊔g-assoc` transport; pure `degrade-compose` +
+   `≤g-prop`). Thesis strengthened, unchanged. See
+   establishment-plan.adoc §"H2 verdict".
+
    Open pieces on this track:
    * Pillar B `EchoPullback.echo-pullback-univ` — start by relating
      `EchoCategorical.SliceHom` to a pullback cone.
-   * Pillar B `EchoGradedComonad` — graded counit/comult + 3 laws,
-     reuse `EchoGraded._≤g_`/`_⊔g_`/`≤g-prop`.
    * Pillars C/D and Pillar E (TYPES/CPP-ITP/Zenodo) not started.
 
 Cross-repo bridge status lives in `docs/echo-types/cross-repo-bridge-status.md`.
@@ -180,30 +187,43 @@ new judgment — it is definitionally `fib`).
   `echo↔fib : Echo f y ↔ fiber f y` via `mk↔ₛ′`, `refl` round-trips.
   Pinned in `Smoke.agda` (`fiber; echo→fib; fib→echo; echo↔fib`),
   wired into `All.agda`.
-* **Pillars B–D (scaffolds):** `EchoPullback`, `EchoGradedComonad`,
-  `EchoSeparating`, `EchoRelModel` — declaration-free doc modules
-  (no postulates, no holes), tracked in `All.agda`, carrying intended
-  signatures as commented specs.
+* **Pillar B (real, verified — H2 thin slice, 2026-05-17):**
+  `EchoGradedComonad.agda` — `gextract`, `gduplicate`,
+  `gcomonad-counit-{l,r}`, `gcomonad-coassoc` over the loss-grade
+  lattice; pinned in `Smoke.agda`. Coassoc needs no path algebra
+  beyond `≤g-prop` (common-upper-bound idiom). No postulates.
+* **Pillars B/C/D (scaffolds):** `EchoPullback`, `EchoSeparating`,
+  `EchoRelModel` — declaration-free doc modules (no postulates, no
+  holes), tracked in `All.agda`, carrying intended signatures as
+  commented specs.
 
 `agda proofs/agda/All.agda` and `agda proofs/agda/Smoke.agda` both
 exit 0 under `--safe --without-K`. No postulates introduced.
 
-Smallest useful next advance (attack order DECIDED 2026-05-17:
-**de-risk H2 first**, do not start with the pullback):
+**H2 LANDED (2026-05-17).** The de-risk bet paid off. The thin
+slice over-delivered: not just counit-left but all three laws
+(`gcomonad-counit-l`, `gcomonad-counit-r`, `gcomonad-coassoc`) plus
+`gextract`/`gduplicate`, real and pinned. Verdict on the
+load-bearing question: graded coassociativity needs **no path
+algebra beyond `≤g-prop`** — the common-upper-bound idiom (already
+used by `EchoGraded.degrade-via-join`) makes the `subst GEcho
+(⊔g-assoc …)` transport vanish; every law is `degrade-compose` +
+`≤g-prop`. Thesis unchanged and strengthened (establishment-plan
+§"H2 verdict"). `All.agda` + `Smoke.agda` exit 0, no postulates.
 
-1. **H2 thin slice — `EchoGradedComonad.agda`.** Graded counit +
-   exactly ONE law (counit-left) over `EchoGraded._≤g_`/`_⊔g_`,
-   reusing `≤g-prop`. The load-bearing question to answer NOW: does
-   graded *coassociativity* need path algebra beyond `≤g-prop`? A
-   "no" supports the graded-comonad thesis; a "yes/lax" is a real
-   result that rewrites the thesis honestly (per establishment-plan
-   revision policy) — not a failure.
-2. Backfill H1 — `EchoPullback.echo-pullback-univ` (relate
-   `EchoCategorical.SliceHom` to a pullback cone).
-3. Finish remaining graded laws, or record the lax verdict.
+Smallest useful next advance:
 
-Rationale: H1 is safe consolidation; H2 is the pivotal bet. Test the
-thesis early (fail fast) rather than build the clean narrative order.
+1. **Backfill H1 — `EchoPullback.echo-pullback-univ`.** Now safe
+   consolidation: present `Echo f y` as the pullback of `f` along
+   `y : ⊤ → B`; start by relating `EchoCategorical.SliceHom` to the
+   pullback cone, then the terminal-cone universal property.
+2. Then Pillar C — `EchoSeparating.agda` (separating model: generic
+   Σ-functoriality holds while `degrade-compose` fails).
+3. Then Pillar D — `EchoRelModel.agda` + `conservativity.adoc`.
+
+Rationale: the pivotal bet (H2) is settled positively, so the
+remaining Pillar-B/C/D work is now narrative consolidation in the
+clean order, no further de-risking needed.
 
 ---
 

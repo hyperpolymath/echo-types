@@ -88,7 +88,9 @@ the composition iso, cancel-iso, pentagon — but no _characterisation_.
 * Artefact 2: `EchoGradedComonad.agda` (headline new family) — reuse
   `EchoGraded._≤g_`, `_⊔g_`, `≤g-prop`; define the graded counit /
   comultiplication and prove the three graded-comonad laws over the
-  loss-grade lattice.
+  loss-grade lattice. *Thin slice landed 2026-05-17:* `gextract`,
+  `gduplicate`, and all three laws (`gcomonad-counit-{l,r}`,
+  `gcomonad-coassoc`) — see the verdict in <<h2-verdict>>.
 * Authority effect: "has a universal property + is a graded comonad"
   is the line between a named lemma cluster and an established notion.
 
@@ -163,6 +165,37 @@ firewalled from the identity claim exactly as `roadmap.md` already does.
   settled it negatively, and having cleanly killed it is part of the
   authority story.
 
+[#h2-verdict]
+== H2 verdict — does graded coassociativity need path algebra? (2026-05-17)
+
+*The pivotal de-risking question, answered: NO.* The thin slice
+(`gextract`, `gduplicate`, `gcomonad-counit-l`, `gcomonad-counit-r`,
+`gcomonad-coassoc`) typechecks under `--safe --without-K` with no
+postulates. All three graded-comonad laws — including
+coassociativity — collapse to `EchoGraded.degrade-compose` plus
+`≤g-prop`, the *exact two ingredients* the repo already owns (they
+already carry `degrade-via-join`). No new path algebra; no `subst`;
+no transport.
+
+The one substantive design point: a *naive* coassociativity
+phrasing comparing `GEcho ((g₁⊔g₂)⊔g₃)` with `GEcho (g₁⊔(g₂⊔g₃))`
+would force a `subst GEcho (⊔g-assoc …)` transport. The slice
+instead states every law in the *common-upper-bound idiom* —
+post-compose each (co)multiplication with the universal degrade into
+an arbitrary common bound `g'`, so both sides land in the same
+`GEcho g'`. The transport then never appears, precisely because the
+join is a universal arrow and `_≤g_` is propositional. This is the
+same idiom `EchoGraded.degrade-via-join` already uses; it is a
+faithful (not weakened) statement of the comonad coherence in the
+join-semilattice presentation.
+
+*Thesis impact (positive):* the "characterised graded comonad of
+structured loss" claim rests cleanly on machinery the repo has
+already proved. The graded-comonad strength is not bought with extra
+axioms or path algebra — it is a corollary of the loss lattice being
+a propositional order with a universal join. The thesis (<<thesis>>)
+stands and is *strengthened*; no honest rewrite is required.
+
 == Status
 
 [cols="1,4,1", options="header"]
@@ -171,19 +204,21 @@ firewalled from the identity claim exactly as `roadmap.md` already does.
 
 | A | `EchoFiberBridge.agda` (`echo↔fib`, pinned in `Smoke.agda`) | Landed
 | B | `EchoPullback.agda` | Scaffolded (doc-only module, in `All.agda`)
-| B | `EchoGradedComonad.agda` | Scaffolded (doc-only module, in `All.agda`)
+| B | `EchoGradedComonad.agda` (`gextract`/`gduplicate` + 3 laws) | Thin slice landed (verdict <<h2-verdict>>)
 | C | `EchoSeparating.agda` | Scaffolded (doc-only module, in `All.agda`)
 | D | `EchoRelModel.agda` | Scaffolded (doc-only module, in `All.agda`)
 | D | `docs/echo-types/conservativity.adoc` | Not started
 | E | TYPES abstract / CPP-ITP paper / Zenodo / library packaging | Not started
 |===
 
-The Pillar B–D scaffolds are documentation-only Agda modules (no
-declarations, hence no postulates or holes — they typecheck under
-`--safe --without-K` and are tracked in `All.agda` per the
-rung-consolidation policy). They carry the intended theorem signatures
-as commented specifications so a fresh session can start filling them
-without re-deriving the design.
+`EchoGradedComonad.agda` is now a real module (thin slice — see
+<<h2-verdict>>). The remaining Pillar B–D entries (`EchoPullback`,
+`EchoSeparating`, `EchoRelModel`) are still documentation-only Agda
+modules (no declarations, hence no postulates or holes — they
+typecheck under `--safe --without-K` and are tracked in `All.agda`
+per the rung-consolidation policy). They carry the intended theorem
+signatures as commented specifications so a fresh session can start
+filling them without re-deriving the design.
 
 == Revision policy
 
@@ -192,3 +227,14 @@ guardrail is hit, or when external validation (Pillar E) advances.
 Append-only revision history, each entry annotated with its trigger.
 The stable thesis (<<thesis>>) does not change without a recorded
 reason.
+
+=== Revision history
+
+* *2026-05-17 — trigger: Pillar B artefact state change + pivotal
+  question resolved.* H2 thin slice landed: `EchoGradedComonad.agda`
+  is real (`gextract`, `gduplicate`, `gcomonad-counit-{l,r}`,
+  `gcomonad-coassoc`), pinned in `Smoke.agda`. The de-risking
+  question "does graded coassociativity need path algebra beyond
+  `≤g-prop`?" is answered *no* (<<h2-verdict>>); the thesis is
+  unchanged and strengthened — no honest rewrite required. Next per
+  the revised sequencing: backfill H1 (`EchoPullback`).
