@@ -175,6 +175,19 @@ open import EchoPullback using
   ; echo-pullback-univ
   )
 
+-- Pillar C: separating model — generic Σ-functoriality holds while
+-- the characteristic loss-grade composition law fails (carried
+-- precisely by propositionality of the loss order).
+open import EchoSeparating using
+  ( _⊑_
+  ; deg
+  ; sep-order-not-prop
+  ; sep-map-over-id
+  ; sep-map-over-comp
+  ; SepDegradeCompose
+  ; sep-degrade-compose-fails
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score

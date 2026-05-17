@@ -109,6 +109,16 @@ Harden Gate 2. The existing `VisibleConstraintAudit` /
 * Artefact: `EchoSeparating.agda` — a *separating model*: a structure
   satisfying generic Σ-functoriality in which the loss-grade
   composition law (`degrade-compose` / `degrade-via-join`) fails.
+  *Landed 2026-05-17:* the model is `EchoGraded` with its single
+  hypothesis `≤g-prop` removed — a non-propositional loss order
+  (`sep-order-not-prop : ¬ (s₀ ≡ s₁)`) with a reindexing that
+  distinguishes the two `lo→hi` arrows. `sep-map-over-id` /
+  `sep-map-over-comp` (generic Σ-functoriality) and the functorial
+  unit hold verbatim; `sep-degrade-compose-fails : ¬
+  SepDegradeCompose` refutes the characteristic law at the checked
+  witness `true ≢ false`. Conclusion: `degrade-compose` is carried
+  precisely by propositionality of the loss order — genuine
+  structure, not Σ-bookkeeping.
 * Authority effect: answers "isn't this all Σ-lemmas with new names?"
   with a model, not an argument. Separating models are the gold
   standard for "this structure is real, not bookkeeping".
@@ -150,14 +160,15 @@ Authority is conferred socially, not internally. In cost/payoff order:
 
 *Order (revised 2026-05-17 — de-risk first):* A ✓ →
 **B(graded comonad, thin slice) ✓ → B(pullback) ✓** →
-C(separating model) → D(second model + conservativity) → E(write-up).
-The graded-comonad result was the pivotal bet, so a minimal slice
-was attempted _before_ the safe pullback work to test the thesis
-early (fail fast); it settled positively and over-delivered all
-three laws, after which the pullback landed as planned. *Pillars A
-and B are now complete.* Next: C(separating model). A–C are the
-credibility core and need no external unblocker. The ordinal /
-Buchholz
+C(separating model) ✓ → D(second model + conservativity) →
+E(write-up). The graded-comonad result was the pivotal bet, so a
+minimal slice was attempted _before_ the safe pullback work to test
+the thesis early (fail fast); it settled positively and
+over-delivered all three laws, after which the pullback and the
+separating model landed as planned. *Pillars A, B and C are now
+complete — the credibility core is done.* Next: D(second model +
+conservativity). A–C were the credibility core and needed no
+external unblocker. The ordinal / Buchholz
 track is impressive _consumer evidence_, not foundation — keep it
 firewalled from the identity claim exactly as `roadmap.md` already does.
 
@@ -214,21 +225,22 @@ stands and is *strengthened*; no honest rewrite is required.
 | A | `EchoFiberBridge.agda` (`echo↔fib`, pinned in `Smoke.agda`) | Landed
 | B | `EchoPullback.agda` (`echo-pullback-univ` + SliceHom↔cone) | Landed
 | B | `EchoGradedComonad.agda` (`gextract`/`gduplicate` + 3 laws) | Thin slice landed (verdict <<h2-verdict>>)
-| C | `EchoSeparating.agda` | Scaffolded (doc-only module, in `All.agda`)
+| C | `EchoSeparating.agda` (`sep-degrade-compose-fails` + Σ-laws hold) | Landed
 | D | `EchoRelModel.agda` | Scaffolded (doc-only module, in `All.agda`)
 | D | `docs/echo-types/conservativity.adoc` | Not started
 | E | TYPES abstract / CPP-ITP paper / Zenodo / library packaging | Not started
 |===
 
-Pillar B is fully landed: both `EchoPullback.agda` (universal
-property) and `EchoGradedComonad.agda` (graded comonad, <<h2-verdict>>)
-are real modules. The remaining Pillar C–D entries (`EchoSeparating`,
-`EchoRelModel`) are still documentation-only Agda modules (no
-declarations, hence no postulates or holes — they typecheck under
-`--safe --without-K` and are tracked in `All.agda` per the
-rung-consolidation policy). They carry the intended theorem
-signatures as commented specifications so a fresh session can start
-filling them without re-deriving the design.
+Pillars A, B and C are fully landed (`EchoFiberBridge`,
+`EchoPullback`, `EchoGradedComonad`, `EchoSeparating` — all real,
+verified, no postulates). The remaining Pillar D entry
+`EchoRelModel` is still a documentation-only Agda module (no
+declarations, hence no postulates or holes — it typechecks under
+`--safe --without-K` and is tracked in `All.agda` per the
+rung-consolidation policy), carrying the intended theorem signatures
+as commented specifications so a fresh session can start filling it
+without re-deriving the design. `conservativity.adoc` (Pillar D
+artefact 2) and Pillar E are not started.
 
 == Revision policy
 
@@ -255,3 +267,12 @@ reason.
   no K). *Pillar B is now complete* (universal property + graded
   comonad). Next per sequencing: Pillar C — `EchoSeparating.agda`
   (separating model).
+* *2026-05-17 — trigger: Pillar C artefact state change.* Pillar C
+  landed: `EchoSeparating.agda` is real — a separating model
+  (`EchoGraded` minus `≤g-prop`) where generic Σ-functoriality
+  (`sep-map-over-{id,comp}`) and the functorial unit hold but
+  `SepDegradeCompose` is refuted (`sep-degrade-compose-fails`, via
+  checked `true ≢ false`). The characteristic law is carried
+  precisely by propositionality of the loss order. *Pillars A, B, C
+  complete* — the credibility core is done. Next per sequencing:
+  Pillar D — `EchoRelModel.agda` (second model) + `conservativity.adoc`.
