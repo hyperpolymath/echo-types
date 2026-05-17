@@ -1,0 +1,190 @@
+= Echo Types — Establishment Plan
+:toc: macro
+:toclevels: 3
+:sectnums:
+:sectnumlevels: 3
+:icons: font
+
+[.lead]
+This document sets out the path by which "echo types" can acquire
+*recognised type-theoretic standing*. It is deliberately separate from
+`roadmap.md` (work partitioned by bottleneck) and `roadmap-gates.adoc`
+(the falsifiable identity claim). This document answers a different
+question: _given_ the gated identity claim, what makes a construction
+like this *established* in the sense that linear, dependent, or graded
+modal types are established — and what specifically must this repository
+ship to get there.
+
+toc::[]
+
+== The honest type-theoretic verdict
+
+`Echo f y := Σ (x : A) , (f x ≡ y)` is *definitionally* the homotopy
+fibre `fib f y` (HoTT book Def. 4.2.4). This fact governs the entire
+strategy and is owned, not hedged:
+
+* *"Linear" and "dependent" are the wrong target — comparing to them is
+  a category error.* Dependent types are a _formation_ discipline
+  (types depend on terms; semantics = LCCC / CwF). Linear and
+  substructural types are a _structural-rule_ discipline
+  (contraction/weakening restricted; semantics = symmetric monoidal
+  closed categories / Benton's LNL). Both change the _judgmental_
+  apparatus of the theory. Echo introduces no new judgment, context
+  structure, or formation rule — it is a derived Σ-type. Shipping
+  bespoke "echo introduction/elimination rules" dressed as primitive
+  would be the fastest possible way to lose every informed reader.
+
+* *The strength that befits echo is a graded comonadic modality —
+  the coeffect / quantitative lineage.* That _is_ an established
+  type strength in the modern sense (Petriček–Orchard–Mycroft
+  coeffects; Brunel–Gaboardi–Mazza–Zdancewic; Atkey's Quantitative
+  Type Theory; Orchard–Liepelt–Eades / Granule; Gaboardi et al.
+  graded modal types). The repo's own code already has the shape:
+  `EchoGraded`'s loss-grade lattice with join and universal property,
+  `EchoLinear`'s two-mode degradation, `EchoCategorical`'s
+  slice/fibration functor laws. It is not yet *named, characterised,
+  and proved* as a graded comonad of structured loss.
+
+[#thesis]
+.The establishment thesis
+****
+Echo is the homotopy fibre, equipped with a loss-grade lattice,
+forming a *definitionally-grounded graded comonad of structured loss*.
+Its authority comes not from being a new object but from being a
+*characterised* one: a universal property, multiple models, an
+irreducibility metatheorem, and a falsifiable retraction discipline.
+****
+
+Owning "it is just `fib`" loudly is a credibility asset: it pre-empts
+the reviewer's first and strongest objection.
+
+== The five pillars
+
+Each pillar names the artefact it must ship and the *authority effect*
+— the specific reason a referee or community would upgrade their
+assessment.
+
+=== Pillar A — Pin the identity
+
+`Echo ≃ fib` currently lives in prose (`docs/gate-1-distinct-phenomenon.adoc`).
+Reviewers want the bridge as a checked lemma.
+
+* Artefact: `proofs/agda/EchoFiberBridge.agda` — `echo↔fib :
+  Echo f y ↔ fiber f y` (definitional; `refl`-level round-trips).
+  Pinned in `Smoke.agda`, wired into `All.agda`. *(landed — see
+  §"Status".)*
+* Authority effect: converts the project's most honest admission into
+  a machine-checked artefact. Referees trust projects that formalise
+  their own deflationary claims.
+
+=== Pillar B — The universal property
+
+The single biggest lever. Echo has functoriality (`map-over` + id/comp),
+the composition iso, cancel-iso, pentagon — but no _characterisation_.
+
+* Artefact 1: `EchoPullback.agda` — `Echo f y` as the pullback of `f`
+  along `y : ⊤ → B`, with the terminal-cone universal property
+  `echo-pullback-univ`. The categorical-semantics anchor.
+* Artefact 2: `EchoGradedComonad.agda` (headline new family) — reuse
+  `EchoGraded._≤g_`, `_⊔g_`, `≤g-prop`; define the graded counit /
+  comultiplication and prove the three graded-comonad laws over the
+  loss-grade lattice.
+* Authority effect: "has a universal property + is a graded comonad"
+  is the line between a named lemma cluster and an established notion.
+
+=== Pillar C — An irreducibility metatheorem
+
+Harden Gate 2. The existing `VisibleConstraintAudit` /
+`IntegrationAudit` _negative_ exhibits (collapsing pseudo-theorems to
+`proj₂`) are exemplary practice; go one step further.
+
+* Artefact: `EchoSeparating.agda` — a *separating model*: a structure
+  satisfying generic Σ-functoriality in which the loss-grade
+  composition law (`degrade-compose` / `degrade-via-join`) fails.
+* Authority effect: answers "isn't this all Σ-lemmas with new names?"
+  with a model, not an argument. Separating models are the gold
+  standard for "this structure is real, not bookkeeping".
+
+=== Pillar D — A second model + conservativity
+
+A notion is established only if it is model-independent.
+
+* Artefact 1: `EchoRelModel.agda` — extend
+  `EchoCategorical.Fibration` / `EchoRelational`; show the
+  graded-comonad laws of Pillar B transport into the relational /
+  presheaf model. Two independent models = robustness.
+* Artefact 2: `docs/echo-types/conservativity.adoc` (+ formal anchor)
+  — because `Echo = Σ`, a small graded calculus with a loss modality
+  embeds *conservatively and definitionally* into MLTT+Σ. State this
+  as a metatheorem. "Conservative, definitionally-grounded extension"
+  is exactly the clean result that earns trust.
+* Authority effect: model-independence + a conservativity theorem turn
+  the deflation into a published positive result.
+
+=== Pillar E — External validation
+
+Authority is conferred socially, not internally. In cost/payoff order:
+
+. TYPES abstract (low bar, fast expert feedback) — "Echo: a
+  definitionally-grounded graded comonad of structured loss".
+. A mechanised-metatheory paper at CPP or ITP (natural venue for a
+  `--safe --without-K` Agda artefact; these venues reward the
+  retraction/gate discipline).
+. Zenodo DOI + installable library packaging (stable module API so
+  others can `import echo-types`).
+. Circulate the strongest adjacency note (HoTT fibres / QTT-modal)
+  to those communities; the adjacency docs already pre-empt referee
+  objections — use them as outreach.
+. Keep the falsifiable gates and a public retraction log. This _is_
+  the biggest authority asset; never soften it.
+
+== Sequencing and guardrails
+
+*Order:* A → B(pullback) → B(graded comonad) → C(separating model) →
+D(second model + conservativity) → E(write-up). A–C are the
+credibility core and need no external unblocker. The ordinal / Buchholz
+track is impressive _consumer evidence_, not foundation — keep it
+firewalled from the identity claim exactly as `roadmap.md` already does.
+
+*Hard guardrails (credibility hazards):*
+
+* Never add a postulate or drop `--safe --without-K` to force a
+  "stronger" result — the conservativity _is_ the product.
+* The funext boundary is real and known (`examples/Transport.agda`
+  stalls because `Field = Fin n → ℚ` forces funext, unavailable under
+  `--safe`). Quarantine any funext-requiring result behind an
+  explicitly labelled, isolated assumption module; never let it touch
+  the core.
+* Do *not* reopen the five-axis simultaneous-integration claim — EI-2
+  settled it negatively, and having cleanly killed it is part of the
+  authority story.
+
+== Status
+
+[cols="1,4,1", options="header"]
+|===
+| Pillar | Artefact | State
+
+| A | `EchoFiberBridge.agda` (`echo↔fib`, pinned in `Smoke.agda`) | Landed
+| B | `EchoPullback.agda` | Scaffolded (doc-only module, in `All.agda`)
+| B | `EchoGradedComonad.agda` | Scaffolded (doc-only module, in `All.agda`)
+| C | `EchoSeparating.agda` | Scaffolded (doc-only module, in `All.agda`)
+| D | `EchoRelModel.agda` | Scaffolded (doc-only module, in `All.agda`)
+| D | `docs/echo-types/conservativity.adoc` | Not started
+| E | TYPES abstract / CPP-ITP paper / Zenodo / library packaging | Not started
+|===
+
+The Pillar B–D scaffolds are documentation-only Agda modules (no
+declarations, hence no postulates or holes — they typecheck under
+`--safe --without-K` and are tracked in `All.agda` per the
+rung-consolidation policy). They carry the intended theorem signatures
+as commented specifications so a fresh session can start filling them
+without re-deriving the design.
+
+== Revision policy
+
+Update this document when a pillar artefact changes state, when a
+guardrail is hit, or when external validation (Pillar E) advances.
+Append-only revision history, each entry annotated with its trigger.
+The stable thesis (<<thesis>>) does not change without a recorded
+reason.

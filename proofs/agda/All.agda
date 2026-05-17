@@ -31,6 +31,15 @@ open import EchoThermodynamics
 open import EchoStabilityTests
 open import VecRotation
 
+-- Establishment-plan pillars (docs/echo-types/establishment-plan.adoc).
+-- A is a real bridge; B–D are doc-only scaffolds (no declarations,
+-- typecheck under --safe --without-K, tracked here per policy).
+open import EchoFiberBridge     -- Pillar A (landed)
+open import EchoPullback        -- Pillar B (scaffold)
+open import EchoGradedComonad   -- Pillar B (scaffold)
+open import EchoSeparating      -- Pillar C (scaffold)
+open import EchoRelModel        -- Pillar D (scaffold)
+
 open import Ordinal.Base
 open import Ordinal.Closure
 open import Ordinal.CNF

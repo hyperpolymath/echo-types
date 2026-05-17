@@ -1,0 +1,41 @@
+{-# OPTIONS --safe --without-K #-}
+
+-- Pillar C of docs/echo-types/establishment-plan.adoc.
+--
+-- SCAFFOLD ONLY. Documentation module (no declarations → no
+-- postulates, no holes; typechecks under `--safe --without-K`,
+-- tracked in `All.agda`).
+--
+-- Goal: a SEPARATING MODEL. Construct a structure that satisfies
+-- generic Σ-functoriality (the `map-over` id/comp laws) but in which
+-- the loss-grade composition law `EchoGraded.degrade-compose`
+-- (equivalently `degrade-via-join`) FAILS. This is the gold-standard
+-- answer to the only objection every referee raises: "isn't this all
+-- Σ-lemmas with renamed components?" A model where the generic laws
+-- hold and the characteristic law does not proves the characteristic
+-- family is genuine structure, not bookkeeping.
+--
+-- This continues the existing negative-exhibit discipline of
+-- `characteristic/VisibleConstraintAudit.agda` and
+-- `characteristic/IntegrationAudit.agda` (which collapse pseudo-
+-- theorems to `proj₂` / products of disjoint facts), but in the
+-- positive direction: an explicit countermodel object.
+--
+-- Intended shape (to be filled):
+--
+--   -- A concrete small carrier with a non-lattice "grade" so the
+--   -- join universal property is unavailable.
+--   record SepModel : Set where ...
+--
+--   -- Generic Σ-functoriality still holds here.
+--   sep-map-over-id   : ...
+--   sep-map-over-comp : ...
+--
+--   -- The characteristic graded law is refuted at a named witness.
+--   sep-degrade-compose-fails :
+--     ¬ (∀ {…} → <degrade p23 (degrade p12 e) ≡ degrade p13 e in SepModel>)
+--
+-- The witness must be concrete (finite carrier, decidable) so the
+-- failure is a checked inequality, not an appeal to non-derivability.
+
+module EchoSeparating where

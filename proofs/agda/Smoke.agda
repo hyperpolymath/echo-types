@@ -32,6 +32,10 @@ open import Echo using
   ; cancel-iso
   ; Echo-comp-pent-Σ-assoc
   )
+-- Pillar A of docs/echo-types/establishment-plan.adoc: the
+-- definitional Echo ≃ fib bridge, pinned so a rename fails CI fast.
+open import EchoFiberBridge using (fiber; echo→fib; fib→echo; echo↔fib)
+
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
 open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)

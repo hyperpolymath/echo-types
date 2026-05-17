@@ -82,6 +82,25 @@ Two active workstreams:
    * Push the surface-route WF back into `Order.agda`'s main
      `_<ᵇ_` package.
 
+3. **Establishment track (`docs/echo-types/establishment-plan.adoc`).**
+   Path to recognised type-theoretic standing as a *characterised
+   graded comonad of structured loss* (coeffect/quantitative
+   lineage) — explicitly NOT the linear/dependent judgmental ladder.
+   Five pillars: A pin-the-identity, B universal property +
+   graded-comonad laws, C separating model, D second model +
+   conservativity, E external validation. Pillar A landed
+   (`EchoFiberBridge.agda`: `echo↔fib` definitional bridge, pinned
+   in `Smoke.agda`). Pillars B–D exist as declaration-free doc
+   scaffolds in `All.agda` (`EchoPullback`, `EchoGradedComonad`,
+   `EchoSeparating`, `EchoRelModel`) carrying intended signatures.
+
+   Open pieces on this track:
+   * Pillar B `EchoPullback.echo-pullback-univ` — start by relating
+     `EchoCategorical.SliceHom` to a pullback cone.
+   * Pillar B `EchoGradedComonad` — graded counit/comult + 3 laws,
+     reuse `EchoGraded._≤g_`/`_⊔g_`/`≤g-prop`.
+   * Pillars C/D and Pillar E (TYPES/CPP-ITP/Zenodo) not started.
+
 Cross-repo bridge status lives in `docs/echo-types/cross-repo-bridge-status.md`.
 
 # Build
@@ -144,7 +163,39 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-04-28)
+## Current rung state (2026-05-17)
+
+Just landed: **Establishment-track opening rung.** New third
+workstream (`docs/echo-types/establishment-plan.adoc`): the path to
+recognised type-theoretic standing as a characterised *graded comonad
+of structured loss*, with the explicit verdict that the
+linear/dependent judgmental ladder is the wrong target (Echo adds no
+new judgment — it is definitionally `fib`).
+
+* `docs/echo-types/establishment-plan.adoc` — five-pillar plan +
+  guardrails (no postulates / no `--safe` weakening; quarantine
+  funext; do not reopen EI-2).
+* **Pillar A (real, verified):** `proofs/agda/EchoFiberBridge.agda`
+  defines `fiber` (stdlib v2.3 has none) and ships
+  `echo↔fib : Echo f y ↔ fiber f y` via `mk↔ₛ′`, `refl` round-trips.
+  Pinned in `Smoke.agda` (`fiber; echo→fib; fib→echo; echo↔fib`),
+  wired into `All.agda`.
+* **Pillars B–D (scaffolds):** `EchoPullback`, `EchoGradedComonad`,
+  `EchoSeparating`, `EchoRelModel` — declaration-free doc modules
+  (no postulates, no holes), tracked in `All.agda`, carrying intended
+  signatures as commented specs.
+
+`agda proofs/agda/All.agda` and `agda proofs/agda/Smoke.agda` both
+exit 0 under `--safe --without-K`. No postulates introduced.
+
+Smallest useful next advance: Pillar B `EchoPullback.echo-pullback-univ`
+— relate `EchoCategorical.SliceHom` to a pullback cone and prove the
+terminal-cone universal property; it unblocks the graded-comonad
+framing (`EchoGradedComonad`).
+
+---
+
+## Previous rung state (2026-04-28)
 
 Just landed: **Honest-thermo rung + 5-decoration sweep close +
 cancel-iso packaging + extended-order lex constructors.** Five

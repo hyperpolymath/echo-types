@@ -1,0 +1,43 @@
+{-# OPTIONS --safe --without-K #-}
+
+-- Pillar B (part 2) of docs/echo-types/establishment-plan.adoc.
+--
+-- SCAFFOLD ONLY. Documentation module (no declarations → no
+-- postulates, no holes; typechecks under `--safe --without-K`,
+-- tracked in `All.agda`).
+--
+-- Goal: exhibit echo, indexed by the loss-grade lattice, as a
+-- *graded comonad of structured loss*. This is the headline new
+-- theorem family: it is what makes "echo" a modality in the
+-- recognised (coeffect / quantitative) sense, slotting it into the
+-- QTT / Granule lineage rather than leaving it a Σ-lemma cluster.
+--
+-- Reuse from `EchoGraded.agda`: the grade order `_≤g_`, its
+-- propositionality `≤g-prop`, the join `_⊔g_` with
+-- `≤g-⊔g-{left,right,univ}`, and `degrade` / `degrade-comp`.
+--
+-- Intended signatures (to be filled, in dependency order):
+--
+--   -- Graded object map (Echo decorated by a loss grade).
+--   GEcho : Grade → (A → B) → B → Set
+--
+--   -- Graded counit: zero-loss grade extracts the bare echo.
+--   gextract : GEcho g0 f y → Echo f y
+--
+--   -- Graded comultiplication along the grade lattice.
+--   gduplicate : g₁ ≤g (g₁ ⊔g g₂) → GEcho (g₁ ⊔g g₂) f y
+--                                  → GEcho g₁ f (GEcho g₂ ...)
+--
+--   -- The three graded-comonad laws (left counit, right counit,
+--   -- coassociativity) stated over `_≤g_` / `_⊔g_`, each reduced
+--   -- to `degrade-compose` + `≤g-prop` where possible.
+--   gcomonad-counit-l   : ...
+--   gcomonad-counit-r   : ...
+--   gcomonad-coassoc    : ...
+--
+-- Note: keep every law a corollary of an existing `EchoGraded`
+-- lemma plus `≤g-prop`. If a law needs genuinely new path algebra,
+-- that is a design signal worth recording in the establishment plan
+-- before proceeding.
+
+module EchoGradedComonad where
