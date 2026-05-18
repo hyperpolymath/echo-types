@@ -114,6 +114,9 @@ open import EchoLinear                            using
   ; linear≤linear
   ; linear≤affine
   ; affine≤affine
+  ; LEcho
+  ; degradeMode
+  ; affine-all-equal
   )
 open import EchoGraded                            using
   ( Grade
@@ -128,7 +131,12 @@ open import EchoGraded                            using
   ; residue≤forget
   ; forget≤forget
   )
-open import EchoCharacteristic                    using (collapse)
+open import EchoCharacteristic                    using
+  ( collapse
+  ; echo-true
+  ; echo-false
+  ; echo-true≢echo-false
+  )
 open import characteristic.RoleGraded             using
   ( RoleGEcho
   ; applyRole
@@ -349,7 +357,14 @@ recipe-non-triviality-concrete =
 --
 -- Status of the generic form:
 --   * Axis record: defined.
---   * NonLossOnly predicate: defined.
+--   * NonLossOnly predicate: defined (and shown vacuous — see
+--     `NonLossOnly-holds-vacuously-for-Mode`).
+--   * ProperNonLossOnly predicate (sharpened, irreflexive): defined.
+--   * Choreo certified under the sharpened predicate
+--     (`ChoreoAxis-proper-non-loss-only`).
+--   * Mode loss-only under the sharpened predicate: DISCHARGED
+--     (`Mode-is-not-proper-non-loss-only`). This is the abstract
+--     obligation previously flagged open.
 --   * Generic 2D family: requires decidable equality and a live
 --     decoration; partial scaffolding below.
 --   * Generic forward direction: not yet proved.
@@ -423,40 +438,131 @@ ChoreoAxis-non-loss-only =
   Client , Server , c⊑s , choreo-c⊑s-strict
 
 ------------------------------------------------------------------------
--- Mode is loss-only at the abstract level.
+-- Why `Mode-is-loss-only : ¬ NonLossOnly ModeAxis` cannot be proved
+-- as literally stated — and the sharpening that discharges it.
 --
--- The strict step linear≤affine has transport `weaken` =
--- collapse-to-residue, which collapses Echo collapse tt (multiple
--- inhabitants) to EchoR ⊤ TrivialCert tt (one inhabitant up to
--- TrivialCert structure). All inputs map to the same output, so
--- the step has no distinguishing pair.
+-- The flagged obligation was `¬ NonLossOnly ModeAxis`. That claim is
+-- FALSE under the `NonLossOnly` predicate above, and the file below
+-- proves it false rather than papering over the gap.
 --
--- Formalising "no distinguishing pair" requires showing that
--- distinct inputs map to equal outputs, which is the
--- collapse-residue-same property. EchoLinear has
--- weaken-collapses-distinction : weaken echo-true ≡ weaken echo-false
--- as the formal certificate. We can lift this to "Mode is not
--- non-loss-only" — i.e., Mode does not satisfy NonLossOnly.
+-- The defect is in `IsStrict`/`NonLossOnly`: a step counts as
+-- "strict" merely if it carries a distinguishing pair. But the
+-- *reflexive* steps `m ≤m m` transport by the identity
+-- (`degradeMode linear≤linear e = e` definitionally), and the
+-- identity trivially preserves distinguishability whenever the
+-- decoration has ≥2 separable inhabitants. So *every* axis with a
+-- multi-inhabitant decoration satisfies `NonLossOnly` via a
+-- reflexive step — the predicate is vacuously true and does not
+-- discriminate loss-only axes at all. `Mode` is no exception:
+-- `NonLossOnly-holds-vacuously-for-Mode` below exhibits the witness
+-- explicitly, which is exactly why `¬ NonLossOnly ModeAxis` is
+-- unprovable.
 --
--- However: NonLossOnly only requires the EXISTENCE of *some* strict
--- step with a distinguishing pair. Mode has only one strict step
--- (linear≤affine), and we need to show it has no distinguishing
--- pair. This requires examining all pairs of inputs in
--- LEcho linear and showing they all map to equal outputs under
--- weaken — which involves the universal property of LEcho linear.
+-- The rigorous fix is to SHARPEN the criterion to the intended
+-- reading (cf. ChoreoInjective.agda: "at least one of its strict
+-- (non-reflexive) steps"): a *proper* strict step must move between
+-- DISTINCT decorations. Under that sharpened predicate
+-- (`ProperNonLossOnly`):
 --
--- This is straightforward but requires more machinery (LEcho's
--- definition unfolds to Echo collapse tt; collapse-to-residue's
--- behaviour on all such inputs; uniqueness of the residue).
+--   * Choreo still certifies (c⊑s : Client ≢ Server, distinguishing
+--     transport) — the positive case is not lost.
+--   * Mode does NOT certify: its only inter-decoration step is
+--     linear≤affine, whose transport `weaken` lands in `LEcho affine`
+--     where `affine-all-equal` forces ALL outputs equal, so no
+--     distinguishing pair can exist. The reflexive steps are now
+--     excluded by the `distinct` requirement.
 --
--- Left as an open obligation in the abstract section. The concrete
--- forward direction above (rolegraded-cell-action,
--- rolemode-cell-action) does not depend on this abstract
--- formalisation.
+-- This discharges the abstract obligation in its defensible form:
+-- `Mode-is-not-proper-non-loss-only`. It does NOT affect the
+-- terminated-negative EI-2 verdict (see TERMINATION NOTICE / the
+-- EI-2 STATUS banners and docs/EI2_REPORT.adoc); it removes a
+-- residual proof-debt comment from the abstract section and
+-- sharpens the underlying criterion.
 ------------------------------------------------------------------------
 
--- Mode-is-loss-only : ¬ NonLossOnly ModeAxis
--- ^^^ open obligation; requires more LEcho machinery.
+-- The original predicate is vacuously satisfied by Mode via the
+-- reflexive linear step. This is the concrete reason
+-- `¬ NonLossOnly ModeAxis` is FALSE (not merely "hard").
+ModeAxis : Axis
+ModeAxis = record
+  { D   = Mode
+  ; _≤_ = _≤m_
+  ; F   = LEcho
+  ; t   = degradeMode
+  }
+
+mode-linear-reflexive-strict : IsStrict ModeAxis linear≤linear
+mode-linear-reflexive-strict = record
+  { x     = echo-true
+  ; y     = echo-false
+  ; x≢y   = echo-true≢echo-false
+  ; tx≢ty = echo-true≢echo-false
+  }
+
+NonLossOnly-holds-vacuously-for-Mode : NonLossOnly ModeAxis
+NonLossOnly-holds-vacuously-for-Mode =
+  linear , linear , linear≤linear , mode-linear-reflexive-strict
+
+------------------------------------------------------------------------
+-- Sharpened criterion: a *proper* strict step moves between DISTINCT
+-- decorations. This excludes reflexive identity steps, which carry
+-- no information-preserving transport content of their own.
+------------------------------------------------------------------------
+
+record ProperlyStrict (a : Axis) {d1 d2 : Axis.D a}
+                      (le : Axis._≤_ a d1 d2) : Set where
+  open Axis a
+  field
+    distinct : d1 ≢ d2
+    x y      : F d1
+    x≢y      : x ≢ y
+    tx≢ty    : t le x ≢ t le y
+
+ProperNonLossOnly : Axis → Set
+ProperNonLossOnly a =
+  Σ (Axis.D a) (λ d1 →
+  Σ (Axis.D a) (λ d2 →
+  Σ (Axis._≤_ a d1 d2) (λ le →
+    ProperlyStrict a le)))
+
+------------------------------------------------------------------------
+-- The sharpening keeps the positive case: Choreo still certifies,
+-- now via the genuinely proper step c⊑s (Client ≢ Server).
+------------------------------------------------------------------------
+
+ChoreoAxis-proper-non-loss-only : ProperNonLossOnly ChoreoAxis
+ChoreoAxis-proper-non-loss-only =
+  Client , Server , c⊑s , record
+    { distinct = λ ()
+    ; x        = rg-input₁
+    ; y        = rg-input₂
+    ; x≢y      = rg-inputs-distinct
+    ; tx≢ty    = rg-images-distinct
+    }
+
+------------------------------------------------------------------------
+-- The discharged obligation: Mode is loss-only under the sharpened
+-- (proper-step) criterion. Case analysis on the mode order:
+--
+--   * linear≤linear / affine≤affine — reflexive; `distinct` is
+--     `m ≡ m → ⊥`, refuted by `refl`.
+--   * linear≤affine — the unique inter-decoration step; its
+--     transport `degradeMode linear≤affine = weaken` lands in
+--     `LEcho affine`, where `affine-all-equal` makes every pair of
+--     outputs equal, contradicting `tx≢ty`.
+------------------------------------------------------------------------
+
+Mode-is-not-proper-non-loss-only : ProperNonLossOnly ModeAxis → ⊥
+Mode-is-not-proper-non-loss-only
+  (linear , linear , linear≤linear , ps) = ProperlyStrict.distinct ps refl
+Mode-is-not-proper-non-loss-only
+  (affine , affine , affine≤affine , ps) = ProperlyStrict.distinct ps refl
+Mode-is-not-proper-non-loss-only
+  (linear , affine , linear≤affine , ps) =
+    ProperlyStrict.tx≢ty ps
+      (affine-all-equal
+        (degradeMode linear≤affine (ProperlyStrict.x ps))
+        (degradeMode linear≤affine (ProperlyStrict.y ps)))
 
 ------------------------------------------------------------------------
 -- Summary (prose; the formal content is above)
