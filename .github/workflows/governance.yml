@@ -18,6 +18,13 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Estate guardrail: cancel superseded runs so re-pushes / rebased PR
+# updates don't pile up queued runs. Safe — governance is read-only
+# policy linting with no publish or mutation.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

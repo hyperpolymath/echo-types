@@ -4,10 +4,23 @@
 name: Agda
 
 on:
+  # Direct pushes only on the integration branches. Feature-branch
+  # validation is fully covered by the pull_request trigger below —
+  # gating WIP pushes to no-PR branches with a full multi-minute Agda
+  # build was the dominant self-inflicted load on the shared estate
+  # Actions concurrency pool, and also double-fired (push + PR) on PR
+  # branches. No proof coverage is lost: PRs and post-merge main still
+  # run the full suite.
   push:
-    branches:
-      - "**"
+    branches: [main, master]
   pull_request:
+
+# Estate guardrail: cancel superseded runs so re-pushes / rebased PR
+# updates don't pile up queued full-suite builds. Safe here — this
+# workflow only typechecks (read-only, no publish or mutation).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions: read-all
 
