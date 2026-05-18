@@ -41,6 +41,11 @@ behind — `git fetch` and read `origin/main` before trusting any survey.
 remainder of information-losing computation: for `f : A → B`,
 `Echo f y := Σ (x : A), (f x ≡ y)`. `[REAL]`
 
+* Kernel: `proofs/agda/EchoKernel.agda` — the funext-free,
+  postulate-free core (re-export of `Echo` + a pinned `Kernel-contract`).
+  `[REAL]` Everything else imports `Echo` transitively; the
+  kernel-vs-derived classification + funext-free certificate is
+  `docs/echo-types/echo-kernel-note.adoc`.
 * Proofs: `proofs/agda/Echo.agda` + ~24 `Echo*.agda` modules
   (`EchoCategorical`, `EchoDecidable`, `EchoCharacteristic`,
   `EchoApprox`, `EchoIndexed`, …).
