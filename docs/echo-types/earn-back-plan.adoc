@@ -35,8 +35,11 @@ its grade-unit object — not redefining Echo.
 [#gate-F1]
 === Gate F1 — Genuine graded comonad (MAKE-OR-BREAK)
 
-*Everything else is gated on F1.* The other gates are not attempted
-until F1 passes.
+*F1 is make-or-break for the graded-comonad claim*, and *F3* is gated
+on it (F3 is not attempted until F1 passes). *F2* and *F4* are
+independent of F1 and proceed in parallel — they earn back
+qualified/real claims regardless of F1 (see "Recommended order of
+attack").
 
 .Claim
 ****
