@@ -1,5 +1,14 @@
 {-# OPTIONS --safe --without-K #-}
 
+-- RETRACTION 2026-05-18 (docs/retractions.adoc R-2026-05-18): comments
+-- in this module that assert a "graded comonad", a "universal property
+-- / terminal cone", "model-independence", or a "conservativity
+-- metatheorem" are RETRACTED claims. The Agda is unchanged and correct;
+-- read it as a loss-graded *reindexing modality* (thin-poset action;
+-- no nested D_r D_s), a funext-relative *pointwise* mediator property,
+-- and carrier-parametricity over a fixed grade poset. Authoritative
+-- prose: docs/echo-types/paper.adoc §"Reframing note".
+
 module EchoChoreo where
 
 open import Echo

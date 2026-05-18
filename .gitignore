@@ -1,3 +1,11 @@
 *.agdai
 arghda-core/target/
 .claude/
+.agda/
+
+# direnv / nix local cache
+.direnv/
+
+# editor / tooling backup files
+*.bak
+*~

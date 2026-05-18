@@ -156,6 +156,16 @@ The `EchoCategory.agda` module establishes a comprehensive categorical formaliza
 3. **Universal CNO**: CNOs as identity morphisms that preserve echo structure: `∀ s → Echo p s ≃ Echo id s`
 4. **Model Independence**: Echo types are preserved across isomorphic computational models
 
+> **Scope note (2026-05-18).** "Model Independence" *here* means the
+> bare-`Echo` invariance `Echo f y ≃ Echo f' (proj₁ (isoB y))` under an
+> isomorphism of the underlying objects (the `ModelIndependence`
+> theorem below). This is a distinct, valid statement and is **not**
+> affected by retraction R-2026-05-18, which retracted the *graded
+> modality's* "two independent models / model-independence" claim
+> (`GradedLossModel`/`EchoRelModel`). Do not conflate the two; this
+> CNO consumer-bridge doc is firewalled from the identity claim. See
+> `docs/retractions.adoc`.
+
 ### Core Theorems
 
 ```agda

@@ -1,5 +1,15 @@
 {-# OPTIONS --safe --without-K #-}
 
+-- RETRACTION 2026-05-18 (docs/retractions.adoc R-2026-05-18): the
+-- "characteristic recipe" this module exercises is, per the repo's
+-- own Gate-2 audit and the 2026-05-18 reframing, one thin-poset
+-- reindexing recipe (X-compose = X-prop + X-comp), not evidence of a
+-- graded comonad or a universal property in the categorical sense.
+-- The Agda is unchanged and correct; "universal property" used in
+-- comments below is informal LEcho-internal phrasing, not the
+-- retracted pullback claim. Authoritative prose:
+-- docs/echo-types/paper.adoc §"Reframing note", docs/characteristic.adoc.
+
 ------------------------------------------------------------------------
 -- TERMINATION NOTICE (added at integration commit):
 --

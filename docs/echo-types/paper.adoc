@@ -1,4 +1,4 @@
-= Echo Types: A Definitionally-Grounded Graded Comonad of Structured Loss
+= Echo Types: A Definitionally-Grounded, Loss-Graded Reindexing Modality
 :toc: macro
 :toclevels: 3
 :sectnums:
@@ -33,14 +33,28 @@ not a footnote.
 
 The thesis of the paper is that the type-theoretic standing that
 *befits* echo is not the linear/dependent judgmental ladder — that
-comparison is a category error — but a **graded comonadic modality of
-structured loss** in the coeffect/quantitative lineage. The
-contribution is the full *characterisation package*, mechanised in
-Agda under `--safe --without-K` with zero postulates: a definitional
-identity, a universal property, a graded comonad whose laws provably
-reduce to order-propositionality, a separating model, model
-independence across two models, and a conservativity metatheorem —
-all under a falsifiable-gate methodology with a public retraction log.
+comparison is a category error — but a **loss-graded reindexing
+modality**: a monotone family indexed by a join-semilattice of loss
+grades, with a functorial reindexing action. It is *analogous to*,
+and motivated by, the coeffect/quantitative lineage, but we are exact
+about what is and is not mechanised. In particular it is *not* a
+graded comonad in the Petriček–Orchard–Mycroft / Katsumata sense: no
+nested functor `D_{r·s} ⇒ D_r D_s` is formed, and the structure maps
+are the lattice-bottom coercion and the join-left reindex, not a
+genuine counit/comultiplication pair.
+
+The contribution is a *characterisation package*, mechanised in Agda
+under `--safe --without-K` with zero postulates: a definitional
+identity; a pointwise (funext-relative) mediator property for the
+pullback presentation; a reindexing modality whose coherence
+equations provably reduce to *thinness of the grade order*; a
+separating model that pins exactly that reduction; a carrier-parametric
+abstraction over a fixed grade poset; and a postulate-free build — all
+under a falsifiable-gate methodology with a public retraction log
+(`docs/retractions.adoc`). The earlier framing of this development as
+a "graded comonad with two independent models and a conservativity
+metatheorem" was retracted on 2026-05-18 after adversarial review;
+see <<reframing-note>> and the retraction log.
 
 === Why not "linear or dependent"
 
@@ -58,23 +72,46 @@ the rest of the paper bears.
 === Contributions
 
 . *Pinned identity.* `echo↔fib : Echo f y ↔ fiber f y`,
-  definitional, `refl` round-trips (Pillar A).
-. *Universal property.* `Echo f y` as the pullback of `f` along the
-  point `y : ⊤ → B`, with a funext-free, K-free terminal-cone
-  property; a `SliceHom` *is* a cone (Pillar B-1, §3).
-. *Graded comonad.* counit / comultiplication over the loss-grade
-  join-semilattice and all three laws — with the *H2 verdict*
-  (§4.2): every law, coassociativity included, collapses to one
-  path-independence lemma plus order-propositionality, with no path
-  algebra (Pillar B-2).
-. *Separating model.* the graded model minus its single hypothesis
+  definitional, `refl` round-trips (Pillar A). `fiber` is a
+  same-module restatement of the Σ; the bridge is the identity. This
+  is a deflationary triviality, owned as such, not a metatheorem.
+. *Pointwise mediator property.* `Echo f y` presented as the pullback
+  of `f` along the point `y : ⊤ → B`; a `SliceHom` *is* a cone
+  (round-trips `refl`). `echo-pullback-univ` gives existence and
+  *pointwise* uniqueness `∀ v → m' v ≡ m v`. We do *not* claim full
+  terminality: `m' ≡ m` is neither stated nor provable here without
+  funext, so this is a funext-relative mediator property, not a
+  universal property in the categorical sense (Pillar B-1, §3).
+. *Loss-graded reindexing modality.* A monotone family `GEcho` over
+  the loss-grade join-semilattice with a functorial reindex
+  `degrade`. The "counit" is the identity coercion (the bottom grade
+  `keep` is absorbed definitionally); the "comultiplication" is the
+  join-left reindex `GEcho g₁ → GEcho (g₁ ⊔ g₂)` — a *single* grade
+  application, *not* a nested `D_r D_s`. The three coherence
+  equations (§4.2) hold for exactly one reason: the grade order is
+  thin (`≤g-prop`) and `degrade` is functorial (`degrade-compose`).
+  This is a thin-poset action, not a graded comonad (Pillar B-2).
+. *Separating model.* the model minus its single hypothesis
   `≤g-prop`: generic Σ-functoriality survives, the characteristic
-  law is refuted at a decidable witness (Pillar C, §5).
-. *Model independence and conservativity.* an abstract model
-  interface with the comonad laws proved once; two agreeing models;
-  a conservativity metatheorem (Pillar D, §6).
+  composition law is refuted at a decidable witness. Read precisely,
+  this *measures* the modality's content over generic Σ: it is
+  exactly thinness of the grade order, nothing more (Pillar C, §5).
+. *Carrier-parametric abstraction (not model-independence).* an
+  abstract interface `GradedLossModel` whose `⊑-prop` field *fixes*
+  the only load-bearing hypothesis; the coherence equations are
+  proved once, parametric in the carrier, over a *fixed* grade
+  poset. The "second model" is the first with a `⊤` component,
+  agreeing definitionally (`refl`). This is carrier-parametricity,
+  not semantic model-independence (Pillar D, §6).
+. *Postulate-free build (not a conservativity metatheorem).* the
+  whole development typechecks `--safe --without-K` with zero
+  postulates / zero escape pragmas, CI-enforced. With `Echo = Σ`
+  definitionally this is *evidence for* conservativity over MLTT+Σ;
+  it is not a mechanised proof-theoretic conservativity theorem,
+  and is no longer stated as one (§6.2).
 . *Methodology.* falsifiable gates with explicit retraction actions;
-  one identity claim settled negatively and logged (§7).
+  identity claims settled negatively and logged, including this
+  development's own framing retraction (§7, <<reframing-note>>).
 
 == Background and notation [EXPAND]
 
@@ -88,90 +125,180 @@ Orchard–Liepelt–Eades / Granule) and a one-paragraph HoTT-fibre
 recap, so the paper is readable by both the QTT and the HoTT
 communities without external lookup.
 
-== The universal property
+== The pullback presentation and its pointwise mediator property
 
-`Echo f y` is the pullback of `f : A → B` along the point
-`y : ⊤ → B`. The `⊤`-leg is forced, so a cone with apex `V` is
+`Echo f y` is presented as the pullback of `f : A → B` along the
+point `y : ⊤ → B`. The `⊤`-leg is forced, so a cone with apex `V` is
 exactly a map `p₁ : V → A` with `∀ v → f (p₁ v) ≡ y` — which *is*
 an `EchoCategorical.SliceHom (λ (_ : V) → y) f`; the bridge
-round-trips are `refl`. The terminal-cone property
-`echo-pullback-univ` gives existence (the obvious pairing) and
-*pointwise* uniqueness `∀ v → m' v ≡ m v` (not `m' ≡ m`, hence
-funext-free); the cone-morphism notion carries a witness-transport
-leg, which is what makes uniqueness provable without K (no UIP on
-`f a ≡ y` is assumed). This is the categorical-semantics anchor: a
-category theorist accepts echo as the limit of a cospan.
+round-trips are `refl`. `echo-pullback-univ` gives existence (the
+obvious pairing) and *pointwise* uniqueness `∀ v → m' v ≡ m v`; the
+cone-morphism notion carries a witness-transport leg, which is what
+makes the pointwise statement provable without K (no UIP on
+`f a ≡ y` is assumed).
 
-== The graded comonad of structured loss
+[CAUTION]
+====
+This is *not* a universal property in the categorical sense, and we
+no longer claim it is. Terminality requires uniqueness of the
+mediating *morphism*, `m' ≡ m` in the hom-type. That statement is
+neither made nor provable here: under `--safe --without-K` it
+requires funext, which the development forbids. What is mechanised
+is strictly weaker — a pointwise-agreeing mediator. A category
+theorist does *not*, on this evidence, accept echo as the limit of
+the cospan; the honest claim is a funext-relative mediator property.
+The previously asserted "terminal-cone universal property" and "a
+category theorist accepts echo as the limit of a cospan" were
+retracted on 2026-05-18 (see <<reframing-note>>).
+====
+
+[NOTE]
+====
+*Earned back, conditionally (Gate F4, 2026-05-18).*
+`proofs/agda/EchoPullbackUnivF4.agda` discharges strict terminality
+`m' ≡ m` as a *function of an explicit `funext` hypothesis* — a
+module parameter `FunExt₀`, **not a postulate**, in the same idiom by
+which `Echo.agda` parameterises `cancel-iso` by the triangle
+identities. The honest reading is therefore not "retracted →
+unconditional" but "retracted → *true, conditional on funext*": a
+category theorist who accepts funext gets the genuine universal
+property; the trusted base is unchanged (no funext is introduced),
+and the funext-free pointwise mediator above is retained verbatim as
+the corollary. The *unconditional* claim stays retracted. Logged as
+retraction follow-up F-2026-05-18a.
+====
+
+== The loss-graded reindexing modality
 
 === Structure
 
 Over the loss-grade join-semilattice `(Grade, ⊔, keep)` with `keep`
-the bottom / monoidal unit: the counit `gextract` (zero-loss echo is
-the bare echo — the Pillar-A definitional move reused) and the
-comultiplication `gduplicate` (duplicating an observation splits the
-loss budget along the join, realised as the join-left embedding).
+the bottom: `GEcho` is a monotone family of types and `degrade` its
+functorial reindexing. We retain the names `gextract` and
+`gduplicate` for continuity with the modules, but state plainly what
+they are:
+
+* `gextract : GEcho keep → Echo collapse tt` is `λ e → e` — the
+  literal identity coercion. `GEcho keep` is *definitionally*
+  `Echo collapse tt` and `keep ⊔ g = g` definitionally, so the
+  "counit law" holds for free; this is the Pillar-A identity reused,
+  not a structure map with content.
+* `gduplicate g₁ g₂ : GEcho g₁ → GEcho (g₁ ⊔ g₂)` is the join-left
+  reindex `degrade (≤-⊔-left g₁ g₂)`. It is a *single* grade
+  application. There is no nested `GEcho (GEcho …)` and no
+  `D_{r·s} ⇒ D_r D_s` anywhere in the development, so this is not a
+  graded comultiplication; it is monotone reindexing into the join.
 
 [#h2-verdict]
-=== The H2 verdict (key technical insight)
+=== The H2 verdict, stated honestly
 
-Stated in the *common-upper-bound idiom* — post-compose each
-(co)multiplication with the universal degrade into an *arbitrary*
-common grade, so both sides of every law land in the same object —
-the three graded-comonad laws (`gcomonad-counit-{l,r}`,
-`gcomonad-coassoc`) each collapse to exactly two ingredients: the
-path-independence lemma `degrade-compose` and propositionality of the
-loss order `≤g-prop`. There is no path algebra, no `subst`, no
-transport. The naive grade-equality phrasing of coassociativity would
-force a `subst` along `⊔`-associativity; the universal-arrow phrasing
-removes it entirely, because the join is a universal arrow and the
-order is a proposition.
+In the *common-upper-bound idiom* — post-compose each side with
+`degrade` into an arbitrary common grade — the three coherence
+equations (`gcomonad-counit-{l,r}`, `gcomonad-coassoc`) each collapse
+to exactly two ingredients: the path-independence lemma
+`degrade-compose` and propositionality of the loss order `≤g-prop`.
+There is no path algebra, no `subst`, no transport.
 
-This is the paper's pivotal observation: the modality is *cheap*
-(no coherence tower) and, as §6 shows, *model-independent for the
-same reason* (the proof never inspects the carrier).
+The honest reading of this collapse is the opposite of a strength
+claim. The equations reduce to thinness because *there is no
+comonadic coherence to discharge*: a thin poset with a functorial
+monotone action satisfies these equations definitionally. The
+separating model (§5) confirms this precisely — delete `≤g-prop` and
+the characteristic equation breaks, while generic Σ-functoriality is
+untouched. So the entire content of this modality over and above
+generic Σ is exactly: *the grade order is thin*. We report this as a
+calibration result, not as evidence of a cheap coherence tower. The
+project's own Gate-2 audit (`docs/characteristic.adoc`) reaches the
+same conclusion for the wider "characteristic theorem family" (all
+instances of one `X-compose = X-prop + X-comp` recipe).
 
 == The separating model
 
-The separating model is the graded model with its *single* hypothesis
+The separating model is the modality with its *single* hypothesis
 `≤g-prop` deleted: a loss order with two distinct arrows `lo→hi` and
 a reindexing that distinguishes them. Generic Σ-functoriality
 (`map-over` id/comp) and the functorial unit still hold verbatim — it
-is a bona-fide Echo setting. The characteristic composition law is
-*refuted* at a concrete decidable witness, discharged by a checked
-`true ≢ false`. Conclusion: the loss law is not a generic
-Σ-consequence; it is carried *precisely* by order-propositionality.
-This is a positive countermodel object, extending the project's
-negative-exhibit discipline, and it answers the only objection every
-referee raises ("isn't this all Σ-lemmas with renamed components?")
-with a model rather than an argument.
+is a bona-fide Echo setting. The characteristic composition equation
+is *refuted* at a concrete decidable witness, discharged by a checked
+`true ≢ false`.
 
-== Model independence and conservativity
+We state the conclusion precisely, without spin. The separating model
+does not show the modality is "genuine structure, not bookkeeping" in
+the reviewer's sense; it *quantifies* the gap. The characteristic
+equation is not a generic Σ-consequence — but the *only* thing it
+adds over generic Σ-functoriality is `≤g-prop`, i.e. that the grade
+order is thin. A reader who regards "the grade preorder is thin" as
+sufficient structure may keep the framing; a reader who does not will
+correctly read this as Σ-functoriality over a thin poset. The
+countermodel is a real, citable calibration object; it does not
+neutralise the "Σ over a poset" objection so much as locate it
+exactly.
 
-=== Two models, one structure
+== Carrier-parametricity, and the limits of the conservativity claim
 
-An abstract interface `GradedLossModel` (a propositional grade order
-with a join and a composing reindexing) — exactly what the H2 verdict
-showed suffices. The graded-comonad laws are proved *once*,
-generically, from the interface (`GCLaws`); this *is* the
-model-independence theorem. Two instances: the Set/Type model
-(`EchoGraded`) and a relational model (`EchoStep`/`map-rel`, the
-composition law from `map-rel-comp` + `degrade-comp`). They agree
-under the graph = fibration bridge: `model-agreement` (carrier iso,
-round-trips `refl`) and `bridge-natural` (`map-over` ↔ `map-rel`).
-The graded comonad is the *same* structure in both.
+=== One structure, parametric in the carrier — not model-independence
 
-=== Conservativity
+An abstract interface `GradedLossModel` packages a grade order with a
+join and a composing reindexing, *and* an explicit field
+`⊑-prop : ∀ p q → p ≡ q`. The coherence equations are proved once,
+generically (`GCLaws`). We previously called this "the
+model-independence theorem"; it is not. Two observations defeat that
+reading:
+
+. The interface *bakes in the only load-bearing hypothesis.* `⊑-prop`
+  is the single ingredient §5 isolates; making it a field means every
+  instance is forced thin by signature. "Proved once for any model"
+  is then "proved once for any thin poset action," which is the
+  statement, not an independence result.
+. The two instances are not independent models. `set-model` and
+  `rel-model` fix the *same* grade poset (`_≤g_`, `≤g-prop`, `_⊔g_`,
+  `keep`); only the carrier differs, and `rel-model`'s carrier is the
+  Set carrier with a `⊤` component (`RStep _ _ = ⊤`). `model-agreement`
+  is `refl` — agreement holds by Σ-η on `× ⊤`, with no semantic
+  content. No instance at a different grade structure exists, or can
+  (the equations require thinness). This is parametricity in an
+  inert carrier component, not semantic model-independence.
+
+The genuinely relational object (`StepND`, nondeterminism) exists in
+`EchoRelational` but is *never* instantiated into a `GradedLossModel`;
+the "graph = fibration bridge" `bridge-natural` is the identity on
+Σ-pairs (`refl`). We no longer claim a relational model of the
+modality.
+
+[NOTE]
+====
+*Earned back, scoped (Gate F2, 2026-05-18).*
+`proofs/agda/EchoStepNDModelF2.agda` gives a genuine second model of
+the *bare Echo functor* (explicitly **not** of the graded modality —
+that retraction stands). It instantiates the same interface the
+deterministic model uses (`EchoFunctorModel`; functor laws by the
+generic `map-rel-id`/`map-rel-comp`) at `EchoRelational.StepND`, a
+relation that is **not the graph of any function under any state
+relabelling** — `nd-not-graph`, a checked `true ≢ false`. The
+agreement carries content: the `StepND` fibre is the disjoint sum of
+its deterministic branches by constructor case analysis
+(`nd-sum-fromto`, `nd-fibre-not-prop`), *not* `refl` and *not* Σ-η on
+`× ⊤` — exactly the defect §6 records for `EchoRelModel`. This earns
+back the R2 "fixable with bounded work" item at functor level only;
+model-independence of the *modality* remains retracted. Logged as
+retraction follow-up F-2026-05-18a.
+====
+
+=== The conservativity claim, narrowed
 
 Because `Echo = Σ` definitionally and the whole development is
-postulate-free under `--safe --without-K`, the loss modality is a
-*conservative, definitional* extension of MLTT+Σ: it adds structure
-(a characterised graded comonad) without adding strength. The
-metatheorem (`conservativity.adoc`) has a three-clause formal anchor:
-definitional (`EchoFiberBridge`), conservative (the postulate-free
-build, CI-enforced), modality-not-axiom (`EchoRelModel` /
-`EchoGradedComonad` / `EchoSeparating`). The conservativity argument
-is *operational* — discharged by the build itself.
+postulate-free under `--safe --without-K`, with zero escape pragmas
+and CI greps enforcing it, the artefact is *evidence* that the loss
+modality adds no proof-theoretic strength over MLTT+Σ. We state only
+that. We do *not* claim a mechanised conservativity metatheorem: a
+green `--safe` build is necessary but not sufficient for proof-theoretic
+conservativity (a statement quantifying over all base propositions),
+and no such meta-argument is mechanised. `conservativity.adoc` has
+been narrowed accordingly: clause 1 (`EchoFiberBridge`) is the
+definitional Σ-identity it is; clause 2 is restated as the
+postulate-free build property; the "modality not axiom" clause is
+retained only in the weak, true form — the reindexing modality is
+*derived*, not postulated.
 
 == Methodology: falsifiable gates and retraction
 
@@ -179,19 +306,32 @@ Development is governed by gates (`roadmap-gates.adoc`) with explicit
 retraction actions and a public retraction log. One identity claim,
 the five-axis simultaneous-integration claim (EI-2), was settled
 *negatively* and is recorded as such; having cleanly killed it is
-part of the authority story, not a blemish. The funext boundary is
-real, known, and quarantined behind an isolated module
-(`examples/Transport.agda`, where `Field = Fin n → ℚ` forces funext);
-no result crosses it. We argue this discipline is itself a
-contribution: a template for honest mechanised-metatheory claims.
+part of the authority story, not a blemish.
+
+A correction to the funext story, which earlier drafts stated
+backwards. There is *no* funext anywhere in the development
+(consistent with `--safe`). `examples/Transport.agda` does not
+*contain* a quarantined funext dependency — it *avoids* funext by a
+first-order carrier choice (`Field n = Vec ℚ n`; a `Fin n → ℚ`
+carrier would have forced funext and was rejected). So "quarantined
+behind an isolated module" mis-described a counterfactual. The place
+funext-relativity *actually* bites is the pullback presentation: its
+mediator property is only pointwise precisely because `m' ≡ m` needs
+funext (§3). We now disclose that as the genuine boundary rather than
+present "funext-free" as a feature. We still argue the gate /
+retraction discipline is a contribution — and this very reframing,
+logged in `docs/retractions.adoc`, is the discipline working.
 
 == Evaluation and discussion [EXPAND]
 
-NOTE: *[EXPAND]* — proof-size / proof-cost table per pillar; what the
-common-upper-bound idiom buys versus the naive `subst` phrasing
-(quantified); a discussion of where the construction does *not*
-extend (the EI-2 negative result, the funext boundary) framed as
-strengths; threats to validity.
+NOTE: *[EXPAND]* — proof-size / proof-cost table per pillar; the
+common-upper-bound idiom analysed honestly (it removes `subst`
+*because* the equations carry no comonadic coherence, not as a clever
+saving); a discussion of where the construction does *not* extend
+(the EI-2 negative result; the funext-relative mediator property; the
+thinness-only content) stated as honest bounds, *not* spun as
+strengths; threats to validity, including the Gate-2 audit's own
+"single recipe" finding.
 
 == Related work [EXPAND]
 
@@ -203,16 +343,68 @@ lens / optic literature (the witness-transport leg of
 the novelty crisp: not a new object, but a fully mechanised
 characterisation package with a falsifiable-gate methodology.
 
+[#reframing-note]
+== Reframing note (2026-05-18)
+
+This draft was reframed after an adversarial three-reviewer review
+(graded-modality, semantics, and proof-assistant skeptics) found that
+the codebase contains no defense for five central claims, and that
+two were contradicted by the repository's own Gate-2 audit. The
+following claims were retracted, not weakened cosmetically:
+
+[cols="2,3", options="header"]
+|===
+| Retracted claim | Replaced by
+
+| "graded comonad" (counit/comultiplication, three comonad laws)
+| loss-graded *reindexing modality*; no nested `D_r D_s` is formed;
+  the equations hold by thinness of the grade order
+
+| "terminal-cone universal property"; "a category theorist accepts
+  echo as the limit of a cospan"
+| a *pointwise, funext-relative* mediator property; full terminality
+  is unstatable here without funext
+
+| "model independence across two agreeing models"
+| carrier-parametricity over a *fixed* grade poset; the second model
+  is the first with a `⊤` component, agreeing by `refl`
+
+| "conservativity metatheorem, discharged operationally by the build"
+| a *postulate-free build*: evidence for, not a proof of,
+  conservativity over MLTT+Σ
+
+| "funext quarantined behind an isolated module; no result crosses it"
+| no funext anywhere; the real funext-relativity is the pointwise
+  mediator property, now disclosed as the boundary
+|===
+
+The full per-attack analysis and the codebase pressure-test are in
+`docs/retractions.adoc`.
+
+*Partial earn-back (follow-up F-2026-05-18a, 2026-05-18).* Two rows
+above are now partially recovered, each strictly to its mechanised
+strength under the Pillar F gate discipline
+(`docs/echo-types/earn-back-plan.adoc`): the universal-property row is
+earned back *conditional on an explicit `funext` parameter* (never a
+postulate; §3 NOTE, `EchoPullbackUnivF4.agda`), and the
+model-independence row is earned back *for the bare Echo functor only*
+via a genuine non-graph `StepND` model (§6 NOTE,
+`EchoStepNDModelF2.agda`). The graded-comonad, modality-level
+model-independence, and conservativity rows remain fully retracted.
+
 == Conclusion
 
 Echo is the homotopy fibre equipped with a loss-grade lattice,
-forming a definitionally-grounded graded comonad of structured loss.
-Its standing comes not from being new but from being *characterised*:
-a universal property, a law-set that provably reduces to
-order-propositionality, a separating model, two agreeing models, and
-a mechanised conservativity metatheorem — with a falsifiable
-retraction discipline. The internal programme is complete; external
-validation is the remaining step.
+carrying a loss-graded reindexing modality. What survives adversarial
+review is narrower than first claimed but exactly stated: a
+definitional Σ-identity; a funext-relative pointwise mediator
+property; a reindexing modality whose coherence equations reduce,
+demonstrably, to thinness of the grade order; a separating model that
+locates that reduction precisely; a carrier-parametric abstraction;
+and a postulate-free `--safe --without-K` build. Its standing comes
+from being *exactly characterised and honestly bounded* under a
+falsifiable retraction discipline — of which this reframing is an
+instance. External validation is the remaining step.
 
 [appendix]
 == Ordinal / Buchholz consumer-evidence [EXPAND]
