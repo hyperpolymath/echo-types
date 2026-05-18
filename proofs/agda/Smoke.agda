@@ -120,6 +120,12 @@ open import EchoThermodynamicsArbitrary using
   ; bennett-reversible-cno-identity
   )
 
+open import EchoThermoCollapseImpossible using
+  ( nat-into-collapse-fiber
+  ; nat-into-collapse-fiber-injective
+  ; collapse-cost-impossible
+  )
+
 open import EchoChoreo using
   ( Role
   ; Global
