@@ -1,0 +1,123 @@
+= Echo Types — Foundation & Trusted Base
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+What the foundation actually is, exactly what is trusted, and how
+each part is mechanically enforced. Created 2026-05-18 after a
+foundation provenance audit. This document makes no proof claims; it
+states the trust surface so there is no doubt about its boundary.
+
+toc::[]
+
+== The foundational object (deliberately trivial)
+
+`Echo f y := Σ (x : A) , (f x ≡ y)` is *definitionally* the homotopy
+fibre. There is no new type former, no axiom, no postulate. The
+soundness of the foundation is the soundness of Agda's `Σ` and `≡`
+under `--safe --without-K` — nothing more is claimed, and that
+triviality is the point, not a weakness. (The self-referential
+`echo↔fib` bridge — `fiber` is a same-module restatement — is the one
+mathematical place worth hardening; see `docs/retractions.adoc`
+R-2026-05-18 and the external-fibre triangulation, tracked P1.)
+
+== Trust surface and its enforcement
+
+[cols="2,3,2", options="header"]
+|===
+| Trusted claim | How it is enforced (post-2026-05-18) | Residual
+
+| Every module is `--safe --without-K`
+| `tools/check-guardrails.sh` scans *every* `proofs/agda/**/*.agda`
+  (comment-stripped) and asserts the OPTIONS line carries both flags;
+  wired as a fail-fast CI step in both jobs. Independent of any
+  `All.agda` closure.
+| none
+
+| Zero postulates / zero escape pragmas
+| Same script: complete deny-list of escape pragmas + soundness flags
+  + `postulate`/`primTrustMe` in code. `--safe` in the typecheck
+  lanes is the primary guarantee; the script covers files outside
+  every closure.
+| nested `{- -}` not modelled (codebase uses `--` banners); lanes are
+  the backstop
+
+| The whole development typechecks
+| Four CI roots — `All.agda`, `Smoke.agda`, `characteristic/All.agda`,
+  `examples/All.agda` — now cover *all* registered modules (the two
+  2026-05-18 closure holes, `examples.Transport` and the
+  N5 exclusion, are resolved/disclosed below).
+| `N5Falsifier` is *known-broken*, see below
+
+| A green build is not a stale-cache artefact
+| `cold-check` CI job: no interface cache, `agda --ignore-interfaces`
+  on all four roots. Runs in parallel with the cached `check` job;
+  both must pass.
+| none
+
+| Dependencies are pinned
+| `standard-library` pinned to branch `v2.3`; `absolute-zero` pinned
+  to commit `3ff5cee7…` (was floating `--depth 1`). Asserted in CI.
+| Agda version itself — see *Known limitations*
+|===
+
+== Known-broken, disclosed (not hidden)
+
+`proofs/agda/characteristic/N5Falsifier.agda` does **not** typecheck
+(`UnsolvedConstraints` / `UnsolvedMetaVariables`, lines ~150–200). It
+was historically excluded from `characteristic/All.agda` with no
+disclosure — a silent hole found by the 2026-05-18 audit. It is now:
+
+* banner-marked in-file as known-broken, with the "VERDICT … SURVIVES"
+  line explicitly flagged *not mechanised*;
+* explicitly noted as a deliberate exclusion in
+  `characteristic/All.agda`;
+* monitored by an *expected-failure* CI gate — if it ever typechecks,
+  CI fails loudly and instructs to register it and drop the gate.
+
+It must not be cited as an established Gate-2 nominee until it is
+green `--safe --without-K`, zero unsolved metas. Triage, not a partial
+hack: left explicit and failing, never forced green.
+
+== Known limitations (tracked, not silent)
+
+. *CI Agda version not exactly pinned.* CI installs Ubuntu's `agda`
+  (apt); local dev and the Nix flake differ (2.8.0 / flake-pinned).
+  The CI step *records and minimally asserts* the version (fails on a
+  wildly wrong major) so it is visible, not silently floating. Exact
+  parity via *CI-through-the-flake* is the tracked P1 follow-up — the
+  only honest way to pin Agda reproducibly.
+. *External-fibre triangulation* (P1): replace the same-module
+  `echo↔fib` self-bijection with agreement against an independently
+  defined fibre, upgrading a triviality to a cross-definition theorem.
+. *Cross-assistant kernel check* (P2): confirm the 3-line core in an
+  independent type-checker (e.g. Cubical Agda's native `fiber`).
+
+== Reproducing the trusted build
+
+[source,sh]
+----
+# Guardrail (no Agda needed):
+bash tools/check-guardrails.sh proofs/agda
+
+# Cold, cache-free typecheck of every root:
+agda --ignore-interfaces -i proofs/agda proofs/agda/All.agda
+agda --ignore-interfaces -i proofs/agda proofs/agda/Smoke.agda
+agda --ignore-interfaces -i proofs/agda proofs/agda/characteristic/All.agda
+agda --ignore-interfaces -i proofs/agda proofs/agda/examples/All.agda
+----
+
+Pinned inputs: `standard-library` `v2.3`; `absolute-zero`
+`3ff5cee7f3fd002378089cd02f0c90a3747b45f0`. Agda: see `flake.nix`
+(reproducible) — CI parity is the P1 item above.
+
+== Revision history
+
+* *2026-05-18 — created.* Post foundation provenance audit. Records
+  the closure-hole closure (`examples.Transport`), the disclosed
+  N5 known-broken hole, the guardrail script, the `absolute-zero`
+  pin, the cold-check job, and the open CI-Agda-pin / triangulation
+  follow-ups. Append-only.

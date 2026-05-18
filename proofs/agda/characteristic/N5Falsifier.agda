@@ -1,11 +1,29 @@
 {-# OPTIONS --safe --without-K #-}
 
 ------------------------------------------------------------------------
+-- !! KNOWN-BROKEN / DOES NOT TYPECHECK (disclosed 2026-05-18) !!
+--
+-- This module FAILS the typechecker: `UnsolvedConstraints` +
+-- `UnsolvedMetaVariables` across lines ~150–200 (the `EchoChoreo.obs`
+-- reindex metas do not solve). It is therefore deliberately NOT
+-- registered in `characteristic/All.agda` and is NOT in any CI green
+-- closure. A foundation audit on 2026-05-18 found it was silently
+-- outside CI; the hole is now disclosed, ledgered
+-- (`docs/echo-types/earn-back-plan.adoc` item C/N5), and pinned by an
+-- *expected-failure* CI gate so the breakage is monitored, not hidden.
+--
+-- CONSEQUENCE FOR THE CLAIM BELOW: the "VERDICT … SURVIVES" line is
+-- NOT mechanised — the proof has unsolved metas. Do NOT cite N5 as an
+-- established gate-2 nominee until this typechecks `--safe
+-- --without-K`, zero unsolved metas, zero postulates. Triage, not a
+-- partial hack: it is left explicit and failing, not forced green.
+------------------------------------------------------------------------
 -- Gate 2 audit: N5Falsifier
 --
--- VERDICT: the N5 candidate (`characteristic.RoleGraded.choreo-grade-commute`)
--- SURVIVES the sharpened falsifier. The candidate is ready for adoption
--- as the fifth gate-2 nominee in `roadmap-gates.adoc`.
+-- VERDICT (NOT MECHANISED — see broken banner above): the N5 candidate
+-- (`characteristic.RoleGraded.choreo-grade-commute`) was *intended* to
+-- be shown to SURVIVE the sharpened falsifier. This is an
+-- attempt-of-record, not a result.
 --
 -- Background. STATE.next-actions q2-3 (low-priority bookkeeping
 -- post-EI-2) calls for adopting `choreo-grade-commute` as nominee N5.
