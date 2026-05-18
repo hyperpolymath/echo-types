@@ -269,3 +269,25 @@ single index; it moves no claim.
   pragmas across all 88 modules; no hidden debt. No claim moved. F1
   feasibility spike is the immediate next action. No gate passed yet;
   no reframed claim has moved.
+* *2026-05-18 — F1 feasibility spike run* (`proofs/agda/EchoGradedComonadF1.agda`,
+  typechecks `--safe --without-K`, *zero postulates*). Result: **F1
+  NOT YET PASSED, feasibility strongly positive (evidence-based, not
+  speculative).** The monoid-graded iterated-residue candidate
+  delivers, mechanised: a non-collapsing graded functor `D` (with a
+  proven separating witness `D2-nontrivial` — `D r` is not `⊤`/a
+  prop), functor laws (`mapD-id`/`mapD-∘`), the *nested*
+  comultiplication `δ : D (m + n) A → D m (D n A)`, and **two of the
+  three graded-comonad laws proved**: `gc-counit-r` (definitional)
+  and `gc-counit-l` (by induction on the grade; the only
+  non-structural tool is ℕ-UIP, which is *K-free* via decidable
+  equality). The make-or-break foundational question is answered:
+  Agda demanded **no K, no funext, no postulate** anywhere — the
+  obstruction this gate feared did *not* materialise. The single
+  remaining obligation is `gc-coassoc` (coassociativity): its base
+  case and skeleton close, the inductive step has an isolated
+  proof-engineering type-mismatch (`m != m + (n + p)`) requiring an
+  explicit δ-naturality-over-`R` lemma rather than the ad-hoc
+  `coe-cong-R ∘ sym` push. Stated in-file as a precise OPEN
+  obligation — *not postulated, not softened*. No reframed claim has
+  moved (F1 requires all three laws); the gate stays open until
+  `gc-coassoc` closes `--safe --without-K` zero-postulate.
