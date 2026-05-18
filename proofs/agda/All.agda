@@ -40,6 +40,12 @@ open import EchoGradedComonad   -- Pillar B (scaffold)
 open import EchoSeparating      -- Pillar C (scaffold)
 open import EchoRelModel        -- Pillar D (scaffold)
 
+-- Pillar F earn-back (docs/echo-types/earn-back-plan.adoc). Wired in
+-- on the gate passing (Sequencing pt 4); see docs/retractions.adoc
+-- follow-up F-2026-05-18a.
+open import EchoPullbackUnivF4  -- Gate F4 PASSED (funext-qualified UP)
+open import EchoStepNDModelF2   -- Gate F2 PASSED (StepND second model)
+
 open import Ordinal.Base
 open import Ordinal.Closure
 open import Ordinal.CNF

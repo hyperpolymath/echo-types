@@ -151,9 +151,12 @@ open import EchoGraded using
   ; degrade-via-join
   )
 
--- Pillar B of docs/echo-types/establishment-plan.adoc: echo as a
--- graded comonad of structured loss. Thin slice — counit + the
--- coassociativity verdict (no path algebra beyond ≤g-prop).
+-- Pillar B of docs/echo-types/establishment-plan.adoc: echo's
+-- loss-graded *reindexing modality* (NOT a graded comonad — no
+-- nested D_r D_s; gextract is the identity coercion, gduplicate the
+-- join-left single-grade reindex). The coherence equations collapse
+-- to ≤g-prop because the grade order is thin, not because a comonad
+-- coherence was discharged. See docs/retractions.adoc R-2026-05-18.
 open import EchoGradedComonad using
   ( gextract
   ; gduplicate
@@ -163,7 +166,9 @@ open import EchoGradedComonad using
   )
 
 -- Pillar B (part 1): Echo as the pullback of f along y : ⊤ → B,
--- with the terminal-cone universal property. SliceHom IS a cone.
+-- with a funext-relative *pointwise* mediator property (NOT a
+-- terminal-cone universal property: m' ≡ m is unstatable here
+-- without funext). SliceHom IS a cone. See R-2026-05-18.
 open import EchoPullback using
   ( EchoCone
   ; echo-cone
@@ -176,8 +181,9 @@ open import EchoPullback using
   )
 
 -- Pillar C: separating model — generic Σ-functoriality holds while
--- the characteristic loss-grade composition law fails (carried
--- precisely by propositionality of the loss order).
+-- the characteristic loss-grade composition law fails. This
+-- *quantifies* the modality's content over generic Σ: it is exactly
+-- thinness of the loss order (≤g-prop), and no more.
 open import EchoSeparating using
   ( _⊑_
   ; deg
@@ -188,9 +194,11 @@ open import EchoSeparating using
   ; sep-degrade-compose-fails
   )
 
--- Pillar D: second model + model-independence. The graded-comonad
--- laws proved once for any GradedLossModel; Set and relational
--- instances; they agree under the graph/fibration bridge.
+-- Pillar D: carrier-parametricity (NOT model-independence). The
+-- coherence equations proved once for any GradedLossModel, but the
+-- interface's ⊑-prop field bakes in the only load-bearing
+-- hypothesis and both instances fix the same grade poset; rel-model
+-- is set-model × ⊤, agreeing by refl. See R-2026-05-18.
 open import EchoRelModel using
   ( GradedLossModel
   ; set-model
@@ -200,6 +208,36 @@ open import EchoRelModel using
   ; rel-gcomonad-coassoc
   ; model-agreement
   ; bridge-natural
+  )
+
+-- Pillar F, Gate F4 (docs/echo-types/earn-back-plan.adoc; retraction
+-- follow-up F-2026-05-18a). The terminal-cone universal property,
+-- earned back as TRUE CONDITIONAL ON an explicit `funext` parameter
+-- (never a postulate). The unconditional pointwise mediator property
+-- is kept as the funext-free corollary. Names pinned so a rename or
+-- a slide back to an *unconditional* claim fails CI fast.
+open import EchoPullbackUnivF4 using
+  ( FunExt₀
+  ; echo-pullback-univ-strict     -- m' ≡ m, GIVEN funext (no postulate)
+  ; echo-pullback-univ-pointwise  -- ∀ v → m' v ≡ m v, funext-free
+  )
+
+-- Pillar F, Gate F2 (same plan / follow-up). A genuine second model
+-- of the *bare* Echo functor on the non-deterministic, non-graph
+-- relation `StepND`: same interface as the deterministic model,
+-- functor laws hold, agreement has content (constructor case
+-- analysis, not refl / not Σ-η on × ⊤), and `nd-not-graph` is the
+-- checked proof it is NOT a disguised graph. Scope: the Echo
+-- functor, NOT the graded comonad / model-independence (still
+-- retracted, R-2026-05-18).
+open import EchoStepNDModelF2 using
+  ( EchoFunctorModel
+  ; det-model
+  ; nd-model
+  ; nd-not-graph                  -- StepND is no function's graph
+  ; det→nd                        -- content-bearing witness preservation
+  ; nd-sum-fromto                 -- nd fibre = sum of det branches
+  ; nd-fibre-not-prop             -- the fibre is not a proposition
   )
 
 open import EchoTropical using
