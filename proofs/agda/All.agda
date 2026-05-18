@@ -40,6 +40,12 @@ open import EchoGradedComonad   -- Pillar B (scaffold)
 open import EchoSeparating      -- Pillar C (scaffold)
 open import EchoRelModel        -- Pillar D (scaffold)
 
+-- Foundation P1: external-fibre triangulation. Echo agrees with the
+-- standard library's OWN independently-authored notions
+-- (Function.Definitions / Function.Bundles), removing the
+-- same-module self-reference flagged by R-2026-05-18 finding 5.
+open import EchoFiberTriangulation
+
 open import Ordinal.Base
 open import Ordinal.Closure
 open import Ordinal.CNF
