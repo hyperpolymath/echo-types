@@ -53,11 +53,18 @@ remainder of information-losing computation: for `f : A → B`,
 == Directions
 
 === Thermodynamic — Landauer/Bennett energy bounds `[REAL*]`
-Finite-domain Landauer/Bennett bounds; `ThermodynamicallyReversible(p)
-≙ Echo p σ ≃ Echo id σ`. Rated ~70% / C+ in STABILITY_ANALYSIS.
+Landauer/Bennett bound *shape*; `ThermodynamicallyReversible(p)
+≙ Echo p σ ≃ Echo id σ`. Zero-cost (Bennett) proved for *every
+injective map* on *any Bishop-finite carrier* (transport along an
+explicit bijection); the identity-at-zero instance is now a corollary.
+Sole residual is the infinite-carrier case, pinned as the falsifiable
+obligation **O-THERMO-∞** (kill condition stated). Re-rated B- / ~85%
+in STABILITY_ANALYSIS §3.3 (was C+ / ~70%, 2026-05-18). Stays `[REAL*]`
+— real, still partial — until O-THERMO-∞ is discharged or refuted.
 
 * Proofs: `proofs/agda/EchoThermodynamics.agda`,
-  `proofs/agda/EchoFiberCount.agda`.
+  `proofs/agda/EchoFiberCount.agda`,
+  `proofs/agda/EchoThermodynamicsFinite.agda`.
 * Docs: `docs/ECHO-CNO-BRIDGE.adoc` §"Thermodynamic Bridge",
   `docs/STABILITY_ANALYSIS.md` §3.3, `docs/WORK_PLAN.md` §5,
   `docs/adjacency/hott-fibers.adoc`.
