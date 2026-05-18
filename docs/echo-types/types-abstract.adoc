@@ -69,6 +69,10 @@ which this abstract's own correction is an instance.
   `∀ v → m' v ≡ m v`. This is *not* a universal property: full
   terminality (`m' ≡ m`) is neither stated nor provable here without
   funext. The honest claim is a funext-relative mediator property.
+  *Earned back conditionally (F4, F-2026-05-18a):* strict terminality
+  is mechanised as a function of an explicit `funext` parameter
+  (`EchoPullbackUnivF4.agda`, not a postulate); the unconditional
+  claim stays retracted, the pointwise corollary is kept.
 . *Loss-graded reindexing modality (Pillar B-2).* Over the loss-grade
   join-semilattice `(Grade, ⊔, keep)`: `gextract` is the identity
   coercion (`keep` is the definitional bottom), `gduplicate` is the
@@ -100,6 +104,11 @@ definitionally.
   `--safe --without-K` build is *evidence for* conservativity over
   MLTT+Σ; it is not a mechanised conservativity metatheorem and is no
   longer claimed as one.
+  *Earned back, scoped (F2, F-2026-05-18a):* a genuine second model of
+  the *bare Echo functor* (not the modality) exists on the non-graph
+  relation `StepND` (`EchoStepNDModelF2.agda`; `nd-not-graph` checked),
+  with content-bearing agreement — not Σ-η on `× ⊤`. Modality-level
+  model-independence and the conservativity narrowing are unchanged.
 
 == The artefact and its discipline
 

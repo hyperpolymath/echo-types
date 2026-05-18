@@ -210,6 +210,36 @@ open import EchoRelModel using
   ; bridge-natural
   )
 
+-- Pillar F, Gate F4 (docs/echo-types/earn-back-plan.adoc; retraction
+-- follow-up F-2026-05-18a). The terminal-cone universal property,
+-- earned back as TRUE CONDITIONAL ON an explicit `funext` parameter
+-- (never a postulate). The unconditional pointwise mediator property
+-- is kept as the funext-free corollary. Names pinned so a rename or
+-- a slide back to an *unconditional* claim fails CI fast.
+open import EchoPullbackUnivF4 using
+  ( FunExt₀
+  ; echo-pullback-univ-strict     -- m' ≡ m, GIVEN funext (no postulate)
+  ; echo-pullback-univ-pointwise  -- ∀ v → m' v ≡ m v, funext-free
+  )
+
+-- Pillar F, Gate F2 (same plan / follow-up). A genuine second model
+-- of the *bare* Echo functor on the non-deterministic, non-graph
+-- relation `StepND`: same interface as the deterministic model,
+-- functor laws hold, agreement has content (constructor case
+-- analysis, not refl / not Σ-η on × ⊤), and `nd-not-graph` is the
+-- checked proof it is NOT a disguised graph. Scope: the Echo
+-- functor, NOT the graded comonad / model-independence (still
+-- retracted, R-2026-05-18).
+open import EchoStepNDModelF2 using
+  ( EchoFunctorModel
+  ; det-model
+  ; nd-model
+  ; nd-not-graph                  -- StepND is no function's graph
+  ; det→nd                        -- content-bearing witness preservation
+  ; nd-sum-fromto                 -- nd fibre = sum of det branches
+  ; nd-fibre-not-prop             -- the fibre is not a proposition
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
