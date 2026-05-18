@@ -55,16 +55,23 @@ remainder of information-losing computation: for `f : A → B`,
 === Thermodynamic — Landauer/Bennett energy bounds `[REAL*]`
 Landauer/Bennett bound *shape*; `ThermodynamicallyReversible(p)
 ≙ Echo p σ ≃ Echo id σ`. Zero-cost (Bennett) proved for *every
-injective map* on *any Bishop-finite carrier* (transport along an
-explicit bijection); the identity-at-zero instance is now a corollary.
-Sole residual is the infinite-carrier case, pinned as the falsifiable
-obligation **O-THERMO-∞** (kill condition stated). Re-rated B- / ~85%
-in STABILITY_ANALYSIS §3.3 (was C+ / ~70%, 2026-05-18). Stays `[REAL*]`
-— real, still partial — until O-THERMO-∞ is discharged or refuted.
+injective map* on *any Bishop-finite carrier*, and now lifted to an
+*arbitrary carrier with no finiteness at all* (K-free subsingleton /
+occupancy route), certified faithful against the established count and
+instantiated on the genuine *infinite* absolute-zero `Program` CNO —
+so "a CNO dissipates zero Landauer energy" is now a real theorem, not
+the historically vacuous claim. The residual is narrower: only the
+*quantitative collapse* functional on an infinite carrier, pinned as
+the falsifiable obligation **O-THERMO-∞** (kill condition stated,
+unchanged, *not* discharged by the arbitrary-carrier Bennett result).
+Re-rated B- / ~90% in STABILITY_ANALYSIS §3.3 (was C+ / ~70%,
+2026-05-18). Stays `[REAL*]` — real, still partial — grade held at B-
+per the standing rule until O-THERMO-∞ is discharged or refuted.
 
 * Proofs: `proofs/agda/EchoThermodynamics.agda`,
   `proofs/agda/EchoFiberCount.agda`,
-  `proofs/agda/EchoThermodynamicsFinite.agda`.
+  `proofs/agda/EchoThermodynamicsFinite.agda`,
+  `proofs/agda/EchoThermodynamicsArbitrary.agda`.
 * Docs: `docs/ECHO-CNO-BRIDGE.adoc` §"Thermodynamic Bridge",
   `docs/STABILITY_ANALYSIS.md` §3.3, `docs/WORK_PLAN.md` §5,
   `docs/adjacency/hott-fibers.adoc`.

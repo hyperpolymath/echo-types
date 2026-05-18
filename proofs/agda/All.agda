@@ -29,6 +29,7 @@ open import Dyadic
 open import DyadicEchoBridge
 open import EchoThermodynamics
 open import EchoThermodynamicsFinite
+open import EchoThermodynamicsArbitrary
 open import EchoStabilityTests
 open import VecRotation
 

@@ -110,6 +110,16 @@ open import EchoThermodynamicsFinite using
   ; landauer-collapse-finite
   )
 
+open import EchoThermodynamicsArbitrary using
+  ( FiberSubsingleton
+  ; injective⇒fiber-subsingleton
+  ; reversible-erasure-cost
+  ; bennett-reversible-arbitrary
+  ; occupancy≡FiberSize-fin
+  ; bennett-arbitrary-refines-finite
+  ; bennett-reversible-cno-identity
+  )
+
 open import EchoChoreo using
   ( Role
   ; Global
