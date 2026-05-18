@@ -200,23 +200,43 @@ This is naturally echo-shaped because it is about the *type*
 characteristic status depends on the gate-2 bar.
 
 Status::
-Open. Forwarded by gate-3's `gate-3-handoff.adoc` for gate-2
-evaluation.
+Closed (formalisation), gate-2 audit recorded. The received-`y`
+general theorem is `EchoTruncation.echo-not-prop`, re-exported under
+the gate name as `characteristic.NonTruncatable.Q2-1`. The
+genuinely open end — the *non-injectivity* form, which does not
+receive `y` but constructs it from a bare non-injectivity witness
+on `f` — is closed as
+`characteristic.NonTruncatable.non-injective⇒echo-not-prop`. Both
+compile under `--safe --without-K` and are in the CI characteristic
+lane via `characteristic/All.agda`.
 
-Attack path::
+Attack path (done)::
 . State and prove the general theorem in
-  `proofs/agda/characteristic/NonTruncatable.agda`.
+  `proofs/agda/characteristic/NonTruncatable.agda`. *Done.*
 . Audit it against the gate-2 falsifier ("naturally echo-shaped,
-  not reducible to generic Σ/fiber lemmas").
+  not reducible to generic Σ/fiber lemmas"). *Done — see the
+  module header.*
 . If it survives, add to `roadmap-gates.adoc` Gate 2 nominee table
   as a candidate N6 (or N5 if `choreo-grade-commute` is not
-  separately adopted).
+  separately adopted). *Integrator decision: see audit verdict.*
 
-Internal falsifier::
-If the general theorem follows by routine unfolding from a stdlib
-lemma about Σ-types having distinct elements, it is not echo-
-specific; it is just "a Σ with two distinct inhabitants is not
-propositional".
+Gate-2 audit verdict::
+The *received-`y`* form (`Q2-1`) is PARTIALLY REDUCIBLE: its proof
+is `ne (cong proj₁ (prop e₁ e₂))`, a generic Σ fact ("a Σ with two
+elements differing in the first component is not `isProp`"). It is
+echo-shaped only in *statement*. Same demotion as
+`VisibleConstraintAudit` applied to `visible-constraint`: kept for
+exposition, **not** nominated. The *constructed-`y`* form
+(`non-injective⇒echo-not-prop`) is strictly more than a Σ fact —
+it shows ordinary non-injectivity (no Σ in the hypothesis) *forces*
+a non-propositional echo fibre. This is the form worth forwarding
+to gate-2; the integrator decision on adoption as a nominee is left
+explicit and not pre-decided here.
+
+Internal falsifier (outcome)::
+The received-`y` form *does* follow by routine unfolding from the
+generic Σ fact, so it is correctly *not* claimed as echo-specific.
+The constructed-`y` form is not reached by that falsifier.
 
 === Q2.2 — Refinement injectivity as characteristic
 
