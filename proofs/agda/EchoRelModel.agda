@@ -1,5 +1,16 @@
 {-# OPTIONS --safe --without-K #-}
 
+-- RETRACTION 2026-05-18 (docs/retractions.adoc R-2026-05-18): this
+-- module's "second model", "model-independence", and "graded-comonad
+-- laws" are RETRACTED claims. set-model and rel-model fix the SAME
+-- grade poset; rel-model's carrier is set-model's × ⊤;
+-- model-agreement is refl; GradedLossModel's ⊑-prop field bakes in
+-- the only load-bearing hypothesis. The Agda is unchanged and
+-- correct; read it as *carrier-parametricity over a fixed grade
+-- poset*, not model-independence, and the equations as thin-poset
+-- reindexing coherence, not comonad laws. Authoritative prose:
+-- docs/echo-types/paper.adoc §"Reframing note", conservativity.adoc.
+
 -- Pillar D (part 1) of docs/echo-types/establishment-plan.adoc.
 --
 -- REAL MODULE (second model + model-independence landed 2026-05-17).
