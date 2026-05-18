@@ -78,25 +78,46 @@ Echo {A = A} f y = Σ A (λ x → f x ≡ y)
 
 **Stability:** New but well-grounded in existing echo type theory
 
-#### 3.3 Thermodynamic Models: B- (was C+; advanced 2026-05-18)
-**Proofs:** `EchoThermodynamics.agda`, `EchoFiberCount.agda`, `EchoThermodynamicsFinite.agda`
+#### 3.3 Thermodynamic Models: B (was C+ → B-; advanced 2026-05-18)
+**Proofs:** `EchoThermodynamics.agda`, `EchoFiberCount.agda`, `EchoThermodynamicsFinite.agda`, `EchoThermodynamicsArbitrary.agda`, `EchoThermoCollapseImpossible.agda`
 - Landauer bound *shape* `k·T·⌊log₂ N⌋` (honest fiber count, no hardcode)
 - Bennett zero-cost for **every injective map** (`bennett-reversible-injective`),
   not just `id` at index zero — `bennett-reversible-id-zero` is now a corollary
 - Lifted off `Fin n` to **any Bishop-finite carrier** by transport along an
   explicit bijection (`FiniteDomain`, `bennett-reversible-finite`,
   `landauer-collapse-finite`) — `--safe --without-K`, zero postulates
+- Bennett zero-cost lifted further to an **arbitrary carrier — no finiteness
+  at all** (`bennett-reversible-arbitrary`, occupancy-keyed; K-free
+  subsingleton route), certified faithful vs. the established count
+  (`occupancy≡FiberSize-fin`, `bennett-arbitrary-refines-finite`), and
+  instantiated on the genuine **infinite** absolute-zero `Program` CNO
+  (`bennett-reversible-cno-identity`) — the historically vacuous
+  "CNO dissipates zero energy" is now a real theorem
 - Landauer worst-case collapse (`landauer-collapse[-finite]`)
+- **O-THERMO-∞ settled `[CLOSED-NEG]`**: the quantitative-collapse
+  functional provably does *not* extend to an infinite carrier as a
+  total `--safe` function — impossibility mechanised
+  (`collapse-cost-impossible`; `nat-into-collapse-fiber` exhibits the
+  collapse fiber as infinite). The doc's own kill condition,
+  discharged via its second horn
 
 **Stability:** The C+ ~70% rating was driven by one concrete gap — the only
-proved zero-cost instance was the identity at index zero. That gap is closed:
-optimality now holds for every injective map on every Bishop-finite carrier.
-The *single* remaining open item is the infinite-carrier case
-(`ProgramState = ℕ → ℕ`), now pinned as the **precise, falsifiable obligation
-O-THERMO-∞** with a stated kill condition (see
-`docs/ECHO-CNO-BRIDGE.adoc` §"Thermodynamic Bridge"). Not "needs more
-development" — one named obligation, refutable by exhibiting a total
-`--safe` cost functional or by mechanising its impossibility.
+proved zero-cost instance was the identity at index zero. That gap is fully
+closed: the Bennett zero-cost direction now holds for every injective map on
+**every carrier** — Bishop-finite *and* arbitrary/infinite, including the
+genuine infinite `Program` CNO. The previously-open item — the **quantitative
+collapse functional** (`fiber-erasure-bound` / `landauer-collapse`) on an
+infinite carrier, the obligation **O-THERMO-∞** — is now **discharged
+negatively**: `collapse-cost-impossible` mechanises its kill condition's
+second horn ((i)∧(ii) ⊢ ⊥) verbatim, for the doc's own named witness. It is
+therefore `[CLOSED-NEG]` — a settled boundary of the theory, do not reopen,
+not a defect. **No open obligation remains for this Direction.** The standing
+B- freeze (no re-rate until O-THERMO-∞ is discharged or refuted) is therefore
+lifted — discharged negatively counts as discharged — and the grade advances
+to **B**. (It is *not* higher: a confirmed-negative is an honest limit, not
+extra positive coverage; and the separate Information-Theory bridge — Theorem
+5, `echo-information-loss` never defined — remains unbuilt, but that is a
+different Direction.)
 
 ### 4. Proof Ecosystem Stability: B+
 
@@ -111,7 +132,7 @@ development" — one named obligation, refutable by exhibiting a total
 | Relational | 80% | B |
 | CNO Integration | 98% | A- |
 | JanusKey Bridge | 90% | B+ |
-| Thermodynamics | 85% | B- |
+| Thermodynamics | 95% | B |
 
 **Proof Quality Indicators:**
 - ✅ All core theorems have constructive proofs

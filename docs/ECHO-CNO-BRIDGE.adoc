@@ -75,19 +75,27 @@ bennett-reversible :
   fiber-erasure-bound f y _≟_ T ≡ 0
 ```
 
-**Status: PROVED**, and (2026-05-18) generalised twice: from the
-identity to *every injective map* (`bennett-reversible-injective`),
-and from `Fin n` to *any Bishop-finite carrier* via transport
-(`bennett-reversible-finite`, `EchoThermodynamicsFinite`).
-`bennett-reversible-id-zero` is now a corollary.
+**Status: PROVED**, and (2026-05-18) generalised three times: from
+the identity to *every injective map* (`bennett-reversible-injective`),
+from `Fin n` to *any Bishop-finite carrier* via transport
+(`bennett-reversible-finite`, `EchoThermodynamicsFinite`), and from
+there to an *arbitrary carrier with no finiteness at all*
+(`bennett-reversible-arbitrary`, `EchoThermodynamicsArbitrary`),
+including the genuine infinite `Program` CNO
+(`bennett-reversible-cno-identity`). `bennett-reversible-id-zero` is a
+corollary. The Bennett zero direction is closed for *all* carriers.
 
-**NOT proved**: the analogous claim over an infinite carrier
-(`ProgramState = ℕ → ℕ`). This is no longer a vague gap — it is the
-precise, falsifiable obligation **O-THERMO-∞**, stated with its kill
-condition in §"Thermodynamic Bridge" below. The earlier
-`cno-thermodynamic-optimality` formulation rested on a hardcoded
-`FiberSize ≡ 1` that made the claim vacuous; that hardcode is gone,
-and the honest finite/Bishop-finite case is proved instead.
+**The infinite-carrier _quantitative collapse_ functional is
+`[CLOSED-NEG]`**: not a vague gap and no longer open — the falsifiable
+obligation **O-THERMO-∞** is now discharged *negatively*, its
+impossibility mechanised (`collapse-cost-impossible`,
+`EchoThermoCollapseImpossible`; see §"Thermodynamic Bridge" below). A
+count-based collapse cost provably cannot exist on an infinite carrier
+as a total `--safe` function — a settled boundary, do not reopen. The
+earlier `cno-thermodynamic-optimality` formulation rested on a
+hardcoded `FiberSize ≡ 1` that made the claim vacuous; that hardcode
+is gone, the honest finite/Bishop-finite/arbitrary cases are proved,
+and the infinite count case is settled negative.
 
 ### Theorem 5: Information-preservation (NOT YET FORMALISED)
 
@@ -140,7 +148,7 @@ Absolute Zero defines CNOs with four properties:
 | `FinalState(p, σ) = σ` | `Echo p σ` contains `(σ, refl)` |
 | `NoSideEffects(p)` | `Echo p σ` is singleton (only `σ` maps to `σ`) |
 | `ThermodynamicallyReversible(p)` | `Echo p σ ≃ Echo id σ` |
-| `ThermodynamicOptimality(p)` | `fiber-erasure-bound p σ _≟_ T ≡ 0` _(proved for every injective `p` on any Bishop-finite carrier — Theorem 4; infinite-carrier case = falsifiable obligation O-THERMO-∞)_ |
+| `ThermodynamicOptimality(p)` | `reversible-erasure-cost p σ d T ≡ 0` _(proved for every injective `p` on **any** carrier — Bishop-finite via `fiber-erasure-bound`, arbitrary/infinite incl. the `Program` CNO via `reversible-erasure-cost` — Theorem 4; the quantitative-collapse functional on an infinite carrier is settled `[CLOSED-NEG]` — impossibility mechanised, `collapse-cost-impossible`)_ |
 | `InformationPreservation(p)` | _no formalised analogue — `echo-information-loss` was never defined; see Theorem 5_ |
 | `UniversalCNO(p)` | `∀ σ → Echo p σ ≃ Echo id σ` (NEW) |
 | `ModelIndependence(p)` | `Echo f y ≃ Echo f' y'` across isomorphic models (NEW) |
@@ -300,33 +308,84 @@ landauer-collapse-finite :
   fiber-erasure-bound-fin fd f y _≟_ T ≡ k * T * ⌊log₂ card fd ⌋
 ```
 
-### Open obligation O-THERMO-∞ (precise, falsifiable — not softened)
+**Proved — Bennett zero-cost on an _arbitrary_ carrier, past
+Bishop-finite (`EchoThermodynamicsArbitrary`).** The finiteness in the
+two results above is an artefact of routing cost through
+`FiberSize-fin` (an enumeration); the *physical content* of Bennett —
+a reversible map has no fan-in — needs no finiteness at all. An
+injective `f : A → B` has a subsingleton fiber for *any* `A : Set a`.
+Keying the Bennett cost on a decidable-inhabitation occupancy instead
+of an enumeration discharges this with no finiteness hypothesis,
+`--safe --without-K`, zero postulates:
 
-The infinite carrier (`ProgramState = ℕ → ℕ`, or any `A` with no
-`A ≃ Fin n`) does **not** generalise, and the reason is now stated
-sharply enough to be refuted:
+```agda
+FiberSubsingleton f y = (p q : Echo f y) → proj₁ p ≡ proj₁ q  -- K-free
 
-> **O-THERMO-∞.** There is no function
+injective⇒fiber-subsingleton :                                -- any A
+  (inj : ∀ {x x′} → f x ≡ f x′ → x ≡ x′) → FiberSubsingleton f y
+
+bennett-reversible-arbitrary :        -- A : Set a arbitrary; no Fin, no ≃
+  (inj : ∀ {x x′ : A} → f x ≡ f x′ → x ≡ x′)
+  (d : Dec (Echo f y)) (T : Temperature) →
+  reversible-erasure-cost f y d T ≡ 0
+```
+
+This is **not** a vacuous re-definition: `occupancy≡FiberSize-fin`
+proves the occupancy *coincides with* the established honest count
+`FiberSize-fin` on every finite restriction under the subsingleton
+hypothesis, and `bennett-arbitrary-refines-finite` shows it strictly
+subsumes the `Fin n` result of PR&nbsp;#58. The `--without-K` reason
+for the first-projection form (not full fiber `isProp`) is recorded in
+the module header: full `isProp` needs `B` an h-set / UIP, unavailable
+under `--without-K`; the projection form is K-free provable from
+injectivity and is exactly what the count needs.
+
+**The real CNO theorem, on the infinite carrier.** `cno-identity :
+Program → Program` (the absolute-zero `Program = List Instruction`
+carrier — *infinite*, the very `ProgramState`-flavoured type the
+original companion remarks disclaimed) is injective, so
+`bennett-reversible-cno-identity` gives erasure cost `≡ 0` at every
+fiber and temperature. "A CNO dissipates zero Landauer energy" is now
+a *real* theorem for the identity/injective CNO over the genuine
+infinite carrier — no longer the vacuous claim the deleted
+`ECHO-CNO-BRIDGE-SUMMARY.md` made.
+
+### O-THERMO-∞ — `[CLOSED-NEG]` (impossibility CONFIRMED)
+
+O-THERMO-∞ concerns *only* the **quantitative collapse** functional
+(`fiber-erasure-bound` / `landauer-collapse`, the count direction) on
+an infinite carrier — a strictly different functional from the
+occupancy-keyed Bennett cost, which is closed for all carriers
+(occupancy is capped at 1; the collapse cost grows as `⌊log₂ N⌋` with
+the fiber count). It is **discharged via the second horn of its own
+kill condition**: a mechanised proof that clauses (i)∧(ii) ⊢ ⊥.
+
+> **O-THERMO-∞ (as stated).** There is no function
 > `cost : (ℕ → B) → (y : B) → DecidableEquality B → Temperature → Energy`
 > that is (i) `--safe --without-K` total (no postulate, no escape
 > pragma), and (ii) agrees with `fiber-erasure-bound` on every finite
-> restriction `Fin n ↪ ℕ` (equivalently: agrees with
-> `fiber-erasure-bound-fin` for every `FiniteDomain`-witnessed
-> sub-carrier).
+> restriction `Fin n ↪ ℕ`.
 >
-> **Falsifier (how to kill this obligation).** Exhibit such a `cost`
-> and a mechanised proof of (i)+(ii); that refutes O-THERMO-∞ and
-> earns the claim back. **Witness that it bites:** the constant map
-> `c : ℕ → B`, `c _ = y₀` has `Echo c y₀ ≃ ℕ` — an infinite fiber.
-> Clause (ii) instantiated at the finite restrictions forces, by
-> `landauer-collapse`, `cost c y₀ _≟_ T = k · T · ⌊log₂ N⌋` with the
-> finite counts `N = 0,1,2,…` unboundedly — so any total `cost` must
-> assign `⌊log₂_⌋` of a quantity with no natural-number value. The
-> obligation is discharged in exactly one of two ways: a constructive
-> `cost` meeting (i)+(ii) (impossibility refuted), or a mechanised
-> proof that (i)∧(ii) ⊢ ⊥ (impossibility confirmed). Neither is in
-> the suite; until one lands, `ThermodynamicOptimality(p)` over an
-> infinite `ProgramState` is **`[OPEN]`**, not "future work".
+> **Settled NEGATIVE.** `EchoThermoCollapseImpossible.collapse-cost-impossible`
+> mechanises (i)∧(ii) ⊢ ⊥ verbatim, for the doc's own named witness.
+> The constant map `c : ℕ → B`, `c _ = y₀` has an *infinite* fiber
+> (`nat-into-collapse-fiber{-injective}` exhibits `ℕ ↪ Echo c y₀` —
+> the structural reason no finite count exists). Its restriction along
+> any `Fin n ↪ ℕ` is the constant `Fin n → B`, whose
+> `fiber-erasure-bound` over `y₀` is `landauer-bound T n` (PR #58's
+> honest `FiberSize-fin-const`). Clause (ii) then forces the *single*
+> total value `cost c y₀ _≟_ T` to equal `landauer-bound T n` for
+> every `n`; at `T = 1` that is `⌊log₂ n⌋`, so it must be both `0`
+> (`n = 1`) and `1` (`n = 2`) — contradiction. Impossibility
+> **confirmed**: the quantitative-collapse functional provably does
+> *not* extend to an infinite carrier as a total `--safe` function.
+>
+> This is a `[CLOSED-NEG]` boundary of the theory — a settled negative
+> result, **do not reopen**. It is *not* a softened "future work" item
+> and it is *not* a defect: the only way a count-based collapse cost
+> could exist on the infinite carrier is the (refuted) first horn, and
+> the negative is now mechanised. `--safe --without-K`, zero
+> postulates, zero escape pragmas; pinned in `Smoke.agda`.
 
 ### What is still NOT proved (unchanged)
 
@@ -342,11 +401,17 @@ sharply enough to be refuted:
    and `fiber-erasure-bound`; now at the full Bishop-finite-carrier
    level, not merely `Fin n`.
 2. **Thermodynamic Reversibility (shape)**: proved for *every*
-   injective map (`bennett-reversible-injective`) and lifted to any
-   Bishop-finite carrier (`bennett-reversible-finite`).
-   `bennett-reversible-id-zero` is now a corollary. The infinite
-   `ProgramState` case is the single, falsifiable obligation
-   O-THERMO-∞ above — `[OPEN]`, with a stated kill condition.
+   injective map (`bennett-reversible-injective`), lifted to any
+   Bishop-finite carrier (`bennett-reversible-finite`), and now to an
+   *arbitrary* carrier with no finiteness at all
+   (`bennett-reversible-arbitrary`), including the genuine infinite
+   `Program` CNO (`bennett-reversible-cno-identity`).
+   `bennett-reversible-id-zero` is a corollary. The Bennett zero
+   direction is closed for all carriers; the quantitative-collapse
+   functional on an infinite carrier (O-THERMO-∞) is now
+   **`[CLOSED-NEG]`** — its impossibility is mechanised
+   (`collapse-cost-impossible`), a settled boundary, no open
+   obligation remains for this Direction.
 3. **Information Theory**: not bridged. Open work — see
    `docs/echo-types/roadmap.md`.
 

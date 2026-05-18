@@ -58,19 +58,30 @@ remainder of information-losing computation: for `f : A → B`,
 
 == Directions
 
-=== Thermodynamic — Landauer/Bennett energy bounds `[REAL*]`
+=== Thermodynamic — Landauer/Bennett energy bounds `[REAL]`
 Landauer/Bennett bound *shape*; `ThermodynamicallyReversible(p)
 ≙ Echo p σ ≃ Echo id σ`. Zero-cost (Bennett) proved for *every
-injective map* on *any Bishop-finite carrier* (transport along an
-explicit bijection); the identity-at-zero instance is now a corollary.
-Sole residual is the infinite-carrier case, pinned as the falsifiable
-obligation **O-THERMO-∞** (kill condition stated). Re-rated B- / ~85%
-in STABILITY_ANALYSIS §3.3 (was C+ / ~70%, 2026-05-18). Stays `[REAL*]`
-— real, still partial — until O-THERMO-∞ is discharged or refuted.
+injective map* on *any Bishop-finite carrier*, and lifted to an
+*arbitrary carrier with no finiteness at all* (K-free subsingleton /
+occupancy route), certified faithful against the established count and
+instantiated on the genuine *infinite* absolute-zero `Program` CNO —
+"a CNO dissipates zero Landauer energy" is now a real theorem, not the
+historically vacuous claim. The one residual — the *quantitative
+collapse* functional on an infinite carrier, **O-THERMO-∞** — is now
+`[CLOSED-NEG]`: its impossibility is mechanised
+(`collapse-cost-impossible`, the doc's own kill condition discharged
+negatively). No open obligation remains for this Direction; tag
+advanced `[REAL*]` → `[REAL]`. Re-rated B / ~95% in
+STABILITY_ANALYSIS §3.3 (was C+ / ~70% then B- / ~90%, 2026-05-18);
+the standing B- freeze lifted because O-THERMO-∞ is now discharged
+(negatively). The Information-Theory bridge is a *separate* Direction
+(see Shannon entry), not part of this one.
 
 * Proofs: `proofs/agda/EchoThermodynamics.agda`,
   `proofs/agda/EchoFiberCount.agda`,
-  `proofs/agda/EchoThermodynamicsFinite.agda`.
+  `proofs/agda/EchoThermodynamicsFinite.agda`,
+  `proofs/agda/EchoThermodynamicsArbitrary.agda`,
+  `proofs/agda/EchoThermoCollapseImpossible.agda`.
 * Docs: `docs/ECHO-CNO-BRIDGE.adoc` §"Thermodynamic Bridge",
   `docs/STABILITY_ANALYSIS.md` §3.3, `docs/WORK_PLAN.md` §5,
   `docs/adjacency/hott-fibers.adoc`.

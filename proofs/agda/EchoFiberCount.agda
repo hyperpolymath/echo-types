@@ -175,6 +175,42 @@ FiberSize-fin-injective {n = ℕ.suc m} f y _≟_ inj (suc i′) hit
                  (λ eq → Fin-suc-inj (inj eq)) i′ hit
 
 ----------------------------------------------------------------------
+-- Headline 2c — FiberSize-fin-subsingleton
+--
+-- The fiber-local hypothesis behind the arbitrary-carrier Bennett
+-- result. If the fiber over `y` is a *subsingleton* — any two hitting
+-- indices coincide — and *some* index `i₀` hits, then the count is
+-- exactly 1. This is strictly weaker as a hypothesis than global
+-- injectivity: it only constrains the indices over `y`. Indeed
+-- `FiberSize-fin-injective` is the corollary obtained by feeding
+-- `ss i j fi fj = inj (trans fi (sym fj))` (kept as-is upstream for
+-- pin stability; this lemma is the honest generalisation).
+--
+-- The proof walks the `FiberSize-fin` recursion in lock-step with the
+-- witness exactly as the injective version does, but discharges the
+-- "no other hit" obligation from subsingleton-ness rather than from
+-- injectivity.
+----------------------------------------------------------------------
+
+FiberSize-fin-subsingleton :
+  ∀ {b} {B : Set b} {n : ℕ}
+  (f : Fin n → B) (y : B) (_≟_ : (y₁ y₂ : B) → Dec (y₁ ≡ y₂))
+  (ss : (i j : Fin n) → f i ≡ y → f j ≡ y → i ≡ j)
+  (i₀ : Fin n) → f i₀ ≡ y →
+  FiberSize-fin f y _≟_ ≡ ℕ.suc ℕ.zero
+FiberSize-fin-subsingleton {n = ℕ.suc m} f y _≟_ ss zero hit
+  with f zero ≟ y
+... | yes _  = cong ℕ.suc
+                 (FiberSize-fin-no-hit (f ∘ suc) y _≟_
+                   (λ j fsj≡y → suc≢zero-Fin j (ss (suc j) zero fsj≡y hit)))
+... | no ¬p  = ⊥-elim (¬p hit)
+FiberSize-fin-subsingleton {n = ℕ.suc m} f y _≟_ ss (suc i′) hit
+  with f zero ≟ y
+... | yes p  = ⊥-elim (suc≢zero-Fin i′ (sym (ss zero (suc i′) p hit)))
+... | no  _  = FiberSize-fin-subsingleton (f ∘ suc) y _≟_
+                 (λ i j fi fj → Fin-suc-inj (ss (suc i) (suc j) fi fj)) i′ hit
+
+----------------------------------------------------------------------
 -- Headline 3 — FiberSize-fin ≡ 0 ⟺ ¬ Echo (split into two halves).
 --
 -- The constructive count zero is exactly the constructive absence
