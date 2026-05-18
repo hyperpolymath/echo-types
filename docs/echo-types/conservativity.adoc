@@ -1,4 +1,4 @@
-= Echo Types — Conservativity Metatheorem
+= Echo Types — Conservativity Evidence (Mechanised Properties)
 :toc: macro
 :toclevels: 3
 :sectnums:
@@ -6,110 +6,142 @@
 :icons: font
 
 [.lead]
-Pillar D, artefact 2 of `establishment-plan.adoc`. A type-theoretic
-notion earns "established" standing not only by having models, but by
-being a *conservative, definitionally-grounded* extension of a
-foundational theory. This document states that metatheorem for the
-loss-graded echo modality and records its formal anchor in the
-verified Agda development.
+Pillar D, artefact 2 of `establishment-plan.adoc`.
+
+[IMPORTANT]
+====
+*Narrowed 2026-05-18.* This document previously asserted a
+"conservativity metatheorem … discharged operationally by the build."
+That overclaimed: a green `--safe --without-K` build is necessary but
+*not sufficient* for proof-theoretic conservativity (a statement
+quantifying over all base propositions), and no such meta-argument is
+mechanised. The metatheorem framing is retracted; what is mechanised
+is stated below as build/identity *properties*, which are *evidence
+for* conservativity over MLTT+Σ, not a proof of it. See
+`docs/retractions.adoc` and `paper.adoc` §"Reframing note".
+====
 
 toc::[]
 
 == Statement
 
 [#thm-conservativity]
-.Conservativity (definitional grounding)
+.Mechanised properties (evidence for conservativity, not a proof of it)
 ****
 Let `MLTT+Σ` be Martin-Löf type theory with Σ-types and the identity
 type, as realised by Agda under `--safe --without-K` (no axiom K, no
 univalence, no postulates, no funext). Let `Echo` be the loss-graded
 echo modality: the object `Echo f y := Σ (x : A) , (f x ≡ y)`
 together with the loss-grade lattice and its reindexing action
-(`EchoGraded`), and the graded-comonad structure
+(`EchoGraded`), and the reindexing-coherence structure
 (`EchoGradedComonad`, `EchoRelModel`).
 
-Then the extension of `MLTT+Σ` by `Echo` and all of its laws is
-*conservative and definitional*:
+The following are *mechanised properties* of the artefact. They are
+*evidence* that `Echo` adds no proof-theoretic strength over MLTT+Σ.
+They are deliberately *not* packaged as a conservativity metatheorem,
+because proof-theoretic conservativity quantifies over all base
+propositions and is not discharged by a typechecking run:
 
-. *Definitional.* `Echo f y` is not a new type former. It is, by
-  `refl`, the homotopy fibre `fib f y` (`EchoFiberBridge.echo↔fib`,
-  both round-trips `refl`). No new judgement, context structure, or
-  formation rule is introduced — `Echo` is a derived Σ-type.
-. *Conservative.* Every theorem of the development is a closed term
-  of `MLTT+Σ`: the entire suite typechecks under `--safe --without-K`
-  with *zero postulates and zero escape pragmas*. Hence any
-  proposition over the base vocabulary provable using `Echo` is
-  already provable in `MLTT+Σ` — `Echo` proves no new base facts.
-. *Modality, not axiom.* The graded-comonad laws
-  (`gcomonad-counit-{l,r}`, `gcomonad-coassoc`) are *derived* — the
-  H2 verdict (see `establishment-plan.adoc`) showed each collapses to
-  `degrade-compose` + order-propositionality, with no path algebra
-  and no transport. The loss modality therefore adds structure
-  (a characterised graded comonad) without adding strength.
+. *Definitional identity.* `Echo f y` is not a new type former. In
+  `EchoFiberBridge`, `fiber f y` is a same-module restatement of the
+  Σ and `echo↔fib` is the identity with `refl` round-trips. This is
+  a deflationary triviality (a type is bijective with itself), owned
+  as such — *not* a grounding theorem about an external fibre notion.
+. *Postulate-free build.* The entire suite typechecks under
+  `--safe --without-K` with *zero postulates and zero escape
+  pragmas*, CI-grep-enforced. Every theorem of the development is
+  therefore a closed term of `MLTT+Σ`. This is necessary for
+  conservativity; it is *not by itself* a proof that every base
+  proposition provable via `Echo` is provable without it (that is a
+  meta-argument about the logic, which we do not mechanise).
+. *Derived, not postulated.* The reindexing-coherence equations
+  (`gcomonad-counit-{l,r}`, `gcomonad-coassoc`) are derived: each
+  collapses to `degrade-compose` + order-propositionality (the H2
+  verdict). Nothing is added as an axiom. Note this is the *weak*
+  claim — "derived" — and carries no implication that a graded
+  *comonad* (in the Petriček/Katsumata sense) has been exhibited; it
+  has not (see `paper.adoc` §"The loss-graded reindexing modality").
 ****
 
-== Why this is the clean result
+== What this is, and what it is not
 
-The honest deflationary fact — "`Echo` is just `fib`" — is precisely
-what makes the metatheorem strong. A construction that *required* new
-axioms (K, univalence, funext, or a postulated modality) would not be
-conservative and would inherit those axioms' costs. Here the opposite
-holds: the loss-graded comonad is a *theorem schema of MLTT+Σ
-itself*, instantiable in multiple models (Pillar D, artefact 1:
-`set-model` and `rel-model`, agreeing under the graph/fibration
-bridge). "Conservative, definitionally-grounded extension" is exactly
-the result that earns trust in the coeffect / quantitative lineage.
+The deflationary fact — "`Echo` is just `fib`" — together with the
+postulate-free build is good *evidence* that the modality is a
+conservative, definitional extension of MLTT+Σ. We claim exactly that
+much. We do *not* claim:
 
-== Formal anchor
+* a proof-theoretic conservativity metatheorem (clause 2 is a build
+  property, not a meta-proof);
+* multiple independent models (`set-model` and `rel-model` fix the
+  same grade poset and agree by `refl`; see Pillar D artefact 1's
+  reframing in `paper.adoc`);
+* a graded comonad (the structure is a thin-poset reindexing action).
 
-The metatheorem is not asserted in prose alone; its three clauses are
-each pinned to checked Agda artefacts already in `All.agda` /
-`Smoke.agda`:
+This narrower statement is what survives adversarial review. It still
+earns trust in the coeffect / quantitative lineage — by being exact
+about its bounds rather than by overclaiming.
+
+== Formal anchor (what each property is actually pinned to)
+
+Each mechanised property is pinned to a checked Agda artefact in
+`All.agda` / `Smoke.agda`. The table states the *honest* content of
+each anchor, not the previous inflated reading:
 
 [cols="1,3,2", options="header"]
 |===
-| Clause | Witness | Module
+| Property | What the witness actually establishes | Module
 
-| Definitional
-| `echo↔fib : Echo f y ↔ fiber f y`, round-trips `refl`
+| Definitional identity
+| `echo↔fib : Echo f y ↔ fiber f y` is the identity with `refl`
+  round-trips, where `fiber` is restated in the same module — i.e. a
+  type is bijective with itself. A triviality, owned as such.
 | `EchoFiberBridge`
 
-| Conservative
-| Whole suite: `--safe --without-K`, no `postulate` / no escape
-  pragmas; CI greps enforce it
+| Postulate-free build
+| Whole suite typechecks `--safe --without-K`, no `postulate` / no
+  escape pragmas; CI greps enforce it. Necessary for, not a proof of,
+  proof-theoretic conservativity.
 | `All.agda` + `Smoke.agda`
 
-| Modality not axiom
-| `GradedLossModel` / `GCLaws` derive every comonad law generically;
-  `model-agreement` shows model-independence
+| Carrier-parametric, not model-independent
+| `GradedLossModel`/`GCLaws` prove the equations once *parametric in
+  the carrier* over a fixed grade poset; `⊑-prop` is a field (the
+  load-bearing hypothesis is baked in). `model-agreement` is `refl`
+  (second model = first `× ⊤`). Not a model-independence result.
 | `EchoRelModel`
 
-| Modality not axiom
+| Derived, not postulated (weak claim only)
 | `gcomonad-coassoc` etc. reduce to `degrade-compose` + `≤g-prop`
-  (H2 verdict); separating model proves the law is genuine
+  (H2 verdict); the separating model shows the *only* content over
+  generic Σ is thinness of the order. No graded comonad is exhibited.
 | `EchoGradedComonad`,
   `EchoSeparating`
 |===
 
-The conservativity argument is *operational*: it is discharged by the
-build itself. Any reintroduction of a postulate, a weakening of
-`--safe --without-K`, or a funext dependency would break clause 2 and
-is caught by the repository's standing guardrails
+These properties are *operational* (discharged by the build) only in
+the weak sense that the build enforces the postulate-free / `--safe`
+guardrails. They do not constitute an operational *conservativity
+proof*. Any reintroduction of a postulate or weakening of
+`--safe --without-K` is still caught by the standing guardrails
 (`establishment-plan.adoc` §"Sequencing and guardrails").
 
 == Scope and non-claims
 
-* This is conservativity over `MLTT+Σ` *as realised under
-  `--safe --without-K`*. It is not a claim about extensional type
-  theory, nor about theories with K or univalence.
+* This is *evidence for* conservativity over `MLTT+Σ` as realised
+  under `--safe --without-K`. It is not a mechanised proof-theoretic
+  conservativity theorem, and not a claim about extensional type
+  theory or theories with K / univalence.
 * It is *not* claimed that the loss modality is interderivable with
   linear or dependent type strength — that comparison is a category
-  error (`establishment-plan.adoc` §"The honest type-theoretic
-  verdict"). The claim is narrower and exact: the loss-graded comonad
-  is a conservative, definitional *modality* in the coeffect sense.
-* The funext boundary remains quarantined: `examples/Transport.agda`
-  stalls where `Field = Fin n → ℚ` forces funext. No conservativity
-  claim extends across that boundary; it is isolated by design.
+  error. The claim is narrower and exact: the loss-graded *reindexing
+  modality* is a conservative, definitional addition (not a graded
+  comonad, not model-independent in the semantic sense).
+* Funext correction: there is *no* funext anywhere in the
+  development. `examples/Transport.agda` *avoids* funext by a
+  first-order carrier (`Vec ℚ n`); it does not "quarantine" a funext
+  dependency. The real funext-relativity is the *pointwise-only*
+  mediator property of the pullback presentation (`paper.adoc` §3),
+  now disclosed as the boundary rather than presented as a feature.
 
 == Revision policy
 
@@ -124,3 +156,16 @@ recorded reason. Append-only revision history.
   `--safe --without-K` suite (conservative), and
   `EchoRelModel`/`EchoGradedComonad`/`EchoSeparating` (modality not
   axiom). Pillar D complete.
+* *2026-05-18 — metatheorem framing retracted.* Adversarial
+  three-reviewer review plus a codebase pressure-test found the
+  "conservativity metatheorem discharged operationally by the build"
+  unsupported (a `--safe` build is not a proof-theoretic
+  conservativity proof), the "two independent models" claim false
+  (same grade poset, `refl` agreement), and "graded comonad"
+  unsupported (no nested `D_r D_s`; thin-poset action only). Statement
+  <<thm-conservativity>> rewritten from a metatheorem to *mechanised
+  properties that are evidence for, not a proof of, conservativity*.
+  Recorded reason: see `docs/retractions.adoc` (entry R-2026-05-18)
+  and `paper.adoc` §"Reframing note". No Agda module changed; the
+  artefacts are exactly as strong as before — only the prose claims
+  are corrected downward.

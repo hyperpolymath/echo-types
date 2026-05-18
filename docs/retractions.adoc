@@ -1,0 +1,147 @@
+= Echo Types — Retraction Log
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+The canonical retraction log referenced by `roadmap-gates.adoc`
+("Failure is recorded in `docs/retractions.adoc` rather than silently
+revised"). Retractions are not failures of the repository; they are
+the mechanism by which its claims are made falsifiable. Append-only.
+
+toc::[]
+
+== Standing on retraction
+
+A retraction here means: a claim previously asserted in a repository
+artefact (README, paper, abstract, conservativity doc) is withdrawn
+or narrowed, with the reason recorded, the replacement stated, and
+the affected artefacts edited so no inflated claim survives in any
+document. The underlying Agda is *not* changed by a prose retraction
+unless separately noted — the mechanised content is whatever it was;
+only the description of it is corrected.
+
+== Entries
+
+[#R-2026-05-18]
+=== R-2026-05-18 — "graded comonad / two models / conservativity metatheorem / universal property / funext quarantine"
+
+==== Trigger
+
+An author-run adversarial review simulating three hostile referees
+(graded-modality skeptic in the Petriček–Orchard–Gaboardi–Katsumata
+lineage; LICS/MFPS semantics skeptic; CPP/ITP proof-assistant
+pragmatist), followed by a codebase pressure-test that searched for
+any in-repo defense of the strongest attacks.
+
+==== Finding
+
+Five central claims had no defense in the codebase; two were
+*contradicted by the repository's own Gate-2 audit*
+(`docs/characteristic.adoc`). Specifics:
+
+. *Not a graded comonad.* Tree-wide there is no `Comonad` record, no
+  `δ : D_{r·s} ⇒ D_r D_s`, no nested `GEcho (GEcho …)`, no
+  co-Kleisli. `gextract` is the identity coercion (`keep` is the
+  definitional lattice bottom); `gduplicate` is the join-left
+  *single-grade* reindex. The structure is a thin-poset reindexing
+  action. The `CNO` modules are unrelated (a Clean-Null-Op /
+  identity-program notion imported from the sister project
+  `absolute-zero` as consumer evidence), not an alternative comonad.
+. *Content is exactly thinness.* The coherence equations collapse to
+  `degrade-compose` + `≤g-prop`; the separating model shows the only
+  content over generic Σ-functoriality is `≤g-prop` (the grade order
+  is thin). `docs/characteristic.adoc` §"Honest qualifications" point
+  2 already states all four "characteristic" survivors are one recipe
+  that "would weaken in parallel" under exactly this observation —
+  i.e. the repository had already recorded the skeptic's case.
+. *Not two models.* `GCLaws` is instantiated only at `set-model` and
+  `rel-model`; both fix the same grade poset (`_≤g_`, `≤g-prop`,
+  `_⊔g_`, `keep`). `rel-model`'s carrier is the Set carrier with a
+  `⊤` component (`RStep _ _ = ⊤`); `model-agreement` is `refl`. The
+  `GradedLossModel` interface has `⊑-prop` as a *field*, baking in
+  the only load-bearing hypothesis. This is carrier-parametricity
+  over a fixed poset, not semantic model-independence.
+. *No universal property.* `echo-pullback-univ` proves only
+  *pointwise* uniqueness `∀ v → m' v ≡ m v`. Full terminality
+  (`m' ≡ m`) is neither stated nor provable here without funext.
+  "A category theorist accepts echo as the limit of a cospan" does
+  not follow from the mechanised content.
+. *No conservativity metatheorem.* Clause 2 ("any base proposition
+  provable via `Echo` is provable without it") is a meta-statement
+  over all propositions; it is not discharged by a typechecking run.
+  `EchoFiberBridge.fiber` is a same-module restatement, so `echo↔fib`
+  is the identity on a type — a triviality, not a grounding theorem.
+. *Funext story inverted.* There is no funext anywhere.
+  `examples/Transport.agda` *avoids* funext via a first-order carrier;
+  it does not "quarantine" a funext dependency. The genuine
+  funext-relativity is the pointwise-only mediator property, which
+  earlier drafts presented as a feature ("funext-free").
+
+==== Action taken
+
+Per `roadmap-gates.adoc` §"Failure action" (record, then reframe —
+*not* silently revise). The following claims are *retracted* and the
+artefacts edited so no inflated form survives:
+
+[cols="2,3", options="header"]
+|===
+| Retracted | Replaced by
+
+| "definitionally-grounded graded comonad of structured loss" (title,
+  thesis, contribution 3)
+| "definitionally-grounded, loss-graded *reindexing modality*"; a
+  thin-poset action, explicitly not a graded comonad
+
+| "terminal-cone universal property"; "category theorist accepts echo
+  as the limit of a cospan"
+| funext-relative *pointwise mediator property*; terminality
+  unstatable here without funext
+
+| "model independence across two agreeing models"
+| carrier-parametricity over a fixed grade poset; second model = first
+  `× ⊤`, agreeing by `refl`
+
+| "conservativity metatheorem, discharged operationally by the build"
+| *postulate-free build* + definitional Σ-identity = *evidence for*,
+  not a proof of, conservativity over MLTT+Σ
+
+| "funext boundary quarantined behind an isolated module; no result
+  crosses it"
+| no funext anywhere; the pointwise-only mediator property is the
+  real, now-disclosed funext boundary
+|===
+
+Artefacts edited 2026-05-18: `docs/echo-types/paper.adoc` (title,
+thesis, contributions, §"loss-graded reindexing modality", §pullback
+presentation, §separating model, §carrier-parametricity, §methodology,
+§"Reframing note", conclusion); `docs/echo-types/conservativity.adoc`
+(statement, anchor table, scope, revision history);
+`docs/echo-types/types-abstract.adoc` (title, verdict, contributions,
+discipline; "submission-ready" status withdrawn pending re-review).
+
+==== Status of the underlying Agda
+
+Unchanged. No module was weakened or edited by this retraction. The
+mechanised content is exactly as strong as before; only the prose
+describing it is corrected downward to match it. The separating model,
+the postulate-free `--safe --without-K` build, the definitional
+Σ-identity, and the pointwise mediator property all stand as
+mechanised — they are simply now claimed at their true strength.
+
+==== Standing relationship to EI-2
+
+This entry is consistent with, and does not reopen, the EI-2 negative
+result (`docs/next-questions.adoc`). EI-2 concerned cross-decoration
+integration narrowness; R-2026-05-18 concerns the graded-comonad /
+model-independence / conservativity framing. Both are calibration
+retractions, not invalidations of the mechanised artefacts.
+
+== Revision policy
+
+Append-only. New retractions get the next `R-YYYY-MM-DD` id. An entry
+is never edited after creation except to add a dated "follow-up"
+sub-section. Reframing of artefacts pursuant to an entry is logged in
+that entry's "Action taken".
