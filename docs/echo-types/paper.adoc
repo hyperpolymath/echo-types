@@ -152,6 +152,22 @@ category theorist accepts echo as the limit of a cospan" were
 retracted on 2026-05-18 (see <<reframing-note>>).
 ====
 
+[NOTE]
+====
+*Earned back, conditionally (Gate F4, 2026-05-18).*
+`proofs/agda/EchoPullbackUnivF4.agda` discharges strict terminality
+`m' ≡ m` as a *function of an explicit `funext` hypothesis* — a
+module parameter `FunExt₀`, **not a postulate**, in the same idiom by
+which `Echo.agda` parameterises `cancel-iso` by the triangle
+identities. The honest reading is therefore not "retracted →
+unconditional" but "retracted → *true, conditional on funext*": a
+category theorist who accepts funext gets the genuine universal
+property; the trusted base is unchanged (no funext is introduced),
+and the funext-free pointwise mediator above is retained verbatim as
+the corollary. The *unconditional* claim stays retracted. Logged as
+retraction follow-up F-2026-05-18a.
+====
+
 == The loss-graded reindexing modality
 
 === Structure
@@ -249,6 +265,25 @@ the "graph = fibration bridge" `bridge-natural` is the identity on
 Σ-pairs (`refl`). We no longer claim a relational model of the
 modality.
 
+[NOTE]
+====
+*Earned back, scoped (Gate F2, 2026-05-18).*
+`proofs/agda/EchoStepNDModelF2.agda` gives a genuine second model of
+the *bare Echo functor* (explicitly **not** of the graded modality —
+that retraction stands). It instantiates the same interface the
+deterministic model uses (`EchoFunctorModel`; functor laws by the
+generic `map-rel-id`/`map-rel-comp`) at `EchoRelational.StepND`, a
+relation that is **not the graph of any function under any state
+relabelling** — `nd-not-graph`, a checked `true ≢ false`. The
+agreement carries content: the `StepND` fibre is the disjoint sum of
+its deterministic branches by constructor case analysis
+(`nd-sum-fromto`, `nd-fibre-not-prop`), *not* `refl` and *not* Σ-η on
+`× ⊤` — exactly the defect §6 records for `EchoRelModel`. This earns
+back the R2 "fixable with bounded work" item at functor level only;
+model-independence of the *modality* remains retracted. Logged as
+retraction follow-up F-2026-05-18a.
+====
+
 === The conservativity claim, narrowed
 
 Because `Echo = Σ` definitionally and the whole development is
@@ -345,6 +380,17 @@ following claims were retracted, not weakened cosmetically:
 
 The full per-attack analysis and the codebase pressure-test are in
 `docs/retractions.adoc`.
+
+*Partial earn-back (follow-up F-2026-05-18a, 2026-05-18).* Two rows
+above are now partially recovered, each strictly to its mechanised
+strength under the Pillar F gate discipline
+(`docs/echo-types/earn-back-plan.adoc`): the universal-property row is
+earned back *conditional on an explicit `funext` parameter* (never a
+postulate; §3 NOTE, `EchoPullbackUnivF4.agda`), and the
+model-independence row is earned back *for the bare Echo functor only*
+via a genuine non-graph `StepND` model (§6 NOTE,
+`EchoStepNDModelF2.agda`). The graded-comonad, modality-level
+model-independence, and conservativity rows remain fully retracted.
 
 == Conclusion
 

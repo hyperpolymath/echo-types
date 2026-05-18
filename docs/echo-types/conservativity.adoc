@@ -142,6 +142,14 @@ proof*. Any reintroduction of a postulate or weakening of
   dependency. The real funext-relativity is the *pointwise-only*
   mediator property of the pullback presentation (`paper.adoc` §3),
   now disclosed as the boundary rather than presented as a feature.
+* Earn-back, scoped (follow-up F-2026-05-18a, 2026-05-18): the
+  pullback's strict terminality is now mechanised *conditional on an
+  explicit `funext` parameter* (`EchoPullbackUnivF4.agda`; not a
+  postulate — the trusted base is unchanged), and a genuine second
+  model of the *bare Echo functor* (not the modality) exists on the
+  non-graph relation `StepND` (`EchoStepNDModelF2.agda`). These do
+  *not* widen the conservativity claim above: it remains *evidence
+  for*, not a proof, and the modality-level retractions stand.
 
 == Revision policy
 
@@ -169,3 +177,12 @@ recorded reason. Append-only revision history.
   and `paper.adoc` §"Reframing note". No Agda module changed; the
   artefacts are exactly as strong as before — only the prose claims
   are corrected downward.
+* *2026-05-18 — Gates F4/F2 earned back (scoped).* Added the
+  scope/non-claims bullet recording that strict terminality is now
+  mechanised conditional on an explicit `funext` parameter
+  (`EchoPullbackUnivF4.agda`, no postulate) and that a genuine second
+  model of the *bare Echo functor* exists on the non-graph relation
+  `StepND` (`EchoStepNDModelF2.agda`). The conservativity statement
+  <<thm-conservativity>> is unchanged: still *evidence for*, not a
+  proof; modality-level retractions stand. Recorded reason:
+  `docs/retractions.adoc` follow-up F-2026-05-18a.
