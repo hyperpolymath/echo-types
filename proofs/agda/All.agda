@@ -79,6 +79,7 @@ open import Ordinal.Buchholz.VeblenProjectionMeasure
 open import Ordinal.Buchholz.VeblenComparisonTarget
 open import Ordinal.Buchholz.VeblenComparisonModel
 open import Ordinal.Buchholz.ExtendedOrder
+open import Ordinal.Buchholz.OrderExtendedDirect
 open import Ordinal.Buchholz.LiftedExtendedOrder
 open import Ordinal.Buchholz.IteratedExtendedOrder
 open import Ordinal.Buchholz.RankBrouwer
