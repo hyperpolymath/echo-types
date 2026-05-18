@@ -328,21 +328,29 @@ itself; each addresses a specific gap.
   criterion, first-projection-injective is sufficient (the criterion
   is about cardinality preservation, which lives at proj₁).
 
-. *Decide between READING 1 and READING 2.* — *partial:* candidate
-  patches written for both readings.
+. *Decide between READING 1 and READING 2.* — *RESOLVED (superseded;
+  no live choice).* Both readings shared the premise that
+  non-loss-only is _sufficient_ for substantive cross-axis
+  interaction. `RoleRole.agda` refuted that premise (NLO is
+  necessary but not sufficient). Per the supersession NOTE and the
+  authoritative Status line below: READING 2 (recipe refinement) was
+  *rejected as overstrong*; READING 1 (gate-1 weakening) was
+  *adopted in revised form*, with distinctness rerouted to the
+  truncation and 2-cell arguments. The closing condition stated in
+  the original wording — "until a reading is adopted" — is therefore
+  met. Obligation 2 is *closed*; this does not reopen or weaken the
+  terminated-negative EI-2 verdict.
++
+The candidate-patch files below are kept only as historical record
+of the alternatives considered; they are *not* decision-pending:
 +
 * `docs/EI2_READING1_PATCHES.adoc` — strict reading: gate-1 narrows
   to non-loss-only-anchored combinations; admission-style framing.
 * `docs/EI2_READING2_PATCHES.adoc` — refined reading: non-loss-only
   is made an explicit precondition of the recipe; refinement-style
-  framing. Requires obligation 5 closed for full intellectual
-  honesty.
-* `docs/EI2_READINGS_COMPARISON.adoc` — side-by-side comparison
-  with decision criterion (depends on willingness to attempt
-  obligation 5 next).
-+
-Decision pending. Until a reading is *adopted* (patches applied to
-the live docs), obligation 2 remains open.
+  framing. (Rejected route.)
+* `docs/EI2_READINGS_COMPARISON.adoc` — side-by-side comparison;
+  itself marked SUPERSEDED.
 
 . *Build a fourth data point.* If a new non-loss-only axis is added
   to the repository (candidates: a secure-transport axis, a
