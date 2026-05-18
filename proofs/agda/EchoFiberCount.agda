@@ -39,7 +39,7 @@ open import Data.Fin.Base                         using (Fin; zero; suc)
 open import Data.Product.Base                     using (Σ; _,_)
 open import Relation.Nullary                      using (¬_)
 open import Relation.Nullary.Decidable.Core       using (Dec; yes; no)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym; trans)
 
 open import Echo                                  using (Echo)
 
@@ -71,6 +71,9 @@ private
 
   suc≢zero-Fin : ∀ {n} (i : Fin n) → ¬ (suc i ≡ zero)
   suc≢zero-Fin _ ()
+
+  Fin-suc-inj : ∀ {n} {i j : Fin n} → suc i ≡ suc j → i ≡ j
+  Fin-suc-inj refl = refl
 
 ----------------------------------------------------------------------
 -- "no-hit" / "all-hit" lemmas (exposed for downstream use).
@@ -133,6 +136,43 @@ FiberSize-fin-const :
   (y₀ : B) (_≟_ : (y₁ y₂ : B) → Dec (y₁ ≡ y₂)) →
   FiberSize-fin {n = n} (λ _ → y₀) y₀ _≟_ ≡ n
 FiberSize-fin-const y₀ _≟_ = FiberSize-fin-all-hit (λ _ → y₀) y₀ _≟_ (λ _ → refl)
+
+----------------------------------------------------------------------
+-- Headline 2b — FiberSize-fin-injective
+--
+-- If `f : Fin n → B` is injective and *some* index `i₀` hits `y`,
+-- the fiber over `y` has size exactly 1. This is the honest
+-- generalisation of `FiberSize-fin-id-zero`: it removes the
+-- restriction to the identity map and to the `zero` index, and
+-- depends only on injectivity + a single witness. It is the
+-- fiber-count engine behind the general Bennett zero-cost result
+-- (`EchoThermodynamics.bennett-reversible-injective`): a reversible
+-- — i.e. injective — computation has singleton fibers wherever it
+-- lands, hence no Landauer-mandated dissipation there.
+--
+-- The proof walks the `FiberSize-fin` recursion in lock-step with
+-- the witness: the hit index contributes the single `suc`, and
+-- injectivity rules out any *other* index hitting `y` (a second hit
+-- would equate two distinct domain points).
+----------------------------------------------------------------------
+
+FiberSize-fin-injective :
+  ∀ {b} {B : Set b} {n : ℕ}
+  (f : Fin n → B) (y : B) (_≟_ : (y₁ y₂ : B) → Dec (y₁ ≡ y₂))
+  (inj : ∀ {i j : Fin n} → f i ≡ f j → i ≡ j)
+  (i₀ : Fin n) → f i₀ ≡ y →
+  FiberSize-fin f y _≟_ ≡ ℕ.suc ℕ.zero
+FiberSize-fin-injective {n = ℕ.suc m} f y _≟_ inj zero hit
+  with f zero ≟ y
+... | yes _  = cong ℕ.suc
+                 (FiberSize-fin-no-hit (f ∘ suc) y _≟_
+                   (λ j fsj≡y → suc≢zero-Fin j (inj (trans fsj≡y (sym hit)))))
+... | no ¬p  = ⊥-elim (¬p hit)
+FiberSize-fin-injective {n = ℕ.suc m} f y _≟_ inj (suc i′) hit
+  with f zero ≟ y
+... | yes p  = ⊥-elim (suc≢zero-Fin i′ (sym (inj (trans p (sym hit)))))
+... | no  _  = FiberSize-fin-injective (f ∘ suc) y _≟_
+                 (λ eq → Fin-suc-inj (inj eq)) i′ hit
 
 ----------------------------------------------------------------------
 -- Headline 3 — FiberSize-fin ≡ 0 ⟺ ¬ Echo (split into two halves).

@@ -87,6 +87,7 @@ open import EchoFiberCount using
   ; FiberSize-fin-no-hit
   ; FiberSize-fin-all-hit
   ; FiberSize-fin-id-zero
+  ; FiberSize-fin-injective
   ; FiberSize-fin-const
   ; FiberSize-fin≡0⇒no-echo
   ; no-echo⇒FiberSize-fin≡0
@@ -98,7 +99,15 @@ open import EchoThermodynamics using
   ; ⌊log₂1⌋≡0
   ; bennett-reversible
   ; bennett-reversible-id-zero
+  ; bennett-reversible-injective
   ; landauer-collapse
+  )
+
+open import EchoThermodynamicsFinite using
+  ( FiniteDomain
+  ; fiber-erasure-bound-fin
+  ; bennett-reversible-finite
+  ; landauer-collapse-finite
   )
 
 open import EchoChoreo using

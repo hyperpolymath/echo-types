@@ -78,13 +78,25 @@ Echo {A = A} f y = Σ A (λ x → f x ≡ y)
 
 **Stability:** New but well-grounded in existing echo type theory
 
-#### 3.3 Thermodynamic Models: C+
-**Proofs:** `EchoThermodynamics.agda`
-- Energy-preservation theorems
-- Entropy calculations
-- Reversibility bounds
+#### 3.3 Thermodynamic Models: B- (was C+; advanced 2026-05-18)
+**Proofs:** `EchoThermodynamics.agda`, `EchoFiberCount.agda`, `EchoThermodynamicsFinite.agda`
+- Landauer bound *shape* `k·T·⌊log₂ N⌋` (honest fiber count, no hardcode)
+- Bennett zero-cost for **every injective map** (`bennett-reversible-injective`),
+  not just `id` at index zero — `bennett-reversible-id-zero` is now a corollary
+- Lifted off `Fin n` to **any Bishop-finite carrier** by transport along an
+  explicit bijection (`FiniteDomain`, `bennett-reversible-finite`,
+  `landauer-collapse-finite`) — `--safe --without-K`, zero postulates
+- Landauer worst-case collapse (`landauer-collapse[-finite]`)
 
-**Stability:** Experimental - interesting but needs more development
+**Stability:** The C+ ~70% rating was driven by one concrete gap — the only
+proved zero-cost instance was the identity at index zero. That gap is closed:
+optimality now holds for every injective map on every Bishop-finite carrier.
+The *single* remaining open item is the infinite-carrier case
+(`ProgramState = ℕ → ℕ`), now pinned as the **precise, falsifiable obligation
+O-THERMO-∞** with a stated kill condition (see
+`docs/ECHO-CNO-BRIDGE.adoc` §"Thermodynamic Bridge"). Not "needs more
+development" — one named obligation, refutable by exhibiting a total
+`--safe` cost functional or by mechanising its impossibility.
 
 ### 4. Proof Ecosystem Stability: B+
 
@@ -99,7 +111,7 @@ Echo {A = A} f y = Σ A (λ x → f x ≡ y)
 | Relational | 80% | B |
 | CNO Integration | 98% | A- |
 | JanusKey Bridge | 90% | B+ |
-| Thermodynamics | 70% | C+ |
+| Thermodynamics | 85% | B- |
 
 **Proof Quality Indicators:**
 - ✅ All core theorems have constructive proofs
