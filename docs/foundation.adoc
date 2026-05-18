@@ -19,10 +19,15 @@ toc::[]
 fibre. There is no new type former, no axiom, no postulate. The
 soundness of the foundation is the soundness of Agda's `Σ` and `≡`
 under `--safe --without-K` — nothing more is claimed, and that
-triviality is the point, not a weakness. (The self-referential
-`echo↔fib` bridge — `fiber` is a same-module restatement — is the one
-mathematical place worth hardening; see `docs/retractions.adoc`
-R-2026-05-18 and the external-fibre triangulation, tracked P1.)
+triviality is the point, not a weakness. The self-referential
+`echo↔fib` bridge (`fiber` is a same-module restatement) was the one
+mathematical place worth hardening — that is now **done**:
+`proofs/agda/EchoFiberTriangulation.agda` triangulates `Echo` against
+the standard library's *own* independently-authored notions
+(`Function.Definitions.StrictlySurjective`, `Function.Bundles._↔_` /
+`mk↠ₛ`), so the bridge is no longer self↔self. See R-2026-05-18 and
+the *Known limitations* item below for the exact (modest) strength
+claimed.
 
 == Trust surface and its enforcement
 
@@ -90,11 +95,31 @@ hack: left explicit and failing, never forced green.
   wildly wrong major) so it is visible, not silently floating. Exact
   parity via *CI-through-the-flake* is the tracked P1 follow-up — the
   only honest way to pin Agda reproducibly.
-. *External-fibre triangulation* (P1): replace the same-module
-  `echo↔fib` self-bijection with agreement against an independently
-  defined fibre, upgrading a triviality to a cross-definition theorem.
+. *External-fibre triangulation* — *DONE 2026-05-18*,
+  `proofs/agda/EchoFiberTriangulation.agda` (wired into `All.agda`,
+  pinned in `Smoke.agda`, `--safe --without-K`, zero postulates).
+  Three results, each at its true strength, no overclaim:
++
+--
+* *T1 (calibration coincidence — not a deep theorem):*
+  `echo-is-stdlib-witness` — the per-point witness of stdlib's
+  `StrictlySurjective _≡_ f` is *definitionally* `Echo f y`. Value:
+  `Echo` is the community's fibre, not a bespoke construction.
+* *T2 (genuine content):* `echo↔coecho` — `Echo f y ↔ ∃ x. y ≡ f x`
+  via stdlib's independent `_↔_` bundle; the round-trips carry
+  `sym`/`sym-sym` transport and are *not* `refl`. This is the
+  substantive cross-definition coherence.
+* *T3 (surjection tie):* `all-echo→stdlib-surjection` — all
+  echo-fibres inhabited yields a bona fide stdlib `A ↠ B` (`mk↠ₛ`).
+--
++
+The same-module self-reference R-2026-05-18 flagged is removed: the
+anchors are authored in the standard library, not here. The honest
+strength is "agreement with the community construction + one genuine
+orientation coherence", *not* a grounding metatheorem.
 . *Cross-assistant kernel check* (P2): confirm the 3-line core in an
-  independent type-checker (e.g. Cubical Agda's native `fiber`).
+  independent type-checker (e.g. Cubical Agda's native `fiber`). Now
+  the single remaining foundational hardening item.
 
 == Reproducing the trusted build
 
@@ -121,3 +146,14 @@ Pinned inputs: `standard-library` `v2.3`; `absolute-zero`
   N5 known-broken hole, the guardrail script, the `absolute-zero`
   pin, the cold-check job, and the open CI-Agda-pin / triangulation
   follow-ups. Append-only.
+* *2026-05-18 — external-fibre triangulation delivered.*
+  `EchoFiberTriangulation.agda` (T1/T2/T3 against stdlib's own
+  `Function.Definitions`/`Function.Bundles`), wired into `All.agda`,
+  pinned in `Smoke.agda`, full + smoke build green, guardrail OK (88
+  modules). The same-module self-reference of R-2026-05-18 finding 5
+  is removed; claimed strictly at calibration + one genuine coherence,
+  not as a grounding metatheorem. Remaining foundational item:
+  cross-assistant kernel check (P2). A `docs/retractions.adoc`
+  follow-up entry is intentionally deferred to stack reconciliation
+  (the append-only log evolves on the reframe/earn-back stack; adding
+  a divergent entry on this `main`-based branch would fork it).

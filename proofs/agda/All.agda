@@ -46,6 +46,12 @@ open import EchoRelModel        -- Pillar D (scaffold)
 open import EchoPullbackUnivF4  -- Gate F4 PASSED (funext-qualified UP)
 open import EchoStepNDModelF2   -- Gate F2 PASSED (StepND second model)
 
+-- Foundation P1: external-fibre triangulation. Echo agrees with the
+-- standard library's OWN independently-authored notions
+-- (Function.Definitions / Function.Bundles), removing the
+-- same-module self-reference flagged by R-2026-05-18 finding 5.
+open import EchoFiberTriangulation
+
 open import Ordinal.Base
 open import Ordinal.Closure
 open import Ordinal.CNF

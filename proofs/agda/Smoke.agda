@@ -36,6 +36,20 @@ open import Echo using
 -- definitional Echo ≃ fib bridge, pinned so a rename fails CI fast.
 open import EchoFiberBridge using (fiber; echo→fib; fib→echo; echo↔fib)
 
+-- Foundation P1 (docs/foundation.adoc): external-fibre
+-- triangulation against the standard library's OWN notions —
+-- removes the same-module self-reference R-2026-05-18 flagged.
+-- `echo↔coecho` is the genuine (non-refl, sym-carrying) coherence;
+-- the T1/T3 pins are calibration coincidences with stdlib, owned as
+-- such. Pinned so a rename or a slide to an unanchored claim trips CI.
+open import EchoFiberTriangulation using
+  ( echo-is-stdlib-witness                      -- T1 calibration
+  ; all-echo→stdlib-strictly-surjective
+  ; stdlib-strictly-surjective→all-echo
+  ; echo↔coecho                                 -- T2 genuine content
+  ; all-echo→stdlib-surjection                  -- T3 surjection tie
+  )
+
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
 open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)
