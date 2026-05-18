@@ -101,6 +101,11 @@ stability-report:
 	@echo "  4. Cross-system verification (Coq/Lean)"
 	@echo "=========================================="
 
+# Enforce the EchoKernel funext-free certificate + classification note
+# (static; no Agda needed). CI calls this same recipe.
+kernel-guard:
+	@sh scripts/kernel-guard.sh
+
 # Default target
 default:
 	just verify
