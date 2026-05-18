@@ -1,3 +1,4 @@
 *.agdai
 arghda-core/target/
 .claude/
+.agda/
