@@ -41,9 +41,15 @@ behind — `git fetch` and read `origin/main` before trusting any survey.
 remainder of information-losing computation: for `f : A → B`,
 `Echo f y := Σ (x : A), (f x ≡ y)`. `[REAL]`
 
-* Proofs: `proofs/agda/Echo.agda` + ~24 `Echo*.agda` modules
-  (`EchoCategorical`, `EchoDecidable`, `EchoCharacteristic`,
-  `EchoApprox`, `EchoIndexed`, …).
+* Kernel: `proofs/agda/EchoKernel.agda` — the funext-free,
+  postulate-free core (re-export of `Echo` + a pinned `Kernel-contract`).
+  `[REAL]` Everything else imports `Echo` transitively; the
+  kernel-vs-derived classification + funext-free certificate is
+  `docs/echo-types/echo-kernel-note.adoc`.
+* Proofs: `proofs/agda/Echo.agda`, `proofs/agda/EchoKernel.agda`,
+  `proofs/agda/EchoFiberTriangulation.agda`, and the derived
+  `Echo*.agda` modules classified in
+  `docs/echo-types/echo-kernel-note.adoc`.
 * Library: `echo-types.agda-lib` (`depend: standard-library
   absolute-zero`).
 * Concept doc: `docs/echo-types/overview.md`,
@@ -149,7 +155,10 @@ The honesty layer. *Read before citing any claim above as final.*
 * `docs/echo-types/earn-back-plan.adoc` — the consolidated proof-debt
   ledger + falsifiable gates F1–F4 (F1 = make-or-break graded comonad;
   F2/F4 independent; F3 gated on F1). Current SoT for what is / isn't
-  proven.
+  proven. Current gate modules on `main` include
+  `proofs/agda/EchoGradedComonadF1.agda`,
+  `proofs/agda/EchoPullbackUnivF4.agda`, and
+  `proofs/agda/EchoStepNDModelF2.agda`, each scoped by the ledger.
 * Gate handoffs: `docs/gate-1-distinct-phenomenon.adoc`,
   `docs/gate-2-handoff.adoc`, `docs/gate-3-*.adoc`.
 
