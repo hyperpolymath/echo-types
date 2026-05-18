@@ -70,8 +70,12 @@ Staged Buchholz-style collapsing in `--safe --without-K`.
   `Closure`, `Psi…`, `ExtendedOrder`).
 * Docs: `docs/buchholz-plan.adoc`,
   `docs/echo-types/buchholz-extended-wf.md`.
-* Known structural-fidelity gap on direct-constructor `_<ᵇ_` (Buchholz
-  item B in the earn-back ledger) — off the paper critical path.
+* Direct-constructor `_<ᵇ_` same-binder cases (Buchholz item B):
+  status tracked solely in the earn-back ledger
+  (`docs/echo-types/earn-back-plan.adoc`, row B) and
+  `docs/retractions.adoc` (F-2026-05-18b) — off the paper critical
+  path. (Reference-only by design: no status is snapshotted here, so
+  this line never drifts as the ledger moves.)
 
 === Characteristic / EI — epistemic, choreographic, roles `[REAL]`
 The echo-invariant line: epistemic structure, choreographies, roles.
