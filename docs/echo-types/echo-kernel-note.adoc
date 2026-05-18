@@ -76,9 +76,10 @@ kernel** — the boundary is real and lives outside this core.
   `EchoEpistemicResidue`, `EchoExamples`, `EchoGraded`,
   `EchoLinear`, `EchoPullback`, `EchoRelModel`, `EchoScope`,
   `EchoStabilityTests`, `EchoThermodynamics`, `EchoCNOBridge`,
-  `EchoIntegration`
+  `EchoThermodynamicsFinite`, `EchoIntegration`
 | Multi-hop. `EchoThermodynamics` reaches the kernel via
-  `EchoFiberCount` (no direct `Echo` import).
+  `EchoFiberCount` (no direct `Echo` import);
+  `EchoThermodynamicsFinite` is its Bishop-finite transport layer.
 
 | *Earn-back gate modules* +
 (derived / scoped; not kernel)
