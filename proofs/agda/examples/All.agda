@@ -14,3 +14,4 @@ module examples.All where
 import examples.TropicalArgmin
 import examples.EpistemicUpdate
 import examples.LinearErasure
+import examples.Transport
