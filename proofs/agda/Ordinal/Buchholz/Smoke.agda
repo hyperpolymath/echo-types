@@ -232,6 +232,24 @@ open import Ordinal.Buchholz.RankPartial using
   ; rank-mono-partial-Ωψ
   )
 
+open import Ordinal.Buchholz.WellFormedCNF using
+  ( Atomic
+  ; atomic-bzero
+  ; atomic-bomega
+  ; atomic-bpsi
+  ; _≤ᵇ_
+  ; WfCNF
+  ; wf-cnf-bzero
+  ; wf-cnf-bomega
+  ; wf-cnf-bpsi
+  ; wf-cnf-bplus
+  ; wfcnf-to-wfbt
+  ; leading
+  ; wfcnf-leading-atomic
+  ; BH-wf-cnf
+  ; bplus-Ω-bzero-wf-cnf
+  )
+
 open import Ordinal.Buchholz.RecursiveSurfaceBudget using
   ( BudgetedBT
   ; _<ᵇʳᶠᵇ_
