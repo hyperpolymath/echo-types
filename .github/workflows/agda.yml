@@ -1,5 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
-# (MPL-2.0 is automatic legal fallback until PMPL is formally recognised)
+# SPDX-License-Identifier: MPL-2.0
 
 name: Agda
 
@@ -199,3 +198,28 @@ jobs:
           agda --ignore-interfaces -i proofs/agda proofs/agda/Smoke.agda
           agda --ignore-interfaces -i proofs/agda proofs/agda/characteristic/All.agda
           agda --ignore-interfaces -i proofs/agda proofs/agda/examples/All.agda
+
+  flake-check:
+    # Foundation P1: the reproducible, exactly-pinned toolchain.
+    # `nix flake check` runs flake.nix's hermetic `checks.suite`
+    # (flake-pinned Agda + PINNED stdlib v2.3 + PINNED absolute-zero
+    # @3ff5cee, guardrail + 4 roots + N5 xfail). ADDITIVE: the apt
+    # `check` and `cold-check` jobs remain the gate, so a version
+    # delta surfaced here (e.g. 2.7.0.1 vs verified 2.8.0) is
+    # informative, not a regression. Its first green run IS the P1
+    # verification (the dev env has no nix; CI is the verifier).
+    # Flip continue-on-error to false once it is first green.
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+
+      - name: Install Nix (pinned action)
+        uses: cachix/install-nix-action@08dcb3a5e62fa31e2da3d490afc4176ef55ecd72  # v30
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: nix flake check (hermetic, reproducible)
+        run: nix flake check --print-build-logs

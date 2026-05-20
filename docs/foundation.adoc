@@ -89,12 +89,25 @@ hack: left explicit and failing, never forced green.
 
 == Known limitations (tracked, not silent)
 
-. *CI Agda version not exactly pinned.* CI installs Ubuntu's `agda`
-  (apt); local dev and the Nix flake differ (2.8.0 / flake-pinned).
-  The CI step *records and minimally asserts* the version (fails on a
-  wildly wrong major) so it is visible, not silently floating. Exact
-  parity via *CI-through-the-flake* is the tracked P1 follow-up — the
-  only honest way to pin Agda reproducibly.
+. *CI Agda exact pin* — *reproducible pin IMPLEMENTED 2026-05-18;
+  first-green verification delegated to CI.* `flake.nix` now pins, as
+  flake inputs: Agda via `nixpkgs nixos-24.11` (2.7.0.1), standard
+  library at tag `v2.3`, and `absolute-zero` at commit `3ff5cee…`
+  (previously nixpkgs-bundled stdlib + a local `absolute-zero`
+  checkout — neither reproducible). A hermetic `checks.suite`
+  (guardrail + four roots + N5 xfail) runs under that pinned
+  toolchain; an *additive* `flake-check` CI job (`nix flake check`)
+  exercises it. This is honest about its boundary: the dev
+  environment has no `nix`, so the flake was authored designed-correct
+  but its build is *first verified by CI*, not claimed green here. It
+  is `continue-on-error` until first green so a version delta
+  (2.7.0.1 vs the verified-green 2.8.0 / apt) is *surfaced*, not a
+  regression; the apt `check` + `cold-check` jobs remain the gate.
+  Open sub-item: on first green, flip `continue-on-error` to `false`
+  and retire the apt job; if red, the logged delta says which
+  nixpkgs/Agda to bump. (Cross-stack: a devShell-only `flake.nix`
+  also exists on the reframe stack PR #47; this one strictly
+  supersedes it.)
 . *External-fibre triangulation* — *DONE 2026-05-18*,
   `proofs/agda/EchoFiberTriangulation.agda` (wired into `All.agda`,
   pinned in `Smoke.agda`, `--safe --without-K`, zero postulates).
@@ -157,3 +170,12 @@ Pinned inputs: `standard-library` `v2.3`; `absolute-zero`
   follow-up entry is intentionally deferred to stack reconciliation
   (the append-only log evolves on the reframe/earn-back stack; adding
   a divergent entry on this `main`-based branch would fork it).
+* *2026-05-18 — CI-via-flake reproducible pin implemented.*
+  `flake.nix` evolved to pin Agda (nixpkgs nixos-24.11) + stdlib v2.3
+  + absolute-zero @3ff5cee as flake inputs, with a hermetic
+  `checks.suite`; additive `flake-check` CI job
+  (`continue-on-error`) added as the verifier. Authored without local
+  `nix` (none in dev env) — designed-correct, CI-verified, not
+  locally claimed green; flagged as such, gate unchanged. P1 item
+  status moved from "tracked follow-up" to "implemented, pending
+  first-green CI verification".
