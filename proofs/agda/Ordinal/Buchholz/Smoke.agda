@@ -250,6 +250,15 @@ open import Ordinal.Buchholz.WellFormedCNF using
   ; bplus-Ω-bzero-wf-cnf
   )
 
+open import Ordinal.Buchholz.OrderRestricted using
+  ( _<ᵇ⁻_
+  ; cnf-strict
+  ; <ᵇ⁻-to-<ᵇ
+  ; wf-<ᵇ⁻
+  ; <ᵇ⁻-irrefl
+  ; <ᵇ⁻-trans
+  )
+
 open import Ordinal.Buchholz.RecursiveSurfaceBudget using
   ( BudgetedBT
   ; _<ᵇʳᶠᵇ_

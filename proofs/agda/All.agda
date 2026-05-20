@@ -70,6 +70,7 @@ open import Ordinal.Buchholz.Examples
 open import Ordinal.Buchholz.WellFormed
 open import Ordinal.Buchholz.WellFormedCNF
 open import Ordinal.Buchholz.WellFounded
+open import Ordinal.Buchholz.OrderRestricted
 open import Ordinal.Buchholz.VeblenInterface
 open import Ordinal.Buchholz.VeblenIdentityModel
 open import Ordinal.Buchholz.VeblenMeasureTarget
