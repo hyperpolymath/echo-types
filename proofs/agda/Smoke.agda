@@ -109,6 +109,15 @@ open import EchoAccess using
   ; echo-access-compose
   )
 
+open import EchoSearch using
+  ( BoundedSearch
+  ; bounded-search-to-echo
+  ; bounded-search-to-cost
+  ; bounded-search-to-dec
+  ; bounded-search-to-access-feasible
+  ; bounded-search-introduce-1
+  )
+
 open import EchoFiberCount using
   ( FiberSize-fin
   ; FiberSize-fin-no-hit

@@ -225,15 +225,19 @@ of every modern cryptosystem depends on this axis being real.
   earlier `FiberSize ≡ 1` hardcode that rendered all
   Landauer/Bennett claims vacuous.
 
-Full cost-tracking refinements (1, 2) now have bookkeeping-layer
-artifacts landed 2026-05-20: refinement 1 (`EchoCost.agda`, scalar
-ℕ ledger) and refinement 2 (`EchoAccess.agda`, two-point modal
-lattice). Their operational upgrades — replacing the ℕ field with
-a resource monad (refinement 1), or operationally substantiating
-the `feasible` grade with an extractor (refinement 2) — remain
-open. Refinement 4 (witness-search abstract machine) remains
-unformalised. Asymptotic computational access still cannot be
-named at the type level without further machinery. Adjacent stdlib pieces:
+All four axis-8 refinements now have first artifacts (2026-05-20):
+refinement 1 (`EchoCost.agda`, scalar ℕ ledger), refinement 2
+(`EchoAccess.agda`, two-point modal lattice), refinement 3
+(`EchoDecidable.agda`, decidability layer, earlier), refinement 4
+(`EchoSearch.agda`, bounded-enumeration extractor). The four
+artifacts form a small lattice: `BoundedSearch` substantiates both
+the `feasible` grade of `EchoA` and the cost ledger of `EchoCost`;
+`EchoCost` projects conservatively to `EchoA` at `infeasible`;
+`EchoDec` is the qualitative ceiling. Open operational upgrades:
+replacing `EchoCost`'s ℕ field with a resource monad; refining
+`BoundedSearch`'s unstructured bound to a step-counter over a
+specific term-language. Asymptotic computational access still
+cannot be named at the type level without further machinery. Adjacent stdlib pieces:
 - `Data.Nat.Logarithm.⌊log₂⌋` (now imported by
   `EchoThermodynamics`) and arithmetic complexity conventions admit
   informal-level statements like "this function runs in `O(n log n)`",
@@ -296,6 +300,17 @@ information. Realised in `EchoDecidable.agda` with headline lemmas
 4. **Witness-search abstract machine.** Model the extractor as a
    term in a bounded-step abstract machine and pair it with the
    echo. Heavier; more faithful to actual cryptographic modelling.
+   **First artifact landed 2026-05-20:** `proofs/agda/EchoSearch.agda`
+   ships the lightest substantiation — a `BoundedSearch f y bound`
+   record packaging an explicit candidate function `Fin bound → A`
+   plus a hit position witnessing that some candidate maps to the
+   target. Headlines: `bounded-search-{to-echo, to-cost, to-dec,
+   to-access-feasible, introduce-1}`, providing bridges to all
+   three other axis-8 artifacts. The `bound` measures search-space
+   cardinality, not step count — a richer abstract machine with
+   `Step : Term → Term` and a step-counter would refine this
+   further; the present layer is what lands under `--safe
+   --without-K` without committing to a specific term-language.
 
 *Open question.* Is there a single refinement that subsumes all four?
 My guess is no: (1) and (4) track asymptotic cost, (2) and (3)
