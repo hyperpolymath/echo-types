@@ -220,6 +220,18 @@ open import Ordinal.Buchholz.RecursiveSurfaceOrder using
   ; <ᵇʳᶠ-irreflexive
   )
 
+open import Ordinal.Buchholz.RankPartial using
+  ( ω-rank-mono-<Ω
+  ; rank-mono-<ᵇ-0-Ω
+  ; rank-mono-<ᵇ-0-ψ
+  ; rank-mono-<ᵇ-ΩΩ
+  ; rank-mono-<ᵇ-Ωψ
+  ; rank-mono-partial-0-Ω
+  ; rank-mono-partial-0-ψ
+  ; rank-mono-partial-ΩΩ
+  ; rank-mono-partial-Ωψ
+  )
+
 open import Ordinal.Buchholz.RecursiveSurfaceBudget using
   ( BudgetedBT
   ; _<ᵇʳᶠᵇ_

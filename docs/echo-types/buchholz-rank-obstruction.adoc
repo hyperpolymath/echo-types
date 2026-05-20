@@ -56,6 +56,52 @@ the RHS to `ω-rank (fin 0) = one` (in Brouwer notation). The required
 osuc oz` — reducing to `osuc oz ≤′ oz`, which is `⊥`. So `rank-mono`
 is refuted at a checked counterexample.
 
+== Per-constructor verdict (2026-05-20 deepening)
+
+Per-constructor analysis of `_<ᵇ_`'s 13 constructors against the
+SA-recommended additive rank `rank (bplus x y) = rank x ⊕ rank y`
+and `rank (bpsi ν α) = osuc (ω-rank ν ⊕ rank α)`:
+
+[cols="2,1,4", options="header"]
+|===
+| Constructor | Verdict | Reason
+
+| `<ᵇ-0-Ω`   | ✓ provable | `oz <′ ω-rank μ` for any μ (osuc-stack or limit).
+| `<ᵇ-0-ψ`   | ✓ provable | `oz <′ osuc _` definitionally.
+| `<ᵇ-ΩΩ`    | ✓ provable | `ω-rank` strict-monotone under `_<Ω_`.
+| `<ᵇ-Ωψ`    | ✓ provable | Chain: `ω-rank μ <′ ω-rank ν ≤′ ω-rank ν ⊕ rank α <′ osuc(…)`.
+| `<ᵇ-0-+`   | ✗ unsound  | `bplus bzero bzero` has rank `oz ⊕ oz = oz`; need `oz <′ oz` (false).
+| `<ᵇ-ψΩ`    | ✗ unsound  | `α` can outsize `ν−μ`; counterexample at μ=fin 0, ν=fin 1, α=bOmega ω.
+| `<ᵇ-ψΩ≤`   | ✗ unsound  | At ν=μ: `osuc(ω-rank ν ⊕ rank α) < ω-rank ν` fails for nonzero α.
+| `<ᵇ-Ω+`    | ✗ unsound  | `Ω<x` doesn't bound `Ω<x⊕y` (y unconstrained).
+| `<ᵇ-ψ+`    | ✗ unsound  | Same shape as `<ᵇ-Ω+` with ψ instead of Ω.
+| `<ᵇ-+Ω`    | ✗ unsound  | The flagship counterexample (`<ᵇ-+Ω <ᵇ-0-Ω`).
+| `<ᵇ-+ψ`    | ✗ unsound  | Same as `<ᵇ-+Ω` with ψ-target.
+| `<ᵇ-+1`    | ✗ unsound  | `x₁<y₁` doesn't bound the right summands.
+| `<ᵇ-0-+` (degenerate) | ✗ | Sub-case of `<ᵇ-0-+`; flagged separately because the rest of `<ᵇ-0-+` would be salvageable if `bplus bzero bzero` is excluded by a CNF tail constraint.
+|===
+
+**Score: 4/13 constructors admit additive rank-mono; 9/13 require
+restriction or a non-additive measure.**
+
+The four passing cases are formalised as a partial Agda artifact
+in `proofs/agda/Ordinal/Buchholz/RankPartial.agda` (2026-05-20):
+
+* `ω-rank-mono-<Ω` — the supporting lemma, isolated for the first
+  time.
+* `rank-mono-<ᵇ-0-Ω`, `rank-mono-<ᵇ-0-ψ`, `rank-mono-<ᵇ-ΩΩ`,
+  `rank-mono-<ᵇ-Ωψ` — the four per-constructor lemmas.
+* `rank-mono-partial-{0-Ω, 0-ψ, ΩΩ, Ωψ}` — the dispatch functions
+  that match exactly the four supported `_<ᵇ_` constructor heads.
+
+This is a *stepping stone*: the four lemmas are reusable for both
+unblock paths.  Path 1 (WF-restriction) needs to additionally
+discharge the nine failing cases under a CNF tail-constraint;
+the four passing cases survive the restriction unchanged.  Path 2
+(non-additive denotational measure) needs to replace the rank
+shape entirely; the four passing cases serve as sanity checks
+that the new shape doesn't regress.
+
 == Why no rank shape rescues it
 
 Sufficient conditions per `_<ᵇ_` constructor on a candidate
