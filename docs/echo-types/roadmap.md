@@ -92,6 +92,22 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   (monotone in ε), and `echo-approx-compose` (additive composition
   under a non-expansive outer leg, realising the taxonomy §2
   conjecture). Wired into `All.agda` and `Smoke.agda`.
+- **[landed]** Composition rung first slice (Axis 2): the §Q3
+  retract-shape. `EchoApprox.agda` now also ships
+  `echo-strict→approx` (general strict ⇒ zero-tolerance, generalises
+  `echo-approx-intro` from own-fibre to arbitrary `y` via the
+  codomain equation), `echo-approx-comp-sound` (RHS-Σ → LHS via
+  `echo-approx-compose`), `echo-approx-comp-retract-to`
+  (canonical-split LHS → RHS-Σ section, picking `b := f x`,
+  `ε₁ := zero`, `ε₂ := ε`), and `echo-approx-comp-retract-A` (the
+  A-component round-trip `proj₁ ∘ sound ∘ retract-to ≡ proj₁`,
+  proved by `refl`). The retraction direction on the A-witness holds
+  definitionally as the design note (§5) predicts. The B-component
+  and tolerance-budget round-trips are deferred to a subsequent
+  rung — they need a `+`-left-identity axiom on `Tolerance`
+  (`zero + ε ≡ ε`) which the current record does not supply.
+  §7 obligations 7 (separated zero-collapse) and 8 (axis-1 shadow
+  agreement) likewise deferred.
 - **[landed]** Per-decoration composition lemmas across the
   five-decoration family — **sweep complete** (2026-04-28):
   `EchoGraded.degrade-compose`, `EchoLinear.degradeMode-compose`,

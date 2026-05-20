@@ -150,8 +150,27 @@ is a Lipschitz constant of `g`. This is a crude first guess — the
 right form may involve sup-norms, dilation-operators, or
 coarser bounds.
 
-*Status.* Entirely speculative. Requires a formal definition of
-approximate echo first.
+*Status (updated).* No longer entirely speculative. The
+non-expansive case (`L_g = 1`) is landed as
+`EchoApprox.Approx.echo-approx-compose` in additive form
+`(ε₁ + ε₂)-echo(g ∘ f)`. The compositional *shape* — whether the
+forward/backward maps form a strict iso analogous to
+`Echo-comp-iso` — is settled in the negative: it is a *retract*,
+not an iso, because the RHS Σ admits multiple splits of the budget
+and the chosen intermediate `b` is not pinned by the input. The
+axis-2 design note (`/tmp/echo-types-exploration/axis2-approximate.md`
+§5) gives the full discussion.
+
+First slice of the retract landed in `EchoApprox.agda`:
+`echo-approx-comp-sound` (RHS-Σ → LHS via `echo-approx-compose`),
+`echo-approx-comp-retract-to` (canonical-split LHS → RHS-Σ section
+at `b := f x`, `ε₁ := zero`, `ε₂ := ε`), and
+`echo-approx-comp-retract-A` (A-component round-trip preserves the
+witness up to `refl`). The B-component round-trip and the
+tolerance-budget round-trip need a `+`-left-identity axiom on
+`Tolerance` (`zero + ε ≡ ε`) — not in the current record. The full
+retract proof and the Lipschitz generalisation (`L_g ≠ 1`) are
+deferred to subsequent rungs.
 
 ### Q4. Associativity — landed
 
