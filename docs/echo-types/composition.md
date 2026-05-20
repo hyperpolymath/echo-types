@@ -170,12 +170,26 @@ First slice of the retract landed in `EchoApprox.agda`:
 `echo-approx-comp-retract-to` (canonical-split LHS → RHS-Σ section
 at `b := f x`, `ε₁ := zero`, `ε₂ := ε`), and
 `echo-approx-comp-retract-A` (A-component round-trip preserves the
-witness up to `refl`). The B-component round-trip and the
-tolerance-budget round-trip need a `+`-left-identity axiom on
-`Tolerance` (`zero + ε ≡ ε`) — not in the current record; a
-design call on whether to extend the `Tolerance` interface or layer
-a separate `BalancedTolerance` record on top is deferred to the
-caller.
+witness up to `refl`).
+
+Rung-C slice (post-PR-#74, design call resolved in favour of option
+(b)): a separate `BalancedTolerance` record layered on `Tolerance`
+(mirroring how `Separated` layers on `PseudoMetric`), carrying
+`+-identityˡ : ∀ ε → zero + ε ≡ ε` and `+-identityʳ : ∀ ε → ε + zero
+≡ ε`. The base `Tolerance` interface stays untouched; lemmas that
+need the identity laws take an explicit `BalancedTolerance`
+hypothesis. With it landed:
+`echo-approx-comp-retract-B` (B-component pin: the canonical-split
+section picks `b := f x` definitionally, `refl`),
+`echo-approx-comp-retract-budget` (`(zero + ε) ≡ ε` from
+`+-identityˡ`), and `echo-approx-comp-retract-from-to` (budget-aligned
+A-component round-trip: `proj₁ (subst _ (+-identityˡ ε) (sound
+(retract-to e))) ≡ proj₁ e`). The full transported equality `subst _
+(+-identityˡ ε) (sound (retract-to e)) ≡ e` is NOT discharged — it
+would require propositionality of the order `_≤_` on the inner
+bound, which `Tolerance` deliberately does not assert; the
+A-component statement is the strongest available without that extra
+hypothesis.
 
 Second slice landed alongside (axis-2 design note §7 obligations
 7 and 8): `Separated` (separation predicate on the pseudo-metric:
@@ -192,10 +206,11 @@ axis-1 / axis-2 cross-classification: the A-component (the axis-1
 `echo-strict→approx` and round-trips definitionally through the
 zero-collapse under separation.
 
-The Lipschitz generalisation (`L_g ≠ 1`) and the full B-component
-+ tolerance-budget retract round-trip remain deferred — both
-require new structure on `Tolerance` (multiplication for the
-former, `+`-identity for the latter).
+The Lipschitz generalisation (`L_g ≠ 1`) remains deferred — it
+requires multiplication on `Tolerance`, another interface call.
+The full transported LHS round-trip equality (beyond the
+A-component) remains deferred too — it needs `_≤_`-propositionality,
+which is structurally orthogonal to `BalancedTolerance`.
 
 ### Q4. Associativity — landed
 

@@ -72,6 +72,7 @@ open import VecRotation using (rotL-alternating; rotR-alternating; map-alternati
 open import EchoApprox using
   ( Tolerance
   ; PseudoMetric
+  ; BalancedTolerance
   ; module Approx
   )
 
@@ -81,6 +82,7 @@ open import EchoApprox using
 open import EchoApproxInstance using
   ( trivialTolerance
   ; trivialPseudoMetric
+  ; trivialBalancedTolerance
   ; approx-EchoR
   ; approx-intro
   ; approx-strict→approx
@@ -90,6 +92,10 @@ open import EchoApproxInstance using
   ; approx-comp-sound
   ; approx-comp-retract-to
   ; approx-comp-retract-A
+  ; approx-comp-retract-B
+  ; approx-comp-retract-budget
+  ; approx-comp-retract-from-to
+  ; approx-subst-A-invariant
   ; approx-Separated
   ; approx-zero-collapses-strict
   ; approx-shadow-A
