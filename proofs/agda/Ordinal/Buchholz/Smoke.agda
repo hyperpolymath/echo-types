@@ -273,6 +273,20 @@ open import Ordinal.Buchholz.OrderRestricted using
   ; <ᵇ⁻-trans
   )
 
+-- Path-1 umbrella: rank-pow strict-mono on the 10-constructor
+-- rank-soundness-ready subset `_<ᵇ⁰_` of `_<ᵇ_`.  Closes 10 of 13
+-- cases of the Buchholz rank-monotonicity theorem under WfCNF;
+-- the 3 excluded cases (`<ᵇ-0-+` edge, `<ᵇ-ψα` / `<ᵇ-ψΩ≤`
+-- admissibility-blocked, `<ᵇ-+1` bplus-target sub-case) remain
+-- open under documented structural blockers.
+open import Ordinal.Buchholz.RankMonoUmbrella using
+  ( _<ᵇ⁰_
+  ; _≤ᵇ⁰_
+  ; ≤ᵇ⁰-refl
+  ; rank-pow-mono-<ᵇ⁰
+  ; rank-pow-mono-≤ᵇ⁰
+  )
+
 open import Ordinal.Buchholz.RecursiveSurfaceBudget using
   ( BudgetedBT
   ; _<ᵇʳᶠᵇ_
