@@ -8,6 +8,7 @@ open import EchoKernel
 open import EchoCharacteristic
 open import EchoResidue
 open import EchoExamples
+open import EchoExampleParser
 
 open import EchoChoreo
 open import EchoEpistemic

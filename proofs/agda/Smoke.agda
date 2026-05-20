@@ -67,6 +67,30 @@ open import EchoFiberTriangulation using
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
 open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)
+
+-- Example 9 (docs/echo-types/examples.md §9): parser residue —
+-- balanced parentheses. The Boolean shadow `parses : List Token →
+-- Bool` is non-injective on distinct presentations (`(())` vs `()()`),
+-- and the Echo retains the token stream. Pinned headlines: the
+-- non-injectivity Σ-witness, the three concrete `Echo parses true`
+-- carriers (empty / pair / nested), and the residue Σ-pair.
+open import EchoExampleParser using
+  ( Token
+  ; LP
+  ; RP
+  ; parses
+  ; echo-parse-empty
+  ; echo-parse-pair
+  ; echo-parse-nested
+  ; echo-parse-nested≢echo-parse-pair
+  ; parses-non-injective
+  ; parser-residue
+  ; BalancedClosed
+  ; empty-balanced
+  ; paren-empty-balanced
+  ; paren-nested-balanced
+  ; paren-pair-balanced
+  )
 open import VecRotation using (rotL-alternating; rotR-alternating; map-alternating)
 
 open import EchoApprox using
