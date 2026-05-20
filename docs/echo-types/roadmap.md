@@ -227,18 +227,25 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   Shannon-entropy formalisation (no probability-monad in stdlib v2
   at the level needed); physical heat-dissipation realisation
   (the bound is information-theoretic, not a physical claim).
-- **[gated on B2]** CNO-equivalence verification across echo-types
-  and `absolute-zero`. Needs cross-repo access.
-  Bridge slot now exists on the adjacent side at
-  `absolute-zero/proofs/agda/EchoBridgeScaffold.agda`; theorem-level
-  alignment remains open.
-- **[gated on B2]** Janus reversible-file-operations bridge
-  verification against `januskey`'s actual API. Needs cross-repo
-  access.
-- **[gated on B2]** Tropical-resource-typing alignment: first do a repo
-  inventory (it is currently not recently audited), then validate
-  `EchoTropical` witness/residue claims against that neighbouring
-  tropical typing development.
+- **[landed]** CNO content-bridge across echo-types and
+  `absolute-zero`. `proofs/agda/EchoCNOBridge.agda` imports `IsCNO`
+  directly from `absolute-zero/proofs/agda/CNO.agda`; both files
+  build clean under `--safe --without-K`. Cross-prover (Coq/Lean4)
+  theorem-statement alignment is now documented in
+  `docs/echo-types/cross-repo-bridge-status.md` (correspondence
+  table + structural blockers around the relational/functional
+  `eval` split and the 3 Coq axioms forbidden by `--safe`).
+- **[partial]** Janus reversible-file-operations bridge against
+  `januskey`'s actual API. Agda side is still a 4-variant name-bridge;
+  decision recorded to structural-mirror the canonical 8-variant
+  Idris2 `OpKind` (`januskey/src/abi/Types.idr`). Content-bridge
+  remains gated on `januskey/PROOF-NEEDS.md`.
+- **[partial]** Tropical-resource-typing alignment. Adjacent repo
+  audited 2026-05-20 (remote `hyperpolymath/tropical-resource-typing`
+  active; 9 `.thy` + `TropicalSessionTypes.lean`). First alignable
+  theorem pair identified: Agda `⊕-idem` ↔ Isabelle `trop_add_idem`
+  ↔ Lean `add_comm_trop`+`add_assoc_trop`. Alignment is
+  citation-level (no Agda↔Isabelle/Lean import surface).
 - **[gated on B2]** `maa-framework` integration. Out of scope for
   the current tooling; needs scope expansion or file export.
 
