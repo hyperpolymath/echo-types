@@ -71,8 +71,11 @@ open import Ordinal.Brouwer.Phase13               using
   ; ≤′-weaken-osuc
   ; ⊕-mono-≤-right
   ; ⊕-mono-<-right
+  ; ⊕-mono-≤-left
   ; f-in-lim′
   )
+
+open import Data.Nat.Base                         using (_≤_; _<_; z≤n; s≤s)
 
 ----------------------------------------------------------------------
 -- Finite iterated product (ℕ exponent)
@@ -225,3 +228,67 @@ X≤′oz⊕X {olim g}  = λ k →
   ≤′-trans {ω^ n} {osuc (ω^ n)} {ω^ (suc n)}
     (≤′-self-osuc (ω^ n))
     (ω^-strict-mono-suc n)
+
+----------------------------------------------------------------------
+-- Left-monotonicity of `_·ℕ_` in its Ord argument
+----------------------------------------------------------------------
+
+-- `α ≤′ β → α ·ℕ k ≤′ β ·ℕ k` by induction on the ℕ exponent.
+-- The successor case combines left- and right-mono of `_⊕_`:
+--
+--   α ·ℕ (suc k) = (α ·ℕ k) ⊕ α
+--   β ·ℕ (suc k) = (β ·ℕ k) ⊕ β
+--
+--   (α ·ℕ k) ⊕ α  ≤′  (β ·ℕ k) ⊕ α     -- ⊕-mono-≤-left + IH
+--                ≤′  (β ·ℕ k) ⊕ β     -- ⊕-mono-≤-right + hyp
+
+·ℕ-mono-≤-left : ∀ {α β} k → α ≤′ β → α ·ℕ k ≤′ β ·ℕ k
+·ℕ-mono-≤-left          zero    _ = tt
+·ℕ-mono-≤-left {α} {β} (suc k)  p =
+  ≤′-trans {(α ·ℕ k) ⊕ α} {(β ·ℕ k) ⊕ α} {(β ·ℕ k) ⊕ β}
+    (⊕-mono-≤-left {α ·ℕ k} {β ·ℕ k} {α} (·ℕ-mono-≤-left k p))
+    (⊕-mono-≤-right {β ·ℕ k} {α} {β} p)
+
+----------------------------------------------------------------------
+-- Gap-monotonicity of `ω^_` (non-strict and strict)
+----------------------------------------------------------------------
+
+-- `ω^ 0 ≤′ ω^ n` for any n.  Induction on n; chain `ω^-step` at each
+-- step.
+
+ω^-from-zero : ∀ n → ω^ zero ≤′ ω^ n
+ω^-from-zero zero    = tt
+ω^-from-zero (suc n) =
+  ≤′-trans {ω^ zero} {ω^ n} {ω^ (suc n)}
+    (ω^-from-zero n)
+    (ω^-step n)
+
+-- `ω^ (suc m) ≤′ ω^ (suc n)` from `ω^ m ≤′ ω^ n`.  Both sides are
+-- limits.  By the recursive `_≤′_` clause for `olim ≤′ olim`,
+-- suffices to show for each branch `k`: `ω^ m ·ℕ k ≤′ ω^ (suc n)`.
+-- Route through `ω^ n ·ℕ k`: `ω^ m ·ℕ k ≤′ ω^ n ·ℕ k ≤′ ω^ (suc n)`.
+
+ω^-mono-≤-suc-suc : ∀ m n → ω^ m ≤′ ω^ n → ω^ (suc m) ≤′ ω^ (suc n)
+ω^-mono-≤-suc-suc m n p = λ k →
+  ≤′-trans {ω^ m ·ℕ k} {ω^ n ·ℕ k} {ω^ (suc n)}
+    (·ℕ-mono-≤-left k p)
+    (f-in-lim′ (λ j → ω^ n ·ℕ j) k)
+
+-- General gap monotonicity: `m ≤ n → ω^ m ≤′ ω^ n`.  Induction on the
+-- `≤` derivation; the `z≤n` case dispatches to `ω^-from-zero`, the
+-- `s≤s` case recurses and lifts via `ω^-mono-≤-suc-suc`.
+
+ω^-mono-≤ : ∀ {m n} → m ≤ n → ω^ m ≤′ ω^ n
+ω^-mono-≤ {.0}     {n}     z≤n     = ω^-from-zero n
+ω^-mono-≤ {suc m'} {suc n'} (s≤s p) = ω^-mono-≤-suc-suc m' n' (ω^-mono-≤ p)
+
+-- Strict gap monotonicity: `m < n → ω^ m <′ ω^ n`.  Note `_<_` on ℕ
+-- is `suc m ≤ n`, so `p : m < n` gives `ω^ (suc m) ≤′ ω^ n` via
+-- `ω^-mono-≤`.  Combined with the one-step strict `ω^-strict-mono-suc`
+-- this lifts to a strict bound on ω^ m.
+
+ω^-strict-mono : ∀ {m n} → m < n → ω^ m <′ ω^ n
+ω^-strict-mono {m} {n} p =
+  ≤′-trans {osuc (ω^ m)} {ω^ (suc m)} {ω^ n}
+    (ω^-strict-mono-suc m)
+    (ω^-mono-≤ p)

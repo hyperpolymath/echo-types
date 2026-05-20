@@ -426,6 +426,7 @@ open import Ordinal.Brouwer.Phase13 using
   ; ⊕-left-≤-sum
   ; ⊕-mono-≤-right
   ; ⊕-mono-<-right
+  ; ⊕-mono-≤-left
   )
 
 -- ω-power infrastructure for path-1 of the Buchholz rank-monotonicity
@@ -442,6 +443,11 @@ open import Ordinal.Brouwer.OmegaPow using
   ; X≤′oz⊕X
   ; ω^-strict-mono-suc
   ; ω^-step
+  ; ·ℕ-mono-≤-left
+  ; ω^-from-zero
+  ; ω^-mono-≤-suc-suc
+  ; ω^-mono-≤
+  ; ω^-strict-mono
   )
 
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
