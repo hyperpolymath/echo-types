@@ -91,6 +91,24 @@ open import EchoCost using
   ; echo-cost-compose
   )
 
+open import EchoAccess using
+  ( Access
+  ; feasible
+  ; infeasible
+  ; _⊑a_
+  ; _⊔a_
+  ; ⊑a-prop
+  ; ⊑a-⊔a-left
+  ; ⊑a-⊔a-right
+  ; ⊑a-⊔a-univ
+  ; EchoA
+  ; echo-access-forget
+  ; echo-access-intro
+  ; echo-access-relax
+  ; echo-access-from-cost
+  ; echo-access-compose
+  )
+
 open import EchoFiberCount using
   ( FiberSize-fin
   ; FiberSize-fin-no-hit

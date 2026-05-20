@@ -19,6 +19,7 @@ open import EchoApprox
 open import EchoIndexed
 open import EchoDecidable
 open import EchoCost
+open import EchoAccess
 open import EchoFiberCount
 open import EchoEpistemicResidue
 open import EchoRelational

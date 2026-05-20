@@ -225,14 +225,15 @@ of every modern cryptosystem depends on this axis being real.
   earlier `FiberSize ≡ 1` hardcode that rendered all
   Landauer/Bennett claims vacuous.
 
-Full cost-tracking refinements (2, 4) remain unformalised; the
-bookkeeping shape of refinement (1) landed 2026-05-20 in
-`EchoCost.agda` (record `EchoCost f y` with a `ℕ` cost ledger and
-the axis-8 lattice projections; see refinement 1 below).
-Refinement 1's *operational* upgrade — replacing the `ℕ` field
-with a resource monad — remains open. Asymptotic
-computational access still cannot be named at the type level
-without further machinery. Adjacent stdlib pieces:
+Full cost-tracking refinements (1, 2) now have bookkeeping-layer
+artifacts landed 2026-05-20: refinement 1 (`EchoCost.agda`, scalar
+ℕ ledger) and refinement 2 (`EchoAccess.agda`, two-point modal
+lattice). Their operational upgrades — replacing the ℕ field with
+a resource monad (refinement 1), or operationally substantiating
+the `feasible` grade with an extractor (refinement 2) — remain
+open. Refinement 4 (witness-search abstract machine) remains
+unformalised. Asymptotic computational access still cannot be
+named at the type level without further machinery. Adjacent stdlib pieces:
 - `Data.Nat.Logarithm.⌊log₂⌋` (now imported by
   `EchoThermodynamics`) and arithmetic complexity conventions admit
   informal-level statements like "this function runs in `O(n log n)`",
@@ -261,7 +262,16 @@ without further machinery. Adjacent stdlib pieces:
    "witness is reachable with `≤ c` steps". A graded semiring on the
    cost indexes gives composition. `EchoGraded.agda` is the natural
    host; the grade would need a complexity-class interpretation
-   (e.g. polynomial vs super-polynomial).
+   (e.g. polynomial vs super-polynomial). **First artifact landed
+   2026-05-20:** `proofs/agda/EchoAccess.agda` ships the modal
+   layer at a two-point lattice `{feasible, infeasible}` ordered
+   `feasible ⊑a infeasible`. Headlines: `_⊑a_` order with
+   `⊑a-prop` (propositional), `_⊔a_` join with the categorical
+   left/right/univ lemmas, `EchoA f y φ` grade-indexed echo,
+   `echo-access-{forget, intro, relax, from-cost, compose}`. The
+   grade is a *label*; the lattice / composition structure carries
+   the modal content. Refinement 4 (witness-search abstract
+   machine) would operationally substantiate the `feasible` grade.
 
 3. **Decidability-respecting echo.** `EchoDec f y = Dec (Echo f y)`
    pairs the echo with a *constructive decision procedure*. Weaker
