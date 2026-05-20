@@ -1,6 +1,8 @@
 = Adjacency: Setoid Quotients
 :toc: macro
 
+_Axes engaged: 1 (Ext/Int), 4 (Canon/Pres), 7 (PR/PI). See `README.adoc` § "Axis coverage matrix"._
+
 toc::[]
 
 == 1. Nearest existing construction

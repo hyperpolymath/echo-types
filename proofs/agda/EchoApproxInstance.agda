@@ -43,7 +43,7 @@ open import Level                                 using (Level)
 open import Data.Unit.Base                        using (⊤; tt)
 open import Relation.Binary.PropositionalEquality using (refl)
 
-open import EchoApprox using (Tolerance; PseudoMetric; module Approx)
+open import EchoApprox using (Tolerance; PseudoMetric; BalancedTolerance; module Approx)
 
 ----------------------------------------------------------------------
 -- The trivial tolerance carrier
@@ -74,6 +74,20 @@ trivialPseudoMetric = record
   }
 
 ----------------------------------------------------------------------
+-- The trivial BalancedTolerance instance on `trivialTolerance`
+----------------------------------------------------------------------
+
+-- On `Tol := ⊤`, both `+`-identity laws reduce to `tt ≡ tt`, which is
+-- `refl`. Pinned alongside `trivialTolerance` so `Smoke.agda` can
+-- enumerate the post-PR-#74 Rung-C lemmas at a typeable instance, in
+-- the same spirit as the per-lemma pins below.
+trivialBalancedTolerance : BalancedTolerance trivialTolerance
+trivialBalancedTolerance = record
+  { +-identityˡ = λ _ → refl
+  ; +-identityʳ = λ _ → refl
+  }
+
+----------------------------------------------------------------------
 -- Per-lemma proof-of-life pins for `Approx` at the trivial instance.
 --
 -- Top-level identifiers, one per `EchoApprox.Approx` headline, with
@@ -96,3 +110,14 @@ approx-compose            = echo-approx-compose
 approx-comp-sound         = echo-approx-comp-sound
 approx-comp-retract-to    = echo-approx-comp-retract-to
 approx-comp-retract-A     = echo-approx-comp-retract-A
+approx-comp-retract-B     = echo-approx-comp-retract-B
+approx-comp-retract-budget = echo-approx-comp-retract-budget
+approx-comp-retract-from-to = echo-approx-comp-retract-from-to
+approx-subst-A-invariant  = subst-A-invariant
+approx-Separated          = Separated
+approx-zero-collapses-strict = echo-approx-zero-collapses-strict
+approx-shadow-A           = echo-shadow-A
+approx-shadow-iso-to      = echo-shadow-iso-to
+approx-shadow-iso-from    = echo-shadow-iso-from
+approx-strict→approx-shadow-A = echo-strict→approx-shadow-A
+approx-strict→approx-collapse-shadow-A = echo-strict→approx-collapse-shadow-A

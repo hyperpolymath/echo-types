@@ -26,6 +26,39 @@
 --                                     preserves the A-witness up to `refl`,
 --                                     witnessing the retraction direction
 --                                     definitionally
+--   * BalancedTolerance              -- Tolerance with `+`-identityˡ/ʳ; the
+--                                     layered record (option (b) of the
+--                                     post-#74 design call) that unlocks the
+--                                     B-component + budget round-trips
+--   * echo-approx-comp-retract-B     -- B-component pin: the canonical-split
+--                                     section picks `b := f x` definitionally
+--                                     (refl; no `BalancedTolerance` needed —
+--                                     pinned for symmetry with -A and the
+--                                     round-trip suite)
+--   * echo-approx-comp-retract-budget -- budget round-trip: under
+--                                     `BalancedTolerance`, the tolerance
+--                                     after `sound ∘ retract-to` is `zero + ε`
+--                                     which equals the original `ε` on the nose
+--   * echo-approx-comp-retract-from-to -- the budget-aligned A-component
+--                                     round-trip: `proj₁ (subst _ (+-identityˡ ε)
+--                                     (sound (retract-to e))) ≡ proj₁ e`;
+--                                     the closest the approximate retract gets
+--                                     to a strict `from-to` round-trip without
+--                                     `≤`-propositionality on the bound
+--   * Separated                    -- separation predicate on a pseudo-metric:
+--                                     `dist b₁ b₂ ≤ zero → b₁ ≡ b₂`
+--   * echo-approx-zero-collapses-strict -- §7 #7: under separation, an
+--                                          ε≡zero approximate echo IS a
+--                                          strict echo
+--   * echo-shadow-A                -- §7 #8 axis-1 shadow: the underlying
+--                                     A-witness of an approximate echo;
+--                                     `echo-strict→approx` agrees with the
+--                                     strict A-witness on the nose
+--   * echo-shadow-iso-to / -from   -- §7 #8 trivial repackaging of `EchoR`
+--                                     as an existential `Σ A (λ x → dist
+--                                     (f x) y ≤ ε)` (definitional both ways)
+--   * echo-strict→approx-shadow-A  -- the A-component of `echo-strict→approx`
+--                                     equals the strict A-component (refl)
 --
 -- The non-expansiveness side condition on the outer leg is the
 -- minimal hypothesis under which tolerances accumulate additively;
@@ -37,13 +70,22 @@
 -- analogue of `Echo-comp-iso` is a *retraction*, not a strict
 -- isomorphism: the RHS Σ-shape admits multiple splits of the ε
 -- budget and the chosen intermediate `b` is not pinned by the input.
--- This module ships the first slice of that retract — soundness (#6),
--- the canonical-split forward section, and an A-component round-trip
--- witness. The B-component round-trip and the full tolerance round-trip
--- need a `+`-left-identity axiom on `Tolerance` (`zero + ε ≡ ε`, not
--- currently in the record); §7 obligations 7 (zero-collapse under
--- separation) and 8 (axis-1 shadow agreement) are deferred to
--- subsequent rungs.
+-- This module ships soundness (#6), the canonical-split forward
+-- section, the A-component round-trip witness, and (post-PR-#74) the
+-- B-component pin + budget round-trip + budget-aligned A-component
+-- round-trip via `BalancedTolerance` (option (b) of the design call:
+-- a layered record on top of `Tolerance`, NOT a mutation of the base
+-- interface — mirrors `Separated`/`PseudoMetric`). §7 obligations 7
+-- (separated zero-collapse) and 8 (axis-1 shadow agreement) are
+-- landed below. Rung D (Lipschitz `L_g ≠ 1`) is deferred — it requires
+-- multiplication on `Tolerance`, another interface call.
+--
+-- The full LHS-element round-trip equality `sound (retract-to e) ≡ e`
+-- (with the budget transported via `+-identityˡ`) is NOT discharged
+-- here: it would require propositionality of the order `_≤_` on the
+-- inner bound, which `Tolerance` deliberately does not assert.
+-- `echo-approx-comp-retract-from-to` captures the strongest
+-- A-component statement available without that extra hypothesis.
 
 module EchoApprox where
 
@@ -85,6 +127,36 @@ record PseudoMetric {b ℓ} (B : Set b) (T : Tolerance ℓ) : Set (b ⊔ ℓ) wh
     dist      : B → B → Tol
     dist-self : ∀ y         → dist y y ≡ zero
     dist-tri  : ∀ b₁ b₂ b₃  → dist b₁ b₃ ≤ (dist b₁ b₂ + dist b₂ b₃)
+
+----------------------------------------------------------------------
+-- Balanced tolerance: a `Tolerance` that has additive identities.
+--
+-- Layered on `Tolerance` exactly as `Separated` is layered on
+-- `PseudoMetric` — an *extra* predicate that callers opt into when
+-- their tolerance carrier admits `zero` as a two-sided identity for
+-- `+`, without forcing every `Tolerance` instance to carry the laws.
+--
+-- The base `Tolerance` interface deliberately stays minimal (transitive
+-- `≤`, reflexivity, monotone `+`) so that lop-sided / fold-mode
+-- tolerance carriers can still be instances. `BalancedTolerance`
+-- captures the balanced-monoid corner of the design space where
+-- `zero + ε ≡ ε` and `ε + zero ≡ ε` hold — exactly the structure
+-- needed to state the full LHS→RHS→LHS round-trip of the
+-- composition retract (the A-component already round-trips without
+-- it; see `echo-approx-comp-retract-A`).
+--
+-- Design call (option (b) of the post-#74 PR-body decision): a
+-- separate record on top of `Tolerance`, NOT a field of the base
+-- record. Keeps the base interface untouched, mirrors the
+-- `Separated`/`PseudoMetric` pattern, and lets every retract lemma
+-- take an explicit `BalancedTolerance` hypothesis at the call site.
+----------------------------------------------------------------------
+
+record BalancedTolerance {ℓ} (T : Tolerance ℓ) : Set ℓ where
+  open Tolerance T
+  field
+    +-identityˡ : ∀ ε → zero + ε ≡ ε
+    +-identityʳ : ∀ ε → ε + zero ≡ ε
 
 ----------------------------------------------------------------------
 -- Approximate echo
@@ -203,10 +275,13 @@ module Approx
   -- a thin repackaging of `echo-approx-compose`) that round-trips
   -- the A-witness definitionally.
   --
-  -- This block lands the first slice: soundness (#6), the canonical-
-  -- split forward section, and the A-component round-trip. The
-  -- B-component and tolerance-budget round-trips need a `+`-left-
-  -- identity axiom on `Tolerance` (`zero + ε ≡ ε`, not in the record).
+  -- This block lands: soundness (#6), the canonical-split forward
+  -- section, the A-component round-trip, the B-component pin, the
+  -- budget round-trip (via `BalancedTolerance`), and a budget-aligned
+  -- A-component round-trip. The base `Tolerance` interface stays
+  -- untouched; `+`-identity laws live on a separate `BalancedTolerance`
+  -- record, taken as an explicit hypothesis at the call sites that
+  -- need them.
   ----------------------------------------------------------------------
 
   -- §7 obligation 6: sound RHS-to-LHS direction.
@@ -261,3 +336,207 @@ module Approx
             (echo-approx-comp-retract-to f g e))
     ≡ proj₁ e
   echo-approx-comp-retract-A f g g-nonexp (x , _) = refl
+
+  ----------------------------------------------------------------------
+  -- B-component pin (post-PR-#74 Rung C, axis-2 design-note §7
+  -- B-component obligation).
+  --
+  -- The canonical-split section `echo-approx-comp-retract-to` picks
+  -- the intermediate `b := f x` definitionally — for every `EchoR ε
+  -- (g ∘ f) y` witness `(x , _)`, the B-component of the resulting
+  -- RHS-Σ shape is `f x = f (proj₁ e)`. The proof is `refl`; the
+  -- B-witness round-trips on the nose through the section step,
+  -- without any `BalancedTolerance` machinery. This pin sits in the
+  -- round-trip suite for symmetry with `echo-approx-comp-retract-A`
+  -- and to make the canonical-split discipline auditable in
+  -- `Smoke.agda`.
+  --
+  -- Note. There is no "full" B-component round-trip — going LHS→RHS
+  -- via the canonical split always lands on `b := f x` regardless of
+  -- the original input, and the LHS has no B-component to compare
+  -- to. The genuine RHS→LHS→RHS round-trip on B fails by design
+  -- (the chosen `b` is forgotten — that is precisely why the
+  -- approximate analogue is a retract, not an iso; design-note §5).
+  ----------------------------------------------------------------------
+
+  echo-approx-comp-retract-B :
+    ∀ {ε : Tol} (f : A → B) (g : B → B)
+    {y : B} (e : EchoR ε (g ∘ f) y) →
+    proj₁ (echo-approx-comp-retract-to f g e) ≡ f (proj₁ e)
+  echo-approx-comp-retract-B f g (x , _) = refl
+
+  ----------------------------------------------------------------------
+  -- Budget round-trip (post-PR-#74 Rung C, axis-2 design-note §7
+  -- budget obligation).
+  --
+  -- The composition `sound ∘ retract-to` weakens the tolerance budget
+  -- from `ε` (the input) to `zero + ε` (the output, because the
+  -- canonical-split section uses `ε₁ := zero` and `ε₂ := ε` and
+  -- `echo-approx-compose` reports the sum). Under
+  -- `BalancedTolerance`, `zero + ε ≡ ε` holds on the nose, so the
+  -- budget round-trips definitionally up to that identity law.
+  --
+  -- This is the smallest statement that uses the new
+  -- `BalancedTolerance` hypothesis: the bare identity law, expressed
+  -- in the same shape `(zero + ε) ≡ ε` that the
+  -- `echo-approx-comp-retract-from-to` `subst` consumes below.
+  ----------------------------------------------------------------------
+
+  echo-approx-comp-retract-budget :
+    (BT : BalancedTolerance T) →
+    ∀ (ε : Tol) → (zero + ε) ≡ ε
+  echo-approx-comp-retract-budget BT ε =
+    BalancedTolerance.+-identityˡ BT ε
+
+  ----------------------------------------------------------------------
+  -- Budget-aligned A-component round-trip (post-PR-#74 Rung C, the
+  -- closest the approximate retract gets to a strict `from-to`
+  -- equality without `≤`-propositionality).
+  --
+  -- `sound (retract-to e)` lives in `EchoR (zero + ε) (g ∘ f) y`,
+  -- not in `EchoR ε (g ∘ f) y`. The `subst` along `+-identityˡ`
+  -- pulls the witness back to the original tolerance type, after
+  -- which the A-component round-trips on the nose.
+  --
+  -- The full equality `subst _ (+-identityˡ ε) (sound (retract-to e))
+  -- ≡ e` is NOT discharged here: that would require propositionality
+  -- of the order `_≤_` on the inner bound (the bound proofs are
+  -- constructed by different routes — `subst (_≤ zero) ...` inside
+  -- `intro` + `+-mono-≤` inside `compose` — and identifying them
+  -- needs more structure than `Tolerance` asserts). The A-component
+  -- equality below is the strongest statement available without
+  -- assuming the order is a proposition.
+  --
+  -- The `subst` reduces to identity on the A-component because the
+  -- `subst (λ ε' → EchoR ε' f y) p` transport acts on the bound
+  -- proof, not on the A-witness (`EchoR ε f y = Σ A (λ x → dist (f x)
+  -- y ≤ ε)`; only the second component depends on `ε`). The proof
+  -- chains this through pattern matching on `e` and then leans on
+  -- `subst-A-invariant` to expose the definitional reduction.
+  ----------------------------------------------------------------------
+
+  -- Auxiliary: `subst` along an equation on the tolerance index does
+  -- not touch the A-component. `Σ`'s first component is independent
+  -- of the type-family transport over the second.
+  subst-A-invariant :
+    ∀ {ε₁ ε₂ : Tol} (p : ε₁ ≡ ε₂)
+    {f : A → B} {y : B} (e : EchoR ε₁ f y) →
+    proj₁ (subst (λ ε → EchoR ε f y) p e) ≡ proj₁ e
+  subst-A-invariant refl _ = refl
+
+  echo-approx-comp-retract-from-to :
+    (BT : BalancedTolerance T) →
+    ∀ {ε : Tol} (f : A → B) (g : B → B) (g-nonexp : NonExpansive g)
+    {y : B} (e : EchoR ε (g ∘ f) y) →
+    proj₁ (subst (λ ε' → EchoR ε' (g ∘ f) y)
+                 (BalancedTolerance.+-identityˡ BT ε)
+                 (echo-approx-comp-sound f g g-nonexp
+                   (echo-approx-comp-retract-to f g e)))
+    ≡ proj₁ e
+  echo-approx-comp-retract-from-to BT {ε = ε} f g g-nonexp e =
+    let
+      rt = echo-approx-comp-sound f g g-nonexp
+             (echo-approx-comp-retract-to f g e)
+      eq = BalancedTolerance.+-identityˡ BT ε
+    in subst-A-invariant eq rt
+
+  ----------------------------------------------------------------------
+  -- §7 obligation 7: separated zero-collapse.
+  --
+  -- A pseudo-metric is *separated* when zero distance implies
+  -- propositional equality on the carrier. Pseudo-metrics in general
+  -- only guarantee `dist y y ≡ zero`; the converse (a metric proper)
+  -- is an extra hypothesis the `PseudoMetric` record deliberately
+  -- does not bake in. Callers who need the converse supply a
+  -- `Separated` witness explicitly at the lemma site.
+  --
+  -- Under that hypothesis, the strict-vs-approximate gap closes at
+  -- ε = zero: any zero-tolerance approximate echo IS a strict echo,
+  -- with the same A-witness on the nose. This realises §7 #7 of the
+  -- axis-2 design note and the §4 "Approximate → strict (only when
+  -- separated, at ε = 0)" statement.
+  --
+  -- Without separation the converse fails by design — multiple `x`s
+  -- may share zero distance to `y` without `f x ≡ y` on the nose.
+  -- That is the point of an approximate echo.
+  ----------------------------------------------------------------------
+
+  Separated : Set (b ⊔ ℓ)
+  Separated = ∀ b₁ b₂ → dist b₁ b₂ ≤ zero → b₁ ≡ b₂
+
+  echo-approx-zero-collapses-strict :
+    Separated →
+    ∀ {f : A → B} {y : B} → EchoR zero f y → Echo f y
+  echo-approx-zero-collapses-strict sep {f = f} {y = y} (x , dfx≤0) =
+    x , sep (f x) y dfx≤0
+
+  ----------------------------------------------------------------------
+  -- §7 obligation 8: axis-1 shadow agreement.
+  --
+  -- The "shadow" of an approximate echo is its underlying A-witness —
+  -- the projection that forgets the metric-bound proof. Two flavours:
+  --
+  --   * `echo-shadow-A`            — extracts the A-witness from an
+  --                                  approximate echo (definitional,
+  --                                  the existing `proj₁`).
+  --
+  --   * `echo-shadow-iso-{to,from}` — the trivial repackaging of
+  --                                   `EchoR ε f y` as the existential
+  --                                   `Σ A (λ x → dist (f x) y ≤ ε)`.
+  --                                   Both directions are `id` because
+  --                                   the two shapes are definitionally
+  --                                   equal; the iso lemma here pins
+  --                                   the §7 #8 obligation explicitly.
+  --
+  --   * `echo-strict→approx-shadow-A` — axis-1 / axis-2 cross-check:
+  --                                     `echo-strict→approx` preserves
+  --                                     the A-component on the nose
+  --                                     (`refl`).  This is the
+  --                                     definitional version of "the
+  --                                     strict→approx inclusion and the
+  --                                     A-shadow projection cohere"
+  --                                     from the user-prompt framing.
+  --
+  -- Together these say: the A-component is a genuine axis-1 invariant
+  -- of approximate echoes — every move in the axis-2 calculus that
+  -- keeps the A-witness fixed (intro, strict→approx, relax,
+  -- canonical-split retract section) preserves the axis-1 shadow
+  -- definitionally.
+  ----------------------------------------------------------------------
+
+  echo-shadow-A :
+    ∀ {ε : Tol} {f : A → B} {y : B} → EchoR ε f y → A
+  echo-shadow-A = proj₁
+
+  -- Forward: an approximate echo IS an existential with metric bound.
+  -- Definitionally `id`; the lemma pins the axis-1 shadow obligation.
+  echo-shadow-iso-to :
+    ∀ {ε : Tol} {f : A → B} {y : B} →
+    EchoR ε f y → Σ A (λ x → dist (f x) y ≤ ε)
+  echo-shadow-iso-to e = e
+
+  echo-shadow-iso-from :
+    ∀ {ε : Tol} {f : A → B} {y : B} →
+    Σ A (λ x → dist (f x) y ≤ ε) → EchoR ε f y
+  echo-shadow-iso-from e = e
+
+  -- A-component of `echo-strict→approx` agrees with the strict
+  -- A-component on the nose. The transport in `echo-strict→approx`
+  -- only touches the bound proof, never the A-witness.
+  echo-strict→approx-shadow-A :
+    ∀ {f : A → B} {y : B} (e : Echo f y) →
+    echo-shadow-A (echo-strict→approx e) ≡ proj₁ e
+  echo-strict→approx-shadow-A (x , _) = refl
+
+  -- Round-trip: under separation, `echo-approx-zero-collapses-strict`
+  -- and `echo-strict→approx` are mutually A-inverse at ε = zero,
+  -- definitionally on the A-component. This closes the §4 statement
+  -- "Approximate → strict (only when separated, at ε = 0)" with a
+  -- definitional witness on the axis-1 shadow.
+  echo-strict→approx-collapse-shadow-A :
+    (sep : Separated) →
+    ∀ {f : A → B} {y : B} (e : Echo f y) →
+    proj₁ (echo-approx-zero-collapses-strict sep
+            (echo-strict→approx e))
+    ≡ proj₁ e
+  echo-strict→approx-collapse-shadow-A sep (x , _) = refl

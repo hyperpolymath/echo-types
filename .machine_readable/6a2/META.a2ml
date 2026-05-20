@@ -6,7 +6,7 @@
 ;;; Schema reference:
 ;;;   github.com/hyperpolymath/standards/blob/main/meta-a2ml/spec/abnf/meta.abnf
 ;;;
-;;; SPDX-License-Identifier: PMPL-1.0-or-later
+;;; SPDX-License-Identifier: MPL-2.0
 ;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
 (define-module (echo-types meta)
@@ -71,6 +71,33 @@
      (context . "User works across two machines: Fedora Kinoite (primary, Nushell) and a Windows machine for travel.")
      (decision . "Build instructions are path-agnostic; line endings normalised via .gitattributes (LF for Agda/AsciiDoc/YAML, .agdai marked binary). Cross-platform considerations apply throughout.")
      (consequences . "Path-agnostic build instructions are required, not optional, for any new tooling.")
+     (supersedes . none))
+
+    (adr-007
+     (title . "F1 earn-back via monoid-graded iterated-residue construction")
+     (status . accepted)
+     (date . "2026-05-20")
+     (context . "R-2026-05-18 retracted the graded-comonad claim about EchoGraded — the structure was a thin-poset reindexing with no nested family, no monoid multiplication, no genuine δ. Pillar F gate F1 (docs/echo-types/earn-back-plan.adoc §F1) asked whether ANY genuine graded comonad with Echo as the grade-unit object could be mechanised under --safe --without-K with zero postulates.")
+     (decision . "The candidate construction passes: proofs/agda/EchoGradedComonadF1.agda ships a monoid-graded iterated-residue comonad at the grade monoid (ℕ, +, 0) with D 0 A = A; D (suc r) A = R (D r A) where R X = X × Bool (an informative residue layer, not ⊤). All three graded-comonad laws (gc-counit-l, gc-counit-r, gc-coassoc) typecheck under --safe --without-K with zero postulates; gc-coassoc closes via the predicted δ-naturality-over-R factoring (δ-suc + subst-D-suc). The separating witness D2-nontrivial certifies D r is not collapsing to ⊤ / a prop.")
+     (consequences . "F1 PASSED; the graded-comonad claim is earned back FOR THIS WITNESS ONLY. EchoGraded itself remains a thin-poset reindexing modality per R-2026-05-18 — F1 enters as an *additional* mechanised contribution beside EchoGraded, not as a reinstatement of it. Paper title and central thesis (Echo as a reindexing modality) stand unchanged. Unblocks F3 (independent second comonad model). Retraction follow-up F-2026-05-20a appended to docs/retractions.adoc.")
+     (supersedes . none))
+
+    (adr-008
+     (title . "F3 earn-back via two non-isomorphic-grade-monoid instances of an abstract interface")
+     (status . accepted)
+     (date . "2026-05-20")
+     (context . "F1 (adr-007) earned back the existence of a graded comonad with Echo as grade-unit object. Gate F3 (docs/echo-types/earn-back-plan.adoc §F3) asked whether the construction is genuinely model-independent — instantiable at non-isomorphic grade monoids without a single hypothesis (no ⊑-prop-equivalent field) baking in the result.")
+     (decision . "EchoGradedComonadInterface.GradedComonadStructure is an abstract record packaging the F1 signature (grade monoid + monoid laws + graded functor + functor laws + counit + nested δ + the three comonad laws stated against subst along the monoid's propositional identities). The record carries NO ⊑-prop-equivalent field — only structure, monoid laws, and comonad laws. Two non-isomorphic-grade-monoid instances inhabit it: EchoGradedComonadInstance1.nat-instance at the commutative monoid (ℕ, +, 0); EchoGradedComonadInstance2.list-instance at the non-commutative free monoid (List Tag, ++, []) over a two-element Tag with per-element residue layers R smol A = A × Bool and R big A = A × ℕ. Non-isomorphism is constructively witnessed by tag-list-non-commutative.")
+     (consequences . "F3 PASSED; the two-models claim is earned back FOR THE F1-STYLE GRADED-COMONAD WITNESS. It does NOT reinstate the older EchoRelModel/GCLaws two-models claim retracted at R-2026-05-18 finding 3 — that situation (same grade poset, ⊑-prop baked in as a field, rel-model = set-model × ⊤, agreement by refl) is unchanged. The two earn-backs are about different abstract interfaces and are not interconvertible. Retraction follow-up F-2026-05-20b appended to docs/retractions.adoc. Pillar F earn-back programme now CLOSED: F4 + F2 (2026-05-18), F1 + F3 (2026-05-20).")
+     (supersedes . none))
+
+    (adr-009
+     (title . "Retraction-discipline succeeded: R-2026-05-18 reframing converted into four earn-back gate passes")
+     (status . accepted)
+     (date . "2026-05-20")
+     (context . "R-2026-05-18 retracted five claims and reframed the project around what the Agda actually shows (thin-poset reindexing modality, not graded comonad; pointwise mediator, not terminal cone; carrier-parametricity, not model-independence; postulate-free build as evidence, not conservativity metatheorem; no funext anywhere, not 'quarantined'). The earn-back plan in docs/echo-types/earn-back-plan.adoc was the falsifiable program for converting the retracted claims back into theorems — or confirming, on the project's own gate discipline, that they cannot be earned at their original strength.")
+     (decision . "All four gates have now passed at the strictly-bounded strength the earn-back plan asked for: F4 (terminal-cone UP as a function of an explicit funext parameter, never a postulate); F2 (genuine second model of the bare Echo functor on a non-graph StepND relation); F1 (genuine graded comonad on iterated-residue carrier with Echo as grade-unit object); F3 (the F1 construction is instantiable at non-isomorphic grade monoids). Each is exactly as strong as the gate specified; nothing is overclaimed. The conservativity metatheorem retraction (R-2026-05-18 finding 5) stays retracted with no gate attempting to earn it back — that one was a meta-statement over all propositions, not discharged by typechecking. The 'not two models for EchoGraded/GCLaws' finding 3 also stays retracted; the F3 earn-back is about the different F1 interface.")
+     (consequences . "The retraction discipline is validated AS A METHODOLOGY: a retraction is not a failure but the mechanism by which claims become falsifiable. Four of five retracted claims were earned back at honest strength, one stays retracted, none was silently re-inflated. paper.adoc / types-abstract.adoc / conservativity.adoc are NOT moved by this ADR — those documents are about EchoGraded's thin-poset structure, which the F1+F3 side-construction does not change. Whether to add a bounded 'new contribution' paragraph is owner-gated.")
      (supersedes . none))))
 
 ;;; ============================================================

@@ -34,16 +34,20 @@ open import Echo using
   )
 
 -- AntiEcho thin slice (theory/antiecho — Σ-dual of Echo). Lands the
--- carrier, per-element disjointness, introduction, and source-side
--- map-over. Distinct from `EchoFiberTriangulation.CoEcho` (which is
--- the trivial opposite-orientation fibre `∃ x . y ≡ f x`); see
--- `coecho.md` §6 for the naming rationale. Partition-with-decidability
--- and tropical decomposition deferred to follow-up slices.
+-- carrier, per-element disjointness, introduction, source-side
+-- map-over, and per-element partition with decidability of `f x ≡ y`
+-- (obligation 5). Distinct from `EchoFiberTriangulation.CoEcho`
+-- (which is the trivial opposite-orientation fibre `∃ x . y ≡ f x`);
+-- see `coecho.md` §6 for the naming rationale. Tropical decomposition
+-- lives in `AntiEchoTropical.agda`; the generic-codomain lift of it
+-- remains deferred.
 open import AntiEcho using
   ( AntiEcho
   ; antiecho-intro
   ; antiecho-disjoint
   ; antiecho-map-over
+  ; antiecho-partition-dec
+  ; antiecho-partition-codomain-dec
   )
 
 -- Pillar A of docs/echo-types/establishment-plan.adoc: the
@@ -67,11 +71,68 @@ open import EchoFiberTriangulation using
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
 open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)
+
+-- Example 9 (docs/echo-types/examples.md §9): parser residue —
+-- balanced parentheses. The Boolean shadow `parses : List Token →
+-- Bool` is non-injective on distinct presentations (`(())` vs `()()`),
+-- and the Echo retains the token stream. Pinned headlines: the
+-- non-injectivity Σ-witness, the three concrete `Echo parses true`
+-- carriers (empty / pair / nested), and the residue Σ-pair.
+open import EchoExampleParser using
+  ( Token
+  ; LP
+  ; RP
+  ; parses
+  ; echo-parse-empty
+  ; echo-parse-pair
+  ; echo-parse-nested
+  ; echo-parse-nested≢echo-parse-pair
+  ; parses-non-injective
+  ; parser-residue
+  ; BalancedClosed
+  ; empty-balanced
+  ; paren-empty-balanced
+  ; paren-nested-balanced
+  ; paren-pair-balanced
+  )
+
+-- Example 10 from `docs/echo-types/examples.md` (abstract
+-- interpretation via Sign lattice). Headlines pinned so a rename
+-- or a slide back to an unanchored claim fails CI fast. See
+-- PR #76 (presentation-dependence cluster).
+open import EchoExampleAbsInt using
+  ( Sign
+  ; Carrier
+  ; α
+  ; concretization-collapses
+  ; α-non-injective-on-pos
+  ; echo-pos-p1
+  ; echo-pos-p2
+  ; echo-zero-witness
+  ; distinct-echoes-same-sign
+  ; absint-classification
+  )
+
+-- Example 5 (docs/echo-types/examples.md §5): database provenance via
+-- K-provenance semiring. Distinct Bool-provenance rows project to the
+-- same payload, witnessing the non-injectivity of `project` and
+-- producing distinct echoes at the same projected value.
+open import EchoExampleProvenance using
+  ( Row
+  ; project
+  ; provenance-collapses
+  ; echo-prov-true
+  ; echo-prov-false
+  ; echoes-distinguish-provenance
+  ; echo-prov-true≢echo-prov-false
+  ; collapse-via-residue
+  )
 open import VecRotation using (rotL-alternating; rotR-alternating; map-alternating)
 
 open import EchoApprox using
   ( Tolerance
   ; PseudoMetric
+  ; BalancedTolerance
   ; module Approx
   )
 
@@ -81,6 +142,7 @@ open import EchoApprox using
 open import EchoApproxInstance using
   ( trivialTolerance
   ; trivialPseudoMetric
+  ; trivialBalancedTolerance
   ; approx-EchoR
   ; approx-intro
   ; approx-strict→approx
@@ -90,6 +152,43 @@ open import EchoApproxInstance using
   ; approx-comp-sound
   ; approx-comp-retract-to
   ; approx-comp-retract-A
+  ; approx-comp-retract-B
+  ; approx-comp-retract-budget
+  ; approx-comp-retract-from-to
+  ; approx-subst-A-invariant
+  ; approx-Separated
+  ; approx-zero-collapses-strict
+  ; approx-shadow-A
+  ; approx-shadow-iso-to
+  ; approx-shadow-iso-from
+  ; approx-strict→approx-shadow-A
+  ; approx-strict→approx-collapse-shadow-A
+  )
+
+-- Axis 8 third quantitative artifact (taxonomy.md §8, refinement 1):
+-- cost-indexed echo over an abstract `CostAlgebra` (ordered commutative
+-- monoid with `0`, `+`, `≤`, left-identity, transitivity, monotone-`+`).
+-- Sits orthogonal to `EchoDecidable` (refinement 3, qualitative
+-- decidability) and `EchoFiberCount` (quantitative fibre-count for
+-- finite domains): names the resource-budget dimension of Axis 8.
+-- Carrier + headlines pinned via `EchoCostInstance` (trivial-on-⊤
+-- instance) — same hygiene pattern as `EchoApproxInstance`.
+open import EchoCost using
+  ( CostAlgebra
+  ; module Cost
+  )
+
+open import EchoCostInstance using
+  ( trivialCostAlgebra
+  ; cost-EchoC
+  ; cost-intro
+  ; cost-intro-≤
+  ; cost-relax
+  ; cost-relax-zero
+  ; cost-forget
+  ; cost-compose
+  ; cost-compose-mono
+  ; cost-forget-compose-mono-A
   )
 
 open import EchoIndexed using
@@ -111,6 +210,36 @@ open import EchoDecidable using
   ; echo-dec-fin
   ; echo-dec-compose-iso
   ; echo-dec-compose-fin
+  )
+
+-- Axis 8(4) thin slice (taxonomy.md §"Witness-search abstract
+-- machine"): the enumerator-bounded refinement of `Echo`. Lands the
+-- search strategy + bound-indexed carrier, introduction, bound
+-- monotonicity, forgetful projection to plain `Echo`, empty-budget
+-- vacuity, and the honest post-composition rule. Sequential /
+-- product-strategy composition needs a `ℕ × ℕ ↔ ℕ` pairing
+-- bijection and lands in a separate slice; see the module preamble
+-- "where next" section.
+open import EchoSearch using
+  ( SearchStrategy
+  ; EchoS
+  ; echo-search-intro
+  ; echo-search-relax
+  ; echo-search-forget
+  ; echo-search-bound-zero
+  ; echo-search-postcompose
+  )
+
+-- Per-lemma pins for the parameterised EchoSearch via
+-- EchoSearchInstance — same hygiene pattern as EchoApproxInstance.
+open import EchoSearchInstance using
+  ( trivialEnum
+  ; trivialF
+  ; search-intro-⊤
+  ; search-relax-⊤
+  ; search-forget-⊤
+  ; search-bound-zero-⊤
+  ; search-postcompose-⊤
   )
 
 -- Axis 8 second formal artifact (taxonomy.md §8): graded access
@@ -342,6 +471,49 @@ open import EchoStepNDModelF2 using
   ; nd-fibre-not-prop             -- the fibre is not a proposition
   )
 
+-- Pillar F, Gate F1 — the MAKE-OR-BREAK gate (docs/echo-types/
+-- earn-back-plan.adoc §F1). A genuine graded comonad on the
+-- iterated-residue carrier `D r A = r nested R-layers`, with grade
+-- monoid (ℕ, +, 0), Echo as the grade-unit object (D 0 (Echo f y) is
+-- the bare echo), NESTED comultiplication δ : D (m+n) ⇒ D m ∘ D n,
+-- all three graded-comonad laws proved, and a separating witness
+-- showing D 2 is not collapsing to ⊤. --safe --without-K, zero
+-- postulates, no funext. Scope: this earns back the graded-comonad
+-- claim FOR THIS WITNESS ONLY; `EchoGraded` itself remains a
+-- thin-poset reindexing modality per R-2026-05-18.
+open import EchoGradedComonadF1 using
+  ( D                              -- the graded functor
+  ; mapD ; mapD-id ; mapD-∘        -- functor laws
+  ; ε                              -- counit at the unit grade
+  ; δ                              -- NESTED comultiplication
+  ; D2-nontrivial                  -- D 2 is not ⊤ / a prop
+  ; gc-counit-r                    -- counit-right law (definitional)
+  ; gc-counit-l                    -- counit-left law
+  ; gc-coassoc                     -- coassociativity law (the F1 keystone)
+  )
+
+-- Pillar F, Gate F3 — PASSED (docs/echo-types/earn-back-plan.adoc §F3).
+-- The abstract `GradedComonadStructure` record (grade monoid + graded
+-- functor + counit + nested comultiplication + monoid laws + functor
+-- laws + comonad laws, with NO ⊑-prop-equivalent field) plus TWO
+-- non-isomorphic-grade-monoid instances:
+--   * `nat-instance`  at the COMMUTATIVE  monoid (ℕ, +, 0)
+--   * `list-instance` at the NON-COMMUTATIVE monoid (List Tag, ++, [])
+-- The non-isomorphism is witnessed by `tag-list-non-commutative`
+-- (one direction: only a non-commutative monoid satisfies it).
+open import EchoGradedComonadInterface using
+  ( GradedComonadStructure          -- the abstract record
+  )
+open import EchoGradedComonadInstance1 using
+  ( nat-instance                    -- F1 packaged as record-inhabitant at (ℕ, +, 0)
+  )
+open import EchoGradedComonadInstance2 using
+  ( Tag                             -- two-element grade index
+  ; tag-list-non-commutative        -- monoid non-isomorphism witness
+  ; D-nontrivial                    -- D (smol ∷ big ∷ []) is non-trivial
+  ; list-instance                   -- the second graded-comonad instance
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
@@ -374,6 +546,17 @@ open import AntiEchoTropical using
   ; optimality-as-antiecho-flavour-from
   ; tropdecomp-antiecho-to
   ; tropdecomp-antiecho-from
+  )
+
+-- Generic-codomain lift of the tropical decomposition. Same headline
+-- theorems as `AntiEchoTropical` above, but parameterised by an
+-- abstract `OrderedCodomain` interface (carrier B, ≤/<, ≤⇒¬<, ¬<⇒≤)
+-- rather than fixed to ℕ. Sanity instance `ℕ-ordered-codomain`
+-- pinned so the interface is demonstrably inhabitable.
+open import AntiEchoTropicalGeneric using
+  ( OrderedCodomain
+  ; ℕ-ordered-codomain
+  ; module Generic
   )
 
 open import EchoIntegration using
@@ -533,12 +716,69 @@ open import Ordinal.Brouwer.Phase13 using
   ; ⊕-left-≤-sum
   ; ⊕-mono-≤-right
   ; ⊕-mono-<-right
+  ; ⊕-mono-≤-left
+  ; ⊕-assoc-≤
+  ; ⊕-assoc-≥
+  )
+
+-- ω-power infrastructure for path-1 of the Buchholz rank-monotonicity
+-- unblock (docs/echo-types/buchholz-rank-obstruction.adoc).  Limit-
+-- shaped replacement for `nat-to-ord (suc n)` successor stacks.
+open import Ordinal.Brouwer.OmegaPow using
+  ( _·ℕ_
+  ; ω^_
+  ; ω^0≡one
+  ; ·ℕ-zero
+  ; ·ℕ-suc
+  ; one·ℕ≡nat-to-ord
+  ; ω^_-pos
+  ; X≤′oz⊕X
+  ; ω^-strict-mono-suc
+  ; ω^-step
+  ; ·ℕ-mono-≤-left
+  ; ω^-from-zero
+  ; ω^-mono-≤-suc-suc
+  ; ω^-mono-≤
+  ; ω^-strict-mono
+  ; ·ℕ-add-≤
+  ; additive-principal
   )
 
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
   ( rank
+  )
+
+-- ω-power rank for Ω-markers and Buchholz terms.  Limit-shaped
+-- replacement for `nat-to-ord (suc n)` successor stacks.  Compositional
+-- rank-mono primitives (right-mono on `bplus`) reusable across both
+-- `_<ᵇ⁻_` (this track) and `_<ᵇʳᶠ_` (parallel session).
+open import Ordinal.Buchholz.RankPow using
+  ( ω-rank-pow
+  ; ω-rank-pow-fin
+  ; ω-rank-pow-pos
+  ; ω-rank-pow-mono
+  ; rank-pow
+  ; rank-pow-bplus
+  ; rank-pow-bOmega
+  ; rank-pow-bplus-right-mono
+  ; rank-pow-bplus-left-≤
+  ; rank-pow-via-left
+  ; additive-principal-ω-rank-pow
+  ; rank-pow-bplus-into-ω-rank-pow
+  ; rank-mono-<ᵇ-0-Ω
+  ; rank-mono-<ᵇ-0-ψ
+  ; rank-mono-<ᵇ-ΩΩ
+  ; rank-mono-<ᵇ-Ωψ
+  ; rank-mono-<ᵇ-ψΩ
+  ; rank-mono-<ᵇ-Ω+
+  ; rank-mono-<ᵇ-ψ+
+  ; rank-mono-<ᵇ-+Ω
+  ; rank-mono-<ᵇ-+ψ
+  ; rank-mono-<ᵇ-+1-via-target
+  ; rank-mono-<ᵇ-+1-Ω-target
+  ; rank-mono-<ᵇ-+1-ψ-target
   )
 
 open import Ordinal.OmegaMarkers using

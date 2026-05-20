@@ -1,0 +1,74 @@
+= EchoAccess `Lift ⊤` carrier — design closure
+:toc:
+:sectnums:
+
+== Verdict
+
+The `enum`, `feasible`, and `infeasible` grades of `EchoAccess.CEcho` retain
+their minimal `Lift ⊤` carriers. This is the **correct honest answer** under
+the access lattice's intended semantics, not a placeholder awaiting refinement.
+
+== Evidence
+
+The access lattice `free ≤a decidable ≤a enum ≤a feasible ≤a infeasible`
+tracks **decreasing information** as you climb. `free` means the witness
+is in hand; `infeasible` means the witness exists only metatheoretically.
+The grade-indexed degrade operator
+
+[source,agda]
+----
+degrade-access : c1 ≤a c2 → CEcho c1 f y → CEcho c2 f y
+----
+
+must therefore _drop_ information when climbing the lattice — never
+fabricate it. Three concrete attempts at "honest carriers" under
+existential semantics all fail structurally:
+
+* `decidable→enum` etc. with `CEcho enum f y := Σ ℕ (λ n → (Fin n → A) × Echo f y)`:
+  the `no ¬e` branch of `EchoDec f y = Dec (Echo f y)` has no
+  `Echo f y` to package; `degrade-access` is uninhabitable.
+* `*→feasible` with a `Dec` requirement on `B`: there is no
+  constructive way to fabricate a decider on an arbitrary `B`
+  from any source carrier.
+* `*→infeasible` with `CEcho infeasible f y := ∀ x → f x ≢ y`
+  (AntiEcho-shape): direct contradiction with any positive source
+  carrier containing `Echo f y`.
+
+Under `--safe --without-K`, no postulate or funext is available to
+discharge the missing data.
+
+== Implication
+
+The `Lift ⊤` carriers are honest in the same sense that
+`EchoGraded.forget = ⊤` is honest: at the loss-maximal grade, there
+is no extractable data to carry. The grade itself names the loss.
+
+The grade-indexed composition machinery on `EchoAccess` —
+`degrade-access-comp`, `degrade-access-compose`,
+`degrade-access-via-join`, `_⊔a_`, and `≤a-⊔a-{left,right,univ}`
+(landed in PR #75) — operates on the grade, not the carrier shape,
+and is therefore sound under either reading. **No landed theorem
+depends on this decision.** This is purely a closure of the design
+question raised in `EchoAccess.agda`'s original header.
+
+== Alternatives considered
+
+* **Option (a) parameterise `CEcho` on `Decidable B` + enumerator** —
+  rejected because it forces every caller to supply machinery at the
+  `free` grade where it does nothing.
+* **Option (b) existential carriers** — owner-authorised initial attempt;
+  shown structurally impossible above.
+* **Option (c) `⊎`-shape (honest ⊎ placeholder)** — preserves total
+  `degrade-access` and the existential spirit, at the cost of
+  weakening honesty lemmas to "conditional on `inj₁`". Kept as a
+  future affordance if a real use-case for existential extraction
+  emerges; not the current default.
+
+== Status
+
+* **Verdict:** closed.
+* **Implication:** no Agda obligation remains for this question;
+  `EchoAccess.agda`'s module header updated to reflect the resolution.
+* **Open:** none. Future work on `EchoAccess` (e.g. cost-indexed
+  refinement per `EchoCost.agda`, search-class refinement per
+  `EchoSearch.agda`) is unaffected by this closure.

@@ -1,6 +1,8 @@
 = Adjacency: refinement types
 :toc: macro
 
+_Axes engaged: 7 (PR/PI). See `README.adoc` § "Axis coverage matrix"._
+
 [.lead]
 *Verdict: distinct against propositional-predicate variants;
 co-extensive with Σ-relevant variants.* The honest claim is

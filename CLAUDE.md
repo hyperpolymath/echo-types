@@ -191,9 +191,277 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-05-17)
+## Current rung state (2026-05-20)
 
-### Session arc 2026-05-17 (read this first)
+### Session arc 2026-05-20 daytime (theory closure waves 1 + 2 + 3)
+
+*Where we started today (commit `888dee0`, post-#73):* the establishment
+track was complete A–D + Pillar E paper drafting in progress. The
+theory roadmap §"Theory work — no proof assistant needed" listed four
+"open" items (Axis 2 approximate, Axis 8 refinement, negative/CoEcho,
+2-categorical shape) plus two truly open (presentation-dependence,
+Gate 1 adjacency refresh).
+
+*Where we ended today:* the **entire `§Theory work — no proof
+assistant needed` section is closed** (modulo Lane 2 in flight). 10+
+PRs landed:
+
+1. `#67` — doc rule-out 2-categorical shape + roadmap correction.
+   Discovered 2 of 4 "open" items were actually shipped: Axis 2 already
+   landed as `EchoApprox.agda`; Axis 8 candidate 3 already landed as
+   `EchoDecidable.agda`. Roadmap re-credited. `decisions/no-2-cat.adoc`
+   added — every would-be 2-cell in landed code is `refl` or forced
+   trivial by propositionality.
+2. `#68` + `#75` — Axis 8 graded access modality. New `EchoAccess.agda`:
+   5-grade enum (`free / decidable / enum / feasible / infeasible`),
+   Hasse-enumerated `_≤a_` with `≤a-prop` closing on `refl`,
+   `EchoAccess` Σ-carrier, `_⊔a_` join + 3 join lemmas + composition
+   trio mirroring `EchoGraded` recipe. Sixth instance of the
+   decoration recipe.
+3. `#69` + `#72` — AntiEcho (Σ-dual of Echo) + tropical decomposition.
+   `AntiEcho f y := Σ A (λ x → f x ≢ y)`. Tropical decomposition
+   `IsArgmin ↔ Echo × Π (¬(score z < y))` ships both bijection
+   directions with `refl` round-trips. Cashes the CoEcho exploration's
+   "EchoTropical tension dissolves" claim.
+4. `#70` + `#74` — EchoApprox composition rung. Retract direction
+   (`echo-approx-comp-retract-to/A`) + Separated zero-collapse +
+   axis-1 shadow lemmas. Rung C (full B/budget round-trip) deferred —
+   needs `Tolerance` `+`-identity; in flight as Lane 2 via separate
+   `BalancedTolerance` record (option b).
+5. `#71` — hygiene: per-lemma Smoke pins for `EchoApprox` via
+   `EchoApproxInstance.agda` (trivial-on-`⊤` instance). Closes a
+   silent CLAUDE.md-invariant violation for parameterised modules.
+   Standard pattern for future parameterised modules.
+6. `#76` — presentation-dependence sub-theory: examples 5, 9, 10
+   cluster as Σ-over-`R` instantiating Axis 4; meta-pattern only,
+   no formalisation needed.
+7. `#77` — Gate 1 adjacency refresh: 5/5 REFINED verdicts; every
+   adjacency claim survives, all benefit from re-statement in axis
+   terms (esp. axis 8 after this session).
+8. This PR — bookkeeping (CLAUDE.md refresh) + Lane 1 closure
+   (`Lift ⊤` confirmed as honest carrier for EchoAccess top grades;
+   `decisions/echo-access-trivial-carrier.adoc`). The existential
+   carriers attempt structurally fails because the access lattice
+   tracks DECREASING information; trivial carrier is correct.
+
+Build invariant held every rung: `All.agda` + `Smoke.agda` exit 0
+under `--safe --without-K`, zero postulates, zero escape pragmas, no
+funext. Pillar E paper continues (parallel sessions; `#73` landed
+primer + related-work + estate PMPL→MPL-2.0 sweep).
+
+Two patterns formalised this session:
+
+* **Smoke pin for parameterised modules** via concrete trivial instance
+  (`EchoApproxInstance.agda` style). Apply to any future parameterised
+  module to honour the "every headline pinned" invariant.
+* **Sandbox quirk on `agda` positional args**: `Bash(agda *)` in
+  `permissions.allow` doesn't cover `agda <file>`. Workaround in
+  `.claude/settings.json`: `"sandbox": {"excludedCommands": ["agda"]}`,
+  applied 2026-05-20. Future Agda swarms should not need the
+  parent-verify dance that was required on PRs #71, #72, #75.
+
+### Session arc 2026-05-20 Wave 3 (later, same day)
+
+After §"Theory work" section closed, a final swarm wave (5 PRs)
+shipped the remaining Axis 8 refinements + the presentation-dependence
+example cluster identified by `#76`:
+
+9.  `#80` — `EchoSearch.agda` + `EchoSearchInstance.agda`. Axis 8(4)
+    witness-search abstract machine, thin slice: bound-`n` echo via
+    enumerator. Headlines: intro / relax / forget / bound-zero /
+    postcompose. Sequential+product composition deferred (needs
+    `ℕ × ℕ ↔ ℕ` pairing); real abstract-machine model deferred.
+10. `#85` — `EchoCost.agda` + `EchoCostInstance.agda`. Axis 8(1)
+    cost-indexed refinement over abstract `CostAlgebra`
+    (ordered commutative monoid with `+`-identityˡ + `+`-mono-≤).
+    Composition uses first-order combiner shape (strictly more
+    general than EchoApprox's endomorphic-outer-leg shape; single-
+    domain corner falls out by `combine := proj₂`). No funext.
+11. `#81` — Example 5 (DB provenance via Bool K-provenance semiring),
+    `EchoExampleProvenance.agda`. Distinct Bool-provenance rows
+    project to same payload; Echo carries the lost annotation.
+    Headlines tie to `EchoResidue` via `collapse-via-residue`.
+12. `#83` — Example 9 (parser residue, balanced parens),
+    `EchoExampleParser.agda`. Pragmatic depth-counter `parses`
+    (avoids full Balanced grammar); both Bool-shadow and
+    BalancedClosed grammar witnesses pinned. `(())` vs `()()`
+    are two distinct echoes at `parses ≡ true`.
+13. `#82` — Example 10 (abstract interpretation via Sign lattice),
+    `EchoExampleAbsInt.agda`. Hand-rolled 5-element carrier
+    (`{m2,m1,z,p1,p2}`) avoids Data.Integer weight. `α` collapses
+    `m2,m1↦neg`, `p1,p2↦pos`. `distinct-echoes-same-sign` is the
+    headline; `absint-classification` proves the concrete class
+    over `pos` is exactly `{p1,p2}`.
+
+Plus parallel-session contributions during Wave 3: `#84` Pillar E
+Evaluation section, `#86` F1 gc-coassoc earn-back closure.
+
+**Axis 8 status now: 4 of 4 refinements landed.** Decidability
+(`EchoDecidable.agda`, pre-session); graded access (`EchoAccess.agda`,
+`#68`+`#75`+`#79`); cost-indexed (`EchoCost.agda`, `#85`);
+witness-search (`EchoSearch.agda`, `#80`).
+
+Build invariant held: `All.agda` + `Smoke.agda` exit 0 across all 5
+Wave-3 PRs under `--safe --without-K`, zero postulates / funext /
+escape pragmas. Smoke pins for parameterised modules continue using
+the `EchoApproxInstance` trivial-on-`⊤` pattern (now `EchoCostInstance`,
+`EchoSearchInstance`).
+
+Two minor lessons added to memory:
+- Each new module should get its OWN `open import ... using ( ... )`
+  block in `Smoke.agda` with a header comment, not share a paren-block
+  with another lane's pins. Cuts merge-conflict resolution noise.
+- During swarm-merge sequences, *another claude session* was
+  concurrently rebasing my open PRs (`#82` shows `8950855`/`549f219`/
+  `b9c6ba0`/`df691d9` from a parallel session). Mostly cooperative —
+  they pre-merged `#83`/`#85`, brought `#82` to MERGEABLE. Re-fetch
+  before force-push; verify other session's branch builds clean
+  before either taking over or backing off.
+
+*Plan for the next Claude:* the theory roadmap section is **closed**.
+Open work:
+
+1. Ordinal track — unbudgeted `_<ᵇʳᶠ_` global WF + surface-route WF
+   back into `Order.agda`'s main `_<ᵇ_`. Solo, not swarmable; this is
+   the named next bottleneck in the roadmap.
+2. Pillar E paper — clear remaining `[EXPAND]` tags as material accrues
+   (parallel sessions are actively doing this — `#73`, `#84`).
+3. `antiecho-partition-dec` (needs DecEq B) and generic-codomain
+   `antiecho-tropical-decompose` (needs ordered-codomain interface) —
+   small deferrals from Wave 1.
+4. EchoSearch sequential/product composition (needs `ℕ × ℕ ↔ ℕ`);
+   real abstract-machine model (configs + step relation); decidability
+   bridge `bounded-search-is-decidable` — see `EchoSearch.agda`'s
+   "where next" section.
+5. EchoApprox examples 6, 7, 8 — still unbuilt in `EchoExamples.agda`
+   (only ex 1–4 + 9 + 5 + 10 land as concrete examples; 6 = approximate
+   echo, 7 = ordinal collapse already in `EchoOrdinal`, 8 = open).
+
+DO NOT reopen: 2-categorical shape (`decisions/no-2-cat.adoc`);
+EchoAccess existential carriers (`decisions/echo-access-trivial-carrier.adoc`);
+the Pillar A–D internal programme (complete since 2026-05-17);
+any §"Theory work" item — the section is closed.
+
+### Session arc 2026-05-20 evening — ω-power rank-mono unblock (read this first)
+
+*Where we started today (commit `8c9ddcb` on `harden/ci-flake-pin-2026-05-18`):*
+the ordinal track had the WfCNF predicate plus the `_<ᵇ⁻_` subrelation
+foundations from the earlier session.  The rank-embedding route to
+unbudgeted `wf-<ᵇʳᶠ_` was framed as "closed impossible" in
+`docs/echo-types/buchholz-rank-obstruction.adoc` — the
+`<ᵇ-+Ω <ᵇ-0-Ω : bplus bzero (bOmega (fin 1)) <ᵇ bOmega (fin 0)`
+counterexample forced a rank inversion under additive Brouwer rank
+with `nat-to-ord` successor-stack `ω-rank`.  4 of 13 constructors
+admitted rank-mono via `RankPartial.agda`; 9 were structurally
+walled.
+
+*Where we ended (PR #87, branch `session-2026-05-20/buchholz-budgeted-plus`,
+23 commits ahead of `8c9ddcb`):* the "closed impossible" verdict is
+**narrowed** — under the WfCNF restriction `_<ᵇ⁻_` together with a
+*limit-shaped* ω-power rank, **10 of 13 constructors close** via
+relation-agnostic compositional primitives.  3 cases remain open
+under documented structural blockers (ψ-admissibility, joint-bplus).
+
+Eight slices landed in order, each with `agda proofs/agda/All.agda`
+and `agda proofs/agda/Smoke.agda` exiting 0 under `--safe --without-K`,
+zero postulates, zero escape pragmas, no funext:
+
+1. **Slice 1** — `Ordinal.Brouwer.OmegaPow.agda` lands `_·ℕ_`, `ω^_`,
+   basic identifications (`ω^0≡one`, `one·ℕ≡nat-to-ord`,
+   `·ℕ-zero`, `·ℕ-suc`), positivity `ω^_-pos`, one-step strict-mono
+   `ω^-strict-mono-suc`, weakening `ω^-step`.
+2. **Slice 2** — left-monotonicity of `_⊕_` (`⊕-mono-≤-left` in
+   `Phase13.agda`) + `·ℕ-mono-≤-left`, `ω^-mono-≤`, `ω^-strict-mono`
+   (general gap).  Block comment in Phase13 documenting why strict
+   left-mono of `_⊕_` is *not* a theorem (the `α + ω = β + ω`
+   counterexample).
+3. **Slice 3** — `⊕-assoc-≤` / `⊕-assoc-≥` (both funext-free `≤′`
+   directions in Phase13), `·ℕ-add-≤` bridge, and the keystone
+   **`additive-principal`** at `ω^(suc n)`.  The closure-under-addition
+   property that makes ω-powers the right rank target for plus-side
+   `_<ᵇ_` constructors.
+4. **Slice 4** — `Ordinal.Buchholz.RankPow.agda`: limit-shaped
+   `ω-rank-pow : OmegaIndex → Ord` (`fin n ↦ ω^(suc n)`), `rank-pow :
+   BT → Ord` consuming it, plus reusable compositional primitives
+   (`rank-pow-bplus-right-mono`, `rank-pow-via-left`,
+   `rank-pow-bplus-into-ω-rank-pow`, `additive-principal-ω-rank-pow`).
+5. **Slice 5** — 9 per-constructor rank-mono primitives in RankPow:
+   `rank-mono-<ᵇ-0-Ω/0-ψ/ΩΩ/Ωψ/ψΩ/Ω+/ψ+/+Ω/+ψ`.  Each stated purely
+   in terms of rank inequalities (not the relation), so both `<ᵇ⁻`
+   and `<ᵇʳᶠ` consumers reuse them by pattern-matching on their own
+   relation's constructor.
+6. **Item 1** — `rank-mono-<ᵇ-+1-via-target` parametric in the
+   target's additive-principal witness; `rank-mono-<ᵇ-+1-Ω-target`
+   and `rank-mono-<ᵇ-+1-ψ-target` convenience wrappers.  Closes
+   `<ᵇ-+1` for atomic targets; bplus-target sub-case explicitly
+   deferred.
+7. **Item 2** — `Ordinal.Buchholz.WellFormedAdmissible.agda` lands
+   `WfAdm : BT → Set` strengthening WfCNF with `rank-pow α <′
+   ω-rank-pow ν` on each `bpsi ν α`.  Carrier only; rank refinement
+   for `<ᵇ-ψα` / `<ᵇ-ψΩ≤` discharge deferred (cross-case interaction
+   with `<ᵇ-+ψ` documented in the module preamble).
+8. **Item 3** — `Ordinal.Buchholz.RankMonoUmbrella.agda`: the
+   rank-soundness-ready relation `_<ᵇ⁰_` with 10 constructors
+   (tail-bounds baked in via `_≤ᵇ⁰_`) plus the umbrella theorem
+   **`rank-pow-mono-<ᵇ⁰ : x <ᵇ⁰ y → rank-pow x <′ rank-pow y`**
+   proved by direct structural recursion over the 10 cases.
+
+*Closure-doc update*: `docs/echo-types/buchholz-rank-obstruction.adoc`
+gains a "Slices 1–5 of the ω-power unblock" section with an updated
+per-constructor verdict table (10 closed / 3 open).  The "rank-
+embedding route is closed" framing is narrowed: closed for
+unrestricted `_<ᵇ_`, opens up under the WfCNF restriction with
+limit-shaped rank.
+
+**Open work on this track (documented blockers):**
+
+* `<ᵇ-ψα`, `<ᵇ-ψΩ≤` — provisional `rank-pow (bpsi ν _) = ω-rank-pow ν`
+  doesn't discriminate on α.  Closed by ψ-admissibility predicate
+  (carrier landed in Item 2); the rank refinement is a separate
+  slice that needs to resolve the `<ᵇ-+ψ` cross-case.
+* `<ᵇ-+1` joint-bplus — `rank-pow (bplus z₁ z₂)` is not additive
+  principal in general.  Needs a coarser dominator function (e.g.,
+  `leading-Ω-index : BT → OmegaIndex` returning the leftmost-deepest
+  Ω-marker) or a richer rank shape.
+* `rank-pow-mono-<ᵇ⁻` (full umbrella over `_<ᵇ⁻_` — gated on the
+  above two).  The 10-of-13 `_<ᵇ⁰_` umbrella is the working closure;
+  consumers needing the full `_<ᵇ⁻_` form bridge through the
+  3-cases-open gap.
+
+Build invariant held every slice: `All.agda` + `Smoke.agda` exit 0
+under `--safe --without-K`, zero postulates, zero escape pragmas, no
+funext.  All headlines pinned in `Smoke.agda` (or
+`Ordinal/Buchholz/Smoke.agda` for the Buchholz-layer modules).
+
+**Reusable design constraint**: Per a parallel-session note on
+`_<ᵇʳᶠ_`, the rank-mono primitives are stated *relation-agnostically*
+(rank-input, rank-output, no `<ᵇ` constructor patterns).  Both the
+`_<ᵇ⁻_` consumer (this track) and the `_<ᵇʳᶠ_` consumer (parallel
+session's wf-`<ᵇʳᶠ` milestone) can pattern-match on their own
+relation's constructor and apply the matching primitive.
+
+*Plan for the next Claude:* PR #87 is the deliverable.  Closure
+work continues in three follow-ons, prioritised:
+
+1. **ψ-admissibility rank refinement** (closes `<ᵇ-ψα`, `<ᵇ-ψΩ≤`,
+   2 of 3 open cases).  Define `rank-adm : BT → Ord` using
+   `ω-rank-pow ν ⊕ rank-pow α` for ψ under WfAdm.  Cross-case fix
+   for `<ᵇ-+ψ`: under admissibility, source-rank is bounded by
+   `ω-rank-pow ν` (the structural admissibility-source-bound lemma).
+2. **Leading-Ω-index domination** (closes `<ᵇ-+1` general).  Define
+   `head-Ω : BT → OmegaIndex` returning the leftmost-deepest Ω
+   marker.  Prove `rank-pow t <′ ω-rank-pow-succ (head-Ω t)` for
+   non-bzero WfCNF terms.  Then `<ᵇ-+1` discharges via head-Ω
+   inversion + additive-principal at the head-Ω's successor.
+3. **Full `rank-pow-mono-<ᵇ⁻` umbrella** — composition of 1+2
+   with the existing 10-constructor `_<ᵇ⁰_` umbrella.
+
+DO NOT reopen: the closed 10 constructors (their primitives are
+correct under WfCNF); the unbudgeted `_<ᵇʳᶠ_` rank route per
+`RankBrouwer.agda` preamble (genuinely impossible for unrestricted
+`_<ᵇ_`).  The umbrella works on `_<ᵇ⁰_`, not on `_<ᵇ_` directly.
+
+### Session arc 2026-05-17 (legacy — read second)
 
 *Where we started today (commit `8a2b908`):* the establishment
 track was a plan plus scaffolds — Pillar A landed; Pillars B–D were
