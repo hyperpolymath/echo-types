@@ -58,6 +58,7 @@ open import Ordinal.OmegaMarkers                  using
 open import Ordinal.Brouwer                       using
   ( Ord
   ; oz
+  ; osuc
   ; olim
   )
 open import Ordinal.Brouwer.Arithmetic            using (_⊕_)
@@ -184,3 +185,167 @@ rank-pow-bplus-right-mono : ∀ {x y z}
   → rank-pow (bplus x y) <′ rank-pow (bplus x z)
 rank-pow-bplus-right-mono {x} {y} {z} p =
   ⊕-mono-<-right {rank-pow x} {rank-pow y} {rank-pow z} p
+
+----------------------------------------------------------------------
+-- Left-≤-sum projection
+----------------------------------------------------------------------
+
+-- The left summand of a `bplus` is always ≤′ the sum (in rank).
+-- Direct from `⊕-left-≤-sum` in Phase13.
+
+open import Ordinal.Brouwer.Phase13 using (⊕-left-≤-sum; ≤′-trans)
+
+rank-pow-bplus-left-≤ : ∀ x y → rank-pow x ≤′ rank-pow (bplus x y)
+rank-pow-bplus-left-≤ x y = ⊕-left-≤-sum {rank-pow x} (rank-pow y)
+
+-- `target <′ rank-pow x → target <′ rank-pow (bplus x y)`.  Covers
+-- the rank-mono shape needed for `<ᵇ-Ω+` and `<ᵇ-ψ+`: source-side
+-- atomic (or smaller) is strictly less than the left of a bplus,
+-- hence strictly less than the bplus itself.
+
+rank-pow-via-left : ∀ {target x y}
+  → target <′ rank-pow x
+  → target <′ rank-pow (bplus x y)
+rank-pow-via-left {target} {x} {y} p =
+  ≤′-trans {osuc target} {rank-pow x} {rank-pow (bplus x y)}
+    p
+    (rank-pow-bplus-left-≤ x y)
+
+----------------------------------------------------------------------
+-- Additive-principal closure at `ω-rank-pow μ`
+----------------------------------------------------------------------
+
+-- `ω-rank-pow μ` is closed under ordinal addition: for any α, β
+-- strictly below, the sum α ⊕ β is also strictly below.  Direct
+-- consequence of `Ordinal.Brouwer.OmegaPow.additive-principal` for
+-- the `fin n` case; the `ω` case picks a common upper bound from
+-- both witnesses' branch indices.
+
+open import Data.Nat.Base       using (_+_; s≤s)
+open import Data.Nat.Properties using (m≤m+n; m≤n+m)
+
+open import Ordinal.Brouwer.OmegaPow using
+  ( additive-principal
+  ; ω^-mono-≤
+  )
+
+additive-principal-ω-rank-pow : ∀ {μ α β}
+  → α <′ ω-rank-pow μ
+  → β <′ ω-rank-pow μ
+  → α ⊕ β <′ ω-rank-pow μ
+additive-principal-ω-rank-pow {fin n} pα pβ =
+  additive-principal {n} pα pβ
+additive-principal-ω-rank-pow {ω} {α} {β} (kα , sα) (kβ , sβ) =
+  (kα + kβ) , additive-principal {kα + kβ} α<sum β<sum
+  where
+  -- Lift α's witness from ω^(suc kα) to ω^(suc (kα + kβ)) via
+  -- ω^-mono-≤ on `kα ≤ kα + kβ`.
+  α<sum : α <′ ω^ (suc (kα + kβ))
+  α<sum = ≤′-trans
+            {osuc α} {ω^ (suc kα)} {ω^ (suc (kα + kβ))}
+            sα
+            (ω^-mono-≤ (s≤s (m≤m+n kα kβ)))
+
+  -- Lift β's witness from ω^(suc kβ) to ω^(suc (kα + kβ)) via
+  -- ω^-mono-≤ on `kβ ≤ kα + kβ`.
+  β<sum : β <′ ω^ (suc (kα + kβ))
+  β<sum = ≤′-trans
+            {osuc β} {ω^ (suc kβ)} {ω^ (suc (kα + kβ))}
+            sβ
+            (ω^-mono-≤ (s≤s (m≤n+m kβ kα)))
+
+----------------------------------------------------------------------
+-- "Plus-side into additive-principal target": the bplus shape
+-- `bplus x y` lands strictly below an additive-principal target when
+-- the left summand x does and the tail y is ≤′ x's rank.
+----------------------------------------------------------------------
+
+-- This is the rank-side discharge for `<ᵇ-+Ω` and `<ᵇ-+ψ` under
+-- WfCNF.  The WfCNF condition `y ≤ᵇ x` lifts to a rank inequality
+-- `rank-pow y ≤′ rank-pow x` (proved in Slice 5b once the
+-- `rank-pow-mono-≤ᵇ` corollary is in place); we take that as a
+-- separate hypothesis here so this primitive can be applied
+-- whenever a caller produces the tail bound (Slice 5 consumer or
+-- the `<ᵇʳᶠ` consumer's own WfCNF carrier).
+
+rank-pow-bplus-into-ω-rank-pow : ∀ {x y μ}
+  → rank-pow x <′ ω-rank-pow μ
+  → rank-pow y ≤′ rank-pow x
+  → rank-pow (bplus x y) <′ ω-rank-pow μ
+rank-pow-bplus-into-ω-rank-pow {x} {y} {μ} px y≤x =
+  additive-principal-ω-rank-pow {μ} px y<target
+  where
+  y<target : rank-pow y <′ ω-rank-pow μ
+  y<target = ≤′-trans
+               {osuc (rank-pow y)} {osuc (rank-pow x)} {ω-rank-pow μ}
+               y≤x   -- `osuc/osuc` clause: y≤x : rank y ≤′ rank x
+                     -- reduces to osuc (rank y) ≤′ osuc (rank x).
+               px
+
+----------------------------------------------------------------------
+-- Per-constructor rank-mono primitives (relation-agnostic)
+----------------------------------------------------------------------
+
+-- One lemma per `_<ᵇ_` constructor, stated purely in terms of rank
+-- inequalities (not the relation itself).  Consumers — `_<ᵇ⁻_`
+-- (this track, Slice 5b) and `_<ᵇʳᶠ_` (parallel-session track) —
+-- pattern-match on their own relation's constructor and apply the
+-- matching primitive below.  The recursive structure lives in the
+-- consumer, not in `RankPow`.
+--
+-- Coverage:
+--   * 4 trivial cases (no premise on subterms): `<ᵇ-0-Ω`, `<ᵇ-0-ψ`,
+--     `<ᵇ-ΩΩ`, `<ᵇ-Ωψ`, `<ᵇ-ψΩ` — 5 actually, since `<ᵇ-ψΩ` is
+--     ω-rank-pow-mono.  Pure structural facts.
+--   * 4 "via-left" cases: `<ᵇ-Ω+`, `<ᵇ-ψ+`, `<ᵇ-+Ω`, `<ᵇ-+ψ` — the
+--     `+` lives on one side; primitive takes a strict-on-left witness
+--     plus (for the `+` source cases) the WfCNF tail bound.
+--   * Deferred: `<ᵇ-ψα`, `<ᵇ-ψΩ≤` (admissibility-blocked under the
+--     provisional `rank-pow (bpsi ν _) = ω-rank-pow ν` shape) and
+--     `<ᵇ-+1` (joint-bplus, structurally hardest; needs a coarser
+--     bound or a refined rank).
+
+rank-mono-<ᵇ-0-Ω : ∀ {μ} → rank-pow bzero <′ rank-pow (bOmega μ)
+rank-mono-<ᵇ-0-Ω {μ} = ω-rank-pow-pos μ
+
+rank-mono-<ᵇ-0-ψ : ∀ {ν α} → rank-pow bzero <′ rank-pow (bpsi ν α)
+rank-mono-<ᵇ-0-ψ {ν} = ω-rank-pow-pos ν
+
+rank-mono-<ᵇ-ΩΩ : ∀ {μ ν} → μ <Ω ν
+  → rank-pow (bOmega μ) <′ rank-pow (bOmega ν)
+rank-mono-<ᵇ-ΩΩ p = ω-rank-pow-mono p
+
+rank-mono-<ᵇ-Ωψ : ∀ {μ ν α} → μ <Ω ν
+  → rank-pow (bOmega μ) <′ rank-pow (bpsi ν α)
+rank-mono-<ᵇ-Ωψ p = ω-rank-pow-mono p
+
+rank-mono-<ᵇ-ψΩ : ∀ {μ ν α β} → μ <Ω ν
+  → rank-pow (bpsi μ α) <′ rank-pow (bpsi ν β)
+rank-mono-<ᵇ-ψΩ p = ω-rank-pow-mono p
+
+rank-mono-<ᵇ-Ω+ : ∀ {μ x y}
+  → rank-pow (bOmega μ) <′ rank-pow x
+  → rank-pow (bOmega μ) <′ rank-pow (bplus x y)
+rank-mono-<ᵇ-Ω+ {μ} {x} {y} p = rank-pow-via-left {rank-pow (bOmega μ)} {x} {y} p
+
+rank-mono-<ᵇ-ψ+ : ∀ {ν α x y}
+  → rank-pow (bpsi ν α) <′ rank-pow x
+  → rank-pow (bpsi ν α) <′ rank-pow (bplus x y)
+rank-mono-<ᵇ-ψ+ {ν} {α} {x} {y} p =
+  rank-pow-via-left {rank-pow (bpsi ν α)} {x} {y} p
+
+rank-mono-<ᵇ-+Ω : ∀ {x y μ}
+  → rank-pow x <′ rank-pow (bOmega μ)
+  → rank-pow y ≤′ rank-pow x          -- WfCNF tail bound (caller-provided)
+  → rank-pow (bplus x y) <′ rank-pow (bOmega μ)
+rank-mono-<ᵇ-+Ω {x} {y} {μ} px y≤x =
+  rank-pow-bplus-into-ω-rank-pow {x} {y} {μ} px y≤x
+
+rank-mono-<ᵇ-+ψ : ∀ {x y ν α}
+  → rank-pow x <′ rank-pow (bpsi ν α)
+  → rank-pow y ≤′ rank-pow x          -- WfCNF tail bound (caller-provided)
+  → rank-pow (bplus x y) <′ rank-pow (bpsi ν α)
+rank-mono-<ᵇ-+ψ {x} {y} {ν} {α} px y≤x =
+  -- `rank-pow (bpsi ν α) = ω-rank-pow ν` (provisional shape), so
+  -- this reduces to the `<ᵇ-+Ω`-shaped argument at target ν.
+  rank-pow-bplus-into-ω-rank-pow {x} {y} {ν} px y≤x

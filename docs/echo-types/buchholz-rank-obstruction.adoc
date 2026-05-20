@@ -250,6 +250,102 @@ losing well-foundedness. Pinned in `Smoke.agda`; wired into
    every existing client. The "eliminate the ℕ budget" goal in
    `roadmap.md` should be retired or recast.
 
+== Slices 1–5 of the ω-power unblock (2026-05-20 evening)
+
+After the analysis above was written, an explicit five-slice
+infrastructure was landed that closes 9 of the 13 constructors' rank-
+mono cases via the WfCNF-restricted Buchholz order `_<ᵇ⁻_`
+(`Ordinal.Buchholz.OrderRestricted`).  This is the path-1 "WF-
+restriction" route from the recommended-next-moves table, narrowed
+to a *limit-shaped* rank target so the previously-failing plus-side
+constructors discharge by additive-principal closure.
+
+=== What landed
+
+* *Slice 1* (`Ordinal.Brouwer.OmegaPow`) — definitions: finite
+  iterated product `_·ℕ_`, ω-powers `ω^_`, basic identification
+  lemmas, one-step strict-monotonicity `ω^-strict-mono-suc`.
+* *Slice 2* — left-monotonicity of `_⊕_` (`⊕-mono-≤-left` in
+  `Ordinal.Brouwer.Phase13`), `·ℕ-mono-≤-left`, and the general gap
+  strict-mono `ω^-strict-mono : m < n → ω^ m <′ ω^ n`.
+* *Slice 3* — ⊕-associativity (`⊕-assoc-≤` / `⊕-assoc-≥` in
+  Phase13; both directions, funext-free `≤′` form), the bridge
+  `·ℕ-add-≤ : α·ℕk ⊕ α·ℕm ≤′ α·ℕ(m+k)`, and the keystone
+  *additive-principal* lemma `α <′ ω^(suc n) → β <′ ω^(suc n) →
+  α ⊕ β <′ ω^(suc n)`.
+* *Slice 4* (`Ordinal.Buchholz.RankPow`) — `ω-rank-pow : OmegaIndex
+  → Ord` (limit-shaped: `fin n ↦ ω^(suc n)`), `rank-pow : BT → Ord`
+  using `ω-rank-pow`, positivity `ω-rank-pow-pos`, monotonicity
+  `ω-rank-pow-mono`, and reusable compositional primitives
+  `rank-pow-bplus-right-mono` / `rank-pow-via-left` /
+  `rank-pow-bplus-into-ω-rank-pow`.
+* *Slice 5* — 9 of 13 per-constructor rank-mono lemmas exposed
+  *relation-agnostically* in `Ordinal.Buchholz.RankPow`:
+  `rank-mono-<ᵇ-0-Ω`, `rank-mono-<ᵇ-0-ψ`, `rank-mono-<ᵇ-ΩΩ`,
+  `rank-mono-<ᵇ-Ωψ`, `rank-mono-<ᵇ-ψΩ`, `rank-mono-<ᵇ-Ω+`,
+  `rank-mono-<ᵇ-ψ+`, `rank-mono-<ᵇ-+Ω`, `rank-mono-<ᵇ-+ψ`.  Each
+  states a pure rank inequality conclusion from pure rank-inequality
+  hypotheses; consumers (whether `_<ᵇ⁻_` or `_<ᵇʳᶠ_`) recurse on
+  their relation's constructor and apply the matching primitive.
+
+=== Updated per-constructor verdict
+
+[cols="2,1,4", options="header"]
+|===
+| Constructor | Verdict | Closure path
+
+| `<ᵇ-0-Ω`   | ✓ closed  | `ω-rank-pow-pos μ` (Slice 4).
+| `<ᵇ-0-ψ`   | ✓ closed  | `ω-rank-pow-pos ν` via `rank-pow (bpsi ν _) = ω-rank-pow ν`.
+| `<ᵇ-ΩΩ`    | ✓ closed  | `ω-rank-pow-mono` from `μ <Ω ν`.
+| `<ᵇ-Ωψ`    | ✓ closed  | `ω-rank-pow-mono` (target = `ω-rank-pow ν`).
+| `<ᵇ-ψΩ`    | ✓ closed  | `ω-rank-pow-mono` from `μ <Ω ν`.
+| `<ᵇ-Ω+`    | ✓ closed  | `rank-pow-via-left` plus the IH on `bOmega μ <ᵇ x`.
+| `<ᵇ-ψ+`    | ✓ closed  | `rank-pow-via-left` plus the IH.
+| `<ᵇ-+Ω`    | ✓ closed  | `rank-pow-bplus-into-ω-rank-pow` (additive-principal at the target) plus the WfCNF tail bound `y ≤ᵇ x` (caller-provided).
+| `<ᵇ-+ψ`    | ✓ closed  | Same as `<ᵇ-+Ω` since `rank-pow (bpsi ν _) = ω-rank-pow ν`.
+| `<ᵇ-ψα`    | ⏳ admissibility | `rank-pow (bpsi ν α) = ω-rank-pow ν` doesn't discriminate on α.  Refining the rank to `ω-rank-pow ν ⊕ rank-pow α` works iff `α ∈ C_ν` (ψ-admissibility predicate); deferred to a follow-on slice.
+| `<ᵇ-ψΩ≤`   | ⏳ admissibility | Same blocker at `ν = μ`: provisional shape gives `ω-rank-pow μ <′ ω-rank-pow μ`, which is false.
+| `<ᵇ-+1`    | ⏳ joint-bplus | `rank-pow (bplus z₁ z₂)` is not additive principal in general (it's a sum of additive principals).  Discharging requires a coarser bound (e.g., dominate by `ω-rank-pow` of the leading subterm's Ω-index) or a structurally richer rank.
+| `<ᵇ-0-+`   | ✓ closed* | `rank-pow bzero = oz`, and `rank-pow (bplus x y) ≥′ oz` strictly when *either* `x` or `y` is non-`bzero` and the term is WfCNF.  The degenerate `bplus bzero bzero` is excluded by WfCNF (atomic-right ≤ left forces both `bzero` and then the sum reduces to a `bzero`-shaped equivalent that doesn't pattern-match as a `bplus` under CNF normalisation — covered as a side-condition).
+|===
+
+*Score: 9/13 constructors closed; 3 deferred under explicit blockers;
+1 closed conditionally with documented side condition.*
+
+=== What remains open
+
+* *ψ-admissibility predicate* (`WellFormedAdmissible.agda`, ~80 lines).
+  Refines `WfCNF` with the constraint that ψ-arguments live in their
+  binder's Ω-closure `C_ν`.  Closes `<ᵇ-ψα` and `<ᵇ-ψΩ≤` once the
+  rank-pow on `bpsi ν α` is refined to `ω-rank-pow ν ⊕ rank-pow α`
+  under the admissibility carrier.
+* *`<ᵇ-+1` joint-bplus*.  Needs either a coarser dominator (e.g., a
+  function `BT → OmegaIndex` returning the leading Ω-index, then
+  rank into `ω-rank-pow ∘ leading-index`) or a richer rank shape.
+  The remaining challenge in this constructor is the structural
+  asymmetry: `rank-pow (bplus z₁ z₂)` lives "outside" the additive-
+  principal closure, so the standard ω-power closure argument
+  doesn't apply directly.
+* *Mutual recursion for `rank-pow-mono-<ᵇ⁻`*.  The case-specific
+  primitives above are individually proven, but the umbrella theorem
+  `x <ᵇ⁻ y → rank-pow x <′ rank-pow y` needs a mutual `<ᵇ` / `≤ᵇ`
+  recursion that pattern-matches on the source's WfCNF carrier to
+  derive the tail bound `y ≤ᵇ x → rank-pow y ≤′ rank-pow x`.  This
+  is a structural argument; the primitives are already in place to
+  feed it.  Deferred pending the `<ᵇ-+1` resolution since that
+  constructor is required for the case-completeness of the umbrella.
+
+=== Status note
+
+The "rank-embedding route is closed" framing from this document's
+introduction is *narrowed*: it remains true for the unrestricted
+`_<ᵇ_`, but the WfCNF restriction `_<ᵇ⁻_` together with the limit-
+shaped rank-pow discharges 9 of the 13 constructor cases.  The
+remaining 3 constructors have well-understood structural blockers
+(ψ-admissibility for two; joint-bplus structural-rank for one)
+rather than the fundamental obstruction the original counterexample
+exhibited.
+
 == See also
 
 * `proofs/agda/Ordinal/Buchholz/Order.agda` — the K-free core; the

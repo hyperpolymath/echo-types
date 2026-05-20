@@ -473,6 +473,19 @@ open import Ordinal.Buchholz.RankPow using
   ; rank-pow-bplus
   ; rank-pow-bOmega
   ; rank-pow-bplus-right-mono
+  ; rank-pow-bplus-left-≤
+  ; rank-pow-via-left
+  ; additive-principal-ω-rank-pow
+  ; rank-pow-bplus-into-ω-rank-pow
+  ; rank-mono-<ᵇ-0-Ω
+  ; rank-mono-<ᵇ-0-ψ
+  ; rank-mono-<ᵇ-ΩΩ
+  ; rank-mono-<ᵇ-Ωψ
+  ; rank-mono-<ᵇ-ψΩ
+  ; rank-mono-<ᵇ-Ω+
+  ; rank-mono-<ᵇ-ψ+
+  ; rank-mono-<ᵇ-+Ω
+  ; rank-mono-<ᵇ-+ψ
   )
 
 open import Ordinal.OmegaMarkers using
