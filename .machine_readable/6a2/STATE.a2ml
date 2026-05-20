@@ -234,19 +234,20 @@
 ;;; ============================================================
 
 (define next-actions
-  '(((id . t-3)
-     (title . "Gate-1 falsification test 3 (informativeness collapse)")
-     (status . unstubbed)
-     (relevance . "Now better-targeted post-EI-2: with RoleGraded in place, ask whether the role-or-grade axis is derivable from the other plus a forgetful functor.")
-     (priority . medium))
-
-    ((id . q2-4)
-     (title . "Falsifier attempts for surviving gate-2 nominees")
-     (status . open)
-     (relevance . "Each surviving nominee has an unattempted falsifier. Worth attempting at least one to harden the gate-2 case beyond 'no successful reduction has been attempted'.")
-     (priority . medium))
-
-    ((id . q2-1)
+  ;; Updated 2026-05-20: the April 2026 next-actions list is largely
+  ;; superseded by intervening session activity. Resolutions:
+  ;;   * `integration` (apply 7-commit integration sequence) — DONE,
+  ;;     long since merged.
+  ;;   * `t-3` (Gate-1 falsification test 3) — superseded by the
+  ;;     Gate 1 adjacency refresh (`decisions/gate1-adjacency-refresh.adoc`,
+  ;;     PR #77) which closed gate-1 work at 5/5 REFINED.
+  ;;   * `q2-4` (falsifier attempts) — partially absorbed into
+  ;;     `IntegrationAudit.agda` EI-2 negative result; further
+  ;;     falsifier attempts are now bookkeeping not load-bearing.
+  ;;   * `q2-1` (echo-not-prop generalisation) — still open.
+  ;;   * `q2-3` (RoleGraded as N5) — still open (low priority).
+  ;;   * `v0-2-recipe-extension` — still parked.
+  '(((id . q2-1)
      (title . "Generalisation of echo-not-prop")
      (status . open)
      (relevance . "n=2 special case proofs generalise to: for non-injective f with at least two distinct preimages of y, is-prop (Echo f y) → ⊥. Closing this also discharges the truncation-argument gap for refinement, IFC, and provenance adjacency notes.")
@@ -260,17 +261,97 @@
      (priority . low)
      (note . "Mostly bookkeeping post-EI-2 since the recipe is no longer the distinctness locus."))
 
-    ((id . integration)
-     (title . "Apply the seven-commit integration sequence")
-     (status . ready)
-     (relevance . "INTEGRATION_COMMITS.adoc has the full sequence. Commit 7 is the EI-2 termination. All artefacts are staged at /mnt/user-data/outputs/audit-output/.")
-     (priority . high))
+    ((id . owner-gated-paper-update)
+     (title . "Bounded new-contribution paragraph in paper.adoc / types-abstract.adoc / conservativity.adoc for F1+F3")
+     (status . owner-gated)
+     (relevance . "F1 + F3 (see META adr-007, adr-008) introduce a separate graded-comonad construction beside EchoGraded. The paper bodies are about EchoGraded's thin-poset structure — the title and central thesis should not move on these gates alone. Whether to add a bounded contribution paragraph mentioning the F1/F3 side-construction is an editorial decision.")
+     (priority . deferred))
+
+    ((id . ordinal-track-path-1)
+     (title . "Ordinal track Path-1 — Brouwer rank-mono into _<ᵇ⁻_")
+     (status . in-flight)
+     (relevance . "Brouwer arithmetic + rank-mono for _<ᵇ⁻_ are in a parallel-session worktree; this echo-types session stays clear of `proofs/agda/Ordinal/**` per `feedback_parallel_session_branch_drift` discipline.")
+     (priority . high)
+     (owner . other-session))
 
     ((id . v0-2-recipe-extension)
      (title . "Recipe extension exploration (parked)")
      (status . parked-v0.2)
      (relevance . "Coupled state across axes; multiple live positions per axis. New module work, not a re-investigation of EI-2.")
      (priority . deferred))))
+
+;;; ============================================================
+;;; Pillar F earn-back closure summary (2026-05-20)
+;;; ============================================================
+;;;
+;;; The Pillar F earn-back programme launched by R-2026-05-18 is now
+;;; CLOSED. All four gates passed at strictly-bounded strength; see
+;;; META.adr-{007,008,009} and docs/retractions.adoc follow-ups
+;;; F-2026-05-18a + F-2026-05-20a + F-2026-05-20b.
+
+(define earn-back-summary
+  '((status . closed)
+    (closing-date . "2026-05-20")
+    (gates
+     ((F4 (status . passed) (date . "2026-05-18")
+          (module . "proofs/agda/EchoPullbackUnivF4.agda")
+          (claim . "Terminal-cone universal property as a function of an explicit funext module parameter, never a postulate")
+          (retraction-followup . "F-2026-05-18a"))
+      (F2 (status . passed) (date . "2026-05-18")
+          (module . "proofs/agda/EchoStepNDModelF2.agda")
+          (claim . "Genuine second model of the bare Echo functor on the non-graph relation StepND; content-bearing agreement")
+          (retraction-followup . "F-2026-05-18a"))
+      (F1 (status . passed) (date . "2026-05-20")
+          (module . "proofs/agda/EchoGradedComonadF1.agda")
+          (claim . "Monoid-graded iterated-residue comonad at (ℕ, +, 0) with Echo as grade-unit object; nested δ; all three comonad laws; D2-nontrivial separating witness")
+          (retraction-followup . "F-2026-05-20a")
+          (adr . adr-007))
+      (F3 (status . passed) (date . "2026-05-20")
+          (modules . ("proofs/agda/EchoGradedComonadInterface.agda"
+                      "proofs/agda/EchoGradedComonadInstance1.agda"
+                      "proofs/agda/EchoGradedComonadInstance2.agda"))
+          (claim . "Abstract GradedComonadStructure record (no ⊑-prop-equivalent field) + two non-isomorphic-grade-monoid instances: nat-instance at commutative (ℕ, +, 0), list-instance at non-commutative free monoid (List Tag, ++, [])")
+          (retraction-followup . "F-2026-05-20b")
+          (adr . adr-008))))
+    (scope-qualifier . "F1+F3 earn back the graded-comonad and two-models claims FOR A NEW SIDE-CONSTRUCTION. EchoGraded remains a thin-poset reindexing modality per R-2026-05-18; EchoRelModel's two-models claim remains retracted. Different abstract interfaces; not interconvertible.")
+    (forbidden-rebrandings
+     . ("EchoGraded is a graded comonad"
+        "the F1 construction reinstates EchoGraded's retracted comonad claim"
+        "the F3 two-models result reinstates EchoRelModel's retracted two-models claim"
+        "the title or central thesis of paper.adoc moves on F1 or F3 alone"))
+    (unmoved-retractions
+     . ("R-2026-05-18 finding 5 (conservativity metatheorem) — stays retracted; no gate attempted to earn it back, no gate could (meta-statement over all propositions, not discharged by typechecking)"
+        "R-2026-05-18 finding 3 (\"Not two models\" for EchoRelModel/GCLaws) — stays retracted; F3 earned a different two-models claim at a different interface"))))
+
+;;; ============================================================
+;;; Theory-work closure summary (2026-05-20)
+;;; ============================================================
+;;;
+;;; The §"Theory work — no proof assistant needed" section in
+;;; docs/echo-types/roadmap.md is now empty. Every item is landed,
+;;; ruled out, or refreshed.
+
+(define theory-work-summary
+  '((status . closed)
+    (closing-date . "2026-05-20")
+    (closure-prs . (#67 #68 #69 #70 #71 #72 #74 #75 #76 #77 #78 #79 #82 #84 #86 #88 #90 #91 #92))
+    (axes-fully-mechanised
+     . ((axis-2-approximate-echo . "EchoApprox.agda + EchoApproxInstance.agda; Rung C BalancedTolerance at #78")
+        (axis-8-decidability    . "EchoDecidable.agda")
+        (axis-8-cost            . "EchoCost.agda + EchoCostInstance.agda (PR #85)")
+        (axis-8-access          . "EchoAccess.agda (PRs #68, #75)")
+        (axis-8-search          . "EchoSearch.agda + EchoSearchInstance.agda (PR #80)")
+        (negative-coecho        . "AntiEcho.agda (PR #69) + AntiEchoTropical.agda (PR #72) + AntiEchoTropicalGeneric.agda (PR #91) + antiecho-partition-dec (PR #90)")))
+    (ruled-out
+     . ((two-categorical-shape . "decisions/no-2-cat.adoc — every would-be 2-cell is refl or forced trivial")))
+    (refreshed
+     . ((presentation-dependence-cluster . "decisions/presentation-dependence.adoc — examples 5, 9, 10 cluster; meta-pattern only, no new module needed")
+        (gate-1-adjacency-refresh        . "decisions/gate1-adjacency-refresh.adoc — 5/5 REFINED, 0 RE-EVALUATE")))
+    (canonical-examples-cluster
+     . ((example-5-database-provenance . "EchoExampleProvenance.agda (PR #81)")
+        (example-9-parser              . "EchoExampleParser.agda (PR #83)")
+        (example-10-abstract-interp    . "EchoExampleAbsInt.agda (PR #82)")
+        (example-6-numeric             . "still unblocked, only remaining example item")))))
 
 ;;; ============================================================
 ;;; END OF STATE
