@@ -526,6 +526,17 @@ open import AntiEchoTropical using
   ; tropdecomp-antiecho-from
   )
 
+-- Generic-codomain lift of the tropical decomposition. Same headline
+-- theorems as `AntiEchoTropical` above, but parameterised by an
+-- abstract `OrderedCodomain` interface (carrier B, ≤/<, ≤⇒¬<, ¬<⇒≤)
+-- rather than fixed to ℕ. Sanity instance `ℕ-ordered-codomain`
+-- pinned so the interface is demonstrably inhabitable.
+open import AntiEchoTropicalGeneric using
+  ( OrderedCodomain
+  ; ℕ-ordered-codomain
+  ; module Generic
+  )
+
 open import EchoIntegration using
   ( knowledge-preserved-under-choreo
   ; merged-at-residue
