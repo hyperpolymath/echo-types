@@ -460,6 +460,21 @@ open import Ordinal.Buchholz.RankBrouwer using
   ( rank
   )
 
+-- ω-power rank for Ω-markers and Buchholz terms.  Limit-shaped
+-- replacement for `nat-to-ord (suc n)` successor stacks.  Compositional
+-- rank-mono primitives (right-mono on `bplus`) reusable across both
+-- `_<ᵇ⁻_` (this track) and `_<ᵇʳᶠ_` (parallel session).
+open import Ordinal.Buchholz.RankPow using
+  ( ω-rank-pow
+  ; ω-rank-pow-fin
+  ; ω-rank-pow-pos
+  ; ω-rank-pow-mono
+  ; rank-pow
+  ; rank-pow-bplus
+  ; rank-pow-bOmega
+  ; rank-pow-bplus-right-mono
+  )
+
 open import Ordinal.OmegaMarkers using
   ( OmegaIndex
   ; fin
