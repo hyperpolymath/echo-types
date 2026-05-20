@@ -63,10 +63,15 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   carry the per-decoration composition recipe. Axis 4's
   "canonical-form operator" open question sharpens but stays open.
   See `decisions/presentation-dependence.adoc` for the full verdict.
-- **[unblocked]** Gate 1 adjacency refresh: the five existing
-  adjacency notes predate the taxonomy. Cross-check each against the
-  current axes and flag any neighbour whose identity claim should
-  be re-evaluated.
+- **[refreshed — see decisions/gate1-adjacency-refresh.adoc]**
+  Gate 1 adjacency refresh: the five existing adjacency notes
+  predate the taxonomy. Cross-check each against the current axes
+  and flag any neighbour whose identity claim should be
+  re-evaluated. Verdict: 5/5 REFINED, 0 RE-EVALUATE; every
+  distinctness claim survives, all five benefit from being
+  re-stated in terms of the now-numbered axes (axis 8 sharpens
+  four of five). No content rewrites scheduled; coherence
+  follow-ups listed in the closure note.
 
 ---
 
