@@ -26,6 +26,20 @@
 --                                     preserves the A-witness up to `refl`,
 --                                     witnessing the retraction direction
 --                                     definitionally
+--   * Separated                    -- separation predicate on a pseudo-metric:
+--                                     `dist b₁ b₂ ≤ zero → b₁ ≡ b₂`
+--   * echo-approx-zero-collapses-strict -- §7 #7: under separation, an
+--                                          ε≡zero approximate echo IS a
+--                                          strict echo
+--   * echo-shadow-A                -- §7 #8 axis-1 shadow: the underlying
+--                                     A-witness of an approximate echo;
+--                                     `echo-strict→approx` agrees with the
+--                                     strict A-witness on the nose
+--   * echo-shadow-iso-to / -from   -- §7 #8 trivial repackaging of `EchoR`
+--                                     as an existential `Σ A (λ x → dist
+--                                     (f x) y ≤ ε)` (definitional both ways)
+--   * echo-strict→approx-shadow-A  -- the A-component of `echo-strict→approx`
+--                                     equals the strict A-component (refl)
 --
 -- The non-expansiveness side condition on the outer leg is the
 -- minimal hypothesis under which tolerances accumulate additively;
@@ -41,9 +55,13 @@
 -- the canonical-split forward section, and an A-component round-trip
 -- witness. The B-component round-trip and the full tolerance round-trip
 -- need a `+`-left-identity axiom on `Tolerance` (`zero + ε ≡ ε`, not
--- currently in the record); §7 obligations 7 (zero-collapse under
--- separation) and 8 (axis-1 shadow agreement) are deferred to
--- subsequent rungs.
+-- currently in the record); see the `Tolerance` design-decision note
+-- in the PR body for two options (interface extension vs. additive
+-- `BalancedTolerance` record). §7 obligations 7 (separated zero-collapse)
+-- and 8 (axis-1 shadow agreement) are now landed below. Rung C
+-- (full B-component + tolerance round-trip) is deferred pending the
+-- design call. Rung D (Lipschitz `L_g ≠ 1`) is deferred — it requires
+-- multiplication on `Tolerance`, another interface call.
 
 module EchoApprox where
 
@@ -261,3 +279,104 @@ module Approx
             (echo-approx-comp-retract-to f g e))
     ≡ proj₁ e
   echo-approx-comp-retract-A f g g-nonexp (x , _) = refl
+
+  ----------------------------------------------------------------------
+  -- §7 obligation 7: separated zero-collapse.
+  --
+  -- A pseudo-metric is *separated* when zero distance implies
+  -- propositional equality on the carrier. Pseudo-metrics in general
+  -- only guarantee `dist y y ≡ zero`; the converse (a metric proper)
+  -- is an extra hypothesis the `PseudoMetric` record deliberately
+  -- does not bake in. Callers who need the converse supply a
+  -- `Separated` witness explicitly at the lemma site.
+  --
+  -- Under that hypothesis, the strict-vs-approximate gap closes at
+  -- ε = zero: any zero-tolerance approximate echo IS a strict echo,
+  -- with the same A-witness on the nose. This realises §7 #7 of the
+  -- axis-2 design note and the §4 "Approximate → strict (only when
+  -- separated, at ε = 0)" statement.
+  --
+  -- Without separation the converse fails by design — multiple `x`s
+  -- may share zero distance to `y` without `f x ≡ y` on the nose.
+  -- That is the point of an approximate echo.
+  ----------------------------------------------------------------------
+
+  Separated : Set (b ⊔ ℓ)
+  Separated = ∀ b₁ b₂ → dist b₁ b₂ ≤ zero → b₁ ≡ b₂
+
+  echo-approx-zero-collapses-strict :
+    Separated →
+    ∀ {f : A → B} {y : B} → EchoR zero f y → Echo f y
+  echo-approx-zero-collapses-strict sep {f = f} {y = y} (x , dfx≤0) =
+    x , sep (f x) y dfx≤0
+
+  ----------------------------------------------------------------------
+  -- §7 obligation 8: axis-1 shadow agreement.
+  --
+  -- The "shadow" of an approximate echo is its underlying A-witness —
+  -- the projection that forgets the metric-bound proof. Two flavours:
+  --
+  --   * `echo-shadow-A`            — extracts the A-witness from an
+  --                                  approximate echo (definitional,
+  --                                  the existing `proj₁`).
+  --
+  --   * `echo-shadow-iso-{to,from}` — the trivial repackaging of
+  --                                   `EchoR ε f y` as the existential
+  --                                   `Σ A (λ x → dist (f x) y ≤ ε)`.
+  --                                   Both directions are `id` because
+  --                                   the two shapes are definitionally
+  --                                   equal; the iso lemma here pins
+  --                                   the §7 #8 obligation explicitly.
+  --
+  --   * `echo-strict→approx-shadow-A` — axis-1 / axis-2 cross-check:
+  --                                     `echo-strict→approx` preserves
+  --                                     the A-component on the nose
+  --                                     (`refl`).  This is the
+  --                                     definitional version of "the
+  --                                     strict→approx inclusion and the
+  --                                     A-shadow projection cohere"
+  --                                     from the user-prompt framing.
+  --
+  -- Together these say: the A-component is a genuine axis-1 invariant
+  -- of approximate echoes — every move in the axis-2 calculus that
+  -- keeps the A-witness fixed (intro, strict→approx, relax,
+  -- canonical-split retract section) preserves the axis-1 shadow
+  -- definitionally.
+  ----------------------------------------------------------------------
+
+  echo-shadow-A :
+    ∀ {ε : Tol} {f : A → B} {y : B} → EchoR ε f y → A
+  echo-shadow-A = proj₁
+
+  -- Forward: an approximate echo IS an existential with metric bound.
+  -- Definitionally `id`; the lemma pins the axis-1 shadow obligation.
+  echo-shadow-iso-to :
+    ∀ {ε : Tol} {f : A → B} {y : B} →
+    EchoR ε f y → Σ A (λ x → dist (f x) y ≤ ε)
+  echo-shadow-iso-to e = e
+
+  echo-shadow-iso-from :
+    ∀ {ε : Tol} {f : A → B} {y : B} →
+    Σ A (λ x → dist (f x) y ≤ ε) → EchoR ε f y
+  echo-shadow-iso-from e = e
+
+  -- A-component of `echo-strict→approx` agrees with the strict
+  -- A-component on the nose. The transport in `echo-strict→approx`
+  -- only touches the bound proof, never the A-witness.
+  echo-strict→approx-shadow-A :
+    ∀ {f : A → B} {y : B} (e : Echo f y) →
+    echo-shadow-A (echo-strict→approx e) ≡ proj₁ e
+  echo-strict→approx-shadow-A (x , _) = refl
+
+  -- Round-trip: under separation, `echo-approx-zero-collapses-strict`
+  -- and `echo-strict→approx` are mutually A-inverse at ε = zero,
+  -- definitionally on the A-component. This closes the §4 statement
+  -- "Approximate → strict (only when separated, at ε = 0)" with a
+  -- definitional witness on the axis-1 shadow.
+  echo-strict→approx-collapse-shadow-A :
+    (sep : Separated) →
+    ∀ {f : A → B} {y : B} (e : Echo f y) →
+    proj₁ (echo-approx-zero-collapses-strict sep
+            (echo-strict→approx e))
+    ≡ proj₁ e
+  echo-strict→approx-collapse-shadow-A sep (x , _) = refl

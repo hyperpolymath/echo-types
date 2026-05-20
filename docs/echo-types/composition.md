@@ -172,9 +172,30 @@ at `b := f x`, `ε₁ := zero`, `ε₂ := ε`), and
 `echo-approx-comp-retract-A` (A-component round-trip preserves the
 witness up to `refl`). The B-component round-trip and the
 tolerance-budget round-trip need a `+`-left-identity axiom on
-`Tolerance` (`zero + ε ≡ ε`) — not in the current record. The full
-retract proof and the Lipschitz generalisation (`L_g ≠ 1`) are
-deferred to subsequent rungs.
+`Tolerance` (`zero + ε ≡ ε`) — not in the current record; a
+design call on whether to extend the `Tolerance` interface or layer
+a separate `BalancedTolerance` record on top is deferred to the
+caller.
+
+Second slice landed alongside (axis-2 design note §7 obligations
+7 and 8): `Separated` (separation predicate on the pseudo-metric:
+`dist b₁ b₂ ≤ zero → b₁ ≡ b₂`),
+`echo-approx-zero-collapses-strict` (under separation, every
+zero-tolerance approximate echo IS a strict echo with the same
+A-witness — the §4 "Approximate → strict, only when separated, at
+ε = 0" statement made formal), and the axis-1 shadow lemmas
+`echo-shadow-A`, `echo-shadow-iso-{to,from}`,
+`echo-strict→approx-shadow-A`,
+`echo-strict→approx-collapse-shadow-A`. The last two pin the
+axis-1 / axis-2 cross-classification: the A-component (the axis-1
+"shadow" of the approximate echo) is preserved on the nose by
+`echo-strict→approx` and round-trips definitionally through the
+zero-collapse under separation.
+
+The Lipschitz generalisation (`L_g ≠ 1`) and the full B-component
++ tolerance-budget retract round-trip remain deferred — both
+require new structure on `Tolerance` (multiplication for the
+former, `+`-identity for the latter).
 
 ### Q4. Associativity — landed
 

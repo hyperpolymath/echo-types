@@ -90,6 +90,13 @@ open import EchoApproxInstance using
   ; approx-comp-sound
   ; approx-comp-retract-to
   ; approx-comp-retract-A
+  ; approx-Separated
+  ; approx-zero-collapses-strict
+  ; approx-shadow-A
+  ; approx-shadow-iso-to
+  ; approx-shadow-iso-from
+  ; approx-strict→approx-shadow-A
+  ; approx-strict→approx-collapse-shadow-A
   )
 
 open import EchoIndexed using
