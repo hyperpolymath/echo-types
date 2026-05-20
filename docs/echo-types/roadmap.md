@@ -54,8 +54,15 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   `⊑-prop`, `Echo-comp-iso` round-trips, pentagon projections,
   `SliceHom`↔cone, `bridge-natural`); see
   `decisions/no-2-cat.adoc` for the full verdict.
-- **[unblocked]** Presentation-dependence sub-theory: examples 5, 9,
-  10 cluster here; write up the common pattern.
+- **[landed — see docs/echo-types/decisions/presentation-dependence.adoc]**
+  Presentation-dependence sub-theory: examples 5, 9, 10 cluster
+  here. Common pattern is Σ-over-presentation-parameter `R`; cluster
+  instantiates the existing Axis 4 without motivating a new axis.
+  Verdict: meta-pattern only — no `EchoPresentation.agda` module
+  needed; landed `EchoIndexed`/`EchoChoreo`/`EchoEpistemic` already
+  carry the per-decoration composition recipe. Axis 4's
+  "canonical-form operator" open question sharpens but stays open.
+  See `decisions/presentation-dependence.adoc` for the full verdict.
 - **[unblocked]** Gate 1 adjacency refresh: the five existing
   adjacency notes predate the taxonomy. Cross-check each against the
   current axes and flag any neighbour whose identity claim should
