@@ -1,5 +1,14 @@
 {-# OPTIONS --safe --without-K #-}
 
+-- RETRACTION 2026-05-18 (docs/retractions.adoc R-2026-05-18): this
+-- module's "terminal-cone universal property" is RETRACTED as a
+-- claim. echo-pullback-univ proves only *pointwise* uniqueness
+-- (∀ v → m' v ≡ m v); full terminality (m' ≡ m) is unstatable here
+-- without funext. The Agda is unchanged and correct; read it as a
+-- funext-relative *pointwise mediator property*, not a universal
+-- property. Authoritative prose: docs/echo-types/paper.adoc §3 and
+-- §"Reframing note".
+
 -- Pillar B (part 1) of docs/echo-types/establishment-plan.adoc.
 --
 -- REAL MODULE (H1 landed 2026-05-17).

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0
+# SPDX-License-Identifier: PMPL-1.0-or-later
 name: OSSF Scorecard
 on:
   push:
@@ -6,6 +6,13 @@ on:
   schedule:
     - cron: '0 4 * * *'
   workflow_dispatch:
+
+# Estate guardrail: cancel superseded runs so re-pushes don't pile up
+# queued analyses. Safe — Scorecard is read-only supply-chain analysis
+# with no publish or mutation (SARIF upload is idempotent).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

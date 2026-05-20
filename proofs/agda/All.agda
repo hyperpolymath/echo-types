@@ -3,6 +3,7 @@
 module All where
 
 open import Echo
+open import EchoKernel
 open import EchoCharacteristic
 open import EchoResidue
 open import EchoExamples
@@ -28,6 +29,9 @@ open import EchoJanusBridge
 open import Dyadic
 open import DyadicEchoBridge
 open import EchoThermodynamics
+open import EchoThermodynamicsFinite
+open import EchoThermodynamicsArbitrary
+open import EchoThermoCollapseImpossible
 open import EchoStabilityTests
 open import VecRotation
 
@@ -39,6 +43,12 @@ open import EchoPullback        -- Pillar B (scaffold)
 open import EchoGradedComonad   -- Pillar B (scaffold)
 open import EchoSeparating      -- Pillar C (scaffold)
 open import EchoRelModel        -- Pillar D (scaffold)
+
+-- Pillar F earn-back (docs/echo-types/earn-back-plan.adoc). Wired in
+-- on the gate passing (Sequencing pt 4); see docs/retractions.adoc
+-- follow-up F-2026-05-18a.
+open import EchoPullbackUnivF4  -- Gate F4 PASSED (funext-qualified UP)
+open import EchoStepNDModelF2   -- Gate F2 PASSED (StepND second model)
 
 -- Foundation P1: external-fibre triangulation. Echo agrees with the
 -- standard library's OWN independently-authored notions
@@ -69,6 +79,7 @@ open import Ordinal.Buchholz.VeblenProjectionMeasure
 open import Ordinal.Buchholz.VeblenComparisonTarget
 open import Ordinal.Buchholz.VeblenComparisonModel
 open import Ordinal.Buchholz.ExtendedOrder
+open import Ordinal.Buchholz.OrderExtendedDirect
 open import Ordinal.Buchholz.LiftedExtendedOrder
 open import Ordinal.Buchholz.IteratedExtendedOrder
 open import Ordinal.Buchholz.RankBrouwer

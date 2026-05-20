@@ -43,6 +43,7 @@
 --   * fiber-erasure-bound             -- bound applied at a fiber
 --   * bennett-reversible              -- FiberSize ≡ 1 ⇒ bound ≡ 0
 --   * bennett-reversible-id-zero      -- id at zero: bound ≡ 0
+--   * bennett-reversible-injective    -- any injective f + a hit: bound ≡ 0
 --   * landauer-collapse               -- constant map: bound = k·T·⌊log₂ n⌋
 
 module EchoThermodynamics where
@@ -59,6 +60,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong; sym;
 open import EchoFiberCount                        using
   ( FiberSize-fin
   ; FiberSize-fin-id-zero
+  ; FiberSize-fin-injective
   ; FiberSize-fin-const
   ; FiberSize-fin-all-hit
   )
@@ -145,6 +147,36 @@ bennett-reversible-id-zero :
   fiber-erasure-bound {n = ℕ.suc m} (λ x → x) zero _≟_ T ≡ 0
 bennett-reversible-id-zero {m} _≟_ T =
   bennett-reversible (λ x → x) zero _≟_ T (FiberSize-fin-id-zero _≟_)
+
+----------------------------------------------------------------------
+-- bennett-reversible-injective
+--
+-- The honest general Bennett statement at the finite-domain level:
+-- *any* injective `f : Fin n → B` (not merely the identity, not
+-- merely at index `zero`) that hits `y` at some index has erasure
+-- bound zero at `y`, at every temperature. This subsumes
+-- `bennett-reversible-id-zero` (the identity is injective; it hits
+-- `zero` at `zero` by `refl`) and is the exact constructive content
+-- of "reversible ⇒ no Landauer-mandated dissipation": injectivity
+-- is reversibility, a singleton fiber is the absence of fan-in.
+--
+-- This is as far as the `FiberSize-fin` cost functional reaches.
+-- Generalising the *carrier* past `Fin n` is addressed — for
+-- Bishop-finite domains — in `EchoThermodynamicsFinite`; the
+-- infinite-carrier case (`ProgramState = ℕ → ℕ`) is a stated,
+-- falsifiable open obligation, see `docs/ECHO-CNO-BRIDGE.adoc`
+-- §"Thermodynamic Bridge" / Open obligation O-THERMO-∞.
+----------------------------------------------------------------------
+
+bennett-reversible-injective :
+  ∀ {b} {B : Set b} {n : ℕ}
+  (f : Fin n → B) (y : B) (_≟_ : (y₁ y₂ : B) → Dec (y₁ ≡ y₂))
+  (inj : ∀ {i j : Fin n} → f i ≡ f j → i ≡ j)
+  (i₀ : Fin n) → f i₀ ≡ y →
+  (T : Temperature) →
+  fiber-erasure-bound f y _≟_ T ≡ 0
+bennett-reversible-injective f y _≟_ inj i₀ hit T =
+  bennett-reversible f y _≟_ T (FiberSize-fin-injective f y _≟_ inj i₀ hit)
 
 ----------------------------------------------------------------------
 -- landauer-collapse

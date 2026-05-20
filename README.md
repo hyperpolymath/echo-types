@@ -11,6 +11,16 @@ Constructive Agda development for echo types as a first-class notion of structur
 
 loss that is not total erasure.
 
+## 🗺️ Where things are
+
+**New here, or can't find something? Start with the
+[Master Map](docs/echo-types/MAP.adoc).** It is the single source of
+truth for every direction (Thermodynamic, Buchholz/Veblen ordinals,
+Characteristic/EI, CNO/absolute-zero, JanusKey, Tropical/Dyadic, MAA,
+Shannon — and ArghDA tooling), each status-tagged and back-linked to
+its proofs and docs, with the retraction/proof-debt governance called
+out. The scattered overview/roadmap docs are detail under it.
+
 ## Core Idea
 
 Most formalisms foreground two clean cases:

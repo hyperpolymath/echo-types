@@ -1,0 +1,117 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= echo-types: kernel vs derived (one-page note)
+:toc: macro
+:source-highlighter: rouge
+
+[.lead]
+Which Agda modules are the *kernel* (the dependency-light, funext-free
+core everything imports) and which are *derived*. Companion to
+`proofs/agda/EchoKernel.agda`. Status SoT is
+`docs/echo-types/MAP.adoc`; honesty SoT is `docs/retractions.adoc`
+(R-2026-05-18). This note links, it does not duplicate.
+
+== The kernel is exactly `Echo`
+
+`Echo f y := Σ (x : A), (f x ≡ y)`. The audit of `Echo.agda` plus the
+`Echo*.agda` modules (intra-repo `open import` DAG, `origin/main`,
+2026-05-18) shows a single root: **every kernel-derived `Echo*` module
+transitively imports `Echo`, and `Echo` imports nothing from the repo
+— only agda-stdlib**:
+
+[none]
+* `Level`, `Function.Base`, `Function.Bundles`, `Data.Product.Base`,
+  `Relation.Binary.PropositionalEquality` (+ `.Properties`).
+
+So no smaller subset is "the core": `Echo.agda` is already minimal and
+has no internal fat to trim (the heaviest content, the cancel-iso
+path algebra, is still first-order — see below). `proofs/agda/EchoKernel.agda`
+re-exports it (`open import Echo public`) and pins the load-bearing
+lemma *types* in a `Kernel-contract` submodule so the public surface
+cannot silently weaken.
+
+=== Funext-free certificate
+
+The kernel cone (`Echo` + the stdlib modules above) contains **no
+`Axiom.Extensionality` / funext** anywhere, **zero postulates**, and
+**zero escape pragmas**; it builds under `--safe --without-K`.
+That successful build *is* the certificate: every lemma re-exported
+by `EchoKernel` is funext-free by construction, mechanically, not by
+assertion. The kernel keeps the cancel-iso round-trips funext-free
+*deliberately* by taking the two triangle coherences (`triangle₁`,
+`triangle₂`) as explicit hypotheses; deriving them instead would need
+funext.
+
+CAUTION: Funext-free is *not* "no funext anywhere in the project". Per
+R-2026-05-18, the genuine funext-relativity is the *pointwise-only*
+mediator property in `EchoPullback` (`echo-pullback-univ` proves only
+`∀ v → m' v ≡ m v`, not `m' ≡ m`). That module is **derived, not
+kernel** — the boundary is real and lives outside this core.
+
+== Classification
+
+[cols="1,2,4", options="header"]
+|===
+| Layer | Modules | Notes
+
+| *Kernel*
+| `Echo` (via `EchoKernel`)
+| Funext-free, postulate-free root. Re-export + contract:
+  `EchoKernel.agda`. `[REAL]`
+
+| *Derived — Tier 1* +
+(only `Echo` + stdlib)
+| `EchoCharacteristic`, `EchoChoreo`, `EchoDecidable`,
+  `EchoFiberBridge`, `EchoFiberCount`, `EchoFiberTriangulation`,
+  `EchoIndexed`, `EchoRelational`, `EchoTruncation`,
+  `EchoJanusBridge`, `EchoTropical`, `EchoSeparating`
+| One hop off the kernel. `EchoJanusBridge`/`EchoTropical` are
+  *Directions* (see MAP). `EchoFiberTriangulation` is the external
+  stdlib triangulation hardening item. `EchoSeparating` carries
+  retracted prose framing (below).
+
+| *Derived — Tier 2* +
+(depend on Tier-1 `Echo*`)
+| `EchoCategorical`, `EchoResidue`, `EchoEpistemic`,
+  `EchoEpistemicResidue`, `EchoExamples`, `EchoGraded`,
+  `EchoLinear`, `EchoPullback`, `EchoRelModel`, `EchoScope`,
+  `EchoStabilityTests`, `EchoThermodynamics`, `EchoCNOBridge`,
+  `EchoThermodynamicsFinite`, `EchoIntegration`
+| Multi-hop. `EchoThermodynamics` reaches the kernel via
+  `EchoFiberCount` (no direct `Echo` import);
+  `EchoThermodynamicsFinite` is its Bishop-finite transport layer.
+
+| *Earn-back gate modules* +
+(derived / scoped; not kernel)
+| `EchoGradedComonadF1`, `EchoPullbackUnivF4`,
+  `EchoStepNDModelF2`
+| Falsifiable earn-back work tracked by
+  `docs/echo-types/earn-back-plan.adoc` and `docs/retractions.adoc`.
+  F4 and F2 are passed at their scoped strength; F1 is a feasibility
+  spike / open gate as recorded in the ledger. None are kernel.
+
+| *Retracted framing* +
+(typecheck; prose withdrawn)
+| `EchoGradedComonad`, `EchoPullback`, `EchoRelModel`,
+  `EchoSeparating`
+| Agda unchanged and `[REAL]` as mechanised; the *graded-comonad /
+  two-models / universal-property* descriptions are `[RETRACTED]`
+  (R-2026-05-18), under a falsifiable earn-back gate. Not kernel.
+
+| *Sibling (not kernel-derived)*
+| `EchoApprox`
+| Does **not** `import Echo`; a parallel stdlib-only approximation
+  module. Listed so the DAG audit is complete.
+|===
+
+`EchoOrdinal` is Tier-1 off `Echo` but additionally pulls the
+`Ordinal/` subtree; it belongs to the Buchholz/Veblen Direction in
+the MAP, not the foundation kernel.
+
+== Maintenance
+
+Living classification. If a module's import set changes, or a
+retraction/earn-back moves a module between layers, update this table
+*and* the `[REAL]/[RETRACTED]` tag in `docs/echo-types/MAP.adoc`
+**in the same PR**. Never duplicate proof detail here — link the
+module or the canonical doc.

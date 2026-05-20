@@ -15,6 +15,27 @@ like this *established* in the sense that linear, dependent, or graded
 modal types are established — and what specifically must this repository
 ship to get there.
 
+[IMPORTANT]
+====
+*Framing retracted 2026-05-18 (`docs/retractions.adoc` R-2026-05-18).*
+This plan was written when the development was believed to ship a
+graded comonad, a universal property, two independent models, and a
+conservativity metatheorem. Adversarial review + a codebase
+pressure-test found no in-repo defense for any of these, and the
+repo's own Gate-2 audit contradicted two. The plan is retained as the
+*historical record of the strategy*, but every occurrence below of
+"graded comonad", "universal property / terminal cone", "two
+independent models / model-independence", and "conservativity
+metatheorem / irreducibility metatheorem" must be read as the
+*narrowed* claims: a loss-graded *reindexing modality* (thin-poset
+action, no nested `D_r D_s`); a *funext-relative pointwise mediator
+property*; *carrier-parametricity over a fixed grade poset*; and a
+*postulate-free build that is evidence for, not a proof of,
+conservativity*. The current honest statements live in
+`paper.adoc`, `conservativity.adoc`, `types-abstract.adoc`. The Agda
+is unchanged; only the prose claims were corrected downward.
+====
+
 toc::[]
 
 == The honest type-theoretic verdict
@@ -34,25 +55,34 @@ strategy and is owned, not hedged:
   bespoke "echo introduction/elimination rules" dressed as primitive
   would be the fastest possible way to lose every informed reader.
 
-* *The strength that befits echo is a graded comonadic modality —
-  the coeffect / quantitative lineage.* That _is_ an established
-  type strength in the modern sense (Petriček–Orchard–Mycroft
-  coeffects; Brunel–Gaboardi–Mazza–Zdancewic; Atkey's Quantitative
-  Type Theory; Orchard–Liepelt–Eades / Granule; Gaboardi et al.
-  graded modal types). The repo's own code already has the shape:
-  `EchoGraded`'s loss-grade lattice with join and universal property,
-  `EchoLinear`'s two-mode degradation, `EchoCategorical`'s
-  slice/fibration functor laws. It is not yet *named, characterised,
-  and proved* as a graded comonad of structured loss.
+* *The strength that befits echo is a loss-graded reindexing
+  modality — motivated by, but not an instance of, the coeffect /
+  quantitative lineage* (Petriček–Orchard–Mycroft coeffects;
+  Brunel–Gaboardi–Mazza–Zdancewic; Atkey's Quantitative Type Theory;
+  Orchard–Liepelt–Eades / Granule; Gaboardi et al. graded modal
+  types). [RETRACTED READING: this was originally "a graded comonadic
+  modality… proved as a graded comonad of structured loss". It is
+  *not* a graded comonad — no nested `D_r D_s` is formed. The repo's
+  code has a thin-poset reindexing action: `EchoGraded`'s loss-grade
+  lattice + monotone `degrade`, `EchoLinear`'s two-mode degradation,
+  `EchoCategorical`'s slice/fibration functor laws.]
 
 [#thesis]
-.The establishment thesis
+.The establishment thesis (narrowed 2026-05-18)
 ****
 Echo is the homotopy fibre, equipped with a loss-grade lattice,
-forming a *definitionally-grounded graded comonad of structured loss*.
-Its authority comes not from being a new object but from being a
-*characterised* one: a universal property, multiple models, an
-irreducibility metatheorem, and a falsifiable retraction discipline.
+carrying a *definitionally-grounded loss-graded reindexing modality*
+(a thin-poset action — *not* a graded comonad). Its standing comes
+not from being a new object but from being *exactly characterised and
+honestly bounded*: a definitional Σ-identity; a funext-relative
+pointwise mediator property; coherence equations that provably reduce
+to thinness of the grade order; a separating model that locates that
+reduction; a carrier-parametric abstraction; a postulate-free build;
+and a falsifiable retraction discipline of which the 2026-05-18
+reframing is itself an instance. _Original wording: "forming a
+definitionally-grounded graded comonad of structured loss… a
+universal property, multiple models, an irreducibility metatheorem" —
+retracted, see R-2026-05-18._
 ****
 
 Owning "it is just `fib`" loudly is a credibility asset: it pre-empts
@@ -91,14 +121,18 @@ the composition iso, cancel-iso, pentagon — but no _characterisation_.
   `echo-pullback-univ` (existence + funext-free pointwise
   uniqueness, no K — uniqueness uses stdlib `Σ-≡,≡→≡` on the
   `factor`/`coherent` legs).
-* Artefact 2: `EchoGradedComonad.agda` (headline new family) — reuse
-  `EchoGraded._≤g_`, `_⊔g_`, `≤g-prop`; define the graded counit /
-  comultiplication and prove the three graded-comonad laws over the
-  loss-grade lattice. *Thin slice landed 2026-05-17:* `gextract`,
-  `gduplicate`, and all three laws (`gcomonad-counit-{l,r}`,
-  `gcomonad-coassoc`) — see the verdict in <<h2-verdict>>.
-* Authority effect: "has a universal property + is a graded comonad"
-  is the line between a named lemma cluster and an established notion.
+* Artefact 2: `EchoGradedComonad.agda` — reuse `EchoGraded._≤g_`,
+  `_⊔g_`, `≤g-prop`; `gextract` (the identity coercion, `keep` being
+  the definitional bottom), `gduplicate` (the join-left *single-grade*
+  reindex), and the three coherence equations
+  (`gcomonad-counit-{l,r}`, `gcomonad-coassoc`). [RETRACTED READING:
+  "the three graded-comonad laws" / "is a graded comonad" — these are
+  thin-poset reindexing-coherence equations; no comonad is exhibited.
+  See <<h2-verdict>> and R-2026-05-18.]
+* Authority effect (narrowed): "has a definitional identity + a
+  funext-relative pointwise mediator property + a reindexing modality
+  whose coherence reduces to order-thinness" — exactly bounded, not a
+  universal property and not a graded comonad.
 
 === Pillar C — An irreducibility metatheorem
 
@@ -127,30 +161,28 @@ Harden Gate 2. The existing `VisibleConstraintAudit` /
 
 A notion is established only if it is model-independent.
 
-* Artefact 1: `EchoRelModel.agda` — extend
-  `EchoCategorical.Fibration` / `EchoRelational`; show the
-  graded-comonad laws of Pillar B transport into the relational /
-  presheaf model. Two independent models = robustness. *Landed
-  2026-05-17:* the H2 verdict is leveraged into the strongest
-  model-independence form — an abstract `GradedLossModel` interface
-  with the comonad laws proved *once* generically (`module GCLaws`),
-  instantiated at `set-model` (EchoGraded) and `rel-model`
-  (relational `EchoStep`/`map-rel`, composition from `map-rel-comp`
-  + `degrade-comp`), with `model-agreement` (round-trips `refl`) and
-  `bridge-natural` (`map-over` ↔ `map-rel` under the graph bridge).
-* Artefact 2: `docs/echo-types/conservativity.adoc` (+ formal anchor)
-  — because `Echo = Σ`, a small graded calculus with a loss modality
-  embeds *conservatively and definitionally* into MLTT+Σ. State this
-  as a metatheorem. "Conservative, definitionally-grounded extension"
-  is exactly the clean result that earns trust. *Landed 2026-05-17:*
-  the metatheorem is stated with a three-clause formal anchor —
-  definitional (`EchoFiberBridge`), conservative (postulate-free
-  `--safe --without-K` suite, operationally enforced by CI greps),
-  modality-not-axiom (`EchoRelModel`/`EchoGradedComonad`/
-  `EchoSeparating`). Scope and non-claims explicit; funext boundary
-  quarantined.
-* Authority effect: model-independence + a conservativity theorem turn
-  the deflation into a published positive result.
+* Artefact 1: `EchoRelModel.agda` — `GradedLossModel`/`GCLaws`,
+  instantiated at `set-model` and `rel-model`. [RETRACTED READING:
+  "two independent models = robustness / the strongest
+  model-independence form". Both instances fix the *same* grade poset;
+  `rel-model`'s carrier is the Set carrier `× ⊤`; `model-agreement`
+  is `refl`; the interface's `⊑-prop` field bakes in the only
+  load-bearing hypothesis. This is *carrier-parametricity over a
+  fixed poset*, not model-independence. R-2026-05-18.]
+* Artefact 2: `docs/echo-types/conservativity.adoc` — because
+  `Echo = Σ` definitionally and the suite is postulate-free under
+  `--safe --without-K` (CI-grep-enforced), this is *evidence that*
+  the loss modality adds no strength over MLTT+Σ. [RETRACTED READING:
+  "State this as a metatheorem" / "a conservativity theorem". A green
+  `--safe` build is necessary but not sufficient for proof-theoretic
+  conservativity; no meta-argument is mechanised, so this is *not*
+  stated as a metatheorem. Funext correction: there is no funext
+  anywhere; `examples/Transport.agda` *avoids* it by carrier choice
+  rather than "quarantining" it — the real funext-relativity is the
+  pointwise-only mediator property. R-2026-05-18.]
+* Authority effect (narrowed): an exactly-bounded, postulate-free
+  package under a falsifiable retraction discipline — not
+  model-independence plus a conservativity theorem.
 
 === Pillar E — External validation
 
@@ -209,6 +241,22 @@ firewalled from the identity claim exactly as `roadmap.md` already does.
 [#h2-verdict]
 == H2 verdict — does graded coassociativity need path algebra? (2026-05-17)
 
+[CAUTION]
+====
+*Reading reversed 2026-05-18 (R-2026-05-18).* The collapse described
+below is real and the Agda is unchanged — but its significance is the
+*opposite* of "thesis-strengthening". The equations reduce to
+`degrade-compose` + `≤g-prop` because *there is no comonadic
+coherence to discharge*: a thin poset with a functorial monotone
+action satisfies them definitionally. This is the calibration that
+shows the modality's entire content over generic Σ is thinness of the
+grade order — confirmed by the separating model and by the repo's own
+Gate-2 audit. Read "graded-comonad laws" below as
+"thin-poset reindexing-coherence equations", and disregard the
+"*Thesis impact (positive)*" paragraph (struck through in substance,
+retained for the record).
+====
+
 *The pivotal de-risking question, answered: NO.* The thin slice
 (`gextract`, `gduplicate`, `gcomonad-counit-l`, `gcomonad-counit-r`,
 `gcomonad-coassoc`) typechecks under `--safe --without-K` with no
@@ -230,12 +278,15 @@ same idiom `EchoGraded.degrade-via-join` already uses; it is a
 faithful (not weakened) statement of the comonad coherence in the
 join-semilattice presentation.
 
-*Thesis impact (positive):* the "characterised graded comonad of
-structured loss" claim rests cleanly on machinery the repo has
-already proved. The graded-comonad strength is not bought with extra
-axioms or path algebra — it is a corollary of the loss lattice being
-a propositional order with a universal join. The thesis (<<thesis>>)
-stands and is *strengthened*; no honest rewrite is required.
+*Thesis impact — RETRACTED 2026-05-18.* This paragraph originally
+read: "the 'characterised graded comonad of structured loss' claim
+rests cleanly on machinery the repo has already proved… the thesis
+stands and is *strengthened*; no honest rewrite is required." That
+conclusion was wrong. There is no graded-comonad strength; the
+collapse to thinness is a *bound*, not a strengthening. An honest
+rewrite *was* required and has been done (`paper.adoc`,
+`conservativity.adoc`, `types-abstract.adoc`, R-2026-05-18). The
+narrowed thesis (<<thesis>>) is what stands.
 
 == Status
 
@@ -313,3 +364,21 @@ reason.
   be filled as more context accrues; not for submission until those
   clear. Remaining Pillar E (Zenodo DOI, library packaging,
   submission logistics, outreach) is offline / author-driven.
+* *2026-05-18 — trigger: adversarial review + codebase pressure-test;
+  framing retraction (R-2026-05-18).* The Pillar B/C/D framing in the
+  entries above is retracted, not rewritten (append-only history).
+  No in-repo defense was found for "graded comonad", "universal
+  property / terminal cone", "two independent models /
+  model-independence", or "conservativity metatheorem"; the repo's
+  own Gate-2 audit contradicted two. The mechanised content is
+  unchanged and the entries above remain accurate as a record of
+  *what landed*; only their *significance claims* are corrected, to:
+  a loss-graded reindexing modality (not a comonad); a funext-relative
+  pointwise mediator property (not a universal property);
+  carrier-parametricity over a fixed grade poset (not
+  model-independence); a postulate-free build that is evidence for,
+  not a proof of, conservativity. Authoritative current statements:
+  `paper.adoc` §"Reframing note", `conservativity.adoc`,
+  `types-abstract.adoc` ("submission-ready" status withdrawn),
+  `docs/retractions.adoc` R-2026-05-18. Pillars A–D stand at their
+  *narrowed* strength; Pillar E re-review is the open item.
