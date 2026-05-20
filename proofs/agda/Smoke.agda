@@ -32,6 +32,20 @@ open import Echo using
   ; cancel-iso
   ; Echo-comp-pent-Σ-assoc
   )
+
+-- AntiEcho thin slice (theory/antiecho — Σ-dual of Echo). Lands the
+-- carrier, per-element disjointness, introduction, and source-side
+-- map-over. Distinct from `EchoFiberTriangulation.CoEcho` (which is
+-- the trivial opposite-orientation fibre `∃ x . y ≡ f x`); see
+-- `coecho.md` §6 for the naming rationale. Partition-with-decidability
+-- and tropical decomposition deferred to follow-up slices.
+open import AntiEcho using
+  ( AntiEcho
+  ; antiecho-intro
+  ; antiecho-disjoint
+  ; antiecho-map-over
+  )
+
 -- Pillar A of docs/echo-types/establishment-plan.adoc: the
 -- definitional Echo ≃ fib bridge, pinned so a rename fails CI fast.
 open import EchoFiberBridge using (fiber; echo→fib; fib→echo; echo↔fib)
