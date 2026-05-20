@@ -18,6 +18,7 @@ open import EchoIntegration
 open import EchoCNOBridge
 
 open import EchoApprox
+open import EchoApproxInstance
 open import EchoIndexed
 open import EchoDecidable
 open import EchoAccess

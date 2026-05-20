@@ -75,6 +75,23 @@ open import EchoApprox using
   ; module Approx
   )
 
+-- Per-lemma pins for the parameterised EchoApprox via EchoApproxInstance
+-- (hygiene; closes the CLAUDE.md "Working rules" invariant gap for
+-- parameterised modules — see follow-up to PR #70).
+open import EchoApproxInstance using
+  ( trivialTolerance
+  ; trivialPseudoMetric
+  ; approx-EchoR
+  ; approx-intro
+  ; approx-strict→approx
+  ; approx-relax
+  ; approx-NonExpansive
+  ; approx-compose
+  ; approx-comp-sound
+  ; approx-comp-retract-to
+  ; approx-comp-retract-A
+  )
+
 open import EchoIndexed using
   ( Echoᵢ
   ; echoᵢ-intro
