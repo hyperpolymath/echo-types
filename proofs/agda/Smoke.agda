@@ -91,6 +91,21 @@ open import EchoExampleParser using
   ; paren-nested-balanced
   ; paren-pair-balanced
   )
+
+-- Example 5 (docs/echo-types/examples.md §5): database provenance via
+-- K-provenance semiring. Distinct Bool-provenance rows project to the
+-- same payload, witnessing the non-injectivity of `project` and
+-- producing distinct echoes at the same projected value.
+open import EchoExampleProvenance using
+  ( Row
+  ; project
+  ; provenance-collapses
+  ; echo-prov-true
+  ; echo-prov-false
+  ; echoes-distinguish-provenance
+  ; echo-prov-true≢echo-prov-false
+  ; collapse-via-residue
+  )
 open import VecRotation using (rotL-alternating; rotR-alternating; map-alternating)
 
 open import EchoApprox using
