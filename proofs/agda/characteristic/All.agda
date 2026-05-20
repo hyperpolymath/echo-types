@@ -25,6 +25,7 @@ import characteristic.ChoreoInjective
 import characteristic.IntegrationAudit
 import characteristic.InteractionTest
 import characteristic.ModeGraded
+import characteristic.NonTruncatable
 import characteristic.RecipeNonTriviality
 import characteristic.RecipeSpec
 import characteristic.RecipeTheorem
