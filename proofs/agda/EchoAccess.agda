@@ -47,27 +47,32 @@
 -- the same recipe `EchoGraded` and `EchoLinear` close at the
 -- per-decoration composition rung.
 --
--- Deferred to follow-up (the design doc's §6 mode-B mitigation):
+-- Carrier design (resolved 2026-05-20, owner decision):
 --
---   * Honest carrier for `enum` (bridge to `EchoFiberCount.FiberSize-fin`)
---     so `feasible` / `infeasible` are not Potemkin labels. This is
---     **not** a code-mechanical extension — it requires a design
---     decision: an honest `enum`-grade carrier must package an
---     enumerator `Fin n → A` and a decider on `B`, neither of which
---     can be supplied without breaking the parametricity over `A`
---     that `Echo f y` enjoys at the `free` grade. The two cleanest
---     resolutions are (a) parameterise the whole `CEcho` family on
---     `Decidable B` + an enumeration witness (forces every caller to
---     supply them, even at the `free` grade where they do nothing),
---     or (b) bury both in an existential inside the `enum` /
---     `feasible` / `infeasible` cases (loses the ability to extract
---     the enumerator from outside). Both are real architectural
---     choices; see the design doc's §6 falsifier mode B. The current
---     carriers for `enum` / `feasible` / `infeasible` remain the
---     minimal `Lift ⊤` placeholder — the grade still names the loss
---     (same design as `EchoGraded.forget = ⊤`), the composition layer
---     above this module is grade-indexed not carrier-indexed, and
---     therefore is unaffected by the eventual carrier choice.
+--   The carriers for `enum` / `feasible` / `infeasible` remain the
+--   minimal `Lift ⊤` placeholder — and this is the correct honest
+--   answer, not a Potemkin label. Option (b) (existential carriers
+--   burying an enumerator + decider) was tried and STRUCTURALLY FAILS:
+--   `degrade-access : c1 ≤a c2 → CEcho c1 → CEcho c2` becomes
+--   uninhabitable at multiple constructors because the access lattice
+--   tracks DECREASING information as you climb (free → infeasible),
+--   so degrading must DROP info, never fabricate it. There is no
+--   way to construct an `Echo f y` witness when degrading from a
+--   `Dec (Echo f y)` refutation, and no way to fabricate a `Dec B`
+--   from a domain-side witness. The `Lift ⊤` shape at the top is
+--   honest in the same sense that `EchoGraded.forget = ⊤` is honest:
+--   at the loss-maximal grade, there is no extractable data to carry.
+--   The grade-indexed composition layer (`degrade-access-comp`,
+--   `_⊔a_`, the join-three) above this module operates on the grade,
+--   not the carrier shape, and is sound under either design — so
+--   this decision affects only the carrier reading, not any landed
+--   theorem. See `docs/echo-types/decisions/echo-access-trivial-carrier.adoc`.
+--
+--   Option (a) (parameterise CEcho on Decidable B + enumerator) would
+--   force every caller to supply machinery at the `free` grade where
+--   it does nothing — explicitly rejected for that reason. Option (c)
+--   (⊎-shape honest+placeholder) considered as a future affordance
+--   if a real use-case for existential extraction emerges.
 
 module EchoAccess where
 
@@ -397,28 +402,28 @@ infeasible ⊔a _          = infeasible
 ≤a-⊔a-univ decidable≤decidable   decidable≤decidable   = decidable≤decidable
 ≤a-⊔a-univ decidable≤enum        free≤enum             = decidable≤enum
 ≤a-⊔a-univ decidable≤enum        decidable≤enum        = decidable≤enum
-≤a-⊔a-univ decidable≤enum        enum≤enum             = decidable≤enum
+≤a-⊔a-univ decidable≤enum        enum≤enum             = enum≤enum
 ≤a-⊔a-univ decidable≤feasible    free≤feasible         = decidable≤feasible
 ≤a-⊔a-univ decidable≤feasible    decidable≤feasible    = decidable≤feasible
-≤a-⊔a-univ decidable≤feasible    enum≤feasible         = decidable≤feasible
-≤a-⊔a-univ decidable≤feasible    feasible≤feasible     = decidable≤feasible
+≤a-⊔a-univ decidable≤feasible    enum≤feasible         = enum≤feasible
+≤a-⊔a-univ decidable≤feasible    feasible≤feasible     = feasible≤feasible
 ≤a-⊔a-univ decidable≤infeasible  free≤infeasible       = decidable≤infeasible
 ≤a-⊔a-univ decidable≤infeasible  decidable≤infeasible  = decidable≤infeasible
-≤a-⊔a-univ decidable≤infeasible  enum≤infeasible       = decidable≤infeasible
-≤a-⊔a-univ decidable≤infeasible  feasible≤infeasible   = decidable≤infeasible
-≤a-⊔a-univ decidable≤infeasible  infeasible≤infeasible = decidable≤infeasible
+≤a-⊔a-univ decidable≤infeasible  enum≤infeasible       = enum≤infeasible
+≤a-⊔a-univ decidable≤infeasible  feasible≤infeasible   = feasible≤infeasible
+≤a-⊔a-univ decidable≤infeasible  infeasible≤infeasible = infeasible≤infeasible
 ≤a-⊔a-univ enum≤enum             free≤enum             = enum≤enum
 ≤a-⊔a-univ enum≤enum             decidable≤enum        = enum≤enum
 ≤a-⊔a-univ enum≤enum             enum≤enum             = enum≤enum
 ≤a-⊔a-univ enum≤feasible         free≤feasible         = enum≤feasible
 ≤a-⊔a-univ enum≤feasible         decidable≤feasible    = enum≤feasible
 ≤a-⊔a-univ enum≤feasible         enum≤feasible         = enum≤feasible
-≤a-⊔a-univ enum≤feasible         feasible≤feasible     = enum≤feasible
+≤a-⊔a-univ enum≤feasible         feasible≤feasible     = feasible≤feasible
 ≤a-⊔a-univ enum≤infeasible       free≤infeasible       = enum≤infeasible
 ≤a-⊔a-univ enum≤infeasible       decidable≤infeasible  = enum≤infeasible
 ≤a-⊔a-univ enum≤infeasible       enum≤infeasible       = enum≤infeasible
-≤a-⊔a-univ enum≤infeasible       feasible≤infeasible   = enum≤infeasible
-≤a-⊔a-univ enum≤infeasible       infeasible≤infeasible = enum≤infeasible
+≤a-⊔a-univ enum≤infeasible       feasible≤infeasible   = feasible≤infeasible
+≤a-⊔a-univ enum≤infeasible       infeasible≤infeasible = infeasible≤infeasible
 ≤a-⊔a-univ feasible≤feasible     free≤feasible         = feasible≤feasible
 ≤a-⊔a-univ feasible≤feasible     decidable≤feasible    = feasible≤feasible
 ≤a-⊔a-univ feasible≤feasible     enum≤feasible         = feasible≤feasible
@@ -427,7 +432,7 @@ infeasible ⊔a _          = infeasible
 ≤a-⊔a-univ feasible≤infeasible   decidable≤infeasible  = feasible≤infeasible
 ≤a-⊔a-univ feasible≤infeasible   enum≤infeasible       = feasible≤infeasible
 ≤a-⊔a-univ feasible≤infeasible   feasible≤infeasible   = feasible≤infeasible
-≤a-⊔a-univ feasible≤infeasible   infeasible≤infeasible = feasible≤infeasible
+≤a-⊔a-univ feasible≤infeasible   infeasible≤infeasible = infeasible≤infeasible
 ≤a-⊔a-univ infeasible≤infeasible free≤infeasible       = infeasible≤infeasible
 ≤a-⊔a-univ infeasible≤infeasible decidable≤infeasible  = infeasible≤infeasible
 ≤a-⊔a-univ infeasible≤infeasible enum≤infeasible       = infeasible≤infeasible

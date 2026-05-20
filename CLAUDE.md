@@ -191,7 +191,97 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-05-17)
+## Current rung state (2026-05-20)
+
+### Session arc 2026-05-20 (read this first)
+
+*Where we started today (commit `888dee0`, post-#73):* the establishment
+track was complete A–D + Pillar E paper drafting in progress. The
+theory roadmap §"Theory work — no proof assistant needed" listed four
+"open" items (Axis 2 approximate, Axis 8 refinement, negative/CoEcho,
+2-categorical shape) plus two truly open (presentation-dependence,
+Gate 1 adjacency refresh).
+
+*Where we ended today:* the **entire `§Theory work — no proof
+assistant needed` section is closed** (modulo Lane 2 in flight). 10+
+PRs landed:
+
+1. `#67` — doc rule-out 2-categorical shape + roadmap correction.
+   Discovered 2 of 4 "open" items were actually shipped: Axis 2 already
+   landed as `EchoApprox.agda`; Axis 8 candidate 3 already landed as
+   `EchoDecidable.agda`. Roadmap re-credited. `decisions/no-2-cat.adoc`
+   added — every would-be 2-cell in landed code is `refl` or forced
+   trivial by propositionality.
+2. `#68` + `#75` — Axis 8 graded access modality. New `EchoAccess.agda`:
+   5-grade enum (`free / decidable / enum / feasible / infeasible`),
+   Hasse-enumerated `_≤a_` with `≤a-prop` closing on `refl`,
+   `EchoAccess` Σ-carrier, `_⊔a_` join + 3 join lemmas + composition
+   trio mirroring `EchoGraded` recipe. Sixth instance of the
+   decoration recipe.
+3. `#69` + `#72` — AntiEcho (Σ-dual of Echo) + tropical decomposition.
+   `AntiEcho f y := Σ A (λ x → f x ≢ y)`. Tropical decomposition
+   `IsArgmin ↔ Echo × Π (¬(score z < y))` ships both bijection
+   directions with `refl` round-trips. Cashes the CoEcho exploration's
+   "EchoTropical tension dissolves" claim.
+4. `#70` + `#74` — EchoApprox composition rung. Retract direction
+   (`echo-approx-comp-retract-to/A`) + Separated zero-collapse +
+   axis-1 shadow lemmas. Rung C (full B/budget round-trip) deferred —
+   needs `Tolerance` `+`-identity; in flight as Lane 2 via separate
+   `BalancedTolerance` record (option b).
+5. `#71` — hygiene: per-lemma Smoke pins for `EchoApprox` via
+   `EchoApproxInstance.agda` (trivial-on-`⊤` instance). Closes a
+   silent CLAUDE.md-invariant violation for parameterised modules.
+   Standard pattern for future parameterised modules.
+6. `#76` — presentation-dependence sub-theory: examples 5, 9, 10
+   cluster as Σ-over-`R` instantiating Axis 4; meta-pattern only,
+   no formalisation needed.
+7. `#77` — Gate 1 adjacency refresh: 5/5 REFINED verdicts; every
+   adjacency claim survives, all benefit from re-statement in axis
+   terms (esp. axis 8 after this session).
+8. This PR — bookkeeping (CLAUDE.md refresh) + Lane 1 closure
+   (`Lift ⊤` confirmed as honest carrier for EchoAccess top grades;
+   `decisions/echo-access-trivial-carrier.adoc`). The existential
+   carriers attempt structurally fails because the access lattice
+   tracks DECREASING information; trivial carrier is correct.
+
+Build invariant held every rung: `All.agda` + `Smoke.agda` exit 0
+under `--safe --without-K`, zero postulates, zero escape pragmas, no
+funext. Pillar E paper continues (parallel sessions; `#73` landed
+primer + related-work + estate PMPL→MPL-2.0 sweep).
+
+Two patterns formalised this session:
+
+* **Smoke pin for parameterised modules** via concrete trivial instance
+  (`EchoApproxInstance.agda` style). Apply to any future parameterised
+  module to honour the "every headline pinned" invariant.
+* **Sandbox quirk on `agda` positional args**: `Bash(agda *)` in
+  `permissions.allow` doesn't cover `agda <file>`. Workaround in
+  `.claude/settings.json`: `"sandbox": {"excludedCommands": ["agda"]}`,
+  applied 2026-05-20. Future Agda swarms should not need the
+  parent-verify dance that was required on PRs #71, #72, #75.
+
+*Plan for the next Claude:* the theory roadmap section is essentially
+closed. Open work:
+
+1. Lane 2 (EchoApprox `BalancedTolerance` + B/budget round-trip) —
+   should land cleanly per the agent's recommendation; verify when it
+   completes.
+2. Ordinal track — unbudgeted `_<ᵇʳᶠ_` global WF + surface-route WF
+   back into `Order.agda`'s main `_<ᵇ_`. Gated on the K-free shared-binder
+   restructure (B1).
+3. Pillar E paper — clear remaining `[EXPAND]` tags as material accrues
+   (parallel sessions are already doing this — see `#73`).
+4. `antiecho-partition-dec` (needs DecEq B) and generic-codomain
+   `antiecho-tropical-decompose` (needs ordered-codomain interface) —
+   small deferrals from this session.
+5. New `EchoCost.agda` / `EchoSearch.agda` slices (mentioned in the
+   2026-05-20 Gate 1 refresh; presumably from other sessions) extend
+   Axis 8 further — no action needed here, but downstream callers may
+   need to mirror their composition recipes.
+
+DO NOT reopen: 2-categorical shape (ruled out via `decisions/no-2-cat.adoc`);
+EchoAccess existential carriers (closed via `decisions/echo-access-trivial-carrier.adoc`);
+the Pillar A–D internal programme (complete since 2026-05-17).
 
 ### Session arc 2026-05-17 (read this first)
 
