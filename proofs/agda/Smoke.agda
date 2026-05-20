@@ -129,6 +129,32 @@ open import EchoApproxInstance using
   ; approx-strict→approx-collapse-shadow-A
   )
 
+-- Axis 8 third quantitative artifact (taxonomy.md §8, refinement 1):
+-- cost-indexed echo over an abstract `CostAlgebra` (ordered commutative
+-- monoid with `0`, `+`, `≤`, left-identity, transitivity, monotone-`+`).
+-- Sits orthogonal to `EchoDecidable` (refinement 3, qualitative
+-- decidability) and `EchoFiberCount` (quantitative fibre-count for
+-- finite domains): names the resource-budget dimension of Axis 8.
+-- Carrier + headlines pinned via `EchoCostInstance` (trivial-on-⊤
+-- instance) — same hygiene pattern as `EchoApproxInstance`.
+open import EchoCost using
+  ( CostAlgebra
+  ; module Cost
+  )
+
+open import EchoCostInstance using
+  ( trivialCostAlgebra
+  ; cost-EchoC
+  ; cost-intro
+  ; cost-intro-≤
+  ; cost-relax
+  ; cost-relax-zero
+  ; cost-forget
+  ; cost-compose
+  ; cost-compose-mono
+  ; cost-forget-compose-mono-A
+  )
+
 open import EchoIndexed using
   ( Echoᵢ
   ; echoᵢ-intro
