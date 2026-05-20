@@ -9,6 +9,7 @@ open import EchoCharacteristic
 open import EchoResidue
 open import EchoExampleAbsInt
 open import EchoExampleParser
+open import EchoExampleProvenance
 open import EchoExamples
 
 open import EchoChoreo
