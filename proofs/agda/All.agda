@@ -3,6 +3,7 @@
 module All where
 
 open import Echo
+open import AntiEcho
 open import EchoKernel
 open import EchoCharacteristic
 open import EchoResidue
