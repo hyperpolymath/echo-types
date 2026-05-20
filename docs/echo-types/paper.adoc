@@ -339,9 +339,20 @@ NOTE: *[EXPAND]* — detailed positioning against: Granule / QTT graded
 modalities; comonadic notions of computation (Uustalu–Vene);
 coeffects (Petriček–Orchard–Mycroft); HoTT fibrewise constructions;
 lens / optic literature (the witness-transport leg of
-`echo-pullback-univ` resembles the very-well-behaved-lens laws). Make
-the novelty crisp: not a new object, but a fully mechanised
-characterisation package with a falsifiable-gate methodology.
+`echo-pullback-univ` resembles the very-well-behaved *1-lens* laws —
+no 2-cell-equipped optic, see below). Make the novelty crisp: not a
+new object, but a fully mechanised characterisation package with a
+falsifiable-gate methodology.
+
+NOTE: *[2-cat ruled out, see `decisions/no-2-cat.adoc`]* — when the
+related-work pass expands the lens/optic comparison and the
+graded-modality positioning, fold in the 2-categorical rule-out: a
+"bicategorical echo" reading was considered and ruled out on the
+landed evidence (every would-be 2-cell appears as `refl` or is
+prop-forced trivial by `≤g-prop` / `⊑-prop`); the construction
+resembles a very-well-behaved *1-lens*, not a 2-cell-equipped optic.
+The closure note in `decisions/no-2-cat.adoc` is the load-bearing
+artifact; this paragraph should cite it rather than re-argue.
 
 [#reframing-note]
 == Reframing note (2026-05-18)

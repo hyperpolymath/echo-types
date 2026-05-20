@@ -113,16 +113,20 @@ composition *accumulates* witnesses rather than losing them.
 
 ## Open questions
 
-### Q1. 2-categorical structure
+### Q1. 2-categorical structure — closed (rule-out)
 
-*Question.* Is there a 2-category whose objects are types, whose
-1-morphisms are maps, and whose 2-morphisms are echo-preserving
-transformations? `EchoCategorical.agda` hints at this but does not
-commit to a full 2-categorical axiomatisation.
-
-*Why it matters.* If yes, the composition laws are the coherence
-laws of the 2-category. If no, the composition laws are ad-hoc and
-probably a sign the residue structure is subtler than we modelled.
+*Verdict.* No 2-category. The five structurally plausible
+organisations (echo as a lax/oplax 2-functor; slice-of-echos
+with `IsMediator` cells; double category; graded bicomonad;
+Grothendieck stack) each collapse to existing 1-cat +
+graded-comonad + pullback content because every would-be 2-cell
+appears as `refl` or is prop-forced trivial by `≤g-prop` /
+`⊑-prop`. The composition laws (accumulation iso, cancel-iso,
+pentagon Σ-assoc, decoration commuting) are *not* 2-coherence
+laws of a hypothesised 2-category — they are the 1-categorical
+composition laws of a pullback-presented type, full stop. See
+`docs/echo-types/decisions/no-2-cat.adoc` for the full closure
+note (verdict / evidence / implication).
 
 ### Q2. Negative echoes
 
@@ -150,8 +154,27 @@ is a Lipschitz constant of `g`. This is a crude first guess — the
 right form may involve sup-norms, dilation-operators, or
 coarser bounds.
 
-*Status.* Entirely speculative. Requires a formal definition of
-approximate echo first.
+*Status (updated).* No longer entirely speculative. The
+non-expansive case (`L_g = 1`) is landed as
+`EchoApprox.Approx.echo-approx-compose` in additive form
+`(ε₁ + ε₂)-echo(g ∘ f)`. The compositional *shape* — whether the
+forward/backward maps form a strict iso analogous to
+`Echo-comp-iso` — is settled in the negative: it is a *retract*,
+not an iso, because the RHS Σ admits multiple splits of the budget
+and the chosen intermediate `b` is not pinned by the input. The
+axis-2 design note (`/tmp/echo-types-exploration/axis2-approximate.md`
+§5) gives the full discussion.
+
+First slice of the retract landed in `EchoApprox.agda`:
+`echo-approx-comp-sound` (RHS-Σ → LHS via `echo-approx-compose`),
+`echo-approx-comp-retract-to` (canonical-split LHS → RHS-Σ section
+at `b := f x`, `ε₁ := zero`, `ε₂ := ε`), and
+`echo-approx-comp-retract-A` (A-component round-trip preserves the
+witness up to `refl`). The B-component round-trip and the
+tolerance-budget round-trip need a `+`-left-identity axiom on
+`Tolerance` (`zero + ε ≡ ε`) — not in the current record. The full
+retract proof and the Lipschitz generalisation (`L_g ≠ 1`) are
+deferred to subsequent rungs.
 
 ### Q4. Associativity — landed
 
@@ -175,14 +198,18 @@ packaged as a stdlib `Function.Bundles._↔_` via
 once `g b ≡ c` has been pinned, so this is a strict iso inside
 `--safe --without-K`.
 
-*Evidence this is the right shape.* Both lemmas land as `refl`
+*Confirmed this is the right shape.* Both lemmas land as `refl`
 without any `trans-assoc` / `cong-trans` manipulation, because
 `Echo-comp-iso-to`'s body `(x , p) ↦ (f x , (x , refl) , p)` is
 structurally symmetric in the outer function — the f-component
 and witness do not depend on which outer is peeled off. If the
 iso had a `trans`-shaped body instead, pentagon would have
-required real coherence lemmas; the `refl` outcome is evidence
-the iso has the right design.
+required real coherence lemmas. The `refl` outcome is the
+*definitive characterisation*: pentagon is identity — what would
+be the bicategorical associator-2-cell — and is forced trivial
+here. With the 2-cat shape ruled out (§Q1;
+`decisions/no-2-cat.adoc`), this is no longer "evidence the iso
+has the right design" but the 1-categorical-final reading of it.
 
 ### Q5. Interaction with role-indexing, gradings, linearity
 
@@ -204,8 +231,14 @@ preimage `x` and re-applies `f` to reconstruct `y` — the echo is
 temporarily made definite. Does the composition law respect this
 extraction?
 
-*Formalisation hint.* Probably expressible as a 2-cell in the
-hypothetical 2-category of Q1. Not attempted.
+*Formalisation hint (revised).* With the 2-cat shape ruled out
+(§Q1; `decisions/no-2-cat.adoc`), recovery is a 1-categorical
+notion: a slice morphism into `Echo f y` (the extraction step)
+followed by the canonical projection, or equivalently a section
+of the appropriate fibration. The earlier "expressible as a
+2-cell in the hypothetical 2-category of Q1" hedge no longer
+applies. Not attempted; now write-up-tractable on a 1-categorical
+footing.
 
 ---
 
