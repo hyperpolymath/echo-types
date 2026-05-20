@@ -225,9 +225,13 @@ of every modern cryptosystem depends on this axis being real.
   earlier `FiberSize ≡ 1` hardcode that rendered all
   Landauer/Bennett claims vacuous.
 
-Full cost-tracking refinements (1, 2, 4) remain unformalised —
-Agda's type system does not express complexity bounds, so
-asymptotic computational access cannot be named at the type level
+Full cost-tracking refinements (2, 4) remain unformalised; the
+bookkeeping shape of refinement (1) landed 2026-05-20 in
+`EchoCost.agda` (record `EchoCost f y` with a `ℕ` cost ledger and
+the axis-8 lattice projections; see refinement 1 below).
+Refinement 1's *operational* upgrade — replacing the `ℕ` field
+with a resource monad — remains open. Asymptotic
+computational access still cannot be named at the type level
 without further machinery. Adjacent stdlib pieces:
 - `Data.Nat.Logarithm.⌊log₂⌋` (now imported by
   `EchoThermodynamics`) and arithmetic complexity conventions admit
@@ -241,7 +245,17 @@ without further machinery. Adjacent stdlib pieces:
 
 1. **Cost-indexed echo.** Pair `Echo f y` with a witness-extraction
    bound: `CEcho f y cost = Σ (Echo f y) (λ _ → Extractor f y cost)`.
-   Requires a resource monad or a cost-passing semantics.
+   Requires a resource monad or a cost-passing semantics. **First
+   artifact landed 2026-05-20:** `proofs/agda/EchoCost.agda` ships
+   the bookkeeping shape — a record `EchoCost f y` pairing the
+   witness with a `ℕ` cost ledger — together with the axis-8
+   lattice projections (`echo-cost-forget` to base `Echo`,
+   `echo-cost-to-dec` to refinement 3's `EchoDec`),
+   `echo-cost-intro-zero`, `echo-cost-bump` (loose upper bound),
+   and `echo-cost-compose` (additive cost along `g ∘ f`). The
+   ledger is bookkeeping, not yet operationally substantiated;
+   a resource-monad / cost-passing upgrade replaces the `ℕ` field
+   without changing the lattice shape.
 
 2. **Graded access modality.** `Echo^c f y` at grade `c` means
    "witness is reachable with `≤ c` steps". A graded semiring on the

@@ -82,6 +82,15 @@ open import EchoDecidable using
   ; echo-dec-compose-fin
   )
 
+open import EchoCost using
+  ( EchoCost
+  ; echo-cost-forget
+  ; echo-cost-to-dec
+  ; echo-cost-intro-zero
+  ; echo-cost-bump
+  ; echo-cost-compose
+  )
+
 open import EchoFiberCount using
   ( FiberSize-fin
   ; FiberSize-fin-no-hit
