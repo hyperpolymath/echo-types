@@ -32,6 +32,20 @@ open import Echo using
   ; cancel-iso
   ; Echo-comp-pent-Σ-assoc
   )
+
+-- AntiEcho thin slice (theory/antiecho — Σ-dual of Echo). Lands the
+-- carrier, per-element disjointness, introduction, and source-side
+-- map-over. Distinct from `EchoFiberTriangulation.CoEcho` (which is
+-- the trivial opposite-orientation fibre `∃ x . y ≡ f x`); see
+-- `coecho.md` §6 for the naming rationale. Partition-with-decidability
+-- and tropical decomposition deferred to follow-up slices.
+open import AntiEcho using
+  ( AntiEcho
+  ; antiecho-intro
+  ; antiecho-disjoint
+  ; antiecho-map-over
+  )
+
 -- Pillar A of docs/echo-types/establishment-plan.adoc: the
 -- definitional Echo ≃ fib bridge, pinned so a rename fails CI fast.
 open import EchoFiberBridge using (fiber; echo→fib; fib→echo; echo↔fib)
@@ -80,6 +94,28 @@ open import EchoDecidable using
   ; echo-dec-fin
   ; echo-dec-compose-iso
   ; echo-dec-compose-fin
+  )
+
+-- Axis 8 second formal artifact (taxonomy.md §8): graded access
+-- modality, thin slice. Mirrors `EchoGraded` and `EchoLinear`'s order
+-- layer (enum, Hasse-enumerated order, transitivity, propositionality)
+-- plus the Σ-shape carrier + `_≤a_`-indexed degrade primitive.
+-- Per-decoration composition (`degrade-access-comp` / `compose` /
+-- `via-join`) and join structure (`_⊔a_`) land in the follow-up PR.
+open import EchoAccess using
+  ( Access
+  ; free
+  ; decidable
+  ; enum
+  ; feasible
+  ; infeasible
+  ; _≤a_
+  ; ≤a-trans
+  ; ≤a-prop
+  ; CEcho
+  ; EchoAccess
+  ; access-of
+  ; degrade-access
   )
 
 open import EchoFiberCount using
