@@ -92,6 +92,23 @@ open import EchoExampleParser using
   ; paren-pair-balanced
   )
 
+-- Example 10 from `docs/echo-types/examples.md` (abstract
+-- interpretation via Sign lattice). Headlines pinned so a rename
+-- or a slide back to an unanchored claim fails CI fast. See
+-- PR #76 (presentation-dependence cluster).
+open import EchoExampleAbsInt using
+  ( Sign
+  ; Carrier
+  ; α
+  ; concretization-collapses
+  ; α-non-injective-on-pos
+  ; echo-pos-p1
+  ; echo-pos-p2
+  ; echo-zero-witness
+  ; distinct-echoes-same-sign
+  ; absint-classification
+  )
+
 -- Example 5 (docs/echo-types/examples.md §5): database provenance via
 -- K-provenance semiring. Distinct Bool-provenance rows project to the
 -- same payload, witnessing the non-injectivity of `project` and

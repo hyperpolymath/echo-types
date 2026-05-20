@@ -7,9 +7,10 @@ open import AntiEcho
 open import EchoKernel
 open import EchoCharacteristic
 open import EchoResidue
+open import EchoExampleAbsInt
+open import EchoExampleParser
 open import EchoExampleProvenance
 open import EchoExamples
-open import EchoExampleParser
 
 open import EchoChoreo
 open import EchoEpistemic
