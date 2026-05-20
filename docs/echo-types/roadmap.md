@@ -272,16 +272,33 @@ tractable today:
    Σ-shapes (`Echo-comp-pent-Σ-assoc-{to, from, from-to, to-from}` +
    equivalence-record packaging `Echo-comp-pent-Σ-assoc : ... ↔ ...`)
    are both in `Echo.agda`. All pinned in `Smoke.agda`.
-4. ~~**Agda: unbudgeted `_<ᵇʳᶠ_` WF on the ordinal track**~~ —
-   **CLOSED-IMPOSSIBLE 2026-05-20.** Eliminating the explicit ℕ
-   budget from `wf-<ᵇʳᶠᵇ` (or analogously `wf-<ᵇ⁺ᵇ`, newly landed)
-   is structurally impossible for the current `_<ᵇ_`. See
-   `buchholz-rank-obstruction.adoc` — `<ᵇ-+Ω`'s ordinal unsoundness
-   refutes every rank/measure/tower/inverse-image route. Recovery
-   needs WF-restriction of `_<ᵇ_` or a non-additive denotational
-   measure (both substantial). Until either is committed to, the
-   budgeted forms (`_<ᵇʳᶠᵇ_`, `_<ᵇ⁺ᵇ_`) are the canonical
-   well-founded carriers; downstream consumers should use them.
+4. **Agda: unbudgeted `_<ᵇʳᶠ_` WF on the ordinal track** —
+   **VERDICT NARROWED 2026-05-20 evening.** The "closed impossible"
+   framing held for *unrestricted* `_<ᵇ_`.  Under the WfCNF
+   restriction `_<ᵇ⁻_` together with a limit-shaped *ω-power* rank
+   (`Ordinal.Brouwer.OmegaPow` + `Ordinal.Buchholz.RankPow`), the
+   path-1 closure is now **10 of 13 constructors** via
+   relation-agnostic rank-mono primitives (PR #87).  The umbrella
+   theorem `rank-pow-mono-<ᵇ⁰ : x <ᵇ⁰ y → rank-pow x <′ rank-pow y`
+   lives in `Ordinal.Buchholz.RankMonoUmbrella`; consumers
+   (whether `_<ᵇ⁻_` or `_<ᵇʳᶠ_` based) construct `_<ᵇ⁰_`
+   derivations and apply the umbrella.
+
+   **3 cases remain open** under documented structural blockers
+   (see `buchholz-rank-obstruction.adoc` for the per-constructor
+   verdict table):
+   * `<ᵇ-ψα`, `<ᵇ-ψΩ≤` — ψ-admissibility predicate carrier landed
+     (`Ordinal.Buchholz.WellFormedAdmissible.WfAdm`); rank-refinement
+     for the discharge is a follow-on slice with a `<ᵇ-+ψ`
+     cross-case to manage.
+   * `<ᵇ-+1` joint-bplus — `rank-pow (bplus z₁ z₂)` is not additive
+     principal in general.  Needs a coarser dominator (e.g.,
+     `leading-Ω-index : BT → OmegaIndex`).
+
+   The keystone is the **additive-principal lemma at ω^(suc n)**
+   (`Ordinal.Brouwer.OmegaPow.additive-principal`).  Budgeted forms
+   (`_<ᵇʳᶠᵇ_`, `_<ᵇ⁺ᵇ_`) remain the canonical well-founded
+   carriers until the 3-case gap closes.
 5. **Gate 1 adjacency refresh against the new taxonomy** — 1 day.
    Cheap coherence pass on existing docs. Cross-check each of the
    13 notes in `docs/adjacency/` against the 8 axes in `taxonomy.md`
