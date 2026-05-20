@@ -113,17 +113,237 @@ the rest of the paper bears.
   identity claims settled negatively and logged, including this
   development's own framing retraction (§7, <<reframing-note>>).
 
-== Background and notation [EXPAND]
+== Background and notation
 
-Σ-types, the identity type, homotopy fibres, graded/coeffect
-comonads, the join-semilattice of loss grades. Agda `--safe
---without-K` and what it excludes (K, univalence, funext).
+This section fixes vocabulary. A reader fluent in dependent type
+theory may not be equally fluent in *both* HoTT fibres and the
+coeffect / graded-modality lineage, and the rest of the paper assumes
+both at the level of recognition rather than internalisation. We aim
+the exposition at exactly that reader: pin the symbols, recall the
+two prior-work neighbourhoods the development sits between, and state
+what `--safe --without-K` does and does not give us. There are no new
+claims here.
 
-NOTE: *[EXPAND]* — flesh out with a self-contained primer on graded
-comonads (Petriček–Orchard–Mycroft; Brunel et al.; Atkey QTT;
-Orchard–Liepelt–Eades / Granule) and a one-paragraph HoTT-fibre
-recap, so the paper is readable by both the QTT and the HoTT
-communities without external lookup.
+=== Type-theoretic setting
+
+The development is Agda + agda-stdlib 2.3 under `--safe --without-K`
+with zero postulates and no escape pragmas. Concretely this excludes:
+Streicher's axiom K (so we may not assume UIP on arbitrary types);
+univalence and any other postulated equivalence; function
+extensionality (`funext`); the law of excluded middle; choice; and
+proof-irrelevance pragmas. The only propositional equality we have is
+Martin-Löf's inductive identity type `_≡_` with its single
+constructor `refl`, and the only dependent pair we have is `Σ`.
+
+The funext-relativity of §3 is *not* a quarantine: there is no funext
+module anywhere in the development, no postulated equality of
+functions, no isolated `Transport.agda`-style escape. The genuine
+funext dependence is *internal* — it sits in the gap between
+pointwise agreement `∀ v → m' v ≡ m v` and morphism equality
+`m' ≡ m`. The 2026-05-18 reframing (`docs/retractions.adoc`,
+<<reframing-note>>) closed an earlier mis-framing of this dependence
+as a quarantined module. The earn-back (Gate F4,
+`EchoPullbackUnivF4.agda`) takes the funext dependence
+*compositionally* via an explicit module parameter `FunExt₀` — never
+a postulate, never a hidden hypothesis. The trusted base is
+unchanged.
+
+=== Σ-types and the identity type
+
+`Σ A (λ x → P x)` is the standard dependent pair: a value of `A` and
+a value of `P x`. We write `Σ A P` when `P` is already a function and
+`(x , p)` for pair construction. Echo is a Σ-type at a specific shape:
+
+[source,agda]
+----
+Echo : ∀ {a b} {A : Set a} {B : Set b} → (A → B) → B → Set (a ⊔ b)
+Echo {A = A} f y = Σ A (λ x → f x ≡ y)
+----
+
+A witness `(x , p) : Echo f y` is a *source* `x : A` together with
+the propositional equality `p : f x ≡ y` certifying that `x` lands at
+`y` under `f`. The identity type `_≡_` is the standard Martin-Löf
+inductive one; `refl` is its sole constructor. Equational reasoning
+uses stdlib's `≡-Reasoning` block syntax (`begin … ≡⟨ … ⟩ … ∎`).
+Bijections are stdlib `Function.Bundles._↔_`, constructed via
+`mk↔ₛ′`. We never use propositional truncation `‖ A ‖` (it would
+collapse the witness data this development exists to keep);
+truncation is named as a contrast in §"Related work" but does not
+appear in any verified statement.
+
+=== HoTT fibres
+
+The homotopy fibre of `f : A → B` at `y : B` (HoTT Book Def. 4.2.4)
+is `fib f y := Σ A (λ x → f x ≡ y)`. This is *definitionally* `Echo
+f y` under a renaming of the function symbol; Pillar A
+(`EchoFiberBridge.agda`) discharges the bridge `echo↔fib : Echo f y
+↔ fiber f y` as `refl` round-trips. We say "homotopy fibre" and
+"Echo" interchangeably; the paper's terminological choice is to use
+"Echo" for the loss-tracking reading and "fibre" when contrasting
+with the broader HoTT framework. There is no difference of
+construction.
+
+Two stylistic notes for HoTT readers. (1) We do *not* use cubical
+Agda, univalence, or HITs anywhere. Every statement is in
+intensional MLTT + Σ + `_≡_`. (2) The fibre is *not* propositionally
+truncated. The whole development depends on the witness `x` being
+proof-relevant: `echo-true ≢ echo-false`
+(`EchoCharacteristic.agda`) and the family of `echo-not-prop`
+exhibits in `proofs/agda/examples/{TropicalArgmin, EpistemicUpdate,
+LinearErasure}.agda` certify the loss of structure under truncation.
+The "structured loss" reading is exactly this: a target value `y :
+B` underdetermines its source, and the (untruncated) fibre records
+*which* source was actually used along with the equation that
+justifies it.
+
+=== Coeffect / graded-modality lineage
+
+The vocabulary the paper uses for "loss-graded" comes from the
+coeffect and graded-modality tradition: Petriček, Orchard and
+Mycroft (ICFP 2014) on coeffects as a calculus of context-dependent
+computation; Brunel, Gaboardi, Mazza and Zdancewic (ESOP 2014) on
+a core quantitative coeffect calculus; Atkey (LICS 2018) on the
+syntax and semantics of Quantitative Type Theory; Orchard, Liepelt
+and Eades (ICFP 2019) on Granule's graded modal types; and at the
+comonad side, Uustalu and Vene's classical comonadic notions of
+computation (ENTCS 2008) which the graded-comonad refinement
+specialises. The shared shape across these works is a family `D_r`
+of types indexed by elements of a (pre)ordered *grade* structure
+with semiring or join-semilattice algebra, equipped with a counit
+`D_0 X → X` and (in the graded-comonadic case) a comultiplication
+`D_{r·s} X → D_r (D_s X)`. The laws are the graded analogues of
+the comonad triangle and pentagon.
+
+The previous draft of this paper presented Echo as an instance of
+this lineage. That framing was retracted (<<reframing-note>>) for a
+concrete and verifiable reason: `EchoGradedComonad.agda` exhibits no
+nested family `GEcho (GEcho …)` and no structure map of shape
+`D_{g₁ ⊔ g₂} ⇒ D_{g₁} D_{g₂}`. What is mechanised is the strictly
+smaller thin-poset reindexing modality described next; this is the
+lineage Echo is *motivated by* and not the structure Echo
+*instantiates*.
+
+=== Thin-poset reindexing modalities
+
+The structure Echo actually carries is a monotone family `GEcho`
+over a join-semilattice `(Grade, ⊔, keep)` of loss grades, together
+with a functorial reindexing action `degrade : g₁ ≤g g₂ → GEcho g₁
+→ GEcho g₂`. Three properties make this useful and pin its load:
+
+* The order `_≤g_` is *propositional* (`≤g-prop`): there is at most
+  one inhabitant of `g₁ ≤g g₂` for any given pair. This is the
+  paper's single load-bearing hypothesis (§5 measures content
+  *exactly* at this hypothesis).
+* `degrade` is *functorial* (`degrade-compose`): composing two
+  degradations through a common intermediate agrees with degrading
+  directly.
+* The join `⊔` has the usual universal property
+  (`≤g-⊔-{left,right,univ}`), making `keep` the bottom and joins the
+  least common upper bounds.
+
+The three coherence equations the paper names
+(`gcomonad-counit-{l,r}`, `gcomonad-coassoc`, retained for module
+continuity) all collapse to `degrade-compose` + `≤g-prop` in the
+common-upper-bound idiom (§4). They are not evidence of a coherence
+tower; they are evidence that thinness already discharges everything
+the names appear to demand. This is the calibration result the paper
+contributes.
+
+=== Notation summary
+
+The notation pinned to specific modules:
+
+[cols="1,2,2", options="header"]
+|===
+| Symbol | Meaning | Source
+
+| `Σ A P`, `(x , p)`
+| Dependent pair, pair construction
+| stdlib `Data.Product`
+
+| `_≡_`, `refl`
+| Propositional equality, its constructor
+| stdlib `Relation.Binary.PropositionalEquality`
+
+| `_↔_`, `mk↔ₛ′`
+| Bijection bundle, its smart constructor
+| stdlib `Function.Bundles`
+
+| `Σ-≡,≡→≡`
+| Pair-equality from component equalities (UIP-free)
+| stdlib `Data.Product.Properties`
+
+| `Echo f y`
+| `Σ A (λ x → f x ≡ y)` — fibre at `y`
+| `proofs/agda/Echo.agda`
+
+| `fib f y`, `fiber f y`
+| Homotopy fibre; same as `Echo f y`
+| `EchoFiberBridge.agda`
+
+| `echo↔fib`
+| Bridge `Echo f y ↔ fiber f y` (`refl` round-trips)
+| `EchoFiberBridge.agda`
+
+| `map-over`, `map-square`
+| Action of morphisms / commuting squares on fibres
+| `Echo.agda`
+
+| `Grade`, `keep`
+| Loss-grade carrier; bottom (no loss)
+| `EchoGraded.agda`
+
+| `_≤g_`, `≤g-prop`
+| Loss-grade order; its propositionality
+| `EchoGraded.agda`
+
+| `_⊔g_`, `≤g-⊔-{left,right,univ}`
+| Join; its universal property
+| `EchoGraded.agda`
+
+| `GEcho g`, `degrade`
+| Loss-graded family; reindexing action
+| `EchoGraded.agda`
+
+| `degrade-compose`
+| Functoriality of `degrade`
+| `EchoGraded.agda`
+
+| `gextract`, `gduplicate`
+| Retained names; identity coercion and join-left reindex
+| `EchoGradedComonad.agda`
+
+| `gcomonad-counit-{l,r}`, `gcomonad-coassoc`
+| Three coherence equations; collapse to `degrade-compose`+`≤g-prop`
+| `EchoGradedComonad.agda`
+
+| `GradedLossModel`, `⊑-prop`
+| Carrier-parametric model interface; load-bearing field
+| `EchoRelModel.agda`
+
+| `GCLaws`
+| Coherence equations proved once, parametric in the carrier
+| `EchoRelModel.agda`
+
+| `FunExt₀`
+| Module parameter for the conditional terminality earn-back
+| `EchoPullbackUnivF4.agda`
+|===
+
+Conventions: universe levels are usually elided (write `Set` for
+`Set a` etc.) when there is no ambiguity. `(x , p)` always
+right-associates: `(x , y , p)` is `(x , (y , p))`. We use Agda's
+mixfix syntax throughout, including `_⊔_` for joins; the
+disambiguation rule is that `⊔` over types is universe-level join
+and `⊔g` over grades is the loss-grade join. Where a stdlib symbol
+collides with a development-local one, we qualify
+(`EchoGraded.degrade`, `Echo.map-over`).
+
+// TODO(bibliography): bib entries needed when a venue/template is
+// chosen: HoTT Book (Def. 4.2.4); Petriček, Orchard and Mycroft
+// (ICFP 2014); Brunel et al. (ESOP 2014); Atkey (LICS 2018);
+// Orchard, Liepelt and Eades (ICFP 2019, Granule); Uustalu and Vene
+// (ENTCS 2008); Gaboardi et al. (ICFP 2016).
 
 == The pullback presentation and its pointwise mediator property
 
@@ -333,26 +553,365 @@ thinness-only content) stated as honest bounds, *not* spun as
 strengths; threats to validity, including the Gate-2 audit's own
 "single recipe" finding.
 
-== Related work [EXPAND]
+== Related work
 
-NOTE: *[EXPAND]* — detailed positioning against: Granule / QTT graded
-modalities; comonadic notions of computation (Uustalu–Vene);
-coeffects (Petriček–Orchard–Mycroft); HoTT fibrewise constructions;
-lens / optic literature (the witness-transport leg of
-`echo-pullback-univ` resembles the very-well-behaved *1-lens* laws —
-no 2-cell-equipped optic, see below). Make the novelty crisp: not a
-new object, but a fully mechanised characterisation package with a
-falsifiable-gate methodology.
+This section positions Echo against its nearest neighbours.  The
+honest summary is that Echo introduces *no new object*: it is the
+homotopy fibre, dressed with a thin-poset reindexing action, packaged
+under a falsifiable-gate methodology.  Per neighbour, we name (a) the
+nearest existing construction, (b) what the verified Agda adds over
+that construction, and (c) — equally important — what it does *not*
+add.  The repository's adjacency notes
+(`docs/adjacency/{quotients,galois-connections,refinement-types,information-flow,provenance,modal-type-theories,hott-fibers,lenses-and-optics,setoid-quotients,provenance-semirings}.adoc`)
+contain the per-neighbour distinctness arguments at gate-1
+granularity; here we draw out the positioning specifically relevant
+to the *characterisation package* (Pillars A–D) rather than to
+gate-1's bare-construction distinctness.
 
-NOTE: *[2-cat ruled out, see `decisions/no-2-cat.adoc`]* — when the
-related-work pass expands the lens/optic comparison and the
-graded-modality positioning, fold in the 2-categorical rule-out: a
-"bicategorical echo" reading was considered and ruled out on the
-landed evidence (every would-be 2-cell appears as `refl` or is
-prop-forced trivial by `≤g-prop` / `⊑-prop`); the construction
-resembles a very-well-behaved *1-lens*, not a 2-cell-equipped optic.
-The closure note in `decisions/no-2-cat.adoc` is the load-bearing
-artifact; this paragraph should cite it rather than re-argue.
+=== HoTT homotopy fibres
+
+The nearest construction is the homotopy fibre `fib f y` (HoTT Book
+Def. 4.2.4).  `Echo f y` is the homotopy fibre.  Pillar A
+(`proofs/agda/EchoFiberBridge.agda`) discharges this as a
+`refl`-round-tripping bridge `echo↔fib : Echo f y ↔ fiber f y`; the
+"bridge" is the identity, as it must be.  This is the most-coincident
+neighbour in the entire literature, and we own the coincidence loudly
+(see <<reframing-note>> and §1).  A category theorist or HoTT user
+should recognise the construction on first sight.
+
+What Echo adds *over the bare fibre* is not a new object but an
+organising vocabulary plus four verified deliverables that HoTT users
+typically do not unify:
+
+* a funext-relative pointwise mediator property
+  (`echo-pullback-univ` in `EchoPullback.agda`; conditionally
+  strengthened to genuine terminality under an explicit `funext`
+  module parameter in `EchoPullbackUnivF4.agda`);
+* a thin-poset reindexing action on a loss-grade lattice
+  (`EchoGradedComonad.agda`'s three coherence equations, each
+  collapsing to `degrade-compose` + `≤g-prop`);
+* a separating model that *measures* the modality's content over
+  generic Σ at exactly `≤g-prop` (`EchoSeparating.agda`);
+* a postulate-free build (`--safe --without-K`, no escape pragmas,
+  CI-enforced) so that the whole package is evidence for
+  conservativity over MLTT+Σ.
+
+What Echo does *not* add over HoTT: anything foundational.  A
+cubical-Agda user has access to univalence and HITs and can express
+every construction here natively, frequently more cleanly.  The
+contribution is at the *exposition* and *packaging* level — naming
+the thin-poset reindexing modality, isolating its load-bearing
+hypothesis, and shipping it under a retraction discipline — not at
+the foundations level.
+
+What we explicitly do *not* claim is distinctness from the homotopy
+fibre.  The win lives one step to the side: against
+*propositionally-truncated* fibres, where `‖ Echo f y ‖` discards the
+witness-type data, the un-truncated form retains it
+(`echo-not-prop`-shaped certificates in
+`proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda`).
+This is the same shape of argument as against refinement types and
+relational information-flow, restated in the modality the HoTT
+framework provides for it.
+
+=== Graded comonads, coeffects, and QTT (the lineage we are motivated
+by, but explicitly not an instance of)
+
+The graded-comonadic lineage runs through Uustalu–Vene's comonadic
+notions of computation; Petriček–Orchard–Mycroft coeffects;
+Brunel–Gaboardi–Mazza–Zdancewic graded modal types; Katsumata's
+parametric effect monads (mirrored at the comonad side); Atkey's
+Quantitative Type Theory; and Orchard–Liepelt–Eades' Granule.  The
+shared idea is a family `D_r` indexed by elements of a (pre)ordered
+*grade* structure with semiring or join-semilattice algebra,
+equipped with a counit `D_0 X → X` and a comultiplication
+`D_{r·s} X → D_r (D_s X)`; the laws are the graded analogues of the
+usual comonad triangle and pentagon.
+
+The development presented here was originally framed as an instance
+of this lineage and was retracted from that framing in adversarial
+review (see <<reframing-note>>).  Stating the corrected position
+plainly: `EchoGradedComonad.agda` does *not* exhibit a graded
+comonad.  There is no nested family `GEcho (GEcho …)` and no
+structure map of shape `D_{g₁ ⊔ g₂} ⇒ D_{g₁} D_{g₂}` anywhere in the
+codebase.  What is mechanised is a *single* grade application
+`gduplicate g₁ g₂ : GEcho g₁ → GEcho (g₁ ⊔ g₂)` — the join-left
+reindex `degrade (≤-⊔-left g₁ g₂)`.  The three coherence equations
+(`gcomonad-counit-{l,r}`, `gcomonad-coassoc`) hold for one reason:
+the grade order is thin (`≤g-prop`) and `degrade` is functorial
+(`degrade-compose`).  We retain the names `gextract` /
+`gduplicate` for module-continuity reasons, with §4 stating plainly
+what they are.
+
+What Echo *is*, against this lineage, is a *loss-graded reindexing
+modality* — a thin-poset action with a functorial monotone
+reindex.  This sits one rung *below* a graded comonad in the
+ladder of structure: every graded comonad over a thin grade poset
+collapses to one of these, but not conversely.  Against QTT
+specifically, the `LinearErasure` example in
+`proofs/agda/examples/LinearErasure.agda` and the linearity-side
+analogue in `EchoLinear.agda` (two-mode `linear ⊑ affine`
+decoration, `degradeMode`, `degradeMode-compose`,
+`degradeMode-via-join`) exhibit the recipe at the same shape that
+QTT's `0 ≤ 1 ≤ ω` quantity ordering carries.  On *bare echo*, QTT
+and Echo coincide: the inverse problem "given erased term at
+quantity ν, what was the source annotation?" is natively
+`Σ (q : Quantity) (erase q ≡ y)`, which is `Echo erase y`.
+
+What Echo adds over the graded-comonad lineage: nothing
+load-bearing on judgmental grounds — Echo introduces no new
+formation rule, context structure, or substructural discipline (§1
+"Why not 'linear or dependent'").  What is added is a verified
+*calibration result*: the separating model (§5) pins down the
+single load-bearing hypothesis (`≤g-prop`) and confirms that
+generic Σ-functoriality survives without it.  This is the kind of
+result the graded-modality literature typically does not ship at
+this granularity, but the result *is itself* about how little
+content the modality adds over generic Σ.  We report it as
+calibration, not as evidence of a rich coherence tower (§4.2).
+
+What Echo does *not* add over QTT / Granule: any judgmental
+extension, any quantity-sensitive elimination rule, any syntactic
+modal account at the term language.  A QTT encoding of the recipe
+appears feasible (see `docs/adjacency/modal-type-theories.adoc`'s
+recipe-level open question); whether QTT carries
+`RoleGraded.choreo-grade-commute` natively without echo machinery is
+a genuinely open question this paper does not close.
+
+=== Lenses and optics (the witness-transport leg)
+
+The nearest construction is a lawful lens `get : S → A`,
+`put : S → A → S` with the three lens laws, generalising through
+prisms, traversals, and the van Laarhoven / profunctor / indexed
+optics families.  Optics are the dominant engineering vocabulary
+for "structured access to a part of a larger whole".  The
+witness-transport leg of `echo-pullback-univ` — the cone-morphism
+notion carrying a `coherent : ∀ v → f (factor v) ≡ y` field,
+transported by `map-over` (`proofs/agda/Echo.agda`) and `map-square`
+along a commuting square — is in the optic neighbourhood; in
+particular, `map-square` is structurally adjacent to the
+2-cell composition of optics.
+
+What Echo adds over lenses (catalogued more fully in
+`docs/adjacency/lenses-and-optics.adoc`):
+
+* *Explicit source-retention instead of set-back.*  Echo records
+  a specific source alongside the equation `f x ≡ y`; lenses
+  reconstruct an updated source from an existing one through `put`.
+  The witness `(true , false) : Echo visible true` is a retained
+  state, not the machinery for overwriting one.
+* *Honest asymmetry on the put side.*  `no-section-visible` in
+  `EchoCharacteristic.agda` proves there is no section
+  `Bool → Bool × Bool` of `visible`; the echo framing is honest
+  about one-argument impossibility and captures what is
+  nevertheless retained.
+* *Sequential composition as an isomorphism theorem.*
+  `Echo-comp-iso : Echo (g ∘ f) y ↔ Σ B (λ b → Echo f b × g b ≡ y)`
+  (Echo.agda) ships sequential composition as a verified
+  equivalence with both round-trips, plus pentagon coherence
+  (`Echo-comp-iso-pent-{B, echo}`) and a cancellation iso
+  (`cancel-iso`) when the outer leg is invertible.  The optic
+  analogues ship as definitions.
+* *Residue as first-class lowering.*  `EchoResidue.echo-to-residue`
+  lowers a full echo to a certificate; `no-section-collapse-to-residue`
+  witnesses strict non-recoverability.  Optics do not typically
+  ship a quotient-of-witness with a non-recoverability proof.
+
+What Echo does *not* add over lenses: no update / `put`, no
+round-trip laws, no profunctor or van Laarhoven encoding, no
+effectful / indexed / monadic / affine optic.  Optics are
+designed around reversible access; echo around witness
+retention under non-reversibility.  The two coincide at the
+get-side skeleton and diverge on the put / residue question.
+
+A *2-categorical* (bicategorical Echo) reading was considered and
+ruled out on the landed evidence: every would-be 2-cell appears as
+`refl` or is prop-forced trivial by `≤g-prop` / `⊑-prop`. The
+construction is a very-well-behaved *1-lens* shape, not a
+2-cell-equipped optic. The load-bearing closure note is
+`docs/echo-types/decisions/no-2-cat.adoc`; this paper cites it
+rather than re-argue.
+
+=== Refinement types
+
+Two implementation traditions need to be distinguished.  In
+*Σ-relevant refinement* (Agda, Coq, dependently-typed ML), the
+refinement type `{ x : A | P x }` literally *is* `Σ A P`; with
+`P x := f x ≡ y`, this is `Echo f y`.  **No win for echo on the
+type level.**  In *propositional-predicate refinement* (F\*,
+Liquid Haskell, SMT-backed systems), the predicate is a
+proposition and the refinement type is the propositional
+truncation of `Σ A P`, discarding individual witness identity.
+Here `echo-not-prop` (gate-3 exhibits at
+`proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda`)
+is the formal certificate that the truncation loses what Echo
+retains.
+
+The narrow claim is *stronger* than the overstated one: against
+Σ-relevant refinement Echo is the same construction with
+different surface syntax (and the characterisation package
+applies verbatim to that surface); against propositional
+refinement, the truncation argument lands formally on three
+domains.
+
+=== Setoid quotients
+
+A setoid `(A, ~)` handles equivalence extrinsically: functions
+must respect `~` and equality up to `~` is proved.  The echo
+pattern "same visible output, distinct retained source" can be
+read as "quotient by the kernel of `f`".  Echo's kernel is
+*implicit* — named through the function `f` rather than through
+a separate relation — and *proof-relevant*: `echo-true ≢ echo-false`
+in `EchoCharacteristic.agda` exhibits distinct representatives
+that a setoid reader would identify.  The graded hierarchy
+(`EchoGraded.degrade`, `degrade-compose`, `degrade-via-join`)
+collapses what a setoid presentation would express as one
+relation per grade plus respect proofs into a single function
+family indexed by `g₁ ≤g g₂`, with composition pinned by `refl`.
+
+Echo does *not* add quotient types (intensional Agda cannot form
+them; the development does not attempt it), nor a quotient
+elimination principle.  A setoid partisan can read the
+development as "pointed setoid with remembered representative",
+under which the residue hierarchy is "retain, then forget; note
+you cannot un-forget" — true and not deep.  The reply is that
+the family `Echo f` is functorial under `map-over` /
+`map-square` without invoking setoid-respecting maps, and that
+the bridges (graded, linear, choreographic, epistemic, tropical)
+integrate as a single recipe rather than as separate quotients.
+
+=== Provenance and provenance semirings
+
+K-provenance (Green–Karvounarakis–Tannen) annotates database
+tuples by elements of a commutative semiring `K`, with
+relational-algebra operations composing annotations via
+`+, ·, 0, 1`; specialisations include boolean, bag, why/where,
+and free polynomial provenance.  The shared motive with Echo is
+*tracking what survives under lossy operations*; the mechanism
+is different.  Echo attaches a *proof term* `(x , p)` where
+`p : f x ≡ y`, not a semiring element; `EchoIndexed.Echoᵢ`
+extends the witness by a role index so the same visible output
+can carry different provenance certificates for different
+observers; `EchoGraded.degrade-compose` /
+`degrade-via-join` show any two factorings of a degradation
+through the order agree on the underlying echo — a thin-poset
+coherence, not a semiring homomorphism.
+
+Echo does *not* ship a semiring, a relational-algebra reading,
+free polynomial provenance, or query-equivalence theorems.  A
+provenance researcher can read the residue hierarchy
+(`keep`, `residue`, `forget`) as K-provenance for an
+impoverished `K`; the non-trivial replies are (i) the witnesses
+are types, not semiring elements, so `Echo collapse tt` retains
+two inhabitants no annotation algebra can distinguish, and (ii)
+the bridges (linear, choreographic, epistemic) are not
+naturally semiring structures.
+
+The single-witness vs propositional-truncation framing is
+sharper than refinement-types' bare truncation argument for
+this neighbour: provenance specifically tracks *one* source per
+output rather than truncating to "some source exists", and
+`echo-not-prop` is the formal certificate at the same shape.
+
+=== Information-flow non-interference and modal type theories
+
+Goguen–Meseguer style non-interference is propositional /
+relational about indistinguishability; gate-3's
+`EpistemicUpdate` example formalises the truncation win at the
+shape "multiple consistent worlds, truncation loses individual
+world identity, breaking `refine-injective`".  Against
+type-theoretic IFC variants (e.g., the dependently-typed
+information-flow tradition) the recipe-level question is open;
+no dedicated `proofs/agda/adjacency/IFC.agda` formalisation
+exists.
+
+Modal type theories (QTT, Reed–Pfenning judgmental S4, adjoint
+modalities, cohesive type theory) are the most under-formalised
+adjacency case.  Against propositional-mode accounts the
+truncation argument lands via `LinearErasure.echo-not-prop`.
+Against modal type theories with sufficient ambient mode
+structure, *Echo coincides with the native modal Σ-construction
+on bare echo*; whether the coincidence extends to the
+characterisation package — and specifically whether QTT
+expresses the thin-poset reindexing modality natively without
+echo machinery — is a recipe-level open question
+(`docs/adjacency/modal-type-theories.adoc`, retraction
+condition 1).  Stating the coincidence plainly is more honest
+than overstating distinctness.
+
+=== Synthesis: a characterisation package, not a new object
+
+The cross-cutting claim is not that Echo is a new construction.
+It is the homotopy fibre.  What this paper contributes is a
+*fully mechanised characterisation package* for that construction
+together with the smallest interesting modality over it:
+
+. a definitional Σ-identity bridge to the HoTT fibre (Pillar A);
+. a funext-relative pointwise mediator property at the pullback
+  presentation, with strict terminality earned back under an
+  explicit `funext` module parameter (Pillar B-1, §3);
+. a loss-graded reindexing modality whose three coherence
+  equations provably reduce to thinness of the grade order
+  (Pillar B-2, §4);
+. a separating model that locates that reduction exactly
+  (Pillar C, §5);
+. a carrier-parametric abstraction over a fixed grade poset
+  (Pillar D, §6);
+. a postulate-free `--safe --without-K` build with zero escape
+  pragmas (§6.2);
+. a falsifiable-gate methodology with a public retraction log
+  (`docs/retractions.adoc`, §7), of which the 2026-05-18
+  reframing is itself the working example.
+
+The novelty is in the *packaging discipline*, not in the
+underlying object.  Against each adjacent framework we are
+honest about what Echo *does not* add: foundations vs HoTT,
+judgmental extensions vs the graded-modality lineage, update
+machinery vs lenses, surface algebra vs provenance semirings,
+quotient types vs setoid quotients, recipe-level distinctness
+against modal type theories with sufficient ambient structure.
+The standing we claim is exactly that of a characterisation
+package whose load-bearing hypothesis (`≤g-prop`) is isolated,
+whose models are pinned, and whose bounds are stated rather
+than spun.
+
+NOTE: *Bib TODO.*  Inline (Name Year) references in this
+section that require formal bibliography entries when a venue
+template is chosen:
+HoTT Book (Univalent Foundations Program 2013, §§3.7, 4.2);
+Vezzosi–Mörtberg–Abel "Cubical Agda" (ICFP 2019);
+Uustalu–Vene "Comonadic notions of computation" (ENTCS 2008);
+Petriček–Orchard–Mycroft "Coeffects: a calculus of context-dependent
+computation" (ICFP 2014);
+Brunel–Gaboardi–Mazza–Zdancewic "A core quantitative coeffect
+calculus" (ESOP 2014);
+Katsumata "Parametric effect monads and semantics of effect
+systems" (POPL 2014);
+Atkey "Syntax and semantics of quantitative type theory"
+(LICS 2018);
+Orchard–Liepelt–Eades "Quantitative program reasoning with graded
+modal types" (ICFP 2019, Granule);
+Reed "A judgmental deconstruction of modal logic" (CMU TR 2009);
+Pfenning–Davies "A judgmental reconstruction of modal logic"
+(MSCS 2001);
+Birkedal–Møgelberg–Schwinghammer–Støvring "First steps in
+synthetic guarded domain theory" (LICS 2011);
+Shulman "Brouwer's fixed-point theorem in real-cohesive homotopy
+type theory" (2017);
+Foster–Greenwald–Moore–Pierce–Schmitt "Combinators for
+bidirectional tree transformations: a linguistic approach to the
+view-update problem" (POPL 2005, lenses);
+Pickering–Gibbons–Wu "Profunctor optics: modular data
+accessors" (Art Sci. Eng. Program. 2017);
+Cousot–Cousot "Abstract interpretation: a unified lattice
+model" (POPL 1977);
+Goguen–Meseguer "Security policies and security models"
+(IEEE S\&P 1982);
+Green–Karvounarakis–Tannen "Provenance semirings" (PODS 2007);
+Swamy et al. "Dependent types and multi-monadic effects in F\*"
+(POPL 2016);
+Vazou–Seidel–Jhala–Vytiniotis–Peyton Jones "Refinement types for
+Haskell" (ICFP 2014, Liquid Haskell).
 
 [#reframing-note]
 == Reframing note (2026-05-18)

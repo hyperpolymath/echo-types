@@ -139,6 +139,37 @@ that locates that reduction, a carrier-parametric abstraction, and a
 postulate-free build, all under a falsifiable-gate methodology that
 has been exercised on this development's own claims.
 
+Positioning by neighbour (full per-neighbour analysis in `paper.adoc`
+§"Related work"):
+
+* *HoTT fibres.* Echo *is* the fibre (`echo↔fib`, `refl` round-trips).
+  The win is not against HoTT but one step to the side: against
+  *propositionally-truncated* fibres, where `‖ Echo f y ‖` discards
+  witness identity, the un-truncated form retains it
+  (`echo-not-prop` certificates).
+* *Graded comonads / coeffects / QTT* (Uustalu–Vene; Petriček et al.;
+  Brunel et al.; Atkey; Granule). Echo is *motivated by* this lineage
+  but explicitly *not* an instance — `EchoGradedComonad.agda` exhibits
+  no nested `D_r D_s`. What we provide is a *calibration*: the
+  separating model isolates the single load-bearing hypothesis
+  (`≤g-prop`) at which generic Σ-functoriality stops being enough.
+* *Lenses / optics.* The witness-transport leg of `map-over` /
+  `map-square` is in the optic neighbourhood; Echo adds explicit
+  source-retention and honest one-sided non-recoverability (`no-section-*`),
+  but ships no `put`, no van Laarhoven encoding.
+* *Refinement types.* Σ-relevant refinement (Agda/Coq) coincides with
+  Echo definitionally; propositional-predicate refinement (F\*, Liquid
+  Haskell) loses what Echo retains (truncation argument).
+* *Setoid quotients / provenance semirings.* Echo's kernel is implicit
+  (named through `f`) and proof-relevant; it ships no quotient
+  elimination and no semiring. Provenance researchers can read the
+  residue hierarchy (`keep`/`residue`/`forget`) as K-provenance for an
+  impoverished `K`.
+* *Modal type theories.* The recipe-level question — whether QTT or
+  Reed–Pfenning S4 expresses the thin-poset reindexing modality
+  natively without echo machinery — is genuinely open and explicitly
+  not closed here.
+
 == Author / artefact statement
 
 Mechanised in Agda (stdlib 2.3), `--safe --without-K`, no postulates.
