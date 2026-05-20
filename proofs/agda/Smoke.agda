@@ -121,11 +121,14 @@ open import EchoDecidable using
   )
 
 -- Axis 8 second formal artifact (taxonomy.md §8): graded access
--- modality, thin slice. Mirrors `EchoGraded` and `EchoLinear`'s order
--- layer (enum, Hasse-enumerated order, transitivity, propositionality)
--- plus the Σ-shape carrier + `_≤a_`-indexed degrade primitive.
--- Per-decoration composition (`degrade-access-comp` / `compose` /
--- `via-join`) and join structure (`_⊔a_`) land in the follow-up PR.
+-- modality. Order layer (enum, Hasse-enumerated order, transitivity,
+-- propositionality) + Σ-shape carrier + `_≤a_`-indexed degrade
+-- primitive landed in the thin slice; the per-decoration composition
+-- trio (`degrade-access-comp` / `compose` / `via-join`) and the
+-- categorical join structure (`_⊔a_` + `≤a-⊔a-{left,right,univ}`)
+-- land in this PR, completing the same recipe as `EchoGraded` and
+-- `EchoLinear`. Honest carriers for `enum` / `feasible` / `infeasible`
+-- remain deferred (a real design choice — see the module preamble).
 open import EchoAccess using
   ( Access
   ; free
@@ -140,6 +143,13 @@ open import EchoAccess using
   ; EchoAccess
   ; access-of
   ; degrade-access
+  ; _⊔a_
+  ; ≤a-⊔a-left
+  ; ≤a-⊔a-right
+  ; ≤a-⊔a-univ
+  ; degrade-access-comp
+  ; degrade-access-compose
+  ; degrade-access-via-join
   )
 
 open import EchoFiberCount using
