@@ -716,12 +716,69 @@ open import Ordinal.Brouwer.Phase13 using
   ; ⊕-left-≤-sum
   ; ⊕-mono-≤-right
   ; ⊕-mono-<-right
+  ; ⊕-mono-≤-left
+  ; ⊕-assoc-≤
+  ; ⊕-assoc-≥
+  )
+
+-- ω-power infrastructure for path-1 of the Buchholz rank-monotonicity
+-- unblock (docs/echo-types/buchholz-rank-obstruction.adoc).  Limit-
+-- shaped replacement for `nat-to-ord (suc n)` successor stacks.
+open import Ordinal.Brouwer.OmegaPow using
+  ( _·ℕ_
+  ; ω^_
+  ; ω^0≡one
+  ; ·ℕ-zero
+  ; ·ℕ-suc
+  ; one·ℕ≡nat-to-ord
+  ; ω^_-pos
+  ; X≤′oz⊕X
+  ; ω^-strict-mono-suc
+  ; ω^-step
+  ; ·ℕ-mono-≤-left
+  ; ω^-from-zero
+  ; ω^-mono-≤-suc-suc
+  ; ω^-mono-≤
+  ; ω^-strict-mono
+  ; ·ℕ-add-≤
+  ; additive-principal
   )
 
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
   ( rank
+  )
+
+-- ω-power rank for Ω-markers and Buchholz terms.  Limit-shaped
+-- replacement for `nat-to-ord (suc n)` successor stacks.  Compositional
+-- rank-mono primitives (right-mono on `bplus`) reusable across both
+-- `_<ᵇ⁻_` (this track) and `_<ᵇʳᶠ_` (parallel session).
+open import Ordinal.Buchholz.RankPow using
+  ( ω-rank-pow
+  ; ω-rank-pow-fin
+  ; ω-rank-pow-pos
+  ; ω-rank-pow-mono
+  ; rank-pow
+  ; rank-pow-bplus
+  ; rank-pow-bOmega
+  ; rank-pow-bplus-right-mono
+  ; rank-pow-bplus-left-≤
+  ; rank-pow-via-left
+  ; additive-principal-ω-rank-pow
+  ; rank-pow-bplus-into-ω-rank-pow
+  ; rank-mono-<ᵇ-0-Ω
+  ; rank-mono-<ᵇ-0-ψ
+  ; rank-mono-<ᵇ-ΩΩ
+  ; rank-mono-<ᵇ-Ωψ
+  ; rank-mono-<ᵇ-ψΩ
+  ; rank-mono-<ᵇ-Ω+
+  ; rank-mono-<ᵇ-ψ+
+  ; rank-mono-<ᵇ-+Ω
+  ; rank-mono-<ᵇ-+ψ
+  ; rank-mono-<ᵇ-+1-via-target
+  ; rank-mono-<ᵇ-+1-Ω-target
+  ; rank-mono-<ᵇ-+1-ψ-target
   )
 
 open import Ordinal.OmegaMarkers using

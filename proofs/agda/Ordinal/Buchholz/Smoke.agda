@@ -232,6 +232,73 @@ open import Ordinal.Buchholz.RecursiveSurfaceOrder using
   ; <ᵇʳᶠ-irreflexive
   )
 
+open import Ordinal.Buchholz.RankPartial using
+  ( ω-rank-mono-<Ω
+  ; rank-mono-<ᵇ-0-Ω
+  ; rank-mono-<ᵇ-0-ψ
+  ; rank-mono-<ᵇ-ΩΩ
+  ; rank-mono-<ᵇ-Ωψ
+  ; rank-mono-partial-0-Ω
+  ; rank-mono-partial-0-ψ
+  ; rank-mono-partial-ΩΩ
+  ; rank-mono-partial-Ωψ
+  )
+
+open import Ordinal.Buchholz.WellFormedCNF using
+  ( Atomic
+  ; atomic-bzero
+  ; atomic-bomega
+  ; atomic-bpsi
+  ; _≤ᵇ_
+  ; WfCNF
+  ; wf-cnf-bzero
+  ; wf-cnf-bomega
+  ; wf-cnf-bpsi
+  ; wf-cnf-bplus
+  ; wfcnf-to-wfbt
+  ; leading
+  ; wfcnf-leading-atomic
+  ; BH-wf-cnf
+  ; bplus-Ω-bzero-wf-cnf
+  )
+
+-- ψ-admissibility: strengthens WfCNF on `bpsi` with the rank-pow
+-- bound `rank-pow α <′ ω-rank-pow ν`.  Carrier only in this slice;
+-- rank refinement for the `<ᵇ-ψα` / `<ᵇ-ψΩ≤` discharge is a follow-on.
+open import Ordinal.Buchholz.WellFormedAdmissible using
+  ( WfAdm
+  ; wf-adm-bzero
+  ; wf-adm-bomega
+  ; wf-adm-bpsi
+  ; wf-adm-bplus
+  ; wfAdm-to-wfCNF
+  ; psi-trivial
+  ; psi-trivial-adm
+  )
+
+open import Ordinal.Buchholz.OrderRestricted using
+  ( _<ᵇ⁻_
+  ; cnf-strict
+  ; <ᵇ⁻-to-<ᵇ
+  ; wf-<ᵇ⁻
+  ; <ᵇ⁻-irrefl
+  ; <ᵇ⁻-trans
+  )
+
+-- Path-1 umbrella: rank-pow strict-mono on the 10-constructor
+-- rank-soundness-ready subset `_<ᵇ⁰_` of `_<ᵇ_`.  Closes 10 of 13
+-- cases of the Buchholz rank-monotonicity theorem under WfCNF;
+-- the 3 excluded cases (`<ᵇ-0-+` edge, `<ᵇ-ψα` / `<ᵇ-ψΩ≤`
+-- admissibility-blocked, `<ᵇ-+1` bplus-target sub-case) remain
+-- open under documented structural blockers.
+open import Ordinal.Buchholz.RankMonoUmbrella using
+  ( _<ᵇ⁰_
+  ; _≤ᵇ⁰_
+  ; ≤ᵇ⁰-refl
+  ; rank-pow-mono-<ᵇ⁰
+  ; rank-pow-mono-≤ᵇ⁰
+  )
+
 open import Ordinal.Buchholz.RecursiveSurfaceBudget using
   ( BudgetedBT
   ; _<ᵇʳᶠᵇ_
@@ -239,6 +306,13 @@ open import Ordinal.Buchholz.RecursiveSurfaceBudget using
   ; wf-<ᵇʳᶠᵇ
   ; <ᵇʳᶠᵇ-irreflexive
   ; <ᵇʳᶠᵇ⇒lifted
+  )
+
+open import Ordinal.Buchholz.OrderExtendedBudget using
+  ( BudgetedBT⁺
+  ; _<ᵇ⁺ᵇ_
+  ; wf-<ᵇ⁺ᵇ
+  ; <ᵇ⁺ᵇ-irreflexive
   )
 
 open import Ordinal.Buchholz.SurfaceOrder using

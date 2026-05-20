@@ -1,6 +1,8 @@
 = Adjacency: provenance / data lineage
 :toc: macro
 
+_Axes engaged: 7 (PR/PI). See `README.adoc` § "Axis coverage matrix"._
+
 [.lead]
 *Verdict: distinct against single-witness provenance variants by
 the multiplicity argument.* Transitive provenance under composition

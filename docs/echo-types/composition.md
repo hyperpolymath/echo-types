@@ -73,23 +73,32 @@ cancel-iso-from : (s-right : ∀ y → g (s y) ≡ y) → Echo f (s y)   → Ech
 ```
 Pinned in `Smoke.agda` as `cancel-iso-to`, `cancel-iso-from`.
 
-*What is deferred.* The round-trips that would promote these two
-maps to a full iso are *not* proved. Under `--without-K`, the two
-round-trips require a triangle-identity coherence between `s-left`
-and `s-right` (roughly `cong g (s-left b) ≡ s-right (g b)`), which
-is not a consequence of the two pointwise inverse laws alone — a
-bare "both-way inverse" is weaker than an equivalence in HoTT
-terms. The in-file comment in `Echo.agda` flags this explicitly.
-Options for the full iso: (a) an equivalence record that packages
-the triangle identity as a field, or (b) stdlib's
-`Function.Bundles.Inverse`.
+*What is landed (round-trips + packaging).* The two round-trips
+`cancel-iso-from-to` and `cancel-iso-to-from` are now proved in
+`Echo.agda`, each parameterised by its respective triangle-identity
+coherence:
+
+* `cancel-iso-from-to` needs `triangle₁ : ∀ b → cong g (s-left b) ≡
+  s-right (g b)`.
+* `cancel-iso-to-from` needs `triangle₂ : ∀ y → cong s (s-right y) ≡
+  s-left (s y)`.
+
+One triangle implies the other in HoTT (any quasi-inverse can be
+upgraded to a half-adjoint equivalence), but constructing the upgrade
+requires non-trivial path algebra, so both are taken as explicit
+arguments. The full iso then packages via stdlib's `mk↔ₛ′` as
+`Echo.cancel-iso : (s-left ...) (s-right ...) (triangle₁ ...)
+(triangle₂ ...) → Echo (g ∘ f) y ↔ Echo f (s y)`. Companion
+`Echo.Echo-comp-iso` does the same for the unconditional
+accumulation iso (no triangles needed). All five pinned in
+`Smoke.agda`.
 
 *Correction to earlier wording.* A bare section on `g` (i.e.,
 `s-right` only) is not enough to collapse the Σ-over-intermediate
 in the accumulation law; the earlier version of this section
 claimed otherwise. The correction is that both `s-left` and
-`s-right` are needed, and even then the full iso needs triangle
-coherence.
+`s-right` are needed, and the full iso additionally needs the two
+triangle identities — both are passed explicitly.
 
 ---
 
@@ -290,10 +299,13 @@ Collecting the above:
    composition: `map-over (g' , c₁) ∘ map-over (f' , c₂) ≡ map-over
    ((g' ∘ f') , coherence)`. Proved in `Echo.map-over-comp`.
 
-3. **(Partial) Cancellation.** Forward and backward maps landed as
-   `cancel-iso-to` (needs `s-left`) and `cancel-iso-from` (needs
-   `s-right`). Round-trips deferred pending a triangle-identity
-   coherence or a stdlib `Function.Bundles.Inverse` shim.
+3. **(Landed) Cancellation.** Forward, backward, both round-trips
+   landed in `Echo.agda` as `cancel-iso-{to, from, from-to,
+   to-from}`, plus the packaging `Echo.cancel-iso : ... ↔ ...`
+   via stdlib's `mk↔ₛ′`. Round-trips parameterised by both
+   triangle identities (`triangle₁`, `triangle₂`) — one implies
+   the other in HoTT, but the constructive upgrade is non-trivial
+   path algebra, so both are explicit.
 
 4. **(Landed) Pentagon.** Three-fold composition associates at
    the projections (`Echo-comp-iso-pent-B`, `Echo-comp-iso-pent-echo`,
@@ -310,20 +322,22 @@ Collecting the above:
    Realised as `EchoApprox.Approx.echo-approx-compose` over a
    parametric pseudo-metric.
 
-6. **(Partial) Decoration commuting.** Role, grade, linearity, and
-   modal decorations commute with composition under conditions to be
-   identified. The grade case is **landed**: `EchoGraded.degrade-compose`
-   shows that any factoring of a `g1 ≤g g3` transition through an
-   intermediate `g2` collapses to the same degraded echo, proved as a
-   corollary of `degrade-comp` and `≤g-prop` (the order is
-   propositional). `degrade-via-join` restates this through the
-   join structure `_⊔g_`, with `≤g-⊔g-left/right/univ` exhibiting
-   `_⊔g_` as the categorical join. The linear case is **landed** in
-   `EchoLinear.agda` as `degradeMode-comp` along the mode order
-   `linear ⊑ linear ⊑ affine ⊑ affine`; corollaries
-   `degradeMode-id-{linear, affine}` and
-   `degradeMode-strict-is-weaken` establish the relationship to the
-   existing `weaken`. Indexed / role / modal cases remain open.
+6. **(Landed) Decoration commuting — sweep complete (2026-04-28).**
+   All five decorations now commute with composition under the same
+   recipe (decoration order → propositionality → join → factoring-
+   free compose → via-join restatement):
+   * Grade: `EchoGraded.degrade-{compose, via-join}` resting on
+     `≤g-prop`, `degrade-comp`, and `_⊔g_` join structure
+     (`≤g-⊔g-{left,right,univ}`).
+   * Linear: `EchoLinear.degradeMode-{comp, compose, via-join}`
+     along the two-mode order with `_⊔m_` join (affine top).
+   * Indexed: `EchoIndexed.map-role-indexed-comp`.
+   * Choreo (role): `EchoChoreo.applyChoreo-{comp, compose,
+     via-join}` along `_⊑c_` (`Client ⊑c Server`) with `_⊔c_`
+     join.
+   * Modal (epistemic): `EchoEpistemic.knowledge-monotone-{comp,
+     id}`.
+   All headlines pinned in `Smoke.agda`.
 
 ---
 
@@ -333,9 +347,11 @@ Ranked by unblock-value. (1) and (2) landed; (3) onwards is open.
 
 1. ~~**Base accumulation iso.**~~ Landed in `Echo.agda` as
    `Echo-comp-iso-{to, from, from-to, to-from}`.
-2. ~~**Cancellation corollary.**~~ Partially landed as
-   `cancel-iso-to` / `cancel-iso-from`; full iso deferred pending
-   triangle-identity coherence (see §3 above).
+2. ~~**Cancellation corollary.**~~ **Fully landed** as
+   `cancel-iso-{to, from, from-to, to-from}` plus the
+   `Function.Bundles._↔_` packaging `Echo.cancel-iso`,
+   parameterised by `s-left`, `s-right`, and both triangle
+   identities. See §3 above for the triangle structure.
 3. ~~**Pentagon coherence.**~~ Landed: projection-level
    (`-pent-B`, `-pent-echo` as `refl`) plus the full Σ-shape iso
    (`Echo-comp-pent-Σ-assoc-{to, from, from-to, to-from}`).

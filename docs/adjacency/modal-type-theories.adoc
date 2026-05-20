@@ -1,6 +1,8 @@
 = Adjacency: modal type theories
 :toc: macro
 
+_Axes engaged: 5 (Comp), 7 (PR/PI); axis 8 (IT/Comp) open — QTT-style quantitative annotations are proxies for resource control (taxonomy §8) but not full computational-access tracking. See `README.adoc` § "Axis coverage matrix"._
+
 [.lead]
 *Verdict: co-extensive with QTT-class systems on bare echo.* Not
 distinct from native modal type theories on the type level; the
