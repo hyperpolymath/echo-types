@@ -58,6 +58,7 @@ open import Ordinal.Buchholz.Syntax
 open import Ordinal.Buchholz.Closure
 open import Ordinal.Buchholz.Order
 open import Ordinal.Buchholz.OrderExtended
+open import Ordinal.Buchholz.OrderExtendedBudget
 open import Ordinal.Buchholz.Psi
 open import Ordinal.Buchholz.Examples
 open import Ordinal.Buchholz.WellFormed

@@ -6,14 +6,25 @@ two identified bottlenecks:
 For current cross-repo progress snapshots, see
 `cross-repo-bridge-status.md`.
 
-- **Bottleneck B1.** The remaining gap between the closed
-  Veblen/current-core route and the full intended Buchholz order:
-  the historically blocked shared-binder shapes in `_<ᵇ_`.
-  `wf-<ᵇ` is landed for the currently admitted core, but promoting
-  those shapes back into the real order package still needs a
-  K-free mediated internalization. Finite same-binder depth is now
-  handled by iterated mediated wrappers, but that does not yet close
-  the real order package itself.
+- **Bottleneck B1 (RECAST 2026-05-20).** The remaining gap between
+  the closed Veblen/current-core route and the full intended
+  Buchholz order: the historically blocked shared-binder shapes in
+  `_<ᵇ_`. `wf-<ᵇ` is landed for the currently admitted core; the
+  shared-binder shapes (`<ᵇ⁺-ψα`, `<ᵇ⁺-+2`) now have a *budgeted*
+  WF carrier in `Ordinal.Buchholz.OrderExtendedBudget.wf-<ᵇ⁺ᵇ`
+  (mirroring the existing `wf-<ᵇʳᶠᵇ` for the recursive surface).
+  **The unbudgeted promotion is structurally impossible** for the
+  current `_<ᵇ_` — see `buchholz-rank-obstruction.adoc`. The
+  Echidna-SA-recommended rank-into-Brouwer route fails on the
+  ordinally-unsound `<ᵇ-+Ω` constructor; all four alternative
+  routes (direct mutual structural recursion, tower-stratification,
+  lex measure into ℕ, inverse-image into the budgeted relation) are
+  also walled. Recovering unbudgeted WF requires either restricting
+  `_<ᵇ_` to a `WellFormed` subset (2–3 weeks of constructor-by-
+  constructor rework) or providing a non-additive denotational
+  measure (essentially solving Buchholz WF "from the model up").
+  The "B1" framing is therefore now: *accept the budgeted forms as
+  canonical*, or *commit to one of the two substantial paths*.
 - **Bottleneck B2.** Tool-scope limitations on adjacent repos
   (`maa-framework/absolute-zero`, `januskey`,
   `tropical-resource-typing`). Blocks end-to-end bridge audits.
@@ -73,17 +84,29 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   round-trips reduce definitionally once the `g b ≡ c` has been pinned,
   so this is a strict iso (no transport coherence required) and lives
   inside `--safe --without-K`. All four pinned in `Smoke.agda`.
-- **[partial]** Budgeted recursive-surface WF on the ordinal track.
+- **[landed]** Budgeted recursive-surface WF on the ordinal track.
   `Ordinal/Buchholz/RecursiveSurfaceBudget.agda` ships
   `BudgetedBT = ℕ × BT`, the budgeted relation `_<ᵇʳᶠᵇ_` with its
   `spend` constructor, `wf-<ᵇʳᶠᵇ : WellFounded _<ᵇʳᶠᵇ_` (via
   subrelation on ℕ), and `<ᵇʳᶠᵇ⇒lifted` transporting each budgeted
   step into the iterated-wrapper tower (`IteratedExtendedOrder`).
-  The unbudgeted global theorem — eliminate the explicit ℕ budget
-  from `wf-<ᵇʳᶠᵇ` to get `WellFounded _<ᵇʳᶠ_` — is the next
-  concrete ordinal-track milestone. Pushing that result back into
-  `Ordinal/Buchholz/Order.agda`'s main `_<ᵇ_` package is the step
-  after that.
+- **[landed, 2026-05-20]** Budgeted shared-binder WF for the
+  K-restricted extended order.
+  `Ordinal/Buchholz/OrderExtendedBudget.agda` ships
+  `BudgetedBT⁺ = ℕ × BT`, the budgeted relation `_<ᵇ⁺ᵇ_` with its
+  `spend` constructor, and `wf-<ᵇ⁺ᵇ : WellFounded _<ᵇ⁺ᵇ_`. Mirrors
+  the recursive-surface pattern but for the depth-1 shared-binder
+  cases (`<ᵇ⁺-ψα`, `<ᵇ⁺-+2`).
+- **[closed-impossible, 2026-05-20]** The unbudgeted global
+  theorem — eliminate the explicit ℕ budget from `wf-<ᵇʳᶠᵇ` to get
+  `WellFounded _<ᵇʳᶠ_`, or analogously for `_<ᵇ⁺_` — is
+  structurally impossible for the current `_<ᵇ_`. The
+  Echidna-SA-recommended rank-into-Brouwer route in
+  `RankBrouwer.agda` was refuted by a worked counterexample on
+  `<ᵇ-+Ω`. All four alternative routes also walled. See
+  `buchholz-rank-obstruction.adoc` for the full analysis and the
+  two substantial-work paths that could re-open the question
+  (WF-restricted `_<ᵇ_` or non-additive denotational measure).
 - **[landed]** `EchoApprox.agda`: new module for ε-indexed echoes
   over a metric codomain. First-class taxonomy axis 2 artifact.
   Ships `EchoR ε f y = Σ A (λ x → dist (f x) y ≤ ε)` parametric over
@@ -228,12 +251,16 @@ tractable today:
    Σ-associativity iso between the two nested Σ-shapes is one of
    two next composition-track follow-ups (the other is
    full-cancel-iso round-trips, which needs a triangle identity).
-4. **Agda: unbudgeted `_<ᵇʳᶠ_` WF on the ordinal track** — eliminate
-   the explicit ℕ budget from `wf-<ᵇʳᶠᵇ` in
-   `RecursiveSurfaceBudget.agda`. Sharpest next ordinal-track move
-   since the budgeted version already ships. Keep `--safe --without-K`.
-   Pushing the result back into `Order.agda`'s `_<ᵇ_` is the step
-   after.
+4. ~~**Agda: unbudgeted `_<ᵇʳᶠ_` WF on the ordinal track**~~ —
+   **CLOSED-IMPOSSIBLE 2026-05-20.** Eliminating the explicit ℕ
+   budget from `wf-<ᵇʳᶠᵇ` (or analogously `wf-<ᵇ⁺ᵇ`, newly landed)
+   is structurally impossible for the current `_<ᵇ_`. See
+   `buchholz-rank-obstruction.adoc` — `<ᵇ-+Ω`'s ordinal unsoundness
+   refutes every rank/measure/tower/inverse-image route. Recovery
+   needs WF-restriction of `_<ᵇ_` or a non-additive denotational
+   measure (both substantial). Until either is committed to, the
+   budgeted forms (`_<ᵇʳᶠᵇ_`, `_<ᵇ⁺ᵇ_`) are the canonical
+   well-founded carriers; downstream consumers should use them.
 5. **Gate 1 adjacency refresh against the new taxonomy** — 1 day.
    Cheap coherence pass on existing docs.
 6. **Theory: pick one axis-8 refinement and formalise it** — 1–2
