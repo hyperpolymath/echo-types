@@ -724,6 +724,14 @@ designed around reversible access; echo around witness
 retention under non-reversibility.  The two coincide at the
 get-side skeleton and diverge on the put / residue question.
 
+A *2-categorical* (bicategorical Echo) reading was considered and
+ruled out on the landed evidence: every would-be 2-cell appears as
+`refl` or is prop-forced trivial by `≤g-prop` / `⊑-prop`. The
+construction is a very-well-behaved *1-lens* shape, not a
+2-cell-equipped optic. The load-bearing closure note is
+`docs/echo-types/decisions/no-2-cat.adoc`; this paper cites it
+rather than re-argue.
+
 === Refinement types
 
 Two implementation traditions need to be distinguished.  In

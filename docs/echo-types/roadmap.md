@@ -25,19 +25,35 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 
 ## Theory work — no proof assistant needed
 
-- **[unblocked]** Axis 2 (approximate echoes): settle the formal
-  definition before touching Agda. Draft in `taxonomy.md` and
-  `composition.md`.
+- **[landed]** Axis 2 (approximate echoes): formal definition
+  shipped as `proofs/agda/EchoApprox.agda` — an ε-fibre over a
+  parametric `Tolerance` (ordered commutative monoid) and a
+  `PseudoMetric`, with `EchoR ε f y = Σ A (λ x → dist (f x) y ≤
+  ε)` plus the three headline lemmas `echo-approx-intro` (exact
+  ⇒ zero-ε), `echo-approx-relax` (monotone in ε), and
+  `echo-approx-compose` (additive composition under a
+  non-expansive outer leg). Note: the formal definition has been
+  retro-documented from the landed module (follow-up doc PR in
+  lane C tracks the `taxonomy.md` §Axis-2 write-up).
 - **[landed]** Axis 8 (information-theoretic vs computational
-  access): promoted from the candidates list to a numbered axis;
-  four candidate refinements of `Echo` (cost-indexed, graded access
-  modality, decidability-respecting, witness-search abstract
-  machine) are listed. Follow-up: pick one refinement and formalise.
+  access): promoted from the candidates list to a numbered axis.
+  *Three* remaining candidate refinements of `Echo`
+  (cost-indexed, graded access modality, witness-search abstract
+  machine); the *decidability-respecting* candidate has shipped
+  as `proofs/agda/EchoDecidable.agda` (`EchoDec f y = Dec (Echo f
+  y)` with six headline lemmas including `echo-dec-intro`,
+  `echo-dec-fin`, `echo-dec-compose-iso`; see `taxonomy.md` §8).
+  Follow-up: pick one of the remaining three refinements and
+  formalise.
 - **[unblocked]** Negative / co-echoes: formulate `CoEcho(f)` and its
   relationship to `Echo(f)`. Possibly resolves the quantitative /
   structural tension hinted at by `EchoTropical`.
-- **[unblocked]** 2-categorical shape: commit to a 2-category or
-  rule it out. Either answer unblocks the composition roadmap.
+- **[ruled out — see docs/echo-types/decisions/no-2-cat.adoc]**
+  2-categorical shape. Every would-be 2-cell in the landed code
+  is `refl` or forced trivial by propositionality (`≤g-prop`,
+  `⊑-prop`, `Echo-comp-iso` round-trips, pentagon projections,
+  `SliceHom`↔cone, `bridge-natural`); see
+  `decisions/no-2-cat.adoc` for the full verdict.
 - **[unblocked]** Presentation-dependence sub-theory: examples 5, 9,
   10 cluster here; write up the common pattern.
 - **[unblocked]** Gate 1 adjacency refresh: the five existing
@@ -92,6 +108,22 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   (monotone in ε), and `echo-approx-compose` (additive composition
   under a non-expansive outer leg, realising the taxonomy §2
   conjecture). Wired into `All.agda` and `Smoke.agda`.
+- **[landed]** Composition rung first slice (Axis 2): the §Q3
+  retract-shape. `EchoApprox.agda` now also ships
+  `echo-strict→approx` (general strict ⇒ zero-tolerance, generalises
+  `echo-approx-intro` from own-fibre to arbitrary `y` via the
+  codomain equation), `echo-approx-comp-sound` (RHS-Σ → LHS via
+  `echo-approx-compose`), `echo-approx-comp-retract-to`
+  (canonical-split LHS → RHS-Σ section, picking `b := f x`,
+  `ε₁ := zero`, `ε₂ := ε`), and `echo-approx-comp-retract-A` (the
+  A-component round-trip `proj₁ ∘ sound ∘ retract-to ≡ proj₁`,
+  proved by `refl`). The retraction direction on the A-witness holds
+  definitionally as the design note (§5) predicts. The B-component
+  and tolerance-budget round-trips are deferred to a subsequent
+  rung — they need a `+`-left-identity axiom on `Tolerance`
+  (`zero + ε ≡ ε`) which the current record does not supply.
+  §7 obligations 7 (separated zero-collapse) and 8 (axis-1 shadow
+  agreement) likewise deferred.
 - **[landed]** Per-decoration composition lemmas across the
   five-decoration family — **sweep complete** (2026-04-28):
   `EchoGraded.degrade-compose`, `EchoLinear.degradeMode-compose`,
@@ -195,18 +227,25 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   Shannon-entropy formalisation (no probability-monad in stdlib v2
   at the level needed); physical heat-dissipation realisation
   (the bound is information-theoretic, not a physical claim).
-- **[gated on B2]** CNO-equivalence verification across echo-types
-  and `absolute-zero`. Needs cross-repo access.
-  Bridge slot now exists on the adjacent side at
-  `absolute-zero/proofs/agda/EchoBridgeScaffold.agda`; theorem-level
-  alignment remains open.
-- **[gated on B2]** Janus reversible-file-operations bridge
-  verification against `januskey`'s actual API. Needs cross-repo
-  access.
-- **[gated on B2]** Tropical-resource-typing alignment: first do a repo
-  inventory (it is currently not recently audited), then validate
-  `EchoTropical` witness/residue claims against that neighbouring
-  tropical typing development.
+- **[landed]** CNO content-bridge across echo-types and
+  `absolute-zero`. `proofs/agda/EchoCNOBridge.agda` imports `IsCNO`
+  directly from `absolute-zero/proofs/agda/CNO.agda`; both files
+  build clean under `--safe --without-K`. Cross-prover (Coq/Lean4)
+  theorem-statement alignment is now documented in
+  `docs/echo-types/cross-repo-bridge-status.md` (correspondence
+  table + structural blockers around the relational/functional
+  `eval` split and the 3 Coq axioms forbidden by `--safe`).
+- **[partial]** Janus reversible-file-operations bridge against
+  `januskey`'s actual API. Agda side is still a 4-variant name-bridge;
+  decision recorded to structural-mirror the canonical 8-variant
+  Idris2 `OpKind` (`januskey/src/abi/Types.idr`). Content-bridge
+  remains gated on `januskey/PROOF-NEEDS.md`.
+- **[partial]** Tropical-resource-typing alignment. Adjacent repo
+  audited 2026-05-20 (remote `hyperpolymath/tropical-resource-typing`
+  active; 9 `.thy` + `TropicalSessionTypes.lean`). First alignable
+  theorem pair identified: Agda `⊕-idem` ↔ Isabelle `trop_add_idem`
+  ↔ Lean `add_comm_trop`+`add_assoc_trop`. Alignment is
+  citation-level (no Agda↔Isabelle/Lean import surface).
 - **[gated on B2]** `maa-framework` integration. Out of scope for
   the current tooling; needs scope expansion or file export.
 

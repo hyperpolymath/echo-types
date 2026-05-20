@@ -3,6 +3,7 @@
 module All where
 
 open import Echo
+open import AntiEcho
 open import EchoKernel
 open import EchoCharacteristic
 open import EchoResidue
@@ -13,12 +14,15 @@ open import EchoEpistemic
 open import EchoLinear
 open import EchoGraded
 open import EchoTropical
+open import AntiEchoTropical
 open import EchoIntegration
 open import EchoCNOBridge
 
 open import EchoApprox
+open import EchoApproxInstance
 open import EchoIndexed
 open import EchoDecidable
+open import EchoAccess
 open import EchoFiberCount
 open import EchoEpistemicResidue
 open import EchoRelational

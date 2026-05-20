@@ -32,6 +32,20 @@ open import Echo using
   ; cancel-iso
   ; Echo-comp-pent-Σ-assoc
   )
+
+-- AntiEcho thin slice (theory/antiecho — Σ-dual of Echo). Lands the
+-- carrier, per-element disjointness, introduction, and source-side
+-- map-over. Distinct from `EchoFiberTriangulation.CoEcho` (which is
+-- the trivial opposite-orientation fibre `∃ x . y ≡ f x`); see
+-- `coecho.md` §6 for the naming rationale. Partition-with-decidability
+-- and tropical decomposition deferred to follow-up slices.
+open import AntiEcho using
+  ( AntiEcho
+  ; antiecho-intro
+  ; antiecho-disjoint
+  ; antiecho-map-over
+  )
+
 -- Pillar A of docs/echo-types/establishment-plan.adoc: the
 -- definitional Echo ≃ fib bridge, pinned so a rename fails CI fast.
 open import EchoFiberBridge using (fiber; echo→fib; fib→echo; echo↔fib)
@@ -61,6 +75,23 @@ open import EchoApprox using
   ; module Approx
   )
 
+-- Per-lemma pins for the parameterised EchoApprox via EchoApproxInstance
+-- (hygiene; closes the CLAUDE.md "Working rules" invariant gap for
+-- parameterised modules — see follow-up to PR #70).
+open import EchoApproxInstance using
+  ( trivialTolerance
+  ; trivialPseudoMetric
+  ; approx-EchoR
+  ; approx-intro
+  ; approx-strict→approx
+  ; approx-relax
+  ; approx-NonExpansive
+  ; approx-compose
+  ; approx-comp-sound
+  ; approx-comp-retract-to
+  ; approx-comp-retract-A
+  )
+
 open import EchoIndexed using
   ( Echoᵢ
   ; echoᵢ-intro
@@ -80,6 +111,28 @@ open import EchoDecidable using
   ; echo-dec-fin
   ; echo-dec-compose-iso
   ; echo-dec-compose-fin
+  )
+
+-- Axis 8 second formal artifact (taxonomy.md §8): graded access
+-- modality, thin slice. Mirrors `EchoGraded` and `EchoLinear`'s order
+-- layer (enum, Hasse-enumerated order, transitivity, propositionality)
+-- plus the Σ-shape carrier + `_≤a_`-indexed degrade primitive.
+-- Per-decoration composition (`degrade-access-comp` / `compose` /
+-- `via-join`) and join structure (`_⊔a_`) land in the follow-up PR.
+open import EchoAccess using
+  ( Access
+  ; free
+  ; decidable
+  ; enum
+  ; feasible
+  ; infeasible
+  ; _≤a_
+  ; ≤a-trans
+  ; ≤a-prop
+  ; CEcho
+  ; EchoAccess
+  ; access-of
+  ; degrade-access
   )
 
 open import EchoFiberCount using
@@ -288,6 +341,31 @@ open import EchoTropical using
   ; distinct-candidates-same-visible-distinct-echo
   )
 
+-- AntiEcho × EchoTropical (theory/antiecho-tropical-decompose):
+-- the headline "Echo × Π-bound" decomposition of TropEcho /
+-- IsArgmin from `coecho.md` §3 / §5 obligation 6. Both
+-- round-trips are `refl` once IsArgmin's Σ-shape is unfolded;
+-- the AntiEcho-flavoured corollary expresses the Π-bound as
+-- Π of negative data over the candidate set (Π-form AntiEcho,
+-- `coecho.md` §1(c)). Pinned so a rename or a slide back to
+-- ad-hoc tropical decoration fails CI fast.
+open import AntiEchoTropical using
+  ( antiecho-tropical-decompose-to
+  ; antiecho-tropical-decompose-from
+  ; antiecho-tropical-decompose-to-from
+  ; antiecho-tropical-decompose-from-to
+  ; antiecho-tropical-decompose
+  ; isargmin-decompose-to
+  ; isargmin-decompose-from
+  ; isargmin-decompose
+  ; ≤⇒¬<
+  ; ¬<⇒≤
+  ; optimality-as-antiecho-flavour-to
+  ; optimality-as-antiecho-flavour-from
+  ; tropdecomp-antiecho-to
+  ; tropdecomp-antiecho-from
+  )
+
 open import EchoIntegration using
   ( knowledge-preserved-under-choreo
   ; merged-at-residue
@@ -325,6 +403,26 @@ open import EchoOrdinal using
   ; no-section-ordinal-collapse
   ; IsZeroSource
   ; ordinal-collapse-classification
+  )
+
+-- Lane 3 (2026-05-20): structural mirror of januskey's canonical
+-- Idris2 OpKind ABI (hyperpolymath/januskey:src/abi/Types.idr).
+-- Eight-variant OpKind + IsFileOp / IsKeyOp partition predicates,
+-- one *-echo per constructor. Theorems remain trivial (each is
+-- `λ e → e`); no content-bridge claim, pending
+-- januskey/PROOF-NEEDS.md.
+open import EchoJanusBridge using
+  ( OpKind
+  ; IsFileOp
+  ; IsKeyOp
+  ; copy-echo
+  ; move-echo
+  ; delete-echo
+  ; modify-echo
+  ; obliterate-echo
+  ; keygen-echo
+  ; keyrotate-echo
+  ; keyrevoke-echo
   )
 
 open import Ordinal.Base using
