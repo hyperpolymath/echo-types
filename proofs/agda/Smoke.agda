@@ -363,6 +363,26 @@ open import EchoOrdinal using
   ; ordinal-collapse-classification
   )
 
+-- Lane 3 (2026-05-20): structural mirror of januskey's canonical
+-- Idris2 OpKind ABI (hyperpolymath/januskey:src/abi/Types.idr).
+-- Eight-variant OpKind + IsFileOp / IsKeyOp partition predicates,
+-- one *-echo per constructor. Theorems remain trivial (each is
+-- `λ e → e`); no content-bridge claim, pending
+-- januskey/PROOF-NEEDS.md.
+open import EchoJanusBridge using
+  ( OpKind
+  ; IsFileOp
+  ; IsKeyOp
+  ; copy-echo
+  ; move-echo
+  ; delete-echo
+  ; modify-echo
+  ; obliterate-echo
+  ; keygen-echo
+  ; keyrotate-echo
+  ; keyrevoke-echo
+  )
+
 open import Ordinal.Base using
   ( OT
   ; zero
