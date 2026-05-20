@@ -22,6 +22,8 @@ open import EchoApprox
 open import EchoApproxInstance
 open import EchoIndexed
 open import EchoDecidable
+open import EchoSearch
+open import EchoSearchInstance
 open import EchoAccess
 open import EchoFiberCount
 open import EchoEpistemicResidue
