@@ -176,6 +176,36 @@ open import EchoDecidable using
   ; echo-dec-compose-fin
   )
 
+-- Axis 8(4) thin slice (taxonomy.md §"Witness-search abstract
+-- machine"): the enumerator-bounded refinement of `Echo`. Lands the
+-- search strategy + bound-indexed carrier, introduction, bound
+-- monotonicity, forgetful projection to plain `Echo`, empty-budget
+-- vacuity, and the honest post-composition rule. Sequential /
+-- product-strategy composition needs a `ℕ × ℕ ↔ ℕ` pairing
+-- bijection and lands in a separate slice; see the module preamble
+-- "where next" section.
+open import EchoSearch using
+  ( SearchStrategy
+  ; EchoS
+  ; echo-search-intro
+  ; echo-search-relax
+  ; echo-search-forget
+  ; echo-search-bound-zero
+  ; echo-search-postcompose
+  )
+
+-- Per-lemma pins for the parameterised EchoSearch via
+-- EchoSearchInstance — same hygiene pattern as EchoApproxInstance.
+open import EchoSearchInstance using
+  ( trivialEnum
+  ; trivialF
+  ; search-intro-⊤
+  ; search-relax-⊤
+  ; search-forget-⊤
+  ; search-bound-zero-⊤
+  ; search-postcompose-⊤
+  )
+
 -- Axis 8 second formal artifact (taxonomy.md §8): graded access
 -- modality. Order layer (enum, Hasse-enumerated order, transitivity,
 -- propositionality) + Σ-shape carrier + `_≤a_`-indexed degrade
