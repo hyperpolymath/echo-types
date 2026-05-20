@@ -7,6 +7,7 @@ open import AntiEcho
 open import EchoKernel
 open import EchoCharacteristic
 open import EchoResidue
+open import EchoExampleAbsInt
 open import EchoExamples
 
 open import EchoChoreo

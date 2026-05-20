@@ -67,6 +67,23 @@ open import EchoFiberTriangulation using
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
 open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)
+
+-- Example 10 from `docs/echo-types/examples.md` (abstract
+-- interpretation via Sign lattice). Headlines pinned so a rename
+-- or a slide back to an unanchored claim fails CI fast. See
+-- PR #76 (presentation-dependence cluster).
+open import EchoExampleAbsInt using
+  ( Sign
+  ; Carrier
+  ; α
+  ; concretization-collapses
+  ; α-non-injective-on-pos
+  ; echo-pos-p1
+  ; echo-pos-p2
+  ; echo-zero-witness
+  ; distinct-echoes-same-sign
+  ; absint-classification
+  )
 open import VecRotation using (rotL-alternating; rotR-alternating; map-alternating)
 
 open import EchoApprox using
