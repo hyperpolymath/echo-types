@@ -8,6 +8,7 @@ open import EchoKernel
 open import EchoCharacteristic
 open import EchoResidue
 open import EchoExamples
+open import EchoExampleParser
 
 open import EchoChoreo
 open import EchoEpistemic
@@ -20,6 +21,8 @@ open import EchoCNOBridge
 
 open import EchoApprox
 open import EchoApproxInstance
+open import EchoCost
+open import EchoCostInstance
 open import EchoIndexed
 open import EchoDecidable
 open import EchoSearch
