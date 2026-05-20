@@ -118,6 +118,16 @@ open import EchoSearch using
   ; bounded-search-introduce-1
   )
 
+open import EchoExampleSignAnalysis using
+  ( Sign
+  ; nat-sign
+  ; nat-sign-non-injective
+  ; echo-1-pos
+  ; echo-2-pos
+  ; echo-1≢echo-2
+  ; echo-pos-classification
+  )
+
 open import EchoFiberCount using
   ( FiberSize-fin
   ; FiberSize-fin-no-hit
