@@ -1,0 +1,127 @@
+= Echo Types — Gates Protocol (Falsifiable Identity Claim)
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+The canonical gates protocol. Created 2026-05-18 to resolve a
+long-standing dangling reference: ~15 documents (including
+`docs/retractions.adoc`'s own lead, `next-questions.adoc`,
+`buchholz-plan.adoc`, the `EI2_*`/`gate-2-*` handoffs, and the
+`echo-types/*` papers) cited `roadmap-gates.adoc` as canonical while
+the file did not exist. This document states the protocol that was
+already being practised; it introduces no new claim and is faithful
+to the living instances in `next-questions.adoc`, `retractions.adoc`,
+and `echo-types/earn-back-plan.adoc`.
+
+toc::[]
+
+== The identity claim, made falsifiable
+
+The repository asserts that "echo" (loss-with-residue,
+`Echo f y := Σ (x:A),(f x ≡ y)`) is a *distinct, characterisable
+type-theoretic phenomenon*. That assertion is held **falsifiable**:
+each gate below has an explicit pass condition *and an explicit
+retraction condition*. A gate whose retraction condition is met
+*retracts* the corresponding claim — it does not weaken into a hedge.
+Retraction is the mechanism by which the identity claim is made
+falsifiable, not a failure of the repository.
+
+== The three gates
+
+[#gate-1]
+=== Gate 1 — Distinct phenomenon
+
+Echo is not a renaming of an existing construction (quotient, Galois
+connection, lens/optic, refinement type, modal/comonadic type,
+provenance semiring). *Pass:* a distinctness witness that survives
+reduction attempts to each neighbour. *Retract:* a neighbour
+construction expresses the characteristic family without importing
+echo-specific primitives. Living instances: `docs/next-questions.adoc`
+Gate 1; `docs/adjacency/*`.
+
+[#gate-2]
+=== Gate 2 — Characteristic theorems
+
+There exist theorems true of echo that *measure* its content rather
+than restate generic Σ-functoriality. *Pass:* a nominee that survives
+a sharpened falsifier of the shape that struck down earlier nominees
+(collapsing a pseudo-theorem to `proj₂` / a product of independent
+restatements). *Retract:* the nominee is shown to be such a product,
+or to reduce to thinness of the loss order alone (cf.
+`EchoSeparating`, `docs/characteristic.adoc` §"Honest
+qualifications").
+
+[#gate-2-nominees]
+.Gate 2 nominee table
+[cols="1,3,1", options="header"]
+|===
+| Id | Candidate | Status
+
+| N1–N4
+| Earlier nominees (recipe family)
+| Audited; documented in `docs/characteristic.adoc` /
+  `characteristic/IntegrationAudit.agda` — one recipe, "would weaken
+  in parallel" (recorded, not hidden).
+| N3
+| `knowledge-and-controlled-degradation`
+| *Struck down* by the sharpened falsifier
+  (`characteristic.IntegrationAudit`).
+| N5
+| `characteristic.RoleGraded.choreo-grade-commute`
+| *NOT adopted.* The falsifier attempt
+  `characteristic/N5Falsifier.agda` is **known-broken** (unsolved
+  metas; disclosed in `docs/foundation.adoc`). The "survives" verdict
+  is *not mechanised*; N5 must not be cited as established.
+|===
+
+[#gate-3]
+=== Gate 3 — Canonical examples
+
+The phenomenon has worked examples that are not toys. *Pass:* an
+example typechecking `--safe --without-K`, zero postulates, exercising
+the characteristic structure (e.g. `examples/Transport.agda` block
+averaging). *Retract:* every example collapses to a trivial instance.
+
+== Failure action
+
+*Failure is recorded in `docs/retractions.adoc` rather than silently
+revised.* When a gate's retraction condition is met:
+
+. add a dated entry to `docs/retractions.adoc` (append-only) stating
+  trigger, finding, what is retracted, and the replacement;
+. edit every affected artefact so *no inflated form survives* in any
+  document — reframe to the mechanised strength, never delete history;
+. earn-back, if attempted, is gated and logged in
+  `docs/echo-types/earn-back-plan.adoc`; a failed earn-back gate is a
+  *second negative result*, logged, not a silent revert.
+
+No postulates, no escape pragmas, `--safe --without-K`, ever — a gate
+"passed" by weakening these is failed (`tools/check-guardrails.sh`
+enforces this independently of any closure; see `docs/foundation.adoc`).
+
+== Relationship to the other living documents
+
+* `docs/next-questions.adoc` — the open questions, each with home
+  gate, attack path, and explicit retraction condition (the
+  operational instance of this protocol).
+* `docs/retractions.adoc` — the append-only failure log this
+  protocol's *Failure action* writes to (R-2026-05-18 and its
+  follow-ups).
+* `docs/echo-types/earn-back-plan.adoc` — the gated programme to
+  convert retracted claims back into theorems (Pillar F).
+* `docs/foundation.adoc` — the trusted base and its enforcement.
+
+== Revision policy
+
+Append-only revision history. This document describes the protocol;
+it does not record results (those live in `retractions.adoc` /
+`next-questions.adoc`).
+
+=== Revision history
+
+* *2026-05-18 — created.* Faithful reconstruction of the
+  already-practised protocol to resolve the dangling canonical
+  reference. No new claim introduced.

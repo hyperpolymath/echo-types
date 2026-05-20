@@ -11,6 +11,12 @@
 -- these modules; this file is the CI seam for the lane.
 --
 -- New characteristic modules should register here.
+--
+-- DELIBERATE EXCLUSION (disclosed 2026-05-18): `characteristic.N5Falsifier`
+-- is NOT imported here because it does not typecheck (unsolved metas;
+-- see its in-file broken banner). It is monitored by an
+-- expected-failure CI gate and ledgered, not silently dropped. Do not
+-- "register" it until it is green `--safe --without-K`.
 ------------------------------------------------------------------------
 
 module characteristic.All where

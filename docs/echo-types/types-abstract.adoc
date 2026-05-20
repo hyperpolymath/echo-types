@@ -1,0 +1,187 @@
+= Echo: a definitionally-grounded, loss-graded reindexing modality
+:toc: macro
+:toclevels: 2
+:sectnums:
+:icons: font
+
+[.lead]
+Pillar E, artefact 1 of `establishment-plan.adoc`: a TYPES-style
+extended abstract (≈2 pp).
+
+[IMPORTANT]
+====
+*NOT submission-ready (status withdrawn 2026-05-18).* This abstract
+previously claimed a graded comonad, two independent models, a
+conservativity metatheorem and a terminal-cone universal property.
+All four were retracted after adversarial review — see
+`docs/retractions.adoc` (R-2026-05-18) and `paper.adoc` §"Reframing
+note". The text below has been corrected to what is actually
+mechanised; it must be re-reviewed before any submission. Every claim
+below is mechanised in the accompanying `--safe --without-K` Agda
+artefact and pinned in `Smoke.agda`, and is stated at its true
+strength — no claim exceeds the artefact.
+====
+
+toc::[]
+
+== Context and the honest verdict
+
+Define, for `f : A → B` and `y : B`,
+`Echo f y := Σ (x : A) , (f x ≡ y)`. This is *definitionally* the
+homotopy fibre `fib f y` (HoTT book Def. 4.2.4); the bridge
+`echo↔fib` is mechanised with `refl` round-trips.
+
+We do **not** claim echo as a new judgmental type strength. Dependent
+types are a formation discipline; linear / substructural types are a
+structural-rule discipline; both alter the judgmental apparatus.
+`Echo` introduces no new judgement, context structure, or formation
+rule — it is a derived Σ-type. Comparing it to "linear or dependent"
+strength is a category error, and we own that loudly: it pre-empts a
+reviewer's first objection and is the foundation of the result, not a
+hedge.
+
+The strength that *does* befit echo is a **loss-graded reindexing
+modality**: a monotone family over a join-semilattice of loss grades
+with a functorial reindexing action. It is *motivated by* the
+coeffect / quantitative lineage (Petriček–Orchard–Mycroft;
+Brunel–Gaboardi–Mazza–Zdancewic; Atkey's QTT;
+Orchard–Liepelt–Eades / Granule) but is explicitly *not* a graded
+comonad in that sense: no nested `D_{r·s} ⇒ D_r D_s` is formed. The
+contribution is to *bound* echo there exactly: a definitional
+identity, a funext-relative pointwise mediator property, a
+reindexing modality whose coherence equations reduce demonstrably to
+thinness of the grade order, a separating model that locates that
+reduction, a carrier-parametric abstraction, and a postulate-free
+build — all mechanised, under a falsifiable retraction discipline of
+which this abstract's own correction is an instance.
+
+== Contributions
+
+. *Pinned identity (Pillar A).* `echo↔fib : Echo f y ↔ fiber f y`,
+  definitional, `refl` round-trips, where `fiber` is a same-module
+  restatement of the Σ. A deflationary triviality (a type bijective
+  with itself), made a machine-checked artefact and owned as such —
+  not a grounding metatheorem.
+. *Pointwise mediator property (Pillar B-1).* `Echo f y` presented as
+  the pullback of `f` along the point `y : ⊤ → B`. A
+  `SliceHom (λ _ → y) f` *is* a cone (round-trips `refl`);
+  `echo-pullback-univ` gives existence and *pointwise* uniqueness
+  `∀ v → m' v ≡ m v`. This is *not* a universal property: full
+  terminality (`m' ≡ m`) is neither stated nor provable here without
+  funext. The honest claim is a funext-relative mediator property.
+  *Earned back conditionally (F4, F-2026-05-18a):* strict terminality
+  is mechanised as a function of an explicit `funext` parameter
+  (`EchoPullbackUnivF4.agda`, not a postulate); the unconditional
+  claim stays retracted, the pointwise corollary is kept.
+. *Loss-graded reindexing modality (Pillar B-2).* Over the loss-grade
+  join-semilattice `(Grade, ⊔, keep)`: `gextract` is the identity
+  coercion (`keep` is the definitional bottom), `gduplicate` is the
+  join-left *single-grade* reindex. No nested `D_r D_s`; this is a
+  thin-poset action, not a graded comonad.
++
+[#h2]
+*The H2 verdict, stated honestly.* In the common-upper-bound idiom
+the three coherence equations collapse to `degrade-compose` plus
+propositionality of the loss order (`≤g-prop`), with no `subst`/
+transport. This collapse is not a strength: the equations reduce to
+thinness *because there is no comonadic coherence to discharge*. A
+thin poset with a functorial monotone action satisfies them
+definitionally.
+. *Separating model (Pillar C).* The model with its single hypothesis
+  `≤g-prop` removed (two distinct `lo→hi` arrows; a reindexing
+  distinguishing them). Generic Σ-functoriality and the functorial
+  unit still hold; the characteristic composition equation is
+  *refuted* at a concrete decidable witness (checked `true ≢ false`).
+  This *quantifies* the modality's content over generic Σ: it is
+  exactly thinness of the grade order, and no more. A real
+  calibration object, not a refutation of the "Σ over a poset" reading.
+. *Carrier-parametric abstraction; conservativity, narrowed
+  (Pillar D).* `GradedLossModel`'s `⊑-prop` field *fixes* the only
+  load-bearing hypothesis; `GCLaws` proves the equations once,
+  parametric in the carrier, over a *fixed* grade poset. The "second
+  model" is the first with a `⊤` component, agreeing by `refl` — not
+  model-independence. Separately: `Echo = Σ` plus a postulate-free
+  `--safe --without-K` build is *evidence for* conservativity over
+  MLTT+Σ; it is not a mechanised conservativity metatheorem and is no
+  longer claimed as one.
+  *Earned back, scoped (F2, F-2026-05-18a):* a genuine second model of
+  the *bare Echo functor* (not the modality) exists on the non-graph
+  relation `StepND` (`EchoStepNDModelF2.agda`; `nd-not-graph` checked),
+  with content-bearing agreement — not Σ-η on `× ⊤`. Modality-level
+  model-independence and the conservativity narrowing are unchanged.
+
+== The artefact and its discipline
+
+The Agda development is `--safe --without-K` throughout, with **zero
+postulates and zero escape pragmas**, CI-enforced — a build property
+that is *evidence for*, not a proof of, conservativity. Every
+headline theorem is pinned in a `Smoke.agda` manifest so a silent
+rename fails CI fast. Development is governed by *falsifiable gates*
+with explicit retraction actions and a public retraction log
+(`docs/retractions.adoc`): one identity claim (EI-2) was settled
+negatively, and this development's own graded-comonad /
+model-independence / conservativity framing was retracted on
+2026-05-18 (R-2026-05-18) — both recorded as such. There is no funext
+anywhere; the genuine funext-relativity is the pointwise-only
+mediator property, disclosed as a bound rather than presented as a
+"funext-free" feature.
+
+== Related work and position
+
+Echo sits beside, not within, the linear/dependent ladder. The
+nearest neighbours are graded / coeffect modalities (Granule, QTT)
+and the HoTT treatment of fibres. The novelty is not a new object,
+and explicitly not a graded comonad — it is an *exactly-bounded
+package*: a definitional Σ-identity, a funext-relative pointwise
+mediator property, a reindexing modality whose coherence equations
+provably reduce to thinness of the grade order, a separating model
+that locates that reduction, a carrier-parametric abstraction, and a
+postulate-free build, all under a falsifiable-gate methodology that
+has been exercised on this development's own claims.
+
+Positioning by neighbour (full per-neighbour analysis in `paper.adoc`
+§"Related work"):
+
+* *HoTT fibres.* Echo *is* the fibre (`echo↔fib`, `refl` round-trips).
+  The win is not against HoTT but one step to the side: against
+  *propositionally-truncated* fibres, where `‖ Echo f y ‖` discards
+  witness identity, the un-truncated form retains it
+  (`echo-not-prop` certificates).
+* *Graded comonads / coeffects / QTT* (Uustalu–Vene; Petriček et al.;
+  Brunel et al.; Atkey; Granule). Echo is *motivated by* this lineage
+  but explicitly *not* an instance — `EchoGradedComonad.agda` exhibits
+  no nested `D_r D_s`. What we provide is a *calibration*: the
+  separating model isolates the single load-bearing hypothesis
+  (`≤g-prop`) at which generic Σ-functoriality stops being enough.
+* *Lenses / optics.* The witness-transport leg of `map-over` /
+  `map-square` is in the optic neighbourhood; Echo adds explicit
+  source-retention and honest one-sided non-recoverability (`no-section-*`),
+  but ships no `put`, no van Laarhoven encoding.
+* *Refinement types.* Σ-relevant refinement (Agda/Coq) coincides with
+  Echo definitionally; propositional-predicate refinement (F\*, Liquid
+  Haskell) loses what Echo retains (truncation argument).
+* *Setoid quotients / provenance semirings.* Echo's kernel is implicit
+  (named through `f`) and proof-relevant; it ships no quotient
+  elimination and no semiring. Provenance researchers can read the
+  residue hierarchy (`keep`/`residue`/`forget`) as K-provenance for an
+  impoverished `K`.
+* *Modal type theories.* The recipe-level question — whether QTT or
+  Reed–Pfenning S4 expresses the thin-poset reindexing modality
+  natively without echo machinery — is genuinely open and explicitly
+  not closed here.
+
+== Author / artefact statement
+
+Mechanised in Agda (stdlib 2.3), `--safe --without-K`, no postulates.
+Source: `hyperpolymath/echo-types`; headline manifest `Smoke.agda`;
+plan and gates in `docs/echo-types/establishment-plan.adoc` /
+`roadmap-gates.adoc`; narrowed conservativity properties in
+`docs/echo-types/conservativity.adoc`; retraction log in
+`docs/retractions.adoc`.
+
+NOTE: This abstract is *not* submission-ready (status withdrawn
+2026-05-18, pending re-review against the reframed `paper.adoc`).
+Submission logistics (venue deadline, TYPES-template formatting,
+author metadata, Zenodo DOI, arXiv cross-post) remain offline and
+author-driven; they are downstream of, not a substitute for, the
+re-review.

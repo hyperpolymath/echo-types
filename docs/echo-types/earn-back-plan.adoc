@@ -1,0 +1,398 @@
+= Echo Types — Earn-Back Plan (Pillar F)
+:toc: macro
+:toclevels: 3
+:sectnums:
+:sectnumlevels: 3
+:icons: font
+
+[.lead]
+After retraction R-2026-05-18 the development is *honest but thin*.
+This plan defines the falsifiable program to convert the retracted
+claims back into theorems — or to confirm, on the project's own gate
+discipline, that they cannot be earned. Nothing in `paper.adoc` /
+`conservativity.adoc` / `types-abstract.adoc` moves until the
+corresponding gate here passes. Methodology — explicit pass/fail,
+abandon criteria, outcomes logged in `docs/retractions.adoc`. The
+canonical loci of the gate discipline are
+`docs/roadmap-gates.adoc` (the protocol document, created 2026-05-18
+to resolve the earlier dangling reference), `docs/retractions.adoc`
+(the append-only retraction + earn-back log), this plan (the
+falsifiable program), and `docs/next-questions.adoc` (the open
+questions register).
+
+toc::[]
+
+== Honest framing
+
+The deflationary fact `Echo = Σ` is permanent and is *not* the
+obstruction. The obstruction was that the previous structure was a
+thin-poset reindexing with a carrier collapsing to `⊤`, a join used
+additively with no monoid/semiring multiplication, no nested functor,
+and an interface that baked in `⊑-prop`. "Earning back" means
+building structure that does *not* have those defects, with Echo as
+its grade-unit object — not redefining Echo.
+
+== Gates, in dependency order
+
+[#gate-F1]
+=== Gate F1 — Genuine graded comonad (MAKE-OR-BREAK)
+
+*F1 is make-or-break for the graded-comonad claim*, and *F3* is gated
+on it (F3 is not attempted until F1 passes). *F2* and *F4* are
+independent of F1 and proceed in parallel — they earn back
+qualified/real claims regardless of F1 (see "Recommended order of
+attack").
+
+.Claim
+****
+There is a grade *monoid* `(M, ·, 1)` and an indexed endofunctor
+`D : M → Set → Set` with:
+
+* `map : (A → B) → D r A → D r B` functorial (id/comp);
+* counit `ε : D 1 A → A`;
+* comultiplication `δ : D (r · s) A → D r (D s A)` — *nested*;
+* the three graded-comonad laws (counit-left, counit-right,
+  coassociativity/pentagon) as equalities of the above;
+
+all under `--safe --without-K`, *zero postulates*, with `D 1 (Echo f y)`
+the bare echo (Echo is the grade-unit object), and `D r` *not*
+collapsing to a proposition/`⊤` for `r ≠ 1`.
+****
+
+.Construction under test
+The candidate is the *monoid-graded iterated-residue comonad*:
+
+* Grade monoid `(ℕ, +, 0)` (`r` = number of residue layers; `1` of
+  the comonad = additive unit `0`).
+* `D 0 A = A`; `D (suc r) A = R (D r A)` where `R X` is the
+  non-collapsing residue carrier (`EchoResidue`-shaped: `Σ X Cert`
+  with `Cert` *informative*, not `⊤`).
+* `ε : D 0 A → A` is the structural identity at the unit grade
+  (legitimate for a graded comonad — the content is in `D r` being a
+  real functor for `r > 0` and in `δ`).
+* `δ : D (m + n) A → D m (D n A)` is the iterated-functor coherence,
+  proved by induction on `m` (stdlib `_+_` recurses on the left and
+  matches `D`'s recursion, so the base case is definitional and the
+  step is one `cong R`). K-free and funext-free: it is `subst` along
+  an *inductively proven type equality*, and `subst`/transport does
+  not need K (K is UIP, not transport).
+
+.Load-bearing risk (what kills F1)
+. *Coassociativity / pentagon for the iterated-functor identity does
+  not close without K* once `Cert` carries non-trivial identity
+  proofs. This is F1's real test — the honest analogue of the old
+  `degrade-compose`, but now genuinely about nested functors.
+. *`δ` degenerates to the identity coercion in a way that a
+  Petriček/Katsumata reader still reads as bookkeeping.* Mitigation
+  bar: `D r` must be demonstrably a non-trivial functor (a separating
+  witness: two elements of `D 2 A` distinguished by `Cert`, so `D` is
+  not constantly `A` or `⊤`).
+. *Naturality of `ε`/`δ` needs funext* (they are natural
+  transformations between endofunctors). Mitigation: state naturality
+  *pointwise* and only claim a graded comonad in the
+  pointwise/“wild” sense, disclosed — or accept F1 fails for the
+  strict categorical claim.
+
+.Gate
+*F1 passes* iff `map`/`ε`/`δ` and all three laws typecheck
+`--safe --without-K`, zero postulates, with the non-triviality
+separating witness for `D 2`. *F1 fails* if any law needs K, funext,
+or a postulate, or if `D r` cannot be shown non-trivial.
+
+.Abandon criterion
+If F1 fails, the graded-comonad claim stays retracted *permanently*;
+record in `docs/retractions.adoc` as a second negative result
+(strengthens the methodology story, like EI-2). Do *not* attempt
+F3/F4. F2 may still proceed (it is independent of F1).
+
+[#gate-F2]
+=== Gate F2 — A real second model of the *bare* Echo functor
+
+Independent of F1 (about the Echo functor, not the comonad). The one
+R2 item rated "fixable with bounded work".
+
+.Claim
+****
+A model instance that genuinely uses `EchoRelational.StepND`
+(non-deterministic, `StepND : Bool → Bool → Set` with a relation that
+is *not* a graph of a function), in which the Echo-functor laws hold,
+and whose agreement with the deterministic model is a theorem with
+*content* (not `refl`, not Σ-η on `× ⊤`).
+****
+
+.Gate
+*Passes* iff a `StepND`-based model is instantiated into the same
+interface the deterministic model uses, the functor laws hold, and
+the agreement lemma has a non-`refl` proof obligation. *Fails* if the
+only way to make it agree is to trivialise the relation back to a
+graph.
+
+[#gate-F3]
+=== Gate F3 — A genuinely independent second model of the comonad
+
+*Gated on F1.* Instantiate F1's graded-comonad interface at a
+*different grade monoid* (e.g. a tropical or multiplicative semiring,
+or a free monoid) — not the same monoid with a `× ⊤` carrier. Pass
+iff the laws hold for two non-isomorphic grade monoids and the
+abstraction does not carry a field equivalent to the old `⊑-prop`
+(no single hypothesis bakes in the result).
+
+[#gate-F4]
+=== Gate F4 — Universal property, honestly qualified
+
+Not "retracted → unconditional"; "retracted → *true, conditional*".
+Parameterise the terminality theorem by an explicit funext
+hypothesis `funext` (a module parameter, *not* a postulate), exactly
+as `Echo.agda` parameterises `cancel-iso` by the triangle identities.
+Then `echo-pullback-univ-strict : funext → (m' ≡ m)` is a genuine
+universal property *given funext*, with zero postulates retained.
+
+.Gate
+*Passes* iff strict terminality typechecks as a function of an
+explicit `funext` parameter, zero postulates, and the unconditional
+pointwise result is kept as the funext-free corollary. This is
+expected to be tractable; it earns back a *qualified* universal
+property, stated as such.
+
+== Sequencing
+
+. *F1 first* (make-or-break). Begin with the feasibility spike
+  `proofs/agda/EchoGradedComonadF1.agda` (prototype, not wired into
+  `All.agda`/`Smoke.agda` until it passes).
+. *F4 and F2 in parallel* (both independent of F1; both expected
+  tractable). They earn back qualified/real claims regardless of F1.
+. *F3 only if F1 passes.*
+. On each gate: update `paper.adoc` / `conservativity.adoc` /
+  `types-abstract.adoc` to the *earned* claim, and log the outcome
+  (pass or fail) in `docs/retractions.adoc` as a follow-up to
+  R-2026-05-18. A failed gate is a second negative result, not a
+  silent revert.
+
+== Guardrails
+
+* No postulates, no escape pragmas, `--safe --without-K`, ever — a
+  gate "passed" by weakening these is failed.
+* No prose claim moves ahead of its gate. The reframed docs stay as
+  they are until the corresponding gate is green.
+* "Triage over partial hack": if a gate is close but not closed, it
+  is *failed and logged*, not shipped behind softened wording.
+
+== Consolidated proof-debt ledger
+
+Full-repo audit 2026-05-18. The `--safe --without-K` build carries
+*zero postulates and zero escape pragmas* (CI-grep-enforced); every
+item below is therefore either a disclosed-in-comment open obligation
+or a structural-fidelity gap, not hidden debt. This ledger is the
+single index; it moves no claim.
+
+[cols="1,4,1",options="header"]
+|===
+| Id | Debt | State
+
+| A1
+| *F1* — `gc-coassoc` (graded-comonad coassociativity),
+  `proofs/agda/EchoGradedComonadF1.agda`.
+| *PASSED 2026-05-20* — `gc-coassoc` closed via the predicted
+  `δ`-naturality-over-`R` (`δ-suc`) + `subst-D-suc` factoring; stdlib
+  `+-assoc (suc m) n p` reduces to `cong suc (+-assoc m n p)`, so
+  ℕ-UIP was *not* needed for coassoc. `--safe --without-K`, zero
+  postulates, wired into `All`/`Smoke`. Retraction follow-up
+  F-2026-05-20a. Unblocks A3 / F3.
+
+| A2
+| *F2* — real second model of the bare Echo functor via
+  `EchoRelational.StepND`, non-`refl` agreement lemma.
+| *PASSED 2026-05-18* — `proofs/agda/EchoStepNDModelF2.agda`,
+  `--safe --without-K`, zero postulates, wired into `All`/`Smoke`.
+  Retraction follow-up F-2026-05-18a.
+
+| A3
+| *F3* — independent second model of the comonad at a different grade
+  monoid (no `× ⊤` carrier, no `⊑-prop`-equivalent field).
+| *PASSED 2026-05-20* — `proofs/agda/EchoGradedComonadInterface.agda`
+  + `EchoGradedComonadInstance1.agda` (F1 at the *commutative*
+  monoid `(ℕ, +, 0)`) + `EchoGradedComonadInstance2.agda`
+  (free-monoid `(List Tag, ++, [])` over a two-element `Tag` with
+  per-element residue `R smol A = A × Bool` / `R big A = A × ℕ`).
+  The two grade monoids are non-isomorphic (one commutative, one
+  not; witness `tag-list-non-commutative`); the interface record
+  carries no `⊑-prop`-equivalent field. `--safe --without-K`, zero
+  postulates, no funext. Wired into `All`/`Smoke`. Retraction
+  follow-up F-2026-05-20b.
+
+| A4
+| *F4* — strict universal property as a function of an explicit
+  `funext` *module parameter* (never a postulate).
+| *PASSED 2026-05-18* — `proofs/agda/EchoPullbackUnivF4.agda`,
+  `--safe --without-K`, zero postulates, pointwise corollary kept,
+  wired into `All`/`Smoke`. Retraction follow-up F-2026-05-18a.
+
+| B
+| Buchholz order: `Ordinal/Buchholz/Order.agda` `_<ᵇ_` compares ψ by
+  Ω-index only and asserts `<ᵇ-ψΩ≤` as a constructor; same-binder
+  sub-cases (`bpsi ν α <ᵇ bpsi ν β` with `α <ᵇ β`;
+  `bplus x y₂ <ᵇ bplus x z₂` with `y₂ <ᵇ z₂`) are not constructible
+  pending a K-free reformulation. Direct-constructor totality / WF do
+  not land; `ExtendedOrder.agda` is the honest closed wrapper (WF via
+  the comparison *measure* `_<ᵇ⁺_`).
+| Disclosed structural-fidelity gap. *Off the echo-types paper
+  critical path.* Long-tail workstream.
+
+| C
+| `characteristic/` open obligations: general recipe-non-triviality
+  over arbitrary axes and `Mode-is-loss-only` (`RecipeNonTriviality.agda`);
+  obligations 2–5 of `ChoreoInjective.agda`. Concrete n=2 cases
+  proved. `RoleRole.agda`'s "REAL OBSTRUCTION" is a *closed negative
+  result* (no uniform total `applyRole₁`), not a debt.
+| Disclosed. Does *not* block EI-2 (terminated-negative).
+  Completeness nice-to-have, lowest priority.
+
+| D
+| Doc-integrity: previously this entry recorded that
+  `docs/roadmap-gates.adoc` was cited as the canonical gate ledger
+  but did not exist in-tree. The file *does* exist (created
+  2026-05-18; see its preamble) and the dangling-reference issue is
+  resolved.
+| *CLOSED 2026-05-20.* `docs/roadmap-gates.adoc` is in tree as the
+  Gates Protocol. The canonical-loci list at the top of this plan
+  has been updated to include it explicitly alongside
+  `retractions.adoc` / `next-questions.adoc`.
+
+| E1
+| `examples/Transport.agda` (Gate-3): two disclosed open items, both
+  blocked only by symbolic-ℚ machinery, not design — (1) the general
+  `∀n` 5a/5b case needs `rotL/rotR (nyquist n) ≡ map -_ (nyquist n)`;
+  (2) Step C (kernel = Nyquist line at n=4) needs a 4×4 ℚ linear
+  solve. Containment results stand; funext was sidestepped via the
+  `Vec ℚ n` carrier (no funext debt).
+| Disclosed. Lowest priority; not paper-blocking.
+
+| E2
+| Doc-integrity (external): the `MEMORY.md` one-liner for
+  `project-echo-types-transport-gate3` says "stops at Rung 2,
+  Fin n→ℚ forces funext" — stale; Rungs 1–6 landed with the
+  `Vec ℚ n` carrier. The note *body* is current.
+| Fixed in this session (index line corrected to match the body).
+|===
+
+=== Recommended order of attack
+
+. *F4 + F2 in parallel* (A4, A2) — *DONE 2026-05-18*: both passed,
+  spikes wired into `All`/`Smoke`, scoped claims moved (follow-up
+  F-2026-05-18a). Each earned back a qualified/real claim
+  independently of F1.
+. *F1 coassoc* (A1) — *DONE 2026-05-20*: passed via the predicted
+  `δ`-naturality-over-`R` factoring; unblocks *F3* (A3).
+. *F3* (A3) — *DONE 2026-05-20*: passed via the
+  `GradedComonadStructure` interface plus two non-isomorphic-
+  grade-monoid instances. Closes the second-models claim *for the
+  graded comonad witness* — see follow-up F-2026-05-20b for scope.
+. *Doc-integrity* (D) — reconcile alongside step 1; removes a drift
+  vector at near-zero cost.
+. *Buchholz* (B) — separate long-tail; keep the `ExtendedOrder`
+  wrapper load-bearing. Not paper-blocking.
+. *`characteristic/`* (C) — lowest priority; EI-2 already terminated.
+
+== Status
+
+* *2026-05-18 — created.* Pillar F opened post-R-2026-05-18.
+* *2026-05-18 — full-repo proof-debt audit.* Added the consolidated
+  ledger above (items A–E). Confirmed zero postulates / zero escape
+  pragmas across all 88 modules; no hidden debt. No claim moved. F1
+  feasibility spike is the immediate next action. No gate passed yet;
+  no reframed claim has moved.
+* *2026-05-18 — F1 feasibility spike run* (`proofs/agda/EchoGradedComonadF1.agda`,
+  typechecks `--safe --without-K`, *zero postulates*). Result: **F1
+  NOT YET PASSED, feasibility strongly positive (evidence-based, not
+  speculative).** The monoid-graded iterated-residue candidate
+  delivers, mechanised: a non-collapsing graded functor `D` (with a
+  proven separating witness `D2-nontrivial` — `D r` is not `⊤`/a
+  prop), functor laws (`mapD-id`/`mapD-∘`), the *nested*
+  comultiplication `δ : D (m + n) A → D m (D n A)`, and **two of the
+  three graded-comonad laws proved**: `gc-counit-r` (definitional)
+  and `gc-counit-l` (by induction on the grade; the only
+  non-structural tool is ℕ-UIP, which is *K-free* via decidable
+  equality). The make-or-break foundational question is answered:
+  Agda demanded **no K, no funext, no postulate** anywhere — the
+  obstruction this gate feared did *not* materialise. The single
+  remaining obligation is `gc-coassoc` (coassociativity): its base
+  case and skeleton close, the inductive step has an isolated
+  proof-engineering type-mismatch (`m != m + (n + p)`) requiring an
+  explicit δ-naturality-over-`R` lemma rather than the ad-hoc
+  `coe-cong-R ∘ sym` push. Stated in-file as a precise OPEN
+  obligation — *not postulated, not softened*. No reframed claim has
+  moved (F1 requires all three laws); the gate stays open until
+  `gc-coassoc` closes `--safe --without-K` zero-postulate.
+* *2026-05-18 — Gates F4 and F2 PASSED.*
+  `EchoPullbackUnivF4.agda` (F4: terminal-cone UP as a function of an
+  explicit `funext` parameter, never a postulate; pointwise corollary
+  kept) and `EchoStepNDModelF2.agda` (F2: genuine second model of the
+  bare Echo functor on the non-graph relation `StepND`, content-bearing
+  agreement). Both `--safe --without-K`, zero postulates; wired into
+  `All.agda` and pinned in `Smoke.agda`; full + smoke build green.
+  Scoped claims moved in `paper.adoc` / `conservativity.adoc` /
+  `types-abstract.adoc`; logged as retraction follow-up F-2026-05-18a.
+  *Strictly scoped:* F2 is the Echo functor only — the graded-comonad,
+  model-independence, and conservativity claims remain retracted; F1
+  (coassoc) and F3 remain open.
+
+* *2026-05-20 — Gate F1 PASSED.* `gc-coassoc` closed via the
+  predicted `δ`-naturality-over-`R` (`δ-suc`) + `subst-D-suc`
+  factoring; stdlib `+-assoc (suc m) n p` reduces definitionally to
+  `cong suc (+-assoc m n p)` (recursion on left), so the two
+  ℕ-equation proofs on the chain ends are syntactically identical
+  and ℕ-UIP was *not* needed for coassoc itself. `EchoGradedComonadF1.agda`
+  now ships all three graded-comonad laws + the separating witness
+  `D2-nontrivial`; `--safe --without-K`, zero postulates, no funext;
+  wired into `All.agda` and pinned in `Smoke.agda`. Full + smoke
+  build green. Retraction follow-up F-2026-05-20a.
++
+*Strictly scoped (re-read with care):* F1 earns back the
+*existence* of a graded comonad with Echo as the grade-unit object
+(`D 0 (Echo f y)` is the bare echo, the nested comultiplication is
+real, all three laws hold, the carrier is non-trivial). It does
+*not* retroactively make `EchoGraded` a graded comonad — `EchoGraded`
+remains a thin-poset reindexing modality per R-2026-05-18, on a
+different structure (`Grade = 3-element lattice`, no nested family,
+no monoid multiplication, no `D r r' ⇒ D r ∘ D r'`). The paper's
+title and central thesis (Echo as a reindexing modality) stand
+unchanged; the F1 result is an *additional* mechanised contribution
+sitting beside `EchoGraded`, not a reinstatement of it. F3
+(independent second comonad model at a different grade monoid) is
+now unblocked.
+
+* *2026-05-20 — Gate F3 PASSED.*
+  `EchoGradedComonadInterface.GradedComonadStructure` is an abstract
+  record packaging the F1 graded-comonad signature (grade monoid +
+  graded functor + counit + nested comultiplication + monoid laws +
+  functor laws + the three comonad laws) without a `⊑-prop`-equivalent
+  field. Two non-isomorphic-grade-monoid instances inhabit it:
++
+[loweralpha]
+. `EchoGradedComonadInstance1.nat-instance` — F1 at the commutative
+  monoid `(ℕ, +, 0)`;
+. `EchoGradedComonadInstance2.list-instance` — the free monoid
+  `(List Tag, ++, [])` over a two-element `Tag` with per-element
+  residue layers `R smol A = A × Bool` and `R big A = A × ℕ`. All
+  three comonad laws proved (`gc-counit-r` definitional;
+  `gc-counit-l`/`gc-coassoc` by structural induction on the list,
+  cons step splitting on the head `Tag`, mirroring F1's
+  `δ`-naturality + `subst-D-suc` factoring).
++
+The grade monoids are non-isomorphic — one commutative, one not;
+the witness `tag-list-non-commutative` discharges this directly. The
+interface record contains no `⊑-prop`-equivalent field; both
+instances inhabit it cleanly without one. `--safe --without-K`,
+zero postulates, no funext; wired into `All.agda` and pinned in
+`Smoke.agda`. Retraction follow-up F-2026-05-20b.
++
+*Strictly scoped (re-read with care):* F3 earns back the
+"two-models" claim *for the graded-comonad witness* introduced by
+F1 — there are two genuinely non-isomorphic grade-monoid models of
+that interface. It does *not* earn back the older `EchoRelModel`
+two-models claim retracted at R-2026-05-18 finding 3, which was
+about `GCLaws` instantiated at `set-model` and `rel-model`. Those
+instantiations remain at the same grade poset with `⊑-prop` baked
+in as a field; that retraction stands. The two earn-backs (F3 here,
+and the original `GCLaws` claim) are about different abstract
+interfaces and are not interconvertible.

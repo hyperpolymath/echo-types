@@ -1,6 +1,8 @@
 = Adjacency: Provenance Semirings
 :toc: macro
 
+_Axes engaged: 5 (Comp), 7 (PR/PI); axis 8 (IT/Comp) open — K-semirings with a cost-tracking interpretation (e.g. tropical) would engage axis 8. See `README.adoc` § "Axis coverage matrix"._
+
 toc::[]
 
 == 1. Nearest existing construction

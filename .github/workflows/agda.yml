@@ -1,13 +1,25 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
-# (MPL-2.0 is automatic legal fallback until PMPL is formally recognised)
+# SPDX-License-Identifier: MPL-2.0
 
 name: Agda
 
 on:
+  # Direct pushes only on the integration branches. Feature-branch
+  # validation is fully covered by the pull_request trigger below —
+  # gating WIP pushes to no-PR branches with a full multi-minute Agda
+  # build was the dominant self-inflicted load on the shared estate
+  # Actions concurrency pool, and also double-fired (push + PR) on PR
+  # branches. No proof coverage is lost: PRs and post-merge main still
+  # run the full suite.
   push:
-    branches:
-      - "**"
+    branches: [main, master]
   pull_request:
+
+# Estate guardrail: cancel superseded runs so re-pushes / rebased PR
+# updates don't pile up queued full-suite builds. Safe here — this
+# workflow only typechecks (read-only, no publish or mutation).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions: read-all
 
@@ -18,10 +30,35 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
 
+      # Fast static gate (no Agda): enforce the EchoKernel funext-free
+      # certificate and that every Echo*.agda is classified in
+      # docs/echo-types/echo-kernel-note.adoc. Fails the run before the
+      # multi-minute typecheck if the kernel cone or the note drifts.
+      - name: Kernel funext-free certificate + classification guard
+        run: sh scripts/kernel-guard.sh
+
       - name: Install Agda and standard library
         run: |
           sudo apt-get update
           sudo apt-get install -y agda git
+
+      - name: Record & sanity-check toolchain
+        run: |
+          set -e
+          ver="$(agda --version | head -n1)"
+          echo "CI Agda: $ver"
+          echo "Local/flake reproducible Agda is pinned via flake.nix;"
+          echo "exact-version CI parity (CI-via-flake) is the tracked"
+          echo "P1 follow-up — see docs/foundation.adoc / proof-debt"
+          echo "ledger item 'CI Agda pin'. This step makes the version"
+          echo "VISIBLE and minimally-asserted, not silently floating."
+          case "$ver" in
+            *"version 2."*) : ;;
+            *) echo "::error::unexpected Agda: $ver"; exit 1 ;;
+          esac
+
+      - name: Foundation guardrail (--safe/--without-K, no pragmas/postulates)
+        run: bash tools/check-guardrails.sh proofs/agda
 
       - name: Fetch Agda standard library (v2.3)
         id: stdlib
@@ -30,12 +67,24 @@ jobs:
           git clone --depth 1 --branch v2.3 https://github.com/agda/agda-stdlib.git "$STDLIB_DIR"
           echo "stdlib_dir=$STDLIB_DIR" >> "$GITHUB_OUTPUT"
 
-      - name: Fetch absolute-zero library
+      - name: Fetch absolute-zero library (PINNED)
         id: absz
+        env:
+          # Pinned 2026-05-18 to the known-good revision the suite is
+          # green against (foundation provenance audit). Bump
+          # deliberately, never float: an unpinned dependency is an
+          # unpinned trust boundary.
+          ABSZ_REF: 3ff5cee7f3fd002378089cd02f0c90a3747b45f0
         run: |
           ABSZ_DIR="$HOME/absolute-zero"
-          git clone --depth 1 https://github.com/hyperpolymath/absolute-zero.git "$ABSZ_DIR"
-          echo "absz_commit=$(git -C "$ABSZ_DIR" rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          git clone https://github.com/hyperpolymath/absolute-zero.git "$ABSZ_DIR"
+          git -C "$ABSZ_DIR" checkout --quiet "$ABSZ_REF"
+          ACTUAL="$(git -C "$ABSZ_DIR" rev-parse HEAD)"
+          if [ "$ACTUAL" != "$ABSZ_REF" ]; then
+            echo "::error::absolute-zero pin mismatch: want $ABSZ_REF got $ACTUAL"
+            exit 1
+          fi
+          echo "absz_commit=$ACTUAL" >> "$GITHUB_OUTPUT"
           echo "absz_dir=$ABSZ_DIR" >> "$GITHUB_OUTPUT"
 
       - name: Register libraries for Agda
@@ -71,10 +120,14 @@ jobs:
             ~/agda-stdlib/**/*.agdai
             ~/absolute-zero/**/*.agdai
             proofs/agda/**/*.agdai
-          key: agdai-${{ runner.os }}-agda2.6.3-stdlib2.3-absz${{ steps.absz.outputs.absz_commit }}-${{ hashFiles('proofs/agda/**/*.agda') }}
+          # Key reflects reality: stdlib v2.3 + the PINNED absz commit
+          # + source hash. (Previously hard-coded a stale "agda2.6.3";
+          # corrected 2026-05-18. The cold-check job below never uses
+          # this cache, so a cache anomaly cannot mask a real break.)
+          key: agdai-${{ runner.os }}-stdlib2.3-absz${{ steps.absz.outputs.absz_commit }}-${{ hashFiles('proofs/agda/**/*.agda') }}
           restore-keys: |
-            agdai-${{ runner.os }}-agda2.6.3-stdlib2.3-absz${{ steps.absz.outputs.absz_commit }}-
-            agdai-${{ runner.os }}-agda2.6.3-stdlib2.3-
+            agdai-${{ runner.os }}-stdlib2.3-absz${{ steps.absz.outputs.absz_commit }}-
+            agdai-${{ runner.os }}-stdlib2.3-
 
       - name: Typecheck full suite
         run: agda -i proofs/agda proofs/agda/All.agda
@@ -87,3 +140,86 @@ jobs:
 
       - name: Typecheck examples lane (Gate #3 canonical examples)
         run: agda -i proofs/agda proofs/agda/examples/All.agda
+
+      # Disclosed known-broken module (foundation audit 2026-05-18):
+      # characteristic/N5Falsifier.agda has unsolved metas and is NOT
+      # in any green closure. This gate ASSERTS it still fails, so the
+      # hole stays monitored: if it ever typechecks, this step fails
+      # loudly and tells us to register it + drop the xfail.
+      - name: Expected-failure gate (N5Falsifier is known-broken)
+        run: |
+          if agda -i proofs/agda proofs/agda/characteristic/N5Falsifier.agda \
+               > /tmp/n5.log 2>&1; then
+            echo "::error::N5Falsifier now typechecks — register it in"
+            echo "::error::characteristic/All.agda and remove this xfail gate."
+            exit 1
+          else
+            echo "N5Falsifier fails as expected (disclosed in its banner"
+            echo "and the proof-debt ledger). Hole monitored, not hidden."
+          fi
+
+  cold-check:
+    # Belt-and-braces: NO interface cache, --ignore-interfaces cold
+    # build. A green here cannot be a stale-.agdai artefact (matters
+    # given the documented WSL git-object-corruption risk). Runs in
+    # parallel with `check`; both must pass.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+
+      - name: Install Agda
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y agda git
+
+      - name: Foundation guardrail
+        run: bash tools/check-guardrails.sh proofs/agda
+
+      - name: Fetch pinned libraries
+        id: libs
+        env:
+          ABSZ_REF: 3ff5cee7f3fd002378089cd02f0c90a3747b45f0
+        run: |
+          STDLIB_DIR="$HOME/agda-stdlib"
+          git clone --depth 1 --branch v2.3 https://github.com/agda/agda-stdlib.git "$STDLIB_DIR"
+          ABSZ_DIR="$HOME/absolute-zero"
+          git clone https://github.com/hyperpolymath/absolute-zero.git "$ABSZ_DIR"
+          git -C "$ABSZ_DIR" checkout --quiet "$ABSZ_REF"
+          mkdir -p "$HOME/.agda"
+          printf 'name: standard-library\ninclude: %s/src\n' "$STDLIB_DIR" > "$RUNNER_TEMP/sl.agda-lib"
+          printf 'name: absolute-zero\ninclude: %s/proofs/agda\n' "$ABSZ_DIR" > "$RUNNER_TEMP/az.agda-lib"
+          printf '%s\n%s\n' "$RUNNER_TEMP/sl.agda-lib" "$RUNNER_TEMP/az.agda-lib" > "$HOME/.agda/libraries"
+          printf 'standard-library\n' > "$HOME/.agda/defaults"
+
+      - name: Cold typecheck (--ignore-interfaces, no cache)
+        run: |
+          agda --ignore-interfaces -i proofs/agda proofs/agda/All.agda
+          agda --ignore-interfaces -i proofs/agda proofs/agda/Smoke.agda
+          agda --ignore-interfaces -i proofs/agda proofs/agda/characteristic/All.agda
+          agda --ignore-interfaces -i proofs/agda proofs/agda/examples/All.agda
+
+  flake-check:
+    # Foundation P1: the reproducible, exactly-pinned toolchain.
+    # `nix flake check` runs flake.nix's hermetic `checks.suite`
+    # (flake-pinned Agda + PINNED stdlib v2.3 + PINNED absolute-zero
+    # @3ff5cee, guardrail + 4 roots + N5 xfail). ADDITIVE: the apt
+    # `check` and `cold-check` jobs remain the gate, so a version
+    # delta surfaced here (e.g. 2.7.0.1 vs verified 2.8.0) is
+    # informative, not a regression. Its first green run IS the P1
+    # verification (the dev env has no nix; CI is the verifier).
+    # Flip continue-on-error to false once it is first green.
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+
+      - name: Install Nix (pinned action)
+        uses: cachix/install-nix-action@08dcb3a5e62fa31e2da3d490afc4176ef55ecd72  # v30
+        with:
+          extra_nix_config: |
+            experimental-features = nix-command flakes
+
+      - name: nix flake check (hermetic, reproducible)
+        run: nix flake check --print-build-logs

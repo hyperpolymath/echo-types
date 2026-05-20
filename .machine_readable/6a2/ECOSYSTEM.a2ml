@@ -13,7 +13,7 @@
 ;;; session understands echo-types' position in the constellation
 ;;; without re-deriving it.
 ;;;
-;;; SPDX-License-Identifier: PMPL-1.0-or-later
+;;; SPDX-License-Identifier: MPL-2.0
 ;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
 (define-module (echo-types ecosystem)
@@ -101,10 +101,11 @@
      (source . "Standing decision sd-003 in STATE.scm")
      (artefacts . (".github/workflows/mirror.yml" "MIRROR_SETUP.adoc")))
 
-    ((convention . "License: PMPL-1.0-or-later for code and docs")
-     (source . "META.scm SPDX header pattern; constellation default")
-     (artefacts . ("LICENSE-PMPL-1.0.txt" ; if present
-                   "SPDX headers in all .scm files")))
+    ((convention . "License: MPL-2.0 for code (PMPL retained as narrative/cultural overlay only; see docs/PMPL-NARRATIVE.adoc — owner direction 2026-05-20)")
+     (source . "META.scm SPDX header pattern; owner direction 2026-05-20 supersedes PMPL-1.0-or-later policy")
+     (artefacts . ("LICENSE" ; MPL-2.0
+                   "docs/PMPL-NARRATIVE.adoc" ; cultural overlay
+                   "SPDX headers in all .a2ml files")))
 
     ((convention . "Cross-platform builds: Linux primary, Windows secondary")
      (source . "Standing decision sd-004 in STATE.scm")

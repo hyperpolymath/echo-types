@@ -1,4 +1,4 @@
-; SPDX-License-Identifier: PMPL-1.0-or-later
+; SPDX-License-Identifier: MPL-2.0
 ; Intentfile.a2ml — declared future intent for echo-types.
 
 (contractile :kind intent :version 1)
