@@ -114,6 +114,14 @@ coe-D-irr : ∀ {A} {j k : ℕ} (p q : D j A ≡ D k A) (x : D j A) →
             (e : j ≡ k) → p ≡ q → coe p x ≡ coe q x
 coe-D-irr p .p x e refl = refl
 
+-- δ-naturality over the R layer.  Peels the outermost R off both
+-- sides of δ.  Direct corollary of `coe-cong-R` at p := D-+ m n A,
+-- isolated as a lemma so the coassociativity proof can rewrite the
+-- nested `δ` without re-deriving the coe push at every step.
+δ-suc : ∀ m n {A} (x : D (m + n) A) (b : Bool) →
+        δ (suc m) n {A} (x , b) ≡ (δ m n x , b)
+δ-suc m n {A} x b = coe-cong-R (D-+ m n A) x b
+
 ----------------------------------------------------------------------
 -- LAW 1 — counit-right.  e · r = 0 + r = r definitionally, so
 -- δ 0 r = coe refl = id and ε is id: the law is definitional.
@@ -155,25 +163,39 @@ gc-counit-l (suc r) {A} (d , b) = begin
 --   D ((m+n)+p) A --subst +-assoc--> D (m+(n+p)) A --δ m (n+p)-->
 --                  D m (D (n+p) A) --mapD m (δ n p)--> D m (D n (D p A))
 
--- LAW 3 — coassociativity.  OPEN OBLIGATION (F1 not yet passed).
+-- LAW 3 — coassociativity.  Closed 2026-05-20.
 --
--- Spike finding (2026-05-18): the base case (`zero`) and the
--- structural skeleton close; the inductive step has an isolated
--- type-mismatch in the chain that re-expresses
---   mapD (suc m) (δ n p) (δ (suc m) (n+p) (subst (cong suc +-assoc)))
--- back through `coe-cong-R`/`sym` — `m != m + (n + p)` at the
--- penultimate rewrite.  This is a PROOF-ENGINEERING bug, NOT a
--- foundational obstruction: Agda demanded NO K, NO funext, NO
--- postulate anywhere; ℕ-UIP (K-free) is the only non-structural
--- tool, exactly as predicted.  The remaining work is to factor the
--- inductive step through an explicit `δ`-naturality lemma
---   δ (suc m) q (x , b) ≡ (δ m q x , b)   [over the R layer]
--- and a `mapD`/`subst` interchange, rather than the ad-hoc
--- `coe-cong-R ∘ sym` push used above.  Tracked as Gate F1 in
--- docs/echo-types/earn-back-plan.adoc §"Status".  NOT postulated,
--- NOT softened: stated here as the precise open obligation.
---
--- gc-coassoc : ∀ m n p {A} (x : D ((m + n) + p) A) →
---   δ m n (δ (m + n) p x)
---   ≡ mapD m (δ n p)
---       (δ m (n + p) (subst (λ k → D k A) (+-assoc m n p) x))
+-- The inductive step factors cleanly through `δ-suc` (δ-naturality
+-- over the outer R layer) and `subst-D-suc` (subst commutes with the
+-- outer R layer).  Stdlib's `+-assoc (suc m) n p` is *definitionally*
+-- `cong suc (+-assoc m n p)` (recursion on left arg), so the
+-- ℕ-equation proofs on the two sides are syntactically identical and
+-- ℕ-UIP is *not* needed — only ℕ-equation transport along the
+-- structural lemmas.  No K, no funext, no postulate.
+
+gc-coassoc : ∀ m n p {A} (x : D ((m + n) + p) A) →
+  δ m n (δ (m + n) p x)
+  ≡ mapD m (δ n p)
+      (δ m (n + p) (subst (λ k → D k A) (+-assoc m n p) x))
+gc-coassoc zero    n p x       = refl
+gc-coassoc (suc m) n p {A} (x , b) = begin
+  δ (suc m) n (δ (suc m + n) p (x , b))
+    ≡⟨ cong (δ (suc m) n) (δ-suc (m + n) p x b) ⟩
+  δ (suc m) n (δ (m + n) p x , b)
+    ≡⟨ δ-suc m n (δ (m + n) p x) b ⟩
+  (δ m n (δ (m + n) p x) , b)
+    ≡⟨ cong (_, b) (gc-coassoc m n p x) ⟩
+  (mapD m (δ n p) (δ m (n + p) (subst (λ k → D k A) (+-assoc m n p) x)) , b)
+    ≡⟨ sym (cong (mapD (suc m) (δ n p))
+                 (δ-suc m (n + p)
+                        (subst (λ k → D k A) (+-assoc m n p) x) b)) ⟩
+  mapD (suc m) (δ n p)
+    (δ (suc m) (n + p)
+       (subst (λ k → D k A) (+-assoc m n p) x , b))
+    ≡⟨ cong (λ z → mapD (suc m) (δ n p) (δ (suc m) (n + p) z))
+            (sym (subst-D-suc (+-assoc m n p) x b)) ⟩
+  mapD (suc m) (δ n p)
+    (δ (suc m) (n + p)
+       (subst (λ k → D k A) (+-assoc (suc m) n p) (x , b)))
+    ∎
+  where open ≡-Reasoning

@@ -450,6 +450,27 @@ open import EchoStepNDModelF2 using
   ; nd-fibre-not-prop             -- the fibre is not a proposition
   )
 
+-- Pillar F, Gate F1 — the MAKE-OR-BREAK gate (docs/echo-types/
+-- earn-back-plan.adoc §F1). A genuine graded comonad on the
+-- iterated-residue carrier `D r A = r nested R-layers`, with grade
+-- monoid (ℕ, +, 0), Echo as the grade-unit object (D 0 (Echo f y) is
+-- the bare echo), NESTED comultiplication δ : D (m+n) ⇒ D m ∘ D n,
+-- all three graded-comonad laws proved, and a separating witness
+-- showing D 2 is not collapsing to ⊤. --safe --without-K, zero
+-- postulates, no funext. Scope: this earns back the graded-comonad
+-- claim FOR THIS WITNESS ONLY; `EchoGraded` itself remains a
+-- thin-poset reindexing modality per R-2026-05-18.
+open import EchoGradedComonadF1 using
+  ( D                              -- the graded functor
+  ; mapD ; mapD-id ; mapD-∘        -- functor laws
+  ; ε                              -- counit at the unit grade
+  ; δ                              -- NESTED comultiplication
+  ; D2-nontrivial                  -- D 2 is not ⊤ / a prop
+  ; gc-counit-r                    -- counit-right law (definitional)
+  ; gc-counit-l                    -- counit-left law
+  ; gc-coassoc                     -- coassociativity law (the F1 keystone)
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
