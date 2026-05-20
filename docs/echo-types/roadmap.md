@@ -137,15 +137,22 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   CNO-zero-energy claims vacuous. Infinite-domain
   (`ProgramState = ℕ → ℕ`) case explicitly out of scope.
   `docs/ECHO-CNO-BRIDGE.adoc` swept to remove four overclaim sites.
-- **[partial]** Buchholz extended order `_<ᵇ⁺_` (2026-04-28).
-  `Ordinal.Buchholz.OrderExtended.agda` adds the two K-restricted
-  shared-binder lex constructors (`<ᵇ⁺-ψα`, `<ᵇ⁺-+2`) on top of
-  the K-free core `_<ᵇ_`, with explicit equality witnesses to
-  keep implicits pairwise distinct. `<ᵇ⁺-irrefl` and `<ᵇ⁺-trans`
-  proved (mixed cases via four `extend-{lhs, rhs}` helpers).
-  Well-foundedness for `_<ᵇ⁺_` is **OPEN** — see
-  `docs/echo-types/buchholz-extended-wf.md` for the two design
-  routes (single-mutual or rank-embedding via Brouwer).
+- **[partial]** Buchholz extended order `_<ᵇ⁺_` (2026-04-28,
+  updated 2026-05-20). `Ordinal.Buchholz.OrderExtended.agda` adds
+  the two K-restricted shared-binder lex constructors (`<ᵇ⁺-ψα`,
+  `<ᵇ⁺-+2`) on top of the K-free core `_<ᵇ_`, with explicit
+  equality witnesses to keep implicits pairwise distinct.
+  `<ᵇ⁺-irrefl` and `<ᵇ⁺-trans` proved (mixed cases via four
+  `extend-{lhs, rhs}` helpers).
+  Well-foundedness in **budgeted form** for `_<ᵇ⁺_` landed
+  2026-05-20: `Ordinal.Buchholz.OrderExtendedBudget` ships
+  `wf-<ᵇ⁺ᵇ` (mirrors `wf-<ᵇʳᶠᵇ`). The **unbudgeted** form is
+  CLOSED-IMPOSSIBLE for the current `_<ᵇ_` — see
+  `docs/echo-types/buchholz-rank-obstruction.adoc` for the
+  structural impossibility (`<ᵇ-+Ω` ordinal unsoundness)
+  refuting all five plausible routes. The historical "Route A /
+  Route B" framing in `buchholz-extended-wf.md` is now
+  superseded.
 - **[unblocked]** Add example-library Agda files matching
   `examples.md`: start with examples 1–4 already in-suite, then
   example 7 (ordinal collapse is in `EchoOrdinal`); examples 5, 6,
@@ -242,15 +249,18 @@ tractable today:
 
 1. **Theory: axis 2 formal definition** — 1–2 days.
    Unblocks `EchoApprox.agda`, which is required for examples 6 and 10.
-2. ~~**Agda: `Echo-comp-iso` + cancellation**~~ — landed. Accumulation
-   iso plus both cancellation maps now live in `Echo.agda`; the full
-   cancellation iso (with round-trips) is the first deferred item —
-   needs a triangle-identity coherence (see composition.md §3).
-3. ~~**Agda: pentagon coherence for `Echo-comp-iso`**~~ — projection
-   pentagon landed as `Echo-comp-iso-pent-{B, echo}`. Full
-   Σ-associativity iso between the two nested Σ-shapes is one of
-   two next composition-track follow-ups (the other is
-   full-cancel-iso round-trips, which needs a triangle identity).
+2. ~~**Agda: `Echo-comp-iso` + cancellation**~~ — **fully landed**.
+   Accumulation iso (`Echo-comp-iso`), both cancellation maps, plus
+   **full cancellation iso with round-trips** (`cancel-iso-{to, from,
+   from-to, to-from}` + packaging `Echo.cancel-iso : ... ↔ ...`
+   parameterised by `s-left`, `s-right`, and both triangle
+   identities) live in `Echo.agda`. All five pinned in `Smoke.agda`.
+3. ~~**Agda: pentagon coherence for `Echo-comp-iso`**~~ —
+   **fully landed**. Projection pentagon (`Echo-comp-iso-pent-{B,
+   echo}`) and the full Σ-associativity iso between the two nested
+   Σ-shapes (`Echo-comp-pent-Σ-assoc-{to, from, from-to, to-from}` +
+   equivalence-record packaging `Echo-comp-pent-Σ-assoc : ... ↔ ...`)
+   are both in `Echo.agda`. All pinned in `Smoke.agda`.
 4. ~~**Agda: unbudgeted `_<ᵇʳᶠ_` WF on the ordinal track**~~ —
    **CLOSED-IMPOSSIBLE 2026-05-20.** Eliminating the explicit ℕ
    budget from `wf-<ᵇʳᶠᵇ` (or analogously `wf-<ᵇ⁺ᵇ`, newly landed)
@@ -262,23 +272,39 @@ tractable today:
    budgeted forms (`_<ᵇʳᶠᵇ_`, `_<ᵇ⁺ᵇ_`) are the canonical
    well-founded carriers; downstream consumers should use them.
 5. **Gate 1 adjacency refresh against the new taxonomy** — 1 day.
-   Cheap coherence pass on existing docs.
+   Cheap coherence pass on existing docs. Cross-check each of the
+   13 notes in `docs/adjacency/` against the 8 axes in `taxonomy.md`
+   and flag any neighbour whose identity claim should be re-evaluated.
 6. **Theory: pick one axis-8 refinement and formalise it** — 1–2
    days. Four candidates in `taxonomy.md` §8 (cost-indexed echo,
    graded access modality, decidability-respecting echo, witness-
    search abstract machine). Choosing commits the repo to one
    formal handle on computational vs information-theoretic access.
-7. **Agda: `EchoApprox.agda`** — 2–3 days. First artifact of axis 2.
+7. ~~**Agda: `EchoApprox.agda`**~~ — **landed**.
+   First artifact of axis 2. Ships `EchoR ε f y = Σ A (λ x → dist
+   (f x) y ≤ ε)` parametric over a `Tolerance` monoid and a
+   `PseudoMetric`, with three headline lemmas: `echo-approx-intro`
+   (exact ⇒ zero-ε), `echo-approx-relax` (monotone in ε),
+   `echo-approx-compose` (additive composition under a non-expansive
+   outer leg). Wired into `All.agda` + pinned in `Smoke.agda`.
 8. **Applications chapter: compiler-analysis residue** — 2 days.
    Largest reader value; entirely unblocked.
-9. **Per-decoration composition lemmas** — 1 day each. Useful
-   coverage. *Grade case landed* (`EchoGraded.degrade-compose`,
-   `degrade-via-join`); linear / indexed / role / modal still open.
+9. ~~**Per-decoration composition lemmas**~~ — **sweep complete**
+   (2026-04-28). All five decorations landed:
+   `EchoGraded.degrade-compose`, `EchoLinear.degradeMode-compose`,
+   `EchoIndexed.map-role-indexed-comp`,
+   `EchoChoreo.applyChoreo-{comp, compose, via-join}` along the
+   choreographic-reachability order `_⊑c_`, and
+   `EchoEpistemic.knowledge-monotone-{comp, id}`. Each follows the
+   same recipe (decoration order → propositionality → join →
+   factoring-free compose → via-join restatement). All headlines
+   pinned in `Smoke.agda`.
 
-Steps 1 and 5–6 are ~5–6 days of honest work that require nothing
-from proof assistants, external repos, or the blocked Buchholz path.
-Steps 5–7 extend into Agda but depend only on infrastructure we
-already have in-suite.
+The remaining open work in this list is **steps 1, 5, 6, 8**. Steps 1
+and 5–6 are ~3–4 days of honest work that require nothing from proof
+assistants, external repos, or the blocked Buchholz path. Step 5 is
+the natural next coherence pass; steps 6 and 8 extend into Agda or
+prose but depend only on infrastructure we already have in-suite.
 
 Everything **[gated]** waits for its unblocker. The pack above gives
 3–4 weeks of disciplined parallel work without touching the remaining
