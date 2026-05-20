@@ -180,13 +180,125 @@ this directory is the intended structure.
 | File | Neighbour
 
 | `quotients.adoc`            | Quotient types / setoid quotients
+| `setoid-quotients.adoc`     | Setoid quotients (extrinsic, named-relation variant)
 | `galois-connections.adoc`   | Galois connections / abstract interpretation
 | `refinement-types.adoc`     | Refinement types (Σ-relevant and propositional variants)
 | `information-flow.adoc`     | Information-flow non-interference (Goguen-Meseguer lineage)
 | `provenance.adoc`           | Provenance / data lineage
+| `provenance-semirings.adoc` | K-provenance (Green-Karvounarakis-Tannen semirings)
 | `modal-type-theories.adoc`  | QTT, Reed-Pfenning modal calculi, adjoint modalities
 | `hott-fibers.adoc`          | HoTT homotopy fibers (cubical and Book HoTT)
+| `cubical-systems.adoc`      | Cubical Agda, RedPRL, redtt, cooltt
+| `lenses-and-optics.adoc`    | Lenses, prisms, profunctor optics
+| `INSERTION_NOTE.adoc`       | _Meta_: doc-surgery instructions for `gate-1-distinct-phenomenon.adoc`
+| `README.adoc`               | _Meta_: this file (index + argument families + axis-coverage matrix)
 |===
+
+== Axis coverage matrix (Gate 1 refresh 2026-05-20)
+
+Cross-reference of each adjacency note against the 8 taxonomy axes
+defined in `docs/echo-types/taxonomy.md`. Refreshed 2026-05-20 — most
+notes predate axis 8 (added with the `EchoDecidable`/`EchoFiberCount`
+landings) and therefore do not currently engage it; the open ○
+markings below flag where axis-8 implications exist but are not
+formally argued.
+
+Legend: ● primary axis (load-bearing in the note's distinctness
+claim); ○ axis-8 implication exists but is open / post-dates the
+note; — axis not engaged.
+
+[cols="3,^1,^1,^1,^1,^1,^1,^1,^1", options="header"]
+|===
+| Note
+| 1 Ext/Int
+| 2 Exact/Approx
+| 3 Loc/Glob
+| 4 Canon/Pres
+| 5 Comp/Non
+| 6 Stat/Dyn
+| 7 PR/PI
+| 8 IT/Comp
+
+| cubical-systems       | ● | — | — | ● | — | — | ● | —
+| galois-connections    | — | — | — | — | ● | — | ● | —
+| hott-fibers           | ● | — | — | — | — | — | ● | —
+| information-flow      | — | — | — | — | — | ● | ● | ○
+| lenses-and-optics     | — | — | — | ● | ● | — | ● | —
+| modal-type-theories   | — | — | — | — | ● | — | ● | ○
+| provenance            | — | — | — | — | — | — | ● | —
+| provenance-semirings  | — | — | — | — | ● | — | ● | ○
+| quotients             | ● | — | — | — | ● | — | ● | —
+| refinement-types      | — | — | — | — | — | — | ● | —
+| setoid-quotients      | ● | — | — | ● | — | — | ● | —
+|===
+
+=== Observations from the matrix
+
+* *Axis 7 (proof-relevant vs proof-irrelevant) is universal.* Every
+  one of the 11 substantive notes routes its distinctness through
+  axis 7. This is the "truncation argument" family's load-bearing
+  axis — the formal certificate is `echo-not-prop`.
+* *Axis 5 (compositional vs non-compositional) carries the 2-cell
+  argument.* Galois, quotients, modal-type-theories, lenses-and-
+  optics, provenance-semirings all engage axis 5 — these are the
+  notes whose distinctness arguments route through composition
+  structure (`EchoCategorical`, the per-decoration composition
+  sweep, the `Echo-comp-iso` pentagon).
+* *Axis 1 (extensional vs intensional)* shows up in four notes —
+  the ones contrasting echo's intensional-witness stance against
+  a neighbour's extensional / propositional collapse (cubical,
+  hott-fibers, quotients, setoid-quotients).
+* *Axis 4 (canonical vs presentation-dependent)* picks up three
+  notes — cubical (equality choice), lenses-and-optics (get/put
+  split), setoid-quotients (named equivalence vs implicit kernel).
+* *Axes with no neighbour coverage* — see §"Gaps" below.
+
+=== Gaps
+
+* *Axis 2 (exact vs approximate)* has *no* adjacency note. The
+  axis-2 artifact is `EchoApprox.agda` (parametric pseudo-metric,
+  three headline lemmas); its closest neighbour analogue — e.g.
+  metric category theory, V-categories, weighted limits — is
+  unwritten. Candidate future note: `metric-categories.adoc`.
+* *Axis 3 (local vs global)* has no adjacency note. The closest
+  candidates are sheaf-theoretic / local-trivialisation framings;
+  not yet written.
+* *Axis 6 (static vs dynamic)* has only one note (`information-
+  flow`, via knowledge update). Other dynamic-typing or temporal
+  neighbours (reactive / temporal logic / coalgebraic process
+  theory) are unwritten.
+* *Axis 8 (information-theoretic vs computational access)* has
+  *no* formal neighbour treatment. Three notes have open
+  implications, flagged ○ above:
+  ** `information-flow.adoc` — cryptographic threat models route
+     through axis 8 when low observers are computationally bounded.
+     Not addressed in the current relational framing.
+  ** `modal-type-theories.adoc` — QTT-style quantitative
+     annotations are proxies for resource control (taxonomy
+     §"Axis 8" lines 236–238) but are not full
+     computational-access tracking. The note treats QTT as a
+     decoration neighbour (axis 5/7), not an axis-8 neighbour.
+  ** `provenance-semirings.adoc` — K-semirings with a cost-tracking
+     interpretation (e.g. tropical `(min, +)`-semirings) would
+     engage axis 8. The current note treats K-provenance as a
+     decoration neighbour (axis 5/7).
+
+  Candidate future notes that *would* directly engage axis 8:
+  `cryptographic-one-way-functions.adoc` (witness inhabitedness vs
+  poly-time witness extraction); `cost-monads.adoc` (resource
+  monads à la Hindley-Milner with cost effects); `complexity-classes
+  -as-modalities.adoc` (P/NP/PSPACE as access modalities).
+
+=== Stale claims flagged for re-evaluation
+
+None of the 11 substantive notes' verdicts is *incorrect* against
+the current taxonomy. Three notes carry framings that would benefit
+from explicit axis-8 disclaimers (the three ○ rows). No note's
+distinctness claim is invalidated by the post-hoc addition of axis
+8; the omission is one of *coverage*, not *contradiction*.
+
+The `INSERTION_NOTE.adoc` describes a doc-surgery operation. As a
+meta-note it has no axis engagement; retained for traceability.
 
 == What's formalised, what's not
 
