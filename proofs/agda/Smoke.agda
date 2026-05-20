@@ -34,16 +34,20 @@ open import Echo using
   )
 
 -- AntiEcho thin slice (theory/antiecho — Σ-dual of Echo). Lands the
--- carrier, per-element disjointness, introduction, and source-side
--- map-over. Distinct from `EchoFiberTriangulation.CoEcho` (which is
--- the trivial opposite-orientation fibre `∃ x . y ≡ f x`); see
--- `coecho.md` §6 for the naming rationale. Partition-with-decidability
--- and tropical decomposition deferred to follow-up slices.
+-- carrier, per-element disjointness, introduction, source-side
+-- map-over, and per-element partition with decidability of `f x ≡ y`
+-- (obligation 5). Distinct from `EchoFiberTriangulation.CoEcho`
+-- (which is the trivial opposite-orientation fibre `∃ x . y ≡ f x`);
+-- see `coecho.md` §6 for the naming rationale. Tropical decomposition
+-- lives in `AntiEchoTropical.agda`; the generic-codomain lift of it
+-- remains deferred.
 open import AntiEcho using
   ( AntiEcho
   ; antiecho-intro
   ; antiecho-disjoint
   ; antiecho-map-over
+  ; antiecho-partition-dec
+  ; antiecho-partition-codomain-dec
   )
 
 -- Pillar A of docs/echo-types/establishment-plan.adoc: the
@@ -520,6 +524,17 @@ open import AntiEchoTropical using
   ; optimality-as-antiecho-flavour-from
   ; tropdecomp-antiecho-to
   ; tropdecomp-antiecho-from
+  )
+
+-- Generic-codomain lift of the tropical decomposition. Same headline
+-- theorems as `AntiEchoTropical` above, but parameterised by an
+-- abstract `OrderedCodomain` interface (carrier B, ≤/<, ≤⇒¬<, ¬<⇒≤)
+-- rather than fixed to ℕ. Sanity instance `ℕ-ordered-codomain`
+-- pinned so the interface is demonstrably inhabitable.
+open import AntiEchoTropicalGeneric using
+  ( OrderedCodomain
+  ; ℕ-ordered-codomain
+  ; module Generic
   )
 
 open import EchoIntegration using
