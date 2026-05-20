@@ -428,6 +428,22 @@ open import Ordinal.Brouwer.Phase13 using
   ; ⊕-mono-<-right
   )
 
+-- ω-power infrastructure for path-1 of the Buchholz rank-monotonicity
+-- unblock (docs/echo-types/buchholz-rank-obstruction.adoc).  Limit-
+-- shaped replacement for `nat-to-ord (suc n)` successor stacks.
+open import Ordinal.Brouwer.OmegaPow using
+  ( _·ℕ_
+  ; ω^_
+  ; ω^0≡one
+  ; ·ℕ-zero
+  ; ·ℕ-suc
+  ; one·ℕ≡nat-to-ord
+  ; ω^_-pos
+  ; X≤′oz⊕X
+  ; ω^-strict-mono-suc
+  ; ω^-step
+  )
+
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
