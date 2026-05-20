@@ -17,17 +17,25 @@
 -- This thin slice lands obligations 1–4 from `coecho.md` §5 (renamed
 -- `antiecho-*`): the carrier, per-element disjointness against Echo,
 -- introduction from any witnessed miss, and contravariant `map-over`
--- along the source. The partition-with-decidability lemma and the
--- tropical decomposition (Echo × Π AntiEcho ≃ IsArgmin) are deferred
--- to follow-up slices; see `coecho.md` §5 obligations 5–6.
+-- along the source. Obligation 5 (the partition-with-decidability
+-- lemma) lands below as `antiecho-partition-dec` and the
+-- codomain-decidability variant `antiecho-partition-codomain-dec`.
+-- Obligation 6 (the tropical decomposition `Echo × Π AntiEcho ≃
+-- IsArgmin`) lives in `AntiEchoTropical.agda`; the generic-codomain
+-- form (lift from the concrete ℕ score to an abstract ordered codomain
+-- interface) remains deferred.
 
 module AntiEcho where
 
 open import Level using (Level; _⊔_)
 open import Data.Empty using (⊥)
 open import Data.Product.Base using (Σ; _,_)
+open import Data.Sum.Base using (_⊎_; inj₁; inj₂)
 open import Function.Base using (_∘_)
 open import Relation.Binary.PropositionalEquality using (_≡_; _≢_)
+open import Relation.Nullary.Decidable.Core using (Dec; yes; no)
+
+open import Echo using (Echo)
 
 ----------------------------------------------------------------------
 -- antiecho-def — the carrier.
@@ -91,3 +99,38 @@ antiecho-map-over :
   {f : A → B} {y : B}
   (g : A' → A) → AntiEcho (f ∘ g) y → AntiEcho f y
 antiecho-map-over g (x , np) = g x , np
+
+----------------------------------------------------------------------
+-- antiecho-partition-dec — every source element classifies to one
+-- side, given decidability of `f x ≡ y`.
+--
+-- The companion to `antiecho-disjoint`. Disjointness ruled out
+-- `Echo` and `AntiEcho` *coinciding* on a shared `x`; this lemma
+-- says that for *any* `x`, decidability of `f x ≡ y` gives an actual
+-- classification of `x` into one side or the other. Together they
+-- exhibit `A` as the disjoint union of the Echo-side and the
+-- AntiEcho-side parameterised by `y`.
+--
+-- The asymmetric joint statement `Echo f y → AntiEcho f y → ⊥`
+-- (where the two sides carry *different* domain witnesses) is
+-- genuinely *not* a theorem and is not what is landed here:
+-- consider `f : Bool → Bool` with `f true = true` and
+-- `f false = false`; both `Echo f true` (via `(true, refl)`) and
+-- `AntiEcho f true` (via `(false, false≢true)`) are inhabited, so
+-- the joint statement is refuted by the model. The correct content
+-- of "obligation 5" is the per-element classification below.
+
+antiecho-partition-dec :
+  ∀ {a b} {A : Set a} {B : Set b} {f : A → B} {y : B}
+  (x : A) → Dec (f x ≡ y) → Echo f y ⊎ AntiEcho f y
+antiecho-partition-dec x (yes p) = inj₁ (x , p)
+antiecho-partition-dec x (no  np) = inj₂ (x , np)
+
+-- Codomain-decidability variant: when *every* `b ≡ y` is decidable
+-- (typically because `B` has decidable equality), the classification
+-- closes uniformly over `f x`.
+
+antiecho-partition-codomain-dec :
+  ∀ {a b} {A : Set a} {B : Set b} {f : A → B} {y : B}
+  → (∀ b → Dec (b ≡ y)) → (x : A) → Echo f y ⊎ AntiEcho f y
+antiecho-partition-codomain-dec dec? x = antiecho-partition-dec x (dec? _)
