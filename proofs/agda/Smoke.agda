@@ -302,6 +302,31 @@ open import EchoTropical using
   ; distinct-candidates-same-visible-distinct-echo
   )
 
+-- AntiEcho × EchoTropical (theory/antiecho-tropical-decompose):
+-- the headline "Echo × Π-bound" decomposition of TropEcho /
+-- IsArgmin from `coecho.md` §3 / §5 obligation 6. Both
+-- round-trips are `refl` once IsArgmin's Σ-shape is unfolded;
+-- the AntiEcho-flavoured corollary expresses the Π-bound as
+-- Π of negative data over the candidate set (Π-form AntiEcho,
+-- `coecho.md` §1(c)). Pinned so a rename or a slide back to
+-- ad-hoc tropical decoration fails CI fast.
+open import AntiEchoTropical using
+  ( antiecho-tropical-decompose-to
+  ; antiecho-tropical-decompose-from
+  ; antiecho-tropical-decompose-to-from
+  ; antiecho-tropical-decompose-from-to
+  ; antiecho-tropical-decompose
+  ; isargmin-decompose-to
+  ; isargmin-decompose-from
+  ; isargmin-decompose
+  ; ≤⇒¬<
+  ; ¬<⇒≤
+  ; optimality-as-antiecho-flavour-to
+  ; optimality-as-antiecho-flavour-from
+  ; tropdecomp-antiecho-to
+  ; tropdecomp-antiecho-from
+  )
+
 open import EchoIntegration using
   ( knowledge-preserved-under-choreo
   ; merged-at-residue
