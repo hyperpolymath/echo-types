@@ -72,10 +72,11 @@ open import Ordinal.Brouwer.Phase13               using
   ; ⊕-mono-≤-right
   ; ⊕-mono-<-right
   ; ⊕-mono-≤-left
+  ; ⊕-assoc-≥
   ; f-in-lim′
   )
 
-open import Data.Nat.Base                         using (_≤_; _<_; z≤n; s≤s)
+open import Data.Nat.Base                         using (_≤_; _<_; _+_; z≤n; s≤s)
 
 ----------------------------------------------------------------------
 -- Finite iterated product (ℕ exponent)
@@ -292,3 +293,109 @@ X≤′oz⊕X {olim g}  = λ k →
   ≤′-trans {osuc (ω^ m)} {ω^ (suc m)} {ω^ n}
     (ω^-strict-mono-suc m)
     (ω^-mono-≤ p)
+
+----------------------------------------------------------------------
+-- Bridging `_·ℕ_` with `_+_`: `α ·ℕ k ⊕ α ·ℕ m ≤′ α ·ℕ (m + k)`
+----------------------------------------------------------------------
+
+-- Propositional equality `α ·ℕ k ⊕ α ·ℕ m ≡ α ·ℕ (m + k)` would
+-- require function extensionality on the `olim` limb of `_⊕_`.  The
+-- `≤′` direction we need is funext-free and follows from
+-- ⊕-associativity (via `Phase13.⊕-assoc-≥`) plus left-monotonicity of
+-- `_⊕_`.
+--
+-- Note the argument order on the LHS (`k` first, then `m`) and the
+-- argument order on the RHS (`m + k`).  This asymmetry is what makes
+-- the recursion work over left-recursive `_+_` on ℕ paired with
+-- right-recursive `_·ℕ_` on `Ord`.
+--
+-- Recursion is on `m`:
+--   * m = 0     : LHS `α ·ℕ k ⊕ α ·ℕ 0 = α ·ℕ k ⊕ oz = α ·ℕ k`;
+--                 RHS `α ·ℕ (0 + k) = α ·ℕ k`.  `≤′-refl`.
+--   * m = suc m' :
+--       LHS = `α ·ℕ k ⊕ ((α ·ℕ m') ⊕ α)`
+--       RHS = `(α ·ℕ (m' + k)) ⊕ α`
+--     ⊕-assoc-≥ flips to `(α ·ℕ k ⊕ α ·ℕ m') ⊕ α`, then left-mono of
+--     ⊕ over the IH `α ·ℕ k ⊕ α ·ℕ m' ≤′ α ·ℕ (m' + k)` closes it.
+
+·ℕ-add-≤ : ∀ {α} k m → (α ·ℕ k) ⊕ (α ·ℕ m) ≤′ α ·ℕ (m + k)
+·ℕ-add-≤ {α} k zero       = ≤′-refl {α ·ℕ k}
+·ℕ-add-≤ {α} k (suc m')   =
+  ≤′-trans
+    {(α ·ℕ k) ⊕ ((α ·ℕ m') ⊕ α)}
+    {((α ·ℕ k) ⊕ (α ·ℕ m')) ⊕ α}
+    {(α ·ℕ (m' + k)) ⊕ α}
+    (⊕-assoc-≥ {α ·ℕ k} {α ·ℕ m'} {α})
+    (⊕-mono-≤-left {(α ·ℕ k) ⊕ (α ·ℕ m')} {α ·ℕ (m' + k)} {α}
+       (·ℕ-add-≤ {α} k m'))
+
+----------------------------------------------------------------------
+-- Additive principal at ω^(suc n)
+----------------------------------------------------------------------
+
+-- The keystone consumer.  For any α, β below ω^(suc n), the sum
+-- α ⊕ β is also strictly below ω^(suc n) — i.e., ω^(suc n) is closed
+-- under ordinal addition.  This is the load-bearing fact that makes
+-- the WfCNF-restricted Buchholz rank-mono work for the plus-side
+-- constructors (`<ᵇ-+Ω`, `<ᵇ-+ψ`, `<ᵇ-+1`).
+--
+-- Proof sketch.  By the recursive shape of `_<′_` against an `olim`:
+--
+--   α <′ ω^(suc n)  ≡  Σ kα. α <′ ω^ n ·ℕ kα
+--   β <′ ω^(suc n)  ≡  Σ kβ. β <′ ω^ n ·ℕ kβ
+--
+-- Pick branch K = kβ + kα for the target.  Then:
+--
+--   α ⊕ β       ≤′  (ω^ n ·ℕ kα) ⊕ β            (left-mono on α≤′…)
+--                              <′  (ω^ n ·ℕ kα) ⊕ (ω^ n ·ℕ kβ)   (right-strict-mono on β<′…)
+--                              ≤′  ω^ n ·ℕ (kβ + kα)             (·ℕ-add-≤ kα kβ)
+--
+-- Each step uses tools already in this module's prerequisite stack.
+-- The crucial non-strict-vs-strict bookkeeping: the left-mono leg is
+-- weakened (α ≤′ ω^ n ·ℕ kα via `≤′-self-osuc`), and strictness
+-- arrives exclusively from the right-strict-mono leg using
+-- β <′ ω^ n ·ℕ kβ.  This avoids the false strict left-mono of `_⊕_`.
+
+additive-principal : ∀ {n α β}
+  → α <′ ω^ (suc n)
+  → β <′ ω^ (suc n)
+  → α ⊕ β <′ ω^ (suc n)
+additive-principal {n} {α} {β} (kα , sα) (kβ , sβ) = kβ + kα , proof
+  where
+  -- α ≤′ ω^ n ·ℕ kα by weakening the strict witness.
+  α≤′kα : α ≤′ ω^ n ·ℕ kα
+  α≤′kα = ≤′-trans {α} {osuc α} {ω^ n ·ℕ kα}
+            (≤′-self-osuc α)
+            sα
+
+  -- α ⊕ β ≤′ (ω^ n ·ℕ kα) ⊕ β by left-mono of `_⊕_` on the
+  -- weakened-strict α≤′(ω^ n ·ℕ kα).
+  step1 : α ⊕ β ≤′ (ω^ n ·ℕ kα) ⊕ β
+  step1 = ⊕-mono-≤-left {α} {ω^ n ·ℕ kα} {β} α≤′kα
+
+  -- (ω^ n ·ℕ kα) ⊕ β <′ (ω^ n ·ℕ kα) ⊕ (ω^ n ·ℕ kβ) by right-strict-
+  -- mono of `_⊕_` on β <′ ω^ n ·ℕ kβ.
+  step2 : osuc ((ω^ n ·ℕ kα) ⊕ β) ≤′ (ω^ n ·ℕ kα) ⊕ (ω^ n ·ℕ kβ)
+  step2 = ⊕-mono-<-right {ω^ n ·ℕ kα} {β} {ω^ n ·ℕ kβ} sβ
+
+  -- (ω^ n ·ℕ kα) ⊕ (ω^ n ·ℕ kβ) ≤′ ω^ n ·ℕ (kβ + kα) by `·ℕ-add-≤`.
+  step3 : (ω^ n ·ℕ kα) ⊕ (ω^ n ·ℕ kβ) ≤′ ω^ n ·ℕ (kβ + kα)
+  step3 = ·ℕ-add-≤ {ω^ n} kα kβ
+
+  -- Chain: osuc (α ⊕ β) ≤′ osuc ((ω^ n ·ℕ kα) ⊕ β)
+  --        ≤′ (ω^ n ·ℕ kα) ⊕ (ω^ n ·ℕ kβ)
+  --        ≤′ ω^ n ·ℕ (kβ + kα).
+  -- The first leg uses the `osuc/osuc` clause of `_≤′_`: it reduces
+  -- to step1.
+  proof : osuc (α ⊕ β) ≤′ ω^ n ·ℕ (kβ + kα)
+  proof = ≤′-trans
+            {osuc (α ⊕ β)}
+            {(ω^ n ·ℕ kα) ⊕ (ω^ n ·ℕ kβ)}
+            {ω^ n ·ℕ (kβ + kα)}
+            (≤′-trans
+              {osuc (α ⊕ β)}
+              {osuc ((ω^ n ·ℕ kα) ⊕ β)}
+              {(ω^ n ·ℕ kα) ⊕ (ω^ n ·ℕ kβ)}
+              step1
+              step2)
+            step3

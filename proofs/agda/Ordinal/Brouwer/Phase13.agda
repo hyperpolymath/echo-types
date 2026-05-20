@@ -293,3 +293,43 @@ mutual
 -- for any finite n, `n + ω = ω`, so the inequality `α + γ < β + γ`
 -- fails when γ is a limit and the gap `β - α` is finite.  Only the
 -- non-strict `⊕-mono-≤-left` above is sound.
+
+----------------------------------------------------------------------------
+-- Associativity of `_⊕_` (both directions, in `≤′` form)
+----------------------------------------------------------------------------
+
+-- Propositional `(A ⊕ B) ⊕ C ≡ A ⊕ (B ⊕ C)` requires function
+-- extensionality on the `olim` limb (the two underlying ℕ-indexed
+-- functions agree pointwise but the binders are at different depths
+-- of the right-recursive `_⊕_` definition).  Both `≤′` directions
+-- are funext-free and suffice for downstream consumers.
+--
+-- Each direction is a structural recursion on `C`:
+--   * C = oz       : both sides reduce to `A ⊕ B`; ≤′-refl.
+--   * C = osuc C'  : both sides are osuc-wrapped sub-sums; the
+--                    `osuc/osuc` clause of `_≤′_` collapses to the IH.
+--   * C = olim g   : both sides are limits indexed by g; branch-by-
+--                    branch IH combined with `f-in-lim′`.
+
+⊕-assoc-≤ : ∀ {A B C} → (A ⊕ B) ⊕ C ≤′ A ⊕ (B ⊕ C)
+⊕-assoc-≤ {A} {B} {oz}      = ≤′-refl {A ⊕ B}
+⊕-assoc-≤ {A} {B} {osuc C'} = ⊕-assoc-≤ {A} {B} {C'}
+⊕-assoc-≤ {A} {B} {olim g}  = λ k →
+  ≤′-trans
+    {(A ⊕ B) ⊕ g k}
+    {A ⊕ (B ⊕ g k)}
+    {A ⊕ (B ⊕ olim g)}
+    (⊕-assoc-≤ {A} {B} {g k})
+    (⊕-mono-≤-right {A} {B ⊕ g k} {B ⊕ olim g}
+      (⊕-mono-≤-right {B} {g k} {olim g} (f-in-lim′ g k)))
+
+⊕-assoc-≥ : ∀ {A B C} → A ⊕ (B ⊕ C) ≤′ (A ⊕ B) ⊕ C
+⊕-assoc-≥ {A} {B} {oz}      = ≤′-refl {A ⊕ B}
+⊕-assoc-≥ {A} {B} {osuc C'} = ⊕-assoc-≥ {A} {B} {C'}
+⊕-assoc-≥ {A} {B} {olim g}  = λ k →
+  ≤′-trans
+    {A ⊕ (B ⊕ g k)}
+    {(A ⊕ B) ⊕ g k}
+    {(A ⊕ B) ⊕ olim g}
+    (⊕-assoc-≥ {A} {B} {g k})
+    (f-in-lim′ (λ j → (A ⊕ B) ⊕ g j) k)
