@@ -61,6 +61,8 @@ open import EchoRelModel        -- Pillar D (scaffold)
 open import EchoPullbackUnivF4  -- Gate F4 PASSED (funext-qualified UP)
 open import EchoStepNDModelF2   -- Gate F2 PASSED (StepND second model)
 open import EchoGradedComonadF1 -- Gate F1 PASSED (graded comonad on iterated-residue)
+open import EchoGradedComonadInterface -- Gate F3 phase 1 (abstract record)
+open import EchoGradedComonadInstance1 -- Gate F3 phase 1 (F1 as record-inhabitant)
 
 -- Foundation P1: external-fibre triangulation. Echo agrees with the
 -- standard library's OWN independently-authored notions

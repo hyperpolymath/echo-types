@@ -488,6 +488,20 @@ open import EchoGradedComonadF1 using
   ; gc-coassoc                     -- coassociativity law (the F1 keystone)
   )
 
+-- Pillar F, Gate F3 phase 1 (docs/echo-types/earn-back-plan.adoc §F3).
+-- The abstract `GradedComonadStructure` record (grade monoid + graded
+-- functor + counit + nested comultiplication + monoid laws + functor
+-- laws + comonad laws, with NO ⊑-prop-equivalent field) and the F1
+-- instance packaged into it. F3 PASSES when a second
+-- non-isomorphic-grade-monoid instance lands (phase 2, separate PR);
+-- this phase ships the interface and instance 1 only.
+open import EchoGradedComonadInterface using
+  ( GradedComonadStructure          -- the abstract record
+  )
+open import EchoGradedComonadInstance1 using
+  ( nat-instance                    -- F1 packaged as record-inhabitant at (ℕ, +, 0)
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
