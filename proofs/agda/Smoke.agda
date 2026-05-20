@@ -34,16 +34,20 @@ open import Echo using
   )
 
 -- AntiEcho thin slice (theory/antiecho — Σ-dual of Echo). Lands the
--- carrier, per-element disjointness, introduction, and source-side
--- map-over. Distinct from `EchoFiberTriangulation.CoEcho` (which is
--- the trivial opposite-orientation fibre `∃ x . y ≡ f x`); see
--- `coecho.md` §6 for the naming rationale. Partition-with-decidability
--- and tropical decomposition deferred to follow-up slices.
+-- carrier, per-element disjointness, introduction, source-side
+-- map-over, and per-element partition with decidability of `f x ≡ y`
+-- (obligation 5). Distinct from `EchoFiberTriangulation.CoEcho`
+-- (which is the trivial opposite-orientation fibre `∃ x . y ≡ f x`);
+-- see `coecho.md` §6 for the naming rationale. Tropical decomposition
+-- lives in `AntiEchoTropical.agda`; the generic-codomain lift of it
+-- remains deferred.
 open import AntiEcho using
   ( AntiEcho
   ; antiecho-intro
   ; antiecho-disjoint
   ; antiecho-map-over
+  ; antiecho-partition-dec
+  ; antiecho-partition-codomain-dec
   )
 
 -- Pillar A of docs/echo-types/establishment-plan.adoc: the
@@ -488,6 +492,28 @@ open import EchoGradedComonadF1 using
   ; gc-coassoc                     -- coassociativity law (the F1 keystone)
   )
 
+-- Pillar F, Gate F3 — PASSED (docs/echo-types/earn-back-plan.adoc §F3).
+-- The abstract `GradedComonadStructure` record (grade monoid + graded
+-- functor + counit + nested comultiplication + monoid laws + functor
+-- laws + comonad laws, with NO ⊑-prop-equivalent field) plus TWO
+-- non-isomorphic-grade-monoid instances:
+--   * `nat-instance`  at the COMMUTATIVE  monoid (ℕ, +, 0)
+--   * `list-instance` at the NON-COMMUTATIVE monoid (List Tag, ++, [])
+-- The non-isomorphism is witnessed by `tag-list-non-commutative`
+-- (one direction: only a non-commutative monoid satisfies it).
+open import EchoGradedComonadInterface using
+  ( GradedComonadStructure          -- the abstract record
+  )
+open import EchoGradedComonadInstance1 using
+  ( nat-instance                    -- F1 packaged as record-inhabitant at (ℕ, +, 0)
+  )
+open import EchoGradedComonadInstance2 using
+  ( Tag                             -- two-element grade index
+  ; tag-list-non-commutative        -- monoid non-isomorphism witness
+  ; D-nontrivial                    -- D (smol ∷ big ∷ []) is non-trivial
+  ; list-instance                   -- the second graded-comonad instance
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
@@ -520,6 +546,17 @@ open import AntiEchoTropical using
   ; optimality-as-antiecho-flavour-from
   ; tropdecomp-antiecho-to
   ; tropdecomp-antiecho-from
+  )
+
+-- Generic-codomain lift of the tropical decomposition. Same headline
+-- theorems as `AntiEchoTropical` above, but parameterised by an
+-- abstract `OrderedCodomain` interface (carrier B, ≤/<, ≤⇒¬<, ¬<⇒≤)
+-- rather than fixed to ℕ. Sanity instance `ℕ-ordered-codomain`
+-- pinned so the interface is demonstrably inhabitable.
+open import AntiEchoTropicalGeneric using
+  ( OrderedCodomain
+  ; ℕ-ordered-codomain
+  ; module Generic
   )
 
 open import EchoIntegration using

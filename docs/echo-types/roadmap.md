@@ -44,17 +44,24 @@ Paths marked **[unblocked]** can proceed today. Paths marked
   `Smoke.agda`. Compiler-analysis widening application worked in
   `applications-compiler-analysis.adoc` example 2.
 - **[landed]** Axis 8 (information-theoretic vs computational
-  access): four refinements all have first artifacts (2026-05-20):
-  `EchoCost` (refinement 1, scalar ledger), `EchoAccess`
-  (refinement 2, two-point modal lattice), `EchoDecidable`
-  (refinement 3, Dec layer, earlier), `EchoSearch` (refinement 4,
-  bounded-enumeration extractor). The four form a small lattice
-  with bridges between them. Operational upgrades remain open
-  (resource monad for refinement 1, step-counter abstract machine
-  for refinement 4).
-- **[unblocked]** Negative / co-echoes: formulate `CoEcho(f)` and its
-  relationship to `Echo(f)`. Possibly resolves the quantitative /
-  structural tension hinted at by `EchoTropical`.
+  access): promoted from the candidates list to a numbered axis.
+  Every candidate refinement is now mechanised. Decidability-
+  respecting: `proofs/agda/EchoDecidable.agda`. Cost-indexed (over
+  an abstract `CostAlgebra`): `EchoCost.agda` + `EchoCostInstance.agda`
+  (PR #85). Graded access modality: `EchoAccess.agda` (PRs #68 +
+  #75). Witness-search abstract machine: `EchoSearch.agda` +
+  `EchoSearchInstance.agda` (PR #80). See `taxonomy.md` §8.
+- **[landed]** Negative / co-echoes: `AntiEcho f y := Σ A (λ x → f x ≢ y)`
+  shipped as `proofs/agda/AntiEcho.agda` (PR #69) with
+  `antiecho-{intro, disjoint, map-over}`, plus per-element
+  classification `antiecho-partition-dec` (PR #90, closes
+  `coecho.md` §5 obligation 5). Distinct from `EchoFiberTriangulation.CoEcho`
+  (which is the trivial opposite-orientation fibre); see naming
+  rationale in `AntiEcho.agda`'s preamble. The tropical decomposition
+  `TropEcho y ↔ Echo score y × (∀ z → y ≤ score z)` lands at the
+  concrete ℕ-scored level in `AntiEchoTropical.agda` (PR #72) and at
+  an abstract `OrderedCodomain` interface in `AntiEchoTropicalGeneric.agda`
+  (PR #91, closes `coecho.md` §5 obligation 6).
 - **[ruled out — see docs/echo-types/decisions/no-2-cat.adoc]**
   2-categorical shape. Every would-be 2-cell in the landed code
   is `refl` or forced trivial by propositionality (`≤g-prop`,
@@ -204,14 +211,20 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 
 - **[unblocked]** Complete worked numeric example (ex. 6) with the
   approximate-echo shape, once the definition lands.
-- **[unblocked]** Parser residue example (ex. 9) as a toy Agda
-  example: parse of balanced parens, echo carries token stream.
-- **[unblocked]** Abstract-interpretation example (ex. 10) via a
-  Sign lattice.
-- **[unblocked]** Database provenance example (ex. 5) via
-  K-provenance semiring — text-only pass first, Agda optional.
-- **[unblocked]** Extend `EchoExamples.agda` with two to three
-  further canonical entries.
+- **[landed]** Parser residue example (ex. 9) — `EchoExampleParser.agda`
+  (PR #83): balanced parens, Boolean shadow `parses : List Token →
+  Bool` non-injective on `(())` vs `()()`, echo retains the token
+  stream.
+- **[landed]** Abstract-interpretation example (ex. 10) —
+  `EchoExampleAbsInt.agda` (PR #82): Sign lattice `{neg, zero, pos}`
+  over a hand-rolled five-element integer carrier; collapses
+  `{m1, m2} ↦ neg`, `{z} ↦ zero`, `{p1, p2} ↦ pos`.
+- **[landed]** Database provenance example (ex. 5) —
+  `EchoExampleProvenance.agda` (PR #81): K-provenance semiring,
+  distinct Bool-provenance rows projecting to the same payload.
+- **[unblocked]** Extend `EchoExamples.agda` with further canonical
+  entries (post-#81/#82/#83 the cluster has good coverage; only
+  ex. 6 remains).
 
 ---
 
