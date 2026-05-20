@@ -137,6 +137,15 @@ open import EchoExampleTruncation using
   ; echo-halve-classification
   )
 
+open import EchoSearchExample using
+  ( double
+  ; search-double-6
+  ; search-as-echo
+  ; search-as-cost
+  ; search-as-dec
+  ; search-as-feasible
+  )
+
 open import EchoFiberCount using
   ( FiberSize-fin
   ; FiberSize-fin-no-hit
