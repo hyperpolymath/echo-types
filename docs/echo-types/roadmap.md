@@ -36,14 +36,22 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 
 ## Theory work — no proof assistant needed
 
-- **[unblocked]** Axis 2 (approximate echoes): settle the formal
-  definition before touching Agda. Draft in `taxonomy.md` and
-  `composition.md`.
+- **[landed]** Axis 2 (approximate echoes): formal definition,
+  distinguishing test, examples, and composition theorem all in
+  `taxonomy.md` §2 (lines 38–64). `EchoApprox.agda` ships
+  `EchoR ε f y`, three headline lemmas (`echo-approx-intro`,
+  `echo-approx-relax`, `echo-approx-compose`). Pinned in
+  `Smoke.agda`. Compiler-analysis widening application worked in
+  `applications-compiler-analysis.adoc` example 2.
 - **[landed]** Axis 8 (information-theoretic vs computational
-  access): promoted from the candidates list to a numbered axis;
-  four candidate refinements of `Echo` (cost-indexed, graded access
-  modality, decidability-respecting, witness-search abstract
-  machine) are listed. Follow-up: pick one refinement and formalise.
+  access): four refinements all have first artifacts (2026-05-20):
+  `EchoCost` (refinement 1, scalar ledger), `EchoAccess`
+  (refinement 2, two-point modal lattice), `EchoDecidable`
+  (refinement 3, Dec layer, earlier), `EchoSearch` (refinement 4,
+  bounded-enumeration extractor). The four form a small lattice
+  with bridges between them. Operational upgrades remain open
+  (resource monad for refinement 1, step-counter abstract machine
+  for refinement 4).
 - **[unblocked]** Negative / co-echoes: formulate `CoEcho(f)` and its
   relationship to `Echo(f)`. Possibly resolves the quantitative /
   structural tension hinted at by `EchoTropical`.
@@ -247,8 +255,11 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 This is my honest suggested ordering, conservative about what's
 tractable today:
 
-1. **Theory: axis 2 formal definition** — 1–2 days.
-   Unblocks `EchoApprox.agda`, which is required for examples 6 and 10.
+1. ~~**Theory: axis 2 formal definition**~~ — **landed**.
+   Formal definition + composition theorem in `taxonomy.md` §2;
+   `EchoApprox.agda` artifact with three headline lemmas; example 10
+   (abstract interpretation widening) worked in
+   `applications-compiler-analysis.adoc`.
 2. ~~**Agda: `Echo-comp-iso` + cancellation**~~ — **fully landed**.
    Accumulation iso (`Echo-comp-iso`), both cancellation maps, plus
    **full cancellation iso with round-trips** (`cancel-iso-{to, from,
@@ -287,8 +298,15 @@ tractable today:
    (exact ⇒ zero-ε), `echo-approx-relax` (monotone in ε),
    `echo-approx-compose` (additive composition under a non-expansive
    outer leg). Wired into `All.agda` + pinned in `Smoke.agda`.
-8. **Applications chapter: compiler-analysis residue** — 2 days.
-   Largest reader value; entirely unblocked.
+8. ~~**Applications chapter: compiler-analysis residue**~~ —
+   **first draft landed 2026-05-20**.
+   `docs/echo-types/applications-compiler-analysis.adoc` with two
+   worked examples (parser error recovery on axis 4;
+   abstract-interpretation widening on axis 2), all four axis-8
+   refinements applied to source-mapping, pipeline composition,
+   scope demarcation, and cross-references to every relevant
+   adjacency note. Follow-up: full Agda exhibits for each example
+   (tracked as `[unblocked]` example-library items below).
 9. ~~**Per-decoration composition lemmas**~~ — **sweep complete**
    (2026-04-28). All five decorations landed:
    `EchoGraded.degrade-compose`, `EchoLinear.degradeMode-compose`,
