@@ -18,6 +18,7 @@ open import EchoLinear
 open import EchoGraded
 open import EchoTropical
 open import AntiEchoTropical
+open import AntiEchoTropicalGeneric
 open import EchoIntegration
 open import EchoCNOBridge
 

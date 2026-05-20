@@ -12,11 +12,13 @@ claims back into theorems — or to confirm, on the project's own gate
 discipline, that they cannot be earned. Nothing in `paper.adoc` /
 `conservativity.adoc` / `types-abstract.adoc` moves until the
 corresponding gate here passes. Methodology — explicit pass/fail,
-abandon criteria, outcomes logged in `docs/retractions.adoc`. (The
-gate discipline was historically attributed to a `roadmap-gates.adoc`;
-that file does not exist in-tree — see proof-debt ledger item *D*
-below. The canonical loci are `docs/retractions.adoc`, this plan, and
-`docs/next-questions.adoc`.)
+abandon criteria, outcomes logged in `docs/retractions.adoc`. The
+canonical loci of the gate discipline are
+`docs/roadmap-gates.adoc` (the protocol document, created 2026-05-18
+to resolve the earlier dangling reference), `docs/retractions.adoc`
+(the append-only retraction + earn-back log), this plan (the
+falsifiable program), and `docs/next-questions.adoc` (the open
+questions register).
 
 toc::[]
 
@@ -246,11 +248,15 @@ single index; it moves no claim.
   Completeness nice-to-have, lowest priority.
 
 | D
-| Doc-integrity: `docs/roadmap-gates.adoc` is cited as the canonical
-  gate ledger by ≥7 docs but does not exist in-tree. Role now split
-  across `retractions.adoc` / this plan / `next-questions.adoc`.
-| Open drift vector. Cheap to reconcile (back-link the citing docs;
-  do not fabricate retroactive gate history).
+| Doc-integrity: previously this entry recorded that
+  `docs/roadmap-gates.adoc` was cited as the canonical gate ledger
+  but did not exist in-tree. The file *does* exist (created
+  2026-05-18; see its preamble) and the dangling-reference issue is
+  resolved.
+| *CLOSED 2026-05-20.* `docs/roadmap-gates.adoc` is in tree as the
+  Gates Protocol. The canonical-loci list at the top of this plan
+  has been updated to include it explicitly alongside
+  `retractions.adoc` / `next-questions.adoc`.
 
 | E1
 | `examples/Transport.agda` (Gate-3): two disclosed open items, both

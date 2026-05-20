@@ -33,8 +33,10 @@
 --
 -- Scope. New module, neither `AntiEcho.agda` nor `EchoTropical.agda`
 -- is modified. Specialised to the concrete `Candidate → ℕ` setting
--- of `EchoTropical.agda`; a generic-codomain version is deferred
--- (would need a `≤`-bearing ordered codomain).
+-- of `EchoTropical.agda`; the generic-codomain version lives in
+-- `AntiEchoTropicalGeneric.agda`, parameterised by an abstract
+-- `OrderedCodomain` interface (carrier `B`, `_≤_`, `_<_`, `≤⇒¬<`,
+-- `¬<⇒≤`).
 
 module AntiEchoTropical where
 
