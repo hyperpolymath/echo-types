@@ -193,7 +193,7 @@ work to `main` and refresh all documentation:
 
 ## Current rung state (2026-05-20)
 
-### Session arc 2026-05-20 (read this first)
+### Session arc 2026-05-20 daytime (theory closure waves 1 + 2 + 3)
 
 *Where we started today (commit `888dee0`, post-#73):* the establishment
 track was complete A–D + Pillar E paper drafting in progress. The
@@ -342,7 +342,126 @@ EchoAccess existential carriers (`decisions/echo-access-trivial-carrier.adoc`);
 the Pillar A–D internal programme (complete since 2026-05-17);
 any §"Theory work" item — the section is closed.
 
-### Session arc 2026-05-17 (read this first)
+### Session arc 2026-05-20 evening — ω-power rank-mono unblock (read this first)
+
+*Where we started today (commit `8c9ddcb` on `harden/ci-flake-pin-2026-05-18`):*
+the ordinal track had the WfCNF predicate plus the `_<ᵇ⁻_` subrelation
+foundations from the earlier session.  The rank-embedding route to
+unbudgeted `wf-<ᵇʳᶠ_` was framed as "closed impossible" in
+`docs/echo-types/buchholz-rank-obstruction.adoc` — the
+`<ᵇ-+Ω <ᵇ-0-Ω : bplus bzero (bOmega (fin 1)) <ᵇ bOmega (fin 0)`
+counterexample forced a rank inversion under additive Brouwer rank
+with `nat-to-ord` successor-stack `ω-rank`.  4 of 13 constructors
+admitted rank-mono via `RankPartial.agda`; 9 were structurally
+walled.
+
+*Where we ended (PR #87, branch `session-2026-05-20/buchholz-budgeted-plus`,
+23 commits ahead of `8c9ddcb`):* the "closed impossible" verdict is
+**narrowed** — under the WfCNF restriction `_<ᵇ⁻_` together with a
+*limit-shaped* ω-power rank, **10 of 13 constructors close** via
+relation-agnostic compositional primitives.  3 cases remain open
+under documented structural blockers (ψ-admissibility, joint-bplus).
+
+Eight slices landed in order, each with `agda proofs/agda/All.agda`
+and `agda proofs/agda/Smoke.agda` exiting 0 under `--safe --without-K`,
+zero postulates, zero escape pragmas, no funext:
+
+1. **Slice 1** — `Ordinal.Brouwer.OmegaPow.agda` lands `_·ℕ_`, `ω^_`,
+   basic identifications (`ω^0≡one`, `one·ℕ≡nat-to-ord`,
+   `·ℕ-zero`, `·ℕ-suc`), positivity `ω^_-pos`, one-step strict-mono
+   `ω^-strict-mono-suc`, weakening `ω^-step`.
+2. **Slice 2** — left-monotonicity of `_⊕_` (`⊕-mono-≤-left` in
+   `Phase13.agda`) + `·ℕ-mono-≤-left`, `ω^-mono-≤`, `ω^-strict-mono`
+   (general gap).  Block comment in Phase13 documenting why strict
+   left-mono of `_⊕_` is *not* a theorem (the `α + ω = β + ω`
+   counterexample).
+3. **Slice 3** — `⊕-assoc-≤` / `⊕-assoc-≥` (both funext-free `≤′`
+   directions in Phase13), `·ℕ-add-≤` bridge, and the keystone
+   **`additive-principal`** at `ω^(suc n)`.  The closure-under-addition
+   property that makes ω-powers the right rank target for plus-side
+   `_<ᵇ_` constructors.
+4. **Slice 4** — `Ordinal.Buchholz.RankPow.agda`: limit-shaped
+   `ω-rank-pow : OmegaIndex → Ord` (`fin n ↦ ω^(suc n)`), `rank-pow :
+   BT → Ord` consuming it, plus reusable compositional primitives
+   (`rank-pow-bplus-right-mono`, `rank-pow-via-left`,
+   `rank-pow-bplus-into-ω-rank-pow`, `additive-principal-ω-rank-pow`).
+5. **Slice 5** — 9 per-constructor rank-mono primitives in RankPow:
+   `rank-mono-<ᵇ-0-Ω/0-ψ/ΩΩ/Ωψ/ψΩ/Ω+/ψ+/+Ω/+ψ`.  Each stated purely
+   in terms of rank inequalities (not the relation), so both `<ᵇ⁻`
+   and `<ᵇʳᶠ` consumers reuse them by pattern-matching on their own
+   relation's constructor.
+6. **Item 1** — `rank-mono-<ᵇ-+1-via-target` parametric in the
+   target's additive-principal witness; `rank-mono-<ᵇ-+1-Ω-target`
+   and `rank-mono-<ᵇ-+1-ψ-target` convenience wrappers.  Closes
+   `<ᵇ-+1` for atomic targets; bplus-target sub-case explicitly
+   deferred.
+7. **Item 2** — `Ordinal.Buchholz.WellFormedAdmissible.agda` lands
+   `WfAdm : BT → Set` strengthening WfCNF with `rank-pow α <′
+   ω-rank-pow ν` on each `bpsi ν α`.  Carrier only; rank refinement
+   for `<ᵇ-ψα` / `<ᵇ-ψΩ≤` discharge deferred (cross-case interaction
+   with `<ᵇ-+ψ` documented in the module preamble).
+8. **Item 3** — `Ordinal.Buchholz.RankMonoUmbrella.agda`: the
+   rank-soundness-ready relation `_<ᵇ⁰_` with 10 constructors
+   (tail-bounds baked in via `_≤ᵇ⁰_`) plus the umbrella theorem
+   **`rank-pow-mono-<ᵇ⁰ : x <ᵇ⁰ y → rank-pow x <′ rank-pow y`**
+   proved by direct structural recursion over the 10 cases.
+
+*Closure-doc update*: `docs/echo-types/buchholz-rank-obstruction.adoc`
+gains a "Slices 1–5 of the ω-power unblock" section with an updated
+per-constructor verdict table (10 closed / 3 open).  The "rank-
+embedding route is closed" framing is narrowed: closed for
+unrestricted `_<ᵇ_`, opens up under the WfCNF restriction with
+limit-shaped rank.
+
+**Open work on this track (documented blockers):**
+
+* `<ᵇ-ψα`, `<ᵇ-ψΩ≤` — provisional `rank-pow (bpsi ν _) = ω-rank-pow ν`
+  doesn't discriminate on α.  Closed by ψ-admissibility predicate
+  (carrier landed in Item 2); the rank refinement is a separate
+  slice that needs to resolve the `<ᵇ-+ψ` cross-case.
+* `<ᵇ-+1` joint-bplus — `rank-pow (bplus z₁ z₂)` is not additive
+  principal in general.  Needs a coarser dominator function (e.g.,
+  `leading-Ω-index : BT → OmegaIndex` returning the leftmost-deepest
+  Ω-marker) or a richer rank shape.
+* `rank-pow-mono-<ᵇ⁻` (full umbrella over `_<ᵇ⁻_` — gated on the
+  above two).  The 10-of-13 `_<ᵇ⁰_` umbrella is the working closure;
+  consumers needing the full `_<ᵇ⁻_` form bridge through the
+  3-cases-open gap.
+
+Build invariant held every slice: `All.agda` + `Smoke.agda` exit 0
+under `--safe --without-K`, zero postulates, zero escape pragmas, no
+funext.  All headlines pinned in `Smoke.agda` (or
+`Ordinal/Buchholz/Smoke.agda` for the Buchholz-layer modules).
+
+**Reusable design constraint**: Per a parallel-session note on
+`_<ᵇʳᶠ_`, the rank-mono primitives are stated *relation-agnostically*
+(rank-input, rank-output, no `<ᵇ` constructor patterns).  Both the
+`_<ᵇ⁻_` consumer (this track) and the `_<ᵇʳᶠ_` consumer (parallel
+session's wf-`<ᵇʳᶠ` milestone) can pattern-match on their own
+relation's constructor and apply the matching primitive.
+
+*Plan for the next Claude:* PR #87 is the deliverable.  Closure
+work continues in three follow-ons, prioritised:
+
+1. **ψ-admissibility rank refinement** (closes `<ᵇ-ψα`, `<ᵇ-ψΩ≤`,
+   2 of 3 open cases).  Define `rank-adm : BT → Ord` using
+   `ω-rank-pow ν ⊕ rank-pow α` for ψ under WfAdm.  Cross-case fix
+   for `<ᵇ-+ψ`: under admissibility, source-rank is bounded by
+   `ω-rank-pow ν` (the structural admissibility-source-bound lemma).
+2. **Leading-Ω-index domination** (closes `<ᵇ-+1` general).  Define
+   `head-Ω : BT → OmegaIndex` returning the leftmost-deepest Ω
+   marker.  Prove `rank-pow t <′ ω-rank-pow-succ (head-Ω t)` for
+   non-bzero WfCNF terms.  Then `<ᵇ-+1` discharges via head-Ω
+   inversion + additive-principal at the head-Ω's successor.
+3. **Full `rank-pow-mono-<ᵇ⁻` umbrella** — composition of 1+2
+   with the existing 10-constructor `_<ᵇ⁰_` umbrella.
+
+DO NOT reopen: the closed 10 constructors (their primitives are
+correct under WfCNF); the unbudgeted `_<ᵇʳᶠ_` rank route per
+`RankBrouwer.agda` preamble (genuinely impossible for unrestricted
+`_<ᵇ_`).  The umbrella works on `_<ᵇ⁰_`, not on `_<ᵇ_` directly.
+
+### Session arc 2026-05-17 (legacy — read second)
 
 *Where we started today (commit `8a2b908`):* the establishment
 track was a plan plus scaffolds — Pillar A landed; Pillars B–D were

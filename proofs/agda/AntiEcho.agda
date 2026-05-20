@@ -21,9 +21,9 @@
 -- lemma) lands below as `antiecho-partition-dec` and the
 -- codomain-decidability variant `antiecho-partition-codomain-dec`.
 -- Obligation 6 (the tropical decomposition `Echo × Π AntiEcho ≃
--- IsArgmin`) lives in `AntiEchoTropical.agda`; the generic-codomain
--- form (lift from the concrete ℕ score to an abstract ordered codomain
--- interface) remains deferred.
+-- IsArgmin`) lives in `AntiEchoTropical.agda` (concrete ℕ-scored
+-- form) and `AntiEchoTropicalGeneric.agda` (generic-codomain lift
+-- over an abstract `OrderedCodomain` interface).
 
 module AntiEcho where
 

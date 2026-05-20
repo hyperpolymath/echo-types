@@ -263,3 +263,73 @@ mutual
   ⊕-mono-≤-right {α} {osuc β'} {osuc γ'} p       = ⊕-mono-≤-right {α} {β'} {γ'} p
   ⊕-mono-≤-right {α} {osuc β'} {olim g}  (n , p) = n , ⊕-mono-<-right {α} {β'} {g n} p
   ⊕-mono-≤-right {α} {olim f}  {γ}       p       = λ n → ⊕-mono-≤-right {α} {f n} {γ} (p n)
+
+----------------------------------------------------------------------------
+-- Left monotonicity of `_⊕_` (companion to right-mono above)
+----------------------------------------------------------------------------
+
+-- `α ≤′ β → α ⊕ γ ≤′ β ⊕ γ`.  Recursion on `γ`; each case of γ
+-- matches one clause of the right-recursive `_⊕_` definition.
+--
+--   * γ = oz       : α ⊕ oz = α, β ⊕ oz = β; reduces to `α ≤′ β`.
+--   * γ = osuc γ'  : both sides reduce to successors of sub-sums;
+--                    `osuc-mono-≤′ = id` collapses to the IH on γ'.
+--   * γ = olim g   : both sides are limits with branch-shifted sums;
+--                    each branch dischargeable by IH plus `f-in-lim′`.
+
+⊕-mono-≤-left : ∀ {α β γ} → α ≤′ β → α ⊕ γ ≤′ β ⊕ γ
+⊕-mono-≤-left {α} {β} {oz}      p = p
+⊕-mono-≤-left {α} {β} {osuc γ'} p = ⊕-mono-≤-left {α} {β} {γ'} p
+⊕-mono-≤-left {α} {β} {olim g}  p = λ k →
+  ≤′-trans {α ⊕ g k} {β ⊕ g k} {β ⊕ olim g}
+    (⊕-mono-≤-left {α} {β} {g k} p)
+    (⊕-mono-≤-right {β} {g k} {olim g} (f-in-lim′ g k))
+
+-- Note: strict left-monotonicity of `_⊕_` is NOT a theorem.
+-- Counterexample: `α = oz`, `β = osuc oz`, `γ = ω = olim nat-to-ord`.
+-- Both `α ⊕ γ` and `β ⊕ γ` evaluate to (the Brouwer representation
+-- of) ω; right-recursive `_⊕_` distributes through the limit, and
+-- the finite-step shift gets absorbed by the supremum.  Classically:
+-- for any finite n, `n + ω = ω`, so the inequality `α + γ < β + γ`
+-- fails when γ is a limit and the gap `β - α` is finite.  Only the
+-- non-strict `⊕-mono-≤-left` above is sound.
+
+----------------------------------------------------------------------------
+-- Associativity of `_⊕_` (both directions, in `≤′` form)
+----------------------------------------------------------------------------
+
+-- Propositional `(A ⊕ B) ⊕ C ≡ A ⊕ (B ⊕ C)` requires function
+-- extensionality on the `olim` limb (the two underlying ℕ-indexed
+-- functions agree pointwise but the binders are at different depths
+-- of the right-recursive `_⊕_` definition).  Both `≤′` directions
+-- are funext-free and suffice for downstream consumers.
+--
+-- Each direction is a structural recursion on `C`:
+--   * C = oz       : both sides reduce to `A ⊕ B`; ≤′-refl.
+--   * C = osuc C'  : both sides are osuc-wrapped sub-sums; the
+--                    `osuc/osuc` clause of `_≤′_` collapses to the IH.
+--   * C = olim g   : both sides are limits indexed by g; branch-by-
+--                    branch IH combined with `f-in-lim′`.
+
+⊕-assoc-≤ : ∀ {A B C} → (A ⊕ B) ⊕ C ≤′ A ⊕ (B ⊕ C)
+⊕-assoc-≤ {A} {B} {oz}      = ≤′-refl {A ⊕ B}
+⊕-assoc-≤ {A} {B} {osuc C'} = ⊕-assoc-≤ {A} {B} {C'}
+⊕-assoc-≤ {A} {B} {olim g}  = λ k →
+  ≤′-trans
+    {(A ⊕ B) ⊕ g k}
+    {A ⊕ (B ⊕ g k)}
+    {A ⊕ (B ⊕ olim g)}
+    (⊕-assoc-≤ {A} {B} {g k})
+    (⊕-mono-≤-right {A} {B ⊕ g k} {B ⊕ olim g}
+      (⊕-mono-≤-right {B} {g k} {olim g} (f-in-lim′ g k)))
+
+⊕-assoc-≥ : ∀ {A B C} → A ⊕ (B ⊕ C) ≤′ (A ⊕ B) ⊕ C
+⊕-assoc-≥ {A} {B} {oz}      = ≤′-refl {A ⊕ B}
+⊕-assoc-≥ {A} {B} {osuc C'} = ⊕-assoc-≥ {A} {B} {C'}
+⊕-assoc-≥ {A} {B} {olim g}  = λ k →
+  ≤′-trans
+    {A ⊕ (B ⊕ g k)}
+    {(A ⊕ B) ⊕ g k}
+    {(A ⊕ B) ⊕ olim g}
+    (⊕-assoc-≥ {A} {B} {g k})
+    (f-in-lim′ (λ j → (A ⊕ B) ⊕ g j) k)

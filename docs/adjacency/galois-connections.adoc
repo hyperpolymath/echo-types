@@ -1,6 +1,8 @@
 = Adjacency: Galois connections / abstract interpretation
 :toc: macro
 
+_Axes engaged: 5 (Comp), 7 (PR/PI). See `README.adoc` § "Axis coverage matrix"._
+
 [.lead]
 *Verdict: distinct, by 2-cell argument.* The natural 2-cell in the
 abstraction lattice is the meet, which is structurally

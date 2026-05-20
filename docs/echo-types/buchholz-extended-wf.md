@@ -119,12 +119,41 @@ consumers that need only the K-free core (e.g. the
 Consumers that need the lex cases use `_<ᵇ⁺_` and accept that
 WF is not yet established for it.
 
-## Recommended next attempt
+## Recommended next attempt (HISTORICAL — superseded 2026-05-20)
 
-Route B (rank-embedding) is lower-risk: the arithmetic lemmas
-needed are bounded and discoverable, and `Ordinal.Brouwer.wf-<`
-is already proved. Route A's failure mode is Agda's termination
-checker, which is harder to debug than provable mathematics.
+Route B (rank-embedding) was previously labelled lower-risk because
+the arithmetic lemmas needed seemed bounded and discoverable. That
+verdict is now **WRONG**.
+
+**Route B is impossible** for the current `_<ᵇ_`. The constructor
+`<ᵇ-+Ω : x <ᵇ bOmega μ → bplus x y <ᵇ bOmega μ` is ordinally unsound
+(concrete refutation: `bplus bzero (bOmega (fin 1)) <ᵇ bOmega (fin 0)`
+exists via `<ᵇ-+Ω <ᵇ-0-Ω`, but any additive `rank` gives the LHS
+larger than the RHS). No additive, multiplicative, or constructive
+ordinal arithmetic on `rank x` and `rank y` resolves the joint
+`<ᵇ-+Ω` ∧ `<ᵇʳᶠ-+2` tension. See `buchholz-rank-obstruction.adoc`
+for the full analysis. Verified empirically 2026-05-20 that *all five*
+plausible routes are walled — rank-embedding, direct mutual structural
+recursion (Agda termination error: `wf-<ᵇʳᶠ x₂` non-decreasing), tower-
+stratification through `LiftedOrder` (refuted by `surfaceLiftBlocked`'s
+shape — wrapper non-self-stability propagates upward), lex-measure
+into ℕ, and inverse-image into `_<ᵇʳᶠᵇ_`.
+
+Route A's "Agda termination checker is harder to debug than provable
+mathematics" framing is also corrected: the mathematics turns out
+not to be provable at all for the current `_<ᵇ_`. The termination
+check was the right oracle.
+
+**What this means.** Both `_<ᵇ⁺_` and `_<ᵇʳᶠ_` retain their
+budgeted forms as the canonical well-foundedness statements
+(`_<ᵇ⁺ᵇ_` newly in `Ordinal.Buchholz.OrderExtendedBudget`,
+mirroring the existing `_<ᵇʳᶠᵇ_`). To recover unbudgeted WF would
+require either restricting `_<ᵇ_` to a `WellFormed` subset
+(2–3 weeks of constructor-by-constructor rework + transitivity +
+inversion re-proof) or providing a non-additive denotational
+measure (essentially solving Buchholz WF "from the model up", a
+substantially larger project than the rank-embedding route was
+ever framed as).
 
 ## See also
 

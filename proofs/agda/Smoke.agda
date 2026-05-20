@@ -492,6 +492,28 @@ open import EchoGradedComonadF1 using
   ; gc-coassoc                     -- coassociativity law (the F1 keystone)
   )
 
+-- Pillar F, Gate F3 — PASSED (docs/echo-types/earn-back-plan.adoc §F3).
+-- The abstract `GradedComonadStructure` record (grade monoid + graded
+-- functor + counit + nested comultiplication + monoid laws + functor
+-- laws + comonad laws, with NO ⊑-prop-equivalent field) plus TWO
+-- non-isomorphic-grade-monoid instances:
+--   * `nat-instance`  at the COMMUTATIVE  monoid (ℕ, +, 0)
+--   * `list-instance` at the NON-COMMUTATIVE monoid (List Tag, ++, [])
+-- The non-isomorphism is witnessed by `tag-list-non-commutative`
+-- (one direction: only a non-commutative monoid satisfies it).
+open import EchoGradedComonadInterface using
+  ( GradedComonadStructure          -- the abstract record
+  )
+open import EchoGradedComonadInstance1 using
+  ( nat-instance                    -- F1 packaged as record-inhabitant at (ℕ, +, 0)
+  )
+open import EchoGradedComonadInstance2 using
+  ( Tag                             -- two-element grade index
+  ; tag-list-non-commutative        -- monoid non-isomorphism witness
+  ; D-nontrivial                    -- D (smol ∷ big ∷ []) is non-trivial
+  ; list-instance                   -- the second graded-comonad instance
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
@@ -524,6 +546,17 @@ open import AntiEchoTropical using
   ; optimality-as-antiecho-flavour-from
   ; tropdecomp-antiecho-to
   ; tropdecomp-antiecho-from
+  )
+
+-- Generic-codomain lift of the tropical decomposition. Same headline
+-- theorems as `AntiEchoTropical` above, but parameterised by an
+-- abstract `OrderedCodomain` interface (carrier B, ≤/<, ≤⇒¬<, ¬<⇒≤)
+-- rather than fixed to ℕ. Sanity instance `ℕ-ordered-codomain`
+-- pinned so the interface is demonstrably inhabitable.
+open import AntiEchoTropicalGeneric using
+  ( OrderedCodomain
+  ; ℕ-ordered-codomain
+  ; module Generic
   )
 
 open import EchoIntegration using
@@ -683,12 +716,69 @@ open import Ordinal.Brouwer.Phase13 using
   ; ⊕-left-≤-sum
   ; ⊕-mono-≤-right
   ; ⊕-mono-<-right
+  ; ⊕-mono-≤-left
+  ; ⊕-assoc-≤
+  ; ⊕-assoc-≥
+  )
+
+-- ω-power infrastructure for path-1 of the Buchholz rank-monotonicity
+-- unblock (docs/echo-types/buchholz-rank-obstruction.adoc).  Limit-
+-- shaped replacement for `nat-to-ord (suc n)` successor stacks.
+open import Ordinal.Brouwer.OmegaPow using
+  ( _·ℕ_
+  ; ω^_
+  ; ω^0≡one
+  ; ·ℕ-zero
+  ; ·ℕ-suc
+  ; one·ℕ≡nat-to-ord
+  ; ω^_-pos
+  ; X≤′oz⊕X
+  ; ω^-strict-mono-suc
+  ; ω^-step
+  ; ·ℕ-mono-≤-left
+  ; ω^-from-zero
+  ; ω^-mono-≤-suc-suc
+  ; ω^-mono-≤
+  ; ω^-strict-mono
+  ; ·ℕ-add-≤
+  ; additive-principal
   )
 
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
   ( rank
+  )
+
+-- ω-power rank for Ω-markers and Buchholz terms.  Limit-shaped
+-- replacement for `nat-to-ord (suc n)` successor stacks.  Compositional
+-- rank-mono primitives (right-mono on `bplus`) reusable across both
+-- `_<ᵇ⁻_` (this track) and `_<ᵇʳᶠ_` (parallel session).
+open import Ordinal.Buchholz.RankPow using
+  ( ω-rank-pow
+  ; ω-rank-pow-fin
+  ; ω-rank-pow-pos
+  ; ω-rank-pow-mono
+  ; rank-pow
+  ; rank-pow-bplus
+  ; rank-pow-bOmega
+  ; rank-pow-bplus-right-mono
+  ; rank-pow-bplus-left-≤
+  ; rank-pow-via-left
+  ; additive-principal-ω-rank-pow
+  ; rank-pow-bplus-into-ω-rank-pow
+  ; rank-mono-<ᵇ-0-Ω
+  ; rank-mono-<ᵇ-0-ψ
+  ; rank-mono-<ᵇ-ΩΩ
+  ; rank-mono-<ᵇ-Ωψ
+  ; rank-mono-<ᵇ-ψΩ
+  ; rank-mono-<ᵇ-Ω+
+  ; rank-mono-<ᵇ-ψ+
+  ; rank-mono-<ᵇ-+Ω
+  ; rank-mono-<ᵇ-+ψ
+  ; rank-mono-<ᵇ-+1-via-target
+  ; rank-mono-<ᵇ-+1-Ω-target
+  ; rank-mono-<ᵇ-+1-ψ-target
   )
 
 open import Ordinal.OmegaMarkers using

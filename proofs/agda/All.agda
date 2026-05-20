@@ -18,6 +18,7 @@ open import EchoLinear
 open import EchoGraded
 open import EchoTropical
 open import AntiEchoTropical
+open import AntiEchoTropicalGeneric
 open import EchoIntegration
 open import EchoCNOBridge
 
@@ -61,6 +62,9 @@ open import EchoRelModel        -- Pillar D (scaffold)
 open import EchoPullbackUnivF4  -- Gate F4 PASSED (funext-qualified UP)
 open import EchoStepNDModelF2   -- Gate F2 PASSED (StepND second model)
 open import EchoGradedComonadF1 -- Gate F1 PASSED (graded comonad on iterated-residue)
+open import EchoGradedComonadInterface -- Gate F3 abstract record
+open import EchoGradedComonadInstance1 -- Gate F3 instance 1 (F1 at (ℕ, +, 0))
+open import EchoGradedComonadInstance2 -- Gate F3 PASSED — instance 2 at (List Tag, ++, [])
 
 -- Foundation P1: external-fibre triangulation. Echo agrees with the
 -- standard library's OWN independently-authored notions
@@ -76,14 +80,19 @@ open import Ordinal.OmegaMarkers
 open import Ordinal.Brouwer
 open import Ordinal.Brouwer.Arithmetic
 open import Ordinal.Brouwer.Phase13
+open import Ordinal.Brouwer.OmegaPow
 open import Ordinal.Buchholz.Syntax
 open import Ordinal.Buchholz.Closure
 open import Ordinal.Buchholz.Order
 open import Ordinal.Buchholz.OrderExtended
+open import Ordinal.Buchholz.OrderExtendedBudget
 open import Ordinal.Buchholz.Psi
 open import Ordinal.Buchholz.Examples
 open import Ordinal.Buchholz.WellFormed
+open import Ordinal.Buchholz.WellFormedCNF
+open import Ordinal.Buchholz.WellFormedAdmissible
 open import Ordinal.Buchholz.WellFounded
+open import Ordinal.Buchholz.OrderRestricted
 open import Ordinal.Buchholz.VeblenInterface
 open import Ordinal.Buchholz.VeblenIdentityModel
 open import Ordinal.Buchholz.VeblenMeasureTarget
@@ -95,6 +104,9 @@ open import Ordinal.Buchholz.OrderExtendedDirect
 open import Ordinal.Buchholz.LiftedExtendedOrder
 open import Ordinal.Buchholz.IteratedExtendedOrder
 open import Ordinal.Buchholz.RankBrouwer
+open import Ordinal.Buchholz.RankPartial
+open import Ordinal.Buchholz.RankPow
+open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
 open import Ordinal.Buchholz.RecursiveSurfaceBudget
 open import Ordinal.Buchholz.SurfaceOrder

@@ -1,35 +1,60 @@
 {-# OPTIONS --safe --without-K #-}
 
--- Rank function `rank : BT → Ord` for the Phase-2 transport route to
--- unbudgeted `WellFounded _<ᵇʳᶠ_`.  Echidna's design-search +
--- 4-agent swarm both unanimously recommended this shape (energy
--- [3, 0, 1]: three downstream blockers, zero capability gaps,
--- minimal structural cost).
+-- Rank function `rank : BT → Ord` originally proposed for the
+-- Phase-2 transport route to unbudgeted `WellFounded _<ᵇʳᶠ_`.
+-- Echidna's design-search + 4-agent swarm unanimously recommended
+-- this shape (energy [3, 0, 1]).
 --
 -- See `echidna/docs/decisions/2026-04-28-corpus-and-design-search.md`
 -- and `echo-types/docs/echidna-design-search-2026-04-28.adoc` for
--- the SA + swarm output, including the 5 next-best alternatives all
--- of which scored strictly worse.
+-- the SA + swarm output.
 --
--- ## What's here
---
--- * `rank : BT → Ord` — the recommended shape, structural recursion
---   on BT.
---
--- ## What's deferred
+-- ## STATUS (CORRECTED 2026-05-20): the transport theorem is impossible
 --
 -- The transport theorem `rank-mono : ∀ {x y} → x <ᵇʳᶠ y → rank x <
--- rank y` requires three downstream lemmas:
+-- rank y` would require three downstream lemmas:
 --
---   * `<ᵇʳᶠ-core x<ᵇy` ⟹ Phase-2.2 `rank-mono-<ᵇ`  (open)
---   * `<ᵇʳᶠ-ψα α<ᵇʳᶠβ`  ⟹ `⊕-mono-<-right`           (landed, Phase13.agda)
---   * `<ᵇʳᶠ-+2 y<ᵇʳᶠz`  ⟹ `⊕-mono-<-right`           (landed, Phase13.agda)
+--   * `<ᵇʳᶠ-core x<ᵇy` ⟹ `rank-mono-<ᵇ`        (was "open", ACTUALLY IMPOSSIBLE)
+--   * `<ᵇʳᶠ-ψα α<ᵇʳᶠβ`  ⟹ `⊕-mono-<-right`     (landed, Phase13.agda)
+--   * `<ᵇʳᶠ-+2 y<ᵇʳᶠz`  ⟹ `⊕-mono-<-right`     (landed, Phase13.agda)
 --
--- Once `rank-mono-<ᵇ` lands, the closing chain is:
+-- `rank-mono-<ᵇ` is structurally impossible for the `_<ᵇ_`
+-- constructor `<ᵇ-+Ω : x <ᵇ bOmega μ → bplus x y <ᵇ bOmega μ`:
+-- instantiate `μ = fin 0`, `x = bzero`, `y = bOmega (fin 1)`. The
+-- witness `bplus bzero (bOmega (fin 1)) <ᵇ bOmega (fin 0)` exists
+-- via `<ᵇ-+Ω <ᵇ-0-Ω`, but additive rank gives `oz ⊕ ω-rank (fin 1)
+-- = two` on the LHS and `ω-rank (fin 0) = one` on the RHS — so
+-- `rank-mono-<ᵇ` would force `two <′ one`, which reduces to `⊥`.
 --
---   wf-<ᵇʳᶠ : WellFounded _<ᵇʳᶠ_
+-- The Echidna SA blueprint validated only the `<ᵇʳᶠ-ψα`/`<ᵇʳᶠ-+2`
+-- blockers, not the 13-constructor `_<ᵇ_` interior. `_<ᵇ_` is a
+-- syntactic strict order on raw BT, chosen so that direct
+-- accessibility in `WellFounded.agda` closes — not the ordinal
+-- order on Cantor normal forms. Constructors like `<ᵇ-+Ω`/`<ᵇ-Ω+`
+-- admit derivations whose ordinal semantics is unrelated. No
+-- additive, multiplicative, or constructive ordinal arithmetic on
+-- `rank x` / `rank y` resolves the joint `<ᵇ-+Ω` ∧ `<ᵇʳᶠ-+2`
+-- tension (former: `rank-+ x y` must be bounded-in-`y`; latter:
+-- must be strict-monotone-in-`y`).
+--
+-- See `docs/echo-types/buchholz-rank-obstruction.adoc` for the
+-- full counterexample, the five attempted routes (rank, direct
+-- mutual, tower-stratification, lex measure, inverse-image —
+-- *all walled*), and the recommended next moves (WF-restricted
+-- `_<ᵇ_`, non-additive denotational measure, or accepting the
+-- budgeted form as canonical).
+--
+-- ## What still ships
+--
+-- The `rank` function itself is left in this module as a historical
+-- artefact and a sanity check that the underlying arithmetic
+-- compiles. It is not used downstream. The closing chain
+--
 --   wf-<ᵇʳᶠ = Subrelation.wellFounded rank-mono
 --               (InverseImage.wellFounded rank wf-<′)
+--
+-- cannot be constructed because `rank-mono-<ᵇ` (the `<ᵇʳᶠ-core`
+-- case of `rank-mono`) cannot be inhabited.
 
 module Ordinal.Buchholz.RankBrouwer where
 
