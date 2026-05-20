@@ -250,6 +250,20 @@ open import Ordinal.Buchholz.WellFormedCNF using
   ; bplus-Ω-bzero-wf-cnf
   )
 
+-- ψ-admissibility: strengthens WfCNF on `bpsi` with the rank-pow
+-- bound `rank-pow α <′ ω-rank-pow ν`.  Carrier only in this slice;
+-- rank refinement for the `<ᵇ-ψα` / `<ᵇ-ψΩ≤` discharge is a follow-on.
+open import Ordinal.Buchholz.WellFormedAdmissible using
+  ( WfAdm
+  ; wf-adm-bzero
+  ; wf-adm-bomega
+  ; wf-adm-bpsi
+  ; wf-adm-bplus
+  ; wfAdm-to-wfCNF
+  ; psi-trivial
+  ; psi-trivial-adm
+  )
+
 open import Ordinal.Buchholz.OrderRestricted using
   ( _<ᵇ⁻_
   ; cnf-strict
