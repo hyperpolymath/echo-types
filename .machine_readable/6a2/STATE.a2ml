@@ -12,7 +12,7 @@
 ;;; concluded; the verdict is negative; the documentation cascade has been
 ;;; applied; the recipe is no longer a candidate locus of distinctness.
 ;;;
-;;; SPDX-License-Identifier: PMPL-1.0-or-later
+;;; SPDX-License-Identifier: MPL-2.0
 ;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
 (define-module (echo-types ei-2 state)
@@ -36,7 +36,7 @@
     (canonical-host . github)                ; per current forge workflow
     (mirrors        . (gitlab codeberg))
     (version-target . "0.1.1")
-    (license        . "PMPL-1.0-or-later")))
+    (license        . "MPL-2.0")))
 
 ;;; ============================================================
 ;;; Session header
