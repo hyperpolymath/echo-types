@@ -128,6 +128,15 @@ open import EchoExampleSignAnalysis using
   ; echo-pos-classification
   )
 
+open import EchoExampleTruncation using
+  ( halve
+  ; halve-non-injective
+  ; echo-6-halve3
+  ; echo-7-halve3
+  ; echo-6≢echo-7
+  ; echo-halve-classification
+  )
+
 open import EchoFiberCount using
   ( FiberSize-fin
   ; FiberSize-fin-no-hit

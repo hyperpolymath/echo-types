@@ -22,6 +22,7 @@ open import EchoCost
 open import EchoAccess
 open import EchoSearch
 open import EchoExampleSignAnalysis
+open import EchoExampleTruncation
 open import EchoFiberCount
 open import EchoEpistemicResidue
 open import EchoRelational
