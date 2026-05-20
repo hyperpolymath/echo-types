@@ -1,6 +1,5 @@
 #!/bin/sh
-# SPDX-License-Identifier: PMPL-1.0-or-later
-# (MPL-2.0 is automatic legal fallback until PMPL is formally recognised)
+# SPDX-License-Identifier: MPL-2.0
 #
 # kernel-guard.sh — enforce the EchoKernel funext-free certificate and
 # keep docs/echo-types/echo-kernel-note.adoc honest.
