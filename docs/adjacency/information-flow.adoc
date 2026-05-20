@@ -1,6 +1,8 @@
 = Adjacency: information-flow non-interference
 :toc: macro
 
+_Axes engaged: 6 (Stat/Dyn), 7 (PR/PI); axis 8 (IT/Comp) open — cryptographic threat models route through axis 8 when low observers are computationally bounded. See `README.adoc` § "Axis coverage matrix"._
+
 [.lead]
 *Verdict: distinct against relational IFC (Goguen-Meseguer
 lineage); open question against type-theoretic IFC.* The
