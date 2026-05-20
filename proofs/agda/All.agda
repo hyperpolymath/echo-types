@@ -14,6 +14,7 @@ open import EchoEpistemic
 open import EchoLinear
 open import EchoGraded
 open import EchoTropical
+open import AntiEchoTropical
 open import EchoIntegration
 open import EchoCNOBridge
 
