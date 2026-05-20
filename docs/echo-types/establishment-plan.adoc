@@ -288,6 +288,12 @@ rewrite *was* required and has been done (`paper.adoc`,
 `conservativity.adoc`, `types-abstract.adoc`, R-2026-05-18). The
 narrowed thesis (<<thesis>>) is what stands.
 
+NOTE: A 2-categorical refinement of this picture was considered as
+a roadmap-level alternative and *ruled out* on the same evidence
+(every would-be 2-cell appears as `refl` or is prop-forced trivial
+by `≤g-prop` / `⊑-prop`). → ruled out, see
+`decisions/no-2-cat.adoc`.
+
 == Status
 
 [cols="1,4,1", options="header"]

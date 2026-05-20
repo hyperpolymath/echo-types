@@ -25,19 +25,35 @@ Paths marked **[unblocked]** can proceed today. Paths marked
 
 ## Theory work — no proof assistant needed
 
-- **[unblocked]** Axis 2 (approximate echoes): settle the formal
-  definition before touching Agda. Draft in `taxonomy.md` and
-  `composition.md`.
+- **[landed]** Axis 2 (approximate echoes): formal definition
+  shipped as `proofs/agda/EchoApprox.agda` — an ε-fibre over a
+  parametric `Tolerance` (ordered commutative monoid) and a
+  `PseudoMetric`, with `EchoR ε f y = Σ A (λ x → dist (f x) y ≤
+  ε)` plus the three headline lemmas `echo-approx-intro` (exact
+  ⇒ zero-ε), `echo-approx-relax` (monotone in ε), and
+  `echo-approx-compose` (additive composition under a
+  non-expansive outer leg). Note: the formal definition has been
+  retro-documented from the landed module (follow-up doc PR in
+  lane C tracks the `taxonomy.md` §Axis-2 write-up).
 - **[landed]** Axis 8 (information-theoretic vs computational
-  access): promoted from the candidates list to a numbered axis;
-  four candidate refinements of `Echo` (cost-indexed, graded access
-  modality, decidability-respecting, witness-search abstract
-  machine) are listed. Follow-up: pick one refinement and formalise.
+  access): promoted from the candidates list to a numbered axis.
+  *Three* remaining candidate refinements of `Echo`
+  (cost-indexed, graded access modality, witness-search abstract
+  machine); the *decidability-respecting* candidate has shipped
+  as `proofs/agda/EchoDecidable.agda` (`EchoDec f y = Dec (Echo f
+  y)` with six headline lemmas including `echo-dec-intro`,
+  `echo-dec-fin`, `echo-dec-compose-iso`; see `taxonomy.md` §8).
+  Follow-up: pick one of the remaining three refinements and
+  formalise.
 - **[unblocked]** Negative / co-echoes: formulate `CoEcho(f)` and its
   relationship to `Echo(f)`. Possibly resolves the quantitative /
   structural tension hinted at by `EchoTropical`.
-- **[unblocked]** 2-categorical shape: commit to a 2-category or
-  rule it out. Either answer unblocks the composition roadmap.
+- **[ruled out — see docs/echo-types/decisions/no-2-cat.adoc]**
+  2-categorical shape. Every would-be 2-cell in the landed code
+  is `refl` or forced trivial by propositionality (`≤g-prop`,
+  `⊑-prop`, `Echo-comp-iso` round-trips, pentagon projections,
+  `SliceHom`↔cone, `bridge-natural`); see
+  `decisions/no-2-cat.adoc` for the full verdict.
 - **[unblocked]** Presentation-dependence sub-theory: examples 5, 9,
   10 cluster here; write up the common pattern.
 - **[unblocked]** Gate 1 adjacency refresh: the five existing
