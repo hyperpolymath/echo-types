@@ -74,6 +74,18 @@ open import Ordinal.Buchholz.Order using
   ; <ᵇ-inv-+ψω
   )
 
+-- Earn-back item B (K-attributed part): same-binder constructors
+-- usable directly; irreflexivity + transitivity K-free. See
+-- docs/echo-types/earn-back-plan.adoc item B, F-2026-05-18b.
+open import Ordinal.Buchholz.OrderExtendedDirect using
+  ( _<ᵇᵈ_
+  ; <ᵇ-ψα      -- same Ω-index lex (was "unconstructible pending K-free")
+  ; <ᵇ-+2      -- same left-summand lex (idem)
+  ; <ᵇ-irrefl
+  ; <ᵇ-trans
+  ; embed      -- conservativity: core `Order._<ᵇ_` ↪ `_<ᵇᵈ_`
+  )
+
 open import Ordinal.Buchholz.Psi using
   ( psiν-notin-Cν
   ; psiν-stage-lb

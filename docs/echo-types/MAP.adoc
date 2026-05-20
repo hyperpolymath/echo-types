@@ -1,0 +1,224 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= echo-types: Master Map
+:toc: macro
+:toclevels: 3
+:source-highlighter: rouge
+
+[.lead]
+*The single source of truth for "what is in echo-types and where."*
+If you cannot find something, it is indexed here or it does not exist.
+This file supersedes the navigational role of the scattered overview /
+roadmap / taxonomy docs (which remain as detail, linked below). Keep it
+current: every new direction or status change updates this file in the
+same PR.
+
+NOTE: This is the *content/architecture* map. For the per-session audit
+trail (which finding lives in which 6a2 capture) see `../../INDEX.adoc`
+— different purpose, complementary.
+
+toc::[]
+
+== Status legend
+
+[cols="1,4"]
+|===
+| `[REAL]`        | Mechanised in Agda `--safe --without-K`, on `origin/main`.
+| `[REAL*]`       | Real but partial / graded — see the linked status.
+| `[ROADMAP]`     | Planned/specified, not yet built.
+| `[OPEN]`        | Acknowledged gap; explicitly *not* bridged yet.
+| `[RETRACTED]`   | Claim withdrawn by retraction R-2026-05-18; under a
+                    falsifiable earn-back gate (see Governance).
+| `[CLOSED-NEG]`  | Settled as a *negative* result (do not reopen).
+|===
+
+The canonical state is always `origin/main`. Local working clones drift
+behind — `git fetch` and read `origin/main` before trusting any survey.
+
+== Foundation
+
+*Echo functor / loss-with-residue.* The theory of the structured
+remainder of information-losing computation: for `f : A → B`,
+`Echo f y := Σ (x : A), (f x ≡ y)`. `[REAL]`
+
+* Kernel: `proofs/agda/EchoKernel.agda` — the funext-free,
+  postulate-free core (re-export of `Echo` + a pinned `Kernel-contract`).
+  `[REAL]` Everything else imports `Echo` transitively; the
+  kernel-vs-derived classification + funext-free certificate is
+  `docs/echo-types/echo-kernel-note.adoc`.
+* Proofs: `proofs/agda/Echo.agda`, `proofs/agda/EchoKernel.agda`,
+  `proofs/agda/EchoFiberTriangulation.agda`, and the derived
+  `Echo*.agda` modules classified in
+  `docs/echo-types/echo-kernel-note.adoc`.
+* Library: `echo-types.agda-lib` (`depend: standard-library
+  absolute-zero`).
+* Concept doc: `docs/echo-types/overview.md`,
+  `docs/echo-types/types-abstract.adoc`,
+  `docs/echo-types/paper.adoc`.
+
+== Directions
+
+=== Thermodynamic — Landauer/Bennett energy bounds `[REAL]`
+Landauer/Bennett bound *shape*; `ThermodynamicallyReversible(p)
+≙ Echo p σ ≃ Echo id σ`. Zero-cost (Bennett) proved for *every
+injective map* on *any Bishop-finite carrier*, and lifted to an
+*arbitrary carrier with no finiteness at all* (K-free subsingleton /
+occupancy route), certified faithful against the established count and
+instantiated on the genuine *infinite* absolute-zero `Program` CNO —
+"a CNO dissipates zero Landauer energy" is now a real theorem, not the
+historically vacuous claim. The one residual — the *quantitative
+collapse* functional on an infinite carrier, **O-THERMO-∞** — is now
+`[CLOSED-NEG]`: its impossibility is mechanised
+(`collapse-cost-impossible`, the doc's own kill condition discharged
+negatively). No open obligation remains for this Direction; tag
+advanced `[REAL*]` → `[REAL]`. Re-rated B / ~95% in
+STABILITY_ANALYSIS §3.3 (was C+ / ~70% then B- / ~90%, 2026-05-18);
+the standing B- freeze lifted because O-THERMO-∞ is now discharged
+(negatively). The Information-Theory bridge is a *separate* Direction
+(see Shannon entry), not part of this one.
+
+* Proofs: `proofs/agda/EchoThermodynamics.agda`,
+  `proofs/agda/EchoFiberCount.agda`,
+  `proofs/agda/EchoThermodynamicsFinite.agda`,
+  `proofs/agda/EchoThermodynamicsArbitrary.agda`,
+  `proofs/agda/EchoThermoCollapseImpossible.agda`.
+* Docs: `docs/ECHO-CNO-BRIDGE.adoc` §"Thermodynamic Bridge",
+  `docs/STABILITY_ANALYSIS.md` §3.3, `docs/WORK_PLAN.md` §5,
+  `docs/adjacency/hott-fibers.adoc`.
+* Build: `just test-thermo`.
+
+=== Buchholz / Veblen ordinals — higher-order number systems `[REAL]`
+Staged Buchholz-style collapsing in `--safe --without-K`.
+
+* Proofs: `proofs/agda/Ordinal/` (`Buchholz/`, `Brouwer`, `CNF`,
+  `Closure`, `Psi…`, `ExtendedOrder`).
+* Docs: `docs/buchholz-plan.adoc`,
+  `docs/echo-types/buchholz-extended-wf.md`.
+* Direct-constructor `_<ᵇ_` same-binder cases (Buchholz item B):
+  status tracked solely in the earn-back ledger
+  (`docs/echo-types/earn-back-plan.adoc`, row B) and
+  `docs/retractions.adoc` (F-2026-05-18b) — off the paper critical
+  path. (Reference-only by design: no status is snapshotted here, so
+  this line never drifts as the ledger moves.)
+
+=== Characteristic / EI — epistemic, choreographic, roles `[REAL]`
+The echo-invariant line: epistemic structure, choreographies, roles.
+
+* Proofs: `proofs/agda/characteristic/` (15 modules — `ChoreoInjective`,
+  `RoleMode`, `RoleRole`, `RoleGraded`, `ModeGraded`, `NonTruncatable`,
+  `RecipeNonTriviality`, `RecipeTheorem`, …), `proofs/agda/EchoChoreo.agda`.
+* Docs: `docs/characteristic.adoc`, `docs/EI2_REPORT.adoc`,
+  `docs/EI2_READINGS_COMPARISON.adoc`, `docs/integration-audit.adoc`.
+* `EI-2` is `[CLOSED-NEG]` (terminated negative — do not reopen).
+  `RoleRole.agda`'s "REAL OBSTRUCTION" is a closed negative result,
+  not debt.
+
+=== CNO / absolute-zero `[REAL]`
+Certified Null Operations = echo types where `f = id`. absolute-zero is
+both a *dependency* of the core and a *bridge* target.
+
+* Proofs: `proofs/agda/EchoCNOBridge.agda`, `MinimalCNO.agda`,
+  `WorkingCNO.agda`.
+* Docs: `docs/ECHO-CNO-BRIDGE.adoc`,
+  `docs/echo-types/cross-repo-bridge-status.md`.
+
+=== JanusKey reversibility `[REAL]`
+Constructive fiber theory ↔ JanusKey "architecturally impossible data
+loss".
+
+* Proofs: `proofs/agda/EchoJanusBridge.agda`.
+* Docs: `docs/EchoJanusBridge.md`, `docs/EchoBridges.md`.
+
+=== Tropical / Dyadic `[REAL*]`
+Bridge domains enumerated in `docs/EchoBridges.md` (JanusKey / CNO /
+Tropical / Dyadic). Dyadic is mechanised; Tropical is named/early.
+
+* Proofs: `proofs/agda/Dyadic.agda`, `proofs/agda/DyadicEchoBridge.agda`.
+* Docs: `docs/EchoBridges.md`.
+
+=== MAA Framework integration `[ROADMAP]`
+Connect echo types with MAA's reversibility proofs
+(`maa-echo-equivalence`). absolute-zero lives under
+`…/verification-ecosystem/maa-framework/`. Planned, not built.
+
+* Docs: `docs/ProofRoadmap.md` §10, `docs/EchoJanusBridge.md`.
+
+=== Shannon / information theory `[OPEN]`
+Explicitly *not bridged*. The Transport / Nyquist sampling work
+(Gate-3) is the nearest built thread; a real Shannon-entropy /
+mutual-information formalisation is open.
+
+* Proofs: `proofs/agda/examples/Transport.agda`.
+* Docs: `docs/ECHO-CNO-BRIDGE.adoc` (lines ~104, ~254),
+  `docs/adjacency/information-flow.adoc`,
+  `docs/gate-3-canonical.adoc`, `docs/gate-3-transport-handoff.adoc`.
+
+== Tooling
+
+=== ArghDA — proof-ladder workspace manager `[REAL*]`
+Language-agnostic proof-workspace engine (`arghda-core`, Rust). MVP.
+
+* Code: `arghda-core/` (Rust crate).
+* Docs: `docs/arghda-spec.adoc`.
+
+== Governance — proof-debt & retraction
+
+The honesty layer. *Read before citing any claim above as final.*
+
+* `docs/retractions.adoc` — **R-2026-05-18** retracts the
+  graded-comonad / two-models / conservativity / universal-property
+  framing. Those are `[RETRACTED]`, now a *loss-graded reindexing
+  modality*; earn-back is gated, claims stay retracted until a gate
+  passes.
+* `docs/echo-types/earn-back-plan.adoc` — the consolidated proof-debt
+  ledger + falsifiable gates F1–F4 (F1 = make-or-break graded comonad;
+  F2/F4 independent; F3 gated on F1). Current SoT for what is / isn't
+  proven. Current gate modules on `main` include
+  `proofs/agda/EchoGradedComonadF1.agda`,
+  `proofs/agda/EchoPullbackUnivF4.agda`, and
+  `proofs/agda/EchoStepNDModelF2.agda`, each scoped by the ledger.
+* Gate handoffs: `docs/gate-1-distinct-phenomenon.adoc`,
+  `docs/gate-2-handoff.adoc`, `docs/gate-3-*.adoc`.
+
+== Documentation index (canonical vs historical)
+
+Multiple overlapping docs exist. Use the *canonical* column; the rest
+are kept for history and **may overclaim** (pre-retraction).
+
+[cols="1,3,3"]
+|===
+| Topic | Canonical (use this) | Historical / superseded
+
+| Project map (this file)
+| `docs/echo-types/MAP.adoc`
+| `INDEX.adoc` is the *audit* index (different role; keep)
+
+| Proof status / roadmap
+| `docs/echo-types/earn-back-plan.adoc` + `docs/retractions.adoc`
+| `ProofRoadmap.md`, `PRIORITIZED_PROOF_ROADMAP.md`, `WORK_PLAN.md`,
+  `roadmap.adoc`, `roadmap-gates.adoc`, `docs/echo-types/roadmap.md`
+  (pre-R-2026-05-18 — historical)
+
+| Concept / definition
+| `docs/echo-types/overview.md`, `docs/echo-types/paper.adoc`
+| `COMPREHENSIVE_DOCUMENTATION.md`
+
+| Bridges
+| `docs/EchoBridges.md` + this file's Directions
+| `docs/echo-types/cross-repo-bridge-status.md` (detail)
+
+| Adjacency / related theory
+| `docs/adjacency/` (per-topic .adoc)
+| —
+|===
+
+== Keeping this current
+
+This is a living document. Whenever a direction is added, a gate
+passes/fails, or a claim is retracted/earned-back:
+
+. Update the relevant Directions/Governance entry *and* its status tag
+  here, in the same PR as the change.
+. Never duplicate detail — link to the canonical proof module / doc.
+. The GitHub wiki `Home` mirrors this file and must point back here as
+  SoT; do not fork content into the wiki.

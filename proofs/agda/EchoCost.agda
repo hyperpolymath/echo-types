@@ -1,169 +1,350 @@
 {-# OPTIONS --safe --without-K #-}
 
--- Axis-8 (taxonomy.md §8) second artifact: cost-indexed echo.
+-- Cost-indexed echoes over an ordered commutative-monoid cost algebra.
 --
--- The dependent-sum `Echo f y` expresses *information-theoretic*
--- accessibility (a witness exists in the metatheory).
--- `EchoDecidable.EchoDec f y` (axis-8 first artifact) pairs the echo
--- with a *constructive decision procedure* — the qualitative
--- "yes/no" layer of axis 8.
+-- Axis 8 *quantitative* refinement (taxonomy.md §8, refinement 1: full
+-- cost-tracking via an explicit cost algebra). Sits orthogonal to the
+-- already-landed Axis 8 artefacts:
 --
--- This module ships the next layer up:
+--   * `EchoDecidable.agda` — refinement 3, qualitative decidability layer
+--   * `EchoFiberCount.agda` — quantitative fibre-count for finite domains
+--   * `EchoAccess.agda`    — graded access modality (5-grade enum)
 --
---   record EchoCost (f : A → B) (y : B) where
---     witness : Echo f y
---     cost    : ℕ
+-- The cost-indexed echo names the *resource-budget* dimension of
+-- Axis 8: not "is a witness produced?" (decidability) and not "how
+-- many witnesses?" (fibre count), but "at what cost?". The cost
+-- carrier is left abstract — callers supply an ordered commutative-
+-- monoid-flavoured `CostAlgebra` at use sites.
 --
--- An `EchoCost f y` is a *cost-indexed echo*: a witness together with
--- a non-negative cost ledger.  The cost is not (yet) tied to an
--- operational semantics — Agda's type system does not express
--- complexity bounds (`taxonomy.md` §8 lines 228–230) — so the cost
--- here is bookkeeping, not a complexity-class claim.  What the layer
--- does provide is a uniform shape for the heavier refinements
--- (witness-search machine, graded access modality) to project down
--- into: every cost-bearing echo forgets to a decidability echo,
--- which forgets to a base echo, which forgets to extensional
--- inhabitedness.  The axis-8 lattice is named explicitly.
+--   EchoC cost c f y := Σ A (λ x → f x ≡ y × cost x ≤ c)
 --
--- Of the four refinement candidates listed in `taxonomy.md` §8, this
--- is refinement 1 ("Cost-indexed echo.  Pair `Echo f y` with a
--- witness-extraction bound").  The fully realised version would
--- replace the `ℕ` field with a resource monad / cost-passing
--- semantics; the bookkeeping shape lands today and the upgrade is
--- orthogonal.
+-- Headline lemmas:
 --
--- Headline lemmas (pinned in `Smoke.agda`):
+--   * echo-cost-intro       -- strict echo at zero-budget when witness
+--                              has zero cost (constructor analogue of
+--                              `Echo.echo-intro`, refined by budget).
+--   * echo-cost-relax       -- monotone in budget: c₁ ≤ c₂ ⇒ EchoC c₁ ⊑ EchoC c₂.
+--   * echo-cost-forget      -- EchoC cost c f y → Echo f y; the projection
+--                              down to the bare Axis-1 echo (the
+--                              "shadow" obligation of every refinement).
+--   * echo-cost-compose     -- additive composition: an `EchoC cost₁ c₁ f b`
+--                              and `EchoC cost₂ c₂ g y` with `g b ≡ y` and
+--                              a combiner `combine : A → A' → A''` with
+--                              `f' (combine x₁ x₂) ≡ g (f x₁)` and a cost
+--                              receipt `cost' (combine x₁ x₂) ≤ cost₁ x₁
+--                              + cost₂ x₂` yield an `EchoC cost' (c₁ + c₂)
+--                              f' y`. The compositional shape is
+--                              first-order — no funext — exactly mirroring
+--                              the additive-error shape of `EchoApprox`'s
+--                              `echo-approx-compose`.
 --
---   * echo-cost-forget       -- project down to base Echo
---   * echo-cost-to-dec       -- project down to EchoDec (refinement 3)
---   * echo-cost-intro-zero   -- immediate witness has cost 0
---   * echo-cost-bump         -- upper bound is loose (cost can grow)
---   * echo-cost-compose      -- cost composes additively along g ∘ f
+-- Composition shape (design call). The minimal first-order shape that
+-- (a) avoids funext, (b) preserves the additive-cost story, and (c)
+-- still composes across two distinct domains `A`/`A'` is to
+-- parameterise by an explicit combiner that builds an `A''`-witness
+-- from the two source witnesses with a controlled cost receipt and a
+-- controlled image equation. This is strictly more general than
+-- restricting to a single-domain endomorphic situation (the shape
+-- `EchoApprox.echo-approx-compose` uses, `g : B → B`); the
+-- single-domain corner falls out by taking `A := A'` and
+-- `combine := proj₂`.
+--
+-- Parameterisation note. `EchoC` is parameterised over a
+-- `CostAlgebra`, so per the CLAUDE.md "Working rules" invariant
+-- (every headline pinned in `Smoke.agda` via `using`), the headline
+-- lemmas are exposed top-level via `EchoCostInstance.agda`, a
+-- trivial-on-⊤ instance — same recipe as `EchoApproxInstance.agda`.
 
 module EchoCost where
 
-open import Level                                 using (Level; _⊔_)
-open import Function.Base                         using (_∘_)
-open import Data.Nat.Base                         using (ℕ; zero; suc; _+_)
+open import Level                                 using (Level; _⊔_; suc)
+open import Function.Base                         using (_∘_; id)
 open import Data.Product.Base                     using (Σ; _,_; _×_; proj₁; proj₂)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
-open import Relation.Nullary.Decidable.Core       using (yes)
+open import Relation.Binary.PropositionalEquality
+  using (_≡_; refl; sym; subst; trans; cong)
 
-open import Echo                                  using
-  ( Echo
-  ; echo-intro
-  ; Echo-comp-iso-from
-  )
-open import EchoDecidable                         using
-  ( EchoDec
-  )
+open import Echo                                  using (Echo)
 
 ----------------------------------------------------------------------
--- The cost-indexed echo
+-- Cost algebra
 ----------------------------------------------------------------------
 
--- A cost-indexed echo at `y` is a witness paired with a non-negative
--- cost ledger.  The cost field is bookkeeping; the present module
--- makes no claim that the ledger reflects an operational notion of
--- extraction steps.  Downstream refinements (witness-search machine,
--- resource-monad cost-passing) would substantiate the ledger; this
--- shape names the layer where they project.
+-- An ordered commutative-monoid-flavoured cost carrier. Just enough
+-- structure to state additive composition with `zero` as a left
+-- identity for the budget:
+--
+--   * reflexive, transitive `≤`,
+--   * binary `+`,
+--   * `+`-monotone on both sides simultaneously (`+-mono-≤`),
+--   * left-identity `zero + c ≡ c` (the budget round-trip lever).
+--
+-- This is the smallest set of laws under which `echo-cost-intro` /
+-- `echo-cost-relax` / `echo-cost-compose` close without funext, and
+-- which the trivial-on-⊤ instance discharges by `tt` / `refl`. The
+-- right-identity / associativity / commutativity laws are not needed
+-- for the headlines here and are omitted on purpose (a real `ℕ`
+-- instance would supply them via `Data.Nat.Properties`; they would
+-- live on a separate `BalancedCostAlgebra` record if a downstream
+-- proof needs them — same layering pattern as `BalancedTolerance` in
+-- `EchoApprox.agda`).
 
-record EchoCost
-  {a b} {A : Set a} {B : Set b}
-  (f : A → B) (y : B) : Set (a ⊔ b) where
-  constructor cost-echo
+record CostAlgebra ℓ : Set (suc ℓ) where
+  infix 4 _≤_
+  infixl 6 _+_
   field
-    witness : Echo f y
-    cost    : ℕ
-
-open EchoCost public
-
-----------------------------------------------------------------------
--- Headline 1 — `echo-cost-forget`.
---
--- A cost-indexed echo forgets its cost ledger to the base
--- information-theoretic echo.  This is the projection down the
--- axis-8 lattice from refinement 1 to the bare-existence layer.
-----------------------------------------------------------------------
-
-echo-cost-forget :
-  ∀ {a b} {A : Set a} {B : Set b}
-  {f : A → B} {y : B} → EchoCost f y → Echo f y
-echo-cost-forget e = witness e
+    Cost        : Set ℓ
+    zero        : Cost
+    _+_         : Cost → Cost → Cost
+    _≤_         : Cost → Cost → Set ℓ
+    ≤-refl      : ∀ {c}             → c ≤ c
+    ≤-trans     : ∀ {a b c}         → a ≤ b → b ≤ c → a ≤ c
+    +-identityˡ : ∀ c               → (zero + c) ≡ c
+    +-mono-≤    : ∀ {a b c d}       → a ≤ c → b ≤ d → (a + b) ≤ (c + d)
 
 ----------------------------------------------------------------------
--- Headline 2 — `echo-cost-to-dec`.
---
--- A cost-indexed echo also projects down to the decidability-
--- respecting layer (refinement 3, `EchoDecidable`).  The decider
--- returns `yes` with the carried witness: cost data is forgotten,
--- but the underlying constructive decision is retained.  This pins
--- refinement 1 → refinement 3 as one step of the axis-8 lattice.
+-- Cost-indexed echo
 ----------------------------------------------------------------------
 
-echo-cost-to-dec :
-  ∀ {a b} {A : Set a} {B : Set b}
-  {f : A → B} {y : B} → EchoCost f y → EchoDec f y
-echo-cost-to-dec e = yes (witness e)
+module Cost
+  {ℓ} (K : CostAlgebra ℓ)
+  where
 
-----------------------------------------------------------------------
--- Headline 3 — `echo-cost-intro-zero`.
---
--- The trivial direction of axis 8: an immediate witness `x : A`
--- gives a zero-cost echo.  Cost is bookkeeping; the immediate
--- witness has not "done" any work.  Mirrors `echo-dec-intro` from
--- `EchoDecidable`, adding the cost-zero ledger.
-----------------------------------------------------------------------
+  open CostAlgebra K
 
-echo-cost-intro-zero :
-  ∀ {a b} {A : Set a} {B : Set b}
-  (f : A → B) (x : A) → EchoCost f (f x)
-echo-cost-intro-zero f x = cost-echo (echo-intro f x) zero
+  -- `EchoC cost c f y`: a witness `x : A` whose image under `f` hits
+  -- `y` exactly *and* whose ascribed cost is within budget `c`.
+  --
+  -- Two pieces of evidence in the second component:
+  --   * `f x ≡ y`         : the bare-echo equation (Axis-1 content)
+  --   * `cost x ≤ c`      : the budget receipt   (Axis-8 content)
+  --
+  -- The Σ-shape uses `_×_` rather than nested Σ for symmetry with
+  -- `EchoApprox.EchoR`, which lets the `echo-cost-forget` projection
+  -- to the bare `Echo` land by `(proj₁ , proj₁ ∘ proj₂)`.
+  EchoC :
+    ∀ {a b} {A : Set a} {B : Set b} →
+    (cost : A → Cost) → (c : Cost) → (f : A → B) → B → Set (a ⊔ b ⊔ ℓ)
+  EchoC {A = A} cost c f y =
+    Σ A (λ x → (f x ≡ y) × (cost x ≤ c))
 
-----------------------------------------------------------------------
--- Headline 4 — `echo-cost-bump`.
---
--- The cost ledger is a loose upper bound: an echo at cost `c` is
--- also an echo at any larger cost `c + k`.  This captures the
--- intuition that "this witness can be extracted in at most c steps"
--- weakens monotonically.  Useful when composing or transporting a
--- cost-indexed echo across operations whose precise step count is
--- not tracked.
-----------------------------------------------------------------------
+  ----------------------------------------------------------------------
+  -- Headline 1: exact intro at zero-budget when the witness has zero cost.
+  --
+  -- The cost-indexed analogue of `Echo.echo-intro`: any `x : A` whose
+  -- ascribed cost is ≤ zero (which by reflexivity holds whenever the
+  -- cost *is* zero) lifts into its own fibre with zero budget. The
+  -- bound proof is `≤-refl` at the cost of `x`, transported along the
+  -- caller's premise `cost x ≤ zero`.
+  --
+  -- Two equivalent shapes:
+  --   * a "you tell me the cost is ≤ zero" version (`echo-cost-intro-≤`)
+  --   * a "the cost *is* zero" definitional version (`echo-cost-intro`)
+  --
+  -- The latter is the named headline; the former is the more general
+  -- form callers reach for when they have a `cost x ≤ zero` proof in
+  -- hand from elsewhere.
+  ----------------------------------------------------------------------
 
-echo-cost-bump :
-  ∀ {a b} {A : Set a} {B : Set b}
-  {f : A → B} {y : B}
-  (k : ℕ) → EchoCost f y → EchoCost f y
-echo-cost-bump k e = cost-echo (witness e) (cost e + k)
+  echo-cost-intro-≤ :
+    ∀ {a b} {A : Set a} {B : Set b}
+    (cost : A → Cost) (f : A → B) (x : A) →
+    cost x ≤ zero →
+    EchoC cost zero f (f x)
+  echo-cost-intro-≤ cost f x cost-x≤0 =
+    x , refl , cost-x≤0
 
-----------------------------------------------------------------------
--- Headline 5 — `echo-cost-compose`.
---
--- Cost composes additively along `g ∘ f`.  Given a cost-indexed
--- echo `(b , p : f x ≡ b , k₁)` in the f-fibre over an intermediate
--- `b`, and a cost-indexed echo `(b , q : g b ≡ y , k₂)` in the
--- g-fibre over `y`, we produce a cost-indexed echo `(x , g∘f x ≡ y,
--- k₁ + k₂)` in the composite-fibre.
---
--- This is the canonical complexity-composition shape: the cost of
--- extracting a `g ∘ f`-witness is the sum of the component costs.
--- The accumulation iso `Echo-comp-iso-to` supplies the witness; the
--- additive cost combines the ledgers.  Anchors `taxonomy.md` §8's
--- "Composition conjecture" at the bookkeeping layer (the
--- multiplicative-cost version would require a richer cost semiring
--- and is left to the witness-search-machine refinement).
-----------------------------------------------------------------------
+  echo-cost-intro :
+    ∀ {a b} {A : Set a} {B : Set b}
+    (cost : A → Cost) (f : A → B) (x : A) →
+    cost x ≡ zero →
+    EchoC cost zero f (f x)
+  echo-cost-intro cost f x cost-x≡0 =
+    x , refl , subst (_≤ zero) (sym cost-x≡0) ≤-refl
 
-echo-cost-compose :
-  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
-  (f : A → B) (g : B → C) {y : C}
-  (b : B)
-  → EchoCost f b
-  → (g b ≡ y) × ℕ
-  → EchoCost (g ∘ f) y
-echo-cost-compose f g b ef (gb≡y , k₂) =
-  cost-echo
-    (Echo-comp-iso-from f g (b , witness ef , gb≡y))
-    (cost ef + k₂)
+  ----------------------------------------------------------------------
+  -- Headline 2: budget is monotone — a tighter budget refines a looser
+  -- one. One `≤-trans` step. The bare-echo equation `f x ≡ y` is
+  -- untouched; only the receipt grows.
+  ----------------------------------------------------------------------
+
+  echo-cost-relax :
+    ∀ {a b} {A : Set a} {B : Set b}
+    {cost : A → Cost} {c₁ c₂ : Cost} {f : A → B} {y : B} →
+    c₁ ≤ c₂ → EchoC cost c₁ f y → EchoC cost c₂ f y
+  echo-cost-relax c₁≤c₂ (x , p , cost-x≤c₁) =
+    x , p , ≤-trans cost-x≤c₁ c₁≤c₂
+
+  ----------------------------------------------------------------------
+  -- Headline 3: forget the cost receipt and recover the bare echo.
+  --
+  -- The Axis-8 → Axis-1 projection. `echo-cost-forget e := (proj₁ e ,
+  -- proj₁ (proj₂ e))` — keep the A-witness and the bare-echo equation;
+  -- drop the budget receipt. This is the *shadow* obligation of every
+  -- Axis-8 refinement (same role as `echo-shadow-A` in `EchoApprox`):
+  -- every move in the cost-indexed calculus that preserves
+  -- `(x , f x ≡ y)` preserves the Axis-1 echo on the nose.
+  ----------------------------------------------------------------------
+
+  echo-cost-forget :
+    ∀ {a b} {A : Set a} {B : Set b}
+    {cost : A → Cost} {c : Cost} {f : A → B} {y : B} →
+    EchoC cost c f y → Echo f y
+  echo-cost-forget (x , p , _) = x , p
+
+  ----------------------------------------------------------------------
+  -- Headline 4: additive composition.
+  --
+  -- The cost-indexed analogue of `Echo-comp-iso` / `echo-approx-compose`.
+  -- Form: given
+  --
+  --   * an EchoC at cost-budget `c₁` for `f : A → B` at intermediate `b`,
+  --   * an EchoC at cost-budget `c₂` for `g : B → C` at target  `y`
+  --     with `g b ≡ y`,
+  --   * a target domain `A''` and a function `f' : A'' → C` taking
+  --     the composite-witness shape,
+  --   * a *combiner* `combine : A → A' → A''` that produces an `A''`-
+  --     witness from the two source witnesses, together with two
+  --     receipts:
+  --       (i)  `image-eq` : `f' (combine x₁ x₂) ≡ g (f x₁)` —
+  --                          the combined witness reaches the
+  --                          same point in `C` as the composite,
+  --       (ii) `cost-bound` : `cost' (combine x₁ x₂) ≤ cost₁ x₁ + cost₂ x₂`
+  --                          — the combined cost stays inside
+  --                          the additive budget,
+  --
+  -- produce an `EchoC cost' (c₁ + c₂) f' y`. The bound proof chains
+  -- the combiner receipt through `+-mono-≤` and `≤-trans`; the
+  -- image equation chains through `trans (image-eq) (cong g (proj₁
+  -- (proj₂ e₁)))` and then through `proj₁ (proj₂ e₂)`.
+  --
+  -- Composition shape (design call). This is strictly more general
+  -- than the EchoApprox-style "single-domain endomorphic g" shape: it
+  -- compositionally combines two echoes whose A-witnesses may live in
+  -- different types and whose `f'`-target need not equal `g ∘ f` on
+  -- the nose. The natural specialisation `f' := g ∘ f` and `combine
+  -- := λ x₁ _ → x₁` (drop the second witness) recovers the
+  -- single-source story; we pin it as `echo-cost-compose-mono` below.
+  --
+  -- No funext used. The image equation is supplied by the caller (not
+  -- derived from a pointwise homotopy on the carriers), and the cost
+  -- bound chains through `+-mono-≤` / `≤-trans` — both first-order.
+  ----------------------------------------------------------------------
+
+  -- `cost₂` lives on `B`, not on `A'`, because the second echo
+  -- `EchoC cost₂ c₂ g y` has `g : B → C` and so its A-witness is a
+  -- `B`-point. The combiner takes the original `A`-witness from
+  -- `e₁` together with the `B`-witness from `e₂` and produces an
+  -- `A''`-witness for the composite target function `f' : A'' → C`.
+  echo-cost-compose :
+    ∀ {a a'' b c} {A : Set a} {A'' : Set a''} {B : Set b} {C : Set c}
+    {cost₁ : A → Cost} {cost₂ : B → Cost} {cost' : A'' → Cost}
+    {c₁ c₂ : Cost}
+    (f  : A → B) (g  : B → C) (f' : A'' → C)
+    (combine : A → B → A'') →
+    ∀ {b'} {y : C}
+    (e₁ : EchoC cost₁ c₁ f b')
+    (e₂ : EchoC cost₂ c₂ g y) →
+    g b' ≡ y →
+    f' (combine (proj₁ e₁) (proj₁ e₂)) ≡ g (f (proj₁ e₁)) →
+    cost' (combine (proj₁ e₁) (proj₁ e₂)) ≤
+      ((cost₁ (proj₁ e₁)) + (cost₂ (proj₁ e₂))) →
+    EchoC cost' (c₁ + c₂) f' y
+  echo-cost-compose {cost₁ = cost₁} {cost₂ = cost₂} {cost' = cost'}
+    {c₁ = c₁} {c₂ = c₂} f g f' combine {b' = b'} {y = y}
+    (x₁ , fp₁ , cost₁-x≤c₁) (x₂ , gp₂ , cost₂-x≤c₂)
+    gb'≡y combine-image combine-cost =
+      combine x₁ x₂ , img , bnd
+    where
+      -- f' (combine x₁ x₂) = g (f x₁) by `combine-image`;
+      -- = g b' by `cong g fp₁` (since `fp₁ : f x₁ ≡ b'`);
+      -- = y by `gb'≡y`.
+      img : f' (combine x₁ x₂) ≡ y
+      img = trans combine-image (trans (cong g fp₁) gb'≡y)
+
+      -- cost' (combine x₁ x₂) ≤ cost₁ x₁ + cost₂ x₂   (by combine-cost)
+      -- cost₁ x₁ + cost₂ x₂ ≤ c₁ + c₂                 (by +-mono-≤)
+      bnd : cost' (combine x₁ x₂) ≤ (c₁ + c₂)
+      bnd = ≤-trans combine-cost (+-mono-≤ cost₁-x≤c₁ cost₂-x≤c₂)
+
+  ----------------------------------------------------------------------
+  -- Single-source specialisation of composition.
+  --
+  -- `echo-cost-compose-mono` is the corner of `echo-cost-compose` in
+  -- which we drop the second source witness: `A'' := A`, `combine x₁
+  -- _ := x₁`, and `cost' := cost₁`. The image and cost receipts then
+  -- discharge to `refl` and `≤-refl` after `+-identityˡ`-style
+  -- algebra in the caller's instance; we leave them as explicit
+  -- hypotheses (matching the `EchoApprox` retract pattern) so that
+  -- callers don't need to do `subst` gymnastics inside this module.
+  --
+  -- The caller-side discharge is trivial whenever `cost₂` is the
+  -- constant-zero cost (a "free" outer leg `g`): then `cost₁ x₁ +
+  -- cost₂ x₂ ≡ cost₁ x₁ + zero`, and a right-identity step closes
+  -- it. The asymmetric "free outer leg" corner is one of the
+  -- natural use sites for this shape.
+  ----------------------------------------------------------------------
+
+  echo-cost-compose-mono :
+    ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+    {cost₁ : A → Cost} {cost₂ : B → Cost}
+    {c₁ c₂ : Cost}
+    (f : A → B) (g : B → C) →
+    ∀ {b'} {y : C}
+    (e₁ : EchoC cost₁ c₁ f b')
+    (e₂ : EchoC cost₂ c₂ g y) →
+    g b' ≡ y →
+    cost₁ (proj₁ e₁) ≤ ((cost₁ (proj₁ e₁)) + (cost₂ (proj₁ e₂))) →
+    EchoC cost₁ (c₁ + c₂) (g ∘ f) y
+  echo-cost-compose-mono {cost₁ = cost₁} {cost₂ = cost₂}
+    {c₁ = c₁} {c₂ = c₂} f g {b' = b'} {y = y}
+    (x₁ , fp₁ , cost₁-x≤c₁) (x₂ , gp₂ , cost₂-x≤c₂)
+    gb'≡y x₁-≤-sum =
+      x₁ , img , bnd
+    where
+      img : g (f x₁) ≡ y
+      img = trans (cong g fp₁) gb'≡y
+
+      bnd : cost₁ x₁ ≤ (c₁ + c₂)
+      bnd = ≤-trans x₁-≤-sum (+-mono-≤ cost₁-x≤c₁ cost₂-x≤c₂)
+
+  ----------------------------------------------------------------------
+  -- Forget-respects-compose (axis-1 shadow law for the composite).
+  --
+  -- The bare-echo projection of `echo-cost-compose-mono e₁ e₂ ...` is
+  -- the bare composite echo at the A-witness of `e₁`. This is the
+  -- compositional version of `echo-cost-forget` — composing in the
+  -- cost-indexed calculus and then forgetting the receipt agrees
+  -- with the bare-Axis-1 composite of the forgotten echoes on the
+  -- A-component.
+  ----------------------------------------------------------------------
+
+  echo-cost-forget-compose-mono-A :
+    ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+    {cost₁ : A → Cost} {cost₂ : B → Cost}
+    {c₁ c₂ : Cost}
+    (f : A → B) (g : B → C)
+    {b' : B} {y : C}
+    (e₁ : EchoC cost₁ c₁ f b')
+    (e₂ : EchoC cost₂ c₂ g y)
+    (gb'≡y : g b' ≡ y)
+    (x₁-≤-sum :
+       cost₁ (proj₁ e₁) ≤
+         ((cost₁ (proj₁ e₁)) + (cost₂ (proj₁ e₂)))) →
+    proj₁ (echo-cost-forget
+             (echo-cost-compose-mono {cost₁ = cost₁} {cost₂ = cost₂}
+                f g e₁ e₂ gb'≡y x₁-≤-sum))
+    ≡ proj₁ (echo-cost-forget e₁)
+  echo-cost-forget-compose-mono-A f g (x , _ , _) _ _ _ = refl
+
+  ----------------------------------------------------------------------
+  -- Budget-zero round-trip companion to `echo-cost-relax`.
+  --
+  -- `echo-cost-relax-zero`: relaxing from `zero` to `(zero + c)` is
+  -- the same as relaxing to `c` (via `+-identityˡ`). The smallest
+  -- statement that uses the `+-identityˡ` field of `CostAlgebra`,
+  -- in the same spirit as `EchoApprox.echo-approx-comp-retract-budget`.
+  ----------------------------------------------------------------------
+
+  echo-cost-relax-zero :
+    ∀ (c : Cost) → (zero + c) ≡ c
+  echo-cost-relax-zero = +-identityˡ

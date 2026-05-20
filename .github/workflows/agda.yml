@@ -1,13 +1,25 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
-# (MPL-2.0 is automatic legal fallback until PMPL is formally recognised)
+# SPDX-License-Identifier: MPL-2.0
 
 name: Agda
 
 on:
+  # Direct pushes only on the integration branches. Feature-branch
+  # validation is fully covered by the pull_request trigger below —
+  # gating WIP pushes to no-PR branches with a full multi-minute Agda
+  # build was the dominant self-inflicted load on the shared estate
+  # Actions concurrency pool, and also double-fired (push + PR) on PR
+  # branches. No proof coverage is lost: PRs and post-merge main still
+  # run the full suite.
   push:
-    branches:
-      - "**"
+    branches: [main, master]
   pull_request:
+
+# Estate guardrail: cancel superseded runs so re-pushes / rebased PR
+# updates don't pile up queued full-suite builds. Safe here — this
+# workflow only typechecks (read-only, no publish or mutation).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions: read-all
 
@@ -17,6 +29,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+
+      # Fast static gate (no Agda): enforce the EchoKernel funext-free
+      # certificate and that every Echo*.agda is classified in
+      # docs/echo-types/echo-kernel-note.adoc. Fails the run before the
+      # multi-minute typecheck if the kernel cone or the note drifts.
+      - name: Kernel funext-free certificate + classification guard
+        run: sh scripts/kernel-guard.sh
 
       - name: Install Agda and standard library
         run: |

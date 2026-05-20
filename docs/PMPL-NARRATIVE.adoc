@@ -1,0 +1,106 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+
+= PMPL as Narrative Overlay
+:toc: macro
+:toclevels: 2
+:sectnums:
+:icons: font
+
+[.lead]
+This repository is licensed under *MPL-2.0* (see `LICENSE`). The
+*PMPL* (Palimpsest-MPL) name remains as a *narrative / cultural /
+discipline overlay* documented here, NOT as an SPDX identifier and
+NOT as a separate legal text. This file exists to record what the
+PMPL framing contributes that the bare MPL-2.0 identifier does not.
+
+== Policy in one paragraph
+
+*Stated licence (legal):* MPL-2.0. This is the licence the SPDX
+headers carry, the LICENSE file contains, the README badge displays,
+and downstream consumers / registries / scanners see. There is no
+"PMPL-1.0-or-later" SPDX identifier in this repository.
+
+*PMPL (narrative):* the working-discipline framing under which this
+code was developed. Palimpsest-MPL was, in its prior incarnation, an
+overlay licence whose text incorporated MPL-2.0 by reference. The
+owner direction of 2026-05-20 collapsed the overlay into MPL-2.0
+proper and lifted the *posture* it represented into this narrative
+document. No legal content was lost: PMPL's operative legal effect
+*was* MPL-2.0 (lawyer-confirmed). What was discarded is a stated
+SPDX identifier that registries, scanners, and downstream tooling
+treated as foreign.
+
+== What PMPL represented
+
+The Palimpsest framing carried three commitments that survive intact
+under MPL-2.0:
+
+. *Multi-author authorship as the default reading.* "Palimpsest"
+  named the working assumption that a meaningful body of code is
+  *layered*: contributions overwrite, gloss, and re-purpose
+  predecessors, and the licence regime should reflect that no single
+  author owns the latest layer cleanly. MPL-2.0's file-level
+  copyleft realises exactly this: each file is its own unit, and the
+  layering is visible in the file's history.
+. *Source availability as a discipline, not a strategy.* PMPL was
+  written to make source release the *default* rather than an
+  opt-in. MPL-2.0's "any covered file you distribute, you make the
+  source available for" clause is the operative version of the same
+  commitment.
+. *Narrative coherence over registry convenience.* PMPL's text spent
+  prose on the *why* of its terms; MPL-2.0 spends none. This
+  document is where the *why* now lives, divorced from the legal
+  text it used to be attached to.
+
+== What we no longer claim
+
+. *That PMPL is a distinct licence at registries.* It never was at
+  any standard SPDX registry. crates.io, npm, Hackage, Debian's
+  copyright scanners and similar all treated `PMPL-1.0-or-later` as
+  foreign and required an OSI-recognised fallback (which is
+  precisely MPL-2.0). Carrying both identifiers was friction
+  without legal effect.
+. *That there is a separate Palimpsest copyleft regime.* There
+  isn't. The legal regime is MPL-2.0; the working discipline that
+  PMPL named is documented here.
+. *That `palimpsest-license` is a co-licensing dependency.* It is
+  reference-only documentation of the prior framing. Downstream
+  consumers do not need to read it.
+
+== Header convention going forward
+
+Source files carry exactly:
+
+[source]
+----
+SPDX-License-Identifier: MPL-2.0
+SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+----
+
+No `PMPL-1.0-or-later`, no compound `MPL-2.0 OR …` clauses, no
+inline comment explaining "MPL-2.0 is the legal fallback for PMPL".
+The header is the legal statement; this document is the narrative.
+Authoring new files: use the two lines above verbatim (substitute
+copyright holder as appropriate); do not invent overlays.
+
+== History
+
+* *Prior to 2026-05-20*: `PMPL-1.0-or-later` was the stated SPDX
+  identifier across this and ~69 other repositories in the estate.
+  MPL-2.0 was named as the automatic legal fallback (lawyer-confirmed).
+* *2026-05-20 (owner direction)*: collapse the SPDX identifier to
+  MPL-2.0; preserve the PMPL framing as this narrative document.
+* *Drift note*: SPDX headers across the wider estate may still carry
+  `PMPL-1.0-or-later` and will be migrated in their own time. The
+  legal effect is unchanged (MPL-2.0 is the operative licence in
+  either case); the stated identifier is the only thing that
+  differs. Migration is owner-paced and manual.
+
+== References
+
+* `LICENSE` (MPL-2.0 full text, this repository).
+* `LICENSE-docs` (CC-BY-4.0 full text for documentation, this
+  repository).
+* Mozilla Public License v2.0 — https://www.mozilla.org/en-US/MPL/2.0/
+* SPDX licence list — https://spdx.org/licenses/MPL-2.0.html

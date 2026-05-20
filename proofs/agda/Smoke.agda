@@ -32,6 +32,20 @@ open import Echo using
   ; cancel-iso
   ; Echo-comp-pent-Σ-assoc
   )
+
+-- AntiEcho thin slice (theory/antiecho — Σ-dual of Echo). Lands the
+-- carrier, per-element disjointness, introduction, and source-side
+-- map-over. Distinct from `EchoFiberTriangulation.CoEcho` (which is
+-- the trivial opposite-orientation fibre `∃ x . y ≡ f x`); see
+-- `coecho.md` §6 for the naming rationale. Partition-with-decidability
+-- and tropical decomposition deferred to follow-up slices.
+open import AntiEcho using
+  ( AntiEcho
+  ; antiecho-intro
+  ; antiecho-disjoint
+  ; antiecho-map-over
+  )
+
 -- Pillar A of docs/echo-types/establishment-plan.adoc: the
 -- definitional Echo ≃ fib bridge, pinned so a rename fails CI fast.
 open import EchoFiberBridge using (fiber; echo→fib; fib→echo; echo↔fib)
@@ -53,12 +67,124 @@ open import EchoFiberTriangulation using
 open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
 open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
 open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)
+
+-- Example 9 (docs/echo-types/examples.md §9): parser residue —
+-- balanced parentheses. The Boolean shadow `parses : List Token →
+-- Bool` is non-injective on distinct presentations (`(())` vs `()()`),
+-- and the Echo retains the token stream. Pinned headlines: the
+-- non-injectivity Σ-witness, the three concrete `Echo parses true`
+-- carriers (empty / pair / nested), and the residue Σ-pair.
+open import EchoExampleParser using
+  ( Token
+  ; LP
+  ; RP
+  ; parses
+  ; echo-parse-empty
+  ; echo-parse-pair
+  ; echo-parse-nested
+  ; echo-parse-nested≢echo-parse-pair
+  ; parses-non-injective
+  ; parser-residue
+  ; BalancedClosed
+  ; empty-balanced
+  ; paren-empty-balanced
+  ; paren-nested-balanced
+  ; paren-pair-balanced
+  )
+
+-- Example 10 from `docs/echo-types/examples.md` (abstract
+-- interpretation via Sign lattice). Headlines pinned so a rename
+-- or a slide back to an unanchored claim fails CI fast. See
+-- PR #76 (presentation-dependence cluster).
+open import EchoExampleAbsInt using
+  ( Sign
+  ; Carrier
+  ; α
+  ; concretization-collapses
+  ; α-non-injective-on-pos
+  ; echo-pos-p1
+  ; echo-pos-p2
+  ; echo-zero-witness
+  ; distinct-echoes-same-sign
+  ; absint-classification
+  )
+
+-- Example 5 (docs/echo-types/examples.md §5): database provenance via
+-- K-provenance semiring. Distinct Bool-provenance rows project to the
+-- same payload, witnessing the non-injectivity of `project` and
+-- producing distinct echoes at the same projected value.
+open import EchoExampleProvenance using
+  ( Row
+  ; project
+  ; provenance-collapses
+  ; echo-prov-true
+  ; echo-prov-false
+  ; echoes-distinguish-provenance
+  ; echo-prov-true≢echo-prov-false
+  ; collapse-via-residue
+  )
 open import VecRotation using (rotL-alternating; rotR-alternating; map-alternating)
 
 open import EchoApprox using
   ( Tolerance
   ; PseudoMetric
+  ; BalancedTolerance
   ; module Approx
+  )
+
+-- Per-lemma pins for the parameterised EchoApprox via EchoApproxInstance
+-- (hygiene; closes the CLAUDE.md "Working rules" invariant gap for
+-- parameterised modules — see follow-up to PR #70).
+open import EchoApproxInstance using
+  ( trivialTolerance
+  ; trivialPseudoMetric
+  ; trivialBalancedTolerance
+  ; approx-EchoR
+  ; approx-intro
+  ; approx-strict→approx
+  ; approx-relax
+  ; approx-NonExpansive
+  ; approx-compose
+  ; approx-comp-sound
+  ; approx-comp-retract-to
+  ; approx-comp-retract-A
+  ; approx-comp-retract-B
+  ; approx-comp-retract-budget
+  ; approx-comp-retract-from-to
+  ; approx-subst-A-invariant
+  ; approx-Separated
+  ; approx-zero-collapses-strict
+  ; approx-shadow-A
+  ; approx-shadow-iso-to
+  ; approx-shadow-iso-from
+  ; approx-strict→approx-shadow-A
+  ; approx-strict→approx-collapse-shadow-A
+  )
+
+-- Axis 8 third quantitative artifact (taxonomy.md §8, refinement 1):
+-- cost-indexed echo over an abstract `CostAlgebra` (ordered commutative
+-- monoid with `0`, `+`, `≤`, left-identity, transitivity, monotone-`+`).
+-- Sits orthogonal to `EchoDecidable` (refinement 3, qualitative
+-- decidability) and `EchoFiberCount` (quantitative fibre-count for
+-- finite domains): names the resource-budget dimension of Axis 8.
+-- Carrier + headlines pinned via `EchoCostInstance` (trivial-on-⊤
+-- instance) — same hygiene pattern as `EchoApproxInstance`.
+open import EchoCost using
+  ( CostAlgebra
+  ; module Cost
+  )
+
+open import EchoCostInstance using
+  ( trivialCostAlgebra
+  ; cost-EchoC
+  ; cost-intro
+  ; cost-intro-≤
+  ; cost-relax
+  ; cost-relax-zero
+  ; cost-forget
+  ; cost-compose
+  ; cost-compose-mono
+  ; cost-forget-compose-mono-A
   )
 
 open import EchoIndexed using
@@ -82,68 +208,66 @@ open import EchoDecidable using
   ; echo-dec-compose-fin
   )
 
-open import EchoCost using
-  ( EchoCost
-  ; echo-cost-forget
-  ; echo-cost-to-dec
-  ; echo-cost-intro-zero
-  ; echo-cost-bump
-  ; echo-cost-compose
+-- Axis 8(4) thin slice (taxonomy.md §"Witness-search abstract
+-- machine"): the enumerator-bounded refinement of `Echo`. Lands the
+-- search strategy + bound-indexed carrier, introduction, bound
+-- monotonicity, forgetful projection to plain `Echo`, empty-budget
+-- vacuity, and the honest post-composition rule. Sequential /
+-- product-strategy composition needs a `ℕ × ℕ ↔ ℕ` pairing
+-- bijection and lands in a separate slice; see the module preamble
+-- "where next" section.
+open import EchoSearch using
+  ( SearchStrategy
+  ; EchoS
+  ; echo-search-intro
+  ; echo-search-relax
+  ; echo-search-forget
+  ; echo-search-bound-zero
+  ; echo-search-postcompose
   )
 
+-- Per-lemma pins for the parameterised EchoSearch via
+-- EchoSearchInstance — same hygiene pattern as EchoApproxInstance.
+open import EchoSearchInstance using
+  ( trivialEnum
+  ; trivialF
+  ; search-intro-⊤
+  ; search-relax-⊤
+  ; search-forget-⊤
+  ; search-bound-zero-⊤
+  ; search-postcompose-⊤
+  )
+
+-- Axis 8 second formal artifact (taxonomy.md §8): graded access
+-- modality. Order layer (enum, Hasse-enumerated order, transitivity,
+-- propositionality) + Σ-shape carrier + `_≤a_`-indexed degrade
+-- primitive landed in the thin slice; the per-decoration composition
+-- trio (`degrade-access-comp` / `compose` / `via-join`) and the
+-- categorical join structure (`_⊔a_` + `≤a-⊔a-{left,right,univ}`)
+-- land in this PR, completing the same recipe as `EchoGraded` and
+-- `EchoLinear`. Honest carriers for `enum` / `feasible` / `infeasible`
+-- remain deferred (a real design choice — see the module preamble).
 open import EchoAccess using
   ( Access
+  ; free
+  ; decidable
+  ; enum
   ; feasible
   ; infeasible
-  ; _⊑a_
+  ; _≤a_
+  ; ≤a-trans
+  ; ≤a-prop
+  ; CEcho
+  ; EchoAccess
+  ; access-of
+  ; degrade-access
   ; _⊔a_
-  ; ⊑a-prop
-  ; ⊑a-⊔a-left
-  ; ⊑a-⊔a-right
-  ; ⊑a-⊔a-univ
-  ; EchoA
-  ; echo-access-forget
-  ; echo-access-intro
-  ; echo-access-relax
-  ; echo-access-from-cost
-  ; echo-access-compose
-  )
-
-open import EchoSearch using
-  ( BoundedSearch
-  ; bounded-search-to-echo
-  ; bounded-search-to-cost
-  ; bounded-search-to-dec
-  ; bounded-search-to-access-feasible
-  ; bounded-search-introduce-1
-  )
-
-open import EchoExampleSignAnalysis using
-  ( Sign
-  ; nat-sign
-  ; nat-sign-non-injective
-  ; echo-1-pos
-  ; echo-2-pos
-  ; echo-1≢echo-2
-  ; echo-pos-classification
-  )
-
-open import EchoExampleTruncation using
-  ( halve
-  ; halve-non-injective
-  ; echo-6-halve3
-  ; echo-7-halve3
-  ; echo-6≢echo-7
-  ; echo-halve-classification
-  )
-
-open import EchoSearchExample using
-  ( double
-  ; search-double-6
-  ; search-as-echo
-  ; search-as-cost
-  ; search-as-dec
-  ; search-as-feasible
+  ; ≤a-⊔a-left
+  ; ≤a-⊔a-right
+  ; ≤a-⊔a-univ
+  ; degrade-access-comp
+  ; degrade-access-compose
+  ; degrade-access-via-join
   )
 
 open import EchoFiberCount using
@@ -151,6 +275,7 @@ open import EchoFiberCount using
   ; FiberSize-fin-no-hit
   ; FiberSize-fin-all-hit
   ; FiberSize-fin-id-zero
+  ; FiberSize-fin-injective
   ; FiberSize-fin-const
   ; FiberSize-fin≡0⇒no-echo
   ; no-echo⇒FiberSize-fin≡0
@@ -162,7 +287,31 @@ open import EchoThermodynamics using
   ; ⌊log₂1⌋≡0
   ; bennett-reversible
   ; bennett-reversible-id-zero
+  ; bennett-reversible-injective
   ; landauer-collapse
+  )
+
+open import EchoThermodynamicsFinite using
+  ( FiniteDomain
+  ; fiber-erasure-bound-fin
+  ; bennett-reversible-finite
+  ; landauer-collapse-finite
+  )
+
+open import EchoThermodynamicsArbitrary using
+  ( FiberSubsingleton
+  ; injective⇒fiber-subsingleton
+  ; reversible-erasure-cost
+  ; bennett-reversible-arbitrary
+  ; occupancy≡FiberSize-fin
+  ; bennett-arbitrary-refines-finite
+  ; bennett-reversible-cno-identity
+  )
+
+open import EchoThermoCollapseImpossible using
+  ( nat-into-collapse-fiber
+  ; nat-into-collapse-fiber-injective
+  ; collapse-cost-impossible
   )
 
 open import EchoChoreo using
@@ -229,9 +378,12 @@ open import EchoGraded using
   ; degrade-via-join
   )
 
--- Pillar B of docs/echo-types/establishment-plan.adoc: echo as a
--- graded comonad of structured loss. Thin slice — counit + the
--- coassociativity verdict (no path algebra beyond ≤g-prop).
+-- Pillar B of docs/echo-types/establishment-plan.adoc: echo's
+-- loss-graded *reindexing modality* (NOT a graded comonad — no
+-- nested D_r D_s; gextract is the identity coercion, gduplicate the
+-- join-left single-grade reindex). The coherence equations collapse
+-- to ≤g-prop because the grade order is thin, not because a comonad
+-- coherence was discharged. See docs/retractions.adoc R-2026-05-18.
 open import EchoGradedComonad using
   ( gextract
   ; gduplicate
@@ -241,7 +393,9 @@ open import EchoGradedComonad using
   )
 
 -- Pillar B (part 1): Echo as the pullback of f along y : ⊤ → B,
--- with the terminal-cone universal property. SliceHom IS a cone.
+-- with a funext-relative *pointwise* mediator property (NOT a
+-- terminal-cone universal property: m' ≡ m is unstatable here
+-- without funext). SliceHom IS a cone. See R-2026-05-18.
 open import EchoPullback using
   ( EchoCone
   ; echo-cone
@@ -254,8 +408,9 @@ open import EchoPullback using
   )
 
 -- Pillar C: separating model — generic Σ-functoriality holds while
--- the characteristic loss-grade composition law fails (carried
--- precisely by propositionality of the loss order).
+-- the characteristic loss-grade composition law fails. This
+-- *quantifies* the modality's content over generic Σ: it is exactly
+-- thinness of the loss order (≤g-prop), and no more.
 open import EchoSeparating using
   ( _⊑_
   ; deg
@@ -266,9 +421,11 @@ open import EchoSeparating using
   ; sep-degrade-compose-fails
   )
 
--- Pillar D: second model + model-independence. The graded-comonad
--- laws proved once for any GradedLossModel; Set and relational
--- instances; they agree under the graph/fibration bridge.
+-- Pillar D: carrier-parametricity (NOT model-independence). The
+-- coherence equations proved once for any GradedLossModel, but the
+-- interface's ⊑-prop field bakes in the only load-bearing
+-- hypothesis and both instances fix the same grade poset; rel-model
+-- is set-model × ⊤, agreeing by refl. See R-2026-05-18.
 open import EchoRelModel using
   ( GradedLossModel
   ; set-model
@@ -280,6 +437,57 @@ open import EchoRelModel using
   ; bridge-natural
   )
 
+-- Pillar F, Gate F4 (docs/echo-types/earn-back-plan.adoc; retraction
+-- follow-up F-2026-05-18a). The terminal-cone universal property,
+-- earned back as TRUE CONDITIONAL ON an explicit `funext` parameter
+-- (never a postulate). The unconditional pointwise mediator property
+-- is kept as the funext-free corollary. Names pinned so a rename or
+-- a slide back to an *unconditional* claim fails CI fast.
+open import EchoPullbackUnivF4 using
+  ( FunExt₀
+  ; echo-pullback-univ-strict     -- m' ≡ m, GIVEN funext (no postulate)
+  ; echo-pullback-univ-pointwise  -- ∀ v → m' v ≡ m v, funext-free
+  )
+
+-- Pillar F, Gate F2 (same plan / follow-up). A genuine second model
+-- of the *bare* Echo functor on the non-deterministic, non-graph
+-- relation `StepND`: same interface as the deterministic model,
+-- functor laws hold, agreement has content (constructor case
+-- analysis, not refl / not Σ-η on × ⊤), and `nd-not-graph` is the
+-- checked proof it is NOT a disguised graph. Scope: the Echo
+-- functor, NOT the graded comonad / model-independence (still
+-- retracted, R-2026-05-18).
+open import EchoStepNDModelF2 using
+  ( EchoFunctorModel
+  ; det-model
+  ; nd-model
+  ; nd-not-graph                  -- StepND is no function's graph
+  ; det→nd                        -- content-bearing witness preservation
+  ; nd-sum-fromto                 -- nd fibre = sum of det branches
+  ; nd-fibre-not-prop             -- the fibre is not a proposition
+  )
+
+-- Pillar F, Gate F1 — the MAKE-OR-BREAK gate (docs/echo-types/
+-- earn-back-plan.adoc §F1). A genuine graded comonad on the
+-- iterated-residue carrier `D r A = r nested R-layers`, with grade
+-- monoid (ℕ, +, 0), Echo as the grade-unit object (D 0 (Echo f y) is
+-- the bare echo), NESTED comultiplication δ : D (m+n) ⇒ D m ∘ D n,
+-- all three graded-comonad laws proved, and a separating witness
+-- showing D 2 is not collapsing to ⊤. --safe --without-K, zero
+-- postulates, no funext. Scope: this earns back the graded-comonad
+-- claim FOR THIS WITNESS ONLY; `EchoGraded` itself remains a
+-- thin-poset reindexing modality per R-2026-05-18.
+open import EchoGradedComonadF1 using
+  ( D                              -- the graded functor
+  ; mapD ; mapD-id ; mapD-∘        -- functor laws
+  ; ε                              -- counit at the unit grade
+  ; δ                              -- NESTED comultiplication
+  ; D2-nontrivial                  -- D 2 is not ⊤ / a prop
+  ; gc-counit-r                    -- counit-right law (definitional)
+  ; gc-counit-l                    -- counit-left law
+  ; gc-coassoc                     -- coassociativity law (the F1 keystone)
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
@@ -287,6 +495,31 @@ open import EchoTropical using
   ; IsArgmin
   ; TropEcho
   ; distinct-candidates-same-visible-distinct-echo
+  )
+
+-- AntiEcho × EchoTropical (theory/antiecho-tropical-decompose):
+-- the headline "Echo × Π-bound" decomposition of TropEcho /
+-- IsArgmin from `coecho.md` §3 / §5 obligation 6. Both
+-- round-trips are `refl` once IsArgmin's Σ-shape is unfolded;
+-- the AntiEcho-flavoured corollary expresses the Π-bound as
+-- Π of negative data over the candidate set (Π-form AntiEcho,
+-- `coecho.md` §1(c)). Pinned so a rename or a slide back to
+-- ad-hoc tropical decoration fails CI fast.
+open import AntiEchoTropical using
+  ( antiecho-tropical-decompose-to
+  ; antiecho-tropical-decompose-from
+  ; antiecho-tropical-decompose-to-from
+  ; antiecho-tropical-decompose-from-to
+  ; antiecho-tropical-decompose
+  ; isargmin-decompose-to
+  ; isargmin-decompose-from
+  ; isargmin-decompose
+  ; ≤⇒¬<
+  ; ¬<⇒≤
+  ; optimality-as-antiecho-flavour-to
+  ; optimality-as-antiecho-flavour-from
+  ; tropdecomp-antiecho-to
+  ; tropdecomp-antiecho-from
   )
 
 open import EchoIntegration using
@@ -326,6 +559,26 @@ open import EchoOrdinal using
   ; no-section-ordinal-collapse
   ; IsZeroSource
   ; ordinal-collapse-classification
+  )
+
+-- Lane 3 (2026-05-20): structural mirror of januskey's canonical
+-- Idris2 OpKind ABI (hyperpolymath/januskey:src/abi/Types.idr).
+-- Eight-variant OpKind + IsFileOp / IsKeyOp partition predicates,
+-- one *-echo per constructor. Theorems remain trivial (each is
+-- `λ e → e`); no content-bridge claim, pending
+-- januskey/PROOF-NEEDS.md.
+open import EchoJanusBridge using
+  ( OpKind
+  ; IsFileOp
+  ; IsKeyOp
+  ; copy-echo
+  ; move-echo
+  ; delete-echo
+  ; modify-echo
+  ; obliterate-echo
+  ; keygen-echo
+  ; keyrotate-echo
+  ; keyrevoke-echo
   )
 
 open import Ordinal.Base using

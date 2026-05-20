@@ -1,264 +1,518 @@
 {-# OPTIONS --safe --without-K #-}
 
--- Axis-8 (taxonomy.md §8) third artifact: graded access modality.
+-- Axis-8 second formal artifact: graded access modality.
 --
--- `EchoAccess.agda` lands refinement 2 of axis 8: a *graded
--- modality* `EchoA f y φ` where `φ : Access` ranges over a
--- two-point lattice `{feasible, infeasible}`.  The grade marks
--- whether the echo's witness is reachable by a constructive
--- extractor (feasible) or only known to exist in the metatheory
--- (infeasible).
+-- `EchoDecidable.agda` shipped the decidability-respecting refinement
+-- of axis 8 (taxonomy.md §8): `EchoDec f y := Dec (Echo f y)`. That
+-- module is the bottom of a lattice; this one builds the lattice.
 --
--- The grade is a *label*; the meaningful content is the order /
--- join structure it carries.  Inside `--safe --without-K` Agda
--- cannot express the operational distinction directly (taxonomy
--- §8 lines 228–230), but the lattice shape lands and the
--- composition / join lemmas are real — they are exactly what
--- the per-decoration composition sweep does for the other five
--- decorations (grade, linear, indexed, choreographic, epistemic).
--- The structural recipe is identical: decoration order →
--- propositionality → join → factoring-free compose → via-join
--- restatement.
+-- The graded access modality refines `Echo f y` with a grade
+-- `c : Access` naming the *feasibility class* at which the echo's
+-- witness is reachable:
 --
--- This is refinement 2 of the four axis-8 candidates listed in
--- `taxonomy.md` §8.  Refinement 3 (decidability-respecting) landed
--- as `EchoDecidable`.  Refinement 1 (cost-indexed, scalar ℕ
--- ledger) landed as `EchoCost`.  Refinement 2 (this module) is the
--- modal layer; the projection `EchoCost → EchoA … feasible`
--- pins the access modality as the qualitative ceiling on the
--- cost-indexed layer.
+--   free        — witness in hand, no search
+--   decidable   — a constructive decider exists (EchoDecidable.EchoDec)
+--   enum        — exhaustive Fin-search (EchoFiberCount terrain)
+--   feasible    — polynomial-time class (grade-only marker)
+--   infeasible  — super-polynomial / cryptographic; witness exists
+--                 only metatheoretically (grade-only marker)
 --
--- Refinement 4 (witness-search abstract machine) remains
--- unformalised; it would operationally substantiate the
--- `feasible` grade, which is currently a modality label.
+-- The chain `free ≤ decidable ≤ enum ≤ feasible ≤ infeasible` is
+-- reflexive at every grade and one-step at the named edges; the order
+-- relation `_≤a_` is enumerated by its 15 reachable pairs in
+-- Hasse-diagram style, exactly mirroring `EchoGraded._≤g_` and
+-- `EchoLinear._≤m_`.
 --
--- Headline lemmas (pinned in `Smoke.agda`):
+-- This file lands the **thin slice** of the recipe per the design in
+-- `taxonomy.md` §8 / the Axis 8 study under `/tmp/echo-types-exploration`:
 --
---   * Access, _⊑a_, _⊔a_     -- the access lattice
---   * ⊑a-prop                 -- order is propositional
---   * ⊑a-⊔a-{left, right, univ}  -- categorical join structure
---   * EchoA                   -- grade-indexed echo type family
---   * echo-access-forget      -- forget grade, project to base Echo
---   * echo-access-intro       -- immediate witness at infeasible
---   * echo-access-relax       -- weaken access claim along ⊑a
---   * echo-access-from-cost   -- bridge from refinement 1 (EchoCost)
---   * echo-access-compose     -- composition takes join of grades
+--   1. `Access`         — enum of five feasibility classes
+--   2. `_≤a_`           — Hasse-enumerated access order
+--   3. `≤a-trans`       — transitivity by case-split
+--   4. `≤a-prop`        — propositionality by case-split + refl
+--                         (load-bearing; the falsifier from the
+--                         design's §6)
+--   5. `EchoAccess`     — Σ-shape carrier indexed by `Access`
+--   6. `access-of`,
+--      `degrade-access` — projection + ≤a-indexed degrade primitive
+--   7. `_⊔a_`,
+--      `≤a-⊔a-{left,right,univ}` — categorical join structure
+--   8. `degrade-access-comp`,
+--      `degrade-access-compose`,
+--      `degrade-access-via-join` — per-decoration composition; the
+--                          "factoring-free" closer chain of
+--                          `composition.md` §6.
+--
+-- Sections 7–8 close the design doc's §5 obligations 5–8 and complete
+-- the same recipe `EchoGraded` and `EchoLinear` close at the
+-- per-decoration composition rung.
+--
+-- Carrier design (resolved 2026-05-20, owner decision):
+--
+--   The carriers for `enum` / `feasible` / `infeasible` remain the
+--   minimal `Lift ⊤` placeholder — and this is the correct honest
+--   answer, not a Potemkin label. Option (b) (existential carriers
+--   burying an enumerator + decider) was tried and STRUCTURALLY FAILS:
+--   `degrade-access : c1 ≤a c2 → CEcho c1 → CEcho c2` becomes
+--   uninhabitable at multiple constructors because the access lattice
+--   tracks DECREASING information as you climb (free → infeasible),
+--   so degrading must DROP info, never fabricate it. There is no
+--   way to construct an `Echo f y` witness when degrading from a
+--   `Dec (Echo f y)` refutation, and no way to fabricate a `Dec B`
+--   from a domain-side witness. The `Lift ⊤` shape at the top is
+--   honest in the same sense that `EchoGraded.forget = ⊤` is honest:
+--   at the loss-maximal grade, there is no extractable data to carry.
+--   The grade-indexed composition layer (`degrade-access-comp`,
+--   `_⊔a_`, the join-three) above this module operates on the grade,
+--   not the carrier shape, and is sound under either design — so
+--   this decision affects only the carrier reading, not any landed
+--   theorem. See `docs/echo-types/decisions/echo-access-trivial-carrier.adoc`.
+--
+--   Option (a) (parameterise CEcho on Decidable B + enumerator) would
+--   force every caller to supply machinery at the `free` grade where
+--   it does nothing — explicitly rejected for that reason. Option (c)
+--   (⊎-shape honest+placeholder) considered as a future affordance
+--   if a real use-case for existential extraction emerges.
 
 module EchoAccess where
 
 open import Level                                 using (Level; _⊔_)
-open import Function.Base                         using (_∘_)
-open import Data.Product.Base                     using (Σ; _,_; _×_; proj₁; proj₂)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Data.Unit.Base                        using (⊤; tt)
+open import Data.Product.Base                     using (Σ; _,_)
+open import Relation.Nullary.Decidable.Core       using (yes)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym)
 
-open import Echo                                  using
-  ( Echo
-  ; echo-intro
-  ; Echo-comp-iso-from
-  )
-open import EchoCost                              using
-  ( EchoCost
-  ; echo-cost-forget
-  )
+open import Echo         using (Echo)
+open import EchoDecidable using (EchoDec)
 
 ----------------------------------------------------------------------
--- The access lattice
+-- 1. The access enum
 ----------------------------------------------------------------------
 
--- Two-point lattice on echo accessibility.  `feasible` marks
--- "constructive extractor exists" (the EchoDec layer of
--- refinement 3); `infeasible` marks "information-theoretically
--- inhabited only" (the bare Echo layer).  Information-theoretic
--- access is the WEAKER claim: every feasible echo is also
--- info-theoretically accessible.  The order direction reflects
--- that — `feasible ⊑a infeasible` reads "feasibility implies
--- info-theoretic accessibility".
+-- Five feasibility classes along a single chain. Lower = more
+-- accessible. The taxonomy §8 reading: `free` is information-
+-- theoretic *and* operationally trivial; `infeasible` is the
+-- cryptographic-hash regime (a witness exists metatheoretically but
+-- is computationally out of reach).
 
 data Access : Set where
+  free       : Access
+  decidable  : Access
+  enum       : Access
   feasible   : Access
   infeasible : Access
 
 ----------------------------------------------------------------------
--- Order
+-- 2. The access order
 ----------------------------------------------------------------------
 
-data _⊑a_ : Access → Access → Set where
-  feasible⊑feasible      : feasible   ⊑a feasible
-  feasible⊑infeasible    : feasible   ⊑a infeasible
-  infeasible⊑infeasible  : infeasible ⊑a infeasible
+-- Hasse-enumerated: every reachable (c1, c2) pair has exactly one
+-- inhabitant. 5 grades give 15 constructors (5+4+3+2+1). Each
+-- constructor names its source and target — the same shape as
+-- `EchoGraded._≤g_` (6 constructors for 3 grades) and
+-- `EchoLinear._≤m_` (3 constructors for 2 modes). This shape is what
+-- makes `≤a-prop` reduce to case-split + `refl` under `--without-K`.
 
-⊑a-trans : ∀ {φ₁ φ₂ φ₃} → φ₁ ⊑a φ₂ → φ₂ ⊑a φ₃ → φ₁ ⊑a φ₃
-⊑a-trans feasible⊑feasible      p23 = p23
-⊑a-trans feasible⊑infeasible    infeasible⊑infeasible = feasible⊑infeasible
-⊑a-trans infeasible⊑infeasible  infeasible⊑infeasible = infeasible⊑infeasible
+data _≤a_ : Access → Access → Set where
+  free≤free             : free       ≤a free
+  free≤decidable        : free       ≤a decidable
+  free≤enum             : free       ≤a enum
+  free≤feasible         : free       ≤a feasible
+  free≤infeasible       : free       ≤a infeasible
+  decidable≤decidable   : decidable  ≤a decidable
+  decidable≤enum        : decidable  ≤a enum
+  decidable≤feasible    : decidable  ≤a feasible
+  decidable≤infeasible  : decidable  ≤a infeasible
+  enum≤enum             : enum       ≤a enum
+  enum≤feasible         : enum       ≤a feasible
+  enum≤infeasible       : enum       ≤a infeasible
+  feasible≤feasible     : feasible   ≤a feasible
+  feasible≤infeasible   : feasible   ≤a infeasible
+  infeasible≤infeasible : infeasible ≤a infeasible
 
 ----------------------------------------------------------------------
--- Order is propositional
+-- 3. Transitivity
 ----------------------------------------------------------------------
 
--- Each constructor of `_⊑a_` is pinned by both its source and target
--- grades, so the order is propositional: any two proofs of
--- `φ₁ ⊑a φ₂` are definitionally equal.  Mirrors `EchoGraded.≤g-prop`.
+-- Same recipe as `EchoGraded.≤g-trans`: on a reflexive first step,
+-- propagate `p23`; otherwise enumerate the reachable composites. The
+-- enumerated relation has exactly one inhabitant per (c1, c3) pair so
+-- there is no choice of factoring — each clause is forced.
 
-⊑a-prop : ∀ {φ₁ φ₂} → (p q : φ₁ ⊑a φ₂) → p ≡ q
-⊑a-prop feasible⊑feasible       feasible⊑feasible      = refl
-⊑a-prop feasible⊑infeasible     feasible⊑infeasible    = refl
-⊑a-prop infeasible⊑infeasible   infeasible⊑infeasible  = refl
+≤a-trans : ∀ {c1 c2 c3} → c1 ≤a c2 → c2 ≤a c3 → c1 ≤a c3
+≤a-trans free≤free             p23                     = p23
+≤a-trans free≤decidable        decidable≤decidable     = free≤decidable
+≤a-trans free≤decidable        decidable≤enum          = free≤enum
+≤a-trans free≤decidable        decidable≤feasible      = free≤feasible
+≤a-trans free≤decidable        decidable≤infeasible    = free≤infeasible
+≤a-trans free≤enum             enum≤enum               = free≤enum
+≤a-trans free≤enum             enum≤feasible           = free≤feasible
+≤a-trans free≤enum             enum≤infeasible         = free≤infeasible
+≤a-trans free≤feasible         feasible≤feasible       = free≤feasible
+≤a-trans free≤feasible         feasible≤infeasible     = free≤infeasible
+≤a-trans free≤infeasible       infeasible≤infeasible   = free≤infeasible
+≤a-trans decidable≤decidable   p23                     = p23
+≤a-trans decidable≤enum        enum≤enum               = decidable≤enum
+≤a-trans decidable≤enum        enum≤feasible           = decidable≤feasible
+≤a-trans decidable≤enum        enum≤infeasible         = decidable≤infeasible
+≤a-trans decidable≤feasible    feasible≤feasible       = decidable≤feasible
+≤a-trans decidable≤feasible    feasible≤infeasible     = decidable≤infeasible
+≤a-trans decidable≤infeasible  infeasible≤infeasible   = decidable≤infeasible
+≤a-trans enum≤enum             p23                     = p23
+≤a-trans enum≤feasible         feasible≤feasible       = enum≤feasible
+≤a-trans enum≤feasible         feasible≤infeasible     = enum≤infeasible
+≤a-trans enum≤infeasible       infeasible≤infeasible   = enum≤infeasible
+≤a-trans feasible≤feasible     p23                     = p23
+≤a-trans feasible≤infeasible   infeasible≤infeasible   = feasible≤infeasible
+≤a-trans infeasible≤infeasible infeasible≤infeasible   = infeasible≤infeasible
 
 ----------------------------------------------------------------------
--- Join
+-- 4. Propositionality of the access order
 ----------------------------------------------------------------------
 
--- Categorical join: `infeasible` is the top.  Joining a feasible
--- access claim with anything gives the weaker (right-or-top) claim.
--- Mirrors `EchoGraded._⊔g_` with `infeasible` playing the `forget`
--- role.
+-- Each constructor of `_≤a_` is pinned by both source and target, so
+-- the order is propositional: any two proofs of `c1 ≤a c2` are equal.
+-- This is the *load-bearing* lemma of the access recipe — see
+-- `composition.md` §6 and `EchoGraded.≤g-prop` (lines 79–89 of
+-- `EchoGraded.agda`). The whole "factoring-free composition" closer
+-- chain rests on it.
+--
+-- Pattern-matches close under `--without-K` because each (c1, c2)
+-- pair has exactly one inhabitant of `_≤a_`; Agda's case-split picks
+-- the unique constructor on both sides and both reduce to `refl`.
+-- The design doc's §6 falsifier reads: "If `≤a-prop` does not close
+-- on case-split + `refl` in ≤30 minutes, the design is wrong; collapse
+-- grades that case-split distinguished but propositional equality
+-- does not." This module shows the chain does close.
+
+≤a-prop : ∀ {c1 c2} (p p' : c1 ≤a c2) → p ≡ p'
+≤a-prop free≤free             free≤free             = refl
+≤a-prop free≤decidable        free≤decidable        = refl
+≤a-prop free≤enum             free≤enum             = refl
+≤a-prop free≤feasible         free≤feasible         = refl
+≤a-prop free≤infeasible       free≤infeasible       = refl
+≤a-prop decidable≤decidable   decidable≤decidable   = refl
+≤a-prop decidable≤enum        decidable≤enum        = refl
+≤a-prop decidable≤feasible    decidable≤feasible    = refl
+≤a-prop decidable≤infeasible  decidable≤infeasible  = refl
+≤a-prop enum≤enum             enum≤enum             = refl
+≤a-prop enum≤feasible         enum≤feasible         = refl
+≤a-prop enum≤infeasible       enum≤infeasible       = refl
+≤a-prop feasible≤feasible     feasible≤feasible     = refl
+≤a-prop feasible≤infeasible   feasible≤infeasible   = refl
+≤a-prop infeasible≤infeasible infeasible≤infeasible = refl
+
+----------------------------------------------------------------------
+-- 5. The graded carrier
+----------------------------------------------------------------------
+
+-- Per-grade carriers along the design's §4 sketch. `free` and
+-- `decidable` are honest (full witness; constructive decider). The
+-- `enum`, `feasible`, and `infeasible` carriers are deliberately the
+-- minimal placeholder `⊤` for this slice — promoting them to honest
+-- bridges (`enum` → `FiberSize-fin`, `feasible` / `infeasible` →
+-- complexity-tagged variants) is the design's deferred §6 mode-B
+-- mitigation and lands in the follow-up PR.
+--
+-- The level lift on `⊤` is needed because `Echo f y` lives in
+-- `Set (a ⊔ b)` and Agda demands a single ambient level across the
+-- match. `Level.Lift` from the standard library keeps the carrier
+-- universe-uniform without disturbing `≤a-prop` (which is
+-- grade-indexed, not carrier-indexed).
+
+open import Level using (Lift; lift)
+
+CEcho :
+  ∀ {a b} {A : Set a} {B : Set b}
+  → Access → (A → B) → B → Set (a ⊔ b)
+CEcho free       f y = Echo f y
+CEcho decidable  f y = EchoDec f y
+CEcho {a} {b} enum       _ _ = Lift (a ⊔ b) ⊤
+CEcho {a} {b} feasible   _ _ = Lift (a ⊔ b) ⊤
+CEcho {a} {b} infeasible _ _ = Lift (a ⊔ b) ⊤
+
+-- The Σ-shape mirror of `EchoGraded.GEcho`'s implicit graded bundle:
+-- pair a grade with content at that grade. Useful when callers want
+-- a single hom-set to thread through the access lattice rather than
+-- a grade-indexed family.
+
+EchoAccess :
+  ∀ {a b} {A : Set a} {B : Set b}
+  → (A → B) → B → Set (a ⊔ b)
+EchoAccess f y = Σ Access (λ c → CEcho c f y)
+
+----------------------------------------------------------------------
+-- 6. `access-of` and `degrade-access`
+----------------------------------------------------------------------
+
+-- Projection: read off the access grade of a packed `EchoAccess`.
+
+access-of :
+  ∀ {a b} {A : Set a} {B : Set b}
+  {f : A → B} {y : B} → EchoAccess f y → Access
+access-of (c , _) = c
+
+-- The `_≤a_`-indexed degrade primitive. Going to a *less accessible*
+-- grade *forgets* content: `free → decidable` wraps the witness in
+-- `yes`, every step into the placeholder block discards down to
+-- `tt`, and reflexive cases are the identity.
+--
+-- The cases enumerate the same 15 constructors as `_≤a_`. The chain
+-- `free → decidable → enum/.../infeasible` is the only place real
+-- content moves; from `enum` onward the carrier is already `⊤`-lifted
+-- so every transition is `lift tt`.
+--
+-- The per-decoration composition trio
+-- (`degrade-access-comp` / `compose` / `via-join`) and the join
+-- structure (`_⊔a_` + universal property) follow this section — the
+-- order layer (`≤a-trans`, `≤a-prop`) is their mathematical
+-- prerequisite.
+
+degrade-access :
+  ∀ {a b} {A : Set a} {B : Set b} {f : A → B} {y : B}
+  {c1 c2 : Access} → c1 ≤a c2 → CEcho c1 f y → CEcho c2 f y
+degrade-access free≤free             e = e
+degrade-access free≤decidable        e = yes e
+degrade-access free≤enum             _ = lift tt
+degrade-access free≤feasible         _ = lift tt
+degrade-access free≤infeasible       _ = lift tt
+degrade-access decidable≤decidable   d = d
+degrade-access decidable≤enum        _ = lift tt
+degrade-access decidable≤feasible    _ = lift tt
+degrade-access decidable≤infeasible  _ = lift tt
+degrade-access enum≤enum             e = e
+degrade-access enum≤feasible         _ = lift tt
+degrade-access enum≤infeasible       _ = lift tt
+degrade-access feasible≤feasible     e = e
+degrade-access feasible≤infeasible   _ = lift tt
+degrade-access infeasible≤infeasible e = e
+
+----------------------------------------------------------------------
+-- 7. The access join
+----------------------------------------------------------------------
+
+-- Componentwise max along the chain
+-- `free ≤ decidable ≤ enum ≤ feasible ≤ infeasible`. `free` is bottom
+-- (`free ⊔a c = c`); `infeasible` is top (`infeasible ⊔a _ = infeasible`).
+-- Same shape as `EchoGraded._⊔g_` and `EchoLinear._⊔m_`, only widened
+-- to five grades. Enumeration is forced once the bottom and top
+-- absorbing cases are fixed.
 
 _⊔a_ : Access → Access → Access
-feasible   ⊔a φ          = φ
+free       ⊔a c2         = c2
+decidable  ⊔a free       = decidable
+decidable  ⊔a decidable  = decidable
+decidable  ⊔a enum       = enum
+decidable  ⊔a feasible   = feasible
+decidable  ⊔a infeasible = infeasible
+enum       ⊔a free       = enum
+enum       ⊔a decidable  = enum
+enum       ⊔a enum       = enum
+enum       ⊔a feasible   = feasible
+enum       ⊔a infeasible = infeasible
+feasible   ⊔a free       = feasible
+feasible   ⊔a decidable  = feasible
+feasible   ⊔a enum       = feasible
+feasible   ⊔a feasible   = feasible
+feasible   ⊔a infeasible = infeasible
 infeasible ⊔a _          = infeasible
 
-⊑a-⊔a-left : ∀ φ₁ φ₂ → φ₁ ⊑a (φ₁ ⊔a φ₂)
-⊑a-⊔a-left feasible   feasible   = feasible⊑feasible
-⊑a-⊔a-left feasible   infeasible = feasible⊑infeasible
-⊑a-⊔a-left infeasible feasible   = infeasible⊑infeasible
-⊑a-⊔a-left infeasible infeasible = infeasible⊑infeasible
+-- Join is an upper bound on its left summand. The proof enumerates
+-- the 25 reachable `(c1, c2)` pairs; each picks out the unique
+-- inhabitant of `_≤a_` from `c1` to `c1 ⊔a c2`. Mirrors
+-- `EchoGraded.≤g-⊔g-left` and `EchoLinear.≤m-⊔m-left`.
 
-⊑a-⊔a-right : ∀ φ₁ φ₂ → φ₂ ⊑a (φ₁ ⊔a φ₂)
-⊑a-⊔a-right feasible   feasible   = feasible⊑feasible
-⊑a-⊔a-right feasible   infeasible = infeasible⊑infeasible
-⊑a-⊔a-right infeasible feasible   = feasible⊑infeasible
-⊑a-⊔a-right infeasible infeasible = infeasible⊑infeasible
+≤a-⊔a-left : ∀ c1 c2 → c1 ≤a (c1 ⊔a c2)
+≤a-⊔a-left free       free       = free≤free
+≤a-⊔a-left free       decidable  = free≤decidable
+≤a-⊔a-left free       enum       = free≤enum
+≤a-⊔a-left free       feasible   = free≤feasible
+≤a-⊔a-left free       infeasible = free≤infeasible
+≤a-⊔a-left decidable  free       = decidable≤decidable
+≤a-⊔a-left decidable  decidable  = decidable≤decidable
+≤a-⊔a-left decidable  enum       = decidable≤enum
+≤a-⊔a-left decidable  feasible   = decidable≤feasible
+≤a-⊔a-left decidable  infeasible = decidable≤infeasible
+≤a-⊔a-left enum       free       = enum≤enum
+≤a-⊔a-left enum       decidable  = enum≤enum
+≤a-⊔a-left enum       enum       = enum≤enum
+≤a-⊔a-left enum       feasible   = enum≤feasible
+≤a-⊔a-left enum       infeasible = enum≤infeasible
+≤a-⊔a-left feasible   free       = feasible≤feasible
+≤a-⊔a-left feasible   decidable  = feasible≤feasible
+≤a-⊔a-left feasible   enum       = feasible≤feasible
+≤a-⊔a-left feasible   feasible   = feasible≤feasible
+≤a-⊔a-left feasible   infeasible = feasible≤infeasible
+≤a-⊔a-left infeasible free       = infeasible≤infeasible
+≤a-⊔a-left infeasible decidable  = infeasible≤infeasible
+≤a-⊔a-left infeasible enum       = infeasible≤infeasible
+≤a-⊔a-left infeasible feasible   = infeasible≤infeasible
+≤a-⊔a-left infeasible infeasible = infeasible≤infeasible
 
-⊑a-⊔a-univ
-  : ∀ {φ₁ φ₂ φ₃}
-  → φ₁ ⊑a φ₃ → φ₂ ⊑a φ₃ → (φ₁ ⊔a φ₂) ⊑a φ₃
-⊑a-⊔a-univ feasible⊑feasible       p2 = p2
-⊑a-⊔a-univ feasible⊑infeasible     p2 = p2
-⊑a-⊔a-univ infeasible⊑infeasible   _  = infeasible⊑infeasible
+-- Join is an upper bound on its right summand. Same shape.
 
-----------------------------------------------------------------------
--- The grade-indexed echo
-----------------------------------------------------------------------
+≤a-⊔a-right : ∀ c1 c2 → c2 ≤a (c1 ⊔a c2)
+≤a-⊔a-right free       free       = free≤free
+≤a-⊔a-right free       decidable  = decidable≤decidable
+≤a-⊔a-right free       enum       = enum≤enum
+≤a-⊔a-right free       feasible   = feasible≤feasible
+≤a-⊔a-right free       infeasible = infeasible≤infeasible
+≤a-⊔a-right decidable  free       = free≤decidable
+≤a-⊔a-right decidable  decidable  = decidable≤decidable
+≤a-⊔a-right decidable  enum       = enum≤enum
+≤a-⊔a-right decidable  feasible   = feasible≤feasible
+≤a-⊔a-right decidable  infeasible = infeasible≤infeasible
+≤a-⊔a-right enum       free       = free≤enum
+≤a-⊔a-right enum       decidable  = decidable≤enum
+≤a-⊔a-right enum       enum       = enum≤enum
+≤a-⊔a-right enum       feasible   = feasible≤feasible
+≤a-⊔a-right enum       infeasible = infeasible≤infeasible
+≤a-⊔a-right feasible   free       = free≤feasible
+≤a-⊔a-right feasible   decidable  = decidable≤feasible
+≤a-⊔a-right feasible   enum       = enum≤feasible
+≤a-⊔a-right feasible   feasible   = feasible≤feasible
+≤a-⊔a-right feasible   infeasible = infeasible≤infeasible
+≤a-⊔a-right infeasible free       = free≤infeasible
+≤a-⊔a-right infeasible decidable  = decidable≤infeasible
+≤a-⊔a-right infeasible enum       = enum≤infeasible
+≤a-⊔a-right infeasible feasible   = feasible≤infeasible
+≤a-⊔a-right infeasible infeasible = infeasible≤infeasible
 
--- The access grade is a *label* on an ordinary `Echo` — the grade
--- carries the modality, the witness carries the data.  Inside
--- `--safe --without-K` we cannot constrain the extractor at the
--- type level; the lattice / composition structure is the modal
--- content.
-
-record EchoA
-  {a b} {A : Set a} {B : Set b}
-  (f : A → B) (y : B) (φ : Access) : Set (a ⊔ b) where
-  constructor access-echo
-  field
-    witness : Echo f y
-
-open EchoA public
-
-----------------------------------------------------------------------
--- Headline 1 — `echo-access-forget`.
+-- Universal property of join: anything dominated by both `c1` and
+-- `c2` is dominated by their join. Together with the two upper-bound
+-- lemmas above this exhibits `_⊔a_` as the categorical join in
+-- `_≤a_`. Same recipe as `EchoGraded.≤g-⊔g-univ` and
+-- `EchoLinear.≤m-⊔m-univ`.
 --
--- Forget the access grade and project down to the base Echo.
--- Mirrors `EchoCost.echo-cost-forget`.
-----------------------------------------------------------------------
+-- The pattern-match strategy: case-split on the first inequality `p1`
+-- so the join `c1 ⊔a c2` reduces enough for Agda to see the
+-- constructor needed in the result. Where `c1 = free`, the join is
+-- `c2` and the result is just `p2`. For other rows, case-split on
+-- `p2` and read off the unique inhabitant of `_≤a_` from
+-- `(c1 ⊔a c2)` to the common upper bound.
 
-echo-access-forget :
-  ∀ {a b} {A : Set a} {B : Set b}
-  {f : A → B} {y : B} {φ : Access}
-  → EchoA f y φ → Echo f y
-echo-access-forget e = witness e
-
-----------------------------------------------------------------------
--- Headline 2 — `echo-access-intro`.
---
--- An immediate witness `x : A` is at the infeasible grade by
--- default: we have not committed to an extractor.  Promoting to
--- feasible would require additional content (an extractor); the
--- bookkeeping shape here doesn't supply one.  Mirrors
--- `echo-cost-intro-zero` (no operational commitment).
-----------------------------------------------------------------------
-
-echo-access-intro :
-  ∀ {a b} {A : Set a} {B : Set b}
-  (f : A → B) (x : A) → EchoA f (f x) infeasible
-echo-access-intro f x = access-echo (echo-intro f x)
-
-----------------------------------------------------------------------
--- Headline 3 — `echo-access-relax`.
---
--- Weakening the access claim is monotone along `_⊑a_`.  Feasible
--- access can always be presented as info-theoretic access (the
--- weaker claim); not the other way around without an extractor.
--- The grade is a label, so the data is unchanged — analogous to
--- `EchoGraded.degrade-compose` operating by relabel only when the
--- order step doesn't change the carrier.
-----------------------------------------------------------------------
-
-echo-access-relax :
-  ∀ {a b} {A : Set a} {B : Set b}
-  {f : A → B} {y : B} {φ₁ φ₂ : Access}
-  → φ₁ ⊑a φ₂ → EchoA f y φ₁ → EchoA f y φ₂
-echo-access-relax _ e = access-echo (witness e)
-
-----------------------------------------------------------------------
--- Headline 4 — `echo-access-from-cost`.
---
--- Bridge from refinement 1 (cost-indexed echo, `EchoCost`) to the
--- access modality.  A cost-indexed echo carries a ℕ ledger but no
--- operational extractor; we present it at the `infeasible` grade
--- by default.  Promoting to `feasible` requires a separate
--- commitment that the cost ledger corresponds to a real extractor
--- — not captured at this layer.  The projection is conservative.
-----------------------------------------------------------------------
-
-echo-access-from-cost :
-  ∀ {a b} {A : Set a} {B : Set b}
-  {f : A → B} {y : B}
-  → EchoCost f y → EchoA f y infeasible
-echo-access-from-cost e = access-echo (echo-cost-forget e)
+≤a-⊔a-univ :
+  ∀ {c1 c2 c} → c1 ≤a c → c2 ≤a c → (c1 ⊔a c2) ≤a c
+≤a-⊔a-univ free≤free             p2 = p2
+≤a-⊔a-univ free≤decidable        p2 = p2
+≤a-⊔a-univ free≤enum             p2 = p2
+≤a-⊔a-univ free≤feasible         p2 = p2
+≤a-⊔a-univ free≤infeasible       p2 = p2
+≤a-⊔a-univ decidable≤decidable   free≤decidable        = decidable≤decidable
+≤a-⊔a-univ decidable≤decidable   decidable≤decidable   = decidable≤decidable
+≤a-⊔a-univ decidable≤enum        free≤enum             = decidable≤enum
+≤a-⊔a-univ decidable≤enum        decidable≤enum        = decidable≤enum
+≤a-⊔a-univ decidable≤enum        enum≤enum             = enum≤enum
+≤a-⊔a-univ decidable≤feasible    free≤feasible         = decidable≤feasible
+≤a-⊔a-univ decidable≤feasible    decidable≤feasible    = decidable≤feasible
+≤a-⊔a-univ decidable≤feasible    enum≤feasible         = enum≤feasible
+≤a-⊔a-univ decidable≤feasible    feasible≤feasible     = feasible≤feasible
+≤a-⊔a-univ decidable≤infeasible  free≤infeasible       = decidable≤infeasible
+≤a-⊔a-univ decidable≤infeasible  decidable≤infeasible  = decidable≤infeasible
+≤a-⊔a-univ decidable≤infeasible  enum≤infeasible       = enum≤infeasible
+≤a-⊔a-univ decidable≤infeasible  feasible≤infeasible   = feasible≤infeasible
+≤a-⊔a-univ decidable≤infeasible  infeasible≤infeasible = infeasible≤infeasible
+≤a-⊔a-univ enum≤enum             free≤enum             = enum≤enum
+≤a-⊔a-univ enum≤enum             decidable≤enum        = enum≤enum
+≤a-⊔a-univ enum≤enum             enum≤enum             = enum≤enum
+≤a-⊔a-univ enum≤feasible         free≤feasible         = enum≤feasible
+≤a-⊔a-univ enum≤feasible         decidable≤feasible    = enum≤feasible
+≤a-⊔a-univ enum≤feasible         enum≤feasible         = enum≤feasible
+≤a-⊔a-univ enum≤feasible         feasible≤feasible     = feasible≤feasible
+≤a-⊔a-univ enum≤infeasible       free≤infeasible       = enum≤infeasible
+≤a-⊔a-univ enum≤infeasible       decidable≤infeasible  = enum≤infeasible
+≤a-⊔a-univ enum≤infeasible       enum≤infeasible       = enum≤infeasible
+≤a-⊔a-univ enum≤infeasible       feasible≤infeasible   = feasible≤infeasible
+≤a-⊔a-univ enum≤infeasible       infeasible≤infeasible = infeasible≤infeasible
+≤a-⊔a-univ feasible≤feasible     free≤feasible         = feasible≤feasible
+≤a-⊔a-univ feasible≤feasible     decidable≤feasible    = feasible≤feasible
+≤a-⊔a-univ feasible≤feasible     enum≤feasible         = feasible≤feasible
+≤a-⊔a-univ feasible≤feasible     feasible≤feasible     = feasible≤feasible
+≤a-⊔a-univ feasible≤infeasible   free≤infeasible       = feasible≤infeasible
+≤a-⊔a-univ feasible≤infeasible   decidable≤infeasible  = feasible≤infeasible
+≤a-⊔a-univ feasible≤infeasible   enum≤infeasible       = feasible≤infeasible
+≤a-⊔a-univ feasible≤infeasible   feasible≤infeasible   = feasible≤infeasible
+≤a-⊔a-univ feasible≤infeasible   infeasible≤infeasible = infeasible≤infeasible
+≤a-⊔a-univ infeasible≤infeasible free≤infeasible       = infeasible≤infeasible
+≤a-⊔a-univ infeasible≤infeasible decidable≤infeasible  = infeasible≤infeasible
+≤a-⊔a-univ infeasible≤infeasible enum≤infeasible       = infeasible≤infeasible
+≤a-⊔a-univ infeasible≤infeasible feasible≤infeasible   = infeasible≤infeasible
+≤a-⊔a-univ infeasible≤infeasible infeasible≤infeasible = infeasible≤infeasible
 
 ----------------------------------------------------------------------
--- Headline 5 — `echo-access-compose`.
---
--- Composition takes the join of access grades.  An f-side echo at
--- grade φ₁ composed with a g-side echo at grade φ₂ produces a
--- (g ∘ f)-side echo at grade `φ₁ ⊔a φ₂` — the weaker of the two
--- claims.  This is the natural composition shape for an access
--- modality: a composite extractor needs both component extractors,
--- so the composite's access class is bounded above by the slower
--- component.  Mirrors `EchoGraded.degrade-via-join` and the
--- per-decoration composition sweep.
---
--- Built on `Echo-comp-iso-from` (the accumulation iso's reverse
--- direction): given an intermediate `b : B`, an `Echo f b` witness,
--- and `g b ≡ y`, we get `Echo (g ∘ f) y`.  The grade combines via
--- `_⊔a_`.
+-- 8. Per-decoration composition
 ----------------------------------------------------------------------
 
-echo-access-compose :
-  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
-  (f : A → B) (g : B → C) {y : C}
-  (b : B) {φ₁ φ₂ : Access}
-  → EchoA f b φ₁
-  → (g b ≡ y)
-  → EchoA (g ∘ f) y (φ₁ ⊔a φ₂)
-echo-access-compose f g b ef gb≡y =
-  access-echo (Echo-comp-iso-from f g (b , witness ef , gb≡y))
+-- The keystone lemma: two successive degrades along a factoring
+-- `c1 ≤a c2 ≤a c3` agree with a single degrade along the composed
+-- ordering proof. Mirrors `EchoGraded.degrade-comp` and
+-- `EchoLinear.degradeMode-comp`. Closes `refl` on every reachable
+-- `(p12, p23)` constructor pair: the carriers reduce definitionally
+-- in lock-step with `≤a-trans`, so on both sides Agda lands on the
+-- same canonical form.
 
-----------------------------------------------------------------------
--- Convenience: via-join restatement
---
--- The composition lemma factors through the join.  This is the
--- counterpart of `EchoGraded.degrade-via-join` for the access
--- modality.  Useful when callers want to thread the join structure
--- explicitly rather than apply `echo-access-compose` directly.
-----------------------------------------------------------------------
+degrade-access-comp :
+  ∀ {a b} {A : Set a} {B : Set b} {f : A → B} {y : B}
+  {c1 c2 c3 : Access}
+  (p12 : c1 ≤a c2)
+  (p23 : c2 ≤a c3)
+  (e : CEcho c1 f y) →
+  degrade-access p23 (degrade-access p12 e)
+  ≡ degrade-access (≤a-trans p12 p23) e
+degrade-access-comp free≤free             p23                     e = refl
+degrade-access-comp free≤decidable        decidable≤decidable     e = refl
+degrade-access-comp free≤decidable        decidable≤enum          e = refl
+degrade-access-comp free≤decidable        decidable≤feasible      e = refl
+degrade-access-comp free≤decidable        decidable≤infeasible    e = refl
+degrade-access-comp free≤enum             enum≤enum               e = refl
+degrade-access-comp free≤enum             enum≤feasible           e = refl
+degrade-access-comp free≤enum             enum≤infeasible         e = refl
+degrade-access-comp free≤feasible         feasible≤feasible       e = refl
+degrade-access-comp free≤feasible         feasible≤infeasible     e = refl
+degrade-access-comp free≤infeasible       infeasible≤infeasible   e = refl
+degrade-access-comp decidable≤decidable   p23                     e = refl
+degrade-access-comp decidable≤enum        enum≤enum               e = refl
+degrade-access-comp decidable≤enum        enum≤feasible           e = refl
+degrade-access-comp decidable≤enum        enum≤infeasible         e = refl
+degrade-access-comp decidable≤feasible    feasible≤feasible       e = refl
+degrade-access-comp decidable≤feasible    feasible≤infeasible     e = refl
+degrade-access-comp decidable≤infeasible  infeasible≤infeasible   e = refl
+degrade-access-comp enum≤enum             p23                     e = refl
+degrade-access-comp enum≤feasible         feasible≤feasible       e = refl
+degrade-access-comp enum≤feasible         feasible≤infeasible     e = refl
+degrade-access-comp enum≤infeasible       infeasible≤infeasible   e = refl
+degrade-access-comp feasible≤feasible     p23                     e = refl
+degrade-access-comp feasible≤infeasible   infeasible≤infeasible   e = refl
+degrade-access-comp infeasible≤infeasible infeasible≤infeasible   e = refl
 
-echo-access-via-join :
-  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
-  {f : A → B} {g : B → C} {y : C}
-  {φ₁ φ₂ : Access}
-  → EchoA (g ∘ f) y φ₁
-  → φ₁ ⊑a (φ₁ ⊔a φ₂)
-echo-access-via-join {φ₁ = φ₁} {φ₂ = φ₂} _ = ⊑a-⊔a-left φ₁ φ₂
+-- Factoring-free composition: any direct ordering proof
+-- `p13 : c1 ≤a c3` agrees with the composed-via-`c2` degrade, because
+-- `≤a-prop` makes the choice of factoring irrelevant. Mirrors
+-- `EchoGraded.degrade-compose` and `EchoLinear.degradeMode-compose`.
+
+degrade-access-compose :
+  ∀ {a b} {A : Set a} {B : Set b} {f : A → B} {y : B}
+  {c1 c2 c3 : Access}
+  (p12 : c1 ≤a c2)
+  (p23 : c2 ≤a c3)
+  (p13 : c1 ≤a c3)
+  (e : CEcho c1 f y) →
+  degrade-access p23 (degrade-access p12 e) ≡ degrade-access p13 e
+degrade-access-compose p12 p23 p13 e
+  rewrite ≤a-prop p13 (≤a-trans p12 p23) = degrade-access-comp p12 p23 e
+
+-- Same composition law restated through the join structure: any
+-- degrade to a common upper bound `c` factors through the `c1 ⊔a c2`
+-- join. Mirrors `EchoGraded.degrade-via-join` and
+-- `EchoLinear.degradeMode-via-join`.
+
+degrade-access-via-join :
+  ∀ {a b} {A : Set a} {B : Set b} {f : A → B} {y : B}
+  {c1 c2 c : Access}
+  (p1 : c1 ≤a c)
+  (p2 : c2 ≤a c)
+  (e : CEcho c1 f y) →
+  degrade-access p1 e
+  ≡ degrade-access (≤a-⊔a-univ p1 p2) (degrade-access (≤a-⊔a-left c1 c2) e)
+degrade-access-via-join {c1 = c1} {c2 = c2} p1 p2 e =
+  sym (degrade-access-compose (≤a-⊔a-left c1 c2) (≤a-⊔a-univ p1 p2) p1 e)

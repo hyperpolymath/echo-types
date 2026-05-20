@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 # governance.yml — single wrapper calling the shared estate governance bundle
 # in hyperpolymath/standards instead of carrying per-repo copies.
 #
@@ -17,6 +17,13 @@ on:
     branches: [main, master]
   pull_request:
   workflow_dispatch:
+
+# Estate guardrail: cancel superseded runs so re-pushes / rebased PR
+# updates don't pile up queued runs. Safe — governance is read-only
+# policy linting with no publish or mutation.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read

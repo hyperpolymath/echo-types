@@ -1,11 +1,11 @@
-; SPDX-License-Identifier: PMPL-1.0-or-later
+; SPDX-License-Identifier: MPL-2.0
 ; Trustfile.a2ml — integrity & provenance for echo-types.
 
 (contractile :kind trust :version 1)
 
 (trust license-content
   :doc "LICENSE contains expected SPDX identifier."
-  :cmd "grep -q 'PMPL\\|License' LICENSE")
+  :cmd "grep -q 'Mozilla Public License' LICENSE")
 
 (trust no-secrets-committed
   :doc "No credential files committed."

@@ -1,15 +1,25 @@
-<!-- SPDX-License-Identifier: PMPL-1.0-or-later -->
+<!-- SPDX-License-Identifier: MPL-2.0 -->
 <!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 
 # echo-types
 
 [![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity)](https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/echo-types)
-[![License: PMPL-1.0](https://img.shields.io/badge/License-PMPL--1.0-blue.svg)](https://github.com/hyperpolymath/palimpsest-license)
+[![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
 [![Green Web](https://api.thegreenwebfoundation.org/greencheckimage/github.com)](https://www.thegreenwebfoundation.org/green-web-check/?url=github.com)
 
 Constructive Agda development for echo types as a first-class notion of structured loss:
 
 loss that is not total erasure.
+
+## 🗺️ Where things are
+
+**New here, or can't find something? Start with the
+[Master Map](docs/echo-types/MAP.adoc).** It is the single source of
+truth for every direction (Thermodynamic, Buchholz/Veblen ordinals,
+Characteristic/EI, CNO/absolute-zero, JanusKey, Tropical/Dyadic, MAA,
+Shannon — and ArghDA tooling), each status-tagged and back-linked to
+its proofs and docs, with the retraction/proof-debt governance called
+out. The scattered overview/roadmap docs are detail under it.
 
 ## Core Idea
 
@@ -118,7 +128,7 @@ Note: `januskey` is not currently nested under `maa-framework` in this workspace
 Cross-repo status:
 
 - bridge formalisms live in this repo (`EchoCNOBridge`, `EchoJanusBridge`, tropical-collapse witness work in `EchoTropical`)
-- Agda-side adapter slot now exists in `maa-framework/absolute-zero` at `absolute-zero/proofs/agda/EchoBridgeScaffold.agda`
+- Agda-side content-bridge `proofs/agda/EchoCNOBridge.agda` imports `IsCNO` directly from `absolute-zero/proofs/agda/CNO.agda` (the earlier scaffolded-adapter plan `EchoBridgeScaffold.agda` was superseded)
 - end-to-end conformance against upstream codebases is a separate track and is not yet fully machine-checked here
 - current bridge ledger: `docs/echo-types/cross-repo-bridge-status.md`
 - see `docs/echo-types/roadmap.md` for staged cross-repo verification gates

@@ -1,172 +1,156 @@
 {-# OPTIONS --safe --without-K #-}
 
--- Axis-8 (taxonomy.md §8) fourth artifact: witness-search abstract
--- machine.
+-- EchoSearch — Axis 8 witness-search abstract machine (thin slice).
 --
--- `EchoSearch.agda` lands refinement 4 of axis 8 in its simplest
--- form: a *bounded enumeration* extractor.  A `BoundedSearch f y
--- bound` packages an explicit candidate function `Fin bound → A`
--- together with a hit position — i.e. an enumeration that finds
--- the witness within `bound` attempts.  This is the lightest
--- operational substantiation of the `feasible` grade in
--- `EchoAccess`: a bounded search IS a constructive extractor, and
--- the bound IS the cost ledger.
+-- Axis 8 of `docs/echo-types/taxonomy.md` distinguishes
+-- information-theoretic inhabitation of `Echo f y` from a
+-- *computational* witness extracted by an algorithm. Refinement (4)
+-- in that section names the heaviest reading:
 --
--- Compared to the other three axis-8 artifacts:
+--     "Witness-search abstract machine. Model the extractor as a
+--      term in a bounded-step abstract machine and pair it with
+--      the echo."
 --
--- * Refinement 1 (`EchoCost`) — scalar ℕ ledger, no operational
---   commitment.  The cost is bookkeeping.
--- * Refinement 2 (`EchoAccess`) — two-point modal lattice
---   `{feasible, infeasible}`.  The grade is a label; lattice
---   structure carries the modal content.
--- * Refinement 3 (`EchoDecidable`) — `Dec (Echo f y)`, qualitative
---   yes/no decidability layer.
--- * Refinement 4 (this module) — the bounded search IS an
---   operational extractor.  It substantiates the `feasible` grade
---   of refinement 2 and supplies a concrete cost (the bound) for
---   refinement 1.
+-- A faithful "abstract machine" with steps, configurations, and a
+-- semantics would be a sizeable separate development; the *honest*
+-- thin slice of that idea is the enumerator-bounded witness:
 --
--- Headline lemmas (pinned in `Smoke.agda`):
+--     a search strategy = an enumerator `enum : ℕ → A`
+--     a bound-`n` echo  = a witness `enum k ≡ x` with `k < n`
+--                         together with the usual `f x ≡ y`
 --
---   * BoundedSearch                        -- the bounded-search record
---   * bounded-search-to-echo               -- project to base Echo
---   * bounded-search-to-cost               -- bridge to refinement 1
---   * bounded-search-to-dec                -- bridge to refinement 3
---   * bounded-search-to-access-feasible    -- bridge to refinement 2 at feasible
---   * bounded-search-introduce-1           -- immediate witness at bound 1
+-- The `ℕ`-bound is the "step budget" of the would-be machine. Every
+-- machine of the heavier refinement (e.g. a Turing-bounded extractor,
+-- a polynomial-time enumeration) projects onto this thin slice by
+-- forgetting everything except the index it queried and the bound it
+-- queried under. So this module sits at the *bottom* of the
+-- axis-8(4) lattice in the same sense that `EchoDecidable` sits at
+-- the bottom of the axis-8(3) lattice (`docs/echo-types/taxonomy.md`
+-- §"Open question / lattice"), and a heavier machine model lands on
+-- top later without renaming or invalidating these lemmas.
+--
+-- Design choices, in line with `EchoApprox` / `EchoFiberCount`:
+--
+--   * `SearchStrategy A := ℕ → A`. A total function. Partiality is
+--     not modelled here — that is a separate refinement (axis 8(2)).
+--     A total enumerator is exactly the right shape for a
+--     bound-respecting machine: at step `k` it produces the element
+--     `enum k`; nothing else.
+--
+--   * `EchoS enum f y n := Σ ℕ λ k → (k < n) × (f (enum k) ≡ y)`.
+--     Crucially `_<_` is stdlib's `Data.Nat.Base._<_`, i.e.
+--     `suc m ≤ n` — the strict form. This is the form `≤-<-trans` /
+--     `<-≤-trans` from `Data.Nat.Properties` operate on without any
+--     conversion glue.
+--
+--   * Composition: we ship `echo-search-postcompose`, the
+--     "post-compose with `g`" rule. This is the search analogue of
+--     "f x ≡ y ⇒ (g ∘ f) x ≡ g y" — it preserves the bound exactly
+--     (the same k, the same enumerator step, the same `< n` proof).
+--     This is the genuinely-honest compositional content available
+--     without further machinery; a product/sequential composition
+--     under two strategies needs more (a `ℕ × ℕ` index, a paired
+--     bound, and a choice of pairing function on the index set),
+--     which is a separate slice. See "where next" below.
+--
+-- Where next:
+--
+--   * Sequential composition `EchoS enum f b n₁ → EchoS enum' g y n₂
+--     → EchoS (paired-enum) (g ∘ f) y (n₁ * n₂)` under a pairing
+--     enumerator on `ℕ × ℕ`. Honest but needs a bijection
+--     `ℕ × ℕ ↔ ℕ`; defer to the slice that wants it.
+--
+--   * A real abstract-machine refinement: configurations + a step
+--     relation, with `EchoS` recovered as `∃ trace . trace.length < n
+--     ∧ trace.last ≡ x ∧ f x ≡ y`. The current `EchoS` projects from
+--     that by collapsing the trace to its terminal index.
+--
+--   * A *bounded-search-is-decidable* lemma in the presence of
+--     decidable equality on `B`: search up to `n` either yields an
+--     `EchoS enum f y n` or proves `¬ EchoS enum f y n`. This is the
+--     concrete bridge to `EchoDecidable`, kept as a separate slice
+--     because it needs a `_≟_` on `B` and a finite-walk recursion.
 
 module EchoSearch where
 
-open import Level                                 using (Level; _⊔_)
-open import Data.Nat.Base                         using (ℕ; suc; zero)
-open import Data.Fin.Base                         using (Fin; zero)
-open import Data.Product.Base                     using (Σ; _,_; proj₁; proj₂)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
-open import Relation.Nullary.Decidable.Core       using (yes)
+open import Function.Base                         using (_∘_; id)
+open import Data.Nat.Base                         using (ℕ; zero; suc; _≤_; _<_; z≤n; s≤s)
+open import Data.Nat.Properties                   using (≤-<-trans; <-≤-trans)
+open import Data.Empty                            using (⊥; ⊥-elim)
+open import Data.Product.Base                     using (Σ; _,_; _×_; proj₁; proj₂)
+open import Relation.Nullary                      using (¬_)
+open import Relation.Binary.PropositionalEquality
+  using (_≡_; refl; sym; trans; cong)
 
-open import Echo                                  using
-  ( Echo
-  ; echo-intro
-  )
-open import EchoCost                              using
-  ( EchoCost
-  ; cost-echo
-  )
-open import EchoDecidable                         using
-  ( EchoDec
-  )
-open import EchoAccess                            using
-  ( EchoA
-  ; access-echo
-  ; feasible
-  )
+open import Echo                                  using (Echo)
 
 ----------------------------------------------------------------------
--- The witness-search abstract machine
+-- Search strategies and bound-indexed echoes
 ----------------------------------------------------------------------
 
--- A bounded-enumeration extractor: a candidate-producing function on
--- `Fin bound` and a hit position witnessing that some candidate maps
--- to the target.  The `bound` measures search-space cardinality
--- (NOT step count of a more refined machine), so this is the
--- *unstructured-enumeration* layer of refinement 4.  A richer
--- abstract machine — `Step : Term → Term`, `Halts : Term → Set`,
--- step-counter — would refine this further; the present layer is
--- what we can land under `--safe --without-K` without committing
--- to a specific term-language.
+-- A search strategy on `A` is a total enumeration of its elements
+-- indexed by ℕ. Total, by design — partiality is a separate axis 8(2)
+-- refinement and would obscure the bound semantics here.
+SearchStrategy : ∀ {a} → Set a → Set a
+SearchStrategy A = ℕ → A
 
-record BoundedSearch
-  {a b} {A : Set a} {B : Set b}
-  (f : A → B) (y : B) (bound : ℕ) : Set (a ⊔ b) where
-  constructor bounded-search
-  field
-    enumerate : Fin bound → A
-    hit       : Σ (Fin bound) (λ i → f (enumerate i) ≡ y)
-
-open BoundedSearch public
-
-----------------------------------------------------------------------
--- Headline 1 — `bounded-search-to-echo`.
---
--- Project to the base information-theoretic echo by extracting the
--- hit candidate.  This is the canonical "search succeeded" → "echo
--- exists" map.  Mirrors `echo-cost-forget` / `echo-access-forget`
--- at the bottom of the axis-8 lattice.
-----------------------------------------------------------------------
-
-bounded-search-to-echo :
+-- The witness-search echo at bound `n`: a step index `k < n` at
+-- which the enumerator produced a preimage of `y` under `f`.
+EchoS :
   ∀ {a b} {A : Set a} {B : Set b}
-  {f : A → B} {y : B} {n : ℕ}
-  → BoundedSearch f y n → Echo f y
-bounded-search-to-echo s =
-  let (i , p) = hit s
-  in enumerate s i , p
+  (enum : SearchStrategy A) (f : A → B) (y : B) (n : ℕ) → Set b
+EchoS enum f y n = Σ ℕ (λ k → (k < n) × (f (enum k) ≡ y))
 
 ----------------------------------------------------------------------
--- Headline 2 — `bounded-search-to-cost`.
---
--- Bridge to refinement 1 (cost-indexed echo, `EchoCost`).  The
--- enumeration bound BECOMES the cost ledger.  This is the
--- operational content refinement 1 lacked: where `EchoCost`'s `ℕ`
--- field was bookkeeping, here it is a real upper bound on the
--- number of candidates the search examined.
+-- Headlines
 ----------------------------------------------------------------------
 
-bounded-search-to-cost :
+-- Introduction. If at step `k < n` the enumerator returns an element
+-- whose image is `y`, we have a bound-`n` search echo.
+echo-search-intro :
   ∀ {a b} {A : Set a} {B : Set b}
-  {f : A → B} {y : B} {n : ℕ}
-  → BoundedSearch f y n → EchoCost f y
-bounded-search-to-cost {n = n} s = cost-echo (bounded-search-to-echo s) n
+  (enum : SearchStrategy A) (f : A → B) {y : B}
+  (k : ℕ) (n : ℕ) (k<n : k < n) →
+  f (enum k) ≡ y →
+  EchoS enum f y n
+echo-search-intro enum f k n k<n eq = k , k<n , eq
 
-----------------------------------------------------------------------
--- Headline 3 — `bounded-search-to-dec`.
---
--- Bridge to refinement 3 (decidability-respecting echo,
--- `EchoDecidable`).  A bounded search that found the witness gives
--- a `yes`-decision immediately.  This is the same bridge as
--- `echo-cost-to-dec` but with the operational backing the cost
--- ledger lacked.
-----------------------------------------------------------------------
-
-bounded-search-to-dec :
+-- Bound monotonicity. A larger budget admits every shorter-budget
+-- search; the same step index, lifted along `<-≤-trans`.
+echo-search-relax :
   ∀ {a b} {A : Set a} {B : Set b}
-  {f : A → B} {y : B} {n : ℕ}
-  → BoundedSearch f y n → EchoDec f y
-bounded-search-to-dec s = yes (bounded-search-to-echo s)
+  (enum : SearchStrategy A) (f : A → B) {y : B} {n m : ℕ}
+  (n≤m : n ≤ m) →
+  EchoS enum f y n → EchoS enum f y m
+echo-search-relax enum f n≤m (k , k<n , eq) =
+  k , <-≤-trans k<n n≤m , eq
 
-----------------------------------------------------------------------
--- Headline 4 — `bounded-search-to-access-feasible`.
---
--- Bridge to refinement 2 (graded access modality, `EchoAccess`) at
--- the `feasible` grade.  This is the operational substantiation
--- refinement 2's `feasible` grade was waiting for: a bounded
--- search IS a constructive extractor, and is therefore feasibly
--- accessible (in the modal sense — not yet a complexity-class
--- claim, since the bound is unstructured).
---
--- Contrast with `echo-access-from-cost`, which projects
--- conservatively to `infeasible`: the cost ledger alone doesn't
--- substantiate feasibility.  Here, the explicit enumeration does.
-----------------------------------------------------------------------
-
-bounded-search-to-access-feasible :
+-- Forgetful projection. Throw away the step budget and the index
+-- bound and keep only the underlying intensional `Echo`. This is the
+-- canonical "search refines inhabitation" arrow.
+echo-search-forget :
   ∀ {a b} {A : Set a} {B : Set b}
-  {f : A → B} {y : B} {n : ℕ}
-  → BoundedSearch f y n → EchoA f y feasible
-bounded-search-to-access-feasible s = access-echo (bounded-search-to-echo s)
+  {enum : SearchStrategy A} {f : A → B} {y : B} {n : ℕ} →
+  EchoS enum f y n → Echo f y
+echo-search-forget (k , _ , eq) = _ , eq
 
-----------------------------------------------------------------------
--- Headline 5 — `bounded-search-introduce-1`.
---
--- An immediate witness `x : A` gives a one-step bounded search
--- whose single candidate is `x` itself.  The enumeration function
--- is the constant `x` at the unique position `Fin 1`, and the hit
--- is `(zero , refl)`.  Mirrors `echo-intro` / `echo-dec-intro` /
--- `echo-cost-intro-zero` at the bottom of the axis-8 lattice.
-----------------------------------------------------------------------
-
-bounded-search-introduce-1 :
+-- Empty-budget vacuity. No witness can live at bound 0, because
+-- `k < 0` is uninhabited in stdlib's `Data.Nat._<_`.
+echo-search-bound-zero :
   ∀ {a b} {A : Set a} {B : Set b}
-  (f : A → B) (x : A) → BoundedSearch f (f x) 1
-bounded-search-introduce-1 f x =
-  bounded-search (λ _ → x) (zero , refl)
+  (enum : SearchStrategy A) (f : A → B) (y : B) →
+  ¬ EchoS enum f y 0
+echo-search-bound-zero enum f y (k , () , eq)
+
+-- Post-composition. The honest compositional rule available without
+-- a product-strategy / pairing-bijection on the index set: a
+-- bound-`n` search witnessing `f` at `y` also witnesses `g ∘ f` at
+-- `g y`, at the *same* step index and the *same* bound. The bound
+-- is preserved exactly because the enumerator and the queried step
+-- have not changed — only what we report as the "answer" has.
+echo-search-postcompose :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (enum : SearchStrategy A) (f : A → B) (g : B → C) {y : B} {n : ℕ} →
+  EchoS enum f y n → EchoS enum (g ∘ f) (g y) n
+echo-search-postcompose enum f g (k , k<n , eq) =
+  k , k<n , cong g eq
