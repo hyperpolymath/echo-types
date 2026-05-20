@@ -492,6 +492,28 @@ open import EchoGradedComonadF1 using
   ; gc-coassoc                     -- coassociativity law (the F1 keystone)
   )
 
+-- Pillar F, Gate F3 — PASSED (docs/echo-types/earn-back-plan.adoc §F3).
+-- The abstract `GradedComonadStructure` record (grade monoid + graded
+-- functor + counit + nested comultiplication + monoid laws + functor
+-- laws + comonad laws, with NO ⊑-prop-equivalent field) plus TWO
+-- non-isomorphic-grade-monoid instances:
+--   * `nat-instance`  at the COMMUTATIVE  monoid (ℕ, +, 0)
+--   * `list-instance` at the NON-COMMUTATIVE monoid (List Tag, ++, [])
+-- The non-isomorphism is witnessed by `tag-list-non-commutative`
+-- (one direction: only a non-commutative monoid satisfies it).
+open import EchoGradedComonadInterface using
+  ( GradedComonadStructure          -- the abstract record
+  )
+open import EchoGradedComonadInstance1 using
+  ( nat-instance                    -- F1 packaged as record-inhabitant at (ℕ, +, 0)
+  )
+open import EchoGradedComonadInstance2 using
+  ( Tag                             -- two-element grade index
+  ; tag-list-non-commutative        -- monoid non-isomorphism witness
+  ; D-nontrivial                    -- D (smol ∷ big ∷ []) is non-trivial
+  ; list-instance                   -- the second graded-comonad instance
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
