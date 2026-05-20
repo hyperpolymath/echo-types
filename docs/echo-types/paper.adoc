@@ -10,11 +10,12 @@
 *STATUS: living draft, not for submission.* Written 2026-05-17 while
 the formal result is fresh, so the narrative is captured at full
 strength now. Sections tagged *[EXPAND]* are deliberate stubs to be
-filled as more context accrues (broader worked examples, deeper
-related-work comparison, the ordinal/Buchholz consumer-evidence
-appendix, an evaluation section). Do not submit until the *[EXPAND]*
-tags are cleared and the venue/template are chosen (Pillar E logistics
-are offline/author-driven). The TYPES extended abstract
+filled as more context accrues; only the ordinal/Buchholz
+consumer-evidence appendix remains, and is gated on the ordinal
+track reaching Bachmann–Howard (see <<ordinal-appendix>>). Do not
+submit until that tag clears and the venue/template are chosen
+(Pillar E logistics are offline/author-driven). The TYPES extended
+abstract
 (`types-abstract.adoc`) is the short, already-submission-ready
 companion; this is the full CPP/ITP-style mechanised-metatheory
 paper it grows into.
@@ -542,16 +543,236 @@ present "funext-free" as a feature. We still argue the gate /
 retraction discipline is a contribution — and this very reframing,
 logged in `docs/retractions.adoc`, is the discipline working.
 
-== Evaluation and discussion [EXPAND]
+== Evaluation and discussion
 
-NOTE: *[EXPAND]* — proof-size / proof-cost table per pillar; the
-common-upper-bound idiom analysed honestly (it removes `subst`
-*because* the equations carry no comonadic coherence, not as a clever
-saving); a discussion of where the construction does *not* extend
-(the EI-2 negative result; the funext-relative mediator property; the
-thinness-only content) stated as honest bounds, *not* spun as
-strengths; threats to validity, including the Gate-2 audit's own
-"single recipe" finding.
+This section reports proof size and the load-bearing cost of each
+pillar, then discusses three honest bounds on the construction and
+the threats to validity carried over from the Gate-2 audit.  The
+posture throughout is the one the retraction note (<<reframing-note>>;
+`docs/retractions.adoc` R-2026-05-18) committed to: claim the
+mechanised strength, neither less nor more.
+
+=== Proof size per pillar
+
+The four pillars together occupy ~930 lines across six modules, with
+zero postulates and three `rewrite` sites (one in the foundational
+`degrade-compose`; one in its `rel-model` lift; one in
+`EchoGraded` proper).  The single `subst` site that appears in
+`EchoPullback.agda` is in the *definitional shape* of the
+`IsMediator` record's `coherent` field — the
+`subst (λ a → f a ≡ y) (factor v) (proj₂ (m v)) ≡ square c v`
+equation that any mediator must witness — and not a transport
+inserted to make a proof go through.
+
+[cols="1,3,1,1,1,1", options="header"]
+|===
+| Pillar | Module | LOC | Top decls | `subst`/`rewrite` (code) | Postulates
+
+| A
+| `EchoFiberBridge.agda`
+| 56
+| `fiber`, `echo→fib`, `fib→echo`, `echo↔fib`
+| 0 / 0
+| 0
+
+| B (pullback)
+| `EchoPullback.agda`
+| 143
+| `EchoCone`, `echo-cone`, `IsMediator`, `echo-pullback-univ`, plus the cone↔SliceHom bridge
+| 1 / 0 (the lone `subst` is in `IsMediator.coherent`'s *shape*, not in a proof body)
+| 0
+
+| B (graded comonad)
+| `EchoGradedComonad.agda`
+| 159
+| `gextract`, `gduplicate`, `gcomonad-counit-l`, `gcomonad-counit-r`, `gcomonad-coassoc`
+| 0 / 0
+| 0
+
+| B (graded foundation)
+| `EchoGraded.agda`
+| 169
+| `Grade`, `_≤g_`, `≤g-prop`, `_⊔g_`, `GEcho`, `degrade`, `degrade-comp`, `degrade-compose`, `degrade-via-join`, plus the ⊔ universal-property trio
+| 0 / 1 (`degrade-compose` rewrites by `≤g-prop`)
+| 0
+
+| C
+| `EchoSeparating.agda`
+| 139
+| `Sep`, `s₀`, `s₁`, `sep-order-not-prop`, `SepGEcho`, `sep-map-over-{id,comp}`, `SepDegradeCompose`, `sep-degrade-compose-fails`
+| 0 / 0
+| 0
+
+| D
+| `EchoRelModel.agda`
+| 261
+| `GradedLossModel`, `GCLaws`, `set-model`, `rel-model`, `model-agreement`, `bridge-natural`
+| 0 / 1
+| 0
+|===
+
+The two F-2026-05-18a earn-back modules (`EchoPullbackUnivF4.agda`
+for the funext-conditional terminal-cone property, and
+`EchoStepNDModelF2.agda` for the second model of the *bare* Echo
+functor) ride the same budget: each typechecks `--safe --without-K`
+with zero postulates, the funext dependency in F4 is a module
+parameter rather than a postulate, and both are pinned in `Smoke.agda`.
+
+What this table is, and what it is not.  It is a fingerprint of the
+mechanised content — useful for a reader who wants to see, before
+reading any proof, that the trusted base is small (zero postulates,
+one definitional `subst`, three uses of `rewrite`).  It is *not* a
+claim of being "small relative to" any comparator; we know of no
+fair comparator in the graded-modal literature and decline to
+manufacture one.
+
+=== The common-upper-bound idiom, honestly
+
+The three graded coherence equations (`gcomonad-counit-l`,
+`gcomonad-counit-r`, `gcomonad-coassoc`) are each phrased so that
+both sides land in the *same* `GEcho g'` for a free common bound
+`g'`, post-composed by an arbitrary degrade into `g'`.  In that
+phrasing, every proof reduces to two calls of `degrade-compose`
+chained through one application of `≤g-prop`, with no `subst`
+anywhere.  The full coassociativity proof is 17 lines of
+`≡-Reasoning` (`EchoGradedComonad.agda`:135–158); each counit proof
+is two lines (`:112–113`, `:122–123`).
+
+It is tempting — and earlier drafts of this paper did — to read this
+as a clever encoding trick that saves transport.  That reading is
+wrong, and the honest reading is uncomfortable.
+
+The naive grade-equality phrasing of coassociativity would compare
+`GEcho ((g₁⊔g₂)⊔g₃)` with `GEcho (g₁⊔(g₂⊔g₃))`, forcing a
+`subst GEcho (⊔g-assoc …)` to make the two sides typecheck against
+one another.  That `subst` then has to be coherent with the comonadic
+laws — i.e. one would have to prove that `degrade` commutes with the
+transport, that the transport is functorial along `_⊔g_`, and that
+the resulting square serialises into the pentagon.  All of that is
+what a genuine graded comonad in the Petriček–Orchard–Mycroft sense
+would carry: a nested family `D_{r·s} ⇒ D_r D_s` whose coherence
+*is* the pentagon and triangle of a categorical comonad object.
+
+The common-upper-bound idiom removes those obligations because there
+is no such nested family to be coherent about.  `EchoGradedComonad`
+does not exhibit a graded comonad in that sense — that claim was
+retracted on 2026-05-18 — and the coherence content is exactly
+*thinness of the order* (`≤g-prop`) propagated by a single
+path-independence lemma (`degrade-compose`).  The proofs are short
+because the structure they discharge is thin, not because the
+encoding is clever.  Said sharply: in a hypothetical setting where
+`_≤g_` had non-trivial path content, the common-upper-bound idiom
+would not save us; we would have to track the path data, and the
+mechanisation would look like the literature's graded-comonad
+mechanisations rather than like ours.
+
+The separating model (`EchoSeparating.agda`) is the operational
+witness for this reading.  It is `EchoGraded` minus `≤g-prop`; every
+generic Σ-functoriality law (`sep-map-over-id`, `sep-map-over-comp`,
+the functorial-unit triad) still holds by the same definitional
+collapse, and `sep-degrade-compose-fails` exhibits a checked
+`true ≢ false` refutation of `SepDegradeCompose`.  The single
+two-line refutation `sep-degrade-compose-fails law = true≢false (law
+rfl-lo s₀ s₁ true)` measures exactly the cost of removing
+propositionality of the order: one degenerate composition pair
+disagrees.  That is the only content there is to remove `subst` from
+in the first place.
+
+=== Where the construction does *not* extend
+
+Three boundaries are mechanised, and we state them as bounds rather
+than as features re-spun.
+
+==== The five-axis simultaneous-integration claim (EI-2) is settled negatively
+
+Gate-2's identity claim that the five axes (loss, role, linearity,
+indexing, modality) integrate *simultaneously* in a non-trivial way
+was killed by an explicit falsifier (the `IntegrationAudit.agda`
+counterexample family; see `docs/integration-audit.adoc` and
+`docs/retractions.adoc` R-2026-04 for the negative-result entry).
+The four "characteristic" survivors integrate pairwise at most.  This
+is recorded as a falsifiable-gate negative, not as a "future work"
+deferral; reopening it requires producing a witness that the audit's
+falsifier rules out, and we know of none.
+
+==== The mediator property is funext-relative
+
+`echo-pullback-univ` discharges *pointwise* uniqueness `∀ v → m' v ≡
+m v` and nothing more (`EchoPullback.agda`:131–143).  The
+unconditional terminal-cone equality `m' ≡ m` is unstatable in
+`--safe --without-K` without funext, and so it is not stated.  The
+F-2026-05-18a earn-back at `EchoPullbackUnivF4.agda` recovers the
+terminal-cone equality *conditionally on an explicit `funext` module
+parameter* — never a postulate, and never silently — and is exactly
+as strong as that conditional form.  The retraction stands for the
+unconditional claim.
+
+==== The content is thinness of the order, full stop
+
+The coherence equations collapse to `degrade-compose` + `≤g-prop`;
+the separating model shows that over generic Σ-functoriality, the
+only load-bearing hypothesis is `≤g-prop`.  The `GradedLossModel`
+interface bakes `⊑-prop` in as a field, and both `set-model` and
+`rel-model` fix the *same* grade poset (the second is the first
+`× ⊤`, agreeing by `refl`).  This is carrier-parametricity over a
+fixed thin poset, not semantic model-independence — and was
+retracted under that earlier framing.  A category theorist reading
+this paper should expect the strength of a thin Grothendieck
+fibration with a propositional order, not the strength of a graded
+comonad in a non-thin lattice.
+
+=== Threats to validity
+
+==== The Gate-2 "single recipe" finding
+
+The Gate-2 handoff (`docs/gate-2-handoff.adoc` Observation G) records
+that all four (and the candidate fifth, `RoleGraded`) Gate-2
+"characteristic" survivors instantiate the same recipe: a custom
+propositional decoration order on a finite type, an echo-indexed
+family whose carrier varies per decoration, and a transport action
+along the order.  The recipe is useful as organising vocabulary, and
+we treat it as such; what it does *not* do is independently
+corroborate the modality across decorations — the four instances
+are not four independent witnesses, they are one structural pattern
+applied four times.  Cross-axis distinctness arguments
+(`docs/gate-1-handoff.adoc`) supply the per-decoration independence
+the recipe itself cannot.  Anyone reading the four-instance
+table in §"Worked examples" as a robustness check should weaken that
+reading accordingly.
+
+==== Sample-size on consumer evidence
+
+The two consumer-evidence streams (`absolute-zero` for compute-side
+identity programs; the planned Buchholz ordinal-notation track) are
+each *one* downstream; the ordinal track is gated on reaching
+Bachmann–Howard and is not yet in scope (see <<ordinal-appendix>>).
+A failure mode of this paper would be over-reading either as
+external validation of the *thesis*; both are validations of
+particular technical bridges (the Echo–CNO bridge and the eventual
+Echo–`<ᵇ` bridge respectively), and not of "Echo as a recognised
+modality" in the field.
+
+==== Conservativity is evidence, not a theorem
+
+`docs/echo-types/conservativity.adoc` was retracted from
+"metatheorem" framing on 2026-05-18.  The postulate-free `--safe
+--without-K` build plus the definitional Σ-identity are *evidence
+for* conservativity over MLTT+Σ, in the same sense any
+typechecking artefact is evidence for the propositions whose proofs
+it carries — they are not, and are not claimed to be, a discharged
+metatheorem over all propositions.  Anyone citing this paper as
+"echo is conservative over MLTT+Σ" is citing more than the
+mechanisation discharges.
+
+==== Audit re-runs and gate discipline
+
+The reframing on 2026-05-18 was triggered by an adversarial-review
+re-run of Gate-2.  The retraction log is append-only; a *future*
+re-run could surface a further finding, and the gate discipline
+commits us to recording it the same way.  This is presented as a
+methodological strength only to the extent that the discipline
+*succeeds in catching* mis-claims; a reader is entitled to treat
+the existence of one retraction as licence to suspect another.
 
 == Related work
 
@@ -977,6 +1198,7 @@ falsifiable retraction discipline — of which this reframing is an
 instance. External validation is the remaining step.
 
 [appendix]
+[#ordinal-appendix]
 == Ordinal / Buchholz consumer-evidence [EXPAND]
 
 NOTE: *[EXPAND]* — the ordinal-notation / Buchholz collapsing track
