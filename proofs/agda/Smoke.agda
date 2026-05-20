@@ -486,6 +486,9 @@ open import Ordinal.Buchholz.RankPow using
   ; rank-mono-<ᵇ-ψ+
   ; rank-mono-<ᵇ-+Ω
   ; rank-mono-<ᵇ-+ψ
+  ; rank-mono-<ᵇ-+1-via-target
+  ; rank-mono-<ᵇ-+1-Ω-target
+  ; rank-mono-<ᵇ-+1-ψ-target
   )
 
 open import Ordinal.OmegaMarkers using

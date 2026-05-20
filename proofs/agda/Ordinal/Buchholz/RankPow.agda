@@ -349,3 +349,72 @@ rank-mono-<ᵇ-+ψ {x} {y} {ν} {α} px y≤x =
   -- `rank-pow (bpsi ν α) = ω-rank-pow ν` (provisional shape), so
   -- this reduces to the `<ᵇ-+Ω`-shaped argument at target ν.
   rank-pow-bplus-into-ω-rank-pow {x} {y} {ν} px y≤x
+
+----------------------------------------------------------------------
+-- `<ᵇ-+1` via a caller-supplied target-additive-principal witness
+----------------------------------------------------------------------
+
+-- `bplus x₁ x₂ <ᵇ bplus y₁ y₂` from `x₁ <ᵇ y₁` is the `<ᵇ-+1`
+-- constructor.  The rank-mono conclusion `rank-pow (bplus x₁ x₂) <′
+-- rank-pow (bplus y₁ y₂)` requires `rank-pow y₁` to be additive
+-- principal (in the sense that `α, β <′ rank-pow y₁` forces
+-- `α ⊕ β <′ rank-pow y₁`).  For atomic `y₁ ∈ {bOmega μ, bpsi ν _}`,
+-- `rank-pow y₁ = ω-rank-pow _` IS additive principal and the consumer
+-- supplies `additive-principal-ω-rank-pow`.  For `y₁ = bplus z₁ z₂`,
+-- `rank-pow y₁` is not additive principal in general; that sub-case
+-- needs a coarser dominator function and is deferred.
+--
+-- The primitive below is parametric in the additive-principal
+-- witness, so the consumer pattern-matches on `y₁`'s constructor and
+-- supplies the appropriate witness at each call site.
+
+rank-mono-<ᵇ-+1-via-target : ∀ {x₁ x₂ y₁ y₂}
+  → (target-add : ∀ {α β}
+       → α <′ rank-pow y₁
+       → β <′ rank-pow y₁
+       → α ⊕ β <′ rank-pow y₁)
+  → rank-pow x₁ <′ rank-pow y₁          -- IH on `x₁ <ᵇ y₁`
+  → rank-pow x₂ ≤′ rank-pow x₁          -- WfCNF source tail bound
+  → rank-pow (bplus x₁ x₂) <′ rank-pow (bplus y₁ y₂)
+rank-mono-<ᵇ-+1-via-target {x₁} {x₂} {y₁} {y₂} target-add rx<ry rx₂≤rx₁ =
+  let
+    -- rank x₂ ≤′ rank x₁ <′ rank y₁ gives rank x₂ <′ rank y₁
+    rx₂<ry : rank-pow x₂ <′ rank-pow y₁
+    rx₂<ry = ≤′-trans
+               {osuc (rank-pow x₂)} {osuc (rank-pow x₁)} {rank-pow y₁}
+               rx₂≤rx₁
+               rx<ry
+
+    -- additive-principal closure on the target: both summands <′ y₁,
+    -- so their ⊕-sum is also <′ y₁.
+    sum<ry : rank-pow x₁ ⊕ rank-pow x₂ <′ rank-pow y₁
+    sum<ry = target-add rx<ry rx₂<ry
+
+    -- y₁ ≤′ y₁ ⊕ y₂ by left-≤-sum.
+    ry≤target : rank-pow y₁ ≤′ rank-pow (bplus y₁ y₂)
+    ry≤target = ⊕-left-≤-sum {rank-pow y₁} (rank-pow y₂)
+  in
+    ≤′-trans
+      {osuc (rank-pow x₁ ⊕ rank-pow x₂)} {rank-pow y₁} {rank-pow (bplus y₁ y₂)}
+      sum<ry
+      ry≤target
+
+-- Convenience: when the target's leading subterm is `bOmega μ`, the
+-- consumer can directly supply `additive-principal-ω-rank-pow {μ}`.
+-- Same for `bpsi ν _` via the provisional shape.
+
+rank-mono-<ᵇ-+1-Ω-target : ∀ {x₁ x₂ μ y₂}
+  → rank-pow x₁ <′ ω-rank-pow μ
+  → rank-pow x₂ ≤′ rank-pow x₁
+  → rank-pow (bplus x₁ x₂) <′ rank-pow (bplus (bOmega μ) y₂)
+rank-mono-<ᵇ-+1-Ω-target {x₁} {x₂} {μ} {y₂} =
+  rank-mono-<ᵇ-+1-via-target {x₁} {x₂} {bOmega μ} {y₂}
+    (additive-principal-ω-rank-pow {μ})
+
+rank-mono-<ᵇ-+1-ψ-target : ∀ {x₁ x₂ ν α y₂}
+  → rank-pow x₁ <′ ω-rank-pow ν
+  → rank-pow x₂ ≤′ rank-pow x₁
+  → rank-pow (bplus x₁ x₂) <′ rank-pow (bplus (bpsi ν α) y₂)
+rank-mono-<ᵇ-+1-ψ-target {x₁} {x₂} {ν} {α} {y₂} =
+  rank-mono-<ᵇ-+1-via-target {x₁} {x₂} {bpsi ν α} {y₂}
+    (additive-principal-ω-rank-pow {ν})
