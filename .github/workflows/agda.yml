@@ -115,7 +115,7 @@ jobs:
       # source change or absolute-zero bump; restore-keys give a warm
       # partial cache even when it does.
       - name: Cache Agda interface files
-        uses: actions/cache@v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
             ~/agda-stdlib/**/*.agdai
