@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: PMPL-1.0-or-later
+# SPDX-License-Identifier: MPL-2.0
 #
 # Foundation guardrail (added 2026-05-18 — the long-documented
 # "CI-grep-enforced" check that did not previously exist).

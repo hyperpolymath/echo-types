@@ -1,5 +1,5 @@
 {
-  # SPDX-License-Identifier: PMPL-1.0-or-later
+  # SPDX-License-Identifier: MPL-2.0
   #
   # Development environment for echo-types. Consumed by .envrc (`use flake`).
   # Toolchain mirrors .tool-versions (cabal / rust / just) plus Agda, which
