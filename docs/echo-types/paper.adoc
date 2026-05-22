@@ -1204,6 +1204,44 @@ via a genuine non-graph `StepND` model (§6 NOTE,
 `EchoStepNDModelF2.agda`). The graded-comonad, modality-level
 model-independence, and conservativity rows remain fully retracted.
 
+[#reframing-note]
+== Reframing note (2026-05-18)
+
+This draft was reframed after an adversarial three-reviewer review
+(graded-modality, semantics, and proof-assistant skeptics) found that
+the codebase contains no defense for five central claims, and that
+two were contradicted by the repository's own Gate-2 audit. The
+following claims were retracted, not weakened cosmetically:
+
+[cols="2,3", options="header"]
+|===
+| Retracted claim | Replaced by
+
+| "graded comonad" (counit/comultiplication, three comonad laws)
+| loss-graded *reindexing modality*; no nested `D_r D_s` is formed;
+  the equations hold by thinness of the grade order
+
+| "terminal-cone universal property"; "a category theorist accepts
+  echo as the limit of a cospan"
+| a *pointwise, funext-relative* mediator property; full terminality
+  is unstatable here without funext
+
+| "model independence across two agreeing models"
+| carrier-parametricity over a *fixed* grade poset; the second model
+  is the first with a `⊤` component, agreeing by `refl`
+
+| "conservativity metatheorem, discharged operationally by the build"
+| a *postulate-free build*: evidence for, not a proof of,
+  conservativity over MLTT+Σ
+
+| "funext quarantined behind an isolated module; no result crosses it"
+| no funext anywhere; the real funext-relativity is the pointwise
+  mediator property, now disclosed as the boundary
+|===
+
+The full per-attack analysis and the codebase pressure-test are in
+`docs/retractions.adoc`.
+
 == Conclusion
 
 Echo is the homotopy fibre equipped with a loss-grade lattice,
