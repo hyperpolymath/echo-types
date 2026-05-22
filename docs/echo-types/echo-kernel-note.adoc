@@ -76,19 +76,29 @@ kernel** — the boundary is real and lives outside this core.
   `EchoEpistemicResidue`, `EchoExamples`, `EchoGraded`,
   `EchoLinear`, `EchoPullback`, `EchoRelModel`, `EchoScope`,
   `EchoStabilityTests`, `EchoThermodynamics`, `EchoCNOBridge`,
-  `EchoThermodynamicsFinite`, `EchoIntegration`
+  `EchoThermodynamicsFinite`, `EchoIntegration`, `EchoAccess`,
+  `EchoCost`, `EchoCostInstance`, `EchoSearch`, `EchoSearchInstance`,
+  `EchoExampleAbsInt`, `EchoExampleParser`, `EchoExampleProvenance`,
+  `EchoExampleSignAnalysis`, `EchoExampleTruncation`,
+  `EchoSearchExample`, `EchoThermodynamicsArbitrary`,
+  `EchoThermoCollapseImpossible`
 | Multi-hop. `EchoThermodynamics` reaches the kernel via
   `EchoFiberCount` (no direct `Echo` import);
   `EchoThermodynamicsFinite` is its Bishop-finite transport layer.
+  `EchoSearch` / `EchoCost` / `EchoAccess` are Axis 8 witness-search
+  and cost-model extensions. `EchoExample*` are derived domain
+  applications.
 
 | *Earn-back gate modules* +
 (derived / scoped; not kernel)
 | `EchoGradedComonadF1`, `EchoPullbackUnivF4`,
-  `EchoStepNDModelF2`
+  `EchoStepNDModelF2`, `EchoGradedComonadInterface`,
+  `EchoGradedComonadInstance1`, `EchoGradedComonadInstance2`
 | Falsifiable earn-back work tracked by
   `docs/echo-types/earn-back-plan.adoc` and `docs/retractions.adoc`.
   F4 and F2 are passed at their scoped strength; F1 is a feasibility
-  spike / open gate as recorded in the ledger. None are kernel.
+  spike / open gate as recorded in the ledger. F3 (Interface +
+  Instances) is the abstract comonad record. None are kernel.
 
 | *Retracted framing* +
 (typecheck; prose withdrawn)
@@ -99,7 +109,7 @@ kernel** — the boundary is real and lives outside this core.
   (R-2026-05-18), under a falsifiable earn-back gate. Not kernel.
 
 | *Sibling (not kernel-derived)*
-| `EchoApprox`
+| `EchoApprox`, `EchoApproxInstance`
 | Does **not** `import Echo`; a parallel stdlib-only approximation
   module. Listed so the DAG audit is complete.
 |===

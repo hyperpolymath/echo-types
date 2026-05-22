@@ -175,8 +175,11 @@ The honesty layer. *Read before citing any claim above as final.*
   F2/F4 independent; F3 gated on F1). Current SoT for what is / isn't
   proven. Current gate modules on `main` include
   `proofs/agda/EchoGradedComonadF1.agda`,
-  `proofs/agda/EchoPullbackUnivF4.agda`, and
-  `proofs/agda/EchoStepNDModelF2.agda`, each scoped by the ledger.
+  `proofs/agda/EchoPullbackUnivF4.agda`,
+  `proofs/agda/EchoStepNDModelF2.agda`,
+  `proofs/agda/EchoGradedComonadInterface.agda`,
+  `proofs/agda/EchoGradedComonadInstance1.agda`,
+  and `proofs/agda/EchoGradedComonadInstance2.agda`, each scoped by the ledger.
 * Gate handoffs: `docs/gate-1-distinct-phenomenon.adoc`,
   `docs/gate-2-handoff.adoc`, `docs/gate-3-*.adoc`.
 
@@ -218,6 +221,11 @@ This is a living document. Whenever a direction is added, a gate
 passes/fails, or a claim is retracted/earned-back:
 
 . Update the relevant Directions/Governance entry *and* its status tag
+  here, in the same PR as the change.
+. Never duplicate detail — link to the canonical proof module / doc.
+. The GitHub wiki `Home` mirrors this file and must point back here as
+  SoT; do not fork content into the wiki.
+e entry *and* its status tag
   here, in the same PR as the change.
 . Never duplicate detail — link to the canonical proof module / doc.
 . The GitHub wiki `Home` mirrors this file and must point back here as
