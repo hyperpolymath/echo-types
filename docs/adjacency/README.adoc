@@ -32,10 +32,18 @@ is the family of `echo-not-prop` lemmas formalised in
 * `EpistemicUpdate.echo-not-prop` — eight worlds, four consistent
 * `LinearErasure.echo-not-prop` — two annotated types, one erasure
 
-The general theorem (forwarded as Q2.1 in `next-questions.adoc`):
-for non-injective `f : A → B` with at least two distinct preimages
-of `y`, `is-prop (Echo f y) → ⊥`. The n=2 special cases are proved;
-the general theorem awaits gate-2 evaluation.
+The general theorem (Q2.1 in `next-questions.adoc`): for
+non-injective `f : A → B` with at least two distinct preimages of
+`y`, `is-prop (Echo f y) → ⊥`. **Proved.** The received-`y` form is
+`EchoTruncation.echo-not-prop`, re-exported as
+`characteristic.NonTruncatable.Q2-1`; the stronger constructed-`y`
+form (non-injectivity of `f` *forces* a non-propositional fibre,
+the `y` being produced rather than assumed) is
+`characteristic.NonTruncatable.non-injective⇒echo-not-prop`. The
+gate-2 audit (recorded in that module's header and in
+`next-questions.adoc` §Q2.1) demotes the received-`y` form as
+Σ-reducible and forwards only the constructed-`y` form as a
+candidate nominee.
 
 Truncation arguments are load-bearing against:
 
@@ -305,10 +313,15 @@ meta-note it has no axis engagement; retained for traceability.
 The truncation argument has formal exhibits for three of its
 target neighbours via gate-3's `echo-not-prop` family
 (`TropicalArgmin`, `EpistemicUpdate`, `LinearErasure`). The
-general theorem (Q2.1) is unstated and unproven. Q2.1 is the
-single most leveraged open formalisation: closing it would
-discharge truncation arguments against all four
-truncation-vulnerable neighbours simultaneously.
+general theorem (Q2.1) is now **stated and proved** in
+`characteristic.NonTruncatable` (received-`y` form `Q2-1` plus the
+stronger constructed-`y` form `non-injective⇒echo-not-prop`),
+discharging the truncation argument against all four
+truncation-vulnerable neighbours at the general level rather than
+the three n=2 instances. The remaining open work is the gate-2
+*nomination* decision (the audit demotes the received-`y` form as
+Σ-reducible and forwards only the constructed-`y` form), not the
+formalisation.
 
 The 2-cell argument has formal exhibits for both of its target
 neighbours (quotients via `EchoVsQuotient.Sophisticated`, Galois

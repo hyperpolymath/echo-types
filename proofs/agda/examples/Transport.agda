@@ -211,8 +211,8 @@ avg-preserves-sum {k} {n} f = begin
 -- agreement below is a definitional equality.  No bridge axis was
 -- weakened or introduced.
 
-open import Echo using (Echo)
-import EchoGraded            -- chosen bridge axis (graded); see header
+open import Echo.Core using (Echo)
+import Echo.Bridges.EchoGraded            -- chosen bridge axis (graded); see header
 
 EchoStep : ∀ {k n} → Field n → Set
 EchoStep {k} {n} y = Σ[ x ∈ Field (suc k *ℕ n) ] avg {k} {n} x ≡ y

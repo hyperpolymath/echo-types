@@ -67,7 +67,7 @@ open import EchoLinear                            using
   ; linear≤affine
   ; affine≤affine
   )
-open import EchoGraded                            using
+open import Echo.Bridges.EchoGraded                            using
   ( Grade
   ; keep
   ; residue

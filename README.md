@@ -7,199 +7,85 @@
 [![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](https://www.mozilla.org/en-US/MPL/2.0/)
 [![Green Web](https://api.thegreenwebfoundation.org/greencheckimage/github.com)](https://www.thegreenwebfoundation.org/green-web-check/?url=github.com)
 
-Constructive Agda development for echo types as a first-class notion of structured loss:
+Constructive Agda development isolating a minimal, mechanically defensible core for "echo types": a first-class notion of structured loss where irreversible operations retain a proof-relevant constraint on what was lost.
 
-loss that is not total erasure.
+## ⚠️ Repository Stance
 
-## 🗺️ Where things are
+This repository has been strictly refactored to separate **mechanically verified core theory** from **speculative bridge material and retracted claims**. 
 
-**New here, or can't find something? Start with the
-[Master Map](docs/echo-types/MAP.adoc).** It is the single source of
-truth for every direction (Thermodynamic, Buchholz/Veblen ordinals,
-Characteristic/EI, CNO/absolute-zero, JanusKey, Tropical/Dyadic, MAA,
-Shannon — and ArghDA tooling), each status-tagged and back-linked to
-its proofs and docs, with the retraction/proof-debt governance called
-out. The scattered overview/roadmap docs are detail under it.
+We prioritise correctness over ambition. For a strict ledger of what is proven, what is partial, and what is retracted, see the [Proof Obligation Ledger](docs/proof-obligations.md). 
 
-## Core Idea
+For technical defenses against triviality, see our [Skepticism Documents](core/skepticisms/) (e.g., *Is this just Fibers?*).
+
+For the narrative structure of the core argument, see the [Paper Spine](docs/paper-spine.md).
+
+## The Minimal Core
 
 Most formalisms foreground two clean cases:
-
-- reversible / injective / linear-ish: no important loss
-- ordinary irreversible: loss occurs and is usually forgotten
+1. Reversible / injective: no important loss.
+2. Ordinary irreversible: loss occurs and is forgotten.
 
 Echo types target a third case:
+3. Irreversible, but with a retained proof-relevant constraint on what was lost.
 
-- irreversible, but with a retained proof-relevant constraint on what was lost
-
-This repository treats that third case as the primary object of study.
-
-## Definition (Foundation)
-
-Given `f : A → B`, define the fiber/echo at `y : B`:
+Given `f : A → B`, the "echo" at `y : B` is defined purely structurally as the fiber:
 
 `Echo f y := Σ (x : A) , (f x ≡ y)`
 
-Current formal foundation is in:
+The core claim is *not* that this syntax is new (it is a standard homotopy fiber), but that treating this specific structure as a computational artifact of irreversible processes exposes a class of practically useful "residue" theorems.
 
-- `proofs/agda/Echo.agda`
-- `proofs/agda/EchoCharacteristic.agda`
-- `proofs/agda/EchoResidue.agda`
-- `proofs/agda/EchoExamples.agda`
-- `proofs/agda/EchoChoreo.agda`
-- `proofs/agda/EchoEpistemic.agda`
-- `proofs/agda/EchoLinear.agda`
-- `proofs/agda/EchoGraded.agda`
-- `proofs/agda/EchoTropical.agda`
-- `proofs/agda/EchoIntegration.agda`
+The foundational, mechanically verified core is isolated in:
+- `proofs/agda/Echo/Core.agda`
+- `proofs/agda/Echo/Characteristic.agda`
+- `proofs/agda/Echo/Residue.agda`
 
-with constructive proofs (`--safe --without-K`, no postulates in `proofs/agda`):
+Characteristic results (PROVED) include:
+- Explicit non-injectivity witnesses for collapse maps (`collapse-non-injective`).
+- Impossibility of full reconstruction from visible output (`no-section-*` family).
+- Retained-constraint theorem for projection-style structured loss (`visible-constraint`).
 
-- `echo-intro` (introduction into own fiber)
-- `map-over` (action on fibers for morphisms over fixed base)
-- `map-over-id` (identity law)
-- `map-over-comp` (composition law)
-- `map-square` (action along commuting squares)
+Canonical examples are in `proofs/agda/Echo/Examples/`:
+- Lossy boolean classification (`EchoExampleAbsInt.agda`).
+- Provenance and redaction (`EchoExampleProvenance.agda`).
 
-Characteristic M2 results include:
+## Bridge Material [EXPERIMENTAL / SPECULATIVE]
 
-- explicit non-injectivity witnesses for collapse maps
-- impossibility of full reconstruction from plain visible output (`no-section-*` family)
-- distinct echoes over the same visible value (`echo-true≢echo-false`, `stateA≢stateB`)
-- retained-constraint theorem for projection-style structured loss (`visible-constraint`)
+Extensive exploratory work connecting Echo Types to other domains has been isolated into `proofs/agda/Echo/Bridges/` and `docs/bridges/`. **These are strictly labeled as partial or speculative.**
 
-Scope-broadening stages now include:
+- **CNO Bridge (Absolute Zero):** [PARTIAL] Integrating with semantic collapse models.
+- **Thermodynamics:** [EXPLORATORY] Mapping information loss to thermodynamic cost.
+- **Tropical Semantics:** [PARTIAL] Argmin-style witness residues.
+- **Buchholz / Veblen Ordinals:** [BLOCKED] Ordinal representation tracks are blocked on the well-foundedness of shared-binder cases (self-lift fails).
+- **JanusKey / Categorical:** [EXPLORATORY]
 
-- choreographic bridge (`RoleEcho` over role projections, commuting-square transport)
-- epistemic bridge (indistinguishability and echo-indexed knowledge)
-- affine/linear bridge (strict weakening from full echoes to residues)
-- graded bridge (grade order and compositional degradation law)
-- tropical bridge (argmin-style witness residues under tropical collapse)
-- integration bridge (cross-decoration commutation via the recipe; the recipe is useful as organising vocabulary but does not carry substantive simultaneous integration content — see `docs/EI2_REPORT.adoc`. Distinctness rests on truncation and 2-cell arguments)
-- indexed/relational/categorical packaging (`EchoIndexed`, `EchoRelational`, `EchoCategorical`, `EchoScope`)
-- cross-ecosystem bridges (`EchoCNOBridge`, `EchoJanusBridge`, `DyadicEchoBridge`, `EchoOrdinal`)
+## Retracted Claims [RETRACTED]
 
-## Current Status Snapshot (2026-04-23)
+The following framings were previously explored but have been strictly **retracted** due to fundamental type-theoretic or mathematical obstacles. They must not be revived without explicit new mechanical proof. See `docs/retracted/` for historical context.
 
-On `main`, the following are true:
-
-- full suite compiles: `agda -i proofs/agda proofs/agda/All.agda`
-- core echo/fiber laws are smoke-pinned (`echo-intro`, `map-over`, `map-over-id`, `map-over-comp`, `map-square`)
-- non-injectivity/no-section family is present (`collapse-non-injective`, `no-section-collapse`, `no-section-visible`, `no-section-collapse-to-residue`, `no-section-weaken`)
-- distinct-witness and retained-constraint exemplars are present (`echo-true≢echo-false`, `stateA≢stateB`, `visible-constraint`)
-
-Ordinal/Buchholz track status:
-
-- `Ordinal.Buchholz.WellFounded` provides `wf-<ᵇ : WellFounded _<ᵇ_` for the currently admitted constructor core
-- top-marker `bplus` bridges are admitted and inverted: `<ᵇ-+ω`, `<ᵇ-+ψω`, `<ᵇ-inv-+Ωω`, `<ᵇ-inv-+ψω`
-- left-summand bridges into additive terms are admitted and inverted: `<ᵇ-Ω+`, `<ᵇ-ψ+`, `<ᵇ-inv-Ω+`, `<ᵇ-inv-ψ+`
-- general additive-target bridges are admitted and inverted: `<ᵇ-+Ω`, `<ᵇ-+ψ`, `<ᵇ-inv-+Ω`, `<ᵇ-inv-+ψ`
-- `Ordinal.Buchholz.VeblenInterface` pins the measure-based WF interface with explicit constructor obligations; the historical same-binder fields (`dec-ψα`, `dec-+2`) remain part of the generic interface, but the closed comparison route now discharges them internally
-- `Ordinal.Buchholz.VeblenMeasureTarget` fixes a first concrete target carrier: a lexicographic order on `OmegaIndex × BT`
-- `Ordinal.Buchholz.VeblenProjectionMeasure` is retained as an explanatory scaffold: it makes the projection-style measure into that target explicit and discharges the shared-binder obligations there as target lemmas
-- `Ordinal.Buchholz.VeblenComparisonTarget` adds a second concrete target: a lexicographic order on `BT × Payload` with recursive `ψ`-compatibility on the first coordinate and tagged payload descent for the same-binder follow-up cases
-- `Ordinal.Buchholz.VeblenComparisonModel` is now the primary closed Veblen route: it instantiates the Veblen interface without deferred assumptions and exposes `core-wf-from-comparison : WellFounded _<ᵇ_`
-- `Ordinal.Buchholz.ExtendedOrder` now packages a closed comparison-induced extension `_ <ᵇ⁺ _` of `BT`: it contains the current core, exposes the historical same-binder principles as lemmas, and is transitive and well-founded
-- `Ordinal.Buchholz.LiftedExtendedOrder` now adds the next honest wrapper `_ <ᵇ⁺¹ _`: the blocked self-lift of `_ <ᵇ⁺ _` fails, but same-binder moves from `_ <ᵇ⁺ _` into `_ <ᵇ⁺¹ _` are derivable and `_ <ᵇ⁺¹ _` is well-founded
-- `Ordinal.Buchholz.IteratedExtendedOrder` now packages that repair as a finite iteration scheme: `LiftedOrder n` gives the `n`th wrapper layer, same-binder moves lift one level at a time, and exact finite same-binder depth is tracked by `SurfaceDepth n` with an embedding into `LiftedOrder (suc n)`
-- `Ordinal.Buchholz.SurfaceOrder` now adds a direct inductive surface `_ <ᵇˢ _` for the two historical same-binder shapes, with an embedding into `_ <ᵇ⁺ _` and inherited well-foundedness
-- `Ordinal.Buchholz.RecursiveSurfaceOrder` now adds a genuinely recursive finite-closure candidate `_ <ᵇʳᶠ _`: every derivation extracts an exact finite depth and embeds into `LiftedOrder (suc n)`, so irreflexivity follows without requiring a single self-stable wrapper
-- `Ordinal.Buchholz.RecursiveSurfaceBudget` now packages the next accepted recursion vehicle: a budgeted relation on `ℕ × BT` whose first coordinate strictly decreases and which still carries the lifted witness into the iterated wrapper tower
-- the exact remaining recursive frontier is now explicit in code as a blocked self-lift: `SurfaceLiftInterface` is refuted by a concrete same-left `bplus` counterexample, and the surviving route is finite wrapper iteration rather than self-stability
-- the Veblen comparison route is now closed for the current admitted constructor core
-- the new `_ <ᵇ⁺ _` wrapper advances the full-order line by giving a mediated closed relation on all terms
-- the new `_ <ᵇˢ _` surface is the first direct bridge candidate between the current core presentation and that mediated wrapper
-- the new `LiftedOrder n` / `SurfaceDepth n` family shows that arbitrary finite same-binder depth can already be handled by iterated mediated wrappers
-- the new `_ <ᵇʳᶠ _` candidate shows that direct recursive derivations also reduce to those finite-depth fragments; what is still open is a single global mediated well-foundedness theorem for that union
-- the new budgeted layer on `ℕ × BT` isolates the missing global step: the recursive surface route is now well-founded once explicit budget is carried, and the remaining task is to discharge or eliminate that budget in the unbudgeted theorem
-- this still does not internalize the historically blocked shared-binder shapes as actual constructors of `_ <ᵇ _`; the full intended Buchholz order remains open at that step
-- remaining live mathematical work is therefore not the current-core WF route, but the mediated internalization of the shared-binder cases back into the real order package
-
-## External Bridge Targets (local workspace)
-
-Current bridge targets in this workspace are:
-
-- `absolute-zero`: `/var/mnt/eclipse/repos/verification-ecosystem/maa-framework/absolute-zero`
-- `januskey`: `/var/mnt/eclipse/repos/developer-ecosystem/januskey`
-- `tropical-resource-typing` (potential target, not recently audited): `/var/mnt/eclipse/repos/verification-ecosystem/tropical-resource-typing` (upstream: `https://github.com/hyperpolymath/tropical-resource-typing`)
-
-Note: `januskey` is not currently nested under `maa-framework` in this workspace layout.
-
-Cross-repo status:
-
-- bridge formalisms live in this repo (`EchoCNOBridge`, `EchoJanusBridge`, tropical-collapse witness work in `EchoTropical`)
-- Agda-side content-bridge `proofs/agda/EchoCNOBridge.agda` imports `IsCNO` directly from `absolute-zero/proofs/agda/CNO.agda` (the earlier scaffolded-adapter plan `EchoBridgeScaffold.agda` was superseded)
-- end-to-end conformance against upstream codebases is a separate track and is not yet fully machine-checked here
-- current bridge ledger: `docs/echo-types/cross-repo-bridge-status.md`
-- see `docs/echo-types/roadmap.md` for staged cross-repo verification gates
-
-## What Echo Types Are For
-
-Echo types are useful when outputs are:
-
-- insufficient to reconstruct their source exactly
-- still sufficient to constrain the source non-trivially
-
-Intended proof-use cases include:
-
-- non-injective computation
-- provenance
-- structured irreversibility
-- partial recoverability
-- classification up to equivalence
-- forensic inference from residues
-- refined taxonomies of information loss
-
-## Identity Claim and Falsifiability
-
-This repo is trying to establish echo types as a concept with its own identity.
-Since `Echo` is built from sigma/fiber machinery, identity will not come from syntax.
-It must come from role and theorems.
-
-We treat the claim as established only if all three are met:
-
-1. Distinct phenomenon: structured loss under non-injective computation.
-2. Characteristic theorem family: results that are naturally echo-shaped, not just generic sigma lemmas.
-3. Canonical examples: cases where echo type is the right explanatory unit.
-
-If these fail, we record that result and stop the identity claim.
+- **Graded Comonad Framing:** The structure is a thin-poset action, not a true graded comonad.
+- **Universal Property / Terminal Cone:** Blocked by the lack of native function extensionality.
+- **Conservativity / Two-Models Framing.**
 
 ## Build
 
+To build the strictly verified core and all experimental bridges:
+
 ```bash
-cd /var/mnt/eclipse/repos/echo-types
-agda -i proofs/agda proofs/agda/Echo.agda
+just build-all
 ```
 
-Full suite:
+To run the test suite:
 
 ```bash
-cd /var/mnt/eclipse/repos/echo-types
-agda -i proofs/agda proofs/agda/All.agda
+just test-all
 ```
 
 ## Tooling Stance
 
-- default development stays plain Agda with the standard library
-- optional exploratory work may use Agda's built-in `--cubical` mode plus the separate Cubical Agda library
-- adjacent cubical systems such as `RedPRL`, `redtt`, and `cooltt` are tracked as references, not as active proof infrastructure for this repo
-- see `roadmap.adoc` (`R2`) and `docs/adjacency/cubical-systems.adoc`
-
-## Roadmap
-
-Proof milestones and decision gates are in:
-
-- `roadmap.adoc`
-- `docs/buchholz-plan.adoc`
-
-Open/gated work and cross-repo follow-ups are tracked in:
-
-- `docs/echo-types/roadmap.md`
-- `docs/echo-types/taxonomy.md`
-- `docs/echo-types/composition.md`
+- Default development stays plain Agda with the standard library (`--safe --without-K`).
+- We do not use unsafe postulates, `TERMINATING` pragmas, or hidden assumptions to bypass checking. If a proof cannot be completed, it is left as a typed hole and marked `BLOCKED`.
 
 ## Licensing
 
-- code, proofs, and tooling in this repository are intended to be licensed under `MPL-2.0`; see [LICENSE](LICENSE)
-- prose documentation in `docs/`, `README.md`, `readme.adoc`, and roadmap files is intended to be licensed under `CC-BY-4.0`; see [LICENSE-docs](LICENSE-docs)
-- current practical follow-up: normalize per-file SPDX headers across source files so file-level notices match the top-level licensing intent
+- Code and proofs: `MPL-2.0`; see [LICENSE](LICENSE).
+- Prose documentation: `CC-BY-4.0`; see [LICENSE-docs](LICENSE-docs).

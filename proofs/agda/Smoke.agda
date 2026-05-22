@@ -6,7 +6,7 @@
 
 module Smoke where
 
-open import Echo using
+open import Echo.Core using
   ( Echo
   ; echo-intro
   ; map-over
@@ -41,7 +41,7 @@ open import Echo using
 -- see `coecho.md` §6 for the naming rationale. Tropical decomposition
 -- lives in `AntiEchoTropical.agda`; the generic-codomain lift of it
 -- remains deferred.
-open import AntiEcho using
+open import Echo.Bridges.AntiEcho using
   ( AntiEcho
   ; antiecho-intro
   ; antiecho-disjoint
@@ -52,7 +52,7 @@ open import AntiEcho using
 
 -- Pillar A of docs/echo-types/establishment-plan.adoc: the
 -- definitional Echo ≃ fib bridge, pinned so a rename fails CI fast.
-open import EchoFiberBridge using (fiber; echo→fib; fib→echo; echo↔fib)
+open import Echo.Bridges.EchoFiberBridge using (fiber; echo→fib; fib→echo; echo↔fib)
 
 -- Foundation P1 (docs/foundation.adoc): external-fibre
 -- triangulation against the standard library's OWN notions —
@@ -60,7 +60,7 @@ open import EchoFiberBridge using (fiber; echo→fib; fib→echo; echo↔fib)
 -- `echo↔coecho` is the genuine (non-refl, sym-carrying) coherence;
 -- the T1/T3 pins are calibration coincidences with stdlib, owned as
 -- such. Pinned so a rename or a slide to an unanchored claim trips CI.
-open import EchoFiberTriangulation using
+open import Echo.Bridges.EchoFiberTriangulation using
   ( echo-is-stdlib-witness                      -- T1 calibration
   ; all-echo→stdlib-strictly-surjective
   ; stdlib-strictly-surjective→all-echo
@@ -68,9 +68,9 @@ open import EchoFiberTriangulation using
   ; all-echo→stdlib-surjection                  -- T3 surjection tie
   )
 
-open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
-open import EchoResidue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
-open import EchoExamples using (square9; visible; quot; collapse-residue-identifies)
+open import Echo.Characteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
+open import Echo.Residue using (EchoR; collapse-to-residue; strict-weakening-collapse; no-section-collapse-to-residue)
+open import Echo.Examples.EchoExamples using (square9; visible; quot; collapse-residue-identifies)
 
 -- Example 9 (docs/echo-types/examples.md §9): parser residue —
 -- balanced parentheses. The Boolean shadow `parses : List Token →
@@ -78,7 +78,7 @@ open import EchoExamples using (square9; visible; quot; collapse-residue-identif
 -- and the Echo retains the token stream. Pinned headlines: the
 -- non-injectivity Σ-witness, the three concrete `Echo parses true`
 -- carriers (empty / pair / nested), and the residue Σ-pair.
-open import EchoExampleParser using
+open import Echo.Examples.EchoExampleParser using
   ( Token
   ; LP
   ; RP
@@ -100,7 +100,7 @@ open import EchoExampleParser using
 -- interpretation via Sign lattice). Headlines pinned so a rename
 -- or a slide back to an unanchored claim fails CI fast. See
 -- PR #76 (presentation-dependence cluster).
-open import EchoExampleAbsInt using
+open import Echo.Examples.EchoExampleAbsInt using
   ( Sign
   ; Carrier
   ; α
@@ -117,7 +117,7 @@ open import EchoExampleAbsInt using
 -- K-provenance semiring. Distinct Bool-provenance rows project to the
 -- same payload, witnessing the non-injectivity of `project` and
 -- producing distinct echoes at the same projected value.
-open import EchoExampleProvenance using
+open import Echo.Examples.EchoExampleProvenance using
   ( Row
   ; project
   ; provenance-collapses
@@ -129,7 +129,7 @@ open import EchoExampleProvenance using
   )
 open import VecRotation using (rotL-alternating; rotR-alternating; map-alternating)
 
-open import EchoApprox using
+open import Echo.Bridges.EchoApprox using
   ( Tolerance
   ; PseudoMetric
   ; BalancedTolerance
@@ -139,7 +139,7 @@ open import EchoApprox using
 -- Per-lemma pins for the parameterised EchoApprox via EchoApproxInstance
 -- (hygiene; closes the CLAUDE.md "Working rules" invariant gap for
 -- parameterised modules — see follow-up to PR #70).
-open import EchoApproxInstance using
+open import Echo.Bridges.EchoApproxInstance using
   ( trivialTolerance
   ; trivialPseudoMetric
   ; trivialBalancedTolerance
@@ -173,12 +173,12 @@ open import EchoApproxInstance using
 -- finite domains): names the resource-budget dimension of Axis 8.
 -- Carrier + headlines pinned via `EchoCostInstance` (trivial-on-⊤
 -- instance) — same hygiene pattern as `EchoApproxInstance`.
-open import EchoCost using
+open import Echo.Bridges.EchoCost using
   ( CostAlgebra
   ; module Cost
   )
 
-open import EchoCostInstance using
+open import Echo.Bridges.EchoCostInstance using
   ( trivialCostAlgebra
   ; cost-EchoC
   ; cost-intro
@@ -191,7 +191,7 @@ open import EchoCostInstance using
   ; cost-forget-compose-mono-A
   )
 
-open import EchoIndexed using
+open import Echo.Bridges.EchoIndexed using
   ( Echoᵢ
   ; echoᵢ-intro
   ; forget-role
@@ -202,7 +202,7 @@ open import EchoIndexed using
   ; forget-role-map-role-indexed
   )
 
-open import EchoDecidable using
+open import Echo.Bridges.EchoDecidable using
   ( EchoDec
   ; echo-dec-intro
   ; echo-dec-pull
@@ -220,7 +220,7 @@ open import EchoDecidable using
 -- product-strategy composition needs a `ℕ × ℕ ↔ ℕ` pairing
 -- bijection and lands in a separate slice; see the module preamble
 -- "where next" section.
-open import EchoSearch using
+open import Echo.Bridges.EchoSearch using
   ( SearchStrategy
   ; EchoS
   ; echo-search-intro
@@ -232,7 +232,7 @@ open import EchoSearch using
 
 -- Per-lemma pins for the parameterised EchoSearch via
 -- EchoSearchInstance — same hygiene pattern as EchoApproxInstance.
-open import EchoSearchInstance using
+open import Echo.Bridges.EchoSearchInstance using
   ( trivialEnum
   ; trivialF
   ; search-intro-⊤
@@ -251,7 +251,7 @@ open import EchoSearchInstance using
 -- land in this PR, completing the same recipe as `EchoGraded` and
 -- `EchoLinear`. Honest carriers for `enum` / `feasible` / `infeasible`
 -- remain deferred (a real design choice — see the module preamble).
-open import EchoAccess using
+open import Echo.Bridges.EchoAccess using
   ( Access
   ; free
   ; decidable
@@ -274,7 +274,7 @@ open import EchoAccess using
   ; degrade-access-via-join
   )
 
-open import EchoFiberCount using
+open import Echo.Bridges.EchoFiberCount using
   ( FiberSize-fin
   ; FiberSize-fin-no-hit
   ; FiberSize-fin-all-hit
@@ -285,7 +285,7 @@ open import EchoFiberCount using
   ; no-echo⇒FiberSize-fin≡0
   )
 
-open import EchoThermodynamics using
+open import Echo.Bridges.EchoThermodynamics using
   ( landauer-bound
   ; fiber-erasure-bound
   ; ⌊log₂1⌋≡0
@@ -295,14 +295,14 @@ open import EchoThermodynamics using
   ; landauer-collapse
   )
 
-open import EchoThermodynamicsFinite using
+open import Echo.Bridges.EchoThermodynamicsFinite using
   ( FiniteDomain
   ; fiber-erasure-bound-fin
   ; bennett-reversible-finite
   ; landauer-collapse-finite
   )
 
-open import EchoThermodynamicsArbitrary using
+open import Echo.Bridges.EchoThermodynamicsArbitrary using
   ( FiberSubsingleton
   ; injective⇒fiber-subsingleton
   ; reversible-erasure-cost
@@ -312,13 +312,13 @@ open import EchoThermodynamicsArbitrary using
   ; bennett-reversible-cno-identity
   )
 
-open import EchoThermoCollapseImpossible using
+open import Echo.Bridges.EchoThermoCollapseImpossible using
   ( nat-into-collapse-fiber
   ; nat-into-collapse-fiber-injective
   ; collapse-cost-impossible
   )
 
-open import EchoChoreo using
+open import Echo.Bridges.EchoChoreo using
   ( Role
   ; Global
   ; obs
@@ -341,7 +341,7 @@ open import EchoChoreo using
   ; applyChoreo-via-join
   )
 
-open import EchoEpistemic using
+open import Echo.Bridges.EchoEpistemic using
   ( Indist
   ; Knows
   ; knowledge-monotone
@@ -369,7 +369,7 @@ open import EchoLinear using
   ; degradeMode-via-join
   )
 
-open import EchoGraded using
+open import Echo.Bridges.EchoGraded using
   ( Grade
   ; degrade
   ; degrade-comp
@@ -388,7 +388,7 @@ open import EchoGraded using
 -- join-left single-grade reindex). The coherence equations collapse
 -- to ≤g-prop because the grade order is thin, not because a comonad
 -- coherence was discharged. See docs/retractions.adoc R-2026-05-18.
-open import EchoGradedComonad using
+open import Echo.Bridges.EchoGradedComonad using
   ( gextract
   ; gduplicate
   ; gcomonad-counit-l
@@ -400,7 +400,7 @@ open import EchoGradedComonad using
 -- with a funext-relative *pointwise* mediator property (NOT a
 -- terminal-cone universal property: m' ≡ m is unstatable here
 -- without funext). SliceHom IS a cone. See R-2026-05-18.
-open import EchoPullback using
+open import Echo.Bridges.EchoPullback using
   ( EchoCone
   ; echo-cone
   ; cone→slice
@@ -415,7 +415,7 @@ open import EchoPullback using
 -- the characteristic loss-grade composition law fails. This
 -- *quantifies* the modality's content over generic Σ: it is exactly
 -- thinness of the loss order (≤g-prop), and no more.
-open import EchoSeparating using
+open import Echo.Bridges.EchoSeparating using
   ( _⊑_
   ; deg
   ; sep-order-not-prop
@@ -430,7 +430,7 @@ open import EchoSeparating using
 -- interface's ⊑-prop field bakes in the only load-bearing
 -- hypothesis and both instances fix the same grade poset; rel-model
 -- is set-model × ⊤, agreeing by refl. See R-2026-05-18.
-open import EchoRelModel using
+open import Echo.Bridges.EchoRelModel using
   ( GradedLossModel
   ; set-model
   ; rel-model
@@ -447,7 +447,7 @@ open import EchoRelModel using
 -- (never a postulate). The unconditional pointwise mediator property
 -- is kept as the funext-free corollary. Names pinned so a rename or
 -- a slide back to an *unconditional* claim fails CI fast.
-open import EchoPullbackUnivF4 using
+open import Echo.Bridges.EchoPullbackUnivF4 using
   ( FunExt₀
   ; echo-pullback-univ-strict     -- m' ≡ m, GIVEN funext (no postulate)
   ; echo-pullback-univ-pointwise  -- ∀ v → m' v ≡ m v, funext-free
@@ -461,7 +461,7 @@ open import EchoPullbackUnivF4 using
 -- checked proof it is NOT a disguised graph. Scope: the Echo
 -- functor, NOT the graded comonad / model-independence (still
 -- retracted, R-2026-05-18).
-open import EchoStepNDModelF2 using
+open import Echo.Bridges.EchoStepNDModelF2 using
   ( EchoFunctorModel
   ; det-model
   ; nd-model
@@ -481,7 +481,7 @@ open import EchoStepNDModelF2 using
 -- postulates, no funext. Scope: this earns back the graded-comonad
 -- claim FOR THIS WITNESS ONLY; `EchoGraded` itself remains a
 -- thin-poset reindexing modality per R-2026-05-18.
-open import EchoGradedComonadF1 using
+open import Echo.Bridges.EchoGradedComonadF1 using
   ( D                              -- the graded functor
   ; mapD ; mapD-id ; mapD-∘        -- functor laws
   ; ε                              -- counit at the unit grade
@@ -501,20 +501,20 @@ open import EchoGradedComonadF1 using
 --   * `list-instance` at the NON-COMMUTATIVE monoid (List Tag, ++, [])
 -- The non-isomorphism is witnessed by `tag-list-non-commutative`
 -- (one direction: only a non-commutative monoid satisfies it).
-open import EchoGradedComonadInterface using
+open import Echo.Bridges.EchoGradedComonadInterface using
   ( GradedComonadStructure          -- the abstract record
   )
-open import EchoGradedComonadInstance1 using
+open import Echo.Bridges.EchoGradedComonadInstance1 using
   ( nat-instance                    -- F1 packaged as record-inhabitant at (ℕ, +, 0)
   )
-open import EchoGradedComonadInstance2 using
+open import Echo.Bridges.EchoGradedComonadInstance2 using
   ( Tag                             -- two-element grade index
   ; tag-list-non-commutative        -- monoid non-isomorphism witness
   ; D-nontrivial                    -- D (smol ∷ big ∷ []) is non-trivial
   ; list-instance                   -- the second graded-comonad instance
   )
 
-open import EchoTropical using
+open import Echo.Bridges.EchoTropical using
   ( Candidate
   ; score
   ; tropical-non-injective
@@ -531,7 +531,7 @@ open import EchoTropical using
 -- Π of negative data over the candidate set (Π-form AntiEcho,
 -- `coecho.md` §1(c)). Pinned so a rename or a slide back to
 -- ad-hoc tropical decoration fails CI fast.
-open import AntiEchoTropical using
+open import Echo.Bridges.AntiEchoTropical using
   ( antiecho-tropical-decompose-to
   ; antiecho-tropical-decompose-from
   ; antiecho-tropical-decompose-to-from
@@ -553,20 +553,20 @@ open import AntiEchoTropical using
 -- abstract `OrderedCodomain` interface (carrier B, ≤/<, ≤⇒¬<, ¬<⇒≤)
 -- rather than fixed to ℕ. Sanity instance `ℕ-ordered-codomain`
 -- pinned so the interface is demonstrably inhabitable.
-open import AntiEchoTropicalGeneric using
+open import Echo.Bridges.AntiEchoTropicalGeneric using
   ( OrderedCodomain
   ; ℕ-ordered-codomain
   ; module Generic
   )
 
-open import EchoIntegration using
+open import Echo.Bridges.EchoIntegration using
   ( knowledge-preserved-under-choreo
   ; merged-at-residue
   ; no-recovery-after-residue-degrade
   ; knowledge-and-controlled-degradation
   )
 
-open import EchoCNOBridge using
+open import Echo.Bridges.EchoCNOBridge using
   ( program-to-unit
   ; ProgramEcho
   ; cno-program-echo
@@ -576,7 +576,7 @@ open import EchoCNOBridge using
   ; cno-compose-echo
   )
 
-open import EchoOrdinal using
+open import Echo.Bridges.EchoOrdinal using
   ( ordinal-collapse
   ; ordinal-left
   ; ordinal-right
@@ -604,7 +604,7 @@ open import EchoOrdinal using
 -- one *-echo per constructor. Theorems remain trivial (each is
 -- `λ e → e`); no content-bridge claim, pending
 -- januskey/PROOF-NEEDS.md.
-open import EchoJanusBridge using
+open import Echo.Bridges.EchoJanusBridge using
   ( OpKind
   ; IsFileOp
   ; IsKeyOp
