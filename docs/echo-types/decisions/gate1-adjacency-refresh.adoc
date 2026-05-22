@@ -1,0 +1,312 @@
+= D-2026-05-20 — Gate 1 adjacency refresh (cross-check against current taxonomy)
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+Coherence pass requested by `roadmap.md` § "Theory work" item
+"Gate 1 adjacency refresh: the five existing adjacency notes
+predate the taxonomy. Cross-check each against the current axes
+and flag any neighbour whose identity claim should be
+re-evaluated." This note is the refresh artefact. It does *not*
+rewrite any adjacency note in place; it issues a per-note
+verdict against the post-2026-05 taxonomy and lists the
+follow-up rewrites that any *re-evaluate* verdict would trigger.
+
+toc::[]
+
+== The five notes
+
+The five adjacency notes named by the roadmap entry are the
+original neighbour set indexed in
+`docs/gate-1-distinct-phenomenon.adoc` § "Neighbouring theories"
+and `docs/adjacency/README.adoc` § "File index". They predate
+both axis 2 (formalised 2026-04-27 in `EchoApprox.agda`) and
+axis 8 (promoted to a numbered axis 2026-04-28, with the first
+Agda artefact `EchoDecidable.agda` landing then and the graded
+`EchoAccess.agda` thin slice landing 2026-05-20). Two further
+notes (`modal-type-theories.adoc`, `hott-fibers.adoc`) were
+added after the original five and are explicitly excluded from
+this refresh — see `gate-1-distinct-phenomenon.adoc` lines
+54–63.
+
+. *`quotients.adoc`* (`docs/adjacency/quotients.adoc`, lines 1–137).
+  Claim: echo is distinct from quotient types / setoid quotients
+  because echo retains witness identity that quotients collapse
+  (truncation argument) *and* because the natural 2-cells in
+  sophisticated quotient encodings — equalizer, join-of-kernels,
+  indexed coherence families — are themselves Σ-over-preimages
+  (2-cell argument). Both arguments formally exhibited
+  (`EchoVsQuotient.Sophisticated` + the gate-3
+  `echo-not-prop` family).
+
+. *`galois-connections.adoc`* (lines 1–158). Claim: echo is
+  distinct from Galois connections / abstract interpretation
+  because the natural 2-cell in the abstraction lattice — the
+  meet of two abstractions — is structurally Σ-over-preimages
+  with a paired predicate, and because the powerset-on-the-
+  concrete-side framing of Galois cannot reproduce the
+  witness-identity content (`EchoVsGalois.Sophisticated`,
+  `meet→echo-intersection`, `meet-on-diagonal→equalizer`).
+
+. *`refinement-types.adoc`* (lines 1–209). Narrow claim: echo
+  coincides with Σ-relevant refinement types (Agda, Coq — these
+  *are* echo) and is distinct from propositional-predicate
+  refinement (F*, Liquid Haskell) via the truncation argument.
+  Tied-case acknowledged explicitly. Formalisation via the
+  gate-3 `echo-not-prop` exhibits; no dedicated
+  `proofs/agda/adjacency/Refinement.agda`.
+
+. *`information-flow.adoc`* (lines 1–190). Split claim. Against
+  relational IFC (Goguen-Meseguer lineage): distinct by
+  `EpistemicUpdate.echo-not-prop` — the propositional
+  equivalence-class formulation cannot carry the witness-identity
+  content that programmable knowledge update needs. Against
+  type-theoretic IFC variants: *open* — the recipe-level
+  comparison has not been performed. No dedicated Agda
+  formalisation.
+
+. *`provenance.adoc`* (lines 1–215). Claim: distinct against
+  single-witness provenance via the *multiplicity argument*
+  (distinguished from the truncation argument: "one witness was
+  selected and the others were discarded as data", not "the
+  predicate was reduced to a proposition"). Transitive
+  provenance under composition reduces structurally to the
+  indexed-families case (S-2). Multi-witness type-relevant
+  provenance would be co-extensive with echo, mirroring the
+  Σ-relevant refinement case.
+
+== The current taxonomy lens
+
+The taxonomy that the notes are being cross-checked against
+(`docs/echo-types/taxonomy.md`, refreshed through 2026-05-20)
+is now eight numbered axes plus three open candidates. The
+five distinctness claims sit in a richer axis-space than they
+were originally written against:
+
+* *Axis 1 — extensional vs intensional.* Stable from inception.
+  Every "echo retains witness identity" claim in the notes
+  factors through this axis: the loss the notes are arguing
+  *against* is collapse to the extensional shadow.
+* *Axis 2 — exact vs approximate* (formalised in
+  `EchoApprox.agda`; ε-fibre over a `Tolerance` monoid and a
+  `PseudoMetric`). Not in scope when the notes were written.
+* *Axis 6 — static vs dynamic.* Stable; the modal flavour
+  (epistemic update, choreographic role observation, dynamic
+  scheduler residue) is the load-bearing reading.
+* *Axis 7 — proof-relevant vs proof-irrelevant.* Stable; the
+  `echo-not-prop` family is the formal witness to this axis
+  being load-bearing.
+* *Axis 8 — information-theoretic vs computational access.* New
+  since the notes were written. Formalised in `EchoDecidable.agda`
+  (refinement 3, the decidability-respecting echo) and
+  `EchoAccess.agda` (refinement 2, the graded access modality);
+  the cost-indexed and witness-search refinements (1, 4) have
+  thin slices in `EchoCost.agda` / `EchoSearch.agda` as of
+  2026-05-20. This axis names "preimage exists" vs "preimage is
+  findable" — a distinction none of the original five notes
+  could see.
+
+Two further developments inflect the refresh:
+
+* *Pillars A–D landed.* The Pillar B universal-property work
+  (`EchoPullback.agda`, terminal cone), the Pillar C separating
+  model (`EchoSeparating.agda`), and the Pillar D
+  carrier-parametricity package (`EchoRelModel.agda`) all
+  shipped after the notes; the Pillar A `Echo ≃ fib`
+  identification (`EchoFiberBridge.agda`) is now load-bearing
+  for any neighbour comparison that invokes the homotopy fibre.
+* *2-cat ruled out (`decisions/no-2-cat.adoc`).* The notes
+  speak of "2-cell arguments" liberally. Those arguments are
+  intact — they are about the *structural shape* of the
+  comparison Σ, not about a 2-category overlay on echo itself —
+  but the rule-out clarifies that the 2-cell shape is content
+  the notes are reading off, not a category-theoretic
+  organisation echo is committing to.
+
+== Per-note verdict
+
+=== `quotients.adoc` — *REFINED*
+
+The truncation and 2-cell arguments survive unchanged. The
+refinement is to state both in terms of the now-numbered axes:
+the truncation argument is the *axis-7-load-bearing* claim
+(`echo-not-prop` certifies proof-relevance is not vacuous),
+and the 2-cell argument is the *axis-5-compositional* shape of
+the sophisticated 2-categorical encoding's equalizer. Axis 8
+also applies: the quotient projection `A → A / ker f`
+information-theoretically retains the same image as `f` but is
+*computationally* even less informative than the propositional
+truncation, so the gap echo names extends downward in the
+access lattice. No retraction conditions are exhibited; no
+rewrite is required. A one-line cross-reference in the note's
+"Status" section, pointing to axes 1 / 7 / 8, would suffice.
+
+=== `galois-connections.adoc` — *REFINED*
+
+Both the meet-Σ argument and the powerset-on-concrete-side
+truncation argument survive. The refinement: the truncation
+argument should now be filed under axis 1 (the powerset framing
+is *extensional* about set membership, where echo is
+*intensional* about witnesses) and the meet argument under
+axis 5 (compositional: the meet IS Σ-over-preimages whether or
+not the Galois user reaches for echo). Axis 8 sharpens the
+honest-tied paragraph: lattice-wide reasoning in AI is
+information-theoretic (the closure operator γ ∘ α is a property
+of the lattice, not of any extractor); fiber-wise reasoning in
+echo can carry computational-access data per fibre once
+`EchoAccess` / `EchoCost` are wired into the comparison. The
+diagonal correspondence (`meet-on-diagonal→equalizer`) is
+unchanged. No rewrite is required.
+
+=== `refinement-types.adoc` — *REFINED*
+
+The narrow Σ-relevant-vs-propositional-predicate split is
+*sharpened* by the axis-8 layer, not weakened. The note's
+existing tied case (Σ-relevant refinement IS echo) sits at the
+axis-1-intensional pole. The propositional-predicate camp sits
+at axis-7-proof-irrelevant. Axis 8 adds a new dimension the
+note does not name: a propositional-predicate refinement
+system that ships a *constructive decider* for its predicate
+(SMT-discharged or otherwise) is providing axis-8
+computational access at the same time as it loses axis-7
+proof-relevance — these are *orthogonal*, and the note
+currently conflates "loses witness data" with "is or isn't a
+constructive theory". `EchoDecidable.agda` makes the
+separation explicit. The refinement is to add a short
+"Cross-axis note" subsection making clear that the truncation
+argument is axis-7 / axis-1 content and the
+decidability-respecting decoration is axis-8 content. Q2.1
+(the general truncation theorem) remains the right open
+obligation.
+
+=== `information-flow.adoc` — *REFINED*
+
+The split into "relational variants closed" and "type-theoretic
+variants open" is intact and is now the *correct*
+factorisation given axis 8. Relational IFC sits at axis-1
+extensional (states quotiented by low-equivalence) and
+axis-7-proof-irrelevant (the relation is propositional); echo
+wins on both. Type-theoretic IFC variants distribute across
+axes 1, 5, 6, 7, and 8 differently depending on the variant,
+which is *why* the recipe-level comparison is genuinely open
+work and not a clerical exercise. The refinement: the "open
+obligation" paragraph should explicitly list which axes the
+recipe needs to be tested against for each type-theoretic IFC
+variant (axis 5 for compositional security types,
+axis 6 / dynamic for runtime monitoring approaches, axis 8 for
+SMT-discharged information-flow types). No rewrite is
+required; the open work the note describes is still the right
+open work.
+
+=== `provenance.adoc` — *REFINED*
+
+The multiplicity-vs-truncation distinction is the note's most
+valuable contribution and survives untouched. The refinement
+is axis-8-shaped: provenance systems in practice are deeply
+concerned with *access* (can you actually recover the source
+record from the output? at what cost?), which is exactly
+axis 8. The note currently treats this implicitly under the
+how-provenance / semiring discussion; an explicit axis-8 cross
+reference would land the point. The 2-cell argument (transitive
+provenance reduces to S-2) is unchanged. The "multi-witness
+type-relevant provenance would be co-extensive with echo"
+framing is unchanged but should additionally note that such a
+system would need to commit to an axis-8 stance (do the
+witness annotations carry access-class data?) — which most
+deployed provenance systems do not, giving echo a sharper edge
+than the current prose suggests.
+
+== Cross-cutting findings
+
+Three findings cut across multiple notes.
+
+* *Five out of five refresh to REFINED, zero to RE-EVALUATE,
+  zero to STILL-VALID-as-stated.* The notes are not invalidated
+  by the post-2026-05 taxonomy; every distinctness claim
+  survives. But every note benefits from being re-stated in
+  terms of the now-numbered axes, because the original prose
+  uses ad-hoc terms ("propositional", "type-data", "witness
+  identity") that the axes now name precisely. This is a
+  coherence finding, not a correctness finding.
+
+* *Axis 8 sharpens four of five notes.* `quotients.adoc`,
+  `galois-connections.adoc`, `refinement-types.adoc`, and
+  `provenance.adoc` all gain a new sub-distinction once
+  computational access is named as a separate axis. Only
+  `information-flow.adoc` is *already* about axis-8-flavoured
+  content (security-typed lambda calculi with SMT discharge),
+  and even there the explicit axis-8 framing would clarify the
+  open obligation. The recommended Q2.x-flavoured follow-up:
+  add an "axis-8 sub-test" to the recipe-evaluation protocol
+  in `gate-2-handoff.adoc`, so future neighbour comparisons
+  test the recipe against all eight axes rather than the
+  pre-2026-05 five.
+
+* *The two-argument-families framing in
+  `docs/adjacency/README.adoc` is also refresh-eligible.* The
+  README currently splits the distinctness arguments into
+  "truncation" and "2-cell" families. Post-refresh, this is
+  cleanly "axis 7 / axis 1 family" and "axis 5 family". The
+  multiplicity argument (provenance) is its own family in the
+  README; it sits at axis-1-intensional plus axis-7-proof-
+  relevant. A README refresh is a separate (smaller) follow-up.
+
+== Recommended next moves
+
+The refresh is *complete as a coherence pass*. No adjacency
+note requires a content rewrite; every note's distinctness
+claim survives the new taxonomy. The recommended follow-ups
+are coherence-flavoured and can be batched:
+
+. *Per-note one-line axis cross-reference.* Each of the five
+  notes gains one line in its "Status" section pointing to the
+  specific axes the note's arguments now factor through. ~5
+  minutes per note; cosmetic.
+
+. *README refresh.* `docs/adjacency/README.adoc` § "The two
+  argument families" promoted to "The three argument families
+  (truncation = axis 7, 2-cell = axis 5, multiplicity = axis
+  1+7)" with cross-references. ~15 minutes.
+
+. *Recipe-evaluation protocol extension.*
+  `docs/gate-2-handoff.adoc` Observation G adds an axis-8
+  sub-test, ensuring future neighbour comparisons test the
+  recipe against all eight axes. Owner-gated; out of scope for
+  this refresh.
+
+. *No new RE-EVALUATE work.* If a future axis is added to
+  `taxonomy.md`, this refresh should be re-run; the protocol
+  is the same. The refresh is *not* premature — the five notes
+  do predate axes 2 and 8 and the post-2026-05 Pillars A–D
+  package, and the coherence gain from naming the axes
+  explicitly is real.
+
+== Status
+
+* Refresh: *complete*. All five notes survive; all five refine
+  to the numbered-axes presentation.
+* No content rewrites scheduled in this PR; the coherence
+  follow-ups (per-note one-liner, README refresh) are listed
+  above as separate optional moves.
+* `roadmap.md` § "Theory work" entry updated from `[unblocked]`
+  to `[refreshed — see decisions/gate1-adjacency-refresh.adoc]`.
+
+== Cross-references
+
+* `docs/echo-types/roadmap.md` — Theory-work entry updated to
+  `[refreshed]`.
+* `docs/echo-types/taxonomy.md` — the eight-axis post-2026-05
+  taxonomy this refresh cross-checks against.
+* `docs/adjacency/README.adoc` — the directory index; itself
+  refresh-eligible (see § "Cross-cutting findings").
+* `docs/adjacency/{quotients, galois-connections,
+  refinement-types, information-flow, provenance}.adoc` — the
+  five notes refreshed against (no in-place edits in this PR).
+* `docs/echo-types/decisions/no-2-cat.adoc` — the template
+  style this note follows, and the rule-out that clarifies the
+  notes' "2-cell argument" wording.
+* `docs/gate-1-distinct-phenomenon.adoc` — the consolidated
+  gate-1 doc that names the original five neighbours.

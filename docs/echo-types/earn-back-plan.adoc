@@ -12,11 +12,13 @@ claims back into theorems — or to confirm, on the project's own gate
 discipline, that they cannot be earned. Nothing in `paper.adoc` /
 `conservativity.adoc` / `types-abstract.adoc` moves until the
 corresponding gate here passes. Methodology — explicit pass/fail,
-abandon criteria, outcomes logged in `docs/retractions.adoc`. (The
-gate discipline was historically attributed to a `roadmap-gates.adoc`;
-that file does not exist in-tree — see proof-debt ledger item *D*
-below. The canonical loci are `docs/retractions.adoc`, this plan, and
-`docs/next-questions.adoc`.)
+abandon criteria, outcomes logged in `docs/retractions.adoc`. The
+canonical loci of the gate discipline are
+`docs/roadmap-gates.adoc` (the protocol document, created 2026-05-18
+to resolve the earlier dangling reference), `docs/retractions.adoc`
+(the append-only retraction + earn-back log), this plan (the
+falsifiable program), and `docs/next-questions.adoc` (the open
+questions register).
 
 toc::[]
 
@@ -189,9 +191,13 @@ single index; it moves no claim.
 
 | A1
 | *F1* — `gc-coassoc` (graded-comonad coassociativity),
-  `proofs/agda/EchoGradedComonadF1.agda`. Needs an explicit
-  δ-naturality-over-`R` lemma. Spike not wired into `All`/`Smoke`.
-| Open, *not postulated*. Feasibility decided *positive* (see Status).
+  `proofs/agda/EchoGradedComonadF1.agda`.
+| *PASSED 2026-05-20* — `gc-coassoc` closed via the predicted
+  `δ`-naturality-over-`R` (`δ-suc`) + `subst-D-suc` factoring; stdlib
+  `+-assoc (suc m) n p` reduces to `cong suc (+-assoc m n p)`, so
+  ℕ-UIP was *not* needed for coassoc. `--safe --without-K`, zero
+  postulates, wired into `All`/`Smoke`. Retraction follow-up
+  F-2026-05-20a. Unblocks A3 / F3.
 
 | A2
 | *F2* — real second model of the bare Echo functor via
@@ -203,7 +209,16 @@ single index; it moves no claim.
 | A3
 | *F3* — independent second model of the comonad at a different grade
   monoid (no `× ⊤` carrier, no `⊑-prop`-equivalent field).
-| Unstarted. Gated on F1.
+| *PASSED 2026-05-20* — `proofs/agda/EchoGradedComonadInterface.agda`
+  + `EchoGradedComonadInstance1.agda` (F1 at the *commutative*
+  monoid `(ℕ, +, 0)`) + `EchoGradedComonadInstance2.agda`
+  (free-monoid `(List Tag, ++, [])` over a two-element `Tag` with
+  per-element residue `R smol A = A × Bool` / `R big A = A × ℕ`).
+  The two grade monoids are non-isomorphic (one commutative, one
+  not; witness `tag-list-non-commutative`); the interface record
+  carries no `⊑-prop`-equivalent field. `--safe --without-K`, zero
+  postulates, no funext. Wired into `All`/`Smoke`. Retraction
+  follow-up F-2026-05-20b.
 
 | A4
 | *F4* — strict universal property as a function of an explicit
@@ -233,11 +248,15 @@ single index; it moves no claim.
   Completeness nice-to-have, lowest priority.
 
 | D
-| Doc-integrity: `docs/roadmap-gates.adoc` is cited as the canonical
-  gate ledger by ≥7 docs but does not exist in-tree. Role now split
-  across `retractions.adoc` / this plan / `next-questions.adoc`.
-| Open drift vector. Cheap to reconcile (back-link the citing docs;
-  do not fabricate retroactive gate history).
+| Doc-integrity: previously this entry recorded that
+  `docs/roadmap-gates.adoc` was cited as the canonical gate ledger
+  but did not exist in-tree. The file *does* exist (created
+  2026-05-18; see its preamble) and the dangling-reference issue is
+  resolved.
+| *CLOSED 2026-05-20.* `docs/roadmap-gates.adoc` is in tree as the
+  Gates Protocol. The canonical-loci list at the top of this plan
+  has been updated to include it explicitly alongside
+  `retractions.adoc` / `next-questions.adoc`.
 
 | E1
 | `examples/Transport.agda` (Gate-3): two disclosed open items, both
@@ -262,8 +281,12 @@ single index; it moves no claim.
   spikes wired into `All`/`Smoke`, scoped claims moved (follow-up
   F-2026-05-18a). Each earned back a qualified/real claim
   independently of F1.
-. *F1 coassoc* (A1) — one obligation, feasibility decided; closes the
-  make-or-break and unlocks *F3* (A3). Now the next action.
+. *F1 coassoc* (A1) — *DONE 2026-05-20*: passed via the predicted
+  `δ`-naturality-over-`R` factoring; unblocks *F3* (A3).
+. *F3* (A3) — *DONE 2026-05-20*: passed via the
+  `GradedComonadStructure` interface plus two non-isomorphic-
+  grade-monoid instances. Closes the second-models claim *for the
+  graded comonad witness* — see follow-up F-2026-05-20b for scope.
 . *Doc-integrity* (D) — reconcile alongside step 1; removes a drift
   vector at near-zero cost.
 . *Buchholz* (B) — separate long-tail; keep the `ExtendedOrder`
@@ -312,3 +335,64 @@ single index; it moves no claim.
   *Strictly scoped:* F2 is the Echo functor only — the graded-comonad,
   model-independence, and conservativity claims remain retracted; F1
   (coassoc) and F3 remain open.
+
+* *2026-05-20 — Gate F1 PASSED.* `gc-coassoc` closed via the
+  predicted `δ`-naturality-over-`R` (`δ-suc`) + `subst-D-suc`
+  factoring; stdlib `+-assoc (suc m) n p` reduces definitionally to
+  `cong suc (+-assoc m n p)` (recursion on left), so the two
+  ℕ-equation proofs on the chain ends are syntactically identical
+  and ℕ-UIP was *not* needed for coassoc itself. `EchoGradedComonadF1.agda`
+  now ships all three graded-comonad laws + the separating witness
+  `D2-nontrivial`; `--safe --without-K`, zero postulates, no funext;
+  wired into `All.agda` and pinned in `Smoke.agda`. Full + smoke
+  build green. Retraction follow-up F-2026-05-20a.
++
+*Strictly scoped (re-read with care):* F1 earns back the
+*existence* of a graded comonad with Echo as the grade-unit object
+(`D 0 (Echo f y)` is the bare echo, the nested comultiplication is
+real, all three laws hold, the carrier is non-trivial). It does
+*not* retroactively make `EchoGraded` a graded comonad — `EchoGraded`
+remains a thin-poset reindexing modality per R-2026-05-18, on a
+different structure (`Grade = 3-element lattice`, no nested family,
+no monoid multiplication, no `D r r' ⇒ D r ∘ D r'`). The paper's
+title and central thesis (Echo as a reindexing modality) stand
+unchanged; the F1 result is an *additional* mechanised contribution
+sitting beside `EchoGraded`, not a reinstatement of it. F3
+(independent second comonad model at a different grade monoid) is
+now unblocked.
+
+* *2026-05-20 — Gate F3 PASSED.*
+  `EchoGradedComonadInterface.GradedComonadStructure` is an abstract
+  record packaging the F1 graded-comonad signature (grade monoid +
+  graded functor + counit + nested comultiplication + monoid laws +
+  functor laws + the three comonad laws) without a `⊑-prop`-equivalent
+  field. Two non-isomorphic-grade-monoid instances inhabit it:
++
+[loweralpha]
+. `EchoGradedComonadInstance1.nat-instance` — F1 at the commutative
+  monoid `(ℕ, +, 0)`;
+. `EchoGradedComonadInstance2.list-instance` — the free monoid
+  `(List Tag, ++, [])` over a two-element `Tag` with per-element
+  residue layers `R smol A = A × Bool` and `R big A = A × ℕ`. All
+  three comonad laws proved (`gc-counit-r` definitional;
+  `gc-counit-l`/`gc-coassoc` by structural induction on the list,
+  cons step splitting on the head `Tag`, mirroring F1's
+  `δ`-naturality + `subst-D-suc` factoring).
++
+The grade monoids are non-isomorphic — one commutative, one not;
+the witness `tag-list-non-commutative` discharges this directly. The
+interface record contains no `⊑-prop`-equivalent field; both
+instances inhabit it cleanly without one. `--safe --without-K`,
+zero postulates, no funext; wired into `All.agda` and pinned in
+`Smoke.agda`. Retraction follow-up F-2026-05-20b.
++
+*Strictly scoped (re-read with care):* F3 earns back the
+"two-models" claim *for the graded-comonad witness* introduced by
+F1 — there are two genuinely non-isomorphic grade-monoid models of
+that interface. It does *not* earn back the older `EchoRelModel`
+two-models claim retracted at R-2026-05-18 finding 3, which was
+about `GCLaws` instantiated at `set-model` and `rel-model`. Those
+instantiations remain at the same grade poset with `⊑-prop` baked
+in as a field; that retraction stands. The two earn-backs (F3 here,
+and the original `GCLaws` claim) are about different abstract
+interfaces and are not interconvertible.

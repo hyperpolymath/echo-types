@@ -1,6 +1,8 @@
 = Adjacency: quotient types / setoid quotients
 :toc: macro
 
+_Axes engaged: 1 (Ext/Int), 5 (Comp), 7 (PR/PI). See `README.adoc` § "Axis coverage matrix"._
+
 [.lead]
 *Verdict: distinct.* Both the truncation and 2-cell arguments are
 active and formalised against this neighbour. This is the gate-1

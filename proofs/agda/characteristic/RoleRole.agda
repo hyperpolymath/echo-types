@@ -53,7 +53,7 @@ open import Data.Bool.Base                        using (Bool; true; false)
 open import Data.Product.Base                     using (Σ; _×_; _,_; proj₁; proj₂)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; trans; cong)
 
-open import EchoChoreo                            using
+open import Echo.Bridges.EchoChoreo                            using
   ( Role; Client; Server
   ; obs; Global
   ; _⊑c_; c⊑c; c⊑s; s⊑s
@@ -209,7 +209,7 @@ role-role-commute-tt rp sp e = refl
 -- carries zero substantive content.
 ------------------------------------------------------------------------
 
-open import EchoChoreo using (RoleEcho; client-to-server)
+open import Echo.Bridges.EchoChoreo using (RoleEcho; client-to-server)
 
 RREcho-pair : Role → Role → Set
 RREcho-pair r₁ r₂ = RoleEcho r₁ true × RoleEcho r₂ true

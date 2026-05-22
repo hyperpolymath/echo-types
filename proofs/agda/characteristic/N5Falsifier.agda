@@ -63,7 +63,7 @@ module characteristic.N5Falsifier where
 open import Data.Product.Base                     using (Σ; _×_; _,_)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import EchoChoreo                            using
+open import Echo.Bridges.EchoChoreo                            using
   ( Client
   ; Server
   ; client-to-server
@@ -72,7 +72,7 @@ open import EchoChoreo                            using
   ; c⊑s
   ; s⊑s
   )
-open import EchoGraded                            using
+open import Echo.Bridges.EchoGraded                            using
   ( _≤g_
   ; keep
   ; keep≤keep

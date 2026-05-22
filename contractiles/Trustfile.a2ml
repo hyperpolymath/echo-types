@@ -5,7 +5,7 @@
 
 (trust license-content
   :doc "LICENSE contains expected SPDX identifier."
-  :cmd "grep -q 'PMPL\\|License' LICENSE")
+  :cmd "grep -q 'Mozilla Public License' LICENSE")
 
 (trust no-secrets-committed
   :doc "No credential files committed."

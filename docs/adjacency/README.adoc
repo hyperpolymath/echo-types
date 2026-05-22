@@ -32,10 +32,18 @@ is the family of `echo-not-prop` lemmas formalised in
 * `EpistemicUpdate.echo-not-prop` — eight worlds, four consistent
 * `LinearErasure.echo-not-prop` — two annotated types, one erasure
 
-The general theorem (forwarded as Q2.1 in `next-questions.adoc`):
-for non-injective `f : A → B` with at least two distinct preimages
-of `y`, `is-prop (Echo f y) → ⊥`. The n=2 special cases are proved;
-the general theorem awaits gate-2 evaluation.
+The general theorem (Q2.1 in `next-questions.adoc`): for
+non-injective `f : A → B` with at least two distinct preimages of
+`y`, `is-prop (Echo f y) → ⊥`. **Proved.** The received-`y` form is
+`EchoTruncation.echo-not-prop`, re-exported as
+`characteristic.NonTruncatable.Q2-1`; the stronger constructed-`y`
+form (non-injectivity of `f` *forces* a non-propositional fibre,
+the `y` being produced rather than assumed) is
+`characteristic.NonTruncatable.non-injective⇒echo-not-prop`. The
+gate-2 audit (recorded in that module's header and in
+`next-questions.adoc` §Q2.1) demotes the received-`y` form as
+Σ-reducible and forwards only the constructed-`y` form as a
+candidate nominee.
 
 Truncation arguments are load-bearing against:
 
@@ -180,23 +188,140 @@ this directory is the intended structure.
 | File | Neighbour
 
 | `quotients.adoc`            | Quotient types / setoid quotients
+| `setoid-quotients.adoc`     | Setoid quotients (extrinsic, named-relation variant)
 | `galois-connections.adoc`   | Galois connections / abstract interpretation
 | `refinement-types.adoc`     | Refinement types (Σ-relevant and propositional variants)
 | `information-flow.adoc`     | Information-flow non-interference (Goguen-Meseguer lineage)
 | `provenance.adoc`           | Provenance / data lineage
+| `provenance-semirings.adoc` | K-provenance (Green-Karvounarakis-Tannen semirings)
 | `modal-type-theories.adoc`  | QTT, Reed-Pfenning modal calculi, adjoint modalities
 | `hott-fibers.adoc`          | HoTT homotopy fibers (cubical and Book HoTT)
+| `cubical-systems.adoc`      | Cubical Agda, RedPRL, redtt, cooltt
+| `lenses-and-optics.adoc`    | Lenses, prisms, profunctor optics
+| `INSERTION_NOTE.adoc`       | _Meta_: doc-surgery instructions for `gate-1-distinct-phenomenon.adoc`
+| `README.adoc`               | _Meta_: this file (index + argument families + axis-coverage matrix)
 |===
+
+== Axis coverage matrix (Gate 1 refresh 2026-05-20)
+
+Cross-reference of each adjacency note against the 8 taxonomy axes
+defined in `docs/echo-types/taxonomy.md`. Refreshed 2026-05-20 — most
+notes predate axis 8 (added with the `EchoDecidable`/`EchoFiberCount`
+landings) and therefore do not currently engage it; the open ○
+markings below flag where axis-8 implications exist but are not
+formally argued.
+
+Legend: ● primary axis (load-bearing in the note's distinctness
+claim); ○ axis-8 implication exists but is open / post-dates the
+note; — axis not engaged.
+
+[cols="3,^1,^1,^1,^1,^1,^1,^1,^1", options="header"]
+|===
+| Note
+| 1 Ext/Int
+| 2 Exact/Approx
+| 3 Loc/Glob
+| 4 Canon/Pres
+| 5 Comp/Non
+| 6 Stat/Dyn
+| 7 PR/PI
+| 8 IT/Comp
+
+| cubical-systems       | ● | — | — | ● | — | — | ● | —
+| galois-connections    | — | — | — | — | ● | — | ● | —
+| hott-fibers           | ● | — | — | — | — | — | ● | —
+| information-flow      | — | — | — | — | — | ● | ● | ○
+| lenses-and-optics     | — | — | — | ● | ● | — | ● | —
+| modal-type-theories   | — | — | — | — | ● | — | ● | ○
+| provenance            | — | — | — | — | — | — | ● | —
+| provenance-semirings  | — | — | — | — | ● | — | ● | ○
+| quotients             | ● | — | — | — | ● | — | ● | —
+| refinement-types      | — | — | — | — | — | — | ● | —
+| setoid-quotients      | ● | — | — | ● | — | — | ● | —
+|===
+
+=== Observations from the matrix
+
+* *Axis 7 (proof-relevant vs proof-irrelevant) is universal.* Every
+  one of the 11 substantive notes routes its distinctness through
+  axis 7. This is the "truncation argument" family's load-bearing
+  axis — the formal certificate is `echo-not-prop`.
+* *Axis 5 (compositional vs non-compositional) carries the 2-cell
+  argument.* Galois, quotients, modal-type-theories, lenses-and-
+  optics, provenance-semirings all engage axis 5 — these are the
+  notes whose distinctness arguments route through composition
+  structure (`EchoCategorical`, the per-decoration composition
+  sweep, the `Echo-comp-iso` pentagon).
+* *Axis 1 (extensional vs intensional)* shows up in four notes —
+  the ones contrasting echo's intensional-witness stance against
+  a neighbour's extensional / propositional collapse (cubical,
+  hott-fibers, quotients, setoid-quotients).
+* *Axis 4 (canonical vs presentation-dependent)* picks up three
+  notes — cubical (equality choice), lenses-and-optics (get/put
+  split), setoid-quotients (named equivalence vs implicit kernel).
+* *Axes with no neighbour coverage* — see §"Gaps" below.
+
+=== Gaps
+
+* *Axis 2 (exact vs approximate)* has *no* adjacency note. The
+  axis-2 artifact is `EchoApprox.agda` (parametric pseudo-metric,
+  three headline lemmas); its closest neighbour analogue — e.g.
+  metric category theory, V-categories, weighted limits — is
+  unwritten. Candidate future note: `metric-categories.adoc`.
+* *Axis 3 (local vs global)* has no adjacency note. The closest
+  candidates are sheaf-theoretic / local-trivialisation framings;
+  not yet written.
+* *Axis 6 (static vs dynamic)* has only one note (`information-
+  flow`, via knowledge update). Other dynamic-typing or temporal
+  neighbours (reactive / temporal logic / coalgebraic process
+  theory) are unwritten.
+* *Axis 8 (information-theoretic vs computational access)* has
+  *no* formal neighbour treatment. Three notes have open
+  implications, flagged ○ above:
+  ** `information-flow.adoc` — cryptographic threat models route
+     through axis 8 when low observers are computationally bounded.
+     Not addressed in the current relational framing.
+  ** `modal-type-theories.adoc` — QTT-style quantitative
+     annotations are proxies for resource control (taxonomy
+     §"Axis 8" lines 236–238) but are not full
+     computational-access tracking. The note treats QTT as a
+     decoration neighbour (axis 5/7), not an axis-8 neighbour.
+  ** `provenance-semirings.adoc` — K-semirings with a cost-tracking
+     interpretation (e.g. tropical `(min, +)`-semirings) would
+     engage axis 8. The current note treats K-provenance as a
+     decoration neighbour (axis 5/7).
+
+  Candidate future notes that *would* directly engage axis 8:
+  `cryptographic-one-way-functions.adoc` (witness inhabitedness vs
+  poly-time witness extraction); `cost-monads.adoc` (resource
+  monads à la Hindley-Milner with cost effects); `complexity-classes
+  -as-modalities.adoc` (P/NP/PSPACE as access modalities).
+
+=== Stale claims flagged for re-evaluation
+
+None of the 11 substantive notes' verdicts is *incorrect* against
+the current taxonomy. Three notes carry framings that would benefit
+from explicit axis-8 disclaimers (the three ○ rows). No note's
+distinctness claim is invalidated by the post-hoc addition of axis
+8; the omission is one of *coverage*, not *contradiction*.
+
+The `INSERTION_NOTE.adoc` describes a doc-surgery operation. As a
+meta-note it has no axis engagement; retained for traceability.
 
 == What's formalised, what's not
 
 The truncation argument has formal exhibits for three of its
 target neighbours via gate-3's `echo-not-prop` family
 (`TropicalArgmin`, `EpistemicUpdate`, `LinearErasure`). The
-general theorem (Q2.1) is unstated and unproven. Q2.1 is the
-single most leveraged open formalisation: closing it would
-discharge truncation arguments against all four
-truncation-vulnerable neighbours simultaneously.
+general theorem (Q2.1) is now **stated and proved** in
+`characteristic.NonTruncatable` (received-`y` form `Q2-1` plus the
+stronger constructed-`y` form `non-injective⇒echo-not-prop`),
+discharging the truncation argument against all four
+truncation-vulnerable neighbours at the general level rather than
+the three n=2 instances. The remaining open work is the gate-2
+*nomination* decision (the audit demotes the received-`y` form as
+Σ-reducible and forwards only the constructed-`y` form), not the
+formalisation.
 
 The 2-cell argument has formal exhibits for both of its target
 neighbours (quotients via `EchoVsQuotient.Sophisticated`, Galois

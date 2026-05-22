@@ -1,0 +1,322 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+= Applications: compiler analysis as structured loss
+:date: 2026-05-20
+:toc: macro
+
+[.lead]
+Compiler analyses are a paradigmatic source of *structured loss*:
+every pass discards source-level information but retains a residue
+that downstream passes use. This chapter exhibits how the Echo Types
+framework — base `Echo`, `EchoApprox`, the axis-8 refinements
+(`EchoDecidable`, `EchoCost`, `EchoAccess`, `EchoSearch`) — gives
+compiler analyses a uniform language for "what is lost, what
+remains, at what cost." Two worked examples drive the chapter:
+parser error recovery (the *presentation-dependent* case, axis 4)
+and abstract-interpretation widening (the *exact-vs-approximate*
+case, axis 2).
+
+toc::[]
+
+== Why compilers
+
+[.lead]
+Every compiler is a pipeline of loss. A typical chain:
+
+[source]
+----
+Source → AST → IR → MIR → ASM → object code
+----
+
+Each arrow discards information. The AST forgets whitespace and
+comments. The IR forgets identifier names and chooses a specific
+order for sub-expressions. The MIR commits to a register colouring.
+The assembler resolves symbolic addresses. The object code can no
+longer recover the algorithm by inspection.
+
+Compiler engineering literature has decades of vocabulary for this:
+*lossy abstraction*, *residue*, *meta-data carried alongside*,
+*back-annotation*, *source mapping*. The Echo Types framework
+gives this vocabulary a definitional grounding: the residue at
+each pass `f : Source → Target` is precisely `Echo f y` — the type
+of source-level data consistent with a given target. The
+extensional shadow `image(f)` is the set of reachable targets; the
+intensional core is the per-target structure of what got lost.
+
+The framework's specific contribution is twofold:
+
+. *Compositionality.* The accumulation isomorphism (`composition.md`
+  §1) says `Echo (g ∘ f) y ≅ Σ B (λ b → Echo f b × g b ≡ y)`. The
+  residue of a multi-pass pipeline factors through the residue of
+  each pass; nothing is collapsed.
+. *Axis-8 refinements.* For analyses that need to *recover* source
+  data (e.g. debugger source-mapping, profiler attribution, error
+  reporting), the relevant question is not "does a witness exist"
+  but "is a witness extractable at some cost." Refinements 1–4 of
+  axis 8 (`EchoCost`, `EchoAccess`, `EchoDecidable`, `EchoSearch`)
+  give that distinction a type-theoretic shape.
+
+The two examples below illustrate each contribution against a
+concrete pass.
+
+== Example 1 — Parser error recovery (axis 4)
+
+[.lead]
+Example 9 of `examples.md`. The pass:
+
+[source]
+----
+parse : List Token → Maybe SyntaxTree
+----
+
+returns a best-effort tree on malformed input, with error markers
+recording recovery choices. The residue question: given a parsed
+tree (possibly error-bearing), what token streams could have
+produced it?
+
+=== The echo
+
+[source,agda]
+----
+-- in the canonical case
+parseEcho : Maybe SyntaxTree → Set
+parseEcho tree = Echo parse tree
+              = Σ (List Token) (λ ts → parse ts ≡ tree)
+----
+
+Two distinct token streams that produce the same error-bearing
+tree are distinct echo inhabitants. The witness is the token
+stream; the equation `parse ts ≡ tree` pins the residue.
+
+=== Why axis 4 (presentation-dependent) fires
+
+A parser is not just a function; it is a function *plus a recovery
+policy*. The same `parse` algorithm with two different recovery
+policies (say: "insert missing semicolon" vs. "skip to next
+statement") produces different echo structures. The
+*presentation-dependent* axis names this: identical extensional
+images can carry different intensional residue.
+
+`docs/adjacency/refinement-types.adoc` is the formal neighbour
+here. Refinement types refine *inputs*; the parser refines
+*outputs* via its error-marker policy. The Echo framing makes the
+policy-dependence explicit at the type level: two recovery
+policies are two different parsers, with two different `Echo`
+families, even though their extensional shadows may agree.
+
+=== What axis-8 adds
+
+A debugger that maps an error-bearing tree back to source-level
+ranges needs an *extractor*: given the tree, produce a candidate
+token stream. The four axis-8 refinements give increasingly
+operational stances:
+
+* `EchoDecidable.EchoDec parse tree` — yes/no decidability:
+  "can we constructively decide whether some token stream
+  produced this tree?" Sufficient for compiler-emitted error
+  messages; insufficient for source-mapping.
+* `EchoCost.EchoCost parse tree` — pair the echo with a cost
+  ledger. Enough for "the source range covers `k` tokens"
+  attribution; the ledger is bookkeeping, not operationally
+  substantiated.
+* `EchoSearch.BoundedSearch parse tree n` — explicit bounded
+  enumeration of candidate streams. Operationally
+  substantiated: the search procedure is named, the bound is a
+  real constraint. This is the level a source-mapping tool
+  needs.
+* `EchoAccess.EchoA parse tree feasible` — modal claim that
+  source-mapping is computationally accessible. Conservatively
+  derived from `BoundedSearch` via
+  `bounded-search-to-access-feasible`.
+
+== Example 2 — Abstract interpretation widening (axis 2)
+
+[.lead]
+Example 10 of `examples.md`. The pass:
+
+[source]
+----
+α : Values → AbstractValues
+----
+
+is a Galois-connection abstraction. Concrete `Values` (e.g. `Int`)
+map to abstract classes (e.g. `Sign = {⊥, neg, zero, pos, ⊤}`).
+The residue: given an abstract value `a`, what concrete values
+have it as their abstraction?
+
+=== The echo
+
+[source,agda]
+----
+abstractEcho : AbstractValue → Set
+abstractEcho a = Echo α a = Σ Values (λ v → α v ≡ a)
+----
+
+For `a = pos` and `α = sign`, the echo at `pos` is the type of
+strictly positive integers. The shadow is the abstract lattice;
+the intensional core is the per-class concrete structure.
+
+=== Why axis 2 (exact vs approximate) fires
+
+Abstract interpretation's *widening* step is the move from exact
+echoes to approximate ones. Given a sequence of analyses
+`a₁, a₂, a₃, ...` over the abstract lattice, widening replaces
+the next iterate with a *larger* (less precise) abstract value,
+introducing tolerance ε that grows with analysis depth.
+
+The base `Echo α a` cannot express this: it requires the
+equation `α v ≡ a` to hold exactly. The widening-induced
+tolerance is the axis-2 content. `EchoApprox.agda` is the
+formal anchor:
+
+[source,agda]
+----
+EchoR : (ε : Tolerance) (f : A → B) (y : B) → Set
+EchoR ε f y = Σ A (λ x → dist (f x) y ≤ ε)
+----
+
+Widened analyses produce `EchoR ε α a` for increasing `ε`.
+Three headline lemmas pin the structure:
+
+* `echo-approx-intro` — exact match is a zero-tolerance
+  approximate echo. Pre-widening data lifts trivially.
+* `echo-approx-relax` — monotone in ε: each widening step
+  weakens the echo claim, never strengthens it.
+* `echo-approx-compose` — additive composition under a
+  non-expansive outer leg. Multi-pass widening accumulates
+  tolerance additively when the downstream pass is non-
+  expansive (a standard analyser correctness condition).
+
+=== Galois connection adjacency
+
+`docs/adjacency/galois-connections.adoc` is the formal
+neighbour. The Galois insertion `α ⊣ γ` between concrete and
+abstract domains has been the dominant compiler-analysis
+formalism since Cousot & Cousot (1977). Echo types do not
+*replace* it; they refine its 2-cell structure:
+
+[quote]
+The natural 2-cell in the abstraction lattice — the meet of
+two abstractions — is structurally Σ-over-preimages with a
+paired predicate. (`galois-connections.adoc`)
+
+For widening, the additional content is axis 2: where Galois
+gives the relational machinery, `EchoApprox` gives the
+*quantitative* tolerance carrier. Meet-and-relax fits naturally
+inside the existing AI machinery, with the tolerance carried
+as decoration data.
+
+== Cross-cutting: pipeline composition
+
+[.lead]
+The compositionality contribution shines on multi-pass
+pipelines. Consider an analyser that runs three passes:
+
+[source]
+----
+α : Source   → IR
+β : IR       → Abstract
+γ : Abstract → Refined
+----
+
+The composite residue `Echo (γ ∘ β ∘ α) refined` decomposes via
+the accumulation iso into:
+
+[source,agda]
+----
+Echo (γ ∘ β ∘ α) refined
+  ≃ Σ Abstract (λ a → Echo (β ∘ α) a × γ a ≡ refined)
+  ≃ Σ Abstract (λ a → Σ IR (λ ir → Echo α ir × β ir ≡ a)
+                    × γ a ≡ refined)
+----
+
+Each layer's residue is preserved. The intermediate `IR`-witness
+is recoverable, the intermediate `Abstract`-witness is
+recoverable, and the original `Source`-witness is reachable
+through the chain. This is exactly the property a source-map
+needs: the debugger should be able to walk back from a refined
+representation to the original token.
+
+The associated formalisations (all landed and pinned in
+`Smoke.agda`):
+
+* `Echo-comp-iso : ... ↔ ...` — the iso, with both round-trips.
+* `Echo-comp-iso-pent-{B, echo}` — projection-pentagon for
+  three-fold composition.
+* `Echo-comp-pent-Σ-assoc : ... ↔ ...` — full Σ-associativity
+  iso.
+
+For widening pipelines (where each pass introduces tolerance),
+the analogous content is `EchoApprox.echo-approx-compose`:
+tolerance composes additively under non-expansive outer legs.
+
+== When echo types are the right framing
+
+The framework is *not* a replacement for the compiler-analysis
+toolkits that already exist. Galois connections, refinement
+types, abstract interpretation, dataflow analysis, type
+inference — all have decades of dedicated infrastructure. Echo
+types are *additive* over these: they name the residue layer
+explicitly, give it a definitional grounding (the homotopy
+fibre by another name, per `adjacency/hott-fibers.adoc`), and
+supply composition and decoration laws via the graded comonad
+shape.
+
+The framework is at its strongest when:
+
+. *The analysis needs to recover source-level data.* Source
+  maps, attribution, profile-guided optimisation, error
+  reporting. The residue is the artifact; axis-8 names how
+  recoverable it is.
+. *Multiple passes accumulate residue.* The accumulation iso
+  factors the residue across the pipeline without collapsing.
+  Standard for debug-info preservation.
+. *The pass introduces tolerance.* `EchoApprox` is the axis-2
+  artifact; widening, lossy compression, fixed-precision
+  arithmetic, sampling.
+. *The witness's existence is separate from its
+  extractability.* Cryptographic compilation passes (e.g.
+  constant-time enforcement); axis 8 names the gap.
+
+It is *not* additive value over:
+
+* Type inference (refinement types and ML-style inference
+  already cover this; the residue is the unification trace,
+  which is a different conceptual layer).
+* Liveness / dataflow at the function level (standard
+  dataflow already factors residue cleanly; Echo's gain is
+  marginal).
+* SSA construction (the residue is structural, not type-
+  theoretic).
+
+== Cross-references
+
+* `proofs/agda/Echo.agda` — base `Echo`, accumulation iso,
+  cancel-iso, pentagon.
+* `proofs/agda/EchoApprox.agda` — axis 2, tolerance-bearing
+  echo.
+* `proofs/agda/EchoDecidable.agda` — axis 8 refinement 3.
+* `proofs/agda/EchoCost.agda` — axis 8 refinement 1.
+* `proofs/agda/EchoAccess.agda` — axis 8 refinement 2.
+* `proofs/agda/EchoSearch.agda` — axis 8 refinement 4.
+* `docs/echo-types/composition.md` — compositionality details.
+* `docs/echo-types/taxonomy.md` — the 8-axis taxonomy.
+* `docs/adjacency/galois-connections.adoc` — Galois neighbour
+  for example 2.
+* `docs/adjacency/refinement-types.adoc` — refinement-types
+  neighbour for example 1's policy dependence.
+* `docs/adjacency/hott-fibers.adoc` — the underlying construction.
+
+== Status
+
+This chapter is a *first draft*. Each of the two examples could
+be expanded to a fully worked Agda exhibit:
+
+* Example 1 — a toy parser with a chosen recovery policy,
+  exhibiting two token streams that produce the same error-
+  bearing tree via `echo-not-prop`-flavoured arguments.
+* Example 2 — a toy sign-analysis with explicit widening,
+  exhibiting tolerance accumulation through
+  `echo-approx-compose`.
+
+Both are tracked as `[unblocked]` items in `roadmap.md`
+(`Add example-library Agda files matching examples.md`).

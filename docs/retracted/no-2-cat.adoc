@@ -1,0 +1,125 @@
+= D-2026-05-20 — Echo has no 2-categorical shape (rule-out)
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+Closure note for the `roadmap.md` entry
+"2-categorical shape: commit to a 2-category or rule it out"
+and for `composition.md` §Q1 / §Q6. The verdict is *rule out*,
+on argued grounds against the landed Pillars A–D evidence. The
+question is closed; future composition write-ups need not hedge
+for a 2-cat refinement.
+
+toc::[]
+
+== Verdict
+
+Echo's composition / graded-comonad / pullback machinery is
+provably *strict-1-categorical-with-a-thin-graded-fragment*. No
+2-categorical overlay yields a *statable theorem* the existing
+1-cat + graded-comonad + pullback content does not already
+encode at strength equal to or greater than what 2-cells could
+witness. The five structurally plausible 2-cat organisations
+(echo as a lax/oplax 2-functor; slice-of-echos with `IsMediator`
+as 2-cells; double category with `SliceHom` horizontals + cones
+verticals; graded bicomonad; Grothendieck stack of cartesian
+sections) all collapse to existing 1-cat content because every
+would-be 2-cell appears as `refl` or is forced trivial by a
+propositionality hypothesis.
+
+== Evidence (from the landed development)
+
+The "2-cat smells" in the codebase, each resolving trivially:
+
+* *Pentagon Σ-assoc iso* (`Echo.agda` L243–L310). The prototypical
+  bicategorical associator-2-cell. `Echo-comp-iso-pent-B` and
+  `-pent-echo` both close by `refl` on both projections — the
+  would-be associator is identity. Strictly 1-categorical.
+* *`Echo-comp-iso` round-trips* (`Echo.agda` L83–L94). Both
+  `refl`. Strict iso, not pseudo; no unitor data.
+* *`SliceHom` ↔ `EchoCone`* (`EchoPullback.agda` L73–L92). Both
+  round-trips `refl`. A cone *is* a slice morphism by record η —
+  the data is identical; no mediating 2-cell exists.
+* *`echo-pullback-univ`* (`EchoPullback.agda` L55–L134).
+  Uniqueness is *pointwise* (`∀ v → m' v ≡ m v`) — the
+  1-categorical statement minus funext, *not* the 2-cell
+  statement. `IsMediator.coherent` is Σ-second-coherence over
+  the `factor` equation: HoTT pullback-as-Σ shape, not a 2-cell.
+* *`bridge-natural`* (`EchoRelModel.agda` L245–L250). The one
+  real naturality in the suite — `echo-to-graph` between
+  `map-over` and `map-rel` under `relmap-of`. In a 2-cat reading
+  it would be a 2-cell `map-over ⇒ map-rel`; it closes by
+  `refl`. Identity 2-cell; naturality on the nose.
+* *`≤g-prop`* (`EchoGraded.agda` L83–L89). The grade order is
+  propositional: each hom-set is a singleton. In 2-cat language,
+  thin / locally discrete; the graded category enriched in
+  `Prop` *is* a 1-category.
+* *`⊑-prop`* (`EchoRelModel.GradedLossModel`). The interface
+  bakes in propositionality of the loss order. Every instance
+  is thin by signature.
+* *`gcomonad-coassoc`* (`EchoGradedComonad.agda` L126–L150). In
+  a bicomonad, coassoc holds up to an associator 2-cell. Here,
+  on the nose: the common-upper-bound idiom pre-empts the
+  associator (`subst GEcho (⊔g-assoc …)` vanishes because both
+  sides land in the *same* `GEcho g`). The would-be associator
+  is replaced by `≤g-prop`.
+* *`EchoRelModel.GCLaws`*. Model independence proves the comonad
+  laws from `⊑-prop` + composing `reindex` alone; the laws
+  already hold *strictly* in both shipped models. No
+  2-cell-equipped interface is needed.
+
+Every place a 2-cell could appear, it appears as `refl` or is
+forced trivial by a propositionality hypothesis.
+
+== Implication
+
+* `composition.md` §Q1 is closed (rule-out). The composition
+  laws (accumulation iso, cancel-iso, pentagon Σ-assoc,
+  decoration commuting) are promoted from "ad-hoc candidates" to
+  *the complete 1-categorical story* — not 2-coherence laws of a
+  hypothesised 2-category, but the 1-categorical composition
+  laws of a pullback-presented type, full stop.
+* `composition.md` §Q6 (composition in the presence of recovery /
+  echo-erasure) reformulates as a 1-categorical question:
+  recovery as a slice morphism or a fibration section, not a
+  2-cell. Write-up-tractable on this footing.
+* `composition.md` §Q4's "Evidence this is the right shape"
+  upgrades to a *characterisation*: pentagon is `refl` because
+  there is no associator 2-cell to obstruct it.
+* The `EchoGradedComonad` + `EchoRelModel` package is the
+  1-categorical graded-comonad story, not a thin slice toward a
+  bicomonad. The paper draft (`paper.adoc`) need not hedge for
+  a future 2-categorical refinement.
+
+== What would force a reopen (not on the roadmap)
+
+* `MapOver`-up-to-2-cell quantification by a downstream
+  consumer (e.g. ordinal-track collapsing layer needing two
+  `MapOver`s equal up to a 2-cell rather than definitionally).
+  Current decoration families (`EchoApprox`, `EchoChoreo`,
+  `EchoEpistemic`) do not exhibit this.
+* A future grade dropping `≤g-prop` (non-propositional grade
+  lattice carrying genuine semilattice data with non-trivial
+  isos). `EchoSeparating` already shows the characteristic law
+  breaks in that regime — the moment a pseudo / 2-categorical
+  layer becomes content-bearing. Not currently in play.
+* A future third model needing a non-trivial intertwining iso
+  (`model-agreement` currently closes on `refl`).
+* Cubical / HoTT migration (out of `--without-K`) repromoting
+  strict equalities to genuine paths. Out of scope.
+
+None is on the active roadmap. The verdict stands.
+
+== Cross-references
+
+* `docs/echo-types/roadmap.md` — Theory-work entry updated to
+  `[ruled out]`.
+* `docs/echo-types/composition.md` §Q1 / §Q4 / §Q6 — open
+  framings folded into this closure.
+* `docs/echo-types/establishment-plan.adoc` — minimal
+  cross-reference at the H2 verdict / guardrails site.
+* `docs/echo-types/paper.adoc` — related-work `[EXPAND]`
+  carries a placeholder note pointing here.
