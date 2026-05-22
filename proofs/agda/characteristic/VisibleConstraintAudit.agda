@@ -23,8 +23,8 @@ open import Data.Bool.Base                        using (Bool)
 open import Data.Product.Base                     using (_,_; proj₂)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import Echo.Core                                  using (Echo)
-open import Echo.Characteristic                    using (visible; visible-constraint)
+open import Echo                                  using (Echo)
+open import EchoCharacteristic                    using (visible; visible-constraint)
 
 ------------------------------------------------------------------------
 -- The reduction

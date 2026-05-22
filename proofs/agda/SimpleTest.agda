@@ -6,7 +6,7 @@ open import Level using (Level; _⊔_)
 open import Function.Base using (id)
 open import Data.Product.Base using (Σ; _,_; proj₁; proj₂)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
-open import Echo.Core
+open import Echo
 
 -- Simple test to verify basic echo functionality
 simple-echo-test : ∀ {a b} {A : Set a} {B : Set b} (f : A → B) (x : A) → Echo f (f x)

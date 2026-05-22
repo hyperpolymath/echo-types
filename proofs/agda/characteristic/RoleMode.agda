@@ -75,7 +75,7 @@ open import Data.Bool.Base                        using (Bool; true)
 open import Data.Unit.Base                        using (⊤; tt)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import Echo.Bridges.EchoChoreo                            using
+open import EchoChoreo                            using
   ( Role
   ; Client
   ; Server

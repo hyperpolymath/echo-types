@@ -100,8 +100,8 @@ open import Data.Product.Base                     using (Σ; _,_; proj₁; proj�
 open import Relation.Binary.PropositionalEquality
   using (_≡_; _≢_; refl; cong; trans; sym)
 
-open import Echo.Core                                  using (Echo)
-open import Echo.Bridges.EchoChoreo                            using
+open import Echo                                  using (Echo)
+open import EchoChoreo                            using
   ( Role
   ; Client
   ; Server
@@ -128,7 +128,7 @@ open import EchoLinear                            using
   ; degradeMode
   ; affine-all-equal
   )
-open import Echo.Bridges.EchoGraded                            using
+open import EchoGraded                            using
   ( Grade
   ; keep
   ; residue
@@ -141,7 +141,7 @@ open import Echo.Bridges.EchoGraded                            using
   ; residue≤forget
   ; forget≤forget
   )
-open import Echo.Characteristic                    using
+open import EchoCharacteristic                    using
   ( collapse
   ; echo-true
   ; echo-false

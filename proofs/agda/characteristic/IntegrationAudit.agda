@@ -41,17 +41,17 @@ open import Data.Bool.Base                        using (Bool)
 open import Data.Product.Base                     using (_×_; _,_; proj₁)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
-open import Echo.Bridges.EchoChoreo                            using
+open import EchoChoreo                            using
   ( Global
   ; Client
   ; RoleEcho
   ; client-stability
   ; scramble-server
   )
-open import Echo.Bridges.EchoEpistemic                         using (Knows)
-open import Echo.Bridges.EchoGraded                            using (degrade; keep≤residue)
-open import Echo.Characteristic                    using (echo-true; echo-false)
-open import Echo.Bridges.EchoIntegration                       using
+open import EchoEpistemic                         using (Knows)
+open import EchoGraded                            using (degrade; keep≤residue)
+open import EchoCharacteristic                    using (echo-true; echo-false)
+open import EchoIntegration                       using
   ( knowledge-and-controlled-degradation
   ; knowledge-preserved-under-choreo
   ; merged-at-residue
