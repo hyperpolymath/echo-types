@@ -71,7 +71,7 @@ open import Data.Bool.Base                        using (Bool; true; false)
 open import Data.Unit.Base                        using (⊤; tt)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
 
-open import EchoChoreo                            using
+open import Echo.Bridges.EchoChoreo                            using
   ( Role; Client; Server; obs; RoleEcho; client-to-server
   ; _⊑c_; c⊑c; c⊑s; s⊑s
   )
@@ -79,7 +79,7 @@ open import EchoLinear                            using
   ( Mode; linear; affine; LEcho
   ; _≤m_; linear≤linear; linear≤affine; affine≤affine
   )
-open import EchoGraded                            using
+open import Echo.Bridges.EchoGraded                            using
   ( Grade; keep; residue; forget
   ; _≤g_; keep≤keep; keep≤residue; keep≤forget
   ; residue≤residue; residue≤forget; forget≤forget

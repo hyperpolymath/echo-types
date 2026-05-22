@@ -11,9 +11,9 @@
 
 module EchoLinear where
 
-open import Echo
-open import EchoCharacteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
-open import EchoResidue
+open import Echo.Core
+open import Echo.Characteristic using (collapse; echo-true; echo-false; echo-true≢echo-false)
+open import Echo.Residue
   using
     ( EchoR
     ; TrivialCert

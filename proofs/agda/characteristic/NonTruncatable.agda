@@ -53,8 +53,8 @@
 
 module characteristic.NonTruncatable where
 
-open import Echo using (Echo)
-open import EchoTruncation using (isProp; echo-not-prop)
+open import Echo.Core using (Echo)
+open import Echo.Bridges.EchoTruncation using (isProp; echo-not-prop)
 
 open import Level using (Level)
 open import Data.Product.Base using (Σ; _,_)

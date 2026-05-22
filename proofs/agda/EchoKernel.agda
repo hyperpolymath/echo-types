@@ -40,7 +40,7 @@ module EchoKernel where
 
 -- The whole funext-free core surface. Everything downstream that
 -- "imports Echo" is importing exactly this.
-open import Echo public
+open import Echo.Core public
 
 ------------------------------------------------------------------------
 -- Kernel contract.
