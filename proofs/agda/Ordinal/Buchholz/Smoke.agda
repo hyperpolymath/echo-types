@@ -361,3 +361,23 @@ open import Ordinal.Buchholz.RankAdm using
   ; rank-pow≤rank-adm
   ; rank-mono-<ᵇ⁺-ψα-from-pow
   )
+
+-- Lane 3 follow-on slice 2026-05-27 (own block per CLAUDE.md
+-- Working rules): lex-pair rank `rank-lex` discharging the
+-- `<ᵇ-ψΩ≤` ν=μ boundary case that `rank-adm` left structurally
+-- open.  Option (A) from `RankAdm.agda` §"<ᵇ-ψΩ≤-still-open"
+-- (lex pair over `Ord × Ord`).  Headline
+-- `rank-mono-<ᵇ-ψΩ≤-lex` covers both ν<μ and ν=μ sub-cases.
+open import Ordinal.Buchholz.RankLex using
+  ( RankLex
+  ; mkLex
+  ; _<lex_
+  ; <lex-first
+  ; <lex-second
+  ; rank-lex
+  ; rank-lex-bzero
+  ; rank-lex-bOmega
+  ; rank-lex-bpsi
+  ; rank-lex-bplus
+  ; rank-mono-<ᵇ-ψΩ≤-lex
+  )
