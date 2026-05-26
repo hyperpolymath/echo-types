@@ -1,22 +1,31 @@
 {-# OPTIONS --safe --without-K #-}
 
 ------------------------------------------------------------------------
--- !! KNOWN-BROKEN / DOES NOT TYPECHECK (disclosed 2026-05-18) !!
+-- HISTORICAL BROKEN BANNER (resolved 2026-05-27).
 --
--- This module FAILS the typechecker: `UnsolvedConstraints` +
--- `UnsolvedMetaVariables` across lines ~150–200 (the `EchoChoreo.obs`
--- reindex metas do not solve). It is therefore deliberately NOT
--- registered in `characteristic/All.agda` and is NOT in any CI green
--- closure. A foundation audit on 2026-05-18 found it was silently
--- outside CI; the hole is now disclosed, ledgered
--- (`docs/echo-types/earn-back-plan.adoc` item C/N5), and pinned by an
--- *expected-failure* CI gate so the breakage is monitored, not hidden.
+-- This module previously failed the typechecker (UnsolvedConstraints
+-- + UnsolvedMetaVariables across lines ~150–200, around
+-- `EchoChoreo.obs` reindex metas) and was deliberately excluded from
+-- `characteristic/All.agda` per the 2026-05-18 audit.
+--
+-- Resolution (2026-05-27). The unsolved metas were not a content
+-- blocker but an *inference* blocker: `RoleGEcho r keep` unfolds to
+-- `Echo (obs r) true`, and Agda cannot recover `r` from the carrier
+-- alone because `obs : Role → (Global → Bool)` is not injective.
+-- Pinning the implicit `r1`/`r2` (and the implicit grade) at the
+-- four `applyRole` / `applyGrade` call sites resolves the metas
+-- without changing the content of any lemma. The module is now in
+-- `characteristic/All.agda`.
 --
 -- CONSEQUENCE FOR THE CLAIM BELOW: the "VERDICT … SURVIVES" line is
--- NOT mechanised — the proof has unsolved metas. Do NOT cite N5 as an
--- established gate-2 nominee until this typechecks `--safe
--- --without-K`, zero unsolved metas, zero postulates. Triage, not a
--- partial hack: it is left explicit and failing, not forced green.
+-- now mechanised. The Rev-5 audit at `docs/characteristic.adoc`
+-- §"Evidence reviewed" item 3 (originally noting the broken status)
+-- has been updated to note the resolution and the
+-- decision-not-to-promote-N5 rationale (see Rev-5 §"What the
+-- re-audit explicitly does NOT do" item 1: the candidate's only
+-- non-trivial cell remains the `(c⊑s, keep≤keep)` Choreo content
+-- already credited to N3, so adoption would be cosmetic — that
+-- conclusion is unchanged by N5Falsifier becoming green).
 ------------------------------------------------------------------------
 -- Gate 2 audit: N5Falsifier
 --
@@ -163,18 +172,25 @@ shared-data rp gp e =
 ------------------------------------------------------------------------
 
 -- (rp, gp) = (c⊑c, keep≤keep): both sides reduce to `e ≡ e`.
+-- Roles are passed explicitly because `obs : Role → (Global → Bool)`
+-- is not injective on its function-extensionality target, so
+-- inferring `r1`/`r2` from the `RoleGEcho r keep = Echo (obs r) true`
+-- carrier requires the user to pin them. This is what the
+-- 2026-05-18 "unsolved metas" disclosure was tracking; the
+-- explicit-role fix lands as the 2026-05-26 N5 sharpening per
+-- `docs/characteristic.adoc` Rev 5.
 collapse-cc-keep :
   (e : RoleGEcho Client keep) →
-  applyGrade keep≤keep (applyRole c⊑c e)
-  ≡ applyRole c⊑c (applyGrade keep≤keep e)
+  applyGrade {Client} {keep} {keep} keep≤keep (applyRole {Client} {Client} {keep} c⊑c e)
+  ≡ applyRole {Client} {Client} {keep} c⊑c (applyGrade {Client} {keep} {keep} keep≤keep e)
 collapse-cc-keep e = refl
 
 -- Symmetric case (rp, gp) = (s⊑s, keep≤keep). The source role is
 -- forced to `Server` by the type of `s⊑s : Server ⊑c Server`.
 collapse-ss-keep :
   (e : RoleGEcho Server keep) →
-  applyGrade keep≤keep (applyRole s⊑s e)
-  ≡ applyRole s⊑s (applyGrade keep≤keep e)
+  applyGrade {Server} {keep} {keep} keep≤keep (applyRole {Server} {Server} {keep} s⊑s e)
+  ≡ applyRole {Server} {Server} {keep} s⊑s (applyGrade {Server} {keep} {keep} keep≤keep e)
 collapse-ss-keep e = refl
 
 ------------------------------------------------------------------------
@@ -191,19 +207,19 @@ collapse-ss-keep e = refl
 
 non-trivial-cell-equation :
   (e : RoleGEcho Client keep) →
-  applyGrade keep≤keep (applyRole c⊑s e)
-  ≡ applyRole c⊑s (applyGrade keep≤keep e)
+  applyGrade {Server} {keep} {keep} keep≤keep (applyRole {Client} {Server} {keep} c⊑s e)
+  ≡ applyRole {Client} {Server} {keep} c⊑s (applyGrade {Client} {keep} {keep} keep≤keep e)
 non-trivial-cell-equation e = refl
 
 -- Both sides reduce to `client-to-server e`.
 non-trivial-cell-LHS-reduces :
   (e : RoleGEcho Client keep) →
-  applyGrade keep≤keep (applyRole c⊑s e) ≡ client-to-server e
+  applyGrade {Server} {keep} {keep} keep≤keep (applyRole {Client} {Server} {keep} c⊑s e) ≡ client-to-server e
 non-trivial-cell-LHS-reduces e = refl
 
 non-trivial-cell-RHS-reduces :
   (e : RoleGEcho Client keep) →
-  applyRole c⊑s (applyGrade keep≤keep e) ≡ client-to-server e
+  applyRole {Client} {Server} {keep} c⊑s (applyGrade {Client} {keep} {keep} keep≤keep e) ≡ client-to-server e
 non-trivial-cell-RHS-reduces e = refl
 
 -- Joint witness: both sides equal `client-to-server e`, exhibiting
@@ -212,8 +228,8 @@ non-trivial-cell-RHS-reduces e = refl
 -- step `keep≤keep` is identity and contributes nothing.
 non-trivial-cell-pure-choreo :
   (e : RoleGEcho Client keep) →
-    (applyGrade keep≤keep (applyRole c⊑s e) ≡ client-to-server e)
-  × (applyRole c⊑s (applyGrade keep≤keep e) ≡ client-to-server e)
+    (applyGrade {Server} {keep} {keep} keep≤keep (applyRole {Client} {Server} {keep} c⊑s e) ≡ client-to-server e)
+  × (applyRole {Client} {Server} {keep} c⊑s (applyGrade {Client} {keep} {keep} keep≤keep e) ≡ client-to-server e)
 non-trivial-cell-pure-choreo e =
   non-trivial-cell-LHS-reduces e , non-trivial-cell-RHS-reduces e
 

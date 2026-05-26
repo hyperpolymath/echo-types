@@ -1,0 +1,123 @@
+= Walkthrough 1: certified region-exit audit
+:toc: macro
+:toclevels: 2
+:sectnums:
+:icons: font
+
+[.lead]
+Lane 5 Walkthrough 1 per `tutorial/README.adoc`. Worked example
+landing 2026-05-26 as the killer-app candidate for `roadmap.adoc`
+§"Lane 5 [PARKED]" unparking.
+
+[IMPORTANT]
+====
+*This walkthrough is NOT a claim that in-memory bytes of the
+exiting region's data have been zeroed.* It is a *type-level*
+guarantee that no pure Agda function reconstructs the live region
+handle from the audit receipt alone. Conflating these is a category
+error a sceptic will catch — and exactly the kind of mistake the
+project's retraction discipline
+(`docs/retractions.adoc` R-2026-05-18) exists to prevent. The
+opening of `RegionExitAudit.agda` repeats this disclosure with the
+same wording so a reader who sees the code first sees the bound
+first.
+====
+
+toc::[]
+
+== What this walkthrough proves
+
+For an ephapax-L3-style region indexed by a `RegionId`, and a live
+handle modelled as `LEcho linear`, the audit-receipt produced by
+exiting the region is `LEcho affine`. The mode step
+`linear → affine` is `EchoLinear.weaken`. The walkthrough's two
+headline lemmas are:
+
+. *`exit-collapses-handles`* — exit is non-injective on live
+  handles. Two distinct live handles (the `EchoCharacteristic`
+  non-injectivity witnesses) exit to the same receipt. Without
+  this, exit would be a renamed identity and the audit would carry
+  no useful information-loss content.
+. *`audit-no-recovery`* — no pure function reconstructs the live
+  handle from the receipt alone, within any region. This is
+  `EchoLinear.no-section-weaken` instantiated per-region. The
+  lemma's `¬ Σ ...` shape is the audit guarantee.
+
+Both are pinned in `tutorial/region_exit_audit/Smoke.agda`. The
+build is `--safe --without-K`, zero postulates.
+
+== What this walkthrough does NOT prove
+
+The bottom of `RegionExitAudit.agda` carries a *matched negative*
+block listing the four properties one might want and that this
+walkthrough does *not* give:
+
+* `bytes-zeroed` — a runtime claim about memory contents.
+* `secure-against-side-channels` — timing / speculative-execution
+  leaks.
+* `audit-is-tamper-evident` — cryptographic authentication of the
+  receipt.
+* `no-recovery-given-an-oracle` — adversaries with access to
+  additional live handles outside the model.
+
+All four are real properties one might want; none of them is what
+`audit-no-recovery` gives. The honest scope is: a type-level
+guarantee inside `--safe --without-K` Agda, for a pure function
+with only the receipt as input.
+
+== Why this is the killer-app candidate
+
+Three reasons recorded in `tutorial/README.adoc` §"Walkthrough 1 >
+Why this is the killer-app candidate":
+
+. *Tied to an active adjacent project.* `hyperpolymath/ephapax` is
+  the language whose L3 region discipline this walkthrough mirrors
+  type-level. Real consumer pressure rather than synthetic example
+  pressure.
+. *Concrete.* One named audit boundary (`exit r`), not a class of
+  boundaries.
+. *Exhibits the affine mode at the interesting discipline.* The
+  guarantee is consumed-on-exit (the receipt is the *evidence* of
+  the exit having happened, not a hint that the handle is
+  available), not merely weakened-once.
+
+The matched-negative is what makes the killer-app status credible.
+A walkthrough that claimed any of the four NOT-proved properties
+above would be over-claiming; one that proves the type-level
+guarantee while disclosing the matched-negative honestly is exactly
+the discipline that makes the rest of the repo defensible.
+
+== Build
+
+[source,bash]
+----
+agda --library-file=/tmp/agda-libs -i . -i proofs/agda \
+     tutorial/region_exit_audit/Smoke.agda
+
+agda --library-file=/tmp/agda-libs -i . -i proofs/agda \
+     tutorial/All.agda
+----
+
+Both exit 0 under `--safe --without-K` with zero postulates.
+
+== References
+
+* `proofs/agda/EchoLinear.agda` — `LEcho`, `weaken`,
+  `no-section-weaken`, `weaken-collapses-distinction`
+* `proofs/agda/EchoCharacteristic.agda` — `echo-true`, `echo-false`,
+  `echo-true≢echo-false`
+* `proofs/agda/EchoResidue.agda` — the `EchoR` carrier that
+  `LEcho affine` unfolds to (`TrivialCert`,
+  `collapse-to-residue`, `no-section-collapse-to-residue`)
+* `tutorial/README.adoc` — Lane 5 scaffold
+* `roadmap.adoc` §"Lane 5" — the lane this walkthrough closes the
+  killer-app gate for
+* `docs/retractions.adoc` R-2026-05-18 — the discipline the
+  honest-bound disclosure inherits
+
+== Status
+
+LANDED 2026-05-26 as part of the Lane 5 first-walkthrough commit
+chain. Walkthroughs 2 (epistemic erasure) and 3 (provenance /
+debugging) remain at scaffold/design-doc level per
+`tutorial/README.adoc`.

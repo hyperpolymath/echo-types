@@ -303,22 +303,30 @@ constructors discharge by additive-principal closure.
 | `<ᵇ-ψ+`    | ✓ closed  | `rank-pow-via-left` plus the IH.
 | `<ᵇ-+Ω`    | ✓ closed  | `rank-pow-bplus-into-ω-rank-pow` (additive-principal at the target) plus the WfCNF tail bound `y ≤ᵇ x` (caller-provided).
 | `<ᵇ-+ψ`    | ✓ closed  | Same as `<ᵇ-+Ω` since `rank-pow (bpsi ν _) = ω-rank-pow ν`.
-| `<ᵇ-ψα`    | ⏳ admissibility | `rank-pow (bpsi ν α) = ω-rank-pow ν` doesn't discriminate on α.  Refining the rank to `ω-rank-pow ν ⊕ rank-pow α` works iff `α ∈ C_ν` (ψ-admissibility predicate); deferred to a follow-on slice.
-| `<ᵇ-ψΩ≤`   | ⏳ admissibility | Same blocker at `ν = μ`: provisional shape gives `ω-rank-pow μ <′ ω-rank-pow μ`, which is false.
+| `<ᵇ⁺-ψα`   | ✓ closed (Lane 3, 2026-05-26) | `rank-adm (bpsi ν α) = ω-rank-pow ν ⊕ rank-pow α`; `⊕-mono-<-right` closes the shared-Ω-index lex case from `rank-pow α <′ rank-pow β` (which the existing `_<ᵇ⁰_` umbrella discharges).  Primitive `rank-mono-<ᵇ⁺-ψα-from-pow` in `Ordinal.Buchholz.RankAdm`.
+| `<ᵇ-ψΩ≤`   | ⏳ encoding mismatch | `ν <Ω μ` (strict) case closes by `additive-principal-ω-rank-pow {μ}`.  `ν = μ` case STILL OPEN: `ω-rank-pow μ ⊕ rank-pow α <′ ω-rank-pow μ` is impossible under any rank shape with `ω-rank-pow ν ≤ rank-adm (bpsi ν α)`.  The classical Buchholz gap `[Ω_μ, Ω_{μ+1})` that admissible ψ_μ(α) lives in is not modelled by `ω-rank-pow ν ⊕ rank-pow α`.  Two design follow-ups (lex pair, multiplicative ordinal) documented in `RankAdm.agda` §"<ᵇ-ψΩ≤-still-open"; option A (lex pair) recommended.
 | `<ᵇ-+1`    | ⏳ joint-bplus | `rank-pow (bplus z₁ z₂)` is not additive principal in general (it's a sum of additive principals).  Discharging requires a coarser bound (e.g., dominate by `ω-rank-pow` of the leading subterm's Ω-index) or a structurally richer rank.
 | `<ᵇ-0-+`   | ✓ closed* | `rank-pow bzero = oz`, and `rank-pow (bplus x y) ≥′ oz` strictly when *either* `x` or `y` is non-`bzero` and the term is WfCNF.  The degenerate `bplus bzero bzero` is excluded by WfCNF (atomic-right ≤ left forces both `bzero` and then the sum reduces to a `bzero`-shaped equivalent that doesn't pattern-match as a `bplus` under CNF normalisation — covered as a side-condition).
 |===
 
-*Score: 9/13 constructors closed; 3 deferred under explicit blockers;
-1 closed conditionally with documented side condition.*
+*Score: 10/13 constructors closed (9 under the original `rank-pow`
+umbrella + 1 under the new `rank-adm` slice); 2 deferred under
+explicit blockers; 1 closed conditionally with documented side
+condition. The Lane-3 active-push slice on 2026-05-26 advanced the
+score by 1 (`<ᵇ⁺-ψα`) and re-classified `<ᵇ-ψΩ≤` from "admissibility"
+to "encoding mismatch" with two named follow-up routes.*
 
 === What remains open
 
-* *ψ-admissibility predicate* (`WellFormedAdmissible.agda`, ~80 lines).
-  Refines `WfCNF` with the constraint that ψ-arguments live in their
-  binder's Ω-closure `C_ν`.  Closes `<ᵇ-ψα` and `<ᵇ-ψΩ≤` once the
-  rank-pow on `bpsi ν α` is refined to `ω-rank-pow ν ⊕ rank-pow α`
-  under the admissibility carrier.
+* *ψ-admissibility predicate* (`WellFormedAdmissible.agda`, landed
+  earlier; `RankAdm.agda` landed 2026-05-26 in the Lane 3 active-push
+  slice). Refines `WfCNF` with the rank-bound on ψ-arguments.
+  *Status*: `<ᵇ⁺-ψα` *closed* via `rank-mono-<ᵇ⁺-ψα-from-pow` in
+  `RankAdm.agda`. `<ᵇ-ψΩ≤` ν=μ boundary case re-classified as
+  *encoding mismatch* — needs a richer rank target (two-component
+  lex or multiplicative ordinal), not just the admissibility
+  carrier. See `RankAdm.agda` §"<ᵇ-ψΩ≤-still-open" for the two
+  design options; option A (lex pair) recommended.
 * *`<ᵇ-+1` joint-bplus*.  Needs either a coarser dominator (e.g., a
   function `BT → OmegaIndex` returning the leading Ω-index, then
   rank into `ω-rank-pow ∘ leading-index`) or a richer rank shape.
