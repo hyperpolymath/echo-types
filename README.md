@@ -201,6 +201,46 @@ cd /var/mnt/eclipse/repos/echo-types
 agda -i proofs/agda proofs/agda/All.agda
 ```
 
+### Installing as a library
+
+The repo is structured as an Agda library via `echo-types.agda-lib`
+at the repo root. To use `echo-types` from another Agda project,
+register the library file once:
+
+```bash
+git clone https://github.com/hyperpolymath/echo-types.git
+echo "$(pwd)/echo-types/echo-types.agda-lib" >> ~/.agda/libraries
+```
+
+Then in any other project, depend on `echo-types` in that
+project's own `.agda-lib`:
+
+```text
+name: my-project
+depend: standard-library echo-types
+include: src
+```
+
+Consumers can then `open import Echo`, `open import EchoLinear`,
+or `open import tutorial.region_exit_audit.RegionExitAudit` — the
+library's `include:` line covers both `proofs/agda` and the repo
+root (for the Lane 5 tutorial track).
+
+Requires `standard-library` v2.3 or later registered alongside.
+
+## Citation
+
+If you cite this repository in academic work, please cite via the
+Zenodo DOI listed in [CITATION.cff](CITATION.cff). The Zenodo
+record is the canonical citation target; GitHub's "Cite this
+repository" widget resolves directly to it.
+
+GitHub→Zenodo integration is a one-time author setup; until that
+is wired the `CITATION.cff` `doi:` field carries a placeholder
+(`10.5281/zenodo.0000000`). See
+[docs/echo-types/pillar-e-offline.adoc](docs/echo-types/pillar-e-offline.adoc)
+§"Zenodo DOI mint" for the activation sequence.
+
 ## Tooling Stance
 
 - default development stays plain Agda with the standard library

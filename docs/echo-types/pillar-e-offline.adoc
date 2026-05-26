@@ -142,8 +142,17 @@ The DOI ladder for a mechanised artefact paper:
   I leave there) and commit. Same for `.zenodo.json`.
 
 This is a 15-minute author-driven sequence once Zenodo is hooked.
-I'll pre-stage `CITATION.cff` and `.zenodo.json` in a separate PR
-on request.
+
+*Pre-staging status (updated 2026-05-27).* `CITATION.cff` and
+`.zenodo.json` are both landed at the repo root with placeholder
+DOI (`10.5281/zenodo.0000000`) and creator block (ORCID commented
+out — supply on author setup). The README citation section
+(`README.md` §Citation) points at `CITATION.cff` and at this
+document's §"Zenodo DOI mint" for the activation sequence. The
+GitHub→Zenodo workflow itself is intentionally NOT pre-staged
+because activating it before the user has authorised the Zenodo
+integration would cause CI runs to fail noisily; the workflow
+lands as a small follow-on once the integration is on.
 
 == Library packaging
 
@@ -191,9 +200,14 @@ echo "$(pwd)/echo-types/echo-types.agda-lib" >> ~/.agda/libraries
   `agda --library echo-types -- proofs/agda/All.agda` to prove the
   packaging works end-to-end.
 
-This is wholly in-repo — I can do all three. The Zenodo bits
-require the user's account, so they're tracked as the next step
-after packaging lands.
+*Pre-staging status (updated 2026-05-27).* Items 1 (`echo-types.agda-lib`
+with dual `include: proofs/agda .`) and 2 (README §"Build" >
+"Installing as a library" subsection with the registration and
+consumer-side `depend:` snippet) are both landed. Item 3 (CI
+install-self job) is deferred so it can be wired alongside the
+GitHub→Zenodo workflow once the user authorises the integration —
+both are downstream of the same author-driven setup, and bundling
+them avoids a transient CI red between the two PRs.
 
 == Outreach drafts
 

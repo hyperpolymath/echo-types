@@ -13,12 +13,15 @@ rather than re-deriving the pedagogy.
 
 [IMPORTANT]
 ====
-*Lane 5 unpark status (updated 2026-05-26).* Walkthrough 1
-(certified region-exit audit) was accepted as the killer-app
+*Lane 5 unpark status (updated 2026-05-27).* Walkthroughs 1
+(certified region-exit audit) and 2 (epistemic erasure with honest
+bound) are LANDED. Walkthrough 1 was accepted as the killer-app
 candidate per `roadmap.adoc` §"Lane 5 [PARKED]" second unblocking
-condition; Lane 5 is *active* on Walkthrough 1 only. Walkthroughs 2
-and 3 remain at scaffold/design-doc level pending either Lane 1
-close-out or independent unparking decisions.
+condition. Walkthrough 2 followed as the second realisation,
+addressing the "does echo-types prove key zeroing?" category-error
+question. Walkthrough 3 (provenance / debugging) remains at
+scaffold/design-doc level pending either Lane 1 close-out or
+independent unparking decisions.
 
 The Smoke gate (`proofs/agda/Smoke.agda`), the top-level
 `proofs/agda/All.agda`, and the identity-claim gates still do not
@@ -95,7 +98,10 @@ honest about the category error a sceptic would catch.
 
 === Walkthrough 2: epistemic erasure with honest bound
 
-*Status.* Design-doc only. Agda lands at unpark time.
+*Status.* LANDED 2026-05-27. See
+`tutorial/epistemic_erasure/EpistemicErasure.agda` for the worked
+example and `tutorial/epistemic_erasure/README.adoc` for the
+narrative.
 
 *The pedagogy.* Model a key-derivation function `kdf : Seed → Key`
 where the visible output is the derived `Key` and the hidden source
