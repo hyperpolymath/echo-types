@@ -107,6 +107,7 @@ open import Ordinal.Buchholz.IteratedExtendedOrder
 open import Ordinal.Buchholz.RankBrouwer
 open import Ordinal.Buchholz.RankPartial
 open import Ordinal.Buchholz.RankPow
+open import Ordinal.Buchholz.RankAdm
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
 open import Ordinal.Buchholz.RecursiveSurfaceBudget

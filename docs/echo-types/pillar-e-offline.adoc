@@ -1,0 +1,381 @@
+= Pillar E offline: prep doc for venue, packaging, outreach
+:toc: macro
+:toclevels: 3
+:sectnums:
+:icons: font
+
+[.lead]
+Pillar E's in-repo half is at close-out (see `paper.adoc` IMPORTANT
+banner and `roadmap.adoc` §Lane 1). This document pre-stages the
+*offline / author-driven* half — venue + template choice, Zenodo
+DOI mint, library packaging, outreach to neighbour communities — so
+the user can act on each item without re-deriving the analysis.
+
+[IMPORTANT]
+====
+*The actions in this document are author-driven.* Nothing here is
+auto-run. Drafts of cover letters and packaging scaffolds land in
+the repo as text for the user to send / publish at their cadence.
+====
+
+toc::[]
+
+== Venue + template matrix
+
+Four candidate venues, ordered by *fit to the current narrowed
+claim*. The narrowed claim (per R-2026-05-18) is a definitional
+Σ-identity + funext-relative pointwise mediator property + thin-
+poset reindexing modality + separating model + carrier-parametric
+abstraction over a fixed grade poset + postulate-free
+`--safe --without-K` build, under a falsifiable retraction
+discipline. The right venue is one whose reviewers will read that
+package on its actual strength rather than against the original
+graded-comonad framing the retraction note walks back.
+
+[cols="1,2,2,3,2", options="header"]
+|===
+| Venue
+| Format
+| Typical deadline cadence
+| Fit to narrowed claim
+| Recommendation
+
+| TYPES (extended abstract)
+| ~2 pp AsciiDoc / LaTeX
+| Annual, spring deadline
+| *Best fit.* The community already accepts work-in-progress retraction-style pieces; the existing `types-abstract.adoc` is already drafted at the right shape; the audience knows graded modalities and will read the narrowed claim on its own terms.
+| *Submit first.* Lowest revision cost, highest probability of audience-appropriate review.
+
+| CPP
+| ~10 pp ACM template
+| Annual, fall deadline (Jan target)
+| Strong fit. CPP's "Certified Programs and Proofs" framing is exactly what the postulate-free `--safe --without-K` artefact is. Reviewers expect a full mechanised metatheory, which `paper.adoc` already is.
+| *Submit second*, after TYPES feedback. CPP rewards exactly the kind of artefact carefully captured here.
+
+| ITP
+| ~15 pp LIPIcs template
+| Annual, late winter deadline (Mar target)
+| Strong fit on the mechanised side. Audience overlaps CPP but is more proof-assistant-centric; the discussion of `--safe --without-K` + zero postulates + Smoke discipline lands harder here.
+| *Alternative to CPP* if CPP timing slips. Don't dual-submit; pick one of CPP/ITP based on which deadline lands first.
+
+| MSCS journal (or Logical Methods in Computer Science)
+| ~25 pp journal article
+| Rolling
+| Best fit if the paper grows substantially (e.g. consumer-evidence appendix lands once Bachmann-Howard hits). Journal length removes the "evaluation section is brief" pressure.
+| *Hold for v2.* After TYPES + CPP cycles produce reviewer feedback, the consolidated journal version is the final form.
+|===
+
+=== Recommended sequencing
+
+. *TYPES extended abstract.* `types-abstract.adoc` already exists
+  in `--safe --without-K`-aware form. Action items:
+
+  .. Pick the year (whichever TYPES has the next submission window).
+  .. Re-review the abstract against the current paper for any
+     residual stale phrasings (the abstract carries a `NOT
+     submission-ready` banner because the original was retracted; the
+     correction has happened, the banner should be updated to
+     `submission-ready as of <date>` once the user signs off).
+  .. Format under the TYPES template (LaTeX). The content
+     translation is mechanical; I can prep the LaTeX source as a
+     parallel file `types-abstract.tex` if requested.
+  .. Submit. Author metadata, affiliation, ORCID — user only.
+. *CPP submission.* Two-month cycle after TYPES. Use `paper.adoc`
+  as the spine; cut to ~10pp by trimming the §"Evaluation and
+  discussion" inline narrative (keep the cost table). Convert to
+  ACM template.
+. *Hold ITP and MSCS for v2.* Don't bundle.
+
+=== What I cannot help with on venue + template
+
+* Author-metadata blocks (ORCID, affiliation, conflict declarations).
+* Cover letters to programme chairs.
+* Pre-submission emails to area chairs (when appropriate).
+* The actual submission upload.
+
+These are author-driven by venue rule.
+
+== Zenodo DOI mint
+
+The DOI ladder for a mechanised artefact paper:
+
+. *Concept DOI* — a stable DOI for the project as a whole
+  (`hyperpolymath/echo-types`), minted once.
+. *Version DOI* — per tagged release. Each `git tag vX.Y.Z` should
+  publish to Zenodo via the GitHub→Zenodo webhook.
+. *Citation block* in README + paper artefact statement —
+  citation by Zenodo DOI rather than commit hash so reviewers cite
+  a stable target.
+
+=== What I can pre-stage in-repo
+
+. `CITATION.cff` at the repo root with the project metadata,
+  author block, abstract (cribbed from `types-abstract.adoc`),
+  license (MPL-2.0 per the recent estate sweep), and a placeholder
+  for the DOI to fill in after first mint. This file is consumed
+  by GitHub's "Cite this repository" widget and is the canonical
+  citation source.
+. `.zenodo.json` with the matching metadata in Zenodo's format,
+  including:
+  - `creators` block (author, ORCID once supplied)
+  - `keywords`: `["agda", "graded modality", "homotopy fibre",
+    "loss grading", "formal methods", "echo types"]`
+  - `related_identifiers` linking to the GitHub repo
+  - `communities`: TBD on user preference (e.g. `agda`,
+    `formal-methods`)
+. A tag-driven CI workflow `.github/workflows/zenodo-release.yml`
+  that fires on `v*` tags and triggers the GitHub→Zenodo
+  integration (after the user has authorised the integration in
+  Zenodo's GitHub settings). The workflow itself doesn't push to
+  Zenodo; it just stamps the release notes and pings the existing
+  webhook.
+
+=== What the user does
+
+. Create / log into a Zenodo account.
+. Authorise the GitHub→Zenodo integration for
+  `hyperpolymath/echo-types` (one-click flip in Zenodo settings).
+. After the integration is on, push the first `v0.1.0` tag from
+  `main` after PR #118 lands. Zenodo will mint both the concept
+  DOI and the v0.1.0 version DOI automatically.
+. Paste the concept DOI back into `CITATION.cff` (the placeholder
+  I leave there) and commit. Same for `.zenodo.json`.
+
+This is a 15-minute author-driven sequence once Zenodo is hooked.
+I'll pre-stage `CITATION.cff` and `.zenodo.json` in a separate PR
+on request.
+
+== Library packaging
+
+Standard Agda library layout for an installable `echo-types.agda-lib`:
+
+[source,text]
+----
+echo-types.agda-lib                    -- name/include/depend
+proofs/agda/                           -- existing tree (no move)
+tutorial/                              -- Lane 5 walkthrough tree
+docs/                                  -- existing tree
+README.md / readme.adoc                -- existing
+LICENSE                                -- existing (MPL-2.0)
+CITATION.cff                           -- new (Zenodo prereq)
+.zenodo.json                           -- new (Zenodo prereq)
+----
+
+The `.agda-lib` file's content:
+
+[source,text]
+----
+name: echo-types
+depend: standard-library
+include: proofs/agda
+        .
+----
+
+That's it. The dual `include` lets a consumer use either bare
+`Echo` (resolved against `proofs/agda`) or `tutorial.region_exit_audit.RegionExitAudit`
+(resolved against the repo root). Anyone with stdlib v2.3 in their
+Agda libraries file can then `agda --library echo-types ...` after
+running the standard registration step.
+
+Action items I can land as a single commit:
+
+. `echo-types.agda-lib` at the repo root.
+. README section documenting the standard install:
++
+[source,bash]
+----
+git clone https://github.com/hyperpolymath/echo-types.git
+echo "$(pwd)/echo-types/echo-types.agda-lib" >> ~/.agda/libraries
+----
+. CI seam: an "install-self" job that runs
+  `agda --library echo-types -- proofs/agda/All.agda` to prove the
+  packaging works end-to-end.
+
+This is wholly in-repo — I can do all three. The Zenodo bits
+require the user's account, so they're tracked as the next step
+after packaging lands.
+
+== Outreach drafts
+
+Three target communities, in priority order. Each cover letter is
+a draft for the user to send (mailing-list post, direct email, or
+forum post — venue depends on the community's norms).
+
+The pattern in each draft:
+. Open with the *narrowed* claim, not the original claim.
+. Cite the retraction note as evidence of the discipline.
+. Link to the comparators page, not the full paper.
+. Ask one specific question, not a generic
+  "what-do-you-think".
+
+=== Draft 1: Granule / QTT (graded modality community)
+
+Target list: Granule mailing list / Discord, Atkey research group
+mailing list, or POPL programme chairs with graded-modality
+interests in the year of submission.
+
+Draft text:
+
+[quote]
+----
+Subject: Echo types — a calibration against graded modalities, with
+a public retraction discipline
+
+Hi all,
+
+We've been working on echo-types, an Agda formalisation of
+fibre-based "structured loss" types. The original framing claimed
+echo as a graded comonad in the Petriček-Orchard-Mycroft sense;
+this turned out to be wrong on careful re-reading and was retracted
+on 2026-05-18 (R-2026-05-18 in our public retraction log,
+`docs/retractions.adoc`). The narrowed claim is a loss-graded
+*reindexing modality* (thin-poset action; no nested D_r D_s) over a
+join-semilattice of loss grades.
+
+The reason I'm writing to this community in particular: we've
+landed a *separating model* (`EchoSeparating.agda`) that quantifies
+exactly the modality's content over generic Σ-functoriality. It is
+`EchoGraded` minus `≤g-prop` (propositionality of the loss order),
+and the characteristic composition equation is refuted at a
+concrete decidable witness when `≤g-prop` is removed. This locates
+the load-bearing hypothesis precisely.
+
+I'd value a sanity check from this community on whether the
+separating-model framing makes sense, and whether echo is best
+read as one of:
+
+(a) a degenerate case of QTT / Granule that doesn't need its own
+    name;
+(b) a meaningful sibling within the coeffect / graded family worth
+    distinguishing;
+(c) something the community already has a better name for.
+
+The single-page reviewer companion is at
+`docs/echo-types/comparators.adoc` and lays out axis-by-axis
+positioning against Granule, QTT, choreographic types, and Linear
+Haskell. The full mechanised metatheory paper is `paper.adoc`.
+
+Either direction of feedback would be a real contribution to the
+discipline; we have no investment in (b) being right.
+
+— [User name]
+----
+
+=== Draft 2: choreographic types community
+
+Target: Hirsch et al. choreographic-types research group, or POPL
+/ ICFP authors of the recent choreographic-types papers.
+
+Draft text:
+
+[quote]
+----
+Subject: Choreographic bridge in echo-types — a possibly-degenerate
+RoleEcho construction
+
+Hi [name],
+
+We have a small Agda formalisation `EchoChoreo.agda` that mirrors
+the role-projection structure of choreographic types via a
+role-indexed echo `RoleEcho r y = Echo (obs r) y`. The construction
+is in our project echo-types
+(`hyperpolymath/echo-types`).
+
+Where I'd value a second opinion: in our Gate 2 audit
+(`docs/characteristic.adoc`), the lemma
+`applyChoreo-compose` survives as a characteristic theorem
+because we can't reduce it to a generic Σ-fibre lemma. But our
+own EI-2 investigation
+(`docs/EI2_REPORT.adoc`) showed that across attempted
+2D/3D integrations of role, mode, and grade decorations, only the
+`(c⊑s, keep≤keep)` cell carries non-trivial cross-axis content,
+and it factors through Choreo's `client-to-server` step.
+
+The question I have for the choreographic-types community is
+whether this is the *expected* shape of role-projection
+non-triviality (Choreo content dominates because choreographic
+projection is the only non-loss-preserving direction on the role
+lattice) — or whether we have a degenerate role lattice that
+collapses non-trivial cross-axis content we should have seen.
+
+Comparators page: `docs/echo-types/comparators.adoc`. The
+choreographic comparison axis is the relevant section.
+
+— [User name]
+----
+
+=== Draft 3: Linear Haskell / substructural types community
+
+Target: Linear Haskell mailing list, Haskell Symposium PC, or
+substructural-types research mailing lists.
+
+Draft text:
+
+[quote]
+----
+Subject: Echo types' affine bridge as a worked weakening example
+
+Hi all,
+
+Our echo-types project (`hyperpolymath/echo-types`) ships a
+two-mode (linear ⊑ affine) linearity decoration in
+`EchoLinear.agda`. The construction is small: weakening
+linear→affine is `EchoResidue.collapse-to-residue`, the
+no-recovery guarantee is `no-section-weaken`, and the
+characteristic Gate 2 lemma `degradeMode-compose` falls out by
+composition + propositionality of the mode order.
+
+A new tutorial walkthrough
+(`tutorial/region_exit_audit/RegionExitAudit.agda`) instantiates
+this at an ephapax-style region exit, with the explicit honest-
+bound disclosure that the audit guarantee is type-level (no pure
+function reconstructs the live handle from the receipt) and is
+NOT a runtime memory-zeroing claim.
+
+The question for this community: is the "consume on exit produces
+an affine audit receipt" pattern already a known idiom in the
+Linear Haskell / Linear Constraints world? If so, the right
+positioning of our walkthrough is "a small Agda mechanisation of a
+Haskell-side pattern", not "a new construction".
+
+Comparators page: `docs/echo-types/comparators.adoc`. The Linear
+Haskell comparison axis is the relevant section.
+
+— [User name]
+----
+
+== Cross-cutting honest disclosures
+
+Each outreach contact should also surface (without leading with):
+
+. The retraction log (`docs/retractions.adoc`) is *append-only*;
+  the R-2026-05-18 narrowing has not been re-opened.
+. The Gate 2 audit is at *Revision 5* (re-audited 2026-05-26 per
+  Lane 2 close-out). The threshold is met by margin of one.
+. The project's only non-zero load-bearing dependency is
+  `agda-stdlib v2.3`. No funext, no postulates, no escape pragmas.
+
+These are not strengths to brag about; they are the discipline that
+makes the narrowed claim defensible. Mentioning them up front in
+follow-up email exchanges is a credibility multiplier; leading
+with them in a cold outreach is over-claiming.
+
+== Action checklist for the user
+
+In order:
+
+. [ ] Choose TYPES year. (Author-only.)
+. [ ] Ask me to pre-stage `CITATION.cff` + `.zenodo.json` +
+      `echo-types.agda-lib` (single follow-up PR).
+. [ ] Create Zenodo account; flip the GitHub→Zenodo integration on.
+. [ ] (Triggered by PR #118 landing.) Push `v0.1.0` tag.
+. [ ] Paste back the concept DOI into `CITATION.cff` + `.zenodo.json`.
+. [ ] Send Draft 1 (Granule / QTT community) when the user is
+      ready. The other two drafts go out only after at least one
+      response to Draft 1 — the staggering avoids contradictory
+      messaging if Draft 1 produces a course correction.
+. [ ] Submit TYPES extended abstract.
+. [ ] (Two-month gap.) Submit CPP using `paper.adoc` as spine.
+
+The first two items can land in this same PR cycle on request. The
+rest are author-driven and the timing is yours.

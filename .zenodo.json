@@ -1,0 +1,30 @@
+{
+  "title": "echo-types: a definitionally-grounded, loss-graded reindexing modality (Agda)",
+  "upload_type": "software",
+  "description": "Constructive Agda formalisation of fibre-based \"structured loss\" types. Defines Echo f y := Σ (x : A) , (f x ≡ y), shows it is definitionally the homotopy fibre (echo↔fib), and develops a loss-graded reindexing modality on top with a pointwise (funext-relative) mediator property, a separating model, and a carrier-parametric abstraction over a fixed grade poset. Under --safe --without-K throughout with zero postulates and a falsifiable retraction discipline.",
+  "creators": [
+    {
+      "name": "Jewell, Jonathan"
+    }
+  ],
+  "keywords": [
+    "agda",
+    "graded modality",
+    "homotopy fibre",
+    "structured loss",
+    "reindexing modality",
+    "formal methods",
+    "mechanised metatheory",
+    "echo types"
+  ],
+  "access_right": "open",
+  "license": "MPL-2.0",
+  "related_identifiers": [
+    {
+      "relation": "isSupplementTo",
+      "identifier": "https://github.com/hyperpolymath/echo-types",
+      "resource_type": "software"
+    }
+  ],
+  "communities": []
+}

@@ -1,0 +1,43 @@
+cff-version: 1.2.0
+title: "echo-types: a definitionally-grounded, loss-graded reindexing modality (Agda)"
+message: "If you cite this software, please cite the Zenodo DOI."
+type: software
+authors:
+  - given-names: Jonathan
+    family-names: Jewell
+    email: jonathan.jewell@gmail.com
+    # PLACEHOLDER: insert ORCID once registered, e.g.
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+repository-code: "https://github.com/hyperpolymath/echo-types"
+url: "https://github.com/hyperpolymath/echo-types"
+abstract: >
+  Constructive Agda formalisation of fibre-based "structured loss"
+  types. Defines Echo f y := Σ (x : A) , (f x ≡ y), shows it is
+  definitionally the homotopy fibre (echo↔fib), and develops a
+  loss-graded reindexing modality on top with a pointwise
+  (funext-relative) mediator property, a separating model, and a
+  carrier-parametric abstraction over a fixed grade poset. Under
+  --safe --without-K throughout with zero postulates and a
+  falsifiable retraction discipline. See paper.adoc and
+  types-abstract.adoc for the mechanised metatheory write-up.
+keywords:
+  - agda
+  - graded modality
+  - homotopy fibre
+  - structured loss
+  - reindexing modality
+  - formal methods
+  - mechanised metatheory
+license: MPL-2.0
+# === PLACEHOLDER: paste concept DOI here after first Zenodo mint ===
+doi: 10.5281/zenodo.0000000
+# === END PLACEHOLDER ===
+preferred-citation:
+  type: software
+  title: "echo-types: a definitionally-grounded, loss-graded reindexing modality (Agda)"
+  authors:
+    - given-names: Jonathan
+      family-names: Jewell
+  url: "https://github.com/hyperpolymath/echo-types"
+  doi: 10.5281/zenodo.0000000
+  year: 2026

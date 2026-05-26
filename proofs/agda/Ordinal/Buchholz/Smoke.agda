@@ -342,3 +342,22 @@ open import Ordinal.Buchholz.VeblenObligations using
   ; dec-+2-plus-right
   ; dec-ψα-psi-arg
   )
+
+-- Lane 3 active-push slice 2026-05-26 (own block per CLAUDE.md
+-- Working rules): admissibility-aware rank `rank-adm`, the
+-- pointwise dominance `rank-pow≤rank-adm`, the headline ψα
+-- primitive `rank-mono-<ᵇ⁺-ψα-from-pow` that closes 1 of the 2
+-- ψ-admissibility-blocked constructor cases, and bpsi-positivity.
+-- The remaining `<ᵇ-ψΩ≤` ν=μ case is documented as still-open
+-- with the design follow-up options listed in `RankAdm.agda`'s
+-- own preamble.
+open import Ordinal.Buchholz.RankAdm using
+  ( rank-adm
+  ; rank-adm-bzero
+  ; rank-adm-bOmega
+  ; rank-adm-bplus
+  ; rank-adm-bpsi
+  ; rank-adm-pos-bpsi
+  ; rank-pow≤rank-adm
+  ; rank-mono-<ᵇ⁺-ψα-from-pow
+  )

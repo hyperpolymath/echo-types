@@ -524,6 +524,8 @@ withdrawn lemma can be left in place as a historical signpost.
 | 4 | Added `EchoLinear.degradeMode-compose` as N4 (per the Revision-3 recommendation; user-explicit). Built `characteristic.RoleGraded` and `choreo-grade-commute` (closes handoff Observation E). 4/4 surviving across three modules. Proposed adding `choreo-grade-commute` as N5 (left to integrator's discretion).
 
 | 5 (2026-05-26) | Close-out re-audit per `roadmap.adoc` §Lane 2: re-checks the Revision-4 nominee table against everything that has landed since (EI-2 terminated negative; `characteristic.NonTruncatable` for Q2.1 received-`y` form is PARTIALLY REDUCIBLE; the broken `characteristic.N5Falsifier` is ledgered, not silently dropped). Verdict: 4/4 still surviving, *comfortable* threshold (≥3/4) met by margin of one. Candidate N5 (`choreo-grade-commute`) remains unadopted: the post-Rev-4 EI-2 termination shows its non-trivial content is the same single `(c⊑s, keep≤keep)` cell as before, so nominating it would not strengthen the count beyond cosmetic.
+
+| 5b (2026-05-27) | Within-Rev-5 follow-up: `characteristic.N5Falsifier` *no longer broken* — unsolved metas around `EchoChoreo.obs` were resolved by pinning the implicit role and grade parameters at the four `applyRole`/`applyGrade` call sites (the blocker was inference, not content). The module is now in `characteristic/All.agda`'s CI green closure. Audit consequences are *recorded in-line in §"Evidence reviewed" item 3 above*: the SURVIVES verdict for the falsifier exhibit is now mechanised, but the N5-not-adopted decision is unchanged on the same Rev-4/Rev-5 cosmetic-only-marginal-evidence logic.
 |===
 
 [[revision-5]]
@@ -568,16 +570,24 @@ comfortable bar?
   bare non-injectivity, carries echo-specific content but is not on
   the Revision-4 nominee table — it is closer to a Gate-3 example
   obligation than a Gate-2 nominee.
-. *`characteristic.N5Falsifier` — KNOWN BROKEN, DELIBERATELY EXCLUDED*
-  from `characteristic/All.agda` and from any CI green closure
-  (`UnsolvedConstraints` + `UnsolvedMetaVariables`). Status disclosed
-  in the module's own broken banner and at
-  `docs/echo-types/earn-back-plan.adoc` item C/N5; monitored by an
-  expected-failure CI gate. *Crucially: nothing in N5Falsifier is
-  cited as evidence in this audit, and its broken status does not
-  count against any nominee. The fact that an attempted falsifier
-  for N5 (= `choreo-grade-commute`) is not mechanised is exactly why
-  N5 itself is not adopted in this revision.*
+. *`characteristic.N5Falsifier` — RESOLVED 2026-05-27, NOW GREEN AND IN CI CLOSURE.*
+  Originally KNOWN BROKEN, deliberately excluded
+  (`UnsolvedConstraints` + `UnsolvedMetaVariables`). The Lane-2
+  N5-sharpening pass on 2026-05-27 closed the unsolved metas by
+  making the implicit `r1`/`r2`/`g` parameters of `applyRole` /
+  `applyGrade` explicit at the four call sites; the obstacle was
+  *inference*, not *content* (Agda cannot recover the role from
+  `RoleGEcho r keep = Echo (obs r) true` because `obs` is not
+  injective, but supplying the role explicitly resolves it). The
+  module is now imported in `characteristic/All.agda` and the
+  broken-banner has been updated with the resolution record.
+  *Crucially: the resolution does not change the Rev-4 conclusion
+  about candidate N5* — the only non-trivial cell is still the
+  `(c⊑s, keep≤keep)` Choreo content already credited to N3, so
+  adoption would still be cosmetic. The cleaned-up green falsifier
+  exhibit *does* tighten the audit story (the SURVIVES verdict is
+  now mechanised instead of being a not-mechanised attempt-of-record)
+  without changing the N5-not-adopted decision.
 
 === Per-nominee re-check
 

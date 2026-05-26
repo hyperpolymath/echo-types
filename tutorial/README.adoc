@@ -13,13 +13,37 @@ rather than re-deriving the pedagogy.
 
 [IMPORTANT]
 ====
-*Lane 5 is parked.* Until its unblocking condition is met (Lane 1
-closes, OR a single killer-application example emerges that
-justifies a tutorial track on its own merit), nothing under this
-directory should be promoted to a load-bearing artefact in the
-README or in `roadmap.adoc` §"Pillar status". The Smoke gate,
-`All.agda`, and the gates do not depend on anything here.
+*Lane 5 unpark status (updated 2026-05-26).* Walkthrough 1
+(certified region-exit audit) was accepted as the killer-app
+candidate per `roadmap.adoc` §"Lane 5 [PARKED]" second unblocking
+condition; Lane 5 is *active* on Walkthrough 1 only. Walkthroughs 2
+and 3 remain at scaffold/design-doc level pending either Lane 1
+close-out or independent unparking decisions.
+
+The Smoke gate (`proofs/agda/Smoke.agda`), the top-level
+`proofs/agda/All.agda`, and the identity-claim gates still do not
+depend on anything here. Walkthroughs are exercised via their own
+per-walkthrough `All.agda` + `Smoke.agda`, plus a tutorial-level
+aggregator at `tutorial/All.agda`.
 ====
+
+== Build
+
+The tutorial tree lives at the repo root rather than under
+`proofs/agda/`. Build it with the repo root added to the Agda
+include path:
+
+[source,bash]
+----
+agda --library-file=/tmp/agda-libs -i . -i proofs/agda \
+     tutorial/All.agda
+agda --library-file=/tmp/agda-libs -i . -i proofs/agda \
+     tutorial/region_exit_audit/Smoke.agda
+----
+
+Both must exit 0 under `--safe --without-K` with zero postulates.
+Directory names use underscores (not hyphens) so they are valid
+Agda module-path components.
 
 toc::[]
 
@@ -54,11 +78,11 @@ matched-negative on that category error.)
 
 *Files when landed.*
 
-* `tutorial/region-exit-audit/README.adoc` — narrative walkthrough
+* `tutorial/region_exit_audit/README.adoc` — narrative walkthrough
   with the design rationale and the bound disclosure up front.
-* `tutorial/region-exit-audit/RegionExitAudit.agda` — the worked
+* `tutorial/region_exit_audit/RegionExitAudit.agda` — the worked
   example. Builds under `--safe --without-K`, zero postulates.
-* `tutorial/region-exit-audit/Smoke.agda` — per-walkthrough Smoke
+* `tutorial/region_exit_audit/Smoke.agda` — per-walkthrough Smoke
   pins (own `using` block, header comment) per CLAUDE.md "Working
   rules".
 
@@ -90,11 +114,11 @@ the proof.
 
 *Files when landed.*
 
-* `tutorial/epistemic-erasure/README.adoc` — narrative with the
+* `tutorial/epistemic_erasure/README.adoc` — narrative with the
   bound disclosure as the *opening* sentence, not a footnote.
-* `tutorial/epistemic-erasure/EpistemicErasure.agda` — the worked
+* `tutorial/epistemic_erasure/EpistemicErasure.agda` — the worked
   example with the `no-section` lemma front and centre.
-* `tutorial/epistemic-erasure/Smoke.agda` — per-walkthrough Smoke
+* `tutorial/epistemic_erasure/Smoke.agda` — per-walkthrough Smoke
   pins.
 
 *Why this walkthrough exists.* Sceptics walking into the repo will
@@ -120,10 +144,10 @@ is no longer recoverable.
 
 *Files when landed.*
 
-* `tutorial/provenance-debugging/README.adoc` — narrative.
-* `tutorial/provenance-debugging/ProvenanceDebugging.agda` — the
+* `tutorial/provenance_debugging/README.adoc` — narrative.
+* `tutorial/provenance_debugging/ProvenanceDebugging.agda` — the
   worked example, building on `EchoExampleProvenance.agda`.
-* `tutorial/provenance-debugging/Smoke.agda` — per-walkthrough
+* `tutorial/provenance_debugging/Smoke.agda` — per-walkthrough
   Smoke pins.
 
 *Why this walkthrough exists.* The two harder walkthroughs (audit,
