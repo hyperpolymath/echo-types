@@ -554,7 +554,6 @@ mechanised strength, neither less nor more.
 
 === Proof size per pillar
 
-<<<<<<< HEAD
 The four pillars together occupy ~930 lines across six modules, with
 zero postulates and three `rewrite` sites (one in the foundational
 `degrade-compose`; one in its `rel-model` lift; one in
@@ -1134,26 +1133,21 @@ Swamy et al. "Dependent types and multi-monadic effects in F\*"
 (POPL 2016);
 Vazou–Seidel–Jhala–Vytiniotis–Peyton Jones "Refinement types for
 Haskell" (ICFP 2014, Liquid Haskell).
-=======
-NOTE: *[EXPAND]* — detailed positioning against: Granule / QTT graded
-modalities; comonadic notions of computation (Uustalu–Vene);
-coeffects (Petriček–Orchard–Mycroft); HoTT fibrewise constructions;
-lens / optic literature (the witness-transport leg of
-`echo-pullback-univ` resembles the very-well-behaved *1-lens* laws —
-no 2-cell-equipped optic, see below). Make the novelty crisp: not a
-new object, but a fully mechanised characterisation package with a
-falsifiable-gate methodology.
 
-NOTE: *[2-cat ruled out, see `decisions/no-2-cat.adoc`]* — when the
-related-work pass expands the lens/optic comparison and the
-graded-modality positioning, fold in the 2-categorical rule-out: a
-"bicategorical echo" reading was considered and ruled out on the
-landed evidence (every would-be 2-cell appears as `refl` or is
-prop-forced trivial by `≤g-prop` / `⊑-prop`); the construction
-resembles a very-well-behaved *1-lens*, not a 2-cell-equipped optic.
-The closure note in `decisions/no-2-cat.adoc` is the load-bearing
-artifact; this paragraph should cite it rather than re-argue.
->>>>>>> docs/rule-out-2cat-and-roadmap-correction
+NOTE: *Related-work `[EXPAND]` cleared 2026-05-26.* The original
+`[EXPAND]` TODO requested detailed positioning against Granule / QTT
+graded modalities, Uustalu–Vene comonads, Petriček–Orchard–Mycroft
+coeffects, HoTT fibrewise constructions, and the lens / optic
+literature with the 1-lens-vs-2-cell-optic clarification. That work
+has been delivered above in §"HoTT homotopy fibres", §"Graded comonads,
+coeffects, and QTT", and §"Lenses and optics (the witness-transport
+leg)" — including the explicit 2-categorical rule-out at the end of
+the lens/optic subsection (`docs/echo-types/decisions/no-2-cat.adoc`
+is the load-bearing closure note). A companion single-page comparator
+table at `docs/echo-types/comparators.adoc` (Echo vs Granule / QTT /
+choreographic / Linear Haskell) ships the axis-by-axis summary form
+for reviewers who want the at-a-glance positioning rather than the
+prose narrative above.
 
 [#reframing-note]
 == Reframing note (2026-05-18)
@@ -1203,44 +1197,6 @@ model-independence row is earned back *for the bare Echo functor only*
 via a genuine non-graph `StepND` model (§6 NOTE,
 `EchoStepNDModelF2.agda`). The graded-comonad, modality-level
 model-independence, and conservativity rows remain fully retracted.
-
-[#reframing-note]
-== Reframing note (2026-05-18)
-
-This draft was reframed after an adversarial three-reviewer review
-(graded-modality, semantics, and proof-assistant skeptics) found that
-the codebase contains no defense for five central claims, and that
-two were contradicted by the repository's own Gate-2 audit. The
-following claims were retracted, not weakened cosmetically:
-
-[cols="2,3", options="header"]
-|===
-| Retracted claim | Replaced by
-
-| "graded comonad" (counit/comultiplication, three comonad laws)
-| loss-graded *reindexing modality*; no nested `D_r D_s` is formed;
-  the equations hold by thinness of the grade order
-
-| "terminal-cone universal property"; "a category theorist accepts
-  echo as the limit of a cospan"
-| a *pointwise, funext-relative* mediator property; full terminality
-  is unstatable here without funext
-
-| "model independence across two agreeing models"
-| carrier-parametricity over a *fixed* grade poset; the second model
-  is the first with a `⊤` component, agreeing by `refl`
-
-| "conservativity metatheorem, discharged operationally by the build"
-| a *postulate-free build*: evidence for, not a proof of,
-  conservativity over MLTT+Σ
-
-| "funext quarantined behind an isolated module; no result crosses it"
-| no funext anywhere; the real funext-relativity is the pointwise
-  mediator property, now disclosed as the boundary
-|===
-
-The full per-attack analysis and the codebase pressure-test are in
-`docs/retractions.adoc`.
 
 == Conclusion
 

@@ -378,6 +378,17 @@ open import EchoAbstractionBarrier using
   ; sigma-distinguishes
   )
 
+-- examples.EchoVsSigma — Track C of the Echo-vs-Σ identity claim.
+-- Per-example raw-Σ counter-programs paired with each headline
+-- example (parser, provenance, absint) — the matched-negative
+-- companions for Gate 3. See `roadmap.adoc` §Lane 2 close-out
+-- item 2.
+open import examples.EchoVsSigma using
+  ( parser-sigma-distinguishes
+  ; provenance-sigma-distinguishes
+  ; absint-sigma-distinguishes
+  )
+
 open import EchoGraded using
   ( Grade
   ; degrade

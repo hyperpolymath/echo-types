@@ -161,14 +161,17 @@ gate cross-links) landed in-session. Tracks B + C remain.
 
 *Close-out criterion (falsifiable).* All three hold:
 
-. Track B (consumer-side abstraction barrier) — same artefact named in
-  Lane 1's close-out. (Lane 1 and Lane 2 share this artefact; that is
-  intentional, not duplication.)
-. Track C (per-example raw-Σ counter-programs) lands as
-  `proofs/agda/examples/EchoVsSigma.agda`, pairing each headline
-  example with the small Σ-misuse it blocks. Pinned in Smoke.
+. *LANDED 2026-05-26.* Track B (consumer-side abstraction barrier) —
+  same artefact named in Lane 1's close-out. (Lane 1 and Lane 2 share
+  this artefact; that is intentional, not duplication.)
+. *LANDED 2026-05-26.* Track C (per-example raw-Σ counter-programs)
+  shipped as `proofs/agda/examples/EchoVsSigma.agda`, pairing each
+  headline example (parser, provenance, abs-int) with the small
+  Σ-misuse it blocks. Builds clean under `--safe --without-K`;
+  pinned in `Smoke.agda` under own `using` block.
 . The Gate 2 nominee list is re-audited and crosses the *comfortable*
   threshold (≥ 3 of 4 surviving), not merely the honest minimum.
+  *(Remaining open item for Lane 2 close-out.)*
 
 *Artefacts (landed today).* `core/skepticisms/is-this-just-sigma-types.md`
 (canonical answer doc, 5-section structure mirroring the demands);
