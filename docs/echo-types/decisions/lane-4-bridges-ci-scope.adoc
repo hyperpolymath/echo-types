@@ -1,0 +1,165 @@
+= Lane 4 scope decision: bridges-CI architecture
+:toc: macro
+:toclevels: 2
+:sectnums:
+:icons: font
+
+[.lead]
+Decision document for `roadmap.adoc` §"Lane 4 [PARKED] — Bridges-CI".
+This file resolves the scope question that the parked-lane line
+asked, while keeping the lane formally parked until its unblocking
+condition (Lane 1 close-out) is met. Author: Claude session,
+2026-05-26.
+
+toc::[]
+
+== The question this document answers
+
+`roadmap.adoc` §"Lane 4 [PARKED]" records:
+
+[quote]
+End-to-end verified bridges to Janus, Tropical, CNO, etc.
+currently sit as in-tree modules (`EchoJanusBridge.agda`,
+`EchoTropical.agda`, `EchoCNOBridge.agda`, `DyadicEchoBridge.agda`)
+without CI-verified round-trips against the target codebases. Two
+architectural options when unparking: …
+
+This document picks one of those two architectures and pins the
+choice so a future session unparking Lane 4 does not re-litigate it.
+It does *not* re-open Lane 4 — the unblocking condition (Lane 1
+closes) still gates activation.
+
+== Decision
+
+*Adopt option A: a separate `echo-bridges-ci` repository pulling
+echo-types and each target as submodules.*
+
+The roadmap line already states this is preferred unless broader
+research-plan priorities favour tighter integration. As of
+2026-05-26 there is no such preference on file; this document
+ratifies the preferred reading as the *decision* rather than the
+default.
+
+== Why option A
+
+Three load-bearing reasons, in priority order.
+
+. *`--safe --without-K` discipline stays inside echo-types.* Every
+  in-tree bridge module today (`EchoJanusBridge`, `EchoTropical`,
+  `EchoCNOBridge`, `DyadicEchoBridge`) typechecks under
+  `--safe --without-K` with zero postulates because the target
+  codebase's content is *encoded structurally* (e.g. `EchoJanusBridge`
+  mirrors januskey's eight-variant `OpKind` as a local Agda
+  inductive). Pulling the actual target codebases in-tree would
+  drag their build invariants into this repo's CI, several of which
+  (Rust / SPARK / Idris2 / TypeScript) cannot be `--safe --without-K`
+  by construction. Option B silently degrades the single invariant
+  this repo is currently strict about.
+. *Bridge instability does not propagate.* The targets evolve on
+  their own cadence; a verified-translation lemma that breaks
+  because the target's API moved should land as a *bridge-CI
+  failure*, not as a red echo-types build. The blast radius of
+  bridge churn must stay outside the load-bearing repo (Lane 1).
+. *Lane 1 is the load-bearing lane.* `roadmap.adoc` §Lanes lists
+  Lane 1 first by priority for a reason: the paper / external
+  recognition. Anything that risks Lane 1's CI cleanliness for
+  Lane 4's content is the wrong trade-off as long as Lane 1 is
+  load-bearing.
+
+== When option B (in-tree submodules) would override
+
+Three concrete triggers, all of which must hold simultaneously,
+would re-open this decision:
+
+. The user's stated priorities shift to favour tighter integration
+  with one specific target codebase to the extent that bridge churn
+  *should* fail the echo-types build.
+. The target codebase in question is itself `--safe --without-K`
+  compatible (in practice: Agda or Idris2-with-totality-checked
+  modules), so option B does not degrade the invariant.
+. Lane 1 has *fully closed* (not merely close-out-met) — i.e. the
+  paper is published or accepted, and external-recognition pressure
+  on CI cleanliness has lifted.
+
+Absent all three, option A stands.
+
+== What option A looks like at unpark time
+
+When Lane 1 closes and Lane 4 is unparked, the work expands to:
+
+. *New repository `hyperpolymath/echo-bridges-ci`* under the same
+  org. Same licence policy (MPL-2.0 per the recent estate sweep).
+. *Submodule layout* under `bridges/`:
++
+[source,text]
+----
+bridges/
+  echo-types/      → submodule pinning hyperpolymath/echo-types
+  januskey/        → submodule pinning hyperpolymath/januskey
+  cno/             → submodule pinning hyperpolymath/cnocode (or wherever absolute-zero lives)
+  ephapax/         → submodule pinning hyperpolymath/ephapax
+  ...
+----
+. *Per-bridge verified-translation lemmas* land in
+  `bridges/<target>/verify.agda` (or `.idr`/`.lean` as the target's
+  proof assistant requires). Each lemma states the round-trip
+  property between the echo-types in-tree mirror (e.g.
+  `EchoJanusBridge.OpKind`) and the live target type (e.g.
+  januskey's `src/abi/Types.idr` `OpKind`). The CI seam is *this
+  lemma typechecking*, not the targets themselves typechecking
+  against echo-types.
+. *CI matrix* per bridge: a build job that bumps the submodule
+  pin, runs the verify lemma, and reports green/red. Red is a
+  bridge-CI signal, not a target-repo signal — neither this repo
+  nor any target is gated on bridge-CI green.
+
+== What stays in echo-types after option A is built
+
+The current in-tree bridge modules
+(`EchoJanusBridge.agda`, `EchoTropical.agda`, `EchoCNOBridge.agda`,
+`DyadicEchoBridge.agda`) *stay where they are*. They are the local
+structural mirrors that the bridge-CI verified-translation lemmas
+target on the echo-types side. Deleting them would break the
+bridge-CI lemmas without strengthening this repo. The roadmap
+should reflect: "in-tree mirrors are the canonical Agda statement
+of the bridge interface; round-trip verification against the live
+target is in `echo-bridges-ci`."
+
+== Open question this decision deliberately leaves
+
+The Tropical bridge does not point at a single canonical target
+repo today (the tropical decoration is a mathematical pattern, not
+a codebase). When Lane 4 unparks, the Tropical bridge either (a)
+finds a concrete consumer to verify against, or (b) stays as the
+in-tree `EchoTropical.agda` plus `AntiEchoTropical.agda` /
+`AntiEchoTropicalGeneric.agda` and is *not* migrated into
+`echo-bridges-ci`. Option (b) is the honest default; option (a)
+requires a named consumer.
+
+== Status
+
+Decision: *option A adopted as of 2026-05-26*.
+
+Lane 4 status: still *PARKED*. This document does not unpark it.
+The unblocking condition (Lane 1 closes per `roadmap.adoc` Lane 1
+close-out criterion) is unchanged.
+
+When Lane 4 unparks, the first three actions are:
+
+. Create `hyperpolymath/echo-bridges-ci` per §"What option A looks
+  like at unpark time".
+. Migrate the JanusBridge round-trip from a structural mirror to a
+  verified-translation lemma against the live januskey
+  `src/abi/Types.idr` `OpKind`.
+. Migrate the CNO bridge analogously.
+
+That sequence is *not* started in this session; recording it here
+saves the next session from re-deriving the unpark plan.
+
+== References
+
+* `roadmap.adoc` §"Lane 4 [PARKED] — Bridges-CI"
+* `docs/bridges/cross-repo-bridge-status.md` — current per-bridge status
+* `proofs/agda/EchoJanusBridge.agda`, `EchoTropical.agda`,
+  `EchoCNOBridge.agda`, `DyadicEchoBridge.agda` — in-tree mirrors
+* `CLAUDE.md` §"Ecosystem context" — list of adjacent target repos

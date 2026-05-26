@@ -185,3 +185,14 @@ Submission logistics (venue deadline, TYPES-template formatting,
 author metadata, Zenodo DOI, arXiv cross-post) remain offline and
 author-driven; they are downstream of, not a substitute for, the
 re-review.
+
+NOTE: *In-repo Pillar E status (2026-05-26).* The full `paper.adoc`
+has cleared all `[EXPAND]` tags except the ordinal consumer-evidence
+appendix (gated on Bachmann–Howard per `roadmap.adoc` §Lane 3). Any
+further re-review of this abstract should treat the full paper as
+the canonical reference for narrowed claims; this abstract is the
+2-page condensation of it. The single-page reviewer companion
+`docs/echo-types/comparators.adoc` carries the axis-by-axis
+comparison against Granule, QTT, choreographic types, and Linear
+Haskell. See `roadmap.adoc` §"Pillar status" for the lane-level
+view.
