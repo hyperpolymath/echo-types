@@ -126,4 +126,4 @@ bennett-corollary-check T =
 --   `FiberSize-fin` is finite-domain only; the infinite case
 --   needs measure-theoretic or capacity arguments and is open.
 -- * Shannon-entropy / mutual-information formalisations: not yet
---   present in the repo. See `docs/echo-types/roadmap.md`.
+--   present in the repo. See `roadmap.adoc` §"Deferred research track".

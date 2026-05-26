@@ -212,6 +212,7 @@ landauer-collapse f y _≟_ T h =
 --     extension of `FiberSize-fin` to a measure-theoretic count
 --     on infinite types, neither of which is available here;
 --   * that Shannon-entropy / informational arguments are
---     formalised — they are not. See `docs/echo-types/roadmap.md`
---     for the open thermodynamic items.
+--     formalised — they are not. See `roadmap.adoc` §Lane 3
+--     (Ordinal track / deferred research) for the open
+--     thermodynamic / information-theory items (not yet formalised).
 ----------------------------------------------------------------------

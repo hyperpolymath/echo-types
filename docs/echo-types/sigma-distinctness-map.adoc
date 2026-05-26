@@ -1,0 +1,189 @@
+= Echo vs. Sigma: distinctness evidence map
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+This file is the reviewer-facing companion to
+`core/skepticisms/is-this-just-sigma-types.md`. Its job is one thing:
+collect, in one place, the in-repo evidence that `Echo f y` is not
+"renamed `Σ A (λ x → f x ≡ y)`" and to organise that evidence under the
+five demands a sceptic typically makes.
+
+[IMPORTANT]
+====
+Statements below stay inside the *narrowed* claims of
+`docs/retractions.adoc` R-2026-05-18. In particular: no "full
+categorical universal property" (the pullback is funext-relative and
+pointwise), no "graded comonad" (the loss structure is a thin-poset
+reindexing modality), no "model-independence" (the abstract model
+interface is carrier-parametricity over a fixed grade poset).
+====
+
+toc::[]
+
+== Five demands, five answers
+
+Each subsection states the demand, names the in-tree artefact(s) that
+answer it, and notes any narrowing relative to the stronger statement a
+sceptic might want.
+
+=== Demand 1 — Irreversibility as a theorem family
+
+[cols="1,3", options="header"]
+|===
+| Claim | Echo proves that no section of the loss-map exists, across multiple decoration layers. Raw `Σ` gives `proj₁` trivially.
+
+| Agda |
+`EchoCharacteristic.no-section-collapse`,
+`EchoCharacteristic.no-section-visible`,
+`EchoResidue.no-section-collapse-to-residue`,
+`EchoLinear.no-section-weaken`,
+`EchoOrdinal.no-section-ordinal-collapse`,
+`EchoEpistemicResidue.no-section-to-epistemic`. All pinned in
+`proofs/agda/Smoke.agda`.
+
+| Prose | `docs/characteristic.adoc`,
+`docs/proof-obligations.md` §"No-section" entries,
+`readme.adoc` §"Characteristic family".
+
+| Narrowing | None. The family lemmas are clean negative results under
+`--safe --without-K`.
+|===
+
+=== Demand 2 — Algebra of loss (down-admissible, up-blocked)
+
+[cols="1,3", options="header"]
+|===
+| Claim | The fibre carries a loss-grade lattice with a monotone
+reindexing modality. Down-step is admissible; up-step is provably not.
+
+| Down-step (Agda) |
+`EchoGraded.degrade-compose` and `EchoGraded.degrade-via-join` are the
+per-decoration composition laws. The same recipe lands at
+`EchoLinear.degradeMode-compose`, `EchoChoreo.applyChoreo-compose`,
+`EchoAccess` (graded access), `EchoCost` (cost-indexed),
+`EchoSearch` (witness-search).
+
+| Up-step blocked (Agda) | `EchoLinear.no-section-weaken` (=
+`EchoResidue.no-section-collapse-to-residue`).
+
+| Separating model | `EchoSeparating.sep-degrade-compose-fails` —
+removing `≤g-prop` (the only load-bearing hypothesis) breaks
+`degrade-compose` at a checked `true ≢ false`. This locates the
+reduction.
+
+| Prose | `docs/characteristic.adoc` (Gate 2 audit), N1–N4 nominees.
+
+| Narrowing | Per R-2026-05-18, this is a *thin-poset reindexing
+modality*, not a graded comonad. No nested `D_r D_s` is formed.
+|===
+
+=== Demand 3 — Categorical identity and bridges
+
+[cols="1,3", options="header"]
+|===
+| Claim | Echo is a recognisable categorical object (the homotopy
+fibre) and other "loss-tracking" frameworks bridge into it.
+
+| Identity (Agda) | `EchoFiberBridge.echo↔fib` — definitional fibre
+identity with `refl` round-trips (Pillar A, landed 2026-05-17).
+
+| Pullback (Agda) | `EchoPullback.echo-pullback-univ` — pullback of
+`f` along `y : ⊤ → B` with *pointwise, funext-relative* mediator
+property. See retraction note at the head of the module.
+
+| Bridges (Agda) | `EchoJanusBridge.agda` (reversible debugger),
+`EchoTropical.agda` + `AntiEchoTropical.agda` (tropical / argmin),
+`EchoCNOBridge.agda`, `DyadicEchoBridge.agda`,
+`EchoFiberCount.agda` + `EchoThermodynamicsFinite.agda` (finite-fibre
+Landauer / Bennett).
+
+| Prose | `docs/echo-types/establishment-plan.adoc` §"Pillar A",
+`docs/adjacency/`.
+
+| Narrowing | The bridges are independent witnesses, not a single
+"every loss-tracker maps uniquely into Echo" theorem. Such a uniqueness
+result would require either funext or an axiom and is therefore *not*
+in scope under the no-postulate invariant.
+|===
+
+=== Demand 4 — Abstraction barrier (consumer-side)
+
+[cols="1,3", options="header"]
+|===
+| Claim | The Echo interface at the affine mode forbids the consumer
+from distinguishing two preimages of the same output. Raw `Σ` does
+not, via `proj₁`.
+
+| In-tree precursor (Agda) | `EchoLinear.affine-canonical`,
+`EchoLinear.affine-all-equal` — the affine residue carrier is
+contractible.
+
+| Planned (Agda) | `proofs/agda/EchoAbstractionBarrier.agda` — Track B
+in the work plan. Headline lemmas:
+`affine-consumer-cannot-distinguish` (positive) and
+`sigma-distinguishes` (the raw-`Σ` counter-program, as a checked
+exhibit of what the barrier blocks).
+
+| Model-side counterpart (Agda) | `EchoRelModel.GradedLossModel` +
+generic `GCLaws` — carrier-parametricity over a fixed grade poset
+(Pillar D, narrowed per R-2026-05-18).
+
+| Narrowing | The planned consumer-side theorem is a *free theorem at
+the headline affine instance*, not full Reynolds parametricity (Agda
+has no parametricity primitive; a fully general statement would need
+an axiom).
+|===
+
+=== Demand 5 — Canonical examples
+
+[cols="1,3", options="header"]
+|===
+| Claim | Echo is the right explanatory unit on real artefacts, not
+just decorative wrapping.
+
+| Agda |
+`EchoExampleParser` (`(())` vs `()()` at `parses ≡ true`),
+`EchoExampleProvenance` (collapsed Bool-provenance),
+`EchoExampleAbsInt` (`{p1,p2}` ↦ `pos`),
+`EchoExampleSignAnalysis`, `EchoExampleTruncation`,
+`EchoFiberCount` + `EchoThermodynamics*` (finite-fibre Landauer),
+`EchoEpistemicResidue` (observation discipline).
+
+| Planned matched-negative (Agda) |
+`proofs/agda/examples/EchoVsSigma.agda` — Track C in the work plan.
+Pairs each headline example with the small raw-`Σ` counter-program
+that would let the corresponding bug through.
+
+| Prose | `docs/echo-types/examples.md`,
+`roadmap-gates.adoc` Gate 3.
+
+| Narrowing | Until Track C lands, the "raw `Σ` would leak" half is
+prose, not a checked artefact.
+|===
+
+== What this file does NOT claim
+
+The five sections above are an *evidence map*, not a re-litigation of
+the gate decisions. In particular:
+
+* This file does not claim Gate 1, Gate 2, or Gate 3 is passed. That
+  is the job of `roadmap-gates.adoc`, `docs/characteristic.adoc`, and
+  the example modules themselves.
+* This file does not claim the planned Track B / Track C work is
+  landed. Where a row mentions "Planned (Agda)", the artefact does not
+  yet exist on `main`; check `git log` before relying on it.
+* This file does not introduce new theorems. It cross-references
+  artefacts that already live elsewhere in the tree.
+
+== See also
+
+* `core/skepticisms/is-this-just-sigma-types.md` — internal devil's
+  advocate ledger this file is the AsciiDoc companion to.
+* `core/skepticisms/is-this-just-fibers.md` — adjacent skepticism.
+* `core/skepticisms/what-is-actually-new.md` — the broader question.
+* `docs/retractions.adoc` — the R-2026-05-18 narrowing that governs
+  the prose discipline here.

@@ -29,6 +29,13 @@ at integration time.
 
 == Inherited spec
 
+For the sceptic-facing evidence map ("is this just renamed Σ?",
+organised under five demands and cross-linked to every in-tree
+artefact), see `docs/echo-types/sigma-distinctness-map.adoc` and its
+internal companion `core/skepticisms/is-this-just-sigma-types.md`.
+That doc is an evidence index; this file is the per-nominee Gate 2
+audit and remains the authoritative gate artefact.
+
 `roadmap-gates.adoc` Gate 2:
 
 .Claim

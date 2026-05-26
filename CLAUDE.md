@@ -176,7 +176,7 @@ work to `main` and refresh all documentation:
    dependency order. Resolve any conflicts (typically additive, in
    `Smoke.agda` and `All.agda`).
 3. **Update human docs.** `docs/echo-types/composition.md`,
-   `docs/echo-types/roadmap.md`, `docs/echo-types/overview.md` and
+   `roadmap.adoc`, `docs/echo-types/overview.md` and
    `cross-repo-bridge-status.md` get a sweep for stale `(Open)` /
    `[unblocked]` tags on anything that just landed. Honest labels:
    `(Landed)`, `(Partial)`, `(Open)`.
@@ -503,7 +503,8 @@ coeffects, lens/optic vs the witness-transport leg); (3) evaluation
 (proof-size/cost table; quantify common-upper-bound idiom vs naive
 `subst`); (4) ordinal consumer-evidence appendix — GATED on the
 ordinal track hitting Bachmann–Howard, keep firewalled per
-`roadmap.md`. THEN offline/author-driven only (venue+template,
+`roadmap.adoc` §Lane 3 (Ordinal track) and `docs/buchholz-plan.adoc`.
+THEN offline/author-driven only (venue+template,
 Zenodo DOI, library packaging, outreach) — flag to the user, do NOT
 auto-run. Strategy (user decision 2026-05-17): the paper was written
 now at full narrative strength while fresh; expand the tagged
@@ -590,7 +591,8 @@ tags as material becomes available, in this order:
 3. Evaluation — proof-size/cost table; quantify
    common-upper-bound-idiom vs naive `subst`.
 4. Ordinal consumer-evidence appendix — gated on that track hitting
-   its Bachmann–Howard milestone (firewalled per roadmap.md).
+   its Bachmann–Howard milestone (firewalled per `roadmap.adoc`
+   §Lane 3 and `docs/buchholz-plan.adoc`).
 5. THEN offline/author-driven: venue+template, Zenodo DOI, library
    packaging, outreach — flag to user, do NOT auto-run.
 

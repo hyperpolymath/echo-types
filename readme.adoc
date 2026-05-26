@@ -65,7 +65,15 @@ Scope-broadening stages now include:
 * indexed / relational / categorical packaging (`EchoIndexed`, `EchoRelational`, `EchoCategorical`, `EchoScope`)
 * cross-ecosystem bridges (`EchoCNOBridge`, `EchoJanusBridge`, `DyadicEchoBridge`, `EchoOrdinal`)
 
-== Current Status Snapshot (2026-04-23)
+== Current Status Snapshot
+
+The repository runs *two parallel, independent tracks*. _Echo Core does
+NOT depend on the Ordinal / Buchholz track._ A reader interested only
+in echo types as a type-theoretic concept can ignore the Ordinal track
+entirely; it lives in `proofs/agda/Ordinal/` and is documented under
+`roadmap.adoc` §Lane 3.
+
+=== Echo Core (load-bearing for the identity claim)
 
 On `main`, the following are true right now:
 
@@ -73,8 +81,25 @@ On `main`, the following are true right now:
 * Core echo/fiber theorems are present and smoke-pinned (`echo-intro`, `map-over`, `map-over-id`, `map-over-comp`, `map-square`).
 * Characteristic non-injectivity/no-section family is present (`collapse-non-injective`, `no-section-collapse`, `no-section-visible`, `no-section-collapse-to-residue`, `no-section-weaken`).
 * Distinct-witness and retained-constraint exemplars are present (`echo-true≢echo-false`, `stateA≢stateB`, `visible-constraint`).
+* Degrade-law family lands across decoration layers (graded, linear/affine, choreographic, access, cost, search); see `docs/theorem-index.md` for the aggregate.
+* Pillars A–D of the establishment plan are LANDED (with R-2026-05-18 narrowings; see `docs/retractions.adoc`); Pillar E (paper) is in progress.
 
-Ordinal/Buchholz track status:
+Per-lane status, close-out criteria, and the identity-claim verdict
+per tag are in `roadmap.adoc`.
+
+=== Ordinal / Buchholz (parallel-independent, experimental)
+
+[NOTE]
+====
+*Banner.* This track is a separate proof-theoretic research project
+living in the same repository. Echo Core does not depend on it.
+Modules under `proofs/agda/Ordinal/` are treated as *experimental*
+until the unbudgeted `wf-<ᵇʳᶠ_` closure lands. See `roadmap.adoc`
+§Lane 3 for status and close-out criterion; `docs/buchholz-plan.adoc`
+for the full plan.
+====
+
+Current state (the full per-rung ledger lives in CLAUDE.md):
 
 * `Ordinal.Buchholz.WellFounded` provides `wf-<ᵇ : WellFounded _<ᵇ_` for the currently admitted constructor core.
 * Top-marker `bplus` bridges are now admitted and inverted:
@@ -128,7 +153,7 @@ Cross-repo status:
 * Agda-side content-bridge `proofs/agda/EchoCNOBridge.agda` imports `IsCNO` directly from `absolute-zero/proofs/agda/CNO.agda` (the earlier scaffolded-adapter plan `EchoBridgeScaffold.agda` was superseded).
 * End-to-end conformance against upstream codebases is a separate track and is not yet fully machine-checked here.
 * Current bridge ledger: `docs/echo-types/cross-repo-bridge-status.md`.
-* See `docs/echo-types/roadmap.md` for staged cross-repo verification gates.
+* See `roadmap.adoc` (Lane 4) for staged cross-repo verification gates.
 
 == What Echo Types Are For
 
@@ -193,7 +218,7 @@ Proof milestones and decision gates are in:
 
 Open/gated work and cross-repo follow-ups are tracked in:
 
-* `docs/echo-types/roadmap.md`
+* `roadmap.adoc`
 * `docs/echo-types/taxonomy.md`
 * `docs/echo-types/composition.md`
 

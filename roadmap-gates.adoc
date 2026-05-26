@@ -103,6 +103,16 @@ There exist theorems whose statements are naturally echo-shaped and are
 not reducible to generic sigma/fiber lemmas.
 ****
 
+[NOTE]
+====
+The reviewer-facing evidence map answering "is this just renamed Σ?" —
+organised under five sceptic demands — lives at
+`docs/echo-types/sigma-distinctness-map.adoc` (companion to
+`core/skepticisms/is-this-just-sigma-types.md`). It is an *evidence
+index*, not a substitute for the per-nominee audit below or for the
+Gate 2 decision itself.
+====
+
 === Test
 
 Nominate at least three theorems from the development as characteristic.

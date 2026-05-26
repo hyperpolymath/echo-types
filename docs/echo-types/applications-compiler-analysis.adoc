@@ -318,5 +318,5 @@ be expanded to a fully worked Agda exhibit:
   exhibiting tolerance accumulation through
   `echo-approx-compose`.
 
-Both are tracked as `[unblocked]` items in `roadmap.md`
+Both are tracked in `roadmap.adoc` as deferred examples-library work
 (`Add example-library Agda files matching examples.md`).

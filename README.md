@@ -79,7 +79,15 @@ Scope-broadening stages now include:
 - indexed/relational/categorical packaging (`EchoIndexed`, `EchoRelational`, `EchoCategorical`, `EchoScope`)
 - cross-ecosystem bridges (`EchoCNOBridge`, `EchoJanusBridge`, `DyadicEchoBridge`, `EchoOrdinal`)
 
-## Current Status Snapshot (2026-04-23)
+## Current Status Snapshot
+
+The repository runs **two parallel, independent tracks**. *Echo Core does
+NOT depend on the Ordinal / Buchholz track.* A reader interested only
+in echo types as a type-theoretic concept can ignore the Ordinal track
+entirely; it lives in `proofs/agda/Ordinal/` and is documented under
+`roadmap.adoc` §Lane 3.
+
+### Echo Core (load-bearing for the identity claim)
 
 On `main`, the following are true:
 
@@ -87,8 +95,23 @@ On `main`, the following are true:
 - core echo/fiber laws are smoke-pinned (`echo-intro`, `map-over`, `map-over-id`, `map-over-comp`, `map-square`)
 - non-injectivity/no-section family is present (`collapse-non-injective`, `no-section-collapse`, `no-section-visible`, `no-section-collapse-to-residue`, `no-section-weaken`)
 - distinct-witness and retained-constraint exemplars are present (`echo-true≢echo-false`, `stateA≢stateB`, `visible-constraint`)
+- degrade-law family lands across decoration layers (graded, linear/affine, choreographic, access, cost, search); see `docs/theorem-index.md` for the aggregate
+- Pillars A–D of the establishment plan are LANDED (with R-2026-05-18 narrowings; see `docs/retractions.adoc`); Pillar E (paper) is in progress
 
-Ordinal/Buchholz track status:
+Per-lane status, close-out criteria, and the identity-claim verdict
+per tag are in `roadmap.adoc`.
+
+### Ordinal / Buchholz (parallel-independent, experimental)
+
+> **Banner.** This track is a separate proof-theoretic research project
+> living in the same repository. Echo Core does not depend on it.
+> Modules under `proofs/agda/Ordinal/` are treated as **experimental**
+> until the unbudgeted `wf-<ᵇʳᶠ_` closure lands. See `roadmap.adoc`
+> §Lane 3 for status and close-out criterion; `docs/buchholz-plan.adoc`
+> for the full plan.
+
+Current state (one-line summary; the full per-rung ledger lives in
+CLAUDE.md):
 
 - `Ordinal.Buchholz.WellFounded` provides `wf-<ᵇ : WellFounded _<ᵇ_` for the currently admitted constructor core
 - top-marker `bplus` bridges are admitted and inverted: `<ᵇ-+ω`, `<ᵇ-+ψω`, `<ᵇ-inv-+Ωω`, `<ᵇ-inv-+ψω`
@@ -131,7 +154,7 @@ Cross-repo status:
 - Agda-side content-bridge `proofs/agda/EchoCNOBridge.agda` imports `IsCNO` directly from `absolute-zero/proofs/agda/CNO.agda` (the earlier scaffolded-adapter plan `EchoBridgeScaffold.agda` was superseded)
 - end-to-end conformance against upstream codebases is a separate track and is not yet fully machine-checked here
 - current bridge ledger: `docs/echo-types/cross-repo-bridge-status.md`
-- see `docs/echo-types/roadmap.md` for staged cross-repo verification gates
+- see `roadmap.adoc` (Lane 4) for staged cross-repo verification gates
 
 ## What Echo Types Are For
 
@@ -187,16 +210,25 @@ agda -i proofs/agda proofs/agda/All.agda
 
 ## Roadmap
 
-Proof milestones and decision gates are in:
+Single canonical roadmap with lane tracker, gates summary, pillar
+status, deferred-research track, and operating rules:
 
 - `roadmap.adoc`
-- `docs/buchholz-plan.adoc`
 
-Open/gated work and cross-repo follow-ups are tracked in:
+Companions (different kinds of doc, not roadmaps):
 
-- `docs/echo-types/roadmap.md`
-- `docs/echo-types/taxonomy.md`
-- `docs/echo-types/composition.md`
+- `roadmap-gates.adoc` — identity-claim falsifier gates (Gate 1/2/3)
+- `docs/echo-types/establishment-plan.adoc` — five-pillar plan to
+  recognised type-theoretic standing
+- `docs/buchholz-plan.adoc` — Ordinal track plan (parallel-independent
+  lane; see roadmap.adoc §Lane 3)
+- `docs/echo-types/taxonomy.md`, `docs/echo-types/composition.md` —
+  topical reference
+
+As of 2026-05-26 the four previously overlapping roadmap docs
+(`docs/echo-types/roadmap.md`, `docs/PRIORITIZED_PROOF_ROADMAP.md`,
+`docs/ProofRoadmap.md`, `docs/WORK_PLAN.md`) have been consolidated
+into `roadmap.adoc` and removed.
 
 ## Licensing
 
