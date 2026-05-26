@@ -369,6 +369,15 @@ open import EchoLinear using
   ; degradeMode-via-join
   )
 
+-- EchoAbstractionBarrier — Track B of the Echo-vs-Σ identity claim.
+-- Consumer-side free theorem at the affine instance + raw-Σ
+-- counter-program. See `roadmap.adoc` §Lane 2 and
+-- `core/skepticisms/is-this-just-sigma-types.md` §4.
+open import EchoAbstractionBarrier using
+  ( affine-consumer-cannot-distinguish
+  ; sigma-distinguishes
+  )
+
 open import EchoGraded using
   ( Grade
   ; degrade

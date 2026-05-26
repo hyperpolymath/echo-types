@@ -1,0 +1,184 @@
+= The Echo abstraction barrier (consumer-side, narrow scope)
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+Companion essay to `proofs/agda/EchoAbstractionBarrier.agda`. The
+module ships two theorems and a deliberately narrow scope. This file
+explains the narrowness — what the abstraction barrier is, what it
+guarantees, what it does *not* guarantee, and why the narrow form is
+the strongest honest statement available under
+`--safe --without-K`.
+
+[IMPORTANT]
+====
+This is Track B of the "Echo ≠ Σ" identity-claim consolidation
+(`roadmap.adoc` §Lane 2; sceptic-facing map at
+`core/skepticisms/is-this-just-sigma-types.md` §4). The theorems below
+respect the R-2026-05-18 retraction discipline: the claim is a
+*consumer-side free theorem at the headline affine instance*, NOT a
+general Reynolds-style parametricity result. The scope narrowness is
+load-bearing.
+====
+
+toc::[]
+
+== What an abstraction barrier means here
+
+A raw dependent pair `Σ A (λ x → f x ≡ y)` exposes `proj₁`. A consumer
+of such a pair can always recover the original `x`. That makes the
+"forgetting" half of any loss-grade story a *convention*, not a
+guarantee — nothing in the type stops the consumer from looking.
+
+The Echo interface, at the affine mode, refuses to export `proj₁`.
+But "refuses to export" is meaningless prose without a checked
+artefact: a sceptic reasonably asks "what stops me writing
+`proj₁ ∘ to-sigma`?" The abstraction barrier is the answer. It is
+the pair of theorems that, together, say:
+
+. *At the affine instance, no consumer can do what the Σ-projection
+  does.* (Theorem `affine-consumer-cannot-distinguish`.)
+. *The Σ-projection does it.* (Theorem `sigma-distinguishes`.)
+
+The first is the guarantee. The second is the negative companion that
+makes the guarantee non-trivial: it exhibits the concrete behaviour
+the affine interface is designed to prevent.
+
+== The two theorems
+
+=== `affine-consumer-cannot-distinguish`
+
+[source,agda]
+----
+affine-consumer-cannot-distinguish :
+  {X : Set ℓ} (g : LEcho affine → X) →
+  g (weaken echo-true) ≡ g (weaken echo-false)
+affine-consumer-cannot-distinguish g =
+  cong g (affine-all-equal (weaken echo-true) (weaken echo-false))
+----
+
+Any consumer `g` at the affine mode produces the same result on the
+two known-distinct linear echoes (`echo-true` and `echo-false`) after
+they have been weakened. This holds *for every consumer type* `X` and
+*every function* `g : LEcho affine → X`, because the affine residue
+carrier is contractible — `EchoLinear.affine-canonical` and
+`affine-all-equal` discharge it in one `cong`.
+
+The reason this is non-trivial: the underlying linear echoes ARE
+distinguishable. `EchoCharacteristic.echo-true≢echo-false` is a
+theorem. The barrier is that crossing from linear to affine via
+`weaken` collapses the distinction *structurally*, and no affine
+consumer can recover it. The Σ-projection on the linear side would
+recover it; the Σ-projection on the affine side cannot, because the
+affine carrier has only one inhabitant up to definitional equality.
+
+=== `sigma-distinguishes`
+
+[source,agda]
+----
+sigma-distinguishes :
+  Σ (Echo collapse tt → Bool)
+    (λ g → g echo-true ≢ g echo-false)
+sigma-distinguishes = proj₁ , true≢false
+----
+
+The Σ-projection `proj₁ : Echo collapse tt → Bool` IS a consumer that
+distinguishes `echo-true` from `echo-false`. The proof is `true≢false`
+directly, because `proj₁ (echo-intro collapse true)` reduces
+definitionally to `true` (via `echo-intro f x = x , refl`) and the
+mirror case reduces to `false`.
+
+This is the load-bearing artefact. Without it, the claim "the affine
+interface refuses `proj₁`" is content-free — what would `proj₁` even
+do? The negative companion answers exactly that question, and the
+answer is "distinguish the two linear echoes". The affine interface
+deliberately refuses to export it.
+
+== What this is NOT
+
+The scope guardrail in the module preamble lists three narrowings.
+They are repeated here in essay form because external readers tend to
+read essays before module headers, and the narrowings are the most
+load-bearing thing about this module.
+
+=== Not full Reynolds parametricity
+
+A general Reynolds-style result would say: for every consumer type
+`X`, every echo carrier `A`, every map `f : A → B`, every output
+`y : B`, and every function `g : Echo f y → X` *at the appropriate
+interface*, `g` cannot inspect `x` beyond what the interface allows.
+Agda has no parametricity primitive. Stating this requires either an
+axiom or a paper-level metatheorem. Both violate the no-postulate
+invariant.
+
+The narrow form here — consumer-side at the headline affine instance
+— is what survives `--safe --without-K`. It says the right thing at
+the one instance where the carrier is contractible and the
+quantification over consumers (`{X : Set ℓ}`) is non-vacuous because
+*every* consumer satisfies the equation.
+
+=== Not a higher-order parametricity claim
+
+`affine-consumer-cannot-distinguish` does not claim that consumers
+*cannot detect the difference between two linear preimages*. It
+claims that consumers *of weakened linear preimages* assign them the
+same value. The detection happens on the linear side (and is the
+content of `echo-true≢echo-false`); the barrier is at the
+linear→affine boundary, and the theorem is what survives crossing it.
+
+=== Not a categorical universal property
+
+The Echo interface is not characterised in this module as a terminal
+cone over anything. The pullback characterisation lives in
+`EchoPullback.agda` and is itself narrowed (per R-2026-05-18) to a
+funext-relative pointwise mediator property. The abstraction barrier
+here is a separate, narrower claim that does not depend on the
+pullback machinery.
+
+== Why two theorems and not one
+
+A single positive theorem (`cannot-distinguish`) is a wish without
+the negative companion. The reader can always ask: "but couldn't some
+other consumer, written cleverly, distinguish them anyway?" The
+answer at the affine instance is *no*, and the reason is structural
+(`affine-canonical`). But the reader's question deserves a checked
+answer, not a structural argument. The negative companion provides
+it: the only consumer that distinguishes the two linear echoes is
+`proj₁` or a function of `proj₁`, and that is *exactly* the function
+the affine interface refuses to export.
+
+The pair is the artefact. Either alone is half the story.
+
+== Honest comparison to neighbour disciplines
+
+* *Granule / QTT.* Stronger general parametricity available via the
+  language's quantitative judgments. Echo's claim here is narrower
+  (instance-level, consumer-side, in Agda without a parametricity
+  primitive). See `docs/echo-types/comparators.adoc` for the
+  axis-by-axis breakdown.
+* *Linear Haskell.* The linearity-mode information is at the type
+  level but Haskell consumers can still inspect linear values via
+  `seq` and other escape hatches. Echo's contractibility argument
+  closes that gap at the affine carrier specifically, because the
+  carrier *is* a singleton up to definitional equality.
+* *Lens / optic laws.* The witness-transport leg of `map-over` looks
+  optic-shaped but the affine-mode contractibility argument has no
+  optic analogue: lenses can inspect their source via `view`. Echo's
+  refusal of `proj₁` at affine mode is the structural difference.
+
+== Cross-references
+
+* Agda module: `proofs/agda/EchoAbstractionBarrier.agda` (this file's
+  companion).
+* Sceptic-facing map: `core/skepticisms/is-this-just-sigma-types.md`
+  §4 and `docs/echo-types/sigma-distinctness-map.adoc` §"Demand 4".
+* The retraction governing the narrowing discipline:
+  `docs/retractions.adoc` R-2026-05-18.
+* Carrier-parametricity (model side): `EchoRelModel.agda` and
+  `docs/echo-types/conservativity.adoc`. That work is at the *model*
+  level (Pillar D); this module is at the *consumer* level — the two
+  are not the same statement.
+* Comparator framing: `docs/echo-types/comparators.adoc`.
