@@ -113,20 +113,26 @@ objection.
 
 *Close-out criterion (falsifiable).* All three hold:
 
-. `docs/echo-types/paper.adoc` `[EXPAND]` tags 1 (background primer)
-  and 2 (related-work pass — Granule / QTT, Uustalu–Vene comonads,
-  coeffects, choreographic types, lens/optic vs witness-transport leg)
-  cleared.
-. `proofs/agda/EchoAbstractionBarrier.agda` lands with the
-  consumer-side free theorem at the affine instance + the raw-Σ
-  counter-program. Pinned in `Smoke.agda`, wired into `All.agda`,
-  cross-linked from `paper.adoc` §"Carrier-parametricity, and the
-  limits of the conservativity claim".
-. A concise comparison artefact (single-page table in
-  `docs/echo-types/comparators.adoc`) ships, mapping Echo's narrowed
-  claims onto the Granule / QTT / choreographic / linear neighbourhood
-  axis-by-axis. Honest about what Echo does NOT do (no graded comonad,
-  no full universal property, no general parametricity).
+. `docs/echo-types/paper.adoc` `[EXPAND]` tag 2 (related-work pass —
+  Granule / QTT, Uustalu–Vene comonads, coeffects, choreographic types,
+  lens/optic vs witness-transport leg) cleared. *(Tag 1, background /
+  notation primer, cleared 2026-05-20 via PR #73 — section "Background
+  and notation" in `paper.adoc`, covering type-theoretic setting +
+  HoTT fibres + coeffect / graded-modality lineage + thin-poset
+  reindexing modality + notation table, all within the R-2026-05-18
+  narrowing.)*
+. *LANDED 2026-05-26.* `proofs/agda/EchoAbstractionBarrier.agda`
+  ships the consumer-side free theorem at the affine instance
+  (`affine-consumer-cannot-distinguish`) + the raw-Σ counter-program
+  (`sigma-distinguishes`). Pinned in `Smoke.agda` under own
+  `using` block; wired into `All.agda`. Full suite exits 0 under
+  `--safe --without-K`. Companion essay
+  `docs/echo-types/abstraction-barrier.adoc`.
+. *LANDED 2026-05-26.* `docs/echo-types/comparators.adoc` ships the
+  single-page axis-by-axis comparison of Echo (narrowed) vs Granule,
+  Atkey QTT, Hirsch et al. choreographic types, and Linear Haskell.
+  Honest "What Echo does NOT do" section foregrounds the
+  R-2026-05-18 narrowings.
 
 *Artefacts (existing).* Pillars A–D landed (`EchoFiberBridge`,
 `EchoPullback`, `EchoSeparating`, `EchoGradedComonad`, `EchoRelModel`).

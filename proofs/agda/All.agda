@@ -15,6 +15,7 @@ open import EchoExamples
 open import EchoChoreo
 open import EchoEpistemic
 open import EchoLinear
+open import EchoAbstractionBarrier
 open import EchoGraded
 open import EchoTropical
 open import AntiEchoTropical
