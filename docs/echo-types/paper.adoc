@@ -19,6 +19,21 @@ abstract
 (`types-abstract.adoc`) is the short, already-submission-ready
 companion; this is the full CPP/ITP-style mechanised-metatheory
 paper it grows into.
+
+*Pillar E in-repo close-out (2026-05-26).* Of the four `[EXPAND]`
+tags originally on this paper: tag 1 (background / notation primer)
+cleared in PR #73; tag 2 (related work — Granule / QTT,
+Uustalu–Vene comonads, coeffects, lens/optic vs witness-transport
+leg) cleared in PR #120, with the single-page reviewer companion at
+`docs/echo-types/comparators.adoc` shipping the axis-by-axis
+summary; tag 3 (evaluation — proof-size / cost table, honest
+account of the common-upper-bound idiom) cleared earlier in PR #84
+(see §"Evaluation and discussion"). Tag 4 (ordinal consumer-evidence
+appendix) is the only one remaining open, and it is *gated* on the
+ordinal-track milestone per `roadmap.adoc` §Lane 3 — not a missing
+deliverable for the in-repo half of Pillar E. Everything else
+(venue choice, Zenodo DOI, library packaging, outreach) is
+author-driven and is flagged but not auto-run.
 ====
 
 toc::[]

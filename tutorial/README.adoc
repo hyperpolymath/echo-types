@@ -1,0 +1,180 @@
+= Tutorial track scaffold (Lane 5)
+:toc: macro
+:toclevels: 2
+:sectnums:
+:icons: font
+
+[.lead]
+This directory is the scaffold for `roadmap.adoc` §"Lane 5 [PARKED]
+— Tutorial / pedagogy". Lane 5 is still parked; this scaffold
+exists so that when the lane unparks the next session has the
+structure and walkthrough plans in hand and can land Agda directly
+rather than re-deriving the pedagogy.
+
+[IMPORTANT]
+====
+*Lane 5 is parked.* Until its unblocking condition is met (Lane 1
+closes, OR a single killer-application example emerges that
+justifies a tutorial track on its own merit), nothing under this
+directory should be promoted to a load-bearing artefact in the
+README or in `roadmap.adoc` §"Pillar status". The Smoke gate,
+`All.agda`, and the gates do not depend on anything here.
+====
+
+toc::[]
+
+== Three walkthroughs (planned)
+
+When Lane 5 unparks, three walkthroughs land in this directory in
+priority order. The order reflects the user's suggestion captured
+in `roadmap.adoc` §Lane 5: the certified region-exit audit comes
+first because it ties to an active adjacent project (ephapax L3),
+demonstrates the affine-mode discipline at a real audit boundary,
+and is the candidate killer-application example.
+
+=== Walkthrough 1: certified region-exit audit (PRIORITY — killer-app candidate)
+
+*Status.* Design-doc only. Agda lands at unpark time.
+
+*Adjacent project.* `hyperpolymath/ephapax` — programming language
+with linear types guaranteeing memory safety for WebAssembly. The
+"L3" layer in CLAUDE.md memory entries refers to ephapax's
+region-based memory discipline.
+
+*The pedagogy.* Model an ephapax-style region as an Agda type
+`Region` with a `freshen`/`exit` pair. Every `S_Region_Exit` step
+produces a *consumed* `LEcho affine` whose payload is the audit
+receipt — what was released and to whom. The Echo's
+`no-section-weaken` provides the machine-checked guarantee that no
+post-exit caller can reconstruct the un-degraded source from the
+audit receipt alone. The walkthrough closes by exhibiting the
+honest bound: the audit guarantee is about the *type-level* witness,
+NOT about in-memory bytes being zeroed. (See Walkthrough 2 for the
+matched-negative on that category error.)
+
+*Files when landed.*
+
+* `tutorial/region-exit-audit/README.adoc` — narrative walkthrough
+  with the design rationale and the bound disclosure up front.
+* `tutorial/region-exit-audit/RegionExitAudit.agda` — the worked
+  example. Builds under `--safe --without-K`, zero postulates.
+* `tutorial/region-exit-audit/Smoke.agda` — per-walkthrough Smoke
+  pins (own `using` block, header comment) per CLAUDE.md "Working
+  rules".
+
+*Why this is the killer-app candidate.* Tied to an active
+adjacent project (real consumer pressure), concrete (one named
+audit boundary, not a class of boundaries), exhibits the affine
+mode at the *interesting* discipline (consumed-on-exit, not just
+weakened-once), and the matched-negative (no-zeroing claim) is
+honest about the category error a sceptic would catch.
+
+=== Walkthrough 2: epistemic erasure with honest bound
+
+*Status.* Design-doc only. Agda lands at unpark time.
+
+*The pedagogy.* Model a key-derivation function `kdf : Seed → Key`
+where the visible output is the derived `Key` and the hidden source
+is the `Seed`. `Echo kdf k` retains the seed at the type level;
+`no-section-collapse` (factored through `EchoResidue`) is the
+machine-checked guarantee that no pure-Agda function recovers the
+seed from the key alone.
+
+*The crucial honest disclosure.* This is *not* a claim that
+in-memory bytes of the seed have been zeroed. Conflating the two
+is a category error a sceptic will catch — exactly the kind of
+mistake the project's retraction discipline (`docs/retractions.adoc`)
+exists to prevent. The walkthrough opens with the disclosure, then
+states the actual claim (no-section at the type level), then walks
+the proof.
+
+*Files when landed.*
+
+* `tutorial/epistemic-erasure/README.adoc` — narrative with the
+  bound disclosure as the *opening* sentence, not a footnote.
+* `tutorial/epistemic-erasure/EpistemicErasure.agda` — the worked
+  example with the `no-section` lemma front and centre.
+* `tutorial/epistemic-erasure/Smoke.agda` — per-walkthrough Smoke
+  pins.
+
+*Why this walkthrough exists.* Sceptics walking into the repo will
+ask "so does echo-types prove key zeroing?". The honest answer is
+"no, and the walkthrough exists to explain *what it does prove*
+instead, before that miscommunication takes root in any
+write-up of echo for an applied audience."
+
+=== Walkthrough 3: provenance / debugging echo
+
+*Status.* Design-doc only. Agda lands at unpark time.
+
+*The pedagogy.* Model a small state-reconstruction example: an
+agent observes a single Boolean output `b : Bool` from an opaque
+computation `f : State → Bool` on a 4-element `State`. `Echo f b`
+retains the source state; iterated `degrade` operations
+(`keep → residue → forget` per `EchoResidue`) walk a debugger
+through what information is available at each provenance level.
+The walkthrough closes by exhibiting how the residue-level
+`collapse-via-residue` lemma supports a class-level claim ("the
+state was in the 'sign-positive' class") even when the full state
+is no longer recoverable.
+
+*Files when landed.*
+
+* `tutorial/provenance-debugging/README.adoc` — narrative.
+* `tutorial/provenance-debugging/ProvenanceDebugging.agda` — the
+  worked example, building on `EchoExampleProvenance.agda`.
+* `tutorial/provenance-debugging/Smoke.agda` — per-walkthrough
+  Smoke pins.
+
+*Why this walkthrough exists.* The two harder walkthroughs (audit,
+erasure) both ship as `LEcho affine` content where information is
+*not* recoverable. This third walkthrough exhibits the dual: where
+the iterated degradation makes some information unrecoverable but
+others survive (the residue layer). It is the gentlest of the
+three; readers who bounce off the audit and erasure walkthroughs
+land here.
+
+== Discipline that applies to all three walkthroughs
+
+The same constraints that govern the rest of the repo apply
+verbatim:
+
+* `--safe --without-K` throughout.
+* Zero postulates, zero escape pragmas, no funext.
+* Every headline theorem pinned in the per-walkthrough Smoke
+  (own `using` block, header comment).
+* Every new Agda module imported into the walkthrough's
+  `All.agda` (and optionally into the top-level
+  `proofs/agda/All.agda` if the walkthrough exposes a reusable
+  lemma).
+* Per-walkthrough `README.adoc` opens with the *honest bound*, not
+  with the punchline.
+* Cross-references to `docs/retractions.adoc` where a narrowed
+  claim is being used (e.g. walkthrough 2's no-key-zeroing
+  disclosure is the same discipline as the R-2026-05-18
+  narrowings).
+
+== Killer-app close-out check
+
+`roadmap.adoc` §Lane 5 records the second unblocking condition
+("a single killer-application example emerges that justifies a
+tutorial track on its own merit"). The certified region-exit audit
+(Walkthrough 1) is the candidate. Whether it *constitutes* a
+killer-app for Lane 5 unparking purposes is a judgment call the
+user can make when reviewing this scaffold. The candidate's claim
+to killer-app status rests on the three items in §"Walkthrough 1
+> Why this is the killer-app candidate". If the user accepts the
+candidate, Lane 5 can unpark on that basis without waiting for
+Lane 1's other closure.
+
+== References
+
+* `roadmap.adoc` §"Lane 5 [PARKED] — Tutorial / pedagogy"
+* `CLAUDE.md` §"Ecosystem context" — ephapax row
+* `proofs/agda/EchoLinear.agda` — `LEcho`, `weaken`, `no-section-weaken`
+* `proofs/agda/EchoResidue.agda` — `EchoR`, `collapse-to-residue`,
+  `no-section-collapse-to-residue`
+* `proofs/agda/EchoExampleProvenance.agda` — provenance example
+  walkthrough 3 builds on
+* `docs/retractions.adoc` — the discipline walkthrough 2's
+  honest-bound disclosure inherits

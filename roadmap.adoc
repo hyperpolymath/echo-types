@@ -169,9 +169,14 @@ gate cross-links) landed in-session. Tracks B + C remain.
   headline example (parser, provenance, abs-int) with the small
   Σ-misuse it blocks. Builds clean under `--safe --without-K`;
   pinned in `Smoke.agda` under own `using` block.
-. The Gate 2 nominee list is re-audited and crosses the *comfortable*
-  threshold (≥ 3 of 4 surviving), not merely the honest minimum.
-  *(Remaining open item for Lane 2 close-out.)*
+. *LANDED 2026-05-26.* The Gate 2 nominee list is re-audited (Rev 5,
+  `docs/characteristic.adoc` §"Revision-5 re-audit (2026-05-26)") and
+  still crosses the *comfortable* threshold: 4/4 surviving, margin of
+  one above the comfortable bar (≥ 3 of 4). The re-audit explicitly
+  re-checks the post-Rev-4 evidence (EI-2 termination,
+  `characteristic.NonTruncatable` Q2.1, the deliberately broken
+  `characteristic.N5Falsifier`) and finds none of it weakens any
+  surviving nominee.
 
 *Artefacts (landed today).* `core/skepticisms/is-this-just-sigma-types.md`
 (canonical answer doc, 5-section structure mirroring the demands);
@@ -218,6 +223,16 @@ subtree. Per-session ledger in CLAUDE.md §"Session arc 2026-05-20".
 
 *Unblocking condition.* Lane 1 closes.
 
+*Scope decision (pre-resolved 2026-05-26).*
+`docs/echo-types/decisions/lane-4-bridges-ci-scope.adoc` adopts
+**option A** (separate `echo-bridges-ci` repository pulling
+echo-types and each target as submodules) per the recommendation
+this section already carried. The decision document also names the
+three triggers that would override the choice (all three must hold
+simultaneously) and lays out what option A looks like at unpark
+time, so an unparking session does not re-derive the architecture.
+Lane 4 itself remains PARKED.
+
 *Scope question to resolve when unparking.* End-to-end verified
 bridges to Janus, Tropical, CNO, etc. currently sit as in-tree
 modules (`EchoJanusBridge.agda`, `EchoTropical.agda`, `EchoCNOBridge.agda`,
@@ -252,6 +267,14 @@ explicit framing: Echo proves no section recovers the key, NOT that
 in-memory bytes are zeroed — conflating these is a category error a
 sceptic will catch); (3) provenance / debugging echo over a small
 state-reconstruction example.
+
+*Scaffold (pre-resolved 2026-05-26).* `tutorial/README.adoc` lands
+the three walkthroughs at design-doc level with their target file
+layouts, honest-bound disclosures, the per-walkthrough Smoke pin
+discipline, and the killer-app-candidate close-out check on
+Walkthrough 1. No Agda lands at this stage; the scaffold exists so
+an unparking session lands Agda directly rather than re-deriving
+the pedagogy. Lane 5 itself remains PARKED.
 
 == Closed lanes
 
