@@ -255,25 +255,43 @@ PR #130 was admin-merged before CI green at user direction; CI was
 still all-12-queued at merge time.  No CI failures have surfaced
 since (treat any later red as authoritative if it does).
 
-*Plan for the next Claude.*  Continue option (A) per
-`RankPow.agda`'s preamble, in priority order:
+*Plan for the next Claude.*
 
-1. *Option (b) head-Ω inversion lemma* — `bOmega ν <ᵇ x → ν <Ω
-   head-Ω x` and the ψ-analogue `bpsi ν α <ᵇ x → ν ≤Ω head-Ω x`.
-   Independent of Slice 2-omega's ω-branch question; smallest useful
-   next step.  Lands in a new module under `Ordinal/Buchholz/` (e.g.
-   `HeadOmegaInversion.agda`) so the existing `HeadOmega.agda` stays
-   pure definitions + sanity lemmas.
-2. *Slice 2-omega* — replace the ω branch of `ω-rank-pow-succ` with
-   the documented `ω^(ω+1)` candidate after running the three
-   cross-checks listed in `RankPow.agda`'s Slice 2-omega comment.
-   Brouwer ordinal arithmetic; non-trivial.
-3. *Slice 2-bplus* — prove the full domination lemma.  Composes
-   (1) + (2).
+Within this same session (2026-05-27 night, PR #131), items (1) and
+(2) from the original plan also landed:
 
-DO NOT reopen: the closed 11/13 Buchholz constructors; the
-W1/W2/W3 walkthroughs; the R-2026-05-18 narrowings; the closed
-fin-branch dominance just landed.
+* *(1) Option (b) head-Ω inversion lemma — LANDED* (commit `560f904`).
+  New module `Ordinal.Buchholz.HeadOmegaInversion` ships
+  `head-Ω-inv-bOmega : bOmega ν <ᵇ y → ν <Ω head-Ω y` (strict) and
+  `head-Ω-inv-bpsi : bpsi ν α <ᵇ y → ν ≤Ω head-Ω y` (non-strict —
+  tracks the `<ᵇ-ψΩ≤` constructor).  Pinned in
+  `Ordinal/Buchholz/Smoke.agda` under its own `using` block.  Wired
+  into `All.agda`.  No rank-mono dependency — that was the
+  load-bearing dependency-graph invariant the design called for.
+* *(2) Slice 2-omega — LANDED* (commit `07abc15`).  ω branch of
+  `ω-rank-pow-succ` replaced with `olim (λ n → ω-rank-pow ω ·ℕ n)`
+  (= `ω^(ω+1)`); per-marker strict dominance proved at the ω
+  branch via a mirror of `Brouwer/OmegaPow.ω^-strict-mono-suc`
+  (branch-index-2 + `X≤′oz⊕X` + `⊕-mono-<-right (ω-rank-pow-pos ω)`).
+  Unified `ω-rank-pow-<-succ : ∀ μ → ω-rank-pow μ <′
+  ω-rank-pow-succ μ` covers both branches.
+
+Only one item remains open:
+
+3. *Slice 2-bplus* — prove the full domination lemma
+   `rank-pow-dominated-by-head-Ω : (t : BT) → NonBzero t → WfCNF t →
+   rank-pow t <′ ω-rank-pow-succ (head-Ω t)` by structural recursion
+   on the WfCNF carrier.  Both per-marker dominances now hold; the
+   atomic cases discharge via `rank-pow-{bOmega,bpsi}-via-head-Ω` +
+   `ω-rank-pow-<-succ`.  The bplus case consumes
+   `head-Ω-inv-{bOmega,bpsi}` from `HeadOmegaInversion` to pull
+   `head-Ω` bounds from the WfCNF tail's `<ᵇ` witness.  No further
+   inversion-via-rank-mono dependency is introduced — that's what
+   option (b) bought.
+
+DO NOT reopen: the closed 11/13 Buchholz constructors; the W1/W2/W3
+walkthroughs; the R-2026-05-18 narrowings; the closed fin-branch /
+ω-branch / unified dominances; the head-Ω inversion family.
 
 ### Session arc 2026-05-27 evening — Lane 5 Walkthrough 3 landed
 
