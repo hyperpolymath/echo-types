@@ -1,0 +1,264 @@
+= Decoration bridge — candidate instance sketches
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+:source-highlighter: rouge
+
+[CAUTION]
+====
+Exploratory pseudocode.  Not committed Agda.  Each candidate is an
+*analogy that may or may not fit* the `Choreo × Graded` shape that
+`EchoIntegration` integrates, with an explicit falsifier.  Failure to
+fit retires the candidate; success commits nothing beyond the
+candidate itself.  See `README.adoc` § "Scope discipline".
+====
+
+toc::[]
+
+== Reading these sketches
+
+Each candidate names: (a) the *external construction* it draws on,
+(b) the *fit shape* — what would need to be supplied to discharge the
+`DecorationFit` record from `proofs/agda/EchoDecorationBridge.agda`,
+(c) one or two pseudo-Agda lines showing the would-be predicate /
+stability witness / knowledge witness, and (d) the *falsifier* — the
+concrete condition under which the analogy collapses and the
+candidate is retired.
+
+The pseudocode is illustrative.  It uses the names from
+`EchoChoreo` (`Role`, `Client`, `Server`, `Global`,
+`scramble-server`, `client-stability`), `EchoEpistemic` (`Knows`),
+and `EchoGraded` (`keep`, `residue`, `keep≤residue`, `degrade`).
+No file in this directory is intended to typecheck as-is.
+
+== Candidate A — CRDT join semilattices
+
+*External construction.*  A replicated value held at two replicas
+(`Client` and `Server`); each replica maintains a local update log.
+A merge operation combines logs into a joined state.
+
+*Fit shape.*
+
+* `Pred` names the invariant "the client's locally-observed value is
+  `b : Bool`".  Local observation is preserved across the merge step
+  whenever the merge is observation-preserving from the client's
+  side — which is precisely the `scramble-client-square` shape
+  `EchoChoreo` already pins.
+* `Pred-stable` is the witness that the merge step does not change
+  the client-side observation.  In CRDT terms, this is *the
+  client-side projection of the merge is a no-op on the merged
+  bit*.  For a state-based CRDT whose merge is the lattice join,
+  this is the *join-idempotence* property restricted to the
+  client-observable component.
+* `knowledge` is the proof that every client-side preimage of a
+  given visible value satisfies `Pred`.  For a Boolean-bit CRDT,
+  this is exhaustion over the two-element preimage.
+
+*Pseudocode.*
+
+[source,agda]
+----
+-- pseudocode; not committed
+PredA : Global → Set
+PredA (cBit , _) = cBit ≡ true   -- "client observes true"
+
+stableA : ∀ g → PredA g → PredA (scramble-server g)
+stableA (true , _) refl = refl    -- merge does not touch cBit
+
+knowledgeA : Knows Client PredA true
+knowledgeA ((true , _) , refl) = refl
+----
+
+*Falsifier.*  If the CRDT's merge is genuinely commutative — i.e.
+*both* `Pred-stable` and a hypothetical `Pred-stable-reverse` hold
+under a symmetric `scramble-client` and `scramble-server` — then no
+residue survives composition, and the analogy fits but says nothing
+the CRDT's own commutativity proof did not already say.  This is the
+candidate's *commutative-merge collapse*: the bridge characterises a
+property the system already has by design, not a phenomenon worth
+naming.  Retire if the target CRDT's merge is uniformly commutative
+on the observable.
+
+*Why this is not generic Σ.*  The fit *requires* the stability
+witness to mention `scramble-server` — a specific update on `Global`,
+not a generic Σ-projection.  A `Σ`-only encoding would have no way to
+name the merge step; it would have to project to the visible bit and
+discard the structure that makes `Pred-stable` mean anything.
+
+== Candidate B — Local-first causal histories
+
+*External construction.*  A document is edited by the client; the
+server periodically reconciles.  The document state carries
+`(cBit, sBit)`: `cBit` is the client's last committed edit, `sBit` is
+the server's reconciled view.  A reconciliation step is the
+`scramble-server` analogue: it may update `sBit` without changing
+`cBit`.
+
+*Fit shape.*
+
+* `Pred` names the invariant "the client's edit history reaches a
+  state where `cBit ≡ true`".  Causal-history depth is bounded by
+  the client's edit count.
+* `Pred-stable` is the witness that reconciliation does not rewrite
+  client history.  This is the *no-server-side-rewrite* property
+  local-first systems offer by design.
+* `knowledge` is the proof that any client-observable witness
+  (a state with `cBit ≡ true`) lies in the predicate.
+
+*Pseudocode.*
+
+[source,agda]
+----
+-- pseudocode; not committed
+PredB : Global → Set
+PredB (cBit , _) = cBit ≡ true   -- "client history reached true"
+
+stableB : ∀ g → PredB g → PredB (scramble-server g)
+stableB (true , _) refl = refl    -- reconciliation does not rewrite cBit
+
+knowledgeB : Knows Client PredB true
+knowledgeB ((true , _) , refl) = refl
+----
+
+*Falsifier.*  If the local-first system already maintains a complete
+causal-history record on every document state (vector clocks, OT
+metadata, full event-log), then the residue the bridge names is
+*already captured* in the system's own provenance metadata.  The
+analogy fits but is redundant: the bridge says nothing the system
+did not already say.  This is the candidate's *metadata-already-complete*
+failure mode.  Retire if the target system's provenance metadata
+fully reconstructs the residue.
+
+*Why this is not generic Σ.*  Same reason as Candidate A — the
+stability witness has to mention `scramble-server` specifically.  But
+there is a second reason: the `Knows Client P y` predicate is
+fundamentally about *what every preimage satisfies*, which is a
+universal quantification a `Σ`-only encoding would have to write out
+explicitly.  The bridge inherits the universal quantification from
+`EchoEpistemic.Knows`.
+
+== Candidate C — Gossip partial views
+
+*External construction.*  A node maintains a partial view of the
+cluster membership; gossip messages refresh the view.  Local
+observation is the *fresh-or-stale bit* of the node's own view;
+remote-side updates may change which peer a node is observing
+without changing the freshness bit.
+
+*Fit shape.*
+
+* `Pred` names the invariant "the node's view of its own freshness
+  bit is `true`".
+* `Pred-stable` is the witness that a remote-view refresh
+  (`scramble-server`-analogue) does not change the local freshness
+  bit.  This is the *view-update-locality* property gossip protocols
+  guarantee.
+* `knowledge` is the proof that any local-observable witness lies in
+  the predicate.
+
+*Pseudocode.*
+
+[source,agda]
+----
+-- pseudocode; not committed
+PredC : Global → Set
+PredC (cBit , _) = cBit ≡ true   -- "local freshness bit is true"
+
+stableC : ∀ g → PredC g → PredC (scramble-server g)
+stableC (true , _) refl = refl    -- view refresh does not touch cBit
+
+knowledgeC : Knows Client PredC true
+knowledgeC ((true , _) , refl) = refl
+----
+
+*Falsifier.*  Most gossip protocols are designed to be
+*view-oblivious*: the node accepts any refresh that arrives without
+caring which peer sent it.  If view-obliviousness is the design
+intent, the residue the bridge would name is *intentionally
+discarded* — the protocol is built precisely to erase that residue.
+The bridge characterises a property the protocol does not have and
+does not want.  Retire if the target protocol's design discards
+peer-provenance on refresh.
+
+*Why this is not generic Σ.*  Same as Candidates A and B.
+
+== The shared pseudocode shape (and why it matters)
+
+All three candidates instantiate the same record:
+
+[source,agda]
+----
+-- pseudocode; the actual record is in proofs/agda/EchoDecorationBridge.agda
+record DecorationFit (y : Bool) : Set₁ where
+  field
+    Pred        : Global → Set
+    Pred-stable : ∀ g → Pred g → Pred (scramble-server g)
+    knowledge   : Knows Client Pred y
+----
+
+That every candidate shares the same record is the bridge's *only*
+positive content — the claim that "decorations on shared state
+evolution" is a structural pattern that admits a uniform fit shape.
+If two candidates need genuinely different records to express their
+fit, the bridge's positive content collapses and the exploration
+loses its motivation.
+
+[NOTE]
+====
+"Same record" is not "same instance".  The three candidates above all
+discharge `DecorationFit` with the same `Pred` (`λ (cBit , _) → cBit
+≡ true`) and the same trivial proofs.  That is because they are
+pseudocode sketches over the same toy `Global = Bool × Bool`.  Real
+candidates would differ in their `Pred` (CRDT lattice element vs
+causal-history segment vs view-freshness predicate), their stability
+witness (idempotent join vs server-side-rewrite-freedom vs
+view-update-locality), and the `Global` carrier they project from.
+The toy version is what types under the actual
+`EchoChoreo.Global = Bool × Bool`.  Promoting any candidate to a real
+discharge is a rung-consolidation, with its own forbidden-rebrandings
+audit.
+====
+
+== Falsifier summary
+
+The three falsifiers above are *distinct*.  None subsumes another.
+The bridge's exploratory value is in the cases where *exactly one*
+candidate fits — that is, the case is non-commutative enough to have
+a residue (rules out A's commutative collapse), the system does not
+already track that residue (rules out B's metadata-already-complete
+collapse), and the system does not want to discard the residue
+(rules out C's view-obliviousness collapse).  If no domain
+construction simultaneously falsifies all three, the bridge has no
+useful target and retires.
+
+== What an actual fit would need
+
+Promoting any candidate from sketch to discharged instance would
+require:
+
+. A concrete `Global` carrier richer than `Bool × Bool`.  The
+  `Choreo × Graded` shape `EchoIntegration` integrates is fixed to
+  `Bool × Bool` for the obvious reason of toy-size; a real candidate
+  needs a domain-appropriate carrier, and the bridge then has to
+  exhibit role-projections (`obs Client`, `obs Server`) that respect
+  the domain's natural observation interface.
+. A real predicate stability proof — not a one-line `refl` over
+  exhaustion, but a structural argument that the
+  `scramble-server`-analogue update preserves the candidate's
+  `Pred`.  This is where the real content lives, and where most
+  candidates will fail.
+. A real `Knows` witness, which means a real `Echo` over the
+  domain's observation map — not the toy
+  `obs Client (cBit , _) = cBit`.
+. A real-domain falsifier check: the analogy must demonstrably
+  *fail* in some natural instance of the candidate's domain, not
+  just in pathological edge cases.  A candidate that fits every
+  instance is suspicious and almost certainly trips
+  "the recipe is uniformly applicable" in the
+  forbidden-rebrandings register.
+
+Any session attempting such a promotion should consult
+`README.adoc` § "Termination criteria" first; promotion is *not*
+pre-authorised.

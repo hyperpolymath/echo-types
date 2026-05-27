@@ -1,0 +1,192 @@
+= Decoration bridge — non-commuting residue
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[CAUTION]
+====
+Conceptual core, not a theorem.  Asks: when two decorations on a
+shared state evolution do not commute, what characterises the
+residue, and why is this not generic `Σ` + `≡`?  Stays scoped to the
+`Choreo × Graded` axis pair `EchoIntegration` integrates.  See
+`README.adoc` § "Scope discipline".
+====
+
+toc::[]
+
+== The question
+
+Suppose `s : Global → Global` and `t : Global → Global` are two
+state-update steps representing two different *decorations* — one a
+role-projection-respecting update (say, `scramble-server` from
+`EchoChoreo`), one a graded degradation (say, the
+`degrade keep≤residue` map's underlying state action).  Two
+compositions are possible: `s ∘ t` or `t ∘ s`.  When `s ∘ t ≡ t ∘ s`
+holds extensionally, the decorations *commute* and the order of
+application does not matter.  When it does not, *something is
+recorded* by the fact of taking one order rather than the other.
+
+The bridge's exploratory question is: in the `Choreo × Graded` axis
+pair, *what* is recorded, and *where* does it live?
+
+== The known facts (carried in from `EchoIntegration`)
+
+The integration claim
+`knowledge-and-controlled-degradation` (re-issued by the bridge as
+`decoration-claim`) packages two facts about the `Choreo × Graded`
+pair:
+
+. *Knowledge preservation along the choreography step.*  If `P`
+  holds on every preimage of `y` under `obs Client`, and `P` is
+  preserved by `scramble-server`, then `P` continues to hold after
+  the choreography step (`client-stability`).  In symbols:
+  `Knows Client P y` implies `∀ e → P (proj₁ (client-stability e))`.
+. *Merge at the residue grade.*  The two witnesses `echo-true` and
+  `echo-false`, which are *distinct* at grade `keep`
+  (`echo-true ≢ echo-false`), become *definitionally equal* after
+  `degrade keep≤residue`.  This is `merged-at-residue`, and its
+  proof is `refl` once `keep≤residue` has been applied.
+
+These two facts live on *independent* surfaces of the integration
+claim.  Fact 1 is purely choreographic; fact 2 is purely graded.
+The integration claim is the conjunction — a product, not a
+non-trivial interaction (as EI-2 established, and as
+`docs/gate-2-handoff.adoc` / `IntegrationAudit.agda` separately
+exhibits).
+
+== Where the residue could live
+
+If the two decorations did *interact* — if the order of application
+made an observable difference — the residue would have to live in
+one of three places:
+
+. *In the visible value `y`.*  If applying `scramble-server` then
+  `degrade` produced a different visible bit from applying `degrade`
+  then `scramble-server`, the residue would be the witnessing
+  inequality.  *This is not the case.*  Both decorations are
+  observation-preserving on the client-side projection — that is
+  the definitional property each was set up to have.  Composition
+  in either order leaves the client-side visible bit unchanged.
+. *In the preimage `x : Global`.*  If applying the two decorations
+  in either order produced different `x`-values that still mapped to
+  the same `y`, the residue would be the preimage difference.
+  *This is the residue the bridge cares about, if it exists.*
+. *In the equality proof `f x ≡ y`.*  If the equality proof itself
+  carried different content — different choices of `cong`-paths,
+  say — the residue would be witnessed by the proof asymmetry.
+  *This is not the case under `--without-K`.*  All proofs of
+  `f x ≡ y` are equal (up to the propositional discipline this
+  project respects), so the equality leg cannot carry residue.
+
+Item 2 is the only place the residue can be.  This is *not* a
+contingent fact about the toy `Global = Bool × Bool`; it is the
+structural shape of `Echo f y = Σ A (f x ≡ y)` together with
+`--safe --without-K`.  The equality leg is forced; the visible value
+is preserved by hypothesis; so the only space for a meaningful
+residue is the witness `x`.
+
+== What this gives that generic `Σ` does not
+
+A bare `Σ A (λ x → f x ≡ y)` lets the consumer extract `x` via
+`proj₁` at will.  No information about how `x` was constructed is
+retained — the act of taking `proj₁` is the act of forgetting
+provenance.  The bridge's framing is the *opposite*: the consumer is
+asked to commit, before extracting, to a *decoration discipline* —
+the role projection and the graded order — under which extraction is
+either constrained (at `keep`) or impossible to disambiguate (at
+`residue`).
+
+In particular, four properties the bridge inherits from the
+integration claim do *not* hold for generic `Σ`:
+
+. *Monotone reindexing along a thin poset.*  `Σ` has no built-in
+  notion of "this witness is the same one, just less precisely
+  named".  `degrade : g1 ≤g g2 → GEcho g1 → GEcho g2` provides
+  exactly that, and the bridge consumes it.  A `Σ`-only
+  reconstruction would need to invent a degradation order, prove it
+  propositional, and re-discover `≤g-prop` — at which point the
+  reconstruction is no longer `Σ`-only.
+. *Definitional collapse at the residue grade.*  `merged-at-residue`
+  is `refl`.  Two distinct witnesses produce identical residues, by
+  computation, not by an extensional argument.  A `Σ`-only
+  encoding would have to *prove* the equality post-hoc, and the
+  proof would not be `refl`.
+. *Role-projection transport along a commuting square.*
+  `client-stability = map-square (obs Client) (obs Client)
+  scramble-server id scramble-client-square` — a structural
+  property of the `obs Client`-fibre, not a property of the
+  witness `x` alone.  Generic `Σ` has no notion of "transport along
+  a square"; the witness-transport leg `scramble-server` would have
+  to be threaded through every consumer manually.
+. *The no-section dual.*
+  `no-recovery-after-residue-degrade` (cited transitively through
+  the integration claim) is the constructive proof that the
+  degradation has no left-inverse.  `Σ` has no such asymmetry —
+  `proj₁` is always a valid (set-theoretic) extraction; the
+  no-section dual is the proof-relevant statement that *no
+  function* can recover the original witness, not just that the
+  current consumer chose not to extract it.
+
+The bridge depends on (1) and (3) substantively.  (2) is the
+canonical "this is what the residue *is*" witness; the bridge's
+`decoration-claim` re-issues it directly.  (4) is structural
+inheritance that the bridge does not currently exercise in code but
+relies on for the *meaning* of the residue characterisation.
+
+== What this does *not* give
+
+The bridge does not give:
+
+* a *uniqueness* statement about the residue.  There is no claim
+  that the witness `x` is the *unique* element of `Global` satisfying
+  both decorations' constraints; only that the `Echo`-discipline
+  retains *something* — the asymmetry between `keep` and `residue`
+  — that bare `Σ` does not.  Uniqueness language would trip
+  retraction-watch (Pillar B narrowing — pointwise, not full UP).
+* a *generalisation* over decoration pairs.  The framing is
+  `Choreo × Graded` only; cf. forbidden-rebrandings entry "the recipe
+  is uniformly applicable across all 2D axis pairs".
+* a *categorical* characterisation.  The residue is a witness in a
+  type, not a limit of a diagram.  Categorical language would trip
+  retraction-watch (Pillar B again; also the "graded comonad"
+  narrowing).
+* a *quantitative* statement about residue size or content.  The
+  residue is identified up to definitional equality at the residue
+  grade; how much information was *lost* in moving from `keep` to
+  `residue` is a separate quantitative track owned by
+  `EchoFiberCount` / `EchoThermodynamics*`, not by this bridge.
+
+== Why the framing stays narrow
+
+The temptation, given the framing above, is to say "the bridge
+identifies the residue as the witness-asymmetry that survives any
+non-commuting decoration pair".  This is the forbidden-rebrandings
+trip: it generalises across pairs.  The bridge identifies the
+residue in *one* axis pair, where two specific decorations
+(`scramble-server` and `degrade keep≤residue`) interact in a
+specific known way.  Other axis pairs are not addressed; they are
+not within scope.
+
+If the bridge ever produces a lemma whose statement quantifies over
+decoration pairs (rather than fixing them), or whose proof relies
+on a generic structural property of "decorations" abstracted away
+from `Choreo × Graded`, that lemma is out of scope and the bridge
+closes pending review per `README.adoc` § "Termination criteria"
+item 4.
+
+== Closing observation
+
+The exploratory value, if any, of this directory is the observation
+that the *one* axis pair `EchoIntegration` integrates makes a
+specific structural choice — putting the residue in the witness
+`x`, not in `y` and not in the equality leg — and that this choice
+might resemble what other adjacent-domain constructions do when they
+build provenance metadata.  The three candidates in
+`01-decoration-instances.adoc` test that resemblance against falsifiers.
+
+Whether the resemblance is real, useful, or merely structural is the
+question this directory exists to ask.  Whether the answer ever
+warrants promotion to core is a separate, gated decision the
+exploration does not pre-authorise.
