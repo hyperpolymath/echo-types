@@ -381,3 +381,21 @@ open import Ordinal.Buchholz.RankLex using
   ; rank-lex-bplus
   ; rank-mono-<ᵇ-ψΩ≤-lex
   )
+
+-- Lane 3 head-Ω first slice 2026-05-27 evening (own block per
+-- CLAUDE.md Working rules): the leading-Ω-index head function
+-- `head-Ω : BT → OmegaIndex` plus four definitional sanity lemmas,
+-- one per `BT` constructor.  No rank-mono in this slice — the
+-- domination lemma `rank-pow t <′ ω-rank-pow-succ (head-Ω t)` and
+-- the headline `<ᵇ-+1` joint-bplus discharge are explicitly deferred
+-- to follow-on slices.  First piece of option (A) per
+-- `RankPow.agda`'s preamble and `docs/echo-types/buchholz-rank-
+-- obstruction.adoc` §"What remains open".
+open import Ordinal.Buchholz.HeadOmega using
+  ( head-Ω
+  ; head-Ω-bzero
+  ; head-Ω-bOmega
+  ; head-Ω-bplus
+  ; head-Ω-bpsi
+  ; head-Ω-bplus-left
+  )

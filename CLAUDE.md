@@ -281,6 +281,76 @@ the W1/W2 walkthroughs (their no-section headlines are the existing
 to-residue` re-exported with honest-bound + matched-negative
 discipline); the R-2026-05-18 narrowings.
 
+### Session arc 2026-05-27 late evening — Lane 3 head-Ω first slice
+
+*Where we started today (commit `04f3d9f`, post-W3):* the consolidation
+branch carried the complete Lane 5 triplet (W1/W2/W3) plus the 11/13
+Buchholz constructor closure via `rank-pow` + `rank-adm` + `rank-lex`.
+The one remaining open per-constructor case `<ᵇ-+1` joint-bplus
+sits behind a documented structural blocker
+(`docs/echo-types/buchholz-rank-obstruction.adoc` §"What remains
+open"): `rank-pow (bplus z₁ z₂)` is not additive principal in
+general.
+
+*Where we ended today:* option (A) from `RankPow.agda`'s preamble
+opens via the head-Ω abstraction.  One slice:
+
+1. *`Ordinal.Buchholz.HeadOmega.agda`* — the leading-Ω-index head
+   function `head-Ω : BT → OmegaIndex`:
+     * `bzero`        ↦ `fin 0` (default; future rank-mono guards via
+       non-bzero premise);
+     * `bOmega ν`     ↦ `ν`;
+     * `bplus x _`    ↦ `head-Ω x` (leftmost);
+     * `bpsi ν _`     ↦ `ν`.
+   Four definitional sanity lemmas (one per `BT` constructor, each
+   `refl`) plus one two-level compositional convenience
+   (`head-Ω-bplus-left`) for the WfCNF left-spine pattern.
+   Pinned in `Ordinal/Buchholz/Smoke.agda` under own `using` block
+   with header comment; wired into `proofs/agda/All.agda` between
+   `RankLex` and `RankMonoUmbrella`.
+
+   *Smallest useful first slice.*  No rank-mono in this slice; the
+   domination lemma `rank-pow t <′ ω-rank-pow-succ (head-Ω t)` and
+   the headline `<ᵇ-+1` joint-bplus discharge are explicitly
+   deferred to follow-on slices per `HeadOmega.agda`'s preamble.
+   The abstraction stands on its own merits before any rank
+   consumer pulls on it.
+
+Build invariant held: `Ordinal/Buchholz/Smoke.agda`,
+`proofs/agda/Smoke.agda`, and `proofs/agda/All.agda` all exit 0
+under `--safe --without-K`, zero postulates, no funext.  All
+headlines pinned in the Buchholz-layer Smoke under their own
+`using` block per CLAUDE.md "Working rules".
+
+*Plan for the next Claude.*  Continue option (A):
+
+1. *Slice 2 — ω-rank-pow-succ + the domination lemma.* Add
+   `ω-rank-pow-succ : OmegaIndex → Ord` to `RankPow.agda` (one
+   option: `ω-rank-pow-succ (fin n) = ω^(suc (suc n))`,
+   `ω-rank-pow-succ ω = olim (λ n → ω^(suc (suc n)))`), then prove
+   `rank-pow-dominated-by-head-Ω : (t : BT) → NonBzero t → WfCNF t →
+   rank-pow t <′ ω-rank-pow-succ (head-Ω t)` by structural recursion
+   on the WfCNF carrier, applying `rank-pow-bplus-into-ω-rank-pow`
+   at each `bplus` step.  This is the load-bearing slice.
+2. *Slice 3 — the headline `rank-mono-<ᵇ-+1-via-head-Ω`.*  Builds
+   on Slice 2 + `rank-mono-<ᵇ-+1-via-target` from `RankPow.agda`.
+   At consumer time: head-Ω inversion on the target's left summand
+   gives the additive-principal witness; source `bplus`'s rank is
+   dominated by `ω-rank-pow-succ (head-Ω source)`, which by
+   `head-Ω-bplus` equals `ω-rank-pow-succ (head-Ω x₁)`, strictly
+   below the target's rank via the `<ᵇ` premise.
+3. *Slice 4 — full `rank-pow-mono-<ᵇ⁻` umbrella.* Composition of
+   the head-Ω discharge with the existing 11-constructor closures.
+   The final Buchholz rank-monotonicity theorem under the WfCNF
+   restriction.
+
+DO NOT reopen: `head-Ω` returns `fin 0` on `bzero` as a deliberate
+default — future rank-mono lemmas guard the `bzero` case via the
+non-bzero premise, so the default is never consumed in a proof
+context.  Changing the default to `Maybe OmegaIndex` would force
+every downstream caller through an unwrap; the documented
+non-bzero guard is the cleaner discipline.
+
 ### Session arc 2026-05-20 daytime (theory closure waves 1 + 2 + 3)
 
 *Where we started today (commit `888dee0`, post-#73):* the establishment
