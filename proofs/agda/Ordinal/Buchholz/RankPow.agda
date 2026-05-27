@@ -418,3 +418,155 @@ rank-mono-<ᵇ-+1-ψ-target : ∀ {x₁ x₂ ν α y₂}
 rank-mono-<ᵇ-+1-ψ-target {x₁} {x₂} {ν} {α} {y₂} =
   rank-mono-<ᵇ-+1-via-target {x₁} {x₂} {bpsi ν α} {y₂}
     (additive-principal-ω-rank-pow {ν})
+
+----------------------------------------------------------------------
+-- Slice 2 of the head-Ω domination route
+----------------------------------------------------------------------
+--
+-- The HeadOmega module (`Ordinal.Buchholz.HeadOmega`) defines the
+-- leading-Ω-index head function `head-Ω : BT → OmegaIndex`.  This
+-- section adds the per-marker "next ω-power up" target
+-- `ω-rank-pow-succ : OmegaIndex → Ord` consumed by the planned (but
+-- not yet landed) `<ᵇ-+1` joint-bplus head-Ω domination route.
+--
+-- ## Scope of this slice
+--
+-- Lands:
+--   * `ω-rank-pow-succ : OmegaIndex → Ord`
+--   * `ω-rank-pow-succ-fin` — definitional sanity, fin branch
+--   * `ω-rank-pow-<-succ-fin` — per-marker strict dominance at fin
+--   * `rank-pow-bOmega-via-head-Ω`,
+--     `rank-pow-bpsi-via-head-Ω` — atomic-rank `refl`-shape primitives
+--     factoring `rank-pow` through `head-Ω` for the two non-bplus,
+--     non-bzero `BT` constructors.  Useful at consumer-recursion
+--     sites that want to rewrite source-rank into head-Ω form
+--     without unfolding `rank-pow` and `head-Ω` separately.
+--
+-- Deferred (with concrete obstructions documented inline below):
+--   * The headline domination lemma
+--     `rank-pow-dominated-by-head-Ω : (t : BT) → NonBzero t →
+--       WfCNF t → rank-pow t <′ ω-rank-pow-succ (head-Ω t)`
+--     in its full generality.  The fin branch is structurally clean
+--     (every WfCNF clause discharges via additive-principal at
+--     ω^(suc(suc n)) and the existing per-constructor rank-mono
+--     primitives), but the **ω branch of `head-Ω` cannot strictly
+--     dominate under the originally-proposed `ω-rank-pow-succ ω` shape**.
+--     See the obstruction note immediately below.
+--
+-- ## Obstruction note for the ω branch
+--
+-- The originally proposed shape (per CLAUDE.md § "Session arc
+-- 2026-05-27 late evening" — Slice 2 sketch) was:
+--
+--   ω-rank-pow ω        = olim (λ n → ω^ (suc n))            -- existing
+--   ω-rank-pow-succ ω   = olim (λ n → ω^ (suc (suc n)))      -- proposed
+--
+-- Both `olim`s represent the **same** ordinal (ω^ω) — the supremum of
+-- {ω, ω², ω³, …} and the supremum of {ω², ω³, ω⁴, …} are equal as
+-- ordinals, just with different ℕ-indexings of the same tail.  Under
+-- the recursive `_<′_` of `Phase13`, this manifests as: every attempt
+-- to discharge `osuc (olim (λ n → ω^(suc n))) ≤′ olim (λ k → ω^(suc(suc k)))`
+-- by picking a branch `k` in the target falls back to an `osuc (olim …)
+-- ≤′ ω^(suc(suc k)) ·ℕ j` obligation that is again a limit-vs-osuc
+-- comparison, recursing indefinitely.
+--
+-- A follow-on slice must replace the ω branch with a genuinely
+-- strictly-larger ordinal (the natural candidate is `ω^(ω+1)`, the
+-- next additive-principal above `ω^ω`).  In Brouwer notation this
+-- would be `olim (λ n → (ω-rank-pow ω) ·ℕ n)`; the proof obligation
+-- shifts but does not vanish — `(ω-rank-pow ω) ·ℕ n` is itself a
+-- nested limit, and the strict-dominance proof needs the equivalent of
+-- the existing `additive-principal-ω-rank-pow` ω-branch closure
+-- (lines 238–255 above) lifted one ω-power.
+--
+-- Choosing not to make that replacement in this slice keeps the
+-- abstraction minimal and avoids committing to a shape that the
+-- consumer (Slice 3, `rank-mono-<ᵇ-+1-via-head-Ω`) might want to
+-- specialise differently.  The ω branch of `ω-rank-pow-succ` below
+-- therefore reuses the **original** CLAUDE.md proposal verbatim, so
+-- the abstraction is in place for follow-on slices to inspect and
+-- (if needed) override before any consumer pulls on the ω case.
+
+ω-rank-pow-succ : OmegaIndex → Ord
+ω-rank-pow-succ (fin n) = ω^ (suc (suc n))
+ω-rank-pow-succ ω       = olim (λ n → ω^ (suc (suc n)))
+
+-- Definitional sanity at the fin branch.  Mirrors `ω-rank-pow-fin`.
+ω-rank-pow-succ-fin : ∀ n → ω-rank-pow-succ (fin n) ≡ ω^ (suc (suc n))
+ω-rank-pow-succ-fin _ = refl
+
+-- Per-marker strict dominance at the fin branch.  For each `fin n`,
+-- `ω-rank-pow (fin n) = ω^(suc n)` is strictly below
+-- `ω-rank-pow-succ (fin n) = ω^(suc(suc n))` via the one-step
+-- strict-mono of the ω-power ladder.  The ω branch is deferred per the
+-- obstruction note above.
+ω-rank-pow-<-succ-fin : ∀ n
+  → ω-rank-pow (fin n) <′ ω-rank-pow-succ (fin n)
+ω-rank-pow-<-succ-fin n = ω^-strict-mono-suc (suc n)
+
+-- Atomic-rank-pow `refl`-shape primitives.  For non-bplus, non-bzero
+-- BT constructors, `rank-pow` reduces to `ω-rank-pow` of the
+-- corresponding `head-Ω` value.  Both equations are `refl`; provided
+-- as named lemmas so consumer rewrites can target `head-Ω`-form
+-- without unfolding `rank-pow` and `head-Ω` separately.
+
+open import Ordinal.Buchholz.HeadOmega using (head-Ω)
+
+rank-pow-bOmega-via-head-Ω : ∀ ν
+  → rank-pow (bOmega ν) ≡ ω-rank-pow (head-Ω (bOmega ν))
+rank-pow-bOmega-via-head-Ω _ = refl
+
+rank-pow-bpsi-via-head-Ω : ∀ ν α
+  → rank-pow (bpsi ν α) ≡ ω-rank-pow (head-Ω (bpsi ν α))
+rank-pow-bpsi-via-head-Ω _ _ = refl
+
+----------------------------------------------------------------------
+-- Where this lands in the head-Ω closure plan
+----------------------------------------------------------------------
+--
+-- The abstraction landed here (`ω-rank-pow-succ` + the fin-branch
+-- dominance + the atomic factoring) is the smallest useful first cut.
+-- The two open follow-ons are:
+--
+-- Slice 2-omega.  Replace the ω branch of `ω-rank-pow-succ` with a
+-- genuinely strictly-dominating shape and prove `ω-rank-pow ω <′
+-- (new-shape)`.  Candidate: `ω^(ω+1)` encoded as
+-- `olim (λ n → (ω-rank-pow ω) ·ℕ n)`.  Cross-checks before committing:
+-- (i) the new shape closes under ordinal addition strictly above
+-- `ω-rank-pow ω` (so additive-principal-style closure lifts);
+-- (ii) the consumer (Slice 3) does not need the additive-principal
+-- *of `ω-rank-pow-succ ω` itself* — it needs additive-principal of
+-- `ω-rank-pow (head-Ω target)`, which already lands via the existing
+-- `additive-principal-ω-rank-pow {ω}` (lines 238–255);
+-- (iii) sanity-check the indexing.  The candidate's branches are
+-- `(ω-rank-pow ω) ·ℕ n = (… (oz ⊕ ω-rank-pow ω) … ⊕ ω-rank-pow ω)`
+-- — the leading `oz ⊕` is NOT definitionally `ω-rank-pow ω` under
+-- Brouwer's right-recursing `_⊕_`.  As an ordinal denotation the
+-- supremum is `ω^ω · ω = ω^(ω+1)` and is strictly above `ω^ω`, so
+-- the lemma *should* go through, but the proof needs the
+-- propositional `oz ⊕ X ≤′ X` (or a path-algebra equivalent) at the
+-- right step — this is exactly the same hazard ("same ordinal under
+-- different ℕ-indexing") that disqualified the original
+-- `olim (λ n → ω^(suc(suc n)))` shape.  Verify with a thin spike
+-- before committing the body.
+--
+-- TODO(slice-2-bplus).  Once the ω branch closes, prove the full
+-- lemma
+--   rank-pow-dominated-by-head-Ω : (t : BT) → NonBzero t → WfCNF t
+--                                → rank-pow t <′ ω-rank-pow-succ (head-Ω t)
+-- by structural recursion on the WfCNF carrier.  The bplus case
+-- needs a `rank-pow-mono-≤ᵇ : x ≤ᵇ y → rank-pow x ≤′ rank-pow y`
+-- companion for the original `_<ᵇ_` — landing-site below this
+-- comment block — because the WfCNF tail bound is `_≤ᵇ_`, not
+-- `_≤ᵇ⁰_`.  The existing `rank-pow-mono-≤ᵇ⁰` in `RankMonoUmbrella`
+-- covers the `<ᵇ⁰` carrier only.  A direct `_≤ᵇ_`-mono primitive
+-- would need either (a) bridging `_≤ᵇ_` to `_≤ᵇ⁰_` (which is
+-- exactly the open Slice 4 problem — full rank-mono umbrella over
+-- the original `_<ᵇ_`), or (b) a head-Ω inversion lemma
+-- `bOmega ν <ᵇ x → ν <Ω head-Ω x` (and ψ-analogue) that does not
+-- transitively depend on rank-mono.  Option (b) is the cleaner
+-- path; it parallels the existing per-constructor rank-mono
+-- primitives without going through the umbrella, and keeps
+-- `rank-pow-dominated-by-head-Ω` independent of
+-- `rank-pow-mono-≤ᵇ` so that a future signature change to one
+-- does not silently break the other.

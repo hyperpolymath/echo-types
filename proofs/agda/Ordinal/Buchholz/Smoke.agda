@@ -399,3 +399,22 @@ open import Ordinal.Buchholz.HeadOmega using
   ; head-Ω-bpsi
   ; head-Ω-bplus-left
   )
+
+-- Lane 3 head-Ω Slice 2 (own block per CLAUDE.md Working rules):
+-- the per-marker "next ω-power up" target `ω-rank-pow-succ` plus
+-- definitional sanity at the fin branch, the per-marker strict
+-- dominance at fin (`ω-rank-pow-<-succ-fin`), and the atomic
+-- rank-pow factoring through head-Ω.  The ω-branch strict
+-- dominance and the full domination lemma over WfCNF carriers are
+-- deferred to follow-on slices Slice 2-omega and Slice 2-bplus
+-- respectively, per the obstruction note inline in `RankPow.agda`
+-- (the originally-proposed `ω-rank-pow-succ ω = olim (λ n →
+-- ω^(suc(suc n)))` represents the same ordinal as `ω-rank-pow ω`,
+-- so strict dominance at ω needs a different shape).
+open import Ordinal.Buchholz.RankPow using
+  ( ω-rank-pow-succ
+  ; ω-rank-pow-succ-fin
+  ; ω-rank-pow-<-succ-fin
+  ; rank-pow-bOmega-via-head-Ω
+  ; rank-pow-bpsi-via-head-Ω
+  )
