@@ -414,7 +414,10 @@ open import Ordinal.Buchholz.HeadOmega using
 open import Ordinal.Buchholz.RankPow using
   ( ω-rank-pow-succ
   ; ω-rank-pow-succ-fin
+  ; ω-rank-pow-succ-omega
   ; ω-rank-pow-<-succ-fin
+  ; ω-rank-pow-<-succ-omega
+  ; ω-rank-pow-<-succ
   ; rank-pow-bOmega-via-head-Ω
   ; rank-pow-bpsi-via-head-Ω
   )
