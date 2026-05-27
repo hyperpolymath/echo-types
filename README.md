@@ -21,6 +21,115 @@ Shannon — and ArghDA tooling), each status-tagged and back-linked to
 its proofs and docs, with the retraction/proof-debt governance called
 out. The scattered overview/roadmap docs are detail under it.
 
+## 📐 Structural overview
+
+```mermaid
+flowchart TD
+    F["<b>Foundation</b><br/>Echo f y := Σ (x : A) , (f x ≡ y)<br/>= homotopy fibre"]
+    AD["<b>Pillars A–D</b> (establishment plan, LANDED 2026-05-17)<br/>A: echo↔fib · B: pullback UP · C: separating model · D: carrier-parametric"]
+    PF["<b>Pillar F gates</b> (earn-back, ALL PASSED)<br/>F1: graded-comonad witness · F2: 2nd Echo-functor model<br/>F3: 2nd non-iso grade-monoid · F4: funext-qualified pullback UP<br/>F5: funext-qualified full OFS"]
+    T1["<b>Tier 1 · Canonical identity layer</b> (2026-05-27)<br/>EchoTotalCompletion (A ≃ Σ B Echo f) · OFS-witness · Image · no-section-of-collapsing-map"]
+    T2["<b>Tier 2 · Classification grid</b><br/>LossTaxonomy (function-side) · ResidueTaxonomy (residue-side) · DecorationStructure · _≡m_"]
+    T3["<b>Tier 3 · Qualified universal property</b> (Gate F5)<br/>echo-factorisation-strict · diagonal lifting · factorisation uniqueness up to iso"]
+    AUD["<b>Audience surfaces</b><br/>EchoProvenance · EchoSecurity · EchoProbabilisticSupport · EchoDifferential"]
+    SUITE["<b>EchoCanonicalIdentitySuite</b><br/>(curated single-file entry point)"]
+
+    F --> AD
+    AD --> PF
+    F --> T1
+    T1 --> T2
+    T2 --> T3
+    PF -.->|F5 underpins| T3
+    T1 --> AUD
+    T2 --> AUD
+    T3 --> AUD
+    T1 --> SUITE
+    T2 --> SUITE
+    T3 --> SUITE
+    AUD --> SUITE
+```
+
+The diagram above renders on GitHub; for terminal viewers an ASCII
+version of the same stack:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  EchoCanonicalIdentitySuite   ← curated single-file entry        │
+├─────────────────────────────────────────────────────────────────┤
+│  Audience surfaces:                                              │
+│  Provenance · Security · ProbabilisticSupport · Differential     │
+├─────────────────────────────────────────────────────────────────┤
+│  Tier 3 (Gate F5, funext-qualified):                             │
+│  F5-1 strict triangle · F5-2 diagonal lifting · F5-3 uniqueness  │
+├─────────────────────────────────────────────────────────────────┤
+│  Tier 2 (classification grid):                                   │
+│  LossTaxonomy · ResidueTaxonomy · DecorationStructure · _≡m_     │
+├─────────────────────────────────────────────────────────────────┤
+│  Tier 1 (canonical identity layer):                              │
+│  TotalCompletion · OFS · ImageFactorization · NoSectionGeneric   │
+├─────────────────────────────────────────────────────────────────┤
+│  Pillar F gates F1–F5  (earn-back ledger, ALL PASSED)            │
+├─────────────────────────────────────────────────────────────────┤
+│  Pillars A–D  (establishment plan, LANDED 2026-05-17)            │
+├─────────────────────────────────────────────────────────────────┤
+│  Foundation: Echo f y := Σ (x : A) , (f x ≡ y)                   │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**The headline factorisation** (Tier 1 + Pillar F Gate F5):
+
+```
+                  encode f
+        A ────────────────────→ Σ B (Echo f)
+         ╲                            │
+          ╲                           │
+         f ╲                          │ proj₁
+            ╲                         │
+             ╲                        │
+              ╲                       ↓
+               ────────────────────→ B
+
+      Left leg  (encode f) :  EQUIVALENCE          ← EchoTotalCompletion.A↔ΣEcho
+      Right leg (proj₁)    :  PROJECTION
+      Triangle             :  f ≡ proj₁ ∘ encode f ← strict given funext (F5-1)
+                                                    pointwise definitional otherwise
+```
+
+This is **the** structural fact the repo establishes: every irreversible
+`f` factors canonically through its total Echo space, with the left leg
+an equivalence (the *slogan-unlock*) and the right leg a projection.
+Under `--safe --without-K` the factorisation existence + fibre
+identification (`ofs-witness`) are unconditional; the function-level
+universal-property clauses are earned back under Pillar F Gate F5
+(`funext` as explicit module parameter, never a postulate).
+
+## 📖 Recommended reading order
+
+For someone landing here for the first time and wanting the full arc:
+
+1. **[`docs/echo-types/MAP.adoc`](docs/echo-types/MAP.adoc)** — the
+   master content map, status-tagged.
+2. **[`proofs/agda/EchoCanonicalIdentitySuite.agda`](proofs/agda/EchoCanonicalIdentitySuite.agda)** —
+   the curated single-file Agda entry point, re-exporting every
+   load-bearing headline from Tier 1, Tier 2, Tier 3, and the
+   audience surfaces.
+3. **[`docs/echo-types/universal-property.adoc`](docs/echo-types/universal-property.adoc)** —
+   the categorical-universal-property story end-to-end (pullback +
+   F4 + F5 / OFS), with the diagrams above as the spine.
+4. **[`docs/echo-types/fibration-package.adoc`](docs/echo-types/fibration-package.adoc)** —
+   the fibration-side companion (`map-over` + composition +
+   cancellation + pentagon).
+5. **[`docs/echo-types/paper.adoc`](docs/echo-types/paper.adoc)** —
+   the long-form Pillar E paper (LIVING DRAFT with `[EXPAND]` tags;
+   §"Post-establishment structural extensions" weaves the
+   2026-05-27 Tier-1+2+3 spine into the central argument).
+6. **[`docs/retractions.adoc`](docs/retractions.adoc)** +
+   **[`docs/echo-types/earn-back-plan.adoc`](docs/echo-types/earn-back-plan.adoc)** —
+   honesty layer: R-2026-05-18 narrowing + Pillar F gate ledger
+   (F1–F5 ALL PASSED).
+7. **[`CLAUDE.md`](CLAUDE.md)** — the session-by-session ledger
+   for what got built when (read after the canonical docs).
+
 ## Core Idea
 
 Most formalisms foreground two clean cases:

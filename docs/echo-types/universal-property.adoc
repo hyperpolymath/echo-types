@@ -29,6 +29,45 @@ The narrative here threads the four artefacts (pullback +
 factorisation, each at K-free + funext-qualified levels) into one
 story.
 
+== The two diagrams in one place
+
+Pullback presentation (§"Pullback presentation"):
+
+[source]
+----
+                 echo-pullback-univ
+        Echo f y ─────────────────→ A
+            │       (existence +    │
+            │        pointwise      │
+       proj₂│        uniqueness)    │ f
+            │                       │
+            ↓                       ↓
+            ⊤ ──────────────────→ B
+                     y
+----
+
+Factorisation system (§"Gate F5 — full OFS, honestly qualified"):
+
+[source]
+----
+                    encode f
+        A ─────────────────────→ Σ B (Echo f)
+         ╲                              │
+          ╲    (left = equivalence)     │
+         f ╲                            │ proj₁
+            ╲   (right = projection)    │
+             ╲                          │
+              ╲                         ↓
+               ──────────────────────→ B
+
+       triangle:    f ≡ proj₁ ∘ encode f
+       (definitional pointwise; strict given funext via F5-1)
+----
+
+Both diagrams collapse to the same fibre intuition: `Echo f y` IS
+the *fibre* of the right-leg projection at `y`, and the right-leg
+projection is the canonical `proj₁` out of the total Σ-space.
+
 == Pullback presentation (`EchoPullback.agda`)
 
 `Echo f y` is the pullback of `f` along the point `y : ⊤ → B`:
@@ -133,6 +172,25 @@ left equivalence (via `HasInverse`) + right projection (=
 pointwise, is unique pointwise. K-free in `module Pointwise`;
 strict in `module Strict (funext)`.
 
+[source]
+----
+                    h
+         A ────────────────→ Σ B (Echo f)
+         │  ╲                      │
+         │    ╲ lift               │
+       e │     ╲ (= h ∘ e⁻¹)       │ proj₁
+         │       ╲                 │
+         ↓         ╲↓               ↓
+         A' ────────────────────→ B
+                    k
+
+   Premise:   proj₁ ∘ h ≡ k ∘ e  (pointwise commutativity)
+   Lift:      ∃! lift such that  lift ∘ e ≡ h   AND   proj₁ ∘ lift ≡ k
+   Construct: lift x := h (e⁻¹ x)
+   Strictness: function-equation form given funext;
+              pointwise form K-free unconditionally.
+----
+
 === Slice F5-3 (`EchoOFSUnivF5Iso.agda`)
 
 Factorisation uniqueness up to iso. Given any second
@@ -152,6 +210,33 @@ construction factors through the existing totality completion:
 Round-trips reduce via the K-free `encode-decode` /
 `decode-encode` lemmas + `cong` of the inverse data. No
 triangle identity needed — bare `HasInverse` suffices.
+
+[source]
+----
+   Setup: f = p ∘ g, g has two-sided inverse g⁻¹
+
+                     g
+        A ────────────────────→ X
+        │                       │
+   f    │                       │ p
+        │                       │
+        ↓                       ↓
+        B ←─────────────────── B
+                  =
+
+   Canonical iso (Gate F5-3):
+
+                  φ.to = encode f ∘ g⁻¹
+        X ──────────────────────────────→ Σ B (Echo f)
+                                              │
+                                              │ proj₁
+                  φ.from = g ∘ decode f        │
+        X ←──────────────────────────────── Σ B (Echo f)
+                                              │
+                                              ↓
+                                              B
+                  (proj₁ ∘ φ.to ≡ p, pointwise via commute)
+----
 
 === Gate-pass status
 

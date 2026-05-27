@@ -69,6 +69,21 @@ pattern.
 
 == Composition accumulation iso: `Echo-comp-iso`
 
+[source]
+----
+                       Echo-comp-iso f g y
+       Echo (g ∘ f) y ───────────────────→ Σ B (λ b → Echo f b × (g b ≡ y))
+            ▲                                              │
+            │                                              │
+            │   Echo-comp-iso-from f g                     │
+            └──────────────────────────────────────────────┘
+
+   Reading: an echo of g ∘ f at y is *equivalent* to picking an
+   intermediate b : B, an echo of f at that b, plus the equation
+   g b ≡ y connecting them. Composition ACCUMULATES witness
+   structure (does NOT weaken the intensional core).
+----
+
 The echo of `g ∘ f` at `y` is canonically equivalent to a
 Σ-over-intermediate-base-point:
 
@@ -91,6 +106,27 @@ to-from}` are pinned in `Smoke.agda`; the packaged `↔` (via
 stdlib's `Function.Bundles.mk↔ₛ′`) is the consumer-side artefact.
 
 == Cancellation iso through a section: `cancel-iso`
+
+[source]
+----
+       g : B → C  with  s : C → B  s.t.  s ∘ g ~ id  ∧  g ∘ s ~ id
+       (+ both triangle identities as explicit hypotheses)
+
+                           cancel-iso f g s ... y
+       Echo (g ∘ f) y ───────────────────────────→ Echo f (s y)
+            ▲                                              │
+            │                                              │
+            │   cancel-iso-from f g s ...                  │
+            └──────────────────────────────────────────────┘
+
+   Reading: when g admits a section/retraction pair s, the outer
+   echo at y is recoverable as the inner echo at the transported
+   base point s y. The triangle identities are required because
+   under --without-K a bare two-sided inverse is weaker than a
+   coherent equivalence; the cancel-iso takes both adjustments
+   as explicit module parameters (same discipline F4/F5 use for
+   funext).
+----
 
 Given a section/retraction pair `(g : B → C, s : C → B)` with
 both `s-left : ∀ b → s (g b) ≡ b` and `s-right : ∀ y → g (s y)
@@ -128,6 +164,34 @@ of `Echo.agda` — a ten-step `≡-Reasoning` block routing through
 `trans-symˡ`.
 
 == Pentagon coherence: `Echo-comp-iso-pent-*` + `Echo-comp-pent-Σ-assoc`
+
+[source]
+----
+   Three-fold composition  h ∘ g ∘ f  admits TWO natural factorings:
+
+   outer-first:                        inner-first:
+
+   Echo (h ∘ (g ∘ f)) y                Echo ((h ∘ g) ∘ f) y
+          │                                   │
+          │ split at h                        │ split at (h ∘ g)
+          ↓                                   ↓
+   Σ c (Echo (g∘f) c × h c ≡ y)        Σ b (Echo f b × (h∘g) b ≡ y)
+          │
+          │ split at g
+          ↓
+   Σ c (Σ b (Echo f b × g b ≡ c) × h c ≡ y)
+                       │
+                       │ Σ-associativity iso
+                       │ (Echo-comp-pent-Σ-assoc)
+                       ↓
+              Σ b (Echo f b × h (g b) ≡ y)
+
+   The pentagon coherence pins that BOTH factorings agree on the
+   A-origin (echo-comp-iso-pent-B) AND on the Echo-f component
+   (echo-comp-iso-pent-echo). The full Σ-associativity iso is
+   strict (no transport coherence required) and lives inside
+   --safe --without-K.
+----
 
 Three-fold composition `h ∘ g ∘ f` admits two natural factorings
 via `Echo-comp-iso`: outer-first (split at `h`, then inner at

@@ -34,6 +34,36 @@ its grade-unit object — not redefining Echo.
 
 == Gates, in dependency order
 
+[source]
+----
+   Pillar F gate dependency graph (all PASSED as of 2026-05-27)
+
+                       F1 (graded-comonad witness)
+                       ──make-or-break──
+                            │
+              ┌─────────────┼─────────────┐
+              │             │             │
+              ↓             ↓             ↓
+       F4 (pullback UP)  F2 (Echo-      F3 (second
+       funext-qualified  functor 2nd    non-isomorphic
+                         model)         grade-monoid)
+              │
+              ↓
+       F5 (full OFS — three slices)
+        │       │       │
+        ↓       ↓       ↓
+       F5-1   F5-2    F5-3
+       strict diagonal factorisation
+       triangle lifting uniqueness-up-to-iso
+
+   Reading: F1 is the only make-or-break; F2 / F4 are independent
+   of F1 (both expected tractable, both PASSED); F3 is gated on F1
+   (passes after F1 lands). F5 (added 2026-05-27 post-F4 success
+   pattern) takes F4 as its template — same "funext as explicit
+   module parameter" discipline. F5's three slices are mutually
+   independent (each landed standalone), composed for full pass.
+----
+
 [#gate-F1]
 === Gate F1 — Genuine graded comonad (MAKE-OR-BREAK)
 
