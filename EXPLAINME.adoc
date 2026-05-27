@@ -29,3 +29,17 @@ Per `.machine_readable/6a2/STATE.a2ml`:
 * Bridges: linear, graded, tropical, choreographic, epistemic, CNO, Janus, Dyadic, Ordinal, Indexed, Relational, Categorical, Scope.
 * Investigation EI-2 (integration-recipe distinctness) terminated negatively via PATH B.
 * `.machine_readable/6a2/STATE.a2ml § ei-2` is the authoritative record; do not reopen.
+
+Ongoing tracks at a glance (point-in-time, see `roadmap.adoc` for the live status):
+
+* *Identity claim.* `docs/retractions.adoc` R-2026-05-18 narrows the public claim to a *loss-graded reindexing modality* over a thin poset (not a graded comonad). Every newer artefact is stated within those narrowings.
+* *Ordinal / Buchholz track.* 11 of 13 per-constructor rank-mono cases closed under the WfCNF-restricted `_<ᵇ⁻_` via the `RankPow` / `RankAdm` / `RankLex` slices. Remaining open case `<ᵇ-+1` joint-bplus has the `Ordinal.Buchholz.HeadOmega` first slice landed; rank-mono follow-ons designed. See `docs/echo-types/buchholz-rank-obstruction.adoc`.
+* *Tutorial track (Lane 5).* Three worked walkthroughs under `tutorial/` (certified region-exit audit, epistemic erasure, provenance/debugging echo); each carries an honest-bound disclosure at the top and a matched-negative block at the bottom. The tutorial tree builds with the repo root added to the Agda include path; see `tutorial/README.adoc`.
+* *Establishment track (Pillar E).* Internal programme (Pillars A–D) complete since 2026-05-17. The paper (`docs/echo-types/paper.adoc`) is a living draft with remaining `[EXPAND]` tags; the venue + Zenodo + outreach plan sits in `docs/echo-types/pillar-e-offline.adoc` (author-driven).
+
+== Where to look first
+
+* `docs/echo-types/MAP.adoc` — the master map (every direction, status-tagged).
+* `roadmap.adoc` + `roadmap-gates.adoc` — lane structure + identity-claim gates.
+* `tutorial/README.adoc` — the pedagogy track if you want to read worked examples first.
+* `docs/retractions.adoc` — read before citing any claim above as final.

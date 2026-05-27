@@ -91,9 +91,12 @@ the standing B- freeze lifted because O-THERMO-∞ is now discharged
 Staged Buchholz-style collapsing in `--safe --without-K`.
 
 * Proofs: `proofs/agda/Ordinal/` (`Buchholz/`, `Brouwer`, `CNF`,
-  `Closure`, `Psi…`, `ExtendedOrder`).
+  `Closure`, `Psi…`, `ExtendedOrder`, `RankPow`, `RankAdm`,
+  `RankLex`, `HeadOmega`).
 * Docs: `docs/buchholz-plan.adoc`,
-  `docs/echo-types/buchholz-extended-wf.md`.
+  `docs/echo-types/buchholz-extended-wf.md`,
+  `docs/echo-types/buchholz-rank-obstruction.adoc` (per-constructor
+  verdict table — see ledger for live count).
 * Direct-constructor `_<ᵇ_` same-binder cases (Buchholz item B):
   status tracked solely in the earn-back ledger
   (`docs/echo-types/earn-back-plan.adoc`, row B) and
@@ -152,6 +155,33 @@ mutual-information formalisation is open.
 * Docs: `docs/ECHO-CNO-BRIDGE.adoc` (lines ~104, ~254),
   `docs/adjacency/information-flow.adoc`,
   `docs/gate-3-canonical.adoc`, `docs/gate-3-transport-handoff.adoc`.
+
+== Tutorial / pedagogy `[REAL]`
+
+Three worked walkthroughs landing 2026-05-26/27 under `tutorial/`,
+each following the honest-bound + matched-negative discipline
+(disclosure at top + `NotProved-*` ⊤-aliases at bottom). Build with
+`agda --library-file=/tmp/agda-libs -i . -i proofs/agda tutorial/All.agda`.
+
+* *Walkthrough 1 — certified region-exit audit*
+  (`tutorial/region_exit_audit/`). ephapax-L3-style region exit
+  modelled type-level via `EchoLinear.no-section-weaken`. Killer-app
+  candidate per `roadmap.adoc` §Lane 5 second unblocking condition.
+* *Walkthrough 2 — epistemic erasure*
+  (`tutorial/epistemic_erasure/`). 4-seed → 2-key KDF with
+  no-section-via-residue lifted from
+  `EchoResidue.no-section-collapse-to-residue`. Heads off the
+  "does echo-types prove key zeroing?" category-error question.
+* *Walkthrough 3 — provenance / debugging*
+  (`tutorial/provenance_debugging/`). 4-element `State` with two
+  orthogonal sign bits walked through 3 residue layers. Ships
+  *both* a section (Layer 1) and its absence (Layer 2),
+  exhibiting the boundary at which type-level recovery flips.
+
+Track-level docs: `tutorial/README.adoc`, plus per-walkthrough
+`README.adoc` files. Lane policy status: see `roadmap.adoc` §Lane 5
+(currently [PARKED] at lane-policy level pending user unpark
+decision; all three walkthroughs landed regardless).
 
 == Tooling
 
