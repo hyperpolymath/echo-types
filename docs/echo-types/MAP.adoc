@@ -92,7 +92,7 @@ Staged Buchholz-style collapsing in `--safe --without-K`.
 
 * Proofs: `proofs/agda/Ordinal/` (`Buchholz/`, `Brouwer`, `CNF`,
   `Closure`, `Psi…`, `ExtendedOrder`, `RankPow`, `RankAdm`,
-  `RankLex`, `HeadOmega`).
+  `RankLex`, `HeadOmega`, `HeadOmegaInversion`).
 * Docs: `docs/buchholz-plan.adoc`,
   `docs/echo-types/buchholz-extended-wf.md`,
   `docs/echo-types/buchholz-rank-obstruction.adoc` (per-constructor

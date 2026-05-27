@@ -23,6 +23,52 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
     a two-level compositional convenience) — first slice of option
     (A) for the remaining `<ᵇ-+1` joint-bplus discharge; no
     rank-mono yet.
+- *Lane 3 head-Ω route — Slice 2 + Slice 2-omega + inversion (option (b))
+  landed.* Follow-on to the Slice 1 head-Ω landing above (session night,
+  PRs #130 + #131):
+  - `Ordinal.Buchholz.RankPow` gains `ω-rank-pow-succ : OmegaIndex →
+    Ord` with per-marker strict dominance at *both* branches
+    (`ω-rank-pow-<-succ-fin` via `ω^-strict-mono-suc`;
+    `ω-rank-pow-<-succ-omega` via the `Brouwer/OmegaPow.ω^-strict-mono-suc`
+    template mirrored at `ω-rank-pow ω`) plus the unified
+    `ω-rank-pow-<-succ : ∀ μ → ω-rank-pow μ <′ ω-rank-pow-succ μ`,
+    plus atomic-rank factoring through `head-Ω`
+    (`rank-pow-bOmega-via-head-Ω`, `rank-pow-bpsi-via-head-Ω`).
+  - Slice 2-omega closes a Brouwer-encoding hazard the original
+    CLAUDE.md proposal would have tripped: the proposed
+    `ω-rank-pow-succ ω = olim (λ n → ω^(suc(suc n)))` is
+    equi-ordinal with `ω-rank-pow ω = olim (λ n → ω^(suc n))`
+    (both denote `ω^ω`), so cannot strictly dominate.  The
+    revised shape `olim (λ n → ω-rank-pow ω ·ℕ n)` denotes
+    `ω^(ω+1)` and goes strictly higher via `X≤′oz⊕X` +
+    `⊕-mono-<-right (ω-rank-pow-pos ω)`.  Full record in
+    `Ordinal.Buchholz.RankPow`'s "History note" block.
+  - New module `Ordinal.Buchholz.HeadOmegaInversion` lands the
+    option-(b) inversion lemmas `head-Ω-inv-bOmega :
+    bOmega ν <ᵇ y → ν <Ω head-Ω y` (strict — three constructors
+    with `bOmega ν` LHS all carry strict `<Ω` witnesses) and
+    `head-Ω-inv-bpsi : bpsi ν α <ᵇ y → ν ≤Ω head-Ω y` (non-strict —
+    the `<ᵇ-ψΩ≤` constructor tops out at `≤Ω`).  Both proved by
+    structural recursion on the `<ᵇ` derivation; no rank-mono
+    dependency.  Picking option (b) over option (a) keeps the
+    eventual `rank-pow-dominated-by-head-Ω` (Slice 2-bplus,
+    remaining open) independent of the still-open `rank-pow-mono-≤ᵇ`
+    on the original `_<ᵇ_`.
+- *Decoration bridge — R5 exploratory entry scaffolded (PR #129).*
+  `docs/echo-types/explorations/decoration-bridge/` lands a bounded
+  exploration of whether the Choreo × Graded integration shape
+  resembles adjacent-domain decoration constructions (CRDTs, gossip,
+  local-first causal histories).  Scope strictly the one axis pair
+  `EchoIntegration.agda` already integrates; external candidates
+  framed as analogies-with-falsifiers, never as evidence of recipe
+  generalisation.  Sits as `roadmap.adoc` § R5 (deferred research)
+  with explicit termination criteria (Track A/B/C failure, all
+  candidates retired, redundancy with retracted framing,
+  forbidden-rebrandings register addition, retraction-watch trip).
+  Companion Agda module `proofs/agda/EchoDecorationBridge.agda` —
+  deliberately not in `All.agda`, classified as "Exploratory (not in
+  All.agda)" in `docs/echo-types/echo-kernel-note.adoc` so CI's
+  classification-drift lint stays green.
 - *Lane 5 tutorial track — the originally-scaffolded triplet is
   complete.* `tutorial/` ships three worked walkthroughs with
   honest-bound disclosure at top + matched-negative `NotProved-*`

@@ -202,18 +202,24 @@ separate branches.
 constructors closed via the budgeted route + `_<ᵇ⁰_` umbrella + Lane 3
 follow-ons (`<ᵇ⁺-ψα` via `RankAdm` 2026-05-26; `<ᵇ-ψΩ≤` at both
 `ν<μ` and the `ν=μ` boundary via `RankLex` 2026-05-27). One
-constructor case (`<ᵇ-+1` joint-bplus) remains open with the
-`Ordinal.Buchholz.HeadOmega` first slice landed 2026-05-27; rank-mono
-follow-ons designed in `RankPow.agda`'s preamble and the obstruction
-doc.
+constructor case (`<ᵇ-+1` joint-bplus) is in flight under the
+head-Ω domination route (option A from `RankPow.agda`'s preamble):
+the abstraction (`head-Ω` + `ω-rank-pow-succ`), the per-marker
+strict dominances at *both* branches, the unified `ω-rank-pow-<-succ`,
+and the option-(b) head-Ω inversion lemmas have all landed across
+PRs #124 (Slice 1, 2026-05-27 late evening), #130 (Slice 2, session
+night), and #131 (Slice 2-omega + inversion + ledger).  Only Slice
+2-bplus — the WfCNF-carrier structural recursion — remains.
 
 *Close-out criterion.* Either:
 
 * the remaining `<ᵇ-+1` joint-bplus case closes via the head-Ω
-  domination route (Slice 2 = `ω-rank-pow-succ` + the domination
-  lemma; Slice 3 = the headline `rank-mono-<ᵇ-+1-via-head-Ω`;
-  Slice 4 = full `rank-pow-mono-<ᵇ⁻` umbrella composition),
-  unblocking full `wf-<ᵇʳᶠ`; OR
+  domination route's Slice 2-bplus (`rank-pow-dominated-by-head-Ω`
+  by structural recursion on WfCNF, consuming the already-landed
+  `head-Ω-inv-{bOmega,bpsi}` + `ω-rank-pow-<-succ`; then the
+  headline `rank-mono-<ᵇ-+1-via-head-Ω` discharge, then the full
+  `rank-pow-mono-<ᵇ⁻` umbrella composition), unblocking full
+  `wf-<ᵇʳᶠ`; OR
 * a falsifiable verdict lands stating that the unbudgeted promotion
   cannot close under `--safe --without-K` for the current `_<ᵇ_`,
   with the WfCNF-restricted `_<ᵇ⁻_` accepted as the final form.

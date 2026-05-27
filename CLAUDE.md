@@ -193,7 +193,107 @@ work to `main` and refresh all documentation:
 
 ## Current rung state (2026-05-27)
 
-### Session arc 2026-05-27 evening — Lane 5 Walkthrough 3 landed (read this first)
+### Session arc 2026-05-27 night — Lane 3 head-Ω Slice 2 landed (read this first)
+
+*Where we started today (commit `65806f4` on `main`, post-#129):* the
+PR #129 decoration-bridge scaffold landed under R5; Lane 3's head-Ω
+domination route had Slice 1 (`HeadOmega.agda`) but no Slice 2 work.
+The `<ᵇ-+1` joint-bplus case remained open with `head-Ω` defined but
+not yet consumed by any rank-mono primitive.
+
+*Where we ended today (commit `bf9ee6e` on `main`, post-#130):* Slice 2
+lands the abstraction (`ω-rank-pow-succ` + the fin-branch strict
+dominance) plus an honest obstruction note on the ω branch:
+
+1. *`Ordinal.Buchholz.RankPow.agda` additions.*
+   * `ω-rank-pow-succ : OmegaIndex → Ord` — the per-marker "next
+     ω-power up" target.  Fin branch is `ω^(suc(suc n))`; ω branch
+     reuses the original CLAUDE.md proposal `olim (λ n →
+     ω^(suc(suc n)))` so the abstraction is in place for follow-on
+     slices to inspect and (if needed) override.
+   * `ω-rank-pow-succ-fin` — definitional sanity at the fin branch.
+   * `ω-rank-pow-<-succ-fin` — per-marker strict dominance at fin
+     via `ω^-strict-mono-suc (suc n)`.
+   * `rank-pow-bOmega-via-head-Ω`, `rank-pow-bpsi-via-head-Ω` —
+     atomic-rank `refl`-shape primitives factoring `rank-pow` through
+     `head-Ω` for the two non-bplus, non-bzero `BT` constructors.
+
+2. *`Ordinal.Buchholz.Smoke.agda` pinning.*  Five headlines pinned
+   under their own `using` block with a header comment, per CLAUDE.md
+   Working rules.
+
+*Obstruction note.*  The originally-proposed CLAUDE.md shape
+`ω-rank-pow-succ ω = olim (λ n → ω^(suc(suc n)))` represents the
+**same** ordinal as `ω-rank-pow ω = olim (λ n → ω^(suc n))` — both
+are `sup{ω^(n+1) : n ∈ ℕ} = ω^ω`, with different ℕ-indexings of the
+same tail.  Strict dominance at the ω branch therefore cannot hold
+under that shape.  Inline `RankPow.agda` comments document two
+follow-on slices:
+
+* *Slice 2-omega.*  Replace the ω branch with a genuinely
+  strictly-larger ordinal.  Candidate: `ω^(ω+1)` encoded as
+  `olim (λ n → (ω-rank-pow ω) ·ℕ n)`.  Three cross-checks
+  documented inline before committing (closure under ordinal
+  addition; the consumer's actual additive-principal need; sanity-
+  check of the indexing's leading `oz ⊕` which is NOT definitionally
+  `ω-rank-pow ω` under Brouwer's right-recursing `_⊕_`).
+* *Slice 2-bplus.*  Prove the full
+  `rank-pow-dominated-by-head-Ω : (t : BT) → NonBzero t → WfCNF t →
+  rank-pow t <′ ω-rank-pow-succ (head-Ω t)` by structural recursion
+  on WfCNF.  The bplus case needs a `rank-pow-mono-≤ᵇ` companion for
+  the original `_<ᵇ_` (the WfCNF tail bound is `_≤ᵇ_`, not `_≤ᵇ⁰_`).
+  Marked `TODO(slice-2-bplus)` inline.  Option (b) — head-Ω inversion
+  that does not transitively depend on rank-mono — is preferred
+  because it keeps `rank-pow-dominated-by-head-Ω` independent of
+  the companion so signature changes don't silently propagate.
+
+Build invariant held: `proofs/agda/All.agda` + `proofs/agda/Smoke.agda`
++ `Ordinal/Buchholz/Smoke.agda` all exit 0 under `--safe --without-K`,
+zero postulates, no funext.  `scripts/kernel-guard.sh` PASS.
+
+PR #130 was admin-merged before CI green at user direction; CI was
+still all-12-queued at merge time.  No CI failures have surfaced
+since (treat any later red as authoritative if it does).
+
+*Plan for the next Claude.*
+
+Within this same session (2026-05-27 night, PR #131), items (1) and
+(2) from the original plan also landed:
+
+* *(1) Option (b) head-Ω inversion lemma — LANDED* (commit `560f904`).
+  New module `Ordinal.Buchholz.HeadOmegaInversion` ships
+  `head-Ω-inv-bOmega : bOmega ν <ᵇ y → ν <Ω head-Ω y` (strict) and
+  `head-Ω-inv-bpsi : bpsi ν α <ᵇ y → ν ≤Ω head-Ω y` (non-strict —
+  tracks the `<ᵇ-ψΩ≤` constructor).  Pinned in
+  `Ordinal/Buchholz/Smoke.agda` under its own `using` block.  Wired
+  into `All.agda`.  No rank-mono dependency — that was the
+  load-bearing dependency-graph invariant the design called for.
+* *(2) Slice 2-omega — LANDED* (commit `07abc15`).  ω branch of
+  `ω-rank-pow-succ` replaced with `olim (λ n → ω-rank-pow ω ·ℕ n)`
+  (= `ω^(ω+1)`); per-marker strict dominance proved at the ω
+  branch via a mirror of `Brouwer/OmegaPow.ω^-strict-mono-suc`
+  (branch-index-2 + `X≤′oz⊕X` + `⊕-mono-<-right (ω-rank-pow-pos ω)`).
+  Unified `ω-rank-pow-<-succ : ∀ μ → ω-rank-pow μ <′
+  ω-rank-pow-succ μ` covers both branches.
+
+Only one item remains open:
+
+3. *Slice 2-bplus* — prove the full domination lemma
+   `rank-pow-dominated-by-head-Ω : (t : BT) → NonBzero t → WfCNF t →
+   rank-pow t <′ ω-rank-pow-succ (head-Ω t)` by structural recursion
+   on the WfCNF carrier.  Both per-marker dominances now hold; the
+   atomic cases discharge via `rank-pow-{bOmega,bpsi}-via-head-Ω` +
+   `ω-rank-pow-<-succ`.  The bplus case consumes
+   `head-Ω-inv-{bOmega,bpsi}` from `HeadOmegaInversion` to pull
+   `head-Ω` bounds from the WfCNF tail's `<ᵇ` witness.  No further
+   inversion-via-rank-mono dependency is introduced — that's what
+   option (b) bought.
+
+DO NOT reopen: the closed 11/13 Buchholz constructors; the W1/W2/W3
+walkthroughs; the R-2026-05-18 narrowings; the closed fin-branch /
+ω-branch / unified dominances; the head-Ω inversion family.
+
+### Session arc 2026-05-27 evening — Lane 5 Walkthrough 3 landed
 
 *Where we started today (commit `4d77d75` on `docs/consolidate-roadmaps-
 and-sigma-skepticism-2026-05-26`, post-#123):* the consolidation branch
