@@ -166,7 +166,7 @@ open import Ordinal.Buchholz.RankPow using
 ω-rank-pow-mono-≤Ω : ∀ {μ ν} → μ ≤Ω ν → ω-rank-pow μ ≤′ ω-rank-pow ν
 ω-rank-pow-mono-≤Ω (fin≤fin m≤n) = ω^-mono-≤ (s≤s m≤n)
 ω-rank-pow-mono-≤Ω {fin m} fin≤ω = f-in-lim′ (λ k → ω^ (suc k)) m
-ω-rank-pow-mono-≤Ω ω≤ω           = ≤′-refl
+ω-rank-pow-mono-≤Ω ω≤ω           = ≤′-refl {ω-rank-pow ω}
 
 ----------------------------------------------------------------------
 -- Positivity of `ω-rank-pow-succ`
