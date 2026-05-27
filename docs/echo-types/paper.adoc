@@ -404,6 +404,35 @@ the corollary. The *unconditional* claim stays retracted. Logged as
 retraction follow-up F-2026-05-18a.
 ====
 
+[NOTE]
+====
+*Full OFS earned back, conditionally (Gate F5 FULL PASS, 2026-05-27).*
+The complete (equivalence, projection) orthogonal factorisation
+system on Type — factorisation existence + diagonal lifting +
+factorisation uniqueness up to isomorphism — is mechanised at the
+funext-qualified level by three modules in the F4 template (funext
+as an explicit module parameter, never a postulate; unconditional
+pointwise corollaries kept funext-free):
+
+* `proofs/agda/EchoOFSUnivF5.agda` — slice F5-1, strict factorisation
+  triangle `f ≡ proj₁ ∘ encode f` given funext.
+* `proofs/agda/EchoOFSUnivF5Diag.agda` — slice F5-2, diagonal lifting
+  property in `module Pointwise` (K-free) + `module Strict` (funext).
+* `proofs/agda/EchoOFSUnivF5Iso.agda` — slice F5-3, factorisation
+  uniqueness up to iso via the composition design
+  `φ.to = encode f ∘ g⁻¹` (routing path-algebra through the
+  existing K-free `encode-decode` / `decode-encode` round-trips —
+  no triangle identity needed).
+
+The honest reading mirrors F4: not "retracted → unconditional" but
+"retracted → *true, conditional on funext*". The (epi, mono)
+truncation form of the image factorisation remains a separate
+deferred earn-back (requires propositional truncation). Logged as
+retraction follow-up F-2026-05-27a in `docs/retractions.adoc`. The
+curated `EchoCanonicalIdentitySuite.agda` re-exports the F5
+headlines under the suite-side index.
+====
+
 == The loss-graded reindexing modality
 
 === Structure
@@ -1212,6 +1241,91 @@ model-independence row is earned back *for the bare Echo functor only*
 via a genuine non-graph `StepND` model (§6 NOTE,
 `EchoStepNDModelF2.agda`). The graded-comonad, modality-level
 model-independence, and conservativity rows remain fully retracted.
+
+== Post-establishment structural extensions (2026-05-27)
+
+A substantial layer of structural mechanisation landed after the
+Pillars A–D narrative above was drafted. It is documented in
+`docs/echo-types/MAP.adoc` §"Canonical identity layer" and
+mirrored on the GitHub wiki; this section threads it into the
+paper's central argument. The headline:
+
+*Echo is now mechanically identified as the canonical fibre-
+completion functor + one leg of the (equivalence, projection)
+orthogonal factorisation system on Type, with the qualified
+universal-property clauses earned back under Pillar F Gate F5
+(FULL PASS 2026-05-27, F-2026-05-27a).*
+
+Three layers:
+
+. *Canonical identity layer (Tier 1).*
+  `EchoTotalCompletion.A↔ΣEcho` mechanises the slogan
+  `A ≃ Σ B (Echo f)` — every irreversible map's domain is
+  canonically equivalent to the total space of its echoes.
+  `EchoOrthogonalFactorizationSystem.ofs-witness` packages the
+  four-tuple OFS witness at the K-free level (factorisation
+  existence + left-leg equivalence + projection-fibre identification
+  + echo↔fib bridge). `EchoImageFactorization.Image` is the
+  proof-relevant image (= total Echo space) with both triangle
+  legs named. `EchoNoSectionGeneric.no-section-of-collapsing-map`
+  lifts the long-standing single-instance no-section result to a
+  structural theorem about any collapsing map with distinguishable
+  collapsing pair.
+
+. *Classification grid (Tier 2).* The audit's
+  "kinds-of-loss × shapes-of-residue × decoration-recipe ×
+  observational-equality" four-axis grid is mechanised:
+  `EchoLossTaxonomy` (function-side: EQUIV/INJ/SURJ/CONST),
+  `EchoResidueTaxonomy` (residue-side: `record ResidueForm` +
+  six instances including Indexed and Cost),
+  `EchoDecorationStructure` (`record DecorationStructure` +
+  four instances + abstract degrade-compose theorem),
+  `EchoObservationalEquivalence` (mode-indexed `_≡m_` with the
+  headline `mode-equality-strictly-finer-at-linear`).
+
+. *Qualified universal property (Tier 3, Pillar F Gate F5).*
+  All three F5 slices land in the F4 template (funext as
+  explicit module parameter, never a postulate; unconditional
+  pointwise corollaries kept funext-free):
+  `EchoOFSUnivF5.echo-factorisation-strict` (strict factorisation
+  triangle); `EchoOFSUnivF5Diag` (diagonal lifting property in
+  `Pointwise` + `Strict` modules); `EchoOFSUnivF5Iso`
+  (factorisation uniqueness up to iso via the composition design
+  `φ.to = encode f ∘ g⁻¹`, routing path-algebra through the
+  existing K-free `encode-decode`/`decode-encode` lemmas —
+  no triangle identity required, contrary to initial diagnosis).
+
+Plus the audience-facing layer: four parametric records
+(`Provenance`, `Security`, `Sampling`, `Sensitivity`) exposing
+the structural content under the names different domains speak
+in; each ships honest-bound matched-negative `NotProved-*` blocks.
+The curated `EchoCanonicalIdentitySuite.agda` is the single-file
+entry point re-exporting the load-bearing headlines.
+
+Two cementing matched-negatives against shadow encodings —
+`EchoEntropy.entropy-shadow-blind` (Shannon-entropy shadow can't
+distinguish what witness side can) and `EchoLLEncoding.gap-paired`
+(LL `!A := 1` shadow admits a section that Echo provably lacks) —
+close the "but couldn't you just use entropy / LL?" line of
+attack at the qualified-counterexample level.
+
+Two consolidation narratives — `universal-property.adoc` and
+`fibration-package.adoc` — thread the pullback+F4+F5 arc and the
+`map-over`+composition+cancellation+pentagon arc respectively as
+end-to-end reading orders. Both cite source modules; neither
+adds new proofs.
+
+*What this layer earns back, scoped narrowly.* The (equivalence,
+projection) OFS on Type is now a *qualified* universal-property
+artefact in this library — true given funext, stated as such.
+The (epi, mono) image factorisation form still requires
+propositional truncation (`∥_∥`), which `--safe --without-K`
+without HITs can't construct; it remains the next deferred
+earn-back. The unconditional content (factorisation existence +
+fibre identification per `EchoOrthogonalFactorizationSystem`)
+remains the funext-free load-bearing artefact. The R-2026-05-18
+discipline — claim-text moves with mechanisation, never ahead of
+it — governs this layer as it did Pillars A–D.
 
 == Conclusion
 

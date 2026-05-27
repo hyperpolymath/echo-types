@@ -134,6 +134,16 @@ Both exit 0 under `--safe --without-K` with zero postulates.
   second realisation of
 * `docs/retractions.adoc` R-2026-05-18 — the discipline the
   honest-bound disclosure inherits
+* `proofs/agda/EchoSecurity.agda` — the audience-facing abstract
+  module is `EchoSecurity` (Walkthrough 1's generalisation).
+  Epistemic erasure is structurally a `Security` instance with
+  seeds as resources and keys as receipts: the KDF collapses two
+  distinguishable seeds to the same key (audit-no-recovery
+  becomes "no recovery of the seed from the key alone"). No
+  dedicated `EchoEpistemicErasure` audience module is shipped —
+  the `Security` abstraction subsumes it cleanly per this
+  observation. Citers of the KDF-style audit claim should cite
+  `EchoSecurity` directly.
 
 == Status
 

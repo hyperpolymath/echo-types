@@ -171,3 +171,20 @@ absint-classification (m1 , ())
 absint-classification (z  , ())
 absint-classification (p1 , _) = inj₁ refl
 absint-classification (p2 , _) = inj₂ refl
+
+----------------------------------------------------------------------
+-- 2026-05-27 follow-up: audience-asymmetry note.
+--
+-- Like `EchoExampleParser`, this example does NOT have a dedicated
+-- audience-facing successor module. "Abstract interpretation /
+-- presentation-dependence" is an EDITORIAL AXIS (the PR #76 cluster)
+-- rather than a DOMAIN AUDIENCE for which a parametric `EchoAbsInt`
+-- module would carry distinct content beyond what `EchoProvenance`
+-- (the database-lineage audience-facing abstract) already provides.
+-- The asymmetry vs `EchoExampleProvenance` (which DOES have an
+-- audience-facing successor) is intentional: only the database /
+-- lineage framing is a domain-specific audience that benefits from
+-- its own naming convention. The structural content here remains as
+-- the concrete sign-lattice worked example for abstract-
+-- interpretation readers.
+----------------------------------------------------------------------

@@ -172,6 +172,20 @@ Both exit 0 under `--safe --without-K` with zero postulates.
   third realisation of
 * `docs/retractions.adoc` R-2026-05-18 — the discipline the
   honest-bound disclosure inherits
+* `proofs/agda/EchoProvenance.agda` — the audience-facing
+  abstract module is `EchoProvenance` (Walkthrough 3's
+  layer-1 / no-flip / lineage shape). This walkthrough's
+  distinctive content — the LAYER-BOUNDARY flip where a section
+  exists at layer 1 but not at layer 2 — extends `EchoProvenance`'s
+  pattern: at layer 1 the classification is tag-distinguished
+  (the `Provenance` shape), at layer 2 the trivial residue
+  collapses and `EchoNoSectionGeneric.no-section-of-collapsing-map`
+  fires. No dedicated `EchoDebugLineage` audience module is
+  shipped — the boundary-flip is a composition of `EchoProvenance`
+  (layer-1 section) + `EchoNoSectionGeneric` (layer-2 no-section)
+  rather than a primitive audience-facing shape. Citers of the
+  "layer-boundary" framing should cite both modules + this
+  walkthrough as the concrete demonstration.
 
 == Status
 
@@ -180,4 +194,8 @@ LANDED 2026-05-27 as the third Lane 5 walkthrough. With Walkthroughs
 `tutorial/README.adoc` is complete in Agda. Lane 5 remains [PARKED]
 at the lane-policy level pending the user's accept-or-defer
 decision on whether Walkthrough 1's killer-app candidate suffices
-for §Lane 5 unparking per `roadmap.adoc`.
+for §Lane 5 unparking per `roadmap.adoc`. The audience-facing
+abstractions covering all three walkthroughs (EchoSecurity for W1,
+EchoSecurity reuse for W2 epistemic erasure, EchoProvenance +
+EchoNoSectionGeneric composition for W3) LANDED 2026-05-27 as part
+of the Tier-3 audience-moves spine.

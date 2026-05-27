@@ -91,7 +91,16 @@ maps can admit different echo types.
   editorial: that studying fibers systematically *as residues of
   information loss*, in an intensional setting with proof-relevant
   witnesses, is worthwhile. See `docs/adjacency/hott-fibers.adoc`
-  for the honest adjacency assessment.
+  for the honest adjacency assessment. *Update 2026-05-27:* the
+  2026-05-27 Tier-1+2+3 spine adds NAMED STRUCTURAL ARTEFACTS on
+  top of the bare fibre — the orthogonal factorisation system
+  witness (`EchoOrthogonalFactorizationSystem.ofs-witness`), the
+  proof-relevant image (`EchoImageFactorization.Image`), the
+  classification grid (`EchoLossTaxonomy` / `EchoResidueTaxonomy`
+  / `EchoDecorationStructure`). The "not a type-former" bound
+  still holds at the bare definition; the editorial claim is now
+  much more strongly supported by the named structural layer
+  sitting on top.
 - **Not a theorem of ordinal analysis.** The ordinal-notation /
   Buchholz workstream in this repo (`docs/buchholz-plan.adoc`) is a
   parallel, syntactic development; its relationship to Echo Types
@@ -104,8 +113,16 @@ maps can admit different echo types.
   irrefl + trans; well-foundedness for `_<ᵇ⁺_` is the next open
   step, with two design routes documented in
   `docs/echo-types/buchholz-extended-wf.md`.
-- **Not a completed categorical semantics.** See
-  `docs/assessment.adoc` for the current M5 verdict.
+- **Not (yet) a completed categorical semantics — but** Pillar F
+  Gate F5 FULL PASS (2026-05-27, follow-up F-2026-05-27a)
+  mechanises the full (equivalence, projection) orthogonal
+  factorisation system on Type *at the qualified level* (funext
+  as explicit module parameter, never a postulate). The
+  unconditional pointwise content remains the funext-free
+  artefact; the function-level OFS clauses are true given funext.
+  See `docs/echo-types/universal-property.adoc` for the
+  consolidated narrative and `docs/assessment.adoc` for the older
+  M5 verdict.
 
 ## Extensional shadow vs intensional core
 
@@ -127,8 +144,18 @@ is fundamentally about.
 
 ## Next reading
 
+- `MAP.adoc` — the master content map (single source of truth);
+  start here if you need to find anything.
+- `EchoCanonicalIdentitySuite.agda` (in `proofs/agda/`) — the
+  curated single-file entry point pulling Tier-1 / Tier-2 / Tier-3
+  headlines together as the "why Echo deserves a name" demo.
+- `universal-property.adoc` — pullback + F4 + F5 / OFS arc
+  end-to-end (the categorical-universal-property story).
+- `fibration-package.adoc` — `map-over` + composition iso +
+  cancellation iso + pentagon coherence (the fibration-side story).
 - `taxonomy.md` — axes along which echoes differ.
 - `examples.md` — worked cases.
 - `composition.md` — how `Echo` behaves under function composition.
-- `roadmap.md` — what can advance without the current proof blockers,
-  and what cannot.
+- `roadmap.adoc` — what can advance without the current proof
+  blockers, and what cannot (note: `roadmap.md` was consolidated
+  into `roadmap.adoc` in 2026-05-26).

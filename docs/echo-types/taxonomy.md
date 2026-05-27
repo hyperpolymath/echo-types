@@ -4,6 +4,20 @@
 not committed definitions. Each axis carries at least one
 distinguishing example that forces the distinction to be real.
 
+> **Forward-link (2026-05-27).** The audit's "kinds-of-loss ×
+> shapes-of-residue" two-axis grid is now mechanised in
+> `proofs/agda/EchoLossTaxonomy.agda` (function-side: four-axis
+> EQUIV/INJ/SURJ/CONST) and `proofs/agda/EchoResidueTaxonomy.agda`
+> (residue-side: `record ResidueForm` + six instances). The
+> decoration recipe is mechanised in
+> `proofs/agda/EchoDecorationStructure.agda` (`record
+> DecorationStructure` + four instances + abstract degrade-compose).
+> Together with `EchoObservationalEquivalence` (mode-indexed
+> `_≡m_`), these four modules close the classification-grid as Agda
+> artefacts rather than comments. Citers should reference the
+> modules; this taxonomy doc remains as the longer-form narrative
+> around the axes.
+
 ---
 
 ## Axis 1 — Extensional vs intensional

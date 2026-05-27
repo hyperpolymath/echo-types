@@ -84,6 +84,39 @@ narrowing history and `roadmap-gates.adoc` for the test discipline.
 No gate is currently FAILED. No gate is currently STABLE-ESTABLISHED;
 re-assessment cadence is per tagged release.
 
+[NOTE]
+.Canonical identity layer (2026-05-27 advance)
+====
+Beyond Gates 1/2/3 (above) and Pillar F earn-back gates (below), a
+substantial structural layer LANDED 2026-05-27 documenting Echo's
+identity as the canonical fibre-completion functor + one leg of
+the (equivalence, projection) orthogonal factorisation system on
+Type. See `docs/echo-types/MAP.adoc` §"Canonical identity layer"
+for the full status-tagged listing:
+
+* *Tier 1* — `EchoTotalCompletion` (`A ≃ Σ B (Echo f)`),
+  `EchoOrthogonalFactorizationSystem` (`ofs-witness`),
+  `EchoImageFactorization` (`Image`),
+  `EchoNoSectionGeneric` (structural no-section).
+* *Tier 2* — `EchoLossTaxonomy` / `EchoResidueTaxonomy` /
+  `EchoDecorationStructure` / `EchoObservationalEquivalence`
+  (the four-axis classification grid as named records, not
+  comments).
+* *Tier 3* — Pillar F Gate F5 FULL PASS (qualified OFS earn-back);
+  audience-facing modules (`EchoProvenance`, `EchoSecurity`,
+  `EchoProbabilisticSupport`, `EchoDifferential`); curated
+  `EchoCanonicalIdentitySuite` as the single-file entry point.
+
+Plus two consolidation narratives:
+`docs/echo-types/universal-property.adoc` (pullback + F4 + F5 /
+OFS arc) and `docs/echo-types/fibration-package.adoc` (`map-over` +
+composition + cancellation + pentagon arc).
+
+This layer is additive to the Gate-1/2/3 verdict above — it
+strengthens the basis for the identity claim without superseding
+the gate discipline.
+====
+
 == Lanes
 
 *Cap = 5 open lanes.* Adding a 6th requires closing or parking an
@@ -169,6 +202,71 @@ gate cross-links) landed in-session. Tracks B + C remain.
   headline example (parser, provenance, abs-int) with the small
   Σ-misuse it blocks. Builds clean under `--safe --without-K`;
   pinned in `Smoke.agda` under own `using` block.
+
+*Cementing follow-ons (LANDED 2026-05-27).* Two additional artefacts
+strengthen the same "Echo's distinguishing power lives in the witness"
+line by knocking out the two most credible alternative readings:
+
+* `proofs/agda/EchoEntropy.agda` — Shannon-entropy non-distinguishing
+  theorem in discrete form. The entropic shadow (`FiberSize-fin` over
+  the canonical `Fin 2 → ⊤` representation of `collapse`, i.e. the
+  uniform-prior Shannon surrogate) is constant in `e`, so any consumer
+  factoring through it gives the same value on `echo-true` and
+  `echo-false`. The witness side
+  (`EchoAbstractionBarrier.sigma-distinguishes`) is the matched-
+  negative companion. Closes the Shannon-entropy item that was flagged
+  as deferred in `EchoThermodynamics.agda` and `EchoStabilityTests.agda`.
+* `proofs/agda/EchoLLEncoding.agda` — linear-logic shallow-encoding
+  gap theorem. An `LLShallowEncoding` record captures the data a
+  standard LL `!A`-style encoding must provide; the canonical
+  `X m := ⊤` shadow (LL `!A := 1`) admits a section of the encoded
+  weakening, while the source-side `EchoLinear.no-section-weaken`
+  refutes any source section. The gap-pair `gap-paired` is the
+  checked, paired artefact: encoded section exists, source-side
+  section does not. Closes the "minimal encoding gap vs standard
+  linear logic" item flagged in `core/skepticisms/what-is-actually-
+  new.md`.
+
+Both modules build under `--safe --without-K` with zero postulates and
+no funext use; pinned in `Smoke.agda` under their own `using` blocks,
+wired into `All.agda`. Real-valued Shannon entropy and the full
+universal LL-encoding gap (over arbitrary shallow encodings, not just
+the trivial witness) remain open and are documented in the modules'
+own companion-remark blocks.
+
+*Architectural keystone (LANDED 2026-05-27).* Two further artefacts
+land the synthesis spine:
+
+* `proofs/agda/EchoTotalCompletion.agda` — `A ≃ Σ B (Echo f)`, the
+  slogan-unlock theorem. `encode`/`decode` + round-trips +
+  factorisation triangle (definitional). The single most-cited but
+  never-pinned theorem in the project's narrative ("irreversible
+  computation + echo = reversible representation") now has an Agda
+  artefact behind it.
+* `proofs/agda/EchoOrthogonalFactorizationSystem.agda` — the
+  (equivalence, projection) factorisation system witness. Every
+  `f : A → B` factors canonically as `A ≃ Σ B (Echo f) → B`, with
+  the left leg an equivalence (`A↔ΣEcho` re-exported as
+  `left-leg-equivalence`) and the right leg a projection whose fibre
+  at `y` is exactly `Echo f y` (`projection-fibre-iso`, via the
+  generic Σ-projection-fibre quartet). The four-tuple `ofs-witness`
+  packages factorisation existence + fibre identification + the
+  `echo↔fib` bridge.
+
+  *Honest scope.* Factorisation existence + fibre identification
+  land under `--safe --without-K` with zero postulates. The full OFS
+  uniqueness-up-to-iso and diagonal-lifting properties need funext
+  to state and live in the next earn-back gate (template =
+  `EchoPullbackUnivF4` / Pillar F4); explicitly documented in the
+  module's companion-remark block.
+
+Both build clean and are pinned in `Smoke.agda` + wired into
+`All.agda` directly under `Echo` (as the canonical totality /
+factorisation companions to the core definition). Together they
+discharge the highest-leverage two-module slice of the unified
+synthesis roadmap (audit + previous-list + new-list, all three
+converging on TotalCompletion as the spine and OFS as the
+architectural keystone).
 . *LANDED 2026-05-26.* The Gate 2 nominee list is re-audited (Rev 5,
   `docs/characteristic.adoc` §"Revision-5 re-audit (2026-05-26)") and
   still crosses the *comfortable* threshold: 4/4 surviving, margin of
@@ -202,24 +300,28 @@ separate branches.
 constructors closed via the budgeted route + `_<ᵇ⁰_` umbrella + Lane 3
 follow-ons (`<ᵇ⁺-ψα` via `RankAdm` 2026-05-26; `<ᵇ-ψΩ≤` at both
 `ν<μ` and the `ν=μ` boundary via `RankLex` 2026-05-27). One
-constructor case (`<ᵇ-+1` joint-bplus) is in flight under the
+constructor case (`<ᵇ-+1` joint-bplus) is now FULLY CLOSED under the
 head-Ω domination route (option A from `RankPow.agda`'s preamble):
 the abstraction (`head-Ω` + `ω-rank-pow-succ`), the per-marker
 strict dominances at *both* branches, the unified `ω-rank-pow-<-succ`,
-and the option-(b) head-Ω inversion lemmas have all landed across
-PRs #124 (Slice 1, 2026-05-27 late evening), #130 (Slice 2, session
-night), and #131 (Slice 2-omega + inversion + ledger).  Only Slice
-2-bplus — the WfCNF-carrier structural recursion — remains.
+the option-(b) head-Ω inversion lemmas, AND the WfCNF-carrier
+structural-recursion `rank-pow-dominated-by-head-Ω` have all landed
+across PRs #124 (Slice 1, 2026-05-27 late evening), #130 (Slice 2,
+session night), #131 (Slice 2-omega + inversion + ledger), and
+#133+#134 (Slice 2-bplus + the explicit-implicit fix). The remaining
+ordinal-track work is Slice 3 (`rank-mono-<ᵇ-+1-via-head-Ω` headline)
++ Slice 4 (full `rank-pow-mono-<ᵇ⁻` umbrella composition).
 
 *Close-out criterion.* Either:
 
 * the remaining `<ᵇ-+1` joint-bplus case closes via the head-Ω
   domination route's Slice 2-bplus (`rank-pow-dominated-by-head-Ω`
   by structural recursion on WfCNF, consuming the already-landed
-  `head-Ω-inv-{bOmega,bpsi}` + `ω-rank-pow-<-succ`; then the
-  headline `rank-mono-<ᵇ-+1-via-head-Ω` discharge, then the full
-  `rank-pow-mono-<ᵇ⁻` umbrella composition), unblocking full
-  `wf-<ᵇʳᶠ`; OR
+  `head-Ω-inv-{bOmega,bpsi}` + `ω-rank-pow-<-succ`; this LANDED via
+  PRs #133+#134 2026-05-27). Slice 3 (the headline
+  `rank-mono-<ᵇ-+1-via-head-Ω` discharge) and Slice 4 (the full
+  `rank-pow-mono-<ᵇ⁻` umbrella composition) remain open, unblocking
+  full `wf-<ᵇʳᶠ` when closed; OR
 * a falsifiable verdict lands stating that the unbudgeted promotion
   cannot close under `--safe --without-K` for the current `_<ᵇ_`,
   with the WfCNF-restricted `_<ᵇ⁻_` accepted as the final form.
@@ -356,7 +458,11 @@ narrowings.
 
 | E — External validation (paper + outreach)
 | IN PROGRESS (in-repo half close-out; offline half author-driven)
-| `docs/echo-types/paper.adoc` LIVING DRAFT with `[EXPAND]` tags; `types-abstract.adoc` submission-ready. `docs/echo-types/pillar-e-offline.adoc` carries the venue matrix (TYPES → CPP → ITP → MSCS), Zenodo DOI mint plan, library packaging plan, and three pre-written outreach drafts. Pre-staged: `CITATION.cff`, `.zenodo.json` (placeholder DOI + ORCID-commented), `echo-types.agda-lib`, README §Citation + §"Installing as a library". Owner-action items: ORCID + Zenodo authorisation + TYPES/CPP submissions + outreach send. Lane 1's close-out criterion still governs the in-repo half.
+| `docs/echo-types/paper.adoc` LIVING DRAFT with `[EXPAND]` tags; `types-abstract.adoc` submission-ready (with 2026-05-27 post-abstract NOTE). `docs/echo-types/pillar-e-offline.adoc` carries the venue matrix (TYPES → CPP → ITP → MSCS), Zenodo DOI mint plan, library packaging plan, and three pre-written outreach drafts. Pre-staged: `CITATION.cff`, `.zenodo.json` (placeholder DOI + ORCID-commented), `echo-types.agda-lib`, README §Citation + §"Installing as a library". Owner-action items: ORCID + Zenodo authorisation + TYPES/CPP submissions + outreach send. Lane 1's close-out criterion still governs the in-repo half.
+
+| F — Earn-back gates (post-R-2026-05-18)
+| ALL PASSED (F1–F5)
+| `docs/echo-types/earn-back-plan.adoc` (gate ledger); F1 `EchoGradedComonadF1` (2026-05-20, graded-comonad-witness); F2 `EchoStepNDModelF2` (2026-05-18, second Echo-functor model); F3 `EchoGradedComonadInstance{1,2}` (2026-05-20, second non-isomorphic grade-monoid); F4 `EchoPullbackUnivF4` (2026-05-18, funext-qualified pullback UP); F5 `EchoOFSUnivF5{,Diag,Iso}` (2026-05-27, funext-qualified full OFS — F-2026-05-27a). Each `--safe --without-K`, zero postulates, no funext in the trusted base.
 |===
 
 == Historical milestone log (M1–M13)

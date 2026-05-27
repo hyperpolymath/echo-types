@@ -139,6 +139,48 @@ integration narrowness; R-2026-05-18 concerns the graded-comonad /
 model-independence / conservativity framing. Both are calibration
 retractions, not invalidations of the mechanised artefacts.
 
+==== Follow-up F-2026-05-27a — Gate F5 PASSED (full OFS, qualified)
+
+Gate F5 (full OFS, honestly qualified) has been earned back at the
+qualified level. Three slices in the F4 template (funext as explicit
+module parameter, never a postulate; unconditional pointwise
+corollaries kept funext-free):
+
+* *F5-1* (`proofs/agda/EchoOFSUnivF5.agda`) —
+  `echo-factorisation-strict (funext) : f ≡ proj₁ ∘ encode f`. The
+  function-level form of the factorisation triangle.
+
+* *F5-2* (`proofs/agda/EchoOFSUnivF5Diag.agda`, modules `Pointwise`
+  + `Strict`) — Diagonal lifting: any commutative square with left
+  equivalence (via `HasInverse`) + right projection (= `proj₁`) +
+  pointwise commutativity admits a unique lift `λ x → h (e⁻¹ x)`
+  satisfying both triangles. Pointwise K-free; strict via funext.
+
+* *F5-3* (`proofs/agda/EchoOFSUnivF5Iso.agda`, modules `Pointwise`
+  + `Strict`) — Factorisation uniqueness up to iso: any second
+  (equivalence, projection) factorisation `f = p ∘ g` admits a
+  canonical iso `φ : X ↔ Σ B (Echo f)` with `φ.to ∘ g ≡ encode f`
+  and `proj₁ ∘ φ.to ≡ p`, both strict given funext. Construction
+  via composition `φ.to = encode f ∘ g⁻¹` routes path-algebra
+  through existing K-free round-trips; no triangle identity needed.
+
+All three slices `--safe --without-K`, zero postulates, wired into
+`All.agda` and pinned in `Smoke.agda`. Full + smoke build green.
+
+What this earns back, scoped narrowly: the (equivalence, projection)
+factorisation system on Type is now a *qualified* universal-property
+artefact in this library — true given funext, stated as such. Three
+clauses (factorisation existence, diagonal lifting, uniqueness up
+to iso) all close under funext; the unconditional pointwise content
+remains the funext-free load-bearing artefact. The (epi, mono) image
+factorisation form (still deferred — requires propositional
+truncation) is a SEPARATE earn-back; F5 addresses only the upper
+(equivalence, projection) form of the OFS pair.
+
+`paper.adoc` / `conservativity.adoc` / `types-abstract.adoc` updates
+pending — claim-text changes lag mechanisation by design (per the
+guardrail in `earn-back-plan.adoc` §"Guardrails").
+
 == Revision policy
 
 Append-only. New retractions get the next `R-YYYY-MM-DD` id. An entry

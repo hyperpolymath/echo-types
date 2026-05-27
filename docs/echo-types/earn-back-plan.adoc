@@ -34,6 +34,36 @@ its grade-unit object — not redefining Echo.
 
 == Gates, in dependency order
 
+[source]
+----
+   Pillar F gate dependency graph (all PASSED as of 2026-05-27)
+
+                       F1 (graded-comonad witness)
+                       ──make-or-break──
+                            │
+              ┌─────────────┼─────────────┐
+              │             │             │
+              ↓             ↓             ↓
+       F4 (pullback UP)  F2 (Echo-      F3 (second
+       funext-qualified  functor 2nd    non-isomorphic
+                         model)         grade-monoid)
+              │
+              ↓
+       F5 (full OFS — three slices)
+        │       │       │
+        ↓       ↓       ↓
+       F5-1   F5-2    F5-3
+       strict diagonal factorisation
+       triangle lifting uniqueness-up-to-iso
+
+   Reading: F1 is the only make-or-break; F2 / F4 are independent
+   of F1 (both expected tractable, both PASSED); F3 is gated on F1
+   (passes after F1 lands). F5 (added 2026-05-27 post-F4 success
+   pattern) takes F4 as its template — same "funext as explicit
+   module parameter" discipline. F5's three slices are mutually
+   independent (each landed standalone), composed for full pass.
+----
+
 [#gate-F1]
 === Gate F1 — Genuine graded comonad (MAKE-OR-BREAK)
 
@@ -153,6 +183,52 @@ explicit `funext` parameter, zero postulates, and the unconditional
 pointwise result is kept as the funext-free corollary. This is
 expected to be tractable; it earns back a *qualified* universal
 property, stated as such.
+
+=== Gate F5 — Full OFS, honestly qualified
+
+Same shape as F4. The R-2026-05-18 discipline narrowed the OFS
+claim to factorisation-existence + fibre-identification at the
+K-free level (`EchoOrthogonalFactorizationSystem.agda`); the
+COMPLETE (equivalence, projection) orthogonal factorisation
+system requires uniqueness up to iso + the diagonal lifting
+property, both of which need funext to STATE (function-level
+equations rather than pointwise).
+
+F5 earns back the function-level OFS clauses as TRUE CONDITIONAL
+on an explicit `funext` parameter (a module hypothesis, never a
+postulate), exactly as F4 does for the pullback's strict
+terminality. Three slices, mutually independent, each in its own
+module in the F4 template style:
+
+* *F5-1 — Strict factorisation triangle.* `f ≡ proj₁ ∘ encode f`
+  as a function equation, lifting the existing K-free pointwise
+  `echo-factorisation` via funext. Three lines.
+  `proofs/agda/EchoOFSUnivF5.agda` (lands first; simplest direct
+  analogue of `echo-pullback-univ-strict`).
+
+* *F5-2 — Diagonal lifting property.* Given a commutative square
+  `e : A → A'` (equivalence via `HasInverse`) + `p : Σ B (Echo f)
+  → B` (= `proj₁`) + `h : A → Σ B (Echo f)` + `k : A' → B` with
+  `proj₁ ∘ h ≡ k ∘ e` pointwise, a unique `lift : A' → Σ B
+  (Echo f)` exists with `lift ∘ e ≡ h` and `proj₁ ∘ lift ≡ k`.
+  Construction: `lift x = h (e⁻¹ x)`. Pointwise commutativity
+  K-free; strict form needs funext.
+
+* *F5-3 — Factorisation uniqueness up to iso.* Given any other
+  `g : A → X` equivalence + `p : X → B` with `p ∘ g ≡ f`
+  pointwise, construct a canonical `φ : X ↔ Σ B (Echo f)` with
+  `proj₁ ∘ φ.to ≡ p` and `φ.to ∘ g ≡ encode f` (both strict,
+  given funext). Path-algebra obligations on the round-trips
+  need funext.
+
+.Gate
+*Passes* iff all three slices typecheck as functions of an
+explicit `funext` parameter, zero postulates, `--safe --without-K`,
+no escape pragmas; AND the unconditional pointwise corollaries
+are kept as the funext-free corollaries. Slice F5-1 alone gives
+a *partial* pass (analogue of "F1 not yet" — feasibility
+positive, full earn-back open). All three together give a *full*
+pass earning back the qualified OFS.
 
 == Sequencing
 
@@ -396,3 +472,46 @@ instantiations remain at the same grade poset with `⊑-prop` baked
 in as a field; that retraction stands. The two earn-backs (F3 here,
 and the original `GCLaws` claim) are about different abstract
 interfaces and are not interconvertible.
+
+* *2026-05-27 — Gate F5 PASSED (all three slices).* The full
+  (equivalence, projection) orthogonal factorisation system on
+  Type, earned back at the qualified level (funext as explicit
+  parameter throughout, never a postulate). Three slices, each in
+  the F4 template (pointwise K-free + funext-strict via a one-line
+  funext lift), all wired into `All.agda` and pinned in
+  `Smoke.agda`:
++
+[loweralpha]
+. *F5-1* — `EchoOFSUnivF5.echo-factorisation-strict (funext) :
+  f ≡ proj₁ ∘ encode f`. Three-line lift of the existing K-free
+  pointwise `EchoOrthogonalFactorizationSystem.echo-factorisation`.
+. *F5-2* — `EchoOFSUnivF5Diag` (modules `Pointwise` + `Strict`).
+  Diagonal lifting property: given a commutative square with
+  left equivalence (via `HasInverse`) + right projection + the
+  commutativity witness, the canonical lift `λ x → h (e⁻¹ x)`
+  exists, satisfies both triangles pointwise, is unique
+  pointwise; strict forms via funext.
+. *F5-3* — `EchoOFSUnivF5Iso` (modules `Pointwise` + `Strict`).
+  Factorisation uniqueness up to iso: given any second
+  (equivalence, projection) factorisation `f = p ∘ g`, the
+  canonical iso `φ : X ↔ Σ B (Echo f)` constructed via the
+  composition `φ.to = encode f ∘ g⁻¹` (routing through the
+  existing K-free `encode-decode`/`decode-encode` round-trips —
+  no triangle identity required) satisfies `φ.to ∘ g ≡ encode f`
+  and `proj₁ ∘ φ.to ≡ p`, both strict given funext.
++
+All three slices `--safe --without-K`, zero postulates, no
+funext in the trusted base (funext as module hypothesis only).
+Unconditional pointwise corollaries kept as funext-free parts in
+each module. Retraction follow-up F-2026-05-27a logged in
+`docs/retractions.adoc`.
++
+*Strictly scoped:* F5 earns back the (equivalence, projection)
+factorisation system AT THE QUALIFIED LEVEL — true given funext,
+stated as such. The unconditional pointwise content (factorisation
+existence + fibre identification per
+`EchoOrthogonalFactorizationSystem`) remains the funext-free
+load-bearing artefact. The (epi, mono) image-factorisation form
+(`EchoImageFactorization`'s deferred upgrade) still requires
+propositional truncation; F5 does not address that — it earns
+back the UPPER (equivalence, projection) form of the OFS pair.

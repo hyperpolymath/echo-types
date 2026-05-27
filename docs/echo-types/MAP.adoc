@@ -56,6 +56,142 @@ remainder of information-losing computation: for `f : A → B`,
   `docs/echo-types/types-abstract.adoc`,
   `docs/echo-types/paper.adoc`.
 
+== Canonical identity layer `[REAL]`
+
+The named-theorem load-bearing artefacts that promote Echo from a
+useful construction to a *named* structural object: the canonical
+fibre-completion functor + one leg of the (equivalence, projection)
+orthogonal factorisation system on Type. Landed 2026-05-27 under
+R-2026-05-18 honest-scope discipline — K-free skeletons land here;
+full HoTT-strength upgrades (contractible / propositional fibres,
+(-1)-truncation, full ↔) are documented as the next earn-back gates
+in the Pillar F4 template style.
+
+* *Total completion* — `A ≃ Σ B (Echo f)`. The slogan-unlock: every
+  irreversible map's domain is canonically equivalent to the total
+  space of its echoes. `proofs/agda/EchoTotalCompletion.agda`.
+* *Orthogonal factorisation system* — every `f : A → B` factors as
+  `A ─encode→ Σ B (Echo f) ─proj₁→ B` with the left leg an
+  equivalence (the totality theorem above) and the right leg a
+  projection whose fibre at `y` is `Echo f y`. Architectural
+  keystone. `proofs/agda/EchoOrthogonalFactorizationSystem.agda`.
+* *Image factorisation* — `Image f := Σ B (Echo f)`; the proof-
+  relevant image IS the total Echo space. Three classifications
+  (Surjective, Injective, projection-uniqueness under injectivity).
+  The (epi, mono) truncation form is the next earn-back gate.
+  `proofs/agda/EchoImageFactorization.agda`.
+* *Generic no-section* — `no-section-of-collapsing-map`: for ANY
+  collapsing map with two distinct elements landing on the same
+  image, no section exists. Lifts the previous single-instance
+  result to a structural fact about non-injectivity-at-a-point;
+  recovers the original as a one-line corollary.
+  `proofs/agda/EchoNoSectionGeneric.agda`.
+* *Loss taxonomy* (function-side) — four-axis classification of
+  `f : A → B` by echo shape: EQUIV ⇒ centre + projection-unique;
+  INJ ⇒ projection-unique; SURJ ⇒ every fibre inhabited; CONST ⇒
+  section from the entire domain. K-free skeletons across all four.
+  `proofs/agda/EchoLossTaxonomy.agda`.
+* *Residue taxonomy* (residue-side) — `record ResidueForm f R`
+  packaging the per-output residue carrier + lowering shared by the
+  eight decoration modules. Four instances: trivial (⊤), identity
+  (`Echo f`), generic Σ-cert (`echoR-residue`), and the worked
+  `linear-affine-residue`. The other six decoration modules
+  documented as structurally compatible.
+  `proofs/agda/EchoResidueTaxonomy.agda`.
+* *Decoration structure* (observation-side) — `record
+  DecorationStructure G` packaging the seven-field decoration
+  recipe (order + refl + trans + propositionality + join + UMP)
+  shared across the eight decoration modules. Three instances:
+  Graded (3-grade), Linear (2-grade), Access (5-grade).
+  `proofs/agda/EchoDecorationStructure.agda`.
+* *Observational equivalence* — mode-indexed equality `_≡m_` on
+  `LEcho`. Linear is witness-aware (`_≡_`); affine is witness-blind
+  (`⊤`). Headline `mode-equality-strictly-finer-at-linear` exhibits
+  a linear-distinct / affine-equal pair, closing the
+  "affine forgets what linear retains" story at the equality level.
+  `proofs/agda/EchoObservationalEquivalence.agda`.
+
+*Qualified universal property (Pillar F, Gate F5 FULL PASS,
+2026-05-27).* Three slices in the F4 template (`funext` as
+explicit module parameter, never a postulate; unconditional
+pointwise corollaries kept funext-free) earn back the
+(equivalence, projection) orthogonal factorisation system on
+Type at the qualified level:
+
+* *F5-1* — `echo-factorisation-strict (funext) : f ≡ proj₁ ∘
+  encode f`. `proofs/agda/EchoOFSUnivF5.agda`.
+* *F5-2* — Diagonal lifting property (Pointwise + Strict
+  modules). `proofs/agda/EchoOFSUnivF5Diag.agda`.
+* *F5-3* — Factorisation uniqueness up to iso (Pointwise +
+  Strict modules) via the composition design `φ.to = encode f ∘
+  g⁻¹`. `proofs/agda/EchoOFSUnivF5Iso.agda`.
+
+Retraction follow-up `F-2026-05-27a` logged in
+`docs/retractions.adoc`. See `docs/echo-types/earn-back-plan.adoc`
+status entry for the full gate-pass record.
+
+*Audience-facing modules (Tier 3, GPT-recommended order, all
+landed 2026-05-27).* Each generalises one concrete example into
+the shape the audience speaks in. All four ship the abstract
+record + parametric headline theorems + worked instance +
+honest-bound matched-negative block.
+
+* *Provenance* — `Provenance` record + `module ProvenanceTheorems`.
+  Worked `bool-over-nat-provenance` reproduces
+  `EchoExampleProvenance`. `proofs/agda/EchoProvenance.agda`.
+* *Security* — `Security` record + `module SecurityTheorems`.
+  Per-region exit collapse + audit-no-recovery (factored through
+  `EchoNoSectionGeneric.no-section-of-collapsing-map`). Worked
+  `region-exit-audit-instance` reproduces the
+  `tutorial/region_exit_audit/RegionExitAudit.agda` walkthrough.
+  Honest-bound: NOT bytes-zeroed / side-channel-safe /
+  tamper-evident / oracle-recovery.
+  `proofs/agda/EchoSecurity.agda`.
+* *ProbabilisticSupport* — `Sampling` record + `module
+  SamplingTheorems`. Marginal non-injectivity, Echo carries which
+  index, residue loses index. Worked `bool-indexed-nat-sampling`.
+  Honest-bound: NOT measure-preserving / probability monad /
+  Kantorovich / coupling / randomness extraction.
+  `proofs/agda/EchoProbabilisticSupport.agda`.
+* *Differential* — `Sensitivity` record + `module
+  SensitivityTheorems`. Blur non-injectivity, Echo carries which
+  perturbation, residue loses perturbation. Worked
+  `bool-perturbed-nat-sensitivity`. Honest-bound: NOT ε-DP /
+  Lipschitz bound / noise calibration / adversary model.
+  `proofs/agda/EchoDifferential.agda`.
+
+*Curated suite — single-file entry point.* The narrative
+deliverable that pulls the Tier-1 / Tier-2 / Tier-3 named theorems
+into one readable file. Re-exports load-bearing headlines from
+every module under suite-side names; companion remark documents
+honest scope at the suite level. External-reader workflow: start
+here + read source-module companion remarks for the headlines that
+interest you. `proofs/agda/EchoCanonicalIdentitySuite.agda`.
+
+*Consolidation docs (2026-05-27).* Two doc-only narratives
+threading the universal-property and fibration-package stories
+end-to-end. Each cites the source modules + reading order; no new
+proofs.
+
+* `docs/echo-types/universal-property.adoc` — pullback presentation
+  + R-2026-05-18 narrowing + Gate F4 + Gate F5 (full OFS, three
+  slices). Threads the categorical universal-property arc.
+* `docs/echo-types/fibration-package.adoc` — `map-over*` action +
+  `Echo-comp-iso` accumulation + `cancel-iso` cancellation +
+  pentagon coherence. Threads the fibration-side story.
+
+*Cementing matched-negatives.* Two shadow encodings that have been
+proposed as adequate substitutes for Echo, now provably aren't:
+
+* *Shannon-entropy non-distinguishing* — the fibre-count entropic
+  shadow agrees on `echo-true` vs `echo-false`, while the witness
+  side distinguishes them (matched-negative against
+  `EchoAbstractionBarrier.sigma-distinguishes`).
+  `proofs/agda/EchoEntropy.agda`.
+* *Linear-logic shallow-encoding gap* — the canonical LL `!A := 1`
+  shadow admits a section that the source `LEcho` provably does
+  not. `proofs/agda/EchoLLEncoding.agda`.
+
 == Directions
 
 === Thermodynamic — Landauer/Bennett energy bounds `[REAL]`
@@ -92,7 +228,7 @@ Staged Buchholz-style collapsing in `--safe --without-K`.
 
 * Proofs: `proofs/agda/Ordinal/` (`Buchholz/`, `Brouwer`, `CNF`,
   `Closure`, `Psi…`, `ExtendedOrder`, `RankPow`, `RankAdm`,
-  `RankLex`, `HeadOmega`, `HeadOmegaInversion`).
+  `RankLex`, `HeadOmega`, `HeadOmegaInversion`, `RankPowDomination`).
 * Docs: `docs/buchholz-plan.adoc`,
   `docs/echo-types/buchholz-extended-wf.md`,
   `docs/echo-types/buchholz-rank-obstruction.adoc` (per-constructor
@@ -146,12 +282,16 @@ Connect echo types with MAA's reversibility proofs
 
 * Docs: `roadmap.adoc` §"Deferred research track", `docs/EchoJanusBridge.md`.
 
-=== Shannon / information theory `[OPEN]`
-Explicitly *not bridged*. The Transport / Nyquist sampling work
-(Gate-3) is the nearest built thread; a real Shannon-entropy /
-mutual-information formalisation is open.
+=== Shannon / information theory `[REAL*]`
+Partial. The *discrete non-distinguishing* form lands as
+`EchoEntropy.agda` — the fibre-count shadow (uniform-prior Shannon
+surrogate) cannot tell echoes apart at a collapsing point, while
+the witness side can. Real-valued `H(P) = -Σ p log p`, mutual
+information, and the Transport/Nyquist (Gate-3) bridge remain
+open. See Canonical identity layer for the cementing artefact.
 
-* Proofs: `proofs/agda/examples/Transport.agda`.
+* Proofs: `proofs/agda/EchoEntropy.agda`,
+  `proofs/agda/examples/Transport.agda`.
 * Docs: `docs/ECHO-CNO-BRIDGE.adoc` (lines ~104, ~254),
   `docs/adjacency/information-flow.adoc`,
   `docs/gate-3-canonical.adoc`, `docs/gate-3-transport-handoff.adoc`.
@@ -252,11 +392,6 @@ This is a living document. Whenever a direction is added, a gate
 passes/fails, or a claim is retracted/earned-back:
 
 . Update the relevant Directions/Governance entry *and* its status tag
-  here, in the same PR as the change.
-. Never duplicate detail — link to the canonical proof module / doc.
-. The GitHub wiki `Home` mirrors this file and must point back here as
-  SoT; do not fork content into the wiki.
-e entry *and* its status tag
   here, in the same PR as the change.
 . Never duplicate detail — link to the canonical proof module / doc.
 . The GitHub wiki `Home` mirrors this file and must point back here as
