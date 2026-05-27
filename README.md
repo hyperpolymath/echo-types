@@ -61,6 +61,63 @@ with constructive proofs (`--safe --without-K`, no postulates in `proofs/agda`):
 - `map-over-comp` (composition law)
 - `map-square` (action along commuting squares)
 
+## Canonical identity layer (2026-05-27)
+
+The named-theorem load-bearing artefacts that promote Echo from a
+useful construction to a *named* structural object — the canonical
+fibre-completion functor plus one leg of the (equivalence,
+projection) orthogonal factorisation system on Type. **Read
+[`docs/echo-types/MAP.adoc`](docs/echo-types/MAP.adoc) §"Canonical
+identity layer" for the full status-tagged listing; this section
+is the README-side hook.**
+
+Single-file curated entry point:
+[`proofs/agda/EchoCanonicalIdentitySuite.agda`](proofs/agda/EchoCanonicalIdentitySuite.agda)
+re-exports every load-bearing headline under the suite-side index.
+
+Tier 1 (the canonical identity layer itself):
+
+- `proofs/agda/EchoTotalCompletion.agda` — `A ≃ Σ B (Echo f)` (the slogan-unlock)
+- `proofs/agda/EchoOrthogonalFactorizationSystem.agda` — `ofs-witness` (the OFS witness at the K-free level)
+- `proofs/agda/EchoImageFactorization.agda` — `Image f := Σ B (Echo f)` (image factorisation in Echo language)
+- `proofs/agda/EchoNoSectionGeneric.agda` — `no-section-of-collapsing-map` (the structural no-section theorem)
+
+Tier 2 (the classification grid — kinds-of-loss × shapes-of-residue):
+
+- `proofs/agda/EchoLossTaxonomy.agda` — four-axis function-side classification (EQUIV / INJ / SURJ / CONST)
+- `proofs/agda/EchoResidueTaxonomy.agda` — `ResidueForm` record + four instances
+- `proofs/agda/EchoDecorationStructure.agda` — `DecorationStructure` record (seven-field recipe) + four instances + abstract degrade-compose
+- `proofs/agda/EchoObservationalEquivalence.agda` — mode-indexed equality `_≡m_` on `LEcho`
+
+Tier 3 / Pillar F Gate F5 FULL PASS (2026-05-27, qualified OFS earn-back):
+
+- `proofs/agda/EchoOFSUnivF5.agda` — F5-1 strict factorisation triangle (funext-qualified)
+- `proofs/agda/EchoOFSUnivF5Diag.agda` — F5-2 diagonal lifting property
+- `proofs/agda/EchoOFSUnivF5Iso.agda` — F5-3 factorisation uniqueness up to iso
+
+Audience-facing surfaces (each ships `record + parametric headline theorems + worked instance + honest-bound matched-negatives`):
+
+- `proofs/agda/EchoProvenance.agda` — database / lineage audience
+- `proofs/agda/EchoSecurity.agda` — region-exit / capability-flow audience (generalises `tutorial/region_exit_audit/`)
+- `proofs/agda/EchoProbabilisticSupport.agda` — sampling / draw-id audience
+- `proofs/agda/EchoDifferential.agda` — sensitivity / perturbation-tracking audience
+
+Cementing matched-negatives (shadow encodings that provably don't substitute for Echo):
+
+- `proofs/agda/EchoEntropy.agda` — Shannon-entropy non-distinguishing theorem
+- `proofs/agda/EchoLLEncoding.agda` — LL `!A := 1` shallow-encoding gap
+
+Consolidation narratives:
+
+- [`docs/echo-types/universal-property.adoc`](docs/echo-types/universal-property.adoc) — pullback + F4 + F5 / OFS arc end-to-end
+- [`docs/echo-types/fibration-package.adoc`](docs/echo-types/fibration-package.adoc) — map-over + composition + cancellation + pentagon arc
+
+Pillar F gate ledger + retraction follow-ups:
+[`docs/echo-types/earn-back-plan.adoc`](docs/echo-types/earn-back-plan.adoc)
+(gates F1–F5, all PASSED) +
+[`docs/retractions.adoc`](docs/retractions.adoc) (R-2026-05-18 +
+follow-ups F-2026-05-18a, F-2026-05-20a/b, F-2026-05-27a).
+
 Characteristic M2 results include:
 
 - explicit non-injectivity witnesses for collapse maps
@@ -97,6 +154,8 @@ On `main`, the following are true:
 - distinct-witness and retained-constraint exemplars are present (`echo-true≢echo-false`, `stateA≢stateB`, `visible-constraint`)
 - degrade-law family lands across decoration layers (graded, linear/affine, choreographic, access, cost, search); see `docs/theorem-index.md` for the aggregate
 - Pillars A–D of the establishment plan are LANDED (with R-2026-05-18 narrowings; see `docs/retractions.adoc`); Pillar E (paper) is in progress
+- Pillar F gates F1–F5 all PASSED (F1 graded-comonad-witness; F2 Echo-functor second model; F3 second non-isomorphic grade-monoid; F4 funext-qualified pullback UP; F5 funext-qualified full OFS — F-2026-05-27a)
+- Canonical identity layer + Tier-2 grid + audience surfaces LANDED 2026-05-27 (see "Canonical identity layer" section above + `EchoCanonicalIdentitySuite.agda` for the curated entry point)
 - Lane 5 tutorial triplet LANDED 2026-05-27 under `tutorial/`: region-exit audit, epistemic erasure, and provenance / debugging — each with honest-bound + matched-negative disclosure discipline; build via `agda --library-file=/tmp/agda-libs -i . -i proofs/agda tutorial/All.agda`
 
 Per-lane status, close-out criteria, and the identity-claim verdict

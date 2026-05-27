@@ -29,6 +29,17 @@
 -- (Example 10) entries. The Σ-over-extra-parameter shape PR #76
 -- identifies for the cluster is, in this slice, the Σ on the row's
 -- `prov` field.
+--
+-- 2026-05-27 follow-up: this concrete `Row + Bool-prov + ℕ-payload`
+-- instance was generalised into the audience-facing abstract module
+-- `proofs/agda/EchoProvenance.agda`. The abstract module ships a
+-- `Provenance` record (Payload + Tag + distinguishability witness)
+-- + four parametric headline theorems via `module ProvenanceTheorems
+-- (P : Provenance)`; the `bool-over-nat-provenance` instance there
+-- reproduces this module's structure. Citers of the
+-- audience-facing "provenance loss is general, not Bool-specific"
+-- claim should cite `EchoProvenance`; this module remains as the
+-- concrete worked example.
 
 module EchoExampleProvenance where
 

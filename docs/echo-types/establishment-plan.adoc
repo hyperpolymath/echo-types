@@ -32,8 +32,22 @@ action, no nested `D_r D_s`); a *funext-relative pointwise mediator
 property*; *carrier-parametricity over a fixed grade poset*; and a
 *postulate-free build that is evidence for, not a proof of,
 conservativity*. The current honest statements live in
-`paper.adoc`, `conservativity.adoc`, `types-abstract.adoc`. The Agda
-is unchanged; only the prose claims were corrected downward.
+`paper.adoc` and `types-abstract.adoc` (the original
+`conservativity.adoc` was relocated to `docs/retracted/conservativity.adoc`
+per the retraction discipline). The Agda is unchanged; only the
+prose claims were corrected downward.
+
+*Pillar F follow-up 2026-05-27.* The earn-back ledger
+`docs/echo-types/earn-back-plan.adoc` now records gates F1–F5 all
+PASSED. F4 + F5 specifically earn back the universal-property
+clauses at the qualified level (funext as explicit module
+parameter, never a postulate): F4 the strict terminal-cone form
+of the pullback, F5 the three-clause full (equivalence, projection)
+orthogonal factorisation system on Type. The retracted
+unconditional forms remain retracted; the qualified earn-backs are
+the new structural layer. See `docs/retractions.adoc` follow-up
+F-2026-05-27a and the consolidation doc
+`docs/echo-types/universal-property.adoc`.
 ====
 
 toc::[]

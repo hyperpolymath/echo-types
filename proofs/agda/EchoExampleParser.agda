@@ -225,3 +225,20 @@ parser-residue :
 parser-residue =
   true , paren-nested , paren-pair ,
     paren-nested≢paren-pair , refl , refl
+
+----------------------------------------------------------------------
+-- 2026-05-27 follow-up: audience-asymmetry note.
+--
+-- Unlike `EchoExampleProvenance` (which has a direct audience-facing
+-- generalisation in `EchoProvenance.agda`), this example does NOT
+-- have a dedicated audience-facing successor module. The reason:
+-- "presentation-dependence" is an EDITORIAL AXIS (PR #76 cluster of
+-- Examples 5, 9, 10) rather than a DOMAIN AUDIENCE — there is no
+-- single discourse community for whom "parser residue" is the
+-- structural-content framing the way databases / lineage are for
+-- provenance. The structural content (a non-injective forgetful map
+-- with distinguishable preimages) is already captured at full
+-- generality by `EchoProvenance.Provenance`; this module remains as
+-- the concrete parser-flavoured worked example. The asymmetry is
+-- intentional, not a missing module.
+----------------------------------------------------------------------

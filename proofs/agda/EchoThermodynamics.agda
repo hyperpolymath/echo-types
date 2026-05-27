@@ -212,7 +212,13 @@ landauer-collapse f y _≟_ T h =
 --     extension of `FiberSize-fin` to a measure-theoretic count
 --     on infinite types, neither of which is available here;
 --   * that Shannon-entropy / informational arguments are
---     formalised — they are not. See `roadmap.adoc` §Lane 3
---     (Ordinal track / deferred research) for the open
---     thermodynamic / information-theory items (not yet formalised).
+--     formalised in a real-valued / measure-theoretic form — they
+--     are not. The discrete (fibre-count / uniform-prior) form IS
+--     formalised in `EchoEntropy.agda` as a non-distinguishing
+--     theorem at the `collapse` fibre: any consumer factoring
+--     through the entropic shadow agrees on `echo-true` vs
+--     `echo-false`, while the witness side (raw `proj₁`) does
+--     distinguish. The real-valued and mutual-information forms
+--     remain open — see `roadmap.adoc` §Lane 3 (Ordinal track /
+--     deferred research).
 ----------------------------------------------------------------------

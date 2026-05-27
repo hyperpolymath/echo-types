@@ -4,6 +4,16 @@
 conjectures. Every result backed by the current Agda development is
 marked *Agda-backed*; every conjectural claim is labelled explicitly.
 
+> **Forward-link (2026-05-27).** The composition-track narrative this
+> doc maintains has been consolidated into
+> [`fibration-package.adoc`](fibration-package.adoc) (`map-over` action
+> + `Echo-comp-iso` accumulation + `cancel-iso` cancellation +
+> pentagon coherence, threaded with reading order). The
+> fibration-package consolidation is now the recommended entry point;
+> this doc remains as the longer-form working-note narrative with the
+> per-section conjecture-vs-proof labelling. The proofs cited herein
+> are all Agda-backed and pinned in `Smoke.agda`.
+
 ---
 
 ## The central question

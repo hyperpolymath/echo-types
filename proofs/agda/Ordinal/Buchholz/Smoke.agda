@@ -399,3 +399,53 @@ open import Ordinal.Buchholz.HeadOmega using
   ; head-Ω-bpsi
   ; head-Ω-bplus-left
   )
+
+-- Lane 3 head-Ω Slice 2 (own block per CLAUDE.md Working rules):
+-- the per-marker "next ω-power up" target `ω-rank-pow-succ` plus
+-- definitional sanity at the fin branch, the per-marker strict
+-- dominance at fin (`ω-rank-pow-<-succ-fin`), and the atomic
+-- rank-pow factoring through head-Ω.  The ω-branch strict
+-- dominance and the full domination lemma over WfCNF carriers are
+-- deferred to follow-on slices Slice 2-omega and Slice 2-bplus
+-- respectively, per the obstruction note inline in `RankPow.agda`
+-- (the originally-proposed `ω-rank-pow-succ ω = olim (λ n →
+-- ω^(suc(suc n)))` represents the same ordinal as `ω-rank-pow ω`,
+-- so strict dominance at ω needs a different shape).
+open import Ordinal.Buchholz.RankPow using
+  ( ω-rank-pow-succ
+  ; ω-rank-pow-succ-fin
+  ; ω-rank-pow-succ-omega
+  ; ω-rank-pow-<-succ-fin
+  ; ω-rank-pow-<-succ-omega
+  ; ω-rank-pow-<-succ
+  ; rank-pow-bOmega-via-head-Ω
+  ; rank-pow-bpsi-via-head-Ω
+  )
+
+-- Lane 3 head-Ω inversion (own block per CLAUDE.md Working rules):
+-- option (b) of the Slice 2-bplus follow-on plan from `RankPow.agda`'s
+-- preamble.  Two atomic-source inversions pulling `head-Ω` bounds
+-- from an `<ᵇ` premise WITHOUT going through rank-mono — keeps the
+-- domination lemma's dependency-graph clean against future signature
+-- changes to `rank-pow-mono-≤ᵇ`.  Strict on the Ω-source, non-strict
+-- on the ψ-source (tracks the `<ᵇ-ψΩ≤` constructor).
+open import Ordinal.Buchholz.HeadOmegaInversion using
+  ( head-Ω-inv-bOmega
+  ; head-Ω-inv-bpsi
+  )
+
+-- Lane 3 head-Ω Slice 2-bplus (own block per CLAUDE.md Working
+-- rules): the full WfCNF-carrier domination lemma.  Composes Slice
+-- 1 + Slice 2 + Slice 2-omega + the inversion family into THE
+-- headline that the eventual `<ᵇ-+1` joint-bplus discharge
+-- (Slice 3, follow-on) will consume.  No `NonBzero` premise needed
+-- — `rank-pow bzero = oz` is strictly below `ω-rank-pow-succ
+-- (fin 0) = ω^2`, so the bzero case discharges uniformly.  No
+-- rank-mono dependency anywhere in the chain (option (b)
+-- discipline preserved).
+open import Ordinal.Buchholz.RankPowDomination using
+  ( ω-rank-pow-mono-≤Ω
+  ; ω-rank-pow-succ-pos
+  ; additive-principal-ω-rank-pow-succ
+  ; rank-pow-dominated-by-head-Ω
+  )

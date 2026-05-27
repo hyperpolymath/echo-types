@@ -1,0 +1,182 @@
+// SPDX-License-Identifier: CC-BY-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= echo-types: The Fibration Package
+:toc: macro
+:toclevels: 3
+:source-highlighter: rouge
+
+[.lead]
+*One place to read the fibration-side story of Echo end-to-end.*
+This doc consolidates the action on fibres (`map-over*` family),
+the composition accumulation iso (`Echo-comp-iso`), the cancellation
+iso through a section (`cancel-iso`), and the pentagon coherence
+(`Echo-comp-iso-pent-*` + `Echo-comp-pent-Σ-assoc`). The Agda
+module is `Echo.agda`; this doc carries the prose threading them.
+
+toc::[]
+
+== The arc, in one paragraph
+
+`Echo` is not just a definitional restatement of the fibre
+(`echo↔fib`); it is functorial in the same way fibres are. Maps
+between fibrations act pointwise on echoes (`map-over`); composed
+fibrations accumulate fibre structure rather than collapse it
+(`Echo-comp-iso`); cancellation along a section-with-coherences
+gives a strict equivalence (`cancel-iso`). All four artefacts land
+under `--safe --without-K`, zero postulates, no funext; the only
+hypotheses required by the iso-shape statements are explicit
+coherence parameters (triangle identities, naturality lemmas)
+passed at the call site.
+
+== Fibration action: `map-over` family
+
+A morphism between fibrations over a fixed base is the data of a
+domain map + a commuting witness. In `Echo.agda`:
+
+[source,agda]
+----
+MapOver :
+  ∀ {a a' b} {A : Set a} {A' : Set a'} {B : Set b} →
+  (f : A → B) → (f' : A' → B) → Set (a ⊔ a' ⊔ b)
+MapOver f f' = Σ (A → A') (λ u → ∀ x → f' (u x) ≡ f x)
+
+map-over :
+  ∀ {a a' b} {A : Set a} {A' : Set a'} {B : Set b}
+  {f : A → B} {f' : A' → B} →
+  MapOver f f' → ∀ {y : B} → Echo f y → Echo f' y
+map-over (u , commute) (x , p) = u x , trans (commute x) p
+----
+
+This is the fibration action: a morphism over `B` acts on each
+fibre individually, transporting the commuting witness through
+the codomain map.
+
+=== Functor laws
+
+`map-over-id` and `map-over-comp` close the functor laws
+pointwise on each fibre element. Both are by pattern-matching
+on the echo's structure + path-algebra on the commuting
+witness — `trans-assoc` is the load-bearing stdlib lemma for
+composition.
+
+=== Squares
+
+`map-square` generalises to a commuting square in `Echo.agda`:
+given `f : A → B`, `f' : A' → B'`, `u : A → A'`, `v : B → B'`
+with `f' ∘ u ≡ v ∘ f` pointwise, an echo of `f` at `y`
+transports to an echo of `f'` at `v y`. Same path-algebra
+pattern.
+
+== Composition accumulation iso: `Echo-comp-iso`
+
+The echo of `g ∘ f` at `y` is canonically equivalent to a
+Σ-over-intermediate-base-point:
+
+[source,agda]
+----
+Echo-comp-iso :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) (y : C) →
+  Echo (g ∘ f) y ↔ Σ B (λ b → Echo f b × (g b ≡ y))
+----
+
+This is the *accumulation* law: composition does NOT weaken the
+intensional core, it accumulates witness structure. The
+round-trips reduce definitionally once the relevant `g b ≡ c`
+has been pinned to `refl` by pattern-matching; no path-algebra,
+no funext, no K.
+
+The four-direction quartet `Echo-comp-iso-{to, from, from-to,
+to-from}` are pinned in `Smoke.agda`; the packaged `↔` (via
+stdlib's `Function.Bundles.mk↔ₛ′`) is the consumer-side artefact.
+
+== Cancellation iso through a section: `cancel-iso`
+
+Given a section/retraction pair `(g : B → C, s : C → B)` with
+both `s-left : ∀ b → s (g b) ≡ b` and `s-right : ∀ y → g (s y)
+≡ y`, plus the two HoTT triangle identities (one per round-trip)
+as explicit hypotheses, the cancellation iso reduces the
+composition-echo to the inner-fibration-echo at the transported
+base point:
+
+[source,agda]
+----
+cancel-iso :
+  ∀ {a b c} {A : Set a} {B : Set b} {C : Set c}
+  (f : A → B) (g : B → C) (s : C → B)
+  (s-left  : ∀ b → s (g b) ≡ b)
+  (s-right : ∀ y → g (s y) ≡ y)
+  (triangle₁ : ∀ b → cong g (s-left b) ≡ s-right (g b))
+  (triangle₂ : ∀ y → cong s (s-right y) ≡ s-left (s y))
+  (y : C) →
+  Echo (g ∘ f) y ↔ Echo f (s y)
+----
+
+The triangle identities are passed as parameters (the same
+discipline F4 / F5-1 use for funext): a bare two-sided inverse
+is weaker than a coherent equivalence in HoTT terms, so the
+adjustment to a half-adjoint equivalence is taken as an explicit
+hypothesis rather than postulated.
+
+*Load-bearing path-algebra lemma.* `hom-natural-id` in
+`Echo.agda` (the naturality of a homotopy `h : f ∼ id` along a
+path) is the one non-trivial path-algebra primitive consumed by
+the `cancel-iso` round-trips. The full proof of
+`cancel-iso-from-to` is the equational chain at lines 161-187
+of `Echo.agda` — a ten-step `≡-Reasoning` block routing through
+`trans-assoc`, `sym-cong`, `trans-cong`, `hom-natural-id`, and
+`trans-symˡ`.
+
+== Pentagon coherence: `Echo-comp-iso-pent-*` + `Echo-comp-pent-Σ-assoc`
+
+Three-fold composition `h ∘ g ∘ f` admits two natural factorings
+via `Echo-comp-iso`: outer-first (split at `h`, then inner at
+`g`) and inner-first (split at `(h ∘ g)` as outer, `f` as inner).
+The projection-pentagon lemmas
+
+[source,agda]
+----
+Echo-comp-iso-pent-B
+Echo-comp-iso-pent-echo
+----
+
+close as `refl` on each pattern-matched constructor: the two
+factorings agree on the A-origin AND on the Echo-f component.
+
+The full Σ-associativity iso between the two nested Σ-shapes
+lands as `Echo-comp-pent-Σ-assoc` (the four-direction quartet +
+packaged `↔`). Round-trips reduce definitionally once `g b ≡ c`
+has been pinned to `refl`. No transport coherence required.
+
+== What stays open
+
+* *Higher coherence for composed maps.* `Echo-comp-iso` and
+  `cancel-iso` package the action on echoes at the 1-categorical
+  level; a 2-categorical refinement (carrying coherence between
+  the two natural transformations of a 2-cell) would require
+  2-category machinery not present in this repo.
+* *Funext-qualified strict form of the iso round-trips.* The
+  round-trips are stated pointwise (`∀ x → ...`); the strict
+  `(to ∘ from) ≡ id` function-equation forms would lift via
+  funext in the F4 template style. Not currently mechanised —
+  consumers wanting the strict form should follow the F4 / F5
+  pattern at the call site.
+
+== Reading order
+
+Citers of Echo's fibration package should read, in order:
+
+. `Echo.agda` (the file itself, in source order: Echo →
+  echo-intro → MapOver / map-over → map-over-id / map-over-comp
+  → map-square → Echo-comp-iso-* → cancel-iso-* → pentagon
+  lemmas → `_↔_` packagings at the end);
+. `EchoFiberBridge.agda` — the definitional bridge to `fiber`;
+. `EchoFiberTriangulation.agda` — calibration against stdlib's
+  own fibre / surjection notions;
+. `docs/echo-types/composition.md` (or `composition.adoc` if
+  present) — the originally-handwritten narrative the
+  mechanisation discharges.
+
+This consolidation doc threads the prose linking the
+mechanisations; the source carries the proofs + the per-lemma
+companion remarks.

@@ -193,6 +193,1057 @@ work to `main` and refresh all documentation:
 
 ## Current rung state (2026-05-27)
 
+### Session arc 2026-05-27 Slice-2 upstream adoption (READ FIRST after the broad-cleanup arc below)
+
+A parallel-session agent shipped PRs #130/#131/#133/#134 to
+`origin/main` while my session was building its own partial
+Slice 2 foundation in `proofs/agda/Ordinal/Buchholz/RankPowDomination.agda`.
+Audit verdict (verified in an isolated worktree): the upstream
+work is REAL, compiles clean under `--safe --without-K`, zero
+postulates. The upstream version is strictly stronger than my
+partial slice:
+
+* Complete domination lemma `rank-pow-dominated-by-head-Ω`
+  (which I had deferred to Slice 2b).
+* Better `ω-rank-pow-succ ω` design — `olim (λ n → ω-rank-pow ω
+  ·ℕ n)` (engineered for `additive-principal-ω-rank-pow-succ`
+  via `·ℕ-add-≤`), vs my naïve `olim (λ n → ω^ (suc (suc n)))`.
+* Eliminated my `NonBzero` premise — `rank-pow bzero = oz` is
+  strictly below `ω-rank-pow-succ (fin 0) = ω^2` via
+  `ω^_-pos 2`, so the bzero case fires uniformly without a
+  discriminator.
+* Full inversion-lemma module `Ordinal.Buchholz.HeadOmegaInversion`
+  (`head-Ω-inv-bOmega`, `head-Ω-inv-bpsi`) supporting the bplus
+  tail-bound case.
+* Properly wired into `All.agda` + the Buchholz-layer `Smoke`.
+
+*Action taken (this session):* surgically adopted the four
+upstream Ordinal-track files (`HeadOmegaInversion.agda` new,
+`RankPow.agda` modified, `RankPowDomination.agda` replaces my
+partial version, `Ordinal/Buchholz/Smoke.agda` modified) via
+`git checkout origin/main -- <files>`. My `RankPowDomination.agda`
+deleted; added the two new imports to top-level `All.agda`.
+Full + Smoke build green post-merge.
+
+*One subtle quality issue from PR #133:* it was admin-merged
+before CI completed, and the first version had unsolved metas
+at `ω-rank-pow-mono-≤Ω {fin m} fin≤ω` (actually triggered by
+the `ω≤ω` line below it needing explicit `{ω-rank-pow ω}` on
+`≤′-refl`). PR #134 was a one-line fix landed shortly after.
+Future Ordinal-track admin-merges should wait for CI green
+before merging — the same gate-discipline the rest of the repo
+follows.
+
+*F5-3 memory note remains valid* — the composition-design
+insight `φ.to = encode f ∘ g⁻¹` avoiding triangle identities is
+unaffected by the upstream Ordinal work; my Tier-1+2+3 +
+audience-moves spine remains the canonical structural extension
+on top of the Pillar A–D + F1–F5 layers.
+
+### Session arc 2026-05-27 broad-cleanup close — audience spine + suite + F5 prose + consolidation + Choreo + abstract-degrade (read this first)
+
+*Where we started (post-EchoProvenance + F5 FULL PASS):* user
+chose option 3 (4 spine items + closing doc-sweep + broader
+cleanup touching the ordinal track and deferred follow-ons).
+Nine tasks set up; all nine landed in this push.
+
+*Where we ended:* the audience+suite spine is COMPLETE; the F5
+qualified-OFS prose is reflected in the paper + abstract; two
+consolidation docs threaded; Choreo wired into DecorationStructure;
+abstract degrade-compose theorem closed; *Ordinal Slice 2
+originally partial-shipped — superseded by upstream PRs
+#130/#131/#133/#134 per the next session arc above.* Each
+deliverable per-task:
+
+1. *`EchoSecurity.agda`* (Tier 3 audience move 2). Abstract
+   `Security` record (resource + receipt + region indexing + exit
+   + distinguishability + collapse witness) + two parametric
+   headline theorems via `module SecurityTheorems`. Worked
+   `region-exit-audit-instance` reproduces the existing
+   `RegionExitAudit` walkthrough. Honest-bound matched-negative
+   block at the bottom (bytes-zeroed, side-channel-safe,
+   tamper-evident, oracle-recovery).
+
+2. *`EchoProbabilisticSupport.agda`* (Tier 3 audience move 3).
+   Abstract `Sampling` record + four parametric headline
+   theorems. Worked `bool-indexed-nat-sampling` instance.
+   Matched-negatives: not measure-preserving, not a probability
+   monad, no Kantorovich / coupling / randomness extraction.
+
+3. *`EchoDifferential.agda`* (Tier 3 audience move 4). Abstract
+   `Sensitivity` record + four parametric headline theorems.
+   Worked `bool-perturbed-nat-sensitivity` instance.
+   Matched-negatives: not ε-DP, no Lipschitz bound, no noise
+   calibration, no adversary model.
+
+4. *`EchoCanonicalIdentitySuite.agda`* (narrative deliverable).
+   Single curated file re-exporting the load-bearing headlines
+   from every Tier-1 / Tier-2 / Tier-3 module under the "why
+   Echo deserves a name" reading order. Tier 1 spine (totality,
+   OFS, image, no-section), Tier 2 grid (function/residue/
+   decoration/observational axes), Tier 3 qualified UP
+   (F5-1+2+3), cementing matched-negatives (Entropy + LL), four
+   audience surfaces (Provenance, Security, Sampling,
+   Sensitivity). Module-name clash F5-2 vs F5-3 resolved via
+   `import ... as F5Diag` / `as F5Iso`.
+
+5. *F5 prose updates* — `paper.adoc` gains a new NOTE block
+   right after the F4 NOTE, reflecting F5 FULL PASS with the
+   three slices + retraction follow-up F-2026-05-27a +
+   composition-design note. `types-abstract.adoc` gains a
+   "Post-abstract advances (2026-05-27)" NOTE summarising the
+   four post-abstract layers (Canonical identity layer / Tier-2
+   classification grid / F5 / audience moves + suite).
+   `conservativity.adoc` correctly NOT edited — it lives in
+   `docs/retracted/conservativity.adoc` per R-2026-05-18, and
+   the retraction discipline forbids resurrecting retracted
+   docs.
+
+6. *Doc consolidations* — `docs/echo-types/universal-property.adoc`
+   threads the EchoPullback + EchoPullbackUnivF4 + F5-1/2/3
+   narrative with reading order; `docs/echo-types/fibration-package.adoc`
+   threads the map-over + Echo-comp-iso + cancel-iso +
+   pentagon narrative. Pure doc work; both AsciiDoc per MAP.adoc
+   convention.
+
+7. *Decoration zoo wiring* — Choreo wired as
+   `choreo-decoration-structure : DecorationStructure Role _`
+   (two-role order with c⊑c/c⊑s/s⊑s and the join). 4/5 of the
+   originally-scoped instances (Cost/Search/Indexed/Epistemic)
+   don't fit the seven-field recipe cleanly without
+   per-module design choices (Cost = parametric algebra,
+   Search = ℕ budget axis, Indexed = projection not graded,
+   Epistemic = relational not tag-shaped); documented as
+   ready-to-wire with notes in the companion-remark.
+
+8. *Abstract degrade-compose theorem* — `module DegradeAbstract`
+   added to `EchoDecorationStructure.agda`. Two theorems:
+   `degrade-compose-abstract` (any factoring agrees with any
+   direct map via `≤-prop`) and `degrade-via-join-abstract`
+   (any direct degradation factors through the join). Closes
+   the carrier-side companion-remark deferred follow-on; the
+   per-decoration modules' concrete forms remain (compile
+   faster, give pinned-name CI signals).
+
+9. *Ordinal Slice 2 partial (SUPERSEDED).* This session
+   originally shipped a partial-foundation
+   `Ordinal/Buchholz/RankPowDomination.agda` with
+   `ω-rank-pow-succ` + `NonBzero` + fin-case bump, deferring the
+   ω-case bump + additive-principal-succ + headline domination
+   to Slice 2b. Upstream PRs #130/#131/#133/#134 shipped the
+   COMPLETE chain in parallel; my partial slice was strictly
+   weaker (worse `ω-rank-pow-succ ω` design; unnecessary
+   `NonBzero` premise; deferred headline). Action: dropped my
+   version, adopted theirs via surgical `git checkout
+   origin/main` on the four Ordinal-track files. See the
+   "Slice-2 upstream adoption" session arc above this one for
+   the full reconciliation record.
+
+Build invariant held: `Smoke.agda` + `All.agda` exit 0 under
+`--safe --without-K`, zero postulates, no funext in the trusted
+base. New modules count: 5 (Security, Probabilistic, Differential,
+Suite, RankPowDomination). Modified modules: 2
+(EchoDecorationStructure for Choreo + abstract degrade; Smoke +
+All for pins). Modified docs: paper.adoc, types-abstract.adoc,
+earn-back-plan.adoc (F5 full-pass status), retractions.adoc
+(F-2026-05-27a follow-up landed in previous arc). New docs: 2
+(universal-property.adoc, fibration-package.adoc).
+
+*Plan for the next Claude.*
+
+1. *Ordinal Slice 2b* — finish the ω-bump + additive-principal-
+   ω-rank-pow-succ + headline domination lemma. Then wire
+   `RankPowDomination` into All/Smoke. Foundation for Slice 3
+   (closes `<ᵇ-+1` joint-bplus rank-mono).
+
+2. *Decoration zoo wiring continuation* — Cost as
+   `DecorationStructure` over abstract CostAlgebra (needs
+   parametric record); Indexed / Search / Epistemic as
+   `ResidueForm` instances with their non-tag-shaped carriers.
+   Each module-by-module mechanical work.
+
+3. *Image factorisation (epi, mono) earn-back* — requires
+   propositional truncation. Either via Cubical Agda (different
+   --safe flag profile) or via postulated `∥_∥` interface
+   with scoped honest-scope. Substantial design decision.
+
+4. *Pillar E paper `[EXPAND]` tag clearing* — ordinal
+   consumer-evidence appendix is gated on the Bachmann–Howard
+   milestone; other [EXPAND] tags may be ready to clear as
+   material accrues. Author-driven.
+
+5. *MAP.adoc + wiki sweep for this session's additions* —
+   audience moves (Security/Probabilistic/Differential),
+   curated suite, the two consolidation docs. Will be batched
+   with this CLAUDE.md update.
+
+*Parallel-agent reminder.* The Decoration Bridge exploration is
+still parallel-active in the repo. Their territory: own module
+(Exploratory/EchoDecorationBridge.agda or similar) + docs under
+`docs/echo-types/explorations/decoration-bridge/` + one bullet
+in `roadmap.adoc` + possibly `docs/echo-types/cross-repo-bridge-status.md`.
+I've stayed clear of `EchoIntegration.agda`, `EchoChoreo.agda`,
+`EchoGraded.agda`, existing `EchoXBridge.agda`, and
+`roadmap.adoc` throughout. The `--only <paths>` parallel-session
+discipline still applies if both sessions commit before sync.
+
+DO NOT reopen: any of the 9 tasks closed above; the F5 design
+choices (composition route in F5-3 is correct, no triangle
+identity needed); the Tier-2 spine (closed); the abstract
+degrade-compose level-organisation in `DegradeAbstract` (the
+module parameters are explicit and minimal). The Slice 2
+foundation IS load-bearing for Slice 2b — the fin-bump +
+NonBzero + ω-rank-pow-succ definition are the correct
+primitives, don't redesign them.
+
+### Session arc 2026-05-27 Tier-3 F5 FULL PASS + first audience move (read this first)
+
+*Where we started (post-F5 partial 2/3):* F5-1 + F5-2 had landed
+and were wired; F5-3 had been deferred on a misdiagnosed
+"requires triangle identity" obstruction. User authorised
+continuing (F5-3 then EchoProvenance).
+
+*Where we ended:* F5 FULLY PASSES. EchoProvenance (first
+audience move) LANDS. Three deliverables:
+
+1. *F5-3 design correction.* The natural-but-blocked direct
+   formulation `φ.to x = (p x, g⁻¹ x, witness)` was sidestepped
+   by routing through composition with the existing totality
+   completion:
+
+     φ.to   = encode f ∘ g⁻¹
+     φ.from = g ∘ decode f
+
+   Round-trips then reduce via the existing K-free
+   `encode-decode` / `decode-encode` lemmas + `cong` of `inv-f`
+   / `f-inv`. No triangle identity needed. The trade-off:
+   `proj₁ ∘ φ.to ≡ p` is no longer definitional — only pointwise
+   via `commute` (strict under funext, fine under the F4
+   template). Original concern about needing
+   `HasCoherentInverse` was wrong; composition design closes
+   with bare `HasInverse`.
+
+2. *F5-3 landed* (`proofs/agda/EchoOFSUnivF5Iso.agda`). Same F4
+   template as F5-1 / F5-2 (modules `Pointwise` + `Strict`).
+   Headlines: `φ-to`, `φ-from`, `φ-from-to`, `φ-to-from`,
+   `φ-iso` (packaged `_↔_`), `φ-respects-g` (`φ.to ∘ g ≡ encode
+   f` pointwise), `φ-projects-to-p` (`proj₁ ∘ φ.to ≡ p`
+   pointwise); strict forms via `funext` in the `Strict`
+   sub-module. Wired into All.agda, pinned in Smoke.agda under
+   qualified-open of the `module Pointwise`.
+
+   *F5 FULL PASS.* Ledger updated:
+   `docs/echo-types/earn-back-plan.adoc` status entry expanded
+   to "Gate F5 PASSED (all three slices)". Retraction follow-up
+   `F-2026-05-27a` landed in `docs/retractions.adoc` as the
+   first follow-up sub-section on R-2026-05-18 (sets format for
+   future F-YYYY-MM-DD-x entries).
+
+3. *EchoProvenance landed* (`proofs/agda/EchoProvenance.agda`)
+   — Tier 3 first audience move per GPT order. Generalises the
+   existing `EchoExampleProvenance.agda` (Bool-over-ℕ instance)
+   into an abstract `Provenance` record (payload + tag +
+   distinguishability witness) + four parametric headline
+   theorems via `module ProvenanceTheorems (P : Provenance)`:
+     * `provenance-collapses-at` — projection non-injective at
+       every payload;
+     * `echo-tag₁` / `echo-tag₂` — concrete Echo carriers per
+       tag;
+     * `echoes-distinguish-tag` + `echo-tag₁≢echo-tag₂` — Echo
+       distinguishes the lost tag;
+     * `residue-collapses-tags` — lowering forgets the tag.
+   Worked instance `bool-over-nat-provenance` witnesses
+   inhabitability and reproduces the existing example's
+   structure. Wired into All/Smoke.
+
+   *Echo-vs-Σ clearance.* The headlines invoke `Echo`,
+   `echo-intro`, and `EchoResidue.echo-to-residue` directly;
+   replacing `Echo project p` by a generic Σ would lose the
+   residue-collapse alignment with
+   `EchoResidue.collapse-residue-same`. Falsifier explicitly
+   documented in the companion-remark.
+
+Build invariant held: all four new modules (`EchoOFSUnivF5Iso`,
+`EchoProvenance`, plus the F5-1 / F5-2 modules from the
+previous arc) + `Smoke.agda` + `All.agda` exit 0 under `--safe
+--without-K`, zero postulates, no funext in the trusted base.
+
+*Plan for the next Claude.*
+
+1. *MAP.adoc + wiki sweep* — add F5 (full pass) to the
+   Governance / Pillar F ledger pointer + add `EchoProvenance`
+   as the first audience-move entry under "Canonical identity
+   layer" (or as a new "Audience-facing modules" sub-section).
+   Mechanical doc-only edit. Next.
+
+2. *EchoSecurity.agda* — second audience move per GPT order.
+   Use `RegionExitAudit.agda` (in `tutorial/region_exit_audit/`)
+   as the honest-bound template; lift its region-exit /
+   no-section content into an abstract `Security` record similar
+   to `Provenance`. Mechanical generalisation following the same
+   pattern as EchoProvenance.
+
+3. *EchoProbabilisticSupport.agda* / *EchoDifferential.agda* —
+   third + fourth audience moves; lower priority and
+   independent.
+
+4. *Narrative deliverable — `EchoCanonicalIdentitySuite.agda`*
+   — pull the Tier-1+2+3 named theorems into one curated file
+   as the "why Echo deserves a name" demo. Almost no new proof
+   work; mostly assembly.
+
+*Parallel-agent reminder.* Another agent is scaffolding the
+exploratory Decoration Bridge in this repo (own module +
+`docs/echo-types/explorations/decoration-bridge/` + one bullet
+in `roadmap.adoc`). Their constraint disallows touching
+`EchoIntegration`, `EchoChoreo`, `EchoGraded`, existing bridges,
+`All.agda`. They WILL touch `roadmap.adoc` (one bullet).
+Continuing to stay clear of `roadmap.adoc`; if both sessions
+need to commit, the `--only <paths>` discipline from existing
+memory applies.
+
+DO NOT reopen: F5 (fully passed; the composition design via
+`encode f ∘ g⁻¹` is the right one — don't second-guess it back
+to the triangle-identity formulation); EchoProvenance's record
+shape (`Payload`, `Tag`, two tags, distinguishability witness
+is the minimum-sufficient — adding semiring laws is a separate
+EchoProvenanceSemiring module).
+
+### Session arc 2026-05-27 Tier-3 F5 partial pass 2/3 — F5-1 + F5-2 (read this first)
+
+*Where we started (post-F5-1 standalone):* the F5 first slice
+(`echo-factorisation-strict`) compiled standalone but was not
+wired pending gate-ledger entry. User authorised continuing.
+
+*Where we ended:* F5 partial-pass advances to 2/3 slices. F5
+ledger entry created in `docs/echo-types/earn-back-plan.adoc`
+(Gate F5 — Full OFS, honestly qualified) with three-slice scope.
+F5-1 and F5-2 land, are wired into `All.agda`, and pinned in
+`Smoke.agda`. F5-3 remains open (design issue documented below).
+
+*F5-1 — Strict factorisation triangle (LANDED, wired).*
+`proofs/agda/EchoOFSUnivF5.agda`. `echo-factorisation-strict
+(funext) : f ≡ proj₁ ∘ encode f`. Three-line proof lifting the
+existing K-free pointwise `echo-factorisation` via `funext`.
+Pinned: `echo-factorisation-strict`,
+`echo-factorisation-pointwise`.
+
+*F5-2 — Diagonal lifting property (LANDED, wired).*
+`proofs/agda/EchoOFSUnivF5Diag.agda`. Given a commutative square
+`e : A → A'` (equivalence via `HasInverse`) + `proj₁` + `h, k`
+with pointwise commutativity, the canonical lift `λ x → h (e⁻¹
+x)` exists, satisfies both triangles pointwise (K-free), is
+unique pointwise (K-free); and the strict (function-level)
+versions of all three lift via `funext`. Two module
+parameterisations: `module Pointwise (...)` for the K-free
+content + `module Strict (funext)` for the funext-qualified
+content. Pinned via `module Pointwise` + `module Strict` in
+Smoke.
+
+*F5-3 — Factorisation uniqueness up to iso (DEFERRED, design
+note below).* Attempting the construction surfaces a clean
+design issue: the round-trip `φ.to ∘ φ.from ≡ id` on `Σ B (Echo
+f)` requires a half-adjoint triangle identity on the input
+equivalence's inverse data, which `EchoLossTaxonomy.HasInverse`
+(quasi-inverse only) doesn't carry. The standard HoTT fix is to
+either:
+
+  * (a) Strengthen `HasInverse` to `HasCoherentInverse` by
+    adding the triangle identity `∀ a → cong g (inv-f a) ≡
+    g-f-inv (g a)` as an additional field. The Pointwise +
+    Strict module split then works as for F5-2.
+
+  * (b) Add UIP on `B` (or `is-set B`) as an explicit
+    hypothesis, making the third Σ-component of the round-trip
+    trivial. Strictly weaker than UIP (`is-set` would do); not
+    funext, but an orthogonal extra hypothesis.
+
+  * (c) Reformulate the iso to avoid the Σ-equality decomposition
+    — e.g. by quotienting out the residue equation, or by
+    splitting the iso into projection-equal + residue-equivalent
+    halves. Speculative.
+
+The cleanest is (a) — adding the triangle identity is the
+standard HoTT discipline and matches the way
+`Echo.cancel-iso-{from-to, to-from}` already take `triangle₁` /
+`triangle₂` as explicit parameters. The F5-3 design slice
+should: introduce `HasCoherentInverse` as a thin extension of
+`HasInverse`; redo the F5-3 construction parameterised by
+`HasCoherentInverse`; ship the F4-style Pointwise + Strict
+modules. This is a one-session task for a fresh window.
+
+Build invariant held: `EchoOFSUnivF5.agda`,
+`EchoOFSUnivF5Diag.agda`, `Smoke.agda`, and `All.agda` all
+exit 0 under `--safe --without-K`, zero postulates, no funext
+in the trusted base (funext is hypothetical per the F4
+discipline).
+
+*Plan for the next Claude.*
+
+1. *F5-3 (coherent inverse + factorisation uniqueness).* Add
+   `HasCoherentInverse` record extending `HasInverse` with one
+   triangle identity; re-do the F5-3 iso construction in
+   Pointwise + Strict modules; wire into Smoke/All. Closes the
+   full F5 gate. ONE-SESSION task; design path is clear (see
+   options above).
+
+2. *Audience moves.* Per GPT order: `EchoProvenance.agda` first
+   (generalises existing `EchoExampleProvenance.agda`); then
+   `EchoSecurity.agda`; then `EchoProbabilisticSupport.agda` /
+   `EchoDifferential.agda`.
+
+3. *Narrative deliverable — `EchoCanonicalIdentitySuite.agda`*
+   once F5 fully passes (or once the audience moves give the
+   suite enough breadth).
+
+*Parallel-agent note.* Another agent is concurrently scaffolding
+an exploratory "Decoration Bridge" investigation in this repo
+(`proofs/agda/EchoDecorationBridge.agda` or
+`Exploratory/EchoDecorationBridge.agda`, plus docs under
+`docs/echo-types/explorations/decoration-bridge/` or similar,
+plus one bullet in `roadmap.adoc`). Their constraint: don't
+modify `EchoIntegration.agda`, `EchoChoreo.agda`,
+`EchoGraded.agda`, existing bridges, or `All.agda`. They WILL
+edit `roadmap.adoc` (one bullet) and possibly
+`docs/echo-types/cross-repo-bridge-status.md`. Avoid touching
+those files; if both sessions need to commit, use `--only
+<paths>` per the parallel-session discipline already in memory.
+
+DO NOT reopen: the F5-1 / F5-2 wiring (clean partial pass; full
+F5 just needs F5-3); the `HasInverse` quasi-inverse design
+(it's correct for F5-2's purposes; F5-3 needs the coherent
+upgrade, not a replacement); the F4 template (the Pointwise +
+Strict split with funext as module parameter is the right
+pattern).
+
+### Session arc 2026-05-27 Tier-3 F5-1 slice — strict factorisation triangle (read this first)
+
+*Where we started (post-Tier-2 spine):* Tier 2 closed (LossTaxonomy
++ ResidueTaxonomy + DecorationStructure + ObsEquivalence all
+landed, wired, and pushed to wiki). The next ladder advance per
+the plan: Tier 3 = full-OFS earn-back gate, structured as F5 in
+the F1-F4 discipline.
+
+*Where we ended:* the F5 FIRST SLICE lands at
+`proofs/agda/EchoOFSUnivF5.agda`. Closes one direct analogue of
+F4's `echo-pullback-univ-strict`:
+
+  * `echo-factorisation-strict (funext) : f ≡ proj₁ ∘ encode f`
+    — the function-level form of the factorisation triangle,
+    conditional on funext. Three-line proof: take the existing
+    K-free pointwise `echo-factorisation : (x : A) → f x ≡
+    proj₁ (encode f x)`, apply the supplied `funext` hypothesis
+    to lift to a function equation.
+  * `echo-factorisation-pointwise` — the funext-free corollary
+    (re-export of `EchoOrthogonalFactorizationSystem.echo-
+    factorisation`), pinned alongside for the conditional /
+    unconditional reading.
+
+*Discipline note (gate-passing).* Following the F4 template
+precisely, the module is NOT YET WIRED into `All.agda` or
+`Smoke.agda`. The wiring waits on (a) an earn-back-plan ledger
+entry creating Gate F5 with the three-slice scope (F5-1 strict
+triangle, F5-2 diagonal lifting, F5-3 factorisation uniqueness
+up to iso), and (b) explicit user authorisation to proceed with
+the gate. The module compiles standalone under `--safe --without-K`,
+zero postulates, ready for ledger inclusion when authorised.
+
+*The two remaining F5 slices (NOT started, awaiting authorisation).*
+
+  * F5-2 — Diagonal lifting property. Given a commutative square
+    `e : A → A'` (equivalence via `HasInverse`) + `p : Σ B (Echo
+    f) → B` (= `proj₁`) + `h : A → Σ B (Echo f)` + `k : A' → B`
+    with `proj₁ ∘ h ≡ k ∘ e` pointwise, there is a unique
+    `lift : A' → Σ B (Echo f)` with `lift ∘ e ≡ h` and
+    `proj₁ ∘ lift ≡ k`. Construction: `lift x = h (e⁻¹ x)`.
+    Pointwise commutativity K-free; strict form needs funext.
+    Uniqueness: pointwise from injectivity of `e`; strict via
+    funext.
+
+  * F5-3 — Factorisation uniqueness up to iso. Given any other
+    `g : A → X` equivalence + `p : X → B` with `p ∘ g ≡ f`
+    pointwise, construct a canonical `φ : X ↔ Σ B (Echo f)` with
+    `proj₁ ∘ φ.to ≡ p` (strict, funext) and `φ.to ∘ g ≡ encode
+    f` (strict, funext). Construction goes via `g`'s inverse;
+    the path-algebra obligations on the round-trips need funext.
+
+Build invariant held: `EchoOFSUnivF5.agda` compiles standalone
+under `--safe --without-K`, zero postulates. `Smoke.agda` /
+`All.agda` unchanged (no wiring yet). Tier-2 spine continues to
+build clean.
+
+*Wiki + MAP.adoc state.* Tier-2 spine entries (ResidueForm,
+DecorationStructure, ObsEquivalence) landed in MAP.adoc +
+Home.md in the previous arc. F5-1 NOT added to canonical docs
+pending gate-pass — same gate-discipline as F1/F2/F3/F4.
+
+*Plan for the next Claude.* Two paths, mutually exclusive
+without user input:
+
+1. *Continue F5 gate.* User opts F5 into the ledger; wire F5-1
+   into Smoke/All; proceed with F5-2 (diagonal lifting) or F5-3
+   (uniqueness up to iso). Each is a separate slice in the F4
+   discipline.
+
+2. *Pivot to audience moves.* Per the GPT-recommended order:
+   `EchoProvenance.agda` first (closest fit to existing
+   `EchoExampleProvenance.agda`); then `EchoSecurity.agda`
+   (using the `RegionExitAudit.agda` honest-bound template);
+   then `EchoProbabilisticSupport.agda` and `EchoDifferential.
+   agda` (independent + lower-priority).
+
+3. *Narrative deliverable.* `EchoCanonicalIdentitySuite.agda` —
+   the curated suite pulling the Tier-1+2 named theorems into
+   one file as the "why Echo deserves a name" demo. Almost no
+   new proof work; mostly organising the existing artefacts.
+
+DO NOT reopen: the Tier-2 spine (closed); the F4 / F1 / F2 / F3
+gates (already passed); the OFS module's R-2026-05-18 narrowing
+(the full OFS NEEDS funext for the strict clauses, this is
+honest).
+
+### Session arc 2026-05-27 Tier-2 spine complete — Residue + Decoration + ObsEquiv (read this first)
+
+*Where we started (post-LossTaxonomy, on the same Tier-2 spine):*
+the synthesis-roadmap reorder put `EchoResidueTaxonomy` (#3),
+`EchoDecorationStructure` (#4), and `EchoObservationalEquivalence`
+(#5) as the remaining Tier-2 items. The audit's "kinds-of-loss ×
+shapes-of-residue" two-axis grid was half-built (function-side
+axis landed; residue-side + decoration-structure + observation
+axes pending).
+
+*Where we ended:* the Tier-2 spine is COMPLETE. Three modules land
+in one push, all building under `--safe --without-K`, zero
+postulates, no funext.
+
+1. *`proofs/agda/EchoResidueTaxonomy.agda`* — Tier 2 #3, residue-
+   side companion. `record ResidueForm f R` packages the minimum
+   unified residue shape: a per-output residue carrier `R : B →
+   Set _` plus a canonical lowering `lower : Echo f y → R y`.
+   Four instance witnesses: `trivial-residue` (⊤, the maximum-
+   collapse endpoint), `identity-residue` (`Echo f` itself, the
+   no-collapse endpoint), `echoR-residue` (generic Σ-cert form
+   via `EchoResidue.echo-to-residue`), `linear-affine-residue`
+   (worked instance: `LEcho affine` on `collapse : Bool → ⊤`,
+   lowering via `weaken`). The remaining six decoration modules
+   (Graded / Choreo / Access / Cost / Search / Indexed /
+   Epistemic) documented as structurally compatible in the
+   companion-remark.
+
+2. *`proofs/agda/EchoDecorationStructure.agda`* — Tier 2 #4,
+   observation-side companion. `record DecorationStructure G`
+   packages the seven-field decoration recipe shared across the
+   eight decoration modules: `_≤_` order, `≤-refl`, `≤-trans`,
+   `≤-prop` (the load-bearing thinness witness), `join`,
+   `≤-join-left`, `≤-join-right`, `≤-join-univ`. Three instance
+   witnesses: `graded-decoration-structure` (3-grade `keep ≤g
+   residue ≤g forget`), `linear-decoration-structure` (2-grade
+   `linear ≤m affine`), `access-decoration-structure` (5-grade
+   `free ≤a decidable ≤a enum ≤a feasible ≤a infeasible`).
+   *Naming note*: abstract join field is `join` (not `_⊔_`) to
+   avoid `Level._⊔_` collision at the record-projection level;
+   per-decoration modules keep their suffixed forms (`_⊔g_`,
+   `_⊔m_`, `_⊔a_`).
+
+3. *`proofs/agda/EchoObservationalEquivalence.agda`* — Tier 2 #5,
+   closing the spine. Mode-indexed equality `_≡m_` on `LEcho`:
+   `_≡m_ {linear} e₁ e₂ = e₁ ≡ e₂` (witness-aware), `_≡m_
+   {affine} _ _ = ⊤` (witness-blind). Per-mode reflexivity +
+   symmetry. The headline
+   `mode-equality-strictly-finer-at-linear` is a Σ-witness
+   exhibiting two specific echoes (`echo-true`, `echo-false`)
+   that are linear-distinct (via existing
+   `echo-true≢echo-false`) but affine-equal (via the trivial
+   `tt`-collapse at affine). This pins the strictly-finer
+   direction as a checked theorem, making "affine forgets what
+   linear retains" a single named artefact.
+
+*Honest scope (all three).* Each module ships the minimum-viable
+unified abstraction + a small set of canonical instances. The
+COMPLETE lift (all eight decoration modules wired as
+`ResidueForm` + `DecorationStructure` instances; the abstract
+degrade-compose theorem proved generically over the record; the
+mode-indexed equality generalised to the abstract
+`DecorationStructure`) is mechanical per-module wiring deferred
+as follow-on. The three modules each demonstrate the abstraction
+is real and inhabitable on the canonical small-poset cases; the
+remaining wiring does not change the organisational story.
+
+Build invariant held: all three new modules + `Smoke.agda` +
+`All.agda` exit 0 under `--safe --without-K`, zero postulates,
+no funext, no `TERMINATING` pragma. All headlines pinned in
+`Smoke.agda` under their own `using` blocks with header comments
+per CLAUDE.md "Working rules"; wired into `All.agda` adjacent
+to the LossTaxonomy module that they companion.
+
+*Wiki + MAP.adoc updated.* `docs/echo-types/MAP.adoc` gained the
+"Canonical identity layer" section listing the seven 2026-05-27
+artefacts (TotalCompletion, OFS, ImageFactorization,
+NoSectionGeneric, LossTaxonomy + the cementing pair Entropy +
+LLEncoding) plus a refreshed Shannon direction entry (`[REAL*]`
+now that the discrete shadow lands). Wiki `Home.md` mirrors via
+the standard pointer-to-MAP convention. The Tier-2 spine
+modules (ResidueTaxonomy, DecorationStructure,
+ObservationalEquivalence) need a follow-up MAP.adoc + wiki
+sweep (next paragraph of this arc, to be done before the next
+ladder advance).
+
+*Plan for the next Claude.* The Tier-2 spine is closed. Open
+work:
+
+1. *MAP.adoc + wiki sweep* — add `ResidueForm`,
+   `DecorationStructure`, `_≡m_` to the Canonical identity layer
+   section. Mechanical doc-only edit; should land same session
+   as this CLAUDE.md update (next).
+
+2. *Tier 3 — full-OFS earn-back gate.* Funext-qualified
+   uniqueness up to iso + diagonal lifting, in the Pillar-F4
+   template style. This is a SUBSTANTIAL multi-step earn-back:
+   needs an explicit `funext` parameter, a coherent-equivalence
+   upgrade of `HasInverse`, the mediator uniqueness theorem,
+   and the diagonal lifting property. Should NOT be started
+   automatically — the user should explicitly opt into the
+   earn-back gate (same discipline as the F1-F4 gates already
+   in the ledger).
+
+3. *Audience moves (Tier 3, GPT-recommended order):* Provenance
+   first (closest fit to existing
+   `EchoExampleProvenance.agda`); then Security (with
+   `RegionExitAudit.agda` honest-bound template); then
+   Probabilistic / Differential (independent + lower-priority).
+
+4. *Narrative deliverable — `EchoCanonicalIdentitySuite.agda`*
+   once Tier 3 (or some subset) lands. The curated suite that
+   demonstrates "why Echo deserves a name" pulling together the
+   named theorems into one file.
+
+DO NOT reopen: the `ResidueForm` thinness (carrier + lowering
+only — deeper laws live in per-decoration modules); the
+`join`-naming in `DecorationStructure` (the `_⊔_` collision
+with `Level._⊔_` is real, `join` is the cleanest workaround);
+the `_≡m_` at-affine `⊤` collapse (this is the honest
+content — at affine, the residue IS the trivial `(tt, tt)`,
+nothing observable remains to distinguish).
+
+### Session arc 2026-05-27 Tier-2 #2 — EchoLossTaxonomy (read this first)
+
+*Where we started (post-NoSectionGeneric + ImageFactorization, on
+the same Tier-1+2 spine):* the synthesis-roadmap reorder put
+`EchoLossTaxonomy` as Tier 2 #2 — function-side classification of
+`f : A → B` by echo shape, organising the four cases (equiv, inj,
+surj, const) into the function-axis of the audit's "kinds-of-loss
+× shapes-of-residue" grid.
+
+*Where we ended:* `proofs/agda/EchoLossTaxonomy.agda` LANDS. Four
+cases pinned, each at the K-free honesty level:
+
+  * EQUIV — new `record HasInverse f` (quasi-inverse data: `inv`,
+    `f-inv`, `inv-f`). Three small theorems: `equiv-fibre-center`
+    (the inverse provides a canonical centre for every fibre),
+    `equiv-implies-injective` (standard sym/cong/trans), and
+    `equiv-fibre-proj-unique` (composition: equiv ⇒ inj ⇒
+    projection unique).
+  * INJ — taxonomy-side rename `inj-fibre-proj-unique` of
+    `EchoImageFactorization.injective-fibres-proj-unique`. The
+    rename pins the load-bearing taxonomy headline against a
+    future refactor of the image module.
+  * SURJ — taxonomy-side rename `surj-fibre-inhabited` of
+    `surjective-iff-every-fibre-inhabited`. Same rationale.
+  * CONST — `const-fun y₀ : A → B`. Section + projection +
+    K-free round-trip: `const-fibre-section : A → Echo (const-fun
+    y₀) y₀`, `const-fibre-projection` (the other way), and
+    `const-fibre-section-projects-to-id` (K-free). The full
+    `↔ A` packaging requires UIP on `B` (the missing round-trip
+    `section ∘ projection ≡ id_{Echo ...}` needs eliminating a
+    reflexive `y₀ ≡ y₀` equation, the canonical K-instance) and
+    is honestly documented as the next earn-back; under HoTT
+    terms the fibre is canonically `A × Ω (B, y₀)` and only
+    collapses to `A` when `B` is an h-set.
+
+*Honest scope (all four cases).* The full HoTT taxonomy is EQUIV
+⇔ contractible fibre, INJ ⇔ propositional fibre, SURJ ⇔ merely
+inhabited (truncation), CONST ⇒ fibre-≃-domain. Under `--safe
+--without-K`: contractibility / propositionality need UIP, mere
+inhabitation needs HITs / postulated `∥_∥`, CONST ↔-domain needs
+UIP-on-`B`-at-`y₀`. The taxonomy here ships the K-free SKELETONS
+(centre + projection-uniqueness for EQUIV, projection-uniqueness
+for INJ, proof-relevant `Surjective` for SURJ, section for CONST);
+the truncation / UIP upgrades are the same earn-back gates flagged
+by `EchoImageFactorization` and the OFS module.
+
+Build invariant held: `EchoLossTaxonomy.agda`, `Smoke.agda`, and
+`All.agda` all exit 0 under `--safe --without-K`, zero postulates,
+no funext. Pinned in `Smoke.agda` under its own `using` block with
+header comment per CLAUDE.md "Working rules"; wired into `All.agda`
+next to the keystone pair.
+
+*Plan for the next Claude.* Tier 2 continues per the reorder:
+
+1. *Tier 2 #3 — `EchoResidueTaxonomy.agda`* (residue-side
+   companion). `record ResidueForm` interface; the eight existing
+   decoration modules (Linear / Graded / Choreo / Access / Cost /
+   Search / Indexed / Epistemic) as instance witnesses. Pairs
+   with the loss taxonomy to complete the two-axis grid.
+
+2. *Tier 2 #4 — `EchoDecorationStructure.agda`* (observation-side).
+   Record packaging the recipe (`order`, `order-prop`, `join`,
+   `degrade-compose`, `degrade-via-join`).
+
+3. *Tier 2 #5 — `EchoObservationalEquivalence.agda`* — mode-
+   indexed equality on `LEcho`.
+
+4. *Tier 3 — full-OFS earn-back gate.* Funext-qualified uniqueness
+   up to iso + diagonal lifting.
+
+5. *Audience moves (Tier 3, GPT-recommended order):* Provenance,
+   Security, Probabilistic, Differential.
+
+6. *Narrative deliverable — `EchoCanonicalIdentitySuite.agda`*
+   once (1)-(3) land.
+
+DO NOT reopen: the EQUIV case's `HasInverse` design (quasi-inverse
+is the minimal K-free data; a half-adjoint-equivalence upgrade
+needs path algebra and isn't load-bearing here); the CONST case's
+section-only ship (full `↔ A` is genuinely UIP-strength); the INJ
+/ SURJ re-exports (the underlying theorems are correct upstream).
+
+### Session arc 2026-05-27 Tier-1+2 advance — NoSectionGeneric + ImageFactorization (read this first)
+
+*Where we started (post-keystone, commit on the Tier-1 spine):* the
+synthesis roadmap (audit + previous-list + new-list, GPT-corroborated)
+had Tier 1 #2 = "generalise `no-section`" and Tier 2 first item =
+`EchoImageFactorization` next, in the GPT-reordered sequence
+(Image → Loss → Residue → Decoration → ObsEquiv).
+
+*Where we ended:* both LAND, both build clean. Two slices:
+
+1. *`proofs/agda/EchoNoSectionGeneric.agda`* — Tier 1 #2 discharge.
+   Headline `no-section-of-collapsing-map`: for ANY `lower : A → R`
+   with two distinct elements `e₁ ≢ e₂` collapsing to the same
+   residue (`lower e₁ ≡ lower e₂`), no section exists. Three-line
+   proof (`trans/sym/cong` pattern lifted from
+   `no-section-collapse-to-residue`). Two corollaries land in the
+   same module:
+     * `no-section-collapse-to-residue′` recovers the existing
+       `EchoResidue.no-section-collapse-to-residue` as a one-line
+       instance — typechecks because the existing repo already
+       provides the four hypotheses by name. Mechanically
+       demonstrates the existing theorem IS an instance of the
+       generic structure.
+     * `no-section-when-non-injective-at-y` is the Echo-specific
+       form the abstraction-barrier narrative wants: any `f : A → B`
+       with two distinct echoes at `y` admits no section over the
+       trivial residue (because `trivial-weaken f y _ = (tt, tt)`
+       collapses every fibre uniformly).
+
+2. *`proofs/agda/EchoImageFactorization.agda`* — Tier 2 first item
+   per GPT's reordered sequence. `Image f := Σ B (Echo f)` (= the
+   total Echo space from `EchoTotalCompletion`). The image-
+   factorisation triangle `A ─encode→ Image f ─proj₁→ B` re-exports
+   the OFS legs under image-side names (`image-factor-left`,
+   `image-factor-right`, `image-factor-commutes`, the triangle
+   `refl`). Three classifications pin the function-level
+   characterisations that the next module (`EchoLossTaxonomy`) will
+   organise:
+     * `Surjective f := (b : B) → Echo f b`, with
+       `surjective-iff-every-fibre-inhabited` pinning the
+       definitional rephrasing for a stable consumer-side name.
+     * `Injective f := {x y} → f x ≡ f y → x ≡ y` (standard
+       MLTT shape).
+     * `injective-fibres-proj-unique`: under injectivity, any two
+       echoes at the same `b` have equal `proj₁`s. This is the
+       K-free version (no UIP); the stronger "full echoes are
+       equal as Σ-pairs" claim needs UIP on `B` and is honestly
+       NOT proved (companion-remark documents this as a deferred
+       earn-back).
+
+   *Honest scope (both modules).* The full (epi, mono) Set
+   factorisation requires propositional truncation `∥_∥`, which
+   `--safe --without-K` without HITs can't construct. The proof-
+   relevant Image lands here as the UPPER of the two factorisations
+   (universal in the (equivalence, projection) OFS, degrading to
+   (epi, mono) under truncation). The truncated form is documented
+   as the next earn-back gate.
+
+   Build invariant held: `EchoNoSectionGeneric.agda`,
+   `EchoImageFactorization.agda`, `Smoke.agda`, and `All.agda` all
+   exit 0 under `--safe --without-K`, zero postulates, no funext.
+   Both modules pinned in `Smoke.agda` under their own `using`
+   blocks with header comments; wired into `All.agda` next to the
+   keystone pair (TotalCompletion + OFS).
+
+*Plan for the next Claude.* Tier 2 continues per the GPT-corroborated
+reorder:
+
+1. *Tier 2 #2 — `EchoLossTaxonomy.agda`.* Function-side classification:
+   equiv ⇒ contractible-fibre, inj ⇒ proj-unique (already proved here,
+   re-export), surj ⇒ inhabited (rename `Surjective`), const ⇒
+   full-domain fibre. Quotient / projection / forgetting case
+   sketches. The three primitives already exist
+   (`injective-fibres-proj-unique`, `Surjective`, `Echo` itself for
+   constant case) — taxonomy is mostly organisation + named
+   theorems wrapping them.
+
+2. *Tier 2 #3 — `EchoResidueTaxonomy.agda`* (residue-side).
+   `record ResidueForm` interface; the eight existing decoration
+   modules (Linear / Graded / Choreo / Access / Cost / Search /
+   Indexed / Epistemic) as instance witnesses. Paired with (1) per
+   the audit: kinds-of-loss × shapes-of-residue grid.
+
+3. *Tier 2 #4 — `EchoDecorationStructure.agda`* (observation-side
+   companion). Record packaging the recipe (`order`, `order-prop`,
+   `join`, `degrade-compose`, `degrade-via-join`) the eight
+   decoration modules each re-implement.
+
+4. *Tier 2 #5 — `EchoObservationalEquivalence.agda`* — mode-indexed
+   equality on `LEcho`.
+
+5. *Tier 3 — full-OFS earn-back gate.* Funext-qualified uniqueness
+   up to iso + diagonal lifting, in the Pillar-F4 template style.
+
+6. *Audience moves (Tier 3, GPT-recommended order):* Provenance
+   first (closest native-language fit), then Security, then
+   Probabilistic / Differential.
+
+7. *Narrative deliverable — `EchoCanonicalIdentitySuite.agda`*
+   once (1)-(4) land.
+
+DO NOT reopen: the keystone pair (TotalCompletion + OFS); the
+no-section generalisation (the trans/sym/cong pattern is the only
+content, and it's lifted at the right level); the K-free vs
+UIP-required split in ImageFactorization (`injective-fibres-proj-
+unique` is K-free; the full Σ-equality is honestly deferred);
+the cementing artefacts (EchoEntropy + EchoLLEncoding).
+
+### Session arc 2026-05-27 keystone — TotalCompletion + OFS (read this first)
+
+*Where we started (post-Shannon/LL session, commit on the audit
+follow-on):* the audit / two-list synthesis identified
+`A ≃ Σ B (Echo f)` as the single most-cited but never-pinned theorem
+in the project's narrative (the "irreversible computation + echo =
+reversible representation" slogan), and the
+(equivalence, projection) factorisation system as the architectural
+keystone that ties it to image factorisation, optic complements, and
+the universal-property story. Neither was in the suite.
+
+*Where we ended:* both LAND, both build clean.  Two slices:
+
+1. *`proofs/agda/EchoTotalCompletion.agda`* — the slogan-unlock.
+   `encode : A → Σ B (Echo f)`, `decode : Σ B (Echo f) → A`,
+   round-trips `decode-encode` (definitional) and `encode-decode`
+   (one `refl`-pattern elimination on the inner equation, safe
+   under `--without-K`), the headline `A↔ΣEcho : A ↔ Σ B (Echo f)`
+   packaged via `mk↔ₛ′`. Two factorisation-triangle convenience
+   lemmas (`f-factors-via-projection`,
+   `encode-is-section-of-proj₁`) pin the definitional content
+   `f ≡ proj₁ ∘ encode f`. Zero postulates, no funext.
+
+2. *`proofs/agda/EchoOrthogonalFactorizationSystem.agda`* — the
+   architectural keystone. Re-exports
+   `EchoTotalCompletion.A↔ΣEcho` as `left-leg-equivalence`; pins
+   the factorisation triangle as `echo-factorisation`. The
+   generic Σ-fact "fibre of `proj₁ : Σ B P → B` at `y` is
+   canonically `P y`" lands as the four
+   `fibre-of-proj₁-{to,from,to-from,from-to}` clauses plus the
+   packaged `fibre-of-proj₁-iso`; specialised to `P := Echo f`
+   it becomes `projection-fibre-iso`, the load-bearing
+   "right-leg's fibre at `y` is `Echo f y`" claim. The four-tuple
+   `ofs-witness` packages the factorisation system witness at
+   the honesty level reached: factorisation existence + left-leg
+   equivalence + projection-fibre identification + echo↔fib
+   bridge.
+
+   *Honest scope.* A full OFS additionally requires uniqueness up
+   to isomorphism and the diagonal-lifting property; both need
+   funext to state. They are NOT proved in this module. The
+   module's companion-remark block explicitly documents this and
+   names the earn-back path: take `funext` as an explicit
+   hypothesis parameter (template = `EchoPullbackUnivF4`, the
+   Pillar F4 funext-qualified strict universal property; same
+   discipline as R-2026-05-18 narrowings). The unconditional
+   content above is the load-bearing artefact; the full OFS is
+   the next earn-back gate.
+
+   *Notation note.* The `fibre-of-proj₁-*` helpers are stated in
+   the unfolded form `Σ (Σ B P) (λ z → proj₁ z ≡ y)` rather than
+   `fiber (proj₁ : Σ B P → B) y`, because `proj₁`'s second
+   implicit argument is named `B` and clashes with a
+   locally-bound `B`. The unfolded form is the same set; only the
+   surface notation differs. Documented inline.
+
+   Build invariant held: `proofs/agda/EchoTotalCompletion.agda`,
+   `proofs/agda/EchoOrthogonalFactorizationSystem.agda`,
+   `proofs/agda/Smoke.agda`, and `proofs/agda/All.agda` all exit
+   0 under `--safe --without-K`, zero postulates, no funext.
+   Both modules pinned in `Smoke.agda` under their own `using`
+   blocks with header comments per CLAUDE.md "Working rules";
+   wired into `All.agda` directly under `Echo` (since they are
+   the canonical totality / factorisation companions to the core
+   Echo definition).
+
+*Plan for the next Claude.* The Tier 1 spine landed today. Open
+work on the synthesis programme (per the two-list + audit
+roadmap):
+
+1. *Tier 1 #2 — generalised `no-section`.* `¬-injective f ⇒
+   ¬ Σ s (weaken ∘ s ≡ id)`. Raises the existing single-instance
+   `no-section-weaken` from "an example" to "a theorem of the
+   structure". Small slice; cheap.
+
+2. *Tier 1 doc-only consolidations.*
+   `docs/echo-types/universal-property.adoc` (consolidating
+   `EchoPullback` + `EchoPullbackUnivF4` + the R-2026-05-18
+   narrowing) and `docs/echo-types/fibration-package.adoc`
+   (consolidating `map-over*` + `Echo-comp-iso` + `cancel-iso`).
+   Pure doc work; no Agda.
+
+3. *Tier 2 — paired taxonomies.*
+   `EchoLossTaxonomy.agda` (function-side: classify `f` by echo
+   shape — equiv ⇒ contr, inj ⇒ prop, surj ⇒ inhabited, const ⇒
+   full domain) PAIRED WITH `EchoResidueTaxonomy.agda`
+   (residue-side: `record ResidueForm` + the eight existing
+   decoration modules as instances). Per the audit, doing both
+   together turns the existing decoration sprawl into a clean
+   two-axis grid (kinds-of-loss × shapes-of-residue).
+
+4. *Tier 2 — `EchoDecorationStructure.agda`.* Companion abstraction
+   to (3): a record packaging the recipe (`order`,
+   `order-prop`, `join`, `degrade-compose`, `degrade-via-join`)
+   that each of the eight decoration modules redundantly
+   re-implements. The eight existing modules become instance
+   witnesses. Turns the uniform recipe from "a comment" into "a
+   theorem".
+
+5. *Tier 2 — `EchoObservationalEquivalence.agda`.* Mode-indexed
+   equality on `LEcho`, making Linear-equality vs Affine-equality
+   crisp.
+
+6. *Tier 3 — full OFS earn-back gate
+   (`EchoOFSUnivE` or similar, Pillar-F-style).* Take funext as
+   explicit hypothesis; prove uniqueness up to isomorphism +
+   diagonal lifting; pin the funext-free corollaries. The
+   unconditional content from this session's OFS module is the
+   load-bearing prerequisite.
+
+7. *Outward extensions (audience moves).* `EchoProvenance.agda`
+   first (closest fit to the existing residue/witness/no-section
+   language; generalisation of the existing
+   `EchoExampleProvenance.agda` instance); then
+   `EchoSecurity.agda` (with the honest-bound discipline
+   `RegionExitAudit.agda:7-17` already established);
+   `EchoProbabilisticSupport.agda` and `EchoDifferential.agda`
+   are independent and lower-priority.
+
+8. *Narrative deliverable —
+   `EchoCanonicalIdentitySuite.agda`.* Once (1)-(5) land, the
+   curated suite practically writes itself: it pulls existing
+   named theorems into a single Agda file that runs as the "why
+   Echo deserves a name" demo. Almost no new proof work.
+
+DO NOT reopen: the four `EchoTotalCompletion` round-trip lemmas
+(both directions are essentially definitional with one path
+elimination); the `fibre-of-proj₁-{to,from,...}` quartet (the
+generic Σ-projection-fibre fact, K-free); the OFS module's
+scope-narrowing (full lifting/uniqueness need funext, documented
+as the next earn-back gate per F4 / R-2026-05-18 discipline);
+the cementing artefacts (EchoEntropy + EchoLLEncoding from the
+preceding session).
+
+### Session arc 2026-05-27 audit follow-on — Shannon + LL gap cementing artefacts (read this first)
+
+*Where we started today (post-`04f3d9f`, after the head-Ω slice):*
+the audit of `EchoAbstractionBarrier` and the cross-repo bridges
+identified two specific "cementing" theorems flagged in the modules
+themselves as not-yet-formalised: Shannon-entropy non-distinguishing
+(`EchoThermodynamics.agda:214-217`, `EchoStabilityTests.agda:128-129`)
+and the linear-logic shallow-encoding gap (no `.agda` site, only
+narrative in `core/skepticisms/what-is-actually-new.md`).
+
+*Where we ended today:* both cementing artefacts LAND.  Two slices:
+
+1. *`proofs/agda/EchoEntropy.agda`* — discrete Shannon-entropy
+   non-distinguishing theorem. Defines a local `⊤-≟` (`Dec`
+   equality on `⊤`), the `Fin 2 → ⊤` representation
+   `collapse-as-fin`, and the `collapse-fibre-count : FiberSize-fin
+   ≡ 2` lemma via `FiberSize-fin-all-hit`. Headlines:
+   `entropy-shadow : Echo collapse tt → ℕ` (constant `2`, the
+   uniform-prior Shannon surrogate), `shannon-shadow` (`⌊log₂_⌋`
+   of it, definitionally `1`), `entropy-shadow-equal` and
+   `shannon-shadow-equal` (both `refl`), `entropy-shadow-blind` and
+   `shannon-shadow-blind` (any consumer factoring through the
+   shadow agrees on `echo-true` vs `echo-false`, via `cong`).
+   Matched-negative `witness-distinguishes-where-entropy-cannot`
+   cites `EchoAbstractionBarrier.sigma-distinguishes` so the
+   pairing is a checked artefact, not a unilateral observation.
+
+2. *`proofs/agda/EchoLLEncoding.agda`* — linear-logic shallow-
+   encoding gap theorem.  `LLShallowEncoding : Set₁` record
+   captures the data of a standard LL `!A`-style translation
+   (mode-indexed carrier `X`, embedding `enc`, encoded weakening
+   `wX`, naturality `enc-commutes`). The canonical `X m := ⊤`
+   shadow (LL `!A := 1`) is `trivial-encoding`; its encoded `wX`
+   admits the identity section by definitional reduction
+   (`trivial-encoding-has-section`).  Headline `ll-encoding-gap`
+   packages "an LL shallow encoding exists whose `wX` has a
+   section"; matched-negative `source-no-section` recites
+   `EchoLinear.no-section-weaken`; `gap-paired` is the single-Σ
+   pair making the gap a checked artefact.
+
+   *Honest scope.* The theorem is an EXISTENCE statement (one
+   encoding with one section). The companion remark documents the
+   non-claims: a sufficiently rich encoding could re-introduce the
+   witness and preserve no-section, but is then no longer the
+   standard `!A := 1` shadow. The interesting content is exactly
+   "the strict LL collapse is too weak to be faithful translation
+   of `LEcho`".
+
+   Build invariant held: `proofs/agda/EchoEntropy.agda`,
+   `proofs/agda/EchoLLEncoding.agda`, `proofs/agda/Smoke.agda`, and
+   `proofs/agda/All.agda` all exit 0 under `--safe --without-K`.
+   Zero postulates, no funext, no `TERMINATING` pragma. Both
+   modules pinned in `Smoke.agda` under their own `using` blocks
+   with header comments per CLAUDE.md "Working rules"; wired into
+   `All.agda` adjacent to `EchoAbstractionBarrier`
+   (`EchoLLEncoding`) and `EchoThermodynamics` (`EchoEntropy`)
+   respectively.
+
+   *Companion doc updates.* `EchoThermodynamics.agda:214` and
+   `EchoStabilityTests.agda:128` rewritten from "not yet
+   formalised" to point at `EchoEntropy.agda`, with the still-open
+   real-valued / mutual-information forms explicitly listed.
+   `roadmap.adoc` §Lane 2 gains a "Cementing follow-ons (LANDED
+   2026-05-27)" subsection covering both artefacts.
+
+*Plan for the next Claude.*  Open follow-ons from this session:
+
+1. *Real-valued Shannon entropy.*  Lift the discrete fibre-count
+   shadow to `H(P) = -Σ p log p` over a parametric distribution.
+   Needs a rationals/reals layer + a probability interface; out of
+   reach under `--safe --without-K` without significant extra
+   infrastructure.  Lower-priority — discrete form is the
+   load-bearing artefact for the abstraction-barrier line.
+
+2. *Universal LL-encoding gap.* Strengthen `ll-encoding-gap` from
+   "exists an LL shallow encoding under which no-section fails" to
+   "every LL shallow encoding satisfying a forget-witness invariant
+   fails".  Statement form: parametrise over `X m := F m` with `F`
+   constant on inhabitants, prove the section always exists.  Small
+   slice; primarily a notational lift over the trivial encoding's
+   argument.
+
+3. *Universal-property gap for entropy.* Promote
+   `entropy-shadow-blind` from "the trivial shadow is blind" to a
+   universal property: any consumer factoring through ANY function
+   of the fibre count cannot recover witness-level distinctions.
+   One-line `cong` once stated.
+
+DO NOT reopen: the `EchoAbstractionBarrier` T2/T3 (Track B of the
+identity claim, landed 2026-05-26); the R-2026-05-18 narrowings;
+the cementing artefact pair landed this session (its claims are
+explicitly scoped at the discrete / existence level — see each
+module's companion-remark block before any "promote to universal"
+work).
+
 ### Session arc 2026-05-27 evening — Lane 5 Walkthrough 3 landed (read this first)
 
 *Where we started today (commit `4d77d75` on `docs/consolidate-roadmaps-

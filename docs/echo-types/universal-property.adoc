@@ -1,0 +1,201 @@
+// SPDX-License-Identifier: CC-BY-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= echo-types: The Universal Property Story
+:toc: macro
+:toclevels: 3
+:source-highlighter: rouge
+
+[.lead]
+*One place to read the full Echo-as-universal-property narrative,
+end-to-end.* This doc consolidates the pullback presentation
+(`EchoPullback.agda`), the R-2026-05-18 narrowing, the Pillar F
+Gate F4 earn-back (`EchoPullbackUnivF4.agda`), and the Pillar F
+Gate F5 full-OFS earn-back chain (F5-1 / F5-2 / F5-3, landed
+2026-05-27). The Agda modules carry the proofs and the
+honest-scope companion remarks; this doc carries the prose linking
+them into one arc.
+
+toc::[]
+
+== The arc, in one paragraph
+
+`Echo f y` IS the fibre of `f : A → B` at `y` (definitional;
+`EchoFiberBridge.echo↔fib`). Two universal-property questions
+follow: is `Echo f y` characterised as a pullback? and is the
+total Echo space the canonical (equivalence, projection)
+factorisation of `f`? The honest answer to BOTH is: yes under
+function extensionality, and yes pointwise (K-free) without it.
+The narrative here threads the four artefacts (pullback +
+factorisation, each at K-free + funext-qualified levels) into one
+story.
+
+== Pullback presentation (`EchoPullback.agda`)
+
+`Echo f y` is the pullback of `f` along the point `y : ⊤ → B`:
+
+* A cone over the cospan `(f : A → B, y : ⊤ → B)` from apex `V`
+  is the data of `(g : V → A, h : V → ⊤, square : ∀ v → f (g v)
+  ≡ y)`. Under `⊤`'s η, `h` is forced (constantly `tt`), so the
+  cone collapses to `(g, square)`.
+* `EchoPullback.SliceHom (λ _ → y) f` *is* a cone (the two
+  round-trips reduce to `refl`).
+* `EchoPullback.echo-pullback-univ` exhibits the mediator
+  `m : V → Echo f y` with `IsMediator f y c m` (the triangle
+  commutes for `m`) and the *pointwise* uniqueness clause
+  `∀ (m' : V → Echo f y) → IsMediator f y c m' → ∀ v → m' v ≡ m v`.
+
+The pointwise uniqueness clause is K-free, postulate-free, and
+funext-free. It is NOT the terminal-cone universal property
+`m' ≡ m` — that requires funext to STATE (function equality
+isn't pointwise equality without funext). The honest claim,
+mechanised at the K-free level, is the pointwise mediator
+property.
+
+== R-2026-05-18 narrowing
+
+Earlier drafts of `paper.adoc` / `types-abstract.adoc` claimed
+the unconditional terminal-cone universal property — `m' ≡ m`.
+The retraction R-2026-05-18 (`docs/retractions.adoc`) corrects
+that to the pointwise mediator property the Agda actually
+proves. The discipline:
+
+* The pointwise content `∀ v → m' v ≡ m v` is mechanised,
+  honest, and load-bearing — that is what the Agda artefact
+  shows.
+* The function-equation form `m' ≡ m` is `[RETRACTED]` at the
+  unconditional level — it is not a theorem of the development
+  without funext.
+* The funext-qualified form `funext → m' ≡ m` is earn-backable
+  — see Gate F4 below.
+
+This is the canonical "honest-conditional" pattern across the
+repo's Pillar F gates: take the missing hypothesis as an
+explicit module parameter, never as a postulate, and pin both
+the conditional strict form AND the unconditional pointwise
+form.
+
+== Gate F4 — pullback strict terminality (`EchoPullbackUnivF4.agda`)
+
+Pillar F's fourth gate (`docs/echo-types/earn-back-plan.adoc`
+§"Gate F4 — Universal property, honestly qualified") closes
+the pullback's strict terminality conditionally. Module
+parameter `FunExt₀` (a level-0 funext hypothesis), one line of
+proof:
+
+[source,agda]
+----
+echo-pullback-univ-strict :
+  {A B : Set} (f : A → B) (y : B) {V : Set} (c : EchoCone f y V) →
+  Σ (V → Echo f y) (λ m →
+    IsMediator f y c m
+    × (∀ (m' : V → Echo f y) → IsMediator f y c m' → m' ≡ m))
+echo-pullback-univ-strict f y c with echo-pullback-univ f y c
+... | m , med , uniq-pt =
+      m , med , λ m' med' → funext (uniq-pt m' med')
+----
+
+Three lines: take the pointwise mediator property,
+apply the supplied `funext` to lift to a function equation.
+
+The unconditional `echo-pullback-univ-pointwise` is kept
+verbatim as the funext-free corollary. Reading:
+
+* unconditional, zero hypotheses → pointwise mediator
+  property;
+* conditional on `funext` → strict terminal cone.
+
+Logged as retraction follow-up F-2026-05-18a.
+
+== Gate F5 — full OFS, honestly qualified (2026-05-27)
+
+The factorisation-system universal property is the larger
+sibling of F4. Where F4 closes the pullback's strict
+terminality, F5 closes the full (equivalence, projection)
+orthogonal factorisation system on Type — factorisation
+existence + diagonal lifting + factorisation uniqueness up to
+iso. Same F4 template throughout (funext as explicit module
+parameter, never a postulate; unconditional pointwise
+corollaries kept funext-free).
+
+=== Slice F5-1 (`EchoOFSUnivF5.agda`)
+
+Strict factorisation triangle: `f ≡ proj₁ ∘ encode f` as a
+function equation, given funext. Three-line lift of the
+existing K-free pointwise `EchoOrthogonalFactorizationSystem.
+echo-factorisation`.
+
+=== Slice F5-2 (`EchoOFSUnivF5Diag.agda`)
+
+Diagonal lifting property. Given a commutative square with
+left equivalence (via `HasInverse`) + right projection (=
+`proj₁`) + pointwise commutativity, the canonical lift
+`λ x → h (e⁻¹ x)` exists, satisfies both triangles
+pointwise, is unique pointwise. K-free in `module Pointwise`;
+strict in `module Strict (funext)`.
+
+=== Slice F5-3 (`EchoOFSUnivF5Iso.agda`)
+
+Factorisation uniqueness up to iso. Given any second
+(equivalence, projection) factorisation `f = p ∘ g` with `g`
+an equivalence, construct a canonical `φ : X ↔ Σ B (Echo f)`
+with `φ.to ∘ g ≡ encode f` and `proj₁ ∘ φ.to ≡ p`, both
+strict given funext.
+
+*Design note.* The natural-but-blocked direct formulation
+`φ.to x = (p x, g⁻¹ x, witness)` surfaces a half-adjoint
+triangle-identity obligation on the round-trip. The cleaner
+construction factors through the existing totality completion:
+
+    φ.to   = encode f ∘ g⁻¹
+    φ.from = g ∘ decode f
+
+Round-trips reduce via the K-free `encode-decode` /
+`decode-encode` lemmas + `cong` of the inverse data. No
+triangle identity needed — bare `HasInverse` suffices.
+
+=== Gate-pass status
+
+F5 PASSED in full (all three slices) on 2026-05-27. Retraction
+follow-up F-2026-05-27a in `docs/retractions.adoc`. The
+qualified OFS claim is now licensed in the paper / abstract
+prose.
+
+== What stays open
+
+* *(epi, mono) image factorisation.* The "lower" form of the
+  factorisation pair, requiring propositional truncation
+  `∥_∥`. Not available under `--safe --without-K` without
+  HITs or postulated `∥_∥`. Honest-scoped in
+  `EchoImageFactorization`'s companion-remark; documented as
+  the next earn-back gate.
+* *Coherent-equivalence upgrade of `HasInverse`.* A half-
+  adjoint triangle identity field would let some of the F5-3
+  path-algebra become definitional rather than pointwise.
+  Deferred refinement; not load-bearing for F5 as it stands
+  (the composition design works around the absence).
+* *Real categorical OFS in a 2-categorical setting.* Echo's
+  OFS witness is at the (Type, function) level; a
+  2-categorical refinement would carry the iso between two
+  factorisations as part of the data. Out of scope under
+  `--safe --without-K` without 2-category machinery.
+
+== Reading order
+
+Citers of Echo's universal property should read, in order:
+
+. `EchoFiberBridge.agda` — the definitional Σ-identity;
+. `EchoPullback.agda` — the pullback presentation +
+  pointwise mediator;
+. `EchoPullbackUnivF4.agda` — F4 strict terminality;
+. `EchoTotalCompletion.agda` — the slogan-unlock
+  `A ≃ Σ B (Echo f)`;
+. `EchoOrthogonalFactorizationSystem.agda` — the K-free OFS
+  witness;
+. `EchoOFSUnivF5.agda` / `EchoOFSUnivF5Diag.agda` /
+  `EchoOFSUnivF5Iso.agda` — the full F5 chain;
+. `EchoCanonicalIdentitySuite.agda` — the curated suite-side
+  re-export of the above as the single-file entry point.
+
+Each module's companion-remark documents its honest scope and
+the deferred gates. This consolidation doc threads the
+narrative; the source modules carry the proofs.

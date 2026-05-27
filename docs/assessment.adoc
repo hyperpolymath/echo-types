@@ -2,6 +2,28 @@
 
 Date: 2026-04-18
 
+[IMPORTANT]
+====
+*Forward-link (2026-05-27).* This M5 assessment is dated 2026-04-18
+and reflects the state at that time — basic Echo / Characteristic /
+Residue layer with the three identity-claim criteria met at the
+example level. Since then a substantially larger structural layer
+has landed:
+
+* *Pillars A–D LANDED* 2026-05-17 + Pillar F gates F1–F5 PASSED.
+* *Canonical identity layer + Tier-2 grid + Tier-3 audience-moves
+  spine + curated suite* LANDED 2026-05-27.
+
+The "distinct concept" verdict here is strictly stronger now: Echo
+is mechanically identified as the canonical fibre-completion
+functor + one leg of the (equivalence, projection) orthogonal
+factorisation system on Type (qualified earn-back F5 FULL PASS
+2026-05-27, follow-up F-2026-05-27a). See
+`docs/echo-types/MAP.adoc` §"Canonical identity layer" and
+`docs/echo-types/universal-property.adoc` for the canonical
+references. This assessment remains as the historical M5 record.
+====
+
 == Binary Conclusion
 
 *Established as distinct concept* (within the current formal scope of this repository).

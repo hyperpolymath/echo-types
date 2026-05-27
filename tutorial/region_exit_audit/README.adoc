@@ -109,15 +109,29 @@ Both exit 0 under `--safe --without-K` with zero postulates.
 * `proofs/agda/EchoResidue.agda` — the `EchoR` carrier that
   `LEcho affine` unfolds to (`TrivialCert`,
   `collapse-to-residue`, `no-section-collapse-to-residue`)
+* `proofs/agda/EchoSecurity.agda` — the audience-facing abstract
+  module that generalises THIS walkthrough into a parametric
+  `Security` record (resource + receipt + region indexing + exit
+  + distinguishability + collapse witness). The
+  `region-exit-audit-instance` defined there reproduces this
+  walkthrough's 2-region `LEcho linear → LEcho affine` shape as
+  an inhabitant of the abstract setup; citers of the
+  "audit-no-recovery is structural, not Bool-specific" claim
+  should cite `EchoSecurity`. This walkthrough remains as the
+  concrete pedagogical introduction.
 * `tutorial/README.adoc` — Lane 5 scaffold
 * `roadmap.adoc` §"Lane 5" — the lane this walkthrough closes the
   killer-app gate for
 * `docs/retractions.adoc` R-2026-05-18 — the discipline the
   honest-bound disclosure inherits
+* `docs/echo-types/MAP.adoc` §"Audience-facing modules" — where
+  this walkthrough's pattern sits in the broader narrative
 
 == Status
 
-LANDED 2026-05-26 as part of the Lane 5 first-walkthrough commit
-chain. Walkthroughs 2 (epistemic erasure) and 3 (provenance /
-debugging) remain at scaffold/design-doc level per
-`tutorial/README.adoc`.
+LANDED 2026-05-26 as the first Lane 5 walkthrough. Walkthroughs 2
+(epistemic erasure) and 3 (provenance / debugging) both LANDED
+2026-05-27; the originally-scaffolded triplet is complete in Agda.
+The audience-facing abstract `EchoSecurity` (this walkthrough's
+generalisation) LANDED 2026-05-27 as part of the Tier-3
+audience-moves spine.

@@ -54,6 +54,155 @@ open import AntiEcho using
 -- definitional Echo ≃ fib bridge, pinned so a rename fails CI fast.
 open import EchoFiberBridge using (fiber; echo→fib; fib→echo; echo↔fib)
 
+-- EchoTotalCompletion — the slogan-unlock theorem: A ≃ Σ B (Echo f).
+-- "Irreversible computation + echo = reversible representation."
+-- Encode/decode + round-trips + factorisation triangle (definitional).
+-- Load-bearing lemma for EchoOrthogonalFactorizationSystem and for
+-- the optic-complement / image-factorisation framings.
+open import EchoTotalCompletion using
+  ( encode
+  ; decode
+  ; decode-encode
+  ; encode-decode
+  ; A↔ΣEcho
+  ; f-factors-via-projection
+  ; encode-is-section-of-proj₁
+  )
+
+-- EchoNoSectionGeneric — raises the example-level
+-- `no-section-collapse-to-residue` to a uniform structural theorem.
+-- Generic headline `no-section-of-collapsing-map`: any collapsing
+-- map with two distinct elements landing on the same image admits
+-- no section. Existing instance recovered as
+-- `no-section-collapse-to-residue′`; Echo-specific corollary
+-- `no-section-when-non-injective-at-y` is the form the abstraction-
+-- barrier / non-injectivity narrative wants.
+open import EchoNoSectionGeneric using
+  ( no-section-of-collapsing-map
+  ; no-section-collapse-to-residue′
+  ; trivial-weaken
+  ; trivial-weaken-collapses
+  ; no-section-when-non-injective-at-y
+  )
+
+-- EchoImageFactorization — image-factorisation triangle in Echo
+-- language. `Image f := Σ B (Echo f)` IS the total Echo space.
+-- Three classifications (Surjective / Injective / projection-
+-- uniqueness under injectivity) pin the function-level
+-- characterisations needed for `EchoLossTaxonomy`. Companion to
+-- `EchoOrthogonalFactorizationSystem` at the (surj, inj) collapse
+-- boundary; the (epi, mono) truncation form remains the next
+-- earn-back gate.
+open import EchoImageFactorization using
+  ( Image
+  ; image-factor-left
+  ; image-factor-right
+  ; image-factor-commutes
+  ; Surjective
+  ; surjective-iff-every-fibre-inhabited
+  ; Injective
+  ; injective-fibres-proj-unique
+  ; image-membership-is-echo
+  )
+
+-- EchoLossTaxonomy — function-side classification of `f : A → B`
+-- by echo shape. Four cases: EQUIV (centre + projection unique),
+-- INJ (projection unique, re-export), SURJ (every fibre inhabited,
+-- re-export), CONST (fibre at y₀ ↔ A). The EQUIV/CONST cases ship
+-- new content (`HasInverse` record, `const-fibre-↔-domain` packaged
+-- as `↔`); INJ/SURJ are taxonomy-side renames of the
+-- `EchoImageFactorization` headlines. Honest scope: the full
+-- "contractible fibre" and "propositional fibre" upgrades need UIP /
+-- truncation and are documented as the next earn-back. Companion to
+-- `EchoResidueTaxonomy` (next module).
+open import EchoLossTaxonomy using
+  ( HasInverse
+  ; equiv-fibre-center
+  ; equiv-implies-injective
+  ; equiv-fibre-proj-unique
+  ; inj-fibre-proj-unique
+  ; surj-fibre-inhabited
+  ; const-fun
+  ; const-fibre-inhabits-domain
+  ; const-fibre-section
+  ; const-fibre-projection
+  ; const-fibre-section-projects-to-id
+  )
+
+-- EchoResidueTaxonomy — residue-side companion to EchoLossTaxonomy.
+-- `record ResidueForm f R` packages the minimum unified residue
+-- shape (per-output carrier + lowering). Four instances: trivial
+-- (⊤), identity (Echo f itself), generic Σ-cert (`echoR-residue`),
+-- and the worked `linear-affine-residue` on `collapse : Bool → ⊤`.
+-- Other six decoration modules (Graded / Choreo / Access / Cost /
+-- Search / Indexed / Epistemic) documented as structurally
+-- compatible in the companion-remark; decoration RECIPE
+-- (order / order-prop / join / degrade-compose / degrade-via-join)
+-- lands in `EchoDecorationStructure` (next module).
+open import EchoResidueTaxonomy using
+  ( ResidueForm
+  ; trivial-residue
+  ; identity-residue
+  ; echoR-residue
+  ; linear-affine-residue
+  ; indexed-residue
+  ; module CostInstance
+  )
+
+-- EchoDecorationStructure — observation-side companion to
+-- EchoResidueTaxonomy. `record DecorationStructure G` packages the
+-- seven-field decoration recipe (order, refl, trans, prop, join,
+-- join-left, join-right, join-univ) shared across the eight
+-- decoration modules. Three instance witnesses (Graded, Linear,
+-- Access) pinned; remaining five (Choreo / Cost / Search / Indexed
+-- / Epistemic) documented as structurally compatible. Naming:
+-- abstract join is `join` (not `_⊔_`) to avoid Level._⊔_ collision
+-- at the projection level.
+open import EchoDecorationStructure using
+  ( DecorationStructure
+  ; graded-decoration-structure
+  ; linear-decoration-structure
+  ; access-decoration-structure
+  ; choreo-decoration-structure
+  ; module DegradeAbstract
+  )
+
+-- EchoObservationalEquivalence — mode-indexed equality on LEcho,
+-- closing the Tier-2 spine. `_≡m_` is `_≡_` at linear (witness-
+-- aware) and `⊤` at affine (witness-blind). The headline
+-- `mode-equality-strictly-finer-at-linear` exhibits a
+-- linear-distinct / affine-equal pair, pinning the strictly-finer
+-- direction as a checked theorem.
+open import EchoObservationalEquivalence using
+  ( _≡m_
+  ; ≡m-refl
+  ; ≡m-sym
+  ; linear-distinguishes-true-false
+  ; affine-collapses
+  ; weaken-preserves-≡m
+  ; mode-equality-strictly-finer-at-linear
+  )
+
+-- EchoOrthogonalFactorizationSystem — the architectural keystone.
+-- Every f : A → B factors canonically as A ≃ Σ B (Echo f) → B with
+-- the left leg an equivalence (totality completion) and the right
+-- leg a projection whose fibre at y is exactly Echo f y. Honest
+-- scope: factorisation existence + fibre identification land here
+-- under --safe --without-K; the full OFS lifting/uniqueness clause
+-- requires funext and is documented as the next earn-back gate (in
+-- the EchoPullbackUnivF4 / Pillar F4 style).
+open import EchoOrthogonalFactorizationSystem using
+  ( echo-factorisation
+  ; left-leg-equivalence
+  ; fibre-of-proj₁-to
+  ; fibre-of-proj₁-from
+  ; fibre-of-proj₁-to-from
+  ; fibre-of-proj₁-from-to
+  ; fibre-of-proj₁-iso
+  ; projection-fibre-iso
+  ; ofs-witness
+  )
+
 -- Foundation P1 (docs/foundation.adoc): external-fibre
 -- triangulation against the standard library's OWN notions —
 -- removes the same-module self-reference R-2026-05-18 flagged.
@@ -295,6 +444,25 @@ open import EchoThermodynamics using
   ; landauer-collapse
   )
 
+-- EchoEntropy — discrete Shannon-entropy non-distinguishing theorem.
+-- Companion to EchoAbstractionBarrier: the entropic shadow (fibre
+-- count = 2 bit on collapse@tt) agrees on echo-true vs echo-false,
+-- so any consumer factoring through it cannot distinguish them.
+-- Matched-negative via `sigma-distinguishes` (witness side does).
+-- Closes the "Shannon-entropy formalisations not yet present" item
+-- flagged in EchoThermodynamics + EchoStabilityTests.
+open import EchoEntropy using
+  ( collapse-as-fin
+  ; collapse-fibre-count
+  ; entropy-shadow
+  ; shannon-shadow
+  ; entropy-shadow-equal
+  ; shannon-shadow-equal
+  ; entropy-shadow-blind
+  ; shannon-shadow-blind
+  ; witness-distinguishes-where-entropy-cannot
+  )
+
 open import EchoThermodynamicsFinite using
   ( FiniteDomain
   ; fiber-erasure-bound-fin
@@ -376,6 +544,22 @@ open import EchoLinear using
 open import EchoAbstractionBarrier using
   ( affine-consumer-cannot-distinguish
   ; sigma-distinguishes
+  )
+
+-- EchoLLEncoding — linear-logic shallow-encoding gap. Companion to
+-- EchoAbstractionBarrier: no standard LL `!A`-style shadow encoding
+-- preserves Echo's `no-section-weaken` property, because the
+-- distinguishing data lives in the witness LL discards. The trivial
+-- ⊤-shadow is the canonical LL `!A := 1` model and admits a section
+-- of the encoded weakening; the source side does not. Closes the
+-- LL-encoding-gap follow-up to the abstraction-barrier audit.
+open import EchoLLEncoding using
+  ( LLShallowEncoding
+  ; trivial-encoding
+  ; trivial-encoding-has-section
+  ; ll-encoding-gap
+  ; source-no-section
+  ; gap-paired
   )
 
 -- examples.EchoVsSigma — Track C of the Echo-vs-Σ identity claim.
@@ -472,6 +656,122 @@ open import EchoPullbackUnivF4 using
   ; echo-pullback-univ-strict     -- m' ≡ m, GIVEN funext (no postulate)
   ; echo-pullback-univ-pointwise  -- ∀ v → m' v ≡ m v, funext-free
   )
+
+-- Pillar F, Gate F5 first slice (docs/echo-types/earn-back-plan.adoc).
+-- Same shape as F4: the function-level factorisation triangle
+-- `f ≡ proj₁ ∘ encode f` is TRUE CONDITIONAL ON an explicit `funext`
+-- parameter; the unconditional pointwise corollary (the existing
+-- `echo-factorisation`) is kept as the funext-free form. Slice F5-1
+-- only; F5-2 (diagonal lifting) and F5-3 (factorisation uniqueness up
+-- to iso) remain open per the ledger. F5-1 partial-pass status.
+open import EchoOFSUnivF5 using
+  ( echo-factorisation-strict     -- f ≡ proj₁ ∘ encode f, GIVEN funext
+  ; echo-factorisation-pointwise  -- ∀ x → f x ≡ proj₁ (encode f x)
+  )
+
+-- Pillar F, Gate F5 second slice. Same template: pointwise (K-free)
+-- diagonal lift + funext-strict diagonal lift. Construction:
+-- `lift x = h (e⁻¹ x)` where `e⁻¹` is the inverse from `HasInverse e`.
+-- Both triangles (lift ∘ e ≡ h, proj₁ ∘ lift ≡ k) commute pointwise
+-- K-free; strict forms lifted via funext. Uniqueness K-free pointwise;
+-- strict via funext. F5-2 partial-pass; F5-3 (factorisation uniqueness
+-- up to iso) remains the final open slice for full F5 pass.
+open import EchoOFSUnivF5Diag using
+  ( module Pointwise
+  ; module Strict
+  )
+
+-- Pillar F, Gate F5 third slice — F5 FULL PASS.
+-- Factorisation uniqueness up to iso. Given any second (eq, proj)
+-- factorisation `f = p ∘ g` with `g : A → X` an equivalence (via
+-- `HasInverse`), construct the canonical iso `φ : X ↔ Σ B (Echo f)`
+-- with `φ.to ∘ g ≡ encode f` and `proj₁ ∘ φ.to ≡ p` (both strict
+-- given funext). Design: composition `φ.to = encode f ∘ g⁻¹`
+-- routes path-algebra through existing K-free `encode-decode` /
+-- `decode-encode` round-trips, avoiding the triangle-identity
+-- obligation the direct formulation would need. F5 fully passes
+-- with all three slices: F5-1 + F5-2 + F5-3, all funext-qualified,
+-- zero postulates. Module names disambiguate the F5-2 / F5-3
+-- `module Pointwise` / `module Strict` via qualified open.
+open import EchoOFSUnivF5Iso as F5Iso using ()
+open F5Iso.Pointwise using
+  ( φ-to
+  ; φ-from
+  ; φ-from-to
+  ; φ-to-from
+  ; φ-iso
+  ; φ-respects-g
+  ; φ-projects-to-p
+  )
+
+-- EchoProvenance — audience-facing abstract provenance theorem
+-- (Tier 3 first audience move, per GPT-recommended order).
+-- Generalises EchoExampleProvenance from Bool-over-ℕ to any
+-- `Provenance` setup (payload + tag + distinguishability witness).
+-- Four headline theorems parametric in `P : Provenance`:
+-- non-injectivity at every payload, concrete Echo carriers per
+-- tag, carriers distinguish tags, residue collapses tags. The
+-- `bool-over-nat-provenance` instance witnesses inhabitability.
+open import EchoProvenance using
+  ( Provenance
+  ; module ProvenanceTheorems
+  ; bool-over-nat-provenance
+  )
+
+-- EchoSecurity — second audience move per GPT order. Abstract
+-- `Security` record (resource + receipt + region indexing + exit
+-- + distinguishability + collapse witness); two parametric
+-- headline theorems via `module SecurityTheorems (S : Security)`:
+-- per-region collapse, per-region audit-no-recovery (factored
+-- through `EchoNoSectionGeneric.no-section-of-collapsing-map`).
+-- Worked `region-exit-audit-instance` reproduces the existing
+-- RegionExitAudit walkthrough's structure. Honest-bound matched
+-- negatives at the bottom of the file (bytes-zeroed,
+-- side-channel-safe, tamper-evident, oracle-recovery).
+open import EchoSecurity using
+  ( Security
+  ; module SecurityTheorems
+  ; TwoRegion
+  ; region-exit-audit-instance
+  )
+
+-- EchoProbabilisticSupport — third audience move per GPT order.
+-- Abstract `Sampling` record (outcome + index + distinguishability
+-- witness) with four parametric headline theorems via `module
+-- SamplingTheorems (S : Sampling)`: marginal non-injectivity,
+-- concrete Echo carriers per index, carriers distinguish indices,
+-- residue loses index. Worked `bool-indexed-nat-sampling` instance.
+-- Honest-bound matched-negatives: not measure-preserving, not a
+-- probability monad, no Kantorovich / coupling / randomness
+-- extraction.
+open import EchoProbabilisticSupport using
+  ( Sampling
+  ; module SamplingTheorems
+  ; bool-indexed-nat-sampling
+  )
+
+-- EchoDifferential — fourth audience move per GPT order. Abstract
+-- `Sensitivity` record (value + perturbation + distinguishability
+-- witness) with four parametric headline theorems via `module
+-- SensitivityTheorems (S : Sensitivity)`: blur non-injectivity,
+-- concrete Echo carriers per perturbation, carriers distinguish
+-- perturbations, residue loses perturbation. Worked
+-- `bool-perturbed-nat-sensitivity` instance. Honest-bound
+-- matched-negatives: not ε-DP, no Lipschitz bound, no noise
+-- calibration, no adversary model.
+open import EchoDifferential using
+  ( Sensitivity
+  ; module SensitivityTheorems
+  ; bool-perturbed-nat-sensitivity
+  )
+
+-- EchoCanonicalIdentitySuite — the curated entry point for "why
+-- Echo deserves a name". Re-exports the load-bearing headlines
+-- from every Tier-1 / Tier-2 / Tier-3 module in a single readable
+-- file. Demonstrating the suite typechecks under --safe --without-K
+-- is the load-bearing CI check; a rename in any source module
+-- that breaks the suite's re-export trips CI fast.
+open import EchoCanonicalIdentitySuite using ()
 
 -- Pillar F, Gate F2 (same plan / follow-up). A genuine second model
 -- of the *bare* Echo functor on the non-deterministic, non-graph

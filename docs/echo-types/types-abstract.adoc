@@ -196,3 +196,53 @@ the canonical reference for narrowed claims; this abstract is the
 comparison against Granule, QTT, choreographic types, and Linear
 Haskell. See `roadmap.adoc` §"Pillar status" for the lane-level
 view.
+
+NOTE: *Post-abstract advances (2026-05-27).* Three layers of
+structural work landed after this abstract was drafted and are NOT
+reflected in the prose above; they are documented in
+`docs/echo-types/MAP.adoc` §"Canonical identity layer" and in
+`CLAUDE.md`. Briefly:
+
+* *Canonical identity layer (Tier 1).* The slogan-unlock theorem
+  `A ≃ Σ B (Echo f)` (`EchoTotalCompletion.A↔ΣEcho`); the
+  (equivalence, projection) orthogonal factorisation system witness
+  `ofs-witness` at the K-free level
+  (`EchoOrthogonalFactorizationSystem.agda`); image factorisation
+  `Image f := Σ B (Echo f)` (`EchoImageFactorization.agda`); the
+  generalised structural no-section theorem
+  `no-section-of-collapsing-map` (`EchoNoSectionGeneric.agda`).
+
+* *Classification grid (Tier 2).* Function-side, residue-side,
+  decoration-recipe, and observational-equality axes are now named
+  abstractions instead of comments
+  (`EchoLossTaxonomy.agda` / `EchoResidueTaxonomy.agda` /
+  `EchoDecorationStructure.agda` /
+  `EchoObservationalEquivalence.agda`).
+
+* *Qualified OFS earned back (Tier 3, Pillar F Gate F5 FULL PASS,
+  2026-05-27).* All three F5 slices in the F4 template (funext as
+  explicit module parameter, never a postulate; unconditional
+  pointwise corollaries kept funext-free): F5-1 strict factorisation
+  triangle (`EchoOFSUnivF5.agda`), F5-2 diagonal lifting property
+  (`EchoOFSUnivF5Diag.agda`), F5-3 factorisation uniqueness up to iso
+  (`EchoOFSUnivF5Iso.agda`). Retraction follow-up F-2026-05-27a in
+  `docs/retractions.adoc`. The qualified OFS claim is now licensed
+  in the abstract's claim-text — if the abstract is re-issued, the
+  Pillar B-1 paragraph should mention "Earned back, qualified
+  conditionally (F5, F-2026-05-27a): the full OFS earns back at the
+  funext-qualified level with all three clauses; unconditional
+  pointwise content remains the funext-free part."
+
+* *Audience-facing modules + curated suite.* Four audience-move
+  modules (`EchoProvenance`, `EchoSecurity`,
+  `EchoProbabilisticSupport`, `EchoDifferential`) expose the
+  structural content under domain-specific framings; the curated
+  `EchoCanonicalIdentitySuite.agda` is the single-file entry
+  point. Each audience module ships an honest-bound matched-
+  negative block.
+
+Any re-review of this abstract should treat the post-abstract
+layers as additional load-bearing content; a forward-looking
+revision should reorganise the Pillar A–D narrative into a
+Tier-1+2+3 narrative anchored by the Canonical Identity Suite as
+the curated reading order.

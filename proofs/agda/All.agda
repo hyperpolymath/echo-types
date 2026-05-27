@@ -3,6 +3,14 @@
 module All where
 
 open import Echo
+open import EchoTotalCompletion
+open import EchoOrthogonalFactorizationSystem
+open import EchoImageFactorization
+open import EchoNoSectionGeneric
+open import EchoLossTaxonomy
+open import EchoResidueTaxonomy
+open import EchoDecorationStructure
+open import EchoObservationalEquivalence
 open import AntiEcho
 open import EchoKernel
 open import EchoCharacteristic
@@ -16,6 +24,7 @@ open import EchoChoreo
 open import EchoEpistemic
 open import EchoLinear
 open import EchoAbstractionBarrier
+open import EchoLLEncoding
 open import EchoGraded
 open import EchoTropical
 open import AntiEchoTropical
@@ -42,6 +51,7 @@ open import EchoJanusBridge
 open import Dyadic
 open import DyadicEchoBridge
 open import EchoThermodynamics
+open import EchoEntropy
 open import EchoThermodynamicsFinite
 open import EchoThermodynamicsArbitrary
 open import EchoThermoCollapseImpossible
@@ -61,6 +71,20 @@ open import EchoRelModel        -- Pillar D (scaffold)
 -- on the gate passing (Sequencing pt 4); see docs/retractions.adoc
 -- follow-up F-2026-05-18a.
 open import EchoPullbackUnivF4  -- Gate F4 PASSED (funext-qualified UP)
+open import EchoOFSUnivF5       -- Gate F5-1 PARTIAL (funext-qualified factorisation triangle)
+open import EchoOFSUnivF5Diag   -- Gate F5-2 (funext-qualified diagonal lifting)
+open import EchoOFSUnivF5Iso    -- Gate F5-3 (funext-qualified factorisation uniqueness up to iso) — F5 FULL PASS
+
+-- Audience moves (Tier 3, per GPT-recommended order). Audience-facing
+-- abstract modules — each generalises one concrete example into the
+-- shape the audience speaks in.
+open import EchoProvenance       -- Provenance loss (generalises EchoExampleProvenance)
+open import EchoSecurity         -- Region-exit audit (generalises RegionExitAudit walkthrough)
+open import EchoProbabilisticSupport  -- Support tracking (audience-facing sampling)
+open import EchoDifferential     -- Perturbation tracking (audience-facing sensitivity)
+
+-- Narrative deliverable: curated index of "why Echo deserves a name".
+open import EchoCanonicalIdentitySuite
 open import EchoStepNDModelF2   -- Gate F2 PASSED (StepND second model)
 open import EchoGradedComonadF1 -- Gate F1 PASSED (graded comonad on iterated-residue)
 open import EchoGradedComonadInterface -- Gate F3 abstract record
@@ -110,6 +134,8 @@ open import Ordinal.Buchholz.RankPow
 open import Ordinal.Buchholz.RankAdm
 open import Ordinal.Buchholz.RankLex
 open import Ordinal.Buchholz.HeadOmega
+open import Ordinal.Buchholz.HeadOmegaInversion
+open import Ordinal.Buchholz.RankPowDomination
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
 open import Ordinal.Buchholz.RecursiveSurfaceBudget

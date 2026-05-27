@@ -125,5 +125,18 @@ bennett-corollary-check T =
 -- * Infinite-domain (`ProgramState = ℕ → ℕ`) erasure bounds:
 --   `FiberSize-fin` is finite-domain only; the infinite case
 --   needs measure-theoretic or capacity arguments and is open.
--- * Shannon-entropy / mutual-information formalisations: not yet
---   present in the repo. See `roadmap.adoc` §"Deferred research track".
+-- * Shannon-entropy / mutual-information formalisations:
+--   - discrete (uniform-prior / fibre-count) Shannon shadow + the
+--     non-distinguishing theorem: LANDED in `EchoEntropy.agda`
+--     (any consumer factoring through the entropic shadow agrees
+--     on `echo-true` vs `echo-false`; witness side via
+--     `EchoAbstractionBarrier.sigma-distinguishes` does
+--     distinguish);
+--   - real-valued `H(P) = -Σ p log p` over a parametric probability
+--     distribution: still not present (needs reals + a probability
+--     layer; out of reach under --safe --without-K without heavy
+--     additional infrastructure);
+--   - mutual information `I(X; Y) = H(X) - H(X|Y)`: still not
+--     present (needs a conditional-probability layer).
+--   See `roadmap.adoc` §"Deferred research track" for the
+--   still-open real-valued items.

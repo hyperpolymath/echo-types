@@ -8,6 +8,32 @@ the 6a2 capture and the supporting documents. A new session
 should read this in under 60 seconds before doing anything
 else.
 
+[IMPORTANT]
+====
+*Status forward-link (2026-05-27).* This INDEX is scoped to the
+EI-2 investigation + 6a2 capture (April 29 2026); it is the
+*audit-trail* index for that specific work. Since then the world
+has moved on substantially:
+
+* *Establishment-plan Pillars A–D LANDED* 2026-05-17 (with
+  R-2026-05-18 narrowings).
+* *Pillar F gates F1, F2, F3, F4, F5 all PASSED*, retraction
+  follow-ups F-2026-05-18a / F-2026-05-20a/b / F-2026-05-27a
+  logged in `docs/retractions.adoc`.
+* *Canonical identity layer + Tier-2 classification grid + Tier-3
+  audience-moves spine + curated suite all LANDED* 2026-05-27.
+* *Lane 5 tutorial triplet (W1+W2+W3) LANDED* 2026-05-26/27.
+* *Ordinal Buchholz rank-mono umbrella* closes 11/13 constructors;
+  HeadOmega slice 1+2 partial.
+
+For the CURRENT state of the repo, read `docs/echo-types/MAP.adoc`
+(the master content map), `CLAUDE.md` (the session-by-session
+ledger), and `docs/echo-types/earn-back-plan.adoc` (the Pillar F
+gate ledger). This file remains AS THE AUDIT INDEX for the EI-2
+work; the EI-2 termination + its forbidden-rebrandings still
+stand, and gate G-001 (no reopening EI-2) is still enforced.
+====
+
 toc::[]
 
 == Why this file exists
