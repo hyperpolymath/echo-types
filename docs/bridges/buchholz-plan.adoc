@@ -4,6 +4,21 @@
 :sectnums:
 :sectnumlevels: 2
 
+[CAUTION]
+====
+*Historical spec.*  This document is the original phased plan for the
+ordinal-notation / collapsing-function workstream as written when E1–E7
+were ahead of us.  The "PLANNED" tags below are dated; many phases have
+since landed under different module names (E1–E7 closed; the WfCNF
+restriction +  `RankPow` / `RankAdm` / `RankLex` slices replace the
+generic `Phase 2.2 rank-mono`; the WF-0/WF-1 well-foundedness is in
+`Ordinal.Buchholz.WellFounded`).  *Live per-constructor verdict*:
+`docs/echo-types/buchholz-rank-obstruction.adoc`.  *Live lane status*:
+`roadmap.adoc` § Lane 3.  *Per-session ledger*: `CLAUDE.md` § "Current
+rung state".  This file is retained for provenance and design context;
+treat its concrete "PLANNED" items as superseded.
+====
+
 [.lead]
 This document scopes the ordinal-notation / collapsing-function workstream
 (Workstream E in `roadmap.adoc`). It is a spec, not a theorem file.
