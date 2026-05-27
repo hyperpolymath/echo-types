@@ -81,12 +81,17 @@ kernel** — the boundary is real and lives outside this core.
   `EchoExampleAbsInt`, `EchoExampleParser`, `EchoExampleProvenance`,
   `EchoExampleSignAnalysis`, `EchoExampleTruncation`,
   `EchoSearchExample`, `EchoThermodynamicsArbitrary`,
-  `EchoThermoCollapseImpossible`
+  `EchoThermoCollapseImpossible`, `EchoAbstractionBarrier`
 | Multi-hop. `EchoThermodynamics` reaches the kernel via
   `EchoFiberCount` (no direct `Echo` import);
   `EchoThermodynamicsFinite` is its Bishop-finite transport layer.
   `EchoSearch` / `EchoCost` / `EchoAccess` are Axis 8 witness-search
-  and cost-model extensions. `EchoExample*` are derived domain
+  and cost-model extensions.  `EchoAbstractionBarrier` is the
+  Lane 1 / Lane 2 consumer-side free-theorem artefact (Track B —
+  `affine-consumer-cannot-distinguish` plus raw-Σ counter-program
+  `sigma-distinguishes`); imports `Echo` + `EchoCharacteristic` +
+  `EchoLinear`, landed 2026-05-26 via PR #119.  `EchoExample*` are
+  derived domain
   applications.
 
 | *Earn-back gate modules* +

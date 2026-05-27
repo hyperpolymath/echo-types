@@ -97,6 +97,7 @@ On `main`, the following are true:
 - distinct-witness and retained-constraint exemplars are present (`echo-true≢echo-false`, `stateA≢stateB`, `visible-constraint`)
 - degrade-law family lands across decoration layers (graded, linear/affine, choreographic, access, cost, search); see `docs/theorem-index.md` for the aggregate
 - Pillars A–D of the establishment plan are LANDED (with R-2026-05-18 narrowings; see `docs/retractions.adoc`); Pillar E (paper) is in progress
+- Lane 5 tutorial triplet LANDED 2026-05-27 under `tutorial/`: region-exit audit, epistemic erasure, and provenance / debugging — each with honest-bound + matched-negative disclosure discipline; build via `agda --library-file=/tmp/agda-libs -i . -i proofs/agda tutorial/All.agda`
 
 Per-lane status, close-out criteria, and the identity-claim verdict
 per tag are in `roadmap.adoc`.
@@ -137,6 +138,7 @@ CLAUDE.md):
 - the new budgeted layer on `ℕ × BT` isolates the missing global step: the recursive surface route is now well-founded once explicit budget is carried, and the remaining task is to discharge or eliminate that budget in the unbudgeted theorem
 - this still does not internalize the historically blocked shared-binder shapes as actual constructors of `_ <ᵇ _`; the full intended Buchholz order remains open at that step
 - remaining live mathematical work is therefore not the current-core WF route, but the mediated internalization of the shared-binder cases back into the real order package
+- as of 2026-05-27: the Buchholz rank-monotonicity matrix closes 11/13 constructor cases via the WfCNF-restricted `_<ᵇ⁻_` umbrella (9 via `RankPow` + `<ᵇ⁺-ψα` via `RankAdm` 2026-05-26 + `<ᵇ-ψΩ≤` via `RankLex` 2026-05-27); the last open case is `<ᵇ-+1` joint-bplus, with the `Ordinal.Buchholz.HeadOmega` first slice (leading-Ω-index head function + 4 definitional sanity lemmas) landed 2026-05-27 as the structural opening of option (A) per the obstruction doc
 
 ## External Bridge Targets (local workspace)
 

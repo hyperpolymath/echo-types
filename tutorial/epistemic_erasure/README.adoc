@@ -138,5 +138,6 @@ Both exit 0 under `--safe --without-K` with zero postulates.
 == Status
 
 LANDED 2026-05-27 as the second Lane 5 walkthrough. Walkthrough 3
-(provenance / debugging) remains at scaffold/design-doc level per
-`tutorial/README.adoc`.
+(provenance / debugging) also LANDED 2026-05-27 — see
+`tutorial/provenance_debugging/README.adoc`. The originally-
+scaffolded Lane 5 triplet is complete in Agda.
