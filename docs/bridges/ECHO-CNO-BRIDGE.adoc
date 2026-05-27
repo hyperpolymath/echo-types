@@ -110,7 +110,7 @@ but that is a witness-presence statement, not an
 information-preservation statement.
 
 A real Shannon-entropy / mutual-information formalisation is open
-work; see `docs/echo-types/roadmap.md` under the thermodynamic
+work; see `roadmap.adoc` under the deferred research / thermodynamic
 items.
 
 ### Theorem 6: Universal CNO Definition (NEW)
@@ -413,7 +413,7 @@ kill condition**: a mechanised proof that clauses (i)∧(ii) ⊢ ⊥.
    (`collapse-cost-impossible`), a settled boundary, no open
    obligation remains for this Direction.
 3. **Information Theory**: not bridged. Open work — see
-   `docs/echo-types/roadmap.md`.
+   `roadmap.adoc` (deferred research track).
 
 ## Practical Implications
 

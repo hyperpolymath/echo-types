@@ -303,22 +303,34 @@ constructors discharge by additive-principal closure.
 | `<ᵇ-ψ+`    | ✓ closed  | `rank-pow-via-left` plus the IH.
 | `<ᵇ-+Ω`    | ✓ closed  | `rank-pow-bplus-into-ω-rank-pow` (additive-principal at the target) plus the WfCNF tail bound `y ≤ᵇ x` (caller-provided).
 | `<ᵇ-+ψ`    | ✓ closed  | Same as `<ᵇ-+Ω` since `rank-pow (bpsi ν _) = ω-rank-pow ν`.
-| `<ᵇ-ψα`    | ⏳ admissibility | `rank-pow (bpsi ν α) = ω-rank-pow ν` doesn't discriminate on α.  Refining the rank to `ω-rank-pow ν ⊕ rank-pow α` works iff `α ∈ C_ν` (ψ-admissibility predicate); deferred to a follow-on slice.
-| `<ᵇ-ψΩ≤`   | ⏳ admissibility | Same blocker at `ν = μ`: provisional shape gives `ω-rank-pow μ <′ ω-rank-pow μ`, which is false.
+| `<ᵇ⁺-ψα`   | ✓ closed (Lane 3, 2026-05-26) | `rank-adm (bpsi ν α) = ω-rank-pow ν ⊕ rank-pow α`; `⊕-mono-<-right` closes the shared-Ω-index lex case from `rank-pow α <′ rank-pow β` (which the existing `_<ᵇ⁰_` umbrella discharges).  Primitive `rank-mono-<ᵇ⁺-ψα-from-pow` in `Ordinal.Buchholz.RankAdm`.
+| `<ᵇ-ψΩ≤`   | ✓ closed (Lane 3 follow-on, 2026-05-27) | Lex-pair rank `rank-lex : BT → RankLex` in `Ordinal.Buchholz.RankLex`, with `rank-lex (bOmega ν) = mkLex (ω-rank-pow ν) (ω-rank-pow ν)` and `rank-lex (bpsi ν α) = mkLex (ω-rank-pow ν) (rank-pow α)`.  Both sub-cases close via `rank-mono-<ᵇ-ψΩ≤-lex`: ν<μ via `<lex-first` + `ω-rank-pow-mono`; ν=μ via `<lex-second` + the admissibility bound `rank-pow α <′ ω-rank-pow ν`.  The "structurally impossible under any rank shape with `ω-rank-pow ν ≤ rank-adm (bpsi ν α)`" verdict from `RankAdm.agda` was scoped to *scalar* ranks; option (A) lex-pair sidesteps it cleanly.
 | `<ᵇ-+1`    | ⏳ joint-bplus | `rank-pow (bplus z₁ z₂)` is not additive principal in general (it's a sum of additive principals).  Discharging requires a coarser bound (e.g., dominate by `ω-rank-pow` of the leading subterm's Ω-index) or a structurally richer rank.
 | `<ᵇ-0-+`   | ✓ closed* | `rank-pow bzero = oz`, and `rank-pow (bplus x y) ≥′ oz` strictly when *either* `x` or `y` is non-`bzero` and the term is WfCNF.  The degenerate `bplus bzero bzero` is excluded by WfCNF (atomic-right ≤ left forces both `bzero` and then the sum reduces to a `bzero`-shaped equivalent that doesn't pattern-match as a `bplus` under CNF normalisation — covered as a side-condition).
 |===
 
-*Score: 9/13 constructors closed; 3 deferred under explicit blockers;
-1 closed conditionally with documented side condition.*
+*Score: 11/13 constructors closed (9 under the original `rank-pow`
+umbrella + 1 under the `rank-adm` slice + 1 under the `rank-lex`
+slice); 1 deferred under an explicit blocker (`<ᵇ-+1` joint-bplus);
+1 closed conditionally with documented side condition. The Lane-3
+active-push slice on 2026-05-26 closed `<ᵇ⁺-ψα` (rank-adm) and
+re-classified `<ᵇ-ψΩ≤` to "encoding mismatch"; the Lane-3 follow-on
+slice on 2026-05-27 closed `<ᵇ-ψΩ≤` via option (A) (lex pair).
+Only `<ᵇ-+1` joint-bplus remains in the per-constructor matrix.*
 
 === What remains open
 
-* *ψ-admissibility predicate* (`WellFormedAdmissible.agda`, ~80 lines).
-  Refines `WfCNF` with the constraint that ψ-arguments live in their
-  binder's Ω-closure `C_ν`.  Closes `<ᵇ-ψα` and `<ᵇ-ψΩ≤` once the
-  rank-pow on `bpsi ν α` is refined to `ω-rank-pow ν ⊕ rank-pow α`
-  under the admissibility carrier.
+* *ψ-admissibility predicate* (`WellFormedAdmissible.agda`, landed
+  earlier; `RankAdm.agda` landed 2026-05-26 in the Lane 3 active-push
+  slice; `RankLex.agda` landed 2026-05-27 in the Lane 3 follow-on).
+  Refines `WfCNF` with the rank-bound on ψ-arguments.
+  *Status*: `<ᵇ⁺-ψα` *closed* via `rank-mono-<ᵇ⁺-ψα-from-pow` in
+  `RankAdm.agda`. `<ᵇ-ψΩ≤` (both ν<μ and ν=μ) *closed* via
+  `rank-mono-<ᵇ-ψΩ≤-lex` in `RankLex.agda` (option A from the
+  design follow-up — lex pair over `Ord × Ord`).  The boundary
+  case ν=μ no longer needs the additive-principal closure; the
+  admissibility bound `rank-pow α <′ ω-rank-pow ν` discharges it
+  directly on the second component of the lex pair.
 * *`<ᵇ-+1` joint-bplus*.  Needs either a coarser dominator (e.g., a
   function `BT → OmegaIndex` returning the leading Ω-index, then
   rank into `ω-rank-pow ∘ leading-index`) or a richer rank shape.

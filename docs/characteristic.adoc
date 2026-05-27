@@ -11,11 +11,15 @@ Gate 2 of the identity claim. It audits the nominees against the gate's
 falsifier — "naturally echo-shaped, not reducible to generic sigma/fiber
 lemmas" — and reports the threshold outcome.
 
-This is *Revision 4*. It adds a fourth nominee (`EchoLinear.degradeMode-compose`),
-introduces a new construction in this lane (`characteristic.RoleGraded`)
-that closes the open recommendation from the handoff's Observation E,
-and proposes a candidate fifth nominee. See §<<revision,Revision notes>>
-for the diff.
+This is *Revision 5* (2026-05-26). It is the close-out re-audit
+required by `roadmap.adoc` §Lane 2: it re-checks that the
+Revision-4 nominee table still clears the *comfortable* threshold
+(≥ 3 of 4 surviving) under everything that has landed in this
+lane since then. Verdict: still 4/4 surviving; comfortable
+threshold met by margin of one. The Revision-5 substance is in
+§<<revision-5,Revision-5 re-audit (2026-05-26)>>; the per-nominee
+audits below are unchanged from Revision 4. See §<<revision,Revision
+notes>> for the full diff.
 
 toc::[]
 
@@ -28,6 +32,13 @@ at integration time.
 ====
 
 == Inherited spec
+
+For the sceptic-facing evidence map ("is this just renamed Σ?",
+organised under five demands and cross-linked to every in-tree
+artefact), see `docs/echo-types/sigma-distinctness-map.adoc` and its
+internal companion `core/skepticisms/is-this-just-sigma-types.md`.
+That doc is an evidence index; this file is the per-nominee Gate 2
+audit and remains the authoritative gate artefact.
 
 `roadmap-gates.adoc` Gate 2:
 
@@ -511,7 +522,127 @@ withdrawn lemma can be left in place as a historical signpost.
 | 3 | Amendment to `roadmap-gates.adoc` adopted. Nominee list: `degrade-via-join`, `degrade-compose`, `applyChoreo-compose`. 3/3 surviving across two modules. Recommended further work: genuine integration theorem; fourth nominee for diversification.
 
 | 4 | Added `EchoLinear.degradeMode-compose` as N4 (per the Revision-3 recommendation; user-explicit). Built `characteristic.RoleGraded` and `choreo-grade-commute` (closes handoff Observation E). 4/4 surviving across three modules. Proposed adding `choreo-grade-commute` as N5 (left to integrator's discretion).
+
+| 5 (2026-05-26) | Close-out re-audit per `roadmap.adoc` §Lane 2: re-checks the Revision-4 nominee table against everything that has landed since (EI-2 terminated negative; `characteristic.NonTruncatable` for Q2.1 received-`y` form is PARTIALLY REDUCIBLE; the broken `characteristic.N5Falsifier` is ledgered, not silently dropped). Verdict: 4/4 still surviving, *comfortable* threshold (≥3/4) met by margin of one. Candidate N5 (`choreo-grade-commute`) remains unadopted: the post-Rev-4 EI-2 termination shows its non-trivial content is the same single `(c⊑s, keep≤keep)` cell as before, so nominating it would not strengthen the count beyond cosmetic.
+
+| 5b (2026-05-27) | Within-Rev-5 follow-up: `characteristic.N5Falsifier` *no longer broken* — unsolved metas around `EchoChoreo.obs` were resolved by pinning the implicit role and grade parameters at the four `applyRole`/`applyGrade` call sites (the blocker was inference, not content). The module is now in `characteristic/All.agda`'s CI green closure. Audit consequences are *recorded in-line in §"Evidence reviewed" item 3 above*: the SURVIVES verdict for the falsifier exhibit is now mechanised, but the N5-not-adopted decision is unchanged on the same Rev-4/Rev-5 cosmetic-only-marginal-evidence logic.
 |===
+
+[[revision-5]]
+== Revision-5 re-audit (2026-05-26)
+
+This section is the close-out audit named in `roadmap.adoc` §Lane 2
+close-out criterion (3). It re-checks the Revision-4 nominee table
+against everything that has landed in the characteristic / Gate-2
+lane since Revision 4. Three categories of evidence were considered;
+none weakens the Revision-4 verdict.
+
+=== Bar being checked
+
+`roadmap.adoc` §Lane 2 distinguishes two thresholds (taken from
+`roadmap-gates.adoc` Gate 2): the *honest minimum* (≥ 2 of 4
+surviving) and the *comfortable* threshold (≥ 3 of 4 surviving).
+Revision 4 reported 4/4. Lane 2 close-out asks: under everything
+this lane has produced since, does that still hold by the
+comfortable bar?
+
+=== Evidence reviewed since Revision 4
+
+. *EI-2 terminated — negative verdict, PATH B* (`docs/EI2_REPORT.adoc`,
+  authoritative). Eight investigation phases, seven data points
+  (sibling 2D constructions `characteristic.RoleMode`,
+  `characteristic.ModeGraded`, 3D `characteristic.RoleModeGrade`
+  with three pairwise commutations + a triple, self-pairing
+  `characteristic.RoleRole`), plus the formal exhibit
+  `characteristic.ChoreoInjective` for the non-loss-only criterion
+  and the partial generic `characteristic.RecipeTheorem`. The
+  termination finding is that the integration recipe with the
+  existing five named axes does *not* carry substantive simultaneous
+  cross-axis content — every "non-trivial" cell carries one-axis-at-
+  a-time content. The five doc locations enumerated in EI2_REPORT
+  §"Documentation cascade" have all been updated accordingly.
+. *Q2.1 / `characteristic.NonTruncatable`.* The general statement of
+  `echo-not-prop` for `(f, y)` with two distinct preimages is
+  re-exported under the Q2.1 name; the received-`y` form is
+  *PARTIALLY REDUCIBLE* per the module's own Gate-2 falsifier audit
+  (proof factors through generic Σ; echo-specific content is in the
+  statement only). The constructed-`y` form, which builds `y` from
+  bare non-injectivity, carries echo-specific content but is not on
+  the Revision-4 nominee table — it is closer to a Gate-3 example
+  obligation than a Gate-2 nominee.
+. *`characteristic.N5Falsifier` — RESOLVED 2026-05-27, NOW GREEN AND IN CI CLOSURE.*
+  Originally KNOWN BROKEN, deliberately excluded
+  (`UnsolvedConstraints` + `UnsolvedMetaVariables`). The Lane-2
+  N5-sharpening pass on 2026-05-27 closed the unsolved metas by
+  making the implicit `r1`/`r2`/`g` parameters of `applyRole` /
+  `applyGrade` explicit at the four call sites; the obstacle was
+  *inference*, not *content* (Agda cannot recover the role from
+  `RoleGEcho r keep = Echo (obs r) true` because `obs` is not
+  injective, but supplying the role explicitly resolves it). The
+  module is now imported in `characteristic/All.agda` and the
+  broken-banner has been updated with the resolution record.
+  *Crucially: the resolution does not change the Rev-4 conclusion
+  about candidate N5* — the only non-trivial cell is still the
+  `(c⊑s, keep≤keep)` Choreo content already credited to N3, so
+  adoption would still be cosmetic. The cleaned-up green falsifier
+  exhibit *does* tighten the audit story (the SURVIVES verdict is
+  now mechanised instead of being a not-mechanised attempt-of-record)
+  without changing the N5-not-adopted decision.
+
+=== Per-nominee re-check
+
+[cols="1,2,2,3", options="header"]
+|===
+| Nominee | Module | Status as of Rev 5 | Reason
+
+| N1 | `EchoGraded.degrade-via-join` | SURVIVES (unchanged from Rev 4) | The lemma is on the loss-grade lattice's join, not on any integration claim. EI-2 termination does not touch it. No falsifier attempted since Rev 4.
+| N2 | `EchoGraded.degrade-compose` | SURVIVES (unchanged from Rev 4) | As N1: single-decoration lemma; EI-2 termination is orthogonal. No falsifier attempted since Rev 4.
+| N3 | `EchoChoreo.applyChoreo-compose` | SURVIVES (unchanged from Rev 4) | Single-decoration role-reachability lemma; the `client-to-server` content this lemma factors through is the very content EI-2 traced as the one load-bearing non-trivial cell across 2D pairings — that is independent evidence the lemma is non-vacuous, not a weakening.
+| N4 | `EchoLinear.degradeMode-compose` | SURVIVES (unchanged from Rev 4) | Single-decoration mode lemma with the specific `weaken` content (`no-section-collapse-to-residue` attached); EI-2 termination is orthogonal.
+|===
+
+=== Verdict
+
+Survivors: N1, N2, N3, N4. Count: 4. Honest threshold (≥ 2): met.
+Comfortable threshold (≥ 3): met by margin of one. The Lane 2
+close-out criterion in `roadmap.adoc` is satisfied.
+
+=== What the re-audit explicitly does NOT do
+
+. *Does not nominate N5.* The candidate fifth nominee
+  (`characteristic.RoleGraded.choreo-grade-commute`) remains a
+  candidate. EI-2's termination shows the protocol-pass-but-narrow
+  reading from Rev 4 was correct: the only non-trivial cell of the
+  2D family's commutation is `(c⊑s, keep≤keep)`, reducing to
+  `client-to-server e` — the same Choreo content N3 already carries.
+  Nominating it would push the count to 5/5, but the marginal
+  evidence is the same `client-to-server` content already credited
+  to N3, so nominating it would be cosmetic. Left unadopted on the
+  same logic as Rev 4.
+. *Does not retroactively retract any Rev-4 verdict.* No nominee's
+  falsifier was attempted and *failed*; the absence of attempts is
+  carried forward as a Rev-4 honest qualification (§<<qualifications,
+  Honest qualifications>> item 3), not a Rev-5 finding.
+. *Does not promote `characteristic.NonTruncatable.Q2-1` to the
+  nominee table.* Its own broken-Gate-2 audit (PARTIALLY REDUCIBLE)
+  was applied honestly; the lemma remains useful as a Gate-3
+  signpost, not as a Gate-2 survivor.
+
+=== Pointer additions since Rev 4
+
+* `proofs/agda/characteristic/RoleMode.agda`,
+  `RoleModeGrade.agda`, `RoleRole.agda`, `ModeGraded.agda`,
+  `ChoreoInjective.agda`, `RecipeNonTriviality.agda`,
+  `RecipeSpec.agda`, `RecipeTheorem.agda`, `InteractionTest.agda` —
+  EI-2 investigation lane. Not Gate-2 nominees; supply the
+  EI-2-termination evidence the §"Evidence reviewed" item 1 cites.
+* `proofs/agda/characteristic/NonTruncatable.agda` — Q2.1, see
+  §"Evidence reviewed" item 2.
+* `proofs/agda/characteristic/N5Falsifier.agda` —
+  *KNOWN BROKEN, NOT IN CI CLOSURE*; see §"Evidence reviewed"
+  item 3.
+* `docs/EI2_REPORT.adoc` — authoritative EI-2 verdict.
+* `proofs/agda/characteristic/All.agda` — the lane-local CI seam.
 
 == Cross-lane observations
 

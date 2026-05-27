@@ -6,7 +6,7 @@
 :icons: font
 
 [.lead]
-Closure note for the `roadmap.md` entry
+Closure note for the `roadmap.adoc` entry
 "2-categorical shape: commit to a 2-category or rule it out"
 and for `composition.md` §Q1 / §Q6. The verdict is *rule out*,
 on argued grounds against the landed Pillars A–D evidence. The
@@ -115,7 +115,7 @@ None is on the active roadmap. The verdict stands.
 
 == Cross-references
 
-* `docs/echo-types/roadmap.md` — Theory-work entry updated to
+* `roadmap.adoc` — Theory-work entry updated to
   `[ruled out]`.
 * `docs/echo-types/composition.md` §Q1 / §Q4 / §Q6 — open
   framings folded into this closure.

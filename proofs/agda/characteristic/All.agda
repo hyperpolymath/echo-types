@@ -12,11 +12,16 @@
 --
 -- New characteristic modules should register here.
 --
--- DELIBERATE EXCLUSION (disclosed 2026-05-18): `characteristic.N5Falsifier`
--- is NOT imported here because it does not typecheck (unsolved metas;
--- see its in-file broken banner). It is monitored by an
--- expected-failure CI gate and ledgered, not silently dropped. Do not
--- "register" it until it is green `--safe --without-K`.
+-- PROMOTION 2026-05-27: `characteristic.N5Falsifier` is now imported
+-- here. The 2026-05-18 broken status (unsolved metas around
+-- `EchoChoreo.obs` reindex) was resolved 2026-05-27 by making the
+-- `applyRole` / `applyGrade` Role + Grade parameters explicit at the
+-- four call sites — the unsolved metas were not a content blocker
+-- but an inference blocker (Agda cannot recover the role from
+-- `RoleGEcho r keep = Echo (obs r) true` because `obs` is not
+-- injective). See N5Falsifier.agda's preamble banner for the
+-- pre-promotion record and `docs/characteristic.adoc` Revision 5
+-- §"Evidence reviewed" item 3 for the audit note.
 ------------------------------------------------------------------------
 
 module characteristic.All where
@@ -25,6 +30,7 @@ import characteristic.ChoreoInjective
 import characteristic.IntegrationAudit
 import characteristic.InteractionTest
 import characteristic.ModeGraded
+import characteristic.N5Falsifier
 import characteristic.NonTruncatable
 import characteristic.RecipeNonTriviality
 import characteristic.RecipeSpec

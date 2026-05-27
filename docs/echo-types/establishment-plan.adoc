@@ -8,7 +8,7 @@
 [.lead]
 This document sets out the path by which "echo types" can acquire
 *recognised type-theoretic standing*. It is deliberately separate from
-`roadmap.md` (work partitioned by bottleneck) and `roadmap-gates.adoc`
+`roadmap.adoc` (work partitioned by lane) and `roadmap-gates.adoc`
 (the falsifiable identity claim). This document answers a different
 question: _given_ the gated identity claim, what makes a construction
 like this *established* in the sense that linear, dependent, or graded
@@ -223,7 +223,7 @@ programme is done; only Pillar E (external validation) remains.*
 A–C were the credibility core and needed no external unblocker. The
 ordinal / Buchholz
 track is impressive _consumer evidence_, not foundation — keep it
-firewalled from the identity claim exactly as `roadmap.md` already does.
+firewalled from the identity claim exactly as `roadmap.adoc` already does.
 
 *Hard guardrails (credibility hazards):*
 

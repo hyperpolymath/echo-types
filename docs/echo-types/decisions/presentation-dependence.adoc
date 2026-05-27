@@ -6,7 +6,7 @@
 :icons: font
 
 [.lead]
-Closure note for the `roadmap.md` entry
+Closure note for the the legacy `roadmap.md` (now consolidated into `roadmap.adoc`) entry
 "Presentation-dependence sub-theory: examples 5, 9, 10 cluster here;
 write up the common pattern". The verdict is *meta-pattern only —
 no new Agda module needed*: presentation-dependence is the existing
@@ -196,7 +196,7 @@ Concretely:
 
 == Cross-references
 
-* `docs/echo-types/roadmap.md` — Theory-work entry updated to
+* `roadmap.adoc` (legacy `docs/echo-types/roadmap.md` consolidated 2026-05-26) — Theory-work entry updated to
   `[landed — see decisions/presentation-dependence.adoc]`.
 * `docs/echo-types/taxonomy.md` §Axis 4 — the existing axis this
   cluster instantiates; its "Open question" is sharpened (not

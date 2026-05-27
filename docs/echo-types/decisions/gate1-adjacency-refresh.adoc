@@ -6,7 +6,7 @@
 :icons: font
 
 [.lead]
-Coherence pass requested by `roadmap.md` § "Theory work" item
+Coherence pass requested by the legacy `roadmap.md` (now consolidated into `roadmap.adoc`) § "Theory work" item
 "Gate 1 adjacency refresh: the five existing adjacency notes
 predate the taxonomy. Cross-check each against the current axes
 and flag any neighbour whose identity claim should be
@@ -291,12 +291,12 @@ are coherence-flavoured and can be batched:
 * No content rewrites scheduled in this PR; the coherence
   follow-ups (per-note one-liner, README refresh) are listed
   above as separate optional moves.
-* `roadmap.md` § "Theory work" entry updated from `[unblocked]`
+* the legacy `roadmap.md` (now consolidated into `roadmap.adoc`) § "Theory work" entry updated from `[unblocked]`
   to `[refreshed — see decisions/gate1-adjacency-refresh.adoc]`.
 
 == Cross-references
 
-* `docs/echo-types/roadmap.md` — Theory-work entry updated to
+* `roadmap.adoc` (legacy `docs/echo-types/roadmap.md` consolidated 2026-05-26) — Theory-work entry updated to
   `[refreshed]`.
 * `docs/echo-types/taxonomy.md` — the eight-axis post-2026-05
   taxonomy this refresh cross-checks against.

@@ -84,8 +84,8 @@ not constitute a unified verification artefact. It closes the
   grading* (`grade : Session → Tropical` in Lean), which is the
   symmetric Agda-exclusive direction.
 - **Long-game alignment target.** When the echo-types ordinal track
-  reaches Bachmann–Howard (ψ₀(Ω_ω); see `docs/echo-types/roadmap.md`
-  and `buchholz-plan.adoc`), the adjacent repo's
+  reaches Bachmann–Howard (ψ₀(Ω_ω); see `roadmap.adoc` §Lane 3 and
+  `docs/buchholz-plan.adoc`), the adjacent repo's
   `Tropical_Ordinal_Bridge.thy` becomes the natural cross-repo
   alignment target (Agda Buchholz BT ↔ Isabelle `tropO` carrier).
   This target is **firewalled** until the ordinal track lands the

@@ -176,7 +176,7 @@ work to `main` and refresh all documentation:
    dependency order. Resolve any conflicts (typically additive, in
    `Smoke.agda` and `All.agda`).
 3. **Update human docs.** `docs/echo-types/composition.md`,
-   `docs/echo-types/roadmap.md`, `docs/echo-types/overview.md` and
+   `roadmap.adoc`, `docs/echo-types/overview.md` and
    `cross-repo-bridge-status.md` get a sweep for stale `(Open)` /
    `[unblocked]` tags on anything that just landed. Honest labels:
    `(Landed)`, `(Partial)`, `(Open)`.
@@ -191,7 +191,165 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-05-20)
+## Current rung state (2026-05-27)
+
+### Session arc 2026-05-27 evening — Lane 5 Walkthrough 3 landed (read this first)
+
+*Where we started today (commit `4d77d75` on `docs/consolidate-roadmaps-
+and-sigma-skepticism-2026-05-26`, post-#123):* the consolidation branch
+carried Walkthroughs 1 (region-exit audit) and 2 (epistemic erasure)
+plus the Lane 3 `RankLex` slice closing `<ᵇ-ψΩ≤`. Walkthrough 3
+(provenance / debugging) was at scaffold/design-doc level in
+`tutorial/README.adoc`. The originally-scaffolded Lane 5 triplet was
+two-thirds landed.
+
+*Where we ended today:* Walkthrough 3 LANDS — the originally-scaffolded
+triplet is complete in Agda. One slice:
+
+1. *Walkthrough 3 — provenance / debugging echo* lands at
+   `tutorial/provenance_debugging/`. Domain: 4-element `State` with
+   two orthogonal sign bits (`firstSign`, `secondSign`); `firstSign`
+   is the echo's visible output, `secondSign` is the class predicate
+   the layer-1 residue carries. Three residue layers walked:
+     * Layer 0 — `Echo firstSign true`, distinguishing all sources;
+     * Layer 1 — `EchoR Bool ClassCert true` carrying `secondSign`;
+     * Layer 2 — `EchoR ⊤ TrivialCert' true` carrying nothing.
+   Headlines: `states-distinct-at-true` (Layer 0 distinguishes);
+   `classes-remain-distinct` (Layer 1 still distinguishes);
+   *`recover-section-at-layer-1`* (POSITIVE — Layer 1 has a section);
+   `trivials-collapse` (Layer 2 collapses); *`no-recovery-from-trivial`*
+   (NEGATIVE — Layer 2 has no section, structural mirror of
+   `EchoResidue.no-section-collapse-to-residue`); and
+   `provenance-walk-contrast` packaging the section / no-section pair.
+
+   *New pedagogical shape vs W1/W2.* Walkthroughs 1 and 2 each ship a
+   one-sided no-section result. Walkthrough 3 ships *both* a section
+   (at layer 1) and its absence (at layer 2), exhibiting the boundary
+   at which the type-level recovery property flips. The mechanical
+   load: `secondSign` is *injective within each `firstSign`-fibre*,
+   which is exactly the property the layer-1 section needs.
+
+   *Honest bound discipline inherited from W2.* The Agda file and the
+   README both open with the disclosure that this is type-level only —
+   no operational debugger, no runtime artefacts, fixed 4-element
+   domain. A `NotProved-*` matched-negative block at the file's
+   bottom lists four out-of-scope properties (runtime debugger,
+   reconstruction in general, completeness across classes, recovery
+   under side information) as `⊤`-aliases so `grep NotProved` catches
+   them.
+
+   *Files landed.*
+   * `tutorial/provenance_debugging/ProvenanceDebugging.agda` (worked
+     example);
+   * `tutorial/provenance_debugging/Smoke.agda` (per-walkthrough Smoke
+     pins, own `using` block, header comment);
+   * `tutorial/provenance_debugging/All.agda` (aggregator);
+   * `tutorial/provenance_debugging/README.adoc` (narrative).
+   * `tutorial/All.agda` registers the new walkthrough.
+   * `tutorial/README.adoc` §"Walkthrough 3" flipped from design-doc
+     status to LANDED 2026-05-27; the IMPORTANT scaffold-status note
+     updated.
+
+Build invariant held: `proofs/agda/All.agda`, `proofs/agda/Smoke.agda`,
+`tutorial/All.agda`, and `tutorial/provenance_debugging/Smoke.agda`
+all exit 0 under `--safe --without-K`, zero postulates, no funext.
+All headlines pinned in the per-walkthrough Smoke under their own
+`using` block per CLAUDE.md "Working rules".
+
+*Plan for the next Claude.* The originally-scaffolded Lane 5 triplet
+is complete. Open work:
+
+1. *Lane 3 follow-on — `<ᵇ-+1` joint-bplus.* The one remaining open
+   per-constructor case in the Buchholz rank-mono umbrella. Closure
+   options documented in `RankPow.agda` and the obstruction doc:
+   (A) leading-Ω-index dominator (`head-Ω : BT → OmegaIndex`),
+   recommended; (B) richer rank shape on `bplus`. Smallest useful
+   first slice = define `head-Ω` + definitional sanity lemmas only,
+   no rank-mono. Multi-session work.
+2. *Lane 5 unparking decision (user).* Walkthroughs 1+2+3 all
+   landed; Walkthrough 1 is the killer-app candidate per
+   `roadmap.adoc` §Lane 5 second unblocking condition. User
+   accept-or-defer pending; the lane remains [PARKED] at the lane-
+   policy level until the user decides.
+3. *Pillar E paper [EXPAND] clearing.* Gated on author-driven
+   material accruing.
+
+DO NOT reopen: the closed 11/13 Buchholz constructors (their
+primitives are correct under WfCNF + admissibility + lex-pair);
+the W1/W2 walkthroughs (their no-section headlines are the existing
+`EchoLinear.no-section-weaken` and `EchoResidue.no-section-collapse-
+to-residue` re-exported with honest-bound + matched-negative
+discipline); the R-2026-05-18 narrowings.
+
+### Session arc 2026-05-27 late evening — Lane 3 head-Ω first slice
+
+*Where we started today (commit `04f3d9f`, post-W3):* the consolidation
+branch carried the complete Lane 5 triplet (W1/W2/W3) plus the 11/13
+Buchholz constructor closure via `rank-pow` + `rank-adm` + `rank-lex`.
+The one remaining open per-constructor case `<ᵇ-+1` joint-bplus
+sits behind a documented structural blocker
+(`docs/echo-types/buchholz-rank-obstruction.adoc` §"What remains
+open"): `rank-pow (bplus z₁ z₂)` is not additive principal in
+general.
+
+*Where we ended today:* option (A) from `RankPow.agda`'s preamble
+opens via the head-Ω abstraction.  One slice:
+
+1. *`Ordinal.Buchholz.HeadOmega.agda`* — the leading-Ω-index head
+   function `head-Ω : BT → OmegaIndex`:
+     * `bzero`        ↦ `fin 0` (default; future rank-mono guards via
+       non-bzero premise);
+     * `bOmega ν`     ↦ `ν`;
+     * `bplus x _`    ↦ `head-Ω x` (leftmost);
+     * `bpsi ν _`     ↦ `ν`.
+   Four definitional sanity lemmas (one per `BT` constructor, each
+   `refl`) plus one two-level compositional convenience
+   (`head-Ω-bplus-left`) for the WfCNF left-spine pattern.
+   Pinned in `Ordinal/Buchholz/Smoke.agda` under own `using` block
+   with header comment; wired into `proofs/agda/All.agda` between
+   `RankLex` and `RankMonoUmbrella`.
+
+   *Smallest useful first slice.*  No rank-mono in this slice; the
+   domination lemma `rank-pow t <′ ω-rank-pow-succ (head-Ω t)` and
+   the headline `<ᵇ-+1` joint-bplus discharge are explicitly
+   deferred to follow-on slices per `HeadOmega.agda`'s preamble.
+   The abstraction stands on its own merits before any rank
+   consumer pulls on it.
+
+Build invariant held: `Ordinal/Buchholz/Smoke.agda`,
+`proofs/agda/Smoke.agda`, and `proofs/agda/All.agda` all exit 0
+under `--safe --without-K`, zero postulates, no funext.  All
+headlines pinned in the Buchholz-layer Smoke under their own
+`using` block per CLAUDE.md "Working rules".
+
+*Plan for the next Claude.*  Continue option (A):
+
+1. *Slice 2 — ω-rank-pow-succ + the domination lemma.* Add
+   `ω-rank-pow-succ : OmegaIndex → Ord` to `RankPow.agda` (one
+   option: `ω-rank-pow-succ (fin n) = ω^(suc (suc n))`,
+   `ω-rank-pow-succ ω = olim (λ n → ω^(suc (suc n)))`), then prove
+   `rank-pow-dominated-by-head-Ω : (t : BT) → NonBzero t → WfCNF t →
+   rank-pow t <′ ω-rank-pow-succ (head-Ω t)` by structural recursion
+   on the WfCNF carrier, applying `rank-pow-bplus-into-ω-rank-pow`
+   at each `bplus` step.  This is the load-bearing slice.
+2. *Slice 3 — the headline `rank-mono-<ᵇ-+1-via-head-Ω`.*  Builds
+   on Slice 2 + `rank-mono-<ᵇ-+1-via-target` from `RankPow.agda`.
+   At consumer time: head-Ω inversion on the target's left summand
+   gives the additive-principal witness; source `bplus`'s rank is
+   dominated by `ω-rank-pow-succ (head-Ω source)`, which by
+   `head-Ω-bplus` equals `ω-rank-pow-succ (head-Ω x₁)`, strictly
+   below the target's rank via the `<ᵇ` premise.
+3. *Slice 4 — full `rank-pow-mono-<ᵇ⁻` umbrella.* Composition of
+   the head-Ω discharge with the existing 11-constructor closures.
+   The final Buchholz rank-monotonicity theorem under the WfCNF
+   restriction.
+
+DO NOT reopen: `head-Ω` returns `fin 0` on `bzero` as a deliberate
+default — future rank-mono lemmas guard the `bzero` case via the
+non-bzero premise, so the default is never consumed in a proof
+context.  Changing the default to `Maybe OmegaIndex` would force
+every downstream caller through an unwrap; the documented
+non-bzero guard is the cleaner discipline.
 
 ### Session arc 2026-05-20 daytime (theory closure waves 1 + 2 + 3)
 
@@ -503,7 +661,8 @@ coeffects, lens/optic vs the witness-transport leg); (3) evaluation
 (proof-size/cost table; quantify common-upper-bound idiom vs naive
 `subst`); (4) ordinal consumer-evidence appendix — GATED on the
 ordinal track hitting Bachmann–Howard, keep firewalled per
-`roadmap.md`. THEN offline/author-driven only (venue+template,
+`roadmap.adoc` §Lane 3 (Ordinal track) and `docs/buchholz-plan.adoc`.
+THEN offline/author-driven only (venue+template,
 Zenodo DOI, library packaging, outreach) — flag to the user, do NOT
 auto-run. Strategy (user decision 2026-05-17): the paper was written
 now at full narrative strength while fresh; expand the tagged
@@ -590,7 +749,8 @@ tags as material becomes available, in this order:
 3. Evaluation — proof-size/cost table; quantify
    common-upper-bound-idiom vs naive `subst`.
 4. Ordinal consumer-evidence appendix — gated on that track hitting
-   its Bachmann–Howard milestone (firewalled per roadmap.md).
+   its Bachmann–Howard milestone (firewalled per `roadmap.adoc`
+   §Lane 3 and `docs/buchholz-plan.adoc`).
 5. THEN offline/author-driven: venue+template, Zenodo DOI, library
    packaging, outreach — flag to user, do NOT auto-run.
 

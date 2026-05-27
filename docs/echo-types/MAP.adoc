@@ -83,7 +83,7 @@ the standing B- freeze lifted because O-THERMO-∞ is now discharged
   `proofs/agda/EchoThermodynamicsArbitrary.agda`,
   `proofs/agda/EchoThermoCollapseImpossible.agda`.
 * Docs: `docs/ECHO-CNO-BRIDGE.adoc` §"Thermodynamic Bridge",
-  `docs/STABILITY_ANALYSIS.md` §3.3, `docs/WORK_PLAN.md` §5,
+  `docs/STABILITY_ANALYSIS.md` §3.3,
   `docs/adjacency/hott-fibers.adoc`.
 * Build: `just test-thermo`.
 
@@ -141,7 +141,7 @@ Connect echo types with MAA's reversibility proofs
 (`maa-echo-equivalence`). absolute-zero lives under
 `…/verification-ecosystem/maa-framework/`. Planned, not built.
 
-* Docs: `docs/ProofRoadmap.md` §10, `docs/EchoJanusBridge.md`.
+* Docs: `roadmap.adoc` §"Deferred research track", `docs/EchoJanusBridge.md`.
 
 === Shannon / information theory `[OPEN]`
 Explicitly *not bridged*. The Transport / Nyquist sampling work
@@ -197,10 +197,11 @@ are kept for history and **may overclaim** (pre-retraction).
 | `INDEX.adoc` is the *audit* index (different role; keep)
 
 | Proof status / roadmap
-| `docs/echo-types/earn-back-plan.adoc` + `docs/retractions.adoc`
-| `ProofRoadmap.md`, `PRIORITIZED_PROOF_ROADMAP.md`, `WORK_PLAN.md`,
-  `roadmap.adoc`, `roadmap-gates.adoc`, `docs/echo-types/roadmap.md`
-  (pre-R-2026-05-18 — historical)
+| `roadmap.adoc` (single canonical roadmap; lanes, gates, deferred
+  research) + `docs/echo-types/earn-back-plan.adoc` +
+  `docs/retractions.adoc`
+| `roadmap-gates.adoc` (pre-R-2026-05-18 — historical; folded into
+  `roadmap.adoc`)
 
 | Concept / definition
 | `docs/echo-types/overview.md`, `docs/echo-types/paper.adoc`

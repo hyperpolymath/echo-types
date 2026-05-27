@@ -6,7 +6,7 @@
 
 1. **Core Bridge Documentation**
    - `docs/EchoJanusBridge.md` - Comprehensive explanation of echo types → JanusKey bridge
-   - `docs/ProofRoadmap.md` - Strategic proof development roadmap
+   - `roadmap.adoc` §"Deferred research track" - Strategic proof development roadmap (consolidated from former `docs/ProofRoadmap.md`)
    - `docs/COMPREHENSIVE_DOCUMENTATION.md` - Complete 3-2-1 structured documentation
 
 2. **Formal Proofs**
@@ -84,7 +84,7 @@
 - [x] Create `EchoJanusBridge.agda` with core theorems
 - [x] Update `All.agda` to include new module
 - [x] Write `EchoJanusBridge.md` documentation
-- [x] Create `ProofRoadmap.md` for future work
+- [x] Consolidate `ProofRoadmap.md` into `roadmap.adoc` (single canonical roadmap)
 - [x] Develop `COMPREHENSIVE_DOCUMENTATION.md` (3-2-1 structure)
 - [x] Verify Agda proofs compile successfully
 - [ ] Add architecture diagrams

@@ -1,0 +1,183 @@
+= Walkthrough 3: provenance / debugging echo
+:toc: macro
+:toclevels: 2
+:sectnums:
+:icons: font
+
+[.lead]
+Lane 5 Walkthrough 3 per `tutorial/README.adoc`. Worked example
+landing 2026-05-27 as the third tutorial walkthrough. Where
+Walkthroughs 1 (region-exit audit) and 2 (epistemic erasure) both
+ship a *no-section* headline at their residue layer, this walkthrough
+contrasts a *positive* recovery at one layer with a *negative* at the
+next — the load-bearing pedagogy is which layer of residue actually
+carries the information needed for source recovery.
+
+[IMPORTANT]
+====
+*This walkthrough is NOT a runtime debugger.* It does not recover
+application state from a running process, a core dump, or any
+operational artefact. The "debugger walk" below is a *type-level*
+statement about which information survives at which residue layer,
+inside `--safe --without-K` Agda, for a small fixed 4-element source
+domain. Conflating it with operational debugging is the category
+error the walkthrough exists to head off. The opening of
+`ProvenanceDebugging.agda` repeats this disclosure with the same
+wording so a reader who sees the code first sees the bound first.
+====
+
+toc::[]
+
+== What this walkthrough proves
+
+A 4-element `State` with two orthogonal sign bits. The visible
+output of the echo is the *first* sign bit (`firstSign : State →
+Bool`); the *second* sign bit (`secondSign : State → Bool`) is the
+class predicate the layer-1 residue carries. The walkthrough's
+headline moves are:
+
+. *`states-distinct-at-true`* — two states with the same `firstSign`
+  produce two genuinely distinct echoes. Without this, "Echo retains
+  source state" would be vacuous in this domain.
+. *`classes-remain-distinct`* — at layer 1 (residue carrier =
+  `secondSign`), the two echoes remain distinguishable as residues.
+  The class-level information *survives* the lowering.
+. *`recover-section-at-layer-1`* (the positive headline). At layer 1
+  there is a *section*: `recover-from-class` is a right inverse of
+  `state-to-class`. The class-level information captured at this
+  layer is exactly enough to reconstruct the source echo.
+. *`trivials-collapse`* — at layer 2 (residue carrier = `⊤`), the
+  two distinct source echoes collapse to identical residues.
+. *`no-recovery-from-trivial`* (the negative headline). At layer 2
+  no section exists. Mirrors the structural argument of
+  `EchoResidue.no-section-collapse-to-residue`: two echoes collapsing
+  to the same residue forces any candidate section to equate them,
+  which the layer-0 distinguishability rules out.
+. *`provenance-walk-contrast`* — both headlines packaged as a
+  Σ-pair. Reading: the section *exists* at layer 1, *does not exist*
+  at layer 2. This contrast is the load-bearing pedagogy.
+
+All headlines are pinned in `tutorial/provenance_debugging/Smoke.agda`.
+The build is `--safe --without-K`, zero postulates, no funext.
+
+== Why both headlines matter (not just no-section)
+
+Walkthroughs 1 and 2 both ship a *one-sided* result: information is
+lost at the residue layer and no Agda function recovers it. That is
+the right shape when the *erasure* is the load-bearing claim (audit
+boundary; epistemic-erasure step).
+
+For provenance / debugging, the load-bearing claim is *which layer
+preserves which information*. A reader walks the residue ladder
+asking "is what I have enough?" at each step. The contrast between
+the positive layer-1 result and the negative layer-2 result is what
+a debugger would *want* to know — and is the substantive type-level
+content the walkthrough is built around.
+
+The mechanical content: `secondSign` is *injective within each
+firstSign-fibre*. At `firstSign s ≡ true`, the two source states
+`pp` and `pn` have distinct `secondSign` values; so the layer-1
+class residue (which is `secondSign s`) uniquely identifies the
+source. Strip that information by lowering to `⊤` (layer 2) and
+the fibre-internal distinction is gone.
+
+== What this walkthrough does NOT prove
+
+The bottom of `ProvenanceDebugging.agda` carries a *matched
+negative* block listing four properties one might want and that
+this walkthrough does *not* give. They are marked as `NotProved-*`
+type aliases (each defined as `⊤`) so a `grep NotProved` in the
+walkthrough catches every category-error claim a sceptic might
+bring and the source tells them honestly that the claim is out of
+scope rather than silently proved-or-not:
+
+* `NotProved-runtimeDebugger` — this is type-level only; no
+  operational debugger is built or specified.
+* `NotProved-stateReconstructionInGeneral` — the section depends on
+  the 4-element domain and the within-fibre injectivity of
+  `secondSign`. No analogous section is claimed for larger or
+  differently-shaped domains.
+* `NotProved-completenessAcrossClasses` — `secondSign` is one
+  particular choice of class predicate. Nothing here speaks to
+  which class predicate is "the right one" for a given debugging
+  task; that would be a domain-specific design decision.
+* `NotProved-recoveryUnderSideInformation` — the section is a pure
+  Agda function with only the layer-1 residue as input. No claim is
+  made about adversaries or callers with access to side information
+  (other echoes, timing, partial leakage, etc.).
+
+All four are real properties one might want; none of them is what
+`provenance-walk-contrast` gives. The honest scope is: a type-level
+statement, inside `--safe --without-K` Agda, for a fixed 4-element
+domain, about which residue layer suffices for pure-function
+recovery.
+
+== Why this walkthrough exists
+
+Three reasons captured in `tutorial/README.adoc` §"Walkthrough 3":
+
+. *Sceptics arrive asking the wrong question.* "Echo is just Σ" is
+  a recurring objection, and one of its more sophisticated forms is
+  "the residue lemmas just say information is lost — well, of course
+  it is, you projected". The provenance walk gives a positive
+  counterpart: *some* residue layers carry exactly the right
+  information for recovery, and the walkthrough makes the criterion
+  (within-fibre injectivity) mechanically explicit.
+. *The dual to Walkthroughs 1 and 2.* The two harder walkthroughs
+  both ship a no-section as their punchline. Walkthrough 3 ships
+  *both* a section (layer 1) and its absence (layer 2), exhibiting
+  the boundary at which the type-level recovery property flips. It
+  is the gentlest of the three; readers who bounced off the audit
+  and erasure walkthroughs land here.
+. *Builds on existing repo content.* `EchoExampleProvenance.agda`
+  already exhibits a Bool-provenance collapse via `EchoResidue`. The
+  walkthrough's positive section is a direct generalisation: same
+  shape, second domain, with the layer-1 / layer-2 contrast made
+  explicit.
+
+The walkthrough is *not* trying to invent a new lemma about
+recovery in general. It is teaching the *reading* of the
+within-fibre injectivity property in a small concrete domain so
+that the next person reasoning about which provenance level
+suffices for some task does not blur the layers.
+
+== Build
+
+[source,bash]
+----
+agda --library-file=/tmp/agda-libs -i . -i proofs/agda \
+     tutorial/provenance_debugging/Smoke.agda
+
+agda --library-file=/tmp/agda-libs -i . -i proofs/agda \
+     tutorial/All.agda
+----
+
+Both exit 0 under `--safe --without-K` with zero postulates.
+
+== References
+
+* `proofs/agda/Echo.agda` — `Echo`, `echo-intro`
+* `proofs/agda/EchoResidue.agda` — `EchoR`, `echo-to-residue`,
+  `no-section-collapse-to-residue` (the structural shape this
+  walkthrough's layer-2 headline mirrors)
+* `proofs/agda/EchoExampleProvenance.agda` — Bool-provenance
+  collapse example this walkthrough generalises into a layered walk
+* `tutorial/region_exit_audit/README.adoc` — Walkthrough 1, sibling
+  walkthrough whose honest-bound + matched-negative discipline this
+  one inherits
+* `tutorial/epistemic_erasure/README.adoc` — Walkthrough 2, sibling
+  whose `NotProved-*` block pattern this one inherits
+* `tutorial/README.adoc` — Lane 5 scaffold
+* `roadmap.adoc` §"Lane 5" — the lane this walkthrough is the
+  third realisation of
+* `docs/retractions.adoc` R-2026-05-18 — the discipline the
+  honest-bound disclosure inherits
+
+== Status
+
+LANDED 2026-05-27 as the third Lane 5 walkthrough. With Walkthroughs
+1, 2, and 3 all landed, the originally-scaffolded triplet from
+`tutorial/README.adoc` is complete in Agda. Lane 5 remains [PARKED]
+at the lane-policy level pending the user's accept-or-defer
+decision on whether Walkthrough 1's killer-app candidate suffices
+for §Lane 5 unparking per `roadmap.adoc`.

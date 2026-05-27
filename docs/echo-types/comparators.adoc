@@ -1,0 +1,270 @@
+= Echo Types vs. Adjacent Type Systems: Axis-by-Axis Comparison
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+Single-page comparison of Echo Types (narrowed per R-2026-05-18)
+against the four nearest neighbouring type systems: Granule (graded
+modalities), Atkey QTT (Quantitative Type Theory), Hirsch et al.
+choreographic types, and Linear Haskell. This is Lane 1 close-out
+artefact #3 per `roadmap.adoc`. The discipline below is *no
+overclaim*: where Echo is weaker than a comparator, that is stated
+plainly.
+
+[IMPORTANT]
+====
+*Honest framing.* This doc does NOT claim Echo subsumes any of these
+systems. It claims Echo *occupies an adjacent niche* on the
+information-loss axis, that its narrowed claims are concrete and
+checkable, and that the per-comparator differences are mostly
+*structural* (different judgmental level, different categorical
+anchor) rather than competitive. The R-2026-05-18 narrowings apply
+throughout: Echo is a thin-poset reindexing modality (not a graded
+comonad), with a funext-relative pointwise mediator (not a full
+universal property) and carrier-parametricity over a fixed grade
+poset (not model-independence).
+====
+
+toc::[]
+
+== Side-by-side axis table
+
+[cols="2,2,2,2,2,2", options="header"]
+|===
+| Axis | Granule | Atkey QTT | Choreographic (Hirsch et al.) | Linear Haskell | Echo (narrowed)
+
+| Primary discipline
+| Graded modality `□_r A`
+| Quantity `0 / 1 / ω` on bindings
+| Role-projected processes
+| Linearity on function arrows
+| Information loss along non-injective maps
+
+| Judgmental level
+| New judgment (coeffect)
+| New judgment (resource use count)
+| New projection / endpoint judgment
+| New arrow type (`%1 →`)
+| *Derived Σ-type* — no new judgment
+
+| Categorical anchor
+| Graded comonad on a coeffect category
+| LCC with quantitative semiring action
+| Symmetric monoidal endpoint categories / projection
+| Symmetric monoidal closed (linearity fragment)
+| *Homotopy fibre + thin-poset reindexing* (definitional; pointwise pullback)
+
+| Composition law shape
+| `□_r (□_s A) → □_{r·s} A` (graded comonad multiplication)
+| Quantity addition + scaling on binders
+| Choreographic transport along role morphisms
+| Multiplicity tracking through `let`/`case`
+| `degrade : ≤g → GEcho → GEcho` (single thin-poset reindex; *no* nested `D_r D_s`)
+
+| What is enforced
+| Quantitative resource use; coeffect-graded function purity
+| Use-count of every binding at compile time
+| Role-consistent communication; deadlock-freedom
+| Single-use of linear values; resource discipline
+| At affine mode: consumer cannot distinguish two preimages of the same output (`affine-consumer-cannot-distinguish`)
+
+| What is NOT enforced (relevant to comparison)
+| —
+| —
+| —
+| Linearity is *erasable*; affine mode not standard
+| General parametricity (Agda has no primitive); full universal property; nested `D_r D_s`; sectionability of `weaken`
+|===
+
+== Per-comparator subsections
+
+=== Granule (Orchard, Liepelt, Eades et al.)
+
+*Closest similarity.* Both Granule and Echo carry a grade lattice and
+a monotone reindexing operation. Granule's `□_r A` is a graded
+modality with a coeffect algebra; Echo's `GEcho g` carries a
+loss-grade `g` with a `degrade : ≤g → GEcho → GEcho` reindex.
+
+*Key difference.* Granule ships a *full graded comonad*: counit,
+duplication into `□_{r·s} (□_s A)`, the multiplication law, the
+coassociativity diagram. Echo originally claimed this and *walked it
+back* (R-2026-05-18). Echo's current honest structure is a *thin-poset
+reindexing modality* — the grade order is propositional (`≤g-prop`),
+so the would-be coassociativity transport `subst GEcho (⊔g-assoc …)`
+is forced to vanish via the common-upper-bound idiom. No nested
+`D_r D_s` is ever formed. The separating model
+(`EchoSeparating.agda`) makes this precise: removing the single
+hypothesis `≤g-prop` breaks the composition law at a checked
+`true ≢ false`.
+
+*Honest verdict.* Granule is stronger on the modality axis — it is a
+real graded comonad with a real coeffect algebra. Echo is weaker on
+that axis *by deliberate retraction*: the path-independence law holds
+*for exactly one reason*, and that reason is propositional. Echo's
+contribution is on a different axis (information loss with a
+no-section dual), not in competition with Granule's coeffect track.
+
+=== Atkey QTT (Quantitative Type Theory)
+
+*Closest similarity.* Both QTT and Echo are *derived* type systems —
+QTT adds quantity annotations to a dependent type theory without
+changing its judgmental structure beyond the resource semiring; Echo
+is *definitionally* the homotopy fibre `Σ A (λ x → f x ≡ y)` and adds
+no new judgment at all.
+
+*Key difference.* QTT enforces *use-count* at compile time: a binding
+declared at quantity `0` is irrelevant, at `1` is linear, at `ω` is
+unrestricted. The discipline is quantitative. Echo enforces
+*non-distinguishability at affine mode* via contractibility of the
+affine carrier (`affine-canonical`, `affine-all-equal`). The
+discipline is informational: the residue is structurally
+indistinguishable, not just counted.
+
+*Honest verdict.* QTT is the closer relative on the
+"derived-type-theory" axis. It is stronger on quantitative use
+tracking; Echo is stronger on the *consumer-side abstraction barrier*
+at the affine instance — see `EchoAbstractionBarrier.sigma-distinguishes`
+for the negative companion that makes Echo's affine guarantee
+non-trivial. Neither subsumes the other; they decorate the same
+fibration with different information.
+
+=== Choreographic types (Hirsch et al.)
+
+*Closest similarity.* Both choreographic types and Echo's choreographic
+bridge (`EchoChoreo.agda`) carry a notion of role-projected
+transport. Echo ships `applyChoreo-compose` — the per-decoration
+composition law on the role-reachability order — as one of the
+characteristic theorem nominees (`docs/characteristic.adoc`).
+
+*Key difference.* Choreographic types are a *programming-language
+discipline* on distributed processes: the global type projects to
+local endpoint types, and well-typedness guarantees deadlock-freedom
+under appropriate operational semantics. Echo's role decoration is
+*one of five* equivalent decoration layers (graded, linear,
+choreographic, access, cost, search) — all instantiations of the same
+thin-poset reindexing recipe. Echo does not ship operational
+semantics, projection algorithms, or endpoint extraction; it ships
+the *information-flow shape* that all five decorations share.
+
+*Honest verdict.* Choreographic types are dramatically stronger on the
+programming-language axis (operational semantics, projection,
+implementation). Echo is on a different layer: it shows that the
+choreographic *composition* law has the same algebraic shape as the
+graded, linear, access, cost, and search composition laws. The
+contribution is *abstraction-level*, not language-level.
+
+=== Linear Haskell
+
+*Closest similarity.* Both Linear Haskell and Echo's linear bridge
+(`EchoLinear.agda`) distinguish linear from non-linear (affine in
+Echo's case) consumption. Both ship a degrade operation
+(`weaken` in Echo; the implicit linear-to-unrestricted promotion in
+Linear Haskell where allowed).
+
+*Key difference, structural.* Linear Haskell's linearity lives on the
+function arrow (`%1 →`) and is *erasable at runtime*. The linearity
+discipline is a compile-time check against multiplicity tracking
+through `let` and `case`; nothing structural in the runtime
+representation prevents `seq` or other inspection. Echo's
+contractibility argument (`affine-canonical`) is *structural at the
+type level*: the affine carrier has exactly one inhabitant up to
+definitional equality, so even at the value level no consumer can
+distinguish two preimages.
+
+*Key difference, scope.* Linear Haskell does not ship a no-section
+family. Echo's `no-section-weaken` (which is `no-section-collapse-to-residue`)
+proves that *no* function `LEcho affine → LEcho linear` is a section
+of `weaken` — the up-step is provably not just unavailable but
+non-existent.
+
+*Honest verdict.* Linear Haskell is the more useful programming tool;
+Echo's affine layer is the more rigorous proof-theoretic object. They
+sit in different problem spaces.
+
+== What Echo does NOT do
+
+The most credibility-relevant section. Reviewers should not expect
+any of the following from Echo:
+
+* *No graded comonad.* `degrade-via-join` and `degrade-compose` are
+  thin-poset reindexing laws under a propositional order. No nested
+  `D_r D_s` is ever formed; no comonad multiplication exists. The
+  retracted "graded comonad" framing is documented at
+  `docs/retractions.adoc` R-2026-05-18.
+
+* *No full universal property.* `EchoPullback.echo-pullback-univ`
+  proves only a *pointwise, funext-relative* mediator property
+  (`∀ v → m' v ≡ m v`), not the full categorical statement
+  (`m' ≡ m`). The funext-free statement is the strongest form
+  available under `--safe --without-K`.
+
+* *No model-independence.* Pillar D's `EchoRelModel.GradedLossModel`
+  provides *carrier-parametricity over a fixed grade poset* — the
+  comonad laws (in the narrowed-to-reindexing sense) are proved once
+  for any model. This is one structure parametric in the carrier, not
+  multiple independent models agreeing semantically.
+
+* *No general Reynolds parametricity.* Agda has no parametricity
+  primitive. `EchoAbstractionBarrier.affine-consumer-cannot-distinguish`
+  is a *consumer-side free theorem at the headline affine instance*,
+  not a quantified statement over all consumer types and all echo
+  carriers. The instance is non-trivial precisely because the affine
+  carrier is contractible.
+
+* *No conservativity metatheorem.* `docs/echo-types/conservativity.adoc`
+  ships a *postulate-free build that is evidence for*, not a
+  *proof of*, conservativity. The original "irreducibility
+  metatheorem" framing was retracted in R-2026-05-18.
+
+* *No unique-mediator universality for bridges.* The bridges
+  (`EchoJanusBridge`, `EchoTropical`, `EchoCNOBridge`,
+  `DyadicEchoBridge`, `EchoFiberCount`/`EchoThermodynamics*`) are
+  *independent witnesses* of Echo as a canonical loss target, not a
+  single "every loss-tracker maps uniquely into Echo" theorem. Such a
+  uniqueness result would require funext or an axiom and is out of
+  scope.
+
+== What Echo DOES claim
+
+For balance — the affirmative side of the same discipline:
+
+* *Definitional homotopy-fibre identity.* `EchoFiberBridge.echo↔fib`
+  pins `Echo f y` as definitionally equal to `fib f y`, both
+  round-trips `refl`. Owning the deflationary admission is a
+  credibility asset.
+
+* *No-section family across 5 decoration layers.* See the aggregate
+  row in `docs/theorem-index.md`. Each decoration *separately*
+  refuses the section that a raw Σ would admit.
+
+* *Per-decoration composition law lands by the same recipe in
+  6 layers.* graded, linear/affine, choreographic, access, cost,
+  search. See `degrade-laws` aggregate row in `theorem-index.md`.
+
+* *Consumer-side abstraction barrier at the affine instance.* The
+  Echo interface at affine mode does not export `proj₁`, and that
+  refusal is structurally enforced by the contractibility of the
+  affine carrier. The Σ-projection counter-program in
+  `EchoAbstractionBarrier.sigma-distinguishes` is the concrete
+  artefact that makes the refusal non-trivial.
+
+* *Five-pillar establishment programme.* Pillars A–D landed (with
+  narrowings); E in progress. See `docs/echo-types/establishment-plan.adoc`.
+
+== Cross-references
+
+* The retraction discipline that governs the narrowed claims here:
+  `docs/retractions.adoc` R-2026-05-18.
+* Sceptic-facing answer to the "is this just Σ?" question, organised
+  under five demands: `core/skepticisms/is-this-just-sigma-types.md`
+  and `docs/echo-types/sigma-distinctness-map.adoc`.
+* The abstraction-barrier theorems referenced above:
+  `proofs/agda/EchoAbstractionBarrier.agda` +
+  `docs/echo-types/abstraction-barrier.adoc`.
+* Establishment-plan thesis and the five pillars:
+  `docs/echo-types/establishment-plan.adoc`.
+* Lane 1 close-out criterion: `roadmap.adoc` §Lane 1. This
+  comparator artefact is item #3 of three.

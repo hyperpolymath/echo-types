@@ -1,0 +1,143 @@
+= Walkthrough 2: epistemic erasure with honest bound
+:toc: macro
+:toclevels: 2
+:sectnums:
+:icons: font
+
+[.lead]
+Lane 5 Walkthrough 2 per `tutorial/README.adoc`. Worked example
+landing 2026-05-27 as the second tutorial walkthrough; targets the
+"does echo-types prove key zeroing?" category-error question that a
+sceptic walking into the repo will ask first.
+
+[IMPORTANT]
+====
+*This walkthrough is NOT a claim that in-memory bytes of the seed
+have been zeroed.* It is a *type-level* guarantee that no pure Agda
+function reconstructs the seed from the residue echo alone, when
+the seed has been forgotten via lowering to a residue carrier.
+Conflating these is a category error a sceptic will catch — and
+exactly the kind of mistake the project's retraction discipline
+(`docs/retractions.adoc` R-2026-05-18) exists to prevent. The
+opening of `EpistemicErasure.agda` repeats this disclosure with the
+same wording so a reader who sees the code first sees the bound
+first.
+====
+
+toc::[]
+
+== What this walkthrough proves
+
+A small concrete KDF (`kdf : Seed → Key`) maps a 4-element `Seed`
+to a 2-element `Key`, two seeds per key. The walkthrough's headline
+moves are:
+
+. *`seeds-distinct-at-k0`* — the payload of `Echo kdf k0` is the
+  *seed*, not the key. Two genuinely distinct seeds (`s00` and
+  `s10`) produce two genuinely distinct echoes of the same key.
+  Without this, "Echo kdf k retains the seed at the type level"
+  would be vacuous.
+. *`no-recovery-from-residue`* — re-export of
+  `EchoResidue.no-section-collapse-to-residue` lifted into the KDF
+  reading. Once the seed has been forgotten via
+  `EchoR ⊤ TrivialCert tt`, no pure Agda function reconstructs the
+  original `Echo kdf k`. The proof structure is the existing
+  Bool-collapse no-section; the KDF walkthrough's contribution is
+  the *reading* — that this is what "epistemic erasure of the seed"
+  means in echo-types' vocabulary.
+
+Both are pinned in `tutorial/epistemic_erasure/Smoke.agda`. The
+build is `--safe --without-K`, zero postulates.
+
+== What this walkthrough does NOT prove
+
+The bottom of `EpistemicErasure.agda` carries a *matched negative*
+block listing four properties one might want and that this
+walkthrough does *not* give. They are marked as `NotProved-*` type
+aliases (each defined as `⊤`) so a `grep NotProved` in the
+walkthrough catches every category-error claim a sceptic might
+bring and the source tells them honestly that the claim is out of
+scope rather than silently proved-or-not:
+
+* `NotProved-byteZeroing` — a runtime claim about memory contents.
+  The walkthrough is type-level; engineering erasure is the
+  caller's responsibility (wipe-on-drop allocators, overwriting
+  page memory, etc.).
+* `NotProved-cryptographicOneWayness` — `kdf` is *not* a one-way
+  function in any cryptographic sense. The "no recovery" here is
+  from the residue echo alone, not from the key together with side
+  information.
+* `NotProved-collisionResistance` — the walkthrough deliberately
+  *uses* collisions (two seeds per key); that is the source of the
+  no-section. A collision-resistant KDF would defeat the very
+  argument being made.
+* `NotProved-seedDistribution` — seeds are a 4-element data type,
+  not random bytes; nothing here speaks to entropy.
+
+All four are real properties one might want; none of them is what
+`no-recovery-from-residue` gives. The honest scope is: a type-level
+guarantee inside `--safe --without-K` Agda, for a pure function with
+only the residue as input.
+
+== Why this walkthrough exists
+
+Three reasons recorded in `tutorial/README.adoc` §"Walkthrough 2 >
+Why this walkthrough exists":
+
+. *Sceptics arrive asking the wrong question.* The first question a
+  security-curious reader brings is "does echo-types prove key
+  zeroing?". The honest answer is "no — and here is what it *does*
+  prove, before that miscommunication takes root in any write-up
+  of echo for an applied audience".
+. *Concrete enough to read end-to-end.* A 4-seed / 2-key universe
+  fits on one screen; the no-section reduces to an existing repo
+  lemma; the matched-negative is part of the source not a footnote
+  somewhere else.
+. *Inherits the disclosure discipline from Walkthrough 1.* Same
+  honest-bound block at the top, same matched-negative block at
+  the bottom — readers walking through the tutorial track in
+  order encounter the discipline twice in different domains, which
+  is the point of having a tutorial track at all.
+
+The walkthrough is *not* trying to invent a new no-section theorem;
+the load-bearing lemma was already in `EchoResidue.agda`. What it
+*is* trying to do is teach the reading of that lemma in a KDF
+context so that the next person to write about echo-types for an
+audience that cares about epistemic erasure does not over-claim.
+
+== Build
+
+[source,bash]
+----
+agda --library-file=/tmp/agda-libs -i . -i proofs/agda \
+     tutorial/epistemic_erasure/Smoke.agda
+
+agda --library-file=/tmp/agda-libs -i . -i proofs/agda \
+     tutorial/All.agda
+----
+
+Both exit 0 under `--safe --without-K` with zero postulates.
+
+== References
+
+* `proofs/agda/Echo.agda` — `Echo` itself
+* `proofs/agda/EchoCharacteristic.agda` — `collapse`, `echo-true`,
+  `echo-false`, `echo-true≢echo-false`
+* `proofs/agda/EchoResidue.agda` — `EchoR`, `TrivialCert`,
+  `collapse-to-residue`, `no-section-collapse-to-residue` (the
+  load-bearing lemma this walkthrough re-exports)
+* `tutorial/region_exit_audit/README.adoc` — Walkthrough 1, sibling
+  walkthrough whose honest-bound + matched-negative discipline this
+  one inherits
+* `tutorial/README.adoc` — Lane 5 scaffold
+* `roadmap.adoc` §"Lane 5" — the lane this walkthrough is the
+  second realisation of
+* `docs/retractions.adoc` R-2026-05-18 — the discipline the
+  honest-bound disclosure inherits
+
+== Status
+
+LANDED 2026-05-27 as the second Lane 5 walkthrough. Walkthrough 3
+(provenance / debugging) also LANDED 2026-05-27 — see
+`tutorial/provenance_debugging/README.adoc`. The originally-
+scaffolded Lane 5 triplet is complete in Agda.

@@ -63,7 +63,7 @@ affine-all-equal e1 e2 = trans (affine-canonical e1) (sym (affine-canonical e2))
 -- linearity decoration: weakening between modes commutes with
 -- transitive composition of the mode-ordering. See
 -- docs/echo-types/composition.md §6 (decoration commuting) and
--- docs/echo-types/roadmap.md "Per-decoration composition lemmas".
+-- the degrade-law family aggregate row in docs/theorem-index.md.
 --
 -- The mode ordering is the smallest reflexive-and-`linear≤affine`
 -- relation: linear ⊑ linear, linear ⊑ affine, affine ⊑ affine. The

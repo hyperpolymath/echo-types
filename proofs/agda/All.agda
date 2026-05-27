@@ -15,6 +15,7 @@ open import EchoExamples
 open import EchoChoreo
 open import EchoEpistemic
 open import EchoLinear
+open import EchoAbstractionBarrier
 open import EchoGraded
 open import EchoTropical
 open import AntiEchoTropical
@@ -106,6 +107,9 @@ open import Ordinal.Buchholz.IteratedExtendedOrder
 open import Ordinal.Buchholz.RankBrouwer
 open import Ordinal.Buchholz.RankPartial
 open import Ordinal.Buchholz.RankPow
+open import Ordinal.Buchholz.RankAdm
+open import Ordinal.Buchholz.RankLex
+open import Ordinal.Buchholz.HeadOmega
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
 open import Ordinal.Buchholz.RecursiveSurfaceBudget

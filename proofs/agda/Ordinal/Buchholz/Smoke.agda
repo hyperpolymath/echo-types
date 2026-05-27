@@ -342,3 +342,60 @@ open import Ordinal.Buchholz.VeblenObligations using
   ; dec-+2-plus-right
   ; dec-ψα-psi-arg
   )
+
+-- Lane 3 active-push slice 2026-05-26 (own block per CLAUDE.md
+-- Working rules): admissibility-aware rank `rank-adm`, the
+-- pointwise dominance `rank-pow≤rank-adm`, the headline ψα
+-- primitive `rank-mono-<ᵇ⁺-ψα-from-pow` that closes 1 of the 2
+-- ψ-admissibility-blocked constructor cases, and bpsi-positivity.
+-- The remaining `<ᵇ-ψΩ≤` ν=μ case is documented as still-open
+-- with the design follow-up options listed in `RankAdm.agda`'s
+-- own preamble.
+open import Ordinal.Buchholz.RankAdm using
+  ( rank-adm
+  ; rank-adm-bzero
+  ; rank-adm-bOmega
+  ; rank-adm-bplus
+  ; rank-adm-bpsi
+  ; rank-adm-pos-bpsi
+  ; rank-pow≤rank-adm
+  ; rank-mono-<ᵇ⁺-ψα-from-pow
+  )
+
+-- Lane 3 follow-on slice 2026-05-27 (own block per CLAUDE.md
+-- Working rules): lex-pair rank `rank-lex` discharging the
+-- `<ᵇ-ψΩ≤` ν=μ boundary case that `rank-adm` left structurally
+-- open.  Option (A) from `RankAdm.agda` §"<ᵇ-ψΩ≤-still-open"
+-- (lex pair over `Ord × Ord`).  Headline
+-- `rank-mono-<ᵇ-ψΩ≤-lex` covers both ν<μ and ν=μ sub-cases.
+open import Ordinal.Buchholz.RankLex using
+  ( RankLex
+  ; mkLex
+  ; _<lex_
+  ; <lex-first
+  ; <lex-second
+  ; rank-lex
+  ; rank-lex-bzero
+  ; rank-lex-bOmega
+  ; rank-lex-bpsi
+  ; rank-lex-bplus
+  ; rank-mono-<ᵇ-ψΩ≤-lex
+  )
+
+-- Lane 3 head-Ω first slice 2026-05-27 evening (own block per
+-- CLAUDE.md Working rules): the leading-Ω-index head function
+-- `head-Ω : BT → OmegaIndex` plus four definitional sanity lemmas,
+-- one per `BT` constructor.  No rank-mono in this slice — the
+-- domination lemma `rank-pow t <′ ω-rank-pow-succ (head-Ω t)` and
+-- the headline `<ᵇ-+1` joint-bplus discharge are explicitly deferred
+-- to follow-on slices.  First piece of option (A) per
+-- `RankPow.agda`'s preamble and `docs/echo-types/buchholz-rank-
+-- obstruction.adoc` §"What remains open".
+open import Ordinal.Buchholz.HeadOmega using
+  ( head-Ω
+  ; head-Ω-bzero
+  ; head-Ω-bOmega
+  ; head-Ω-bplus
+  ; head-Ω-bpsi
+  ; head-Ω-bplus-left
+  )

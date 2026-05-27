@@ -1,514 +1,444 @@
-= echo-types Proof Roadmap
+= echo-types Roadmap
+:toc: macro
+:toclevels: 3
+:sectnums:
+:sectnumlevels: 3
+:icons: font
+
+[.lead]
+Single canonical roadmap for the echo-types project. As of 2026-05-26
+this file replaces the previously fragmented set of overlapping
+roadmaps (`docs/echo-types/roadmap.md`, `docs/PRIORITIZED_PROOF_ROADMAP.md`,
+`docs/ProofRoadmap.md`, `docs/WORK_PLAN.md` — all deleted in this
+sweep; CLAUDE.md retains the per-session rung-consolidation ledger,
+`roadmap-gates.adoc` retains the identity-claim gates,
+`docs/echo-types/establishment-plan.adoc` retains the five-pillar
+plan).
+
+[IMPORTANT]
+====
+*Reading order.* This file tracks **lanes** — which lane is currently
+load-bearing, what closes each one, what is parked. The gates
+(`roadmap-gates.adoc`) define the identity claim's falsifier. The
+pillars (`docs/echo-types/establishment-plan.adoc`) define the path to
+type-theoretic standing. CLAUDE.md is the session-level rung ledger.
+
+*Retraction discipline.* The single most credible thing about this
+project is `docs/retractions.adoc` R-2026-05-18: under adversarial
+review, four headline claims were narrowed (full universal property →
+funext-relative pointwise mediator; graded comonad → thin-poset
+reindexing modality; model-independence → carrier-parametricity over a
+fixed grade poset; conservativity metatheorem → postulate-free build
+that is evidence-for, not proof-of, conservativity). Narrowing is a
+feature, not a defect. Every lane below carries an explicit
+*retraction-watch* line to prevent re-overclaim.
+====
+
+toc::[]
 
 == Mission
 
-Establish whether echo types are a genuine proof-theoretic concept, not merely a naming layer over fibers.
+Establish whether echo types are a genuine type-theoretic concept
+comparable to choreographic, linear, and graded modal type systems —
+not merely a naming layer over fibres.
 
 Guiding claim:
 
-*echo types formalize irreversible computation with retained constraints on what was lost.*
+*echo types formalise irreversible computation with retained
+constraints on what was lost, occupying the same conceptual
+neighbourhood as graded modalities (Granule / QTT), choreographic
+types (Hirsch et al.), and substructural disciplines (Linear Haskell /
+Atkey QTT).*
 
 Decision policy:
 
-* If the claim can be established with precise theorems and examples, continue and scale.
-* If it cannot be established, document failure clearly and stop the identity claim.
-
-Document map (to keep status/docs aligned):
-
-* `README.md` / `readme.adoc`: current snapshot and build entry points.
-* `roadmap.adoc` (this file): canonical milestone log for the echo-theory track.
-* `docs/buchholz-plan.adoc`: canonical status for the ordinal/Buchholz WF track.
-* `docs/echo-types/roadmap.md`: gated and cross-repo follow-up queue.
-
-== Current Foundation (Established)
-
-File: `proofs/agda/Echo.agda`
-
-Already proved:
-
-* `Echo` definition via sigma/fiber
-* `echo-intro`
-* `map-over`
-* `map-over-id`
-* `map-over-comp`
-* `map-square`
-
-These are the minimal structural laws for functorial behavior over fixed codomain and commuting-square transport.
-
-== Workstream A: Characteristic Echo Theorems
-
-Goal: prove results that express *structured loss*, not only generic sigma manipulation.
-
-Target theorem family:
-
-1. Non-injective with retained witness:
-   prove explicit examples where `x₁ ≠ x₂` and `f x₁ ≡ f x₂`, but echoes retain distinguishing constraints.
-2. Irreversible but not forgetful:
-   formalize that plain output `y : B` underdetermines source while `Echo f y` remains proof-relevant.
-3. Collapse with constrained preimage:
-   model collapse maps and prove retained witness class constraints.
-4. Distinct echoes over same visible result:
-   for fixed `y`, exhibit non-identical echo inhabitants carrying different source constraints.
-
-Pass condition:
-
-* at least 3 nontrivial theorems above compile and are phrased without ad hoc postulates.
-
-Fail condition:
-
-* all attempted statements reduce to tautological repackaging with no additional inferential content.
-
-== Workstream B: Weakened Echo / Residue Types
-
-Goal: formalize “not full witness, but certified residue”.
-
-Planned form:
-
-[source]
-----
-EchoR f R y := Σ (r : R y) , Certifies r
-----
-
-where `R y` captures residue-level evidence and `Certifies` links it to preimages.
-
-Pass condition:
-
-* at least one residue construction that is strictly weaker than full fiber witness and still supports useful inference.
-
-Fail condition:
-
-* residue variants collapse either to full fibers or to vacuous annotations.
-
-== Workstream C: Canonical Examples
-
-Goal: show echo types solve examples better than nearby notions.
-
-Priority examples:
-
-1. Squaring `x ↦ x²`: visible `9`, hidden sign provenance.
-2. Structured projection: state projection with retained constraints on forgotten fields.
-3. Quotient-like map: identify equivalence classes while retaining certified class-level residue.
-4. Scar/collapse examples: retained witness under collapse transformations.
-
-Pass condition:
-
-* examples are executable as Agda definitions/lemmas, not prose only.
-
-== Workstream D: Semantic Bridge
-
-Goal: connect DTT construction to categorical semantics without overcommitting to HoTT.
-
-Deliverables:
-
-* slice-over-fixed-codomain reading of `map-over`
-* commuting-square transport reading of `map-square`
-* explicit statement of assumptions used (intensional equality only unless otherwise stated)
-
-Pass condition:
-
-* semantics map cleanly onto existing proofs, with no hidden extensionality assumptions.
-
-== Milestones
-
-M1. Foundation complete (DONE): core echo/fiber functoriality module compiles.
-
-M2. Characteristic theorem pack:
-
-* add `proofs/agda/EchoCharacteristic.agda` (or similar)
-* compile cleanly
-
-Status: DONE (2026-04-18)
-
-Delivered in `proofs/agda/EchoCharacteristic.agda`:
-
-* `collapse-non-injective`
-* `no-section-collapse`
-* `echo-true≢echo-false`
-* `visible-constraint`
-* `state₁≢state₂`
-* `no-section-visible`
-* `transport-visible-not`
-
-M3. Residue formalization:
-
-* add `proofs/agda/EchoResidue.agda`
-* prove at least one strict weakening result
-
-Status: DONE (2026-04-18)
-
-Delivered in `proofs/agda/EchoResidue.agda`:
-
-* generic residue echo `EchoR`
-* generic lowering map `echo-to-residue`
-* collapse-instance lowering `collapse-to-residue`
-* strict weakening witness `strict-weakening-collapse`
-* non-recoverability theorem `no-section-collapse-to-residue`
-
-M4. Example suite:
-
-* add `proofs/agda/EchoExamples.agda`
-* encode and prove at least 3 canonical cases
-
-Status: DONE (2026-04-18)
-
-Delivered in `proofs/agda/EchoExamples.agda`:
-
-* squaring/sign-loss model (`square9`, `echo-plus3`, `echo-minus3`)
-* structured projection model (`visible`, `visible-constraint`, `stateA≢stateB`)
-* quotient/collapse model (`quot`, `quot-echo-classification`)
-* collapse residue identification (`collapse-residue-identifies`)
-
-M5. Assessment report:
-
-* add `docs/assessment.adoc` with binary conclusion:
-  * established as distinct concept
-  * not established (end-of-story)
-
-Status: DONE (2026-04-18)
-
-Delivered in `docs/assessment.adoc` with binary verdict.
-
-M6. Choreographic bridge:
-
-* add `proofs/agda/EchoChoreo.agda`
-* define role-indexed echoes via global-to-local projections
-* prove transport along commuting squares
-
-Status: DONE (2026-04-18)
-
-Delivered in `proofs/agda/EchoChoreo.agda`:
-
-* `RoleEcho`
-* `client-non-injective`, `server-non-injective`
-* `client-to-server`
-* `client-stability`
-* `client-preimage-class`
-
-M7. Epistemic bridge:
-
-* add `proofs/agda/EchoEpistemic.agda`
-* define indistinguishability and echo-indexed knowledge
-* prove non-trivial non-knowledge examples
-
-Status: DONE (2026-04-18)
-
-Delivered in `proofs/agda/EchoEpistemic.agda`:
-
-* `Indist`
-* `Knows`
-* `knowledge-monotone`
-* `not-knows-server-true-at-client-true`
-* `shared-echo-from-indist`
-* `indist-from-two-echoes`
-
-M8. Linear/affine bridge:
-
-* add `proofs/agda/EchoLinear.agda`
-* formalize strict weakening from full witness to affine residue
-
-Status: DONE (2026-04-18)
-
-Delivered in `proofs/agda/EchoLinear.agda`:
-
-* `Mode`, `LEcho`
-* `weaken`
-* `strict-linear-example`
-* `no-section-weaken`
-
-M9. Graded bridge:
-
-* add `proofs/agda/EchoGraded.agda`
-* define grade order and compositional degradation
-
-Status: DONE (2026-04-18)
-
-Delivered in `proofs/agda/EchoGraded.agda`:
-
-* `Grade`, `_≤g_`
-* `degrade`
-* `degrade-comp`
-* `⊔g-assoc`
-
-M10. Tropical bridge:
-
-* add `proofs/agda/EchoTropical.agda`
-* prove distinct candidates can share visible tropical value but retain distinct echoes
-
-Status: DONE (2026-04-18)
-
-Delivered in `proofs/agda/EchoTropical.agda`:
-
-* `score`
-* `tropical-non-injective`
-* `IsArgmin`, `TropEcho`
-* `distinct-candidates-same-visible-distinct-echo`
-
-== Controlled Scope Broadening (A-D)
-
-Status: DONE (2026-04-18)
-
-Phase A (`proofs/agda/EchoIndexed.agda`):
-
-* role-indexed echoes `Echoᵢ`
-* `echoᵢ-intro`, indexed transport `map-role-indexed`
-* trace-level provenance examples (`echo-user-ok`, `echo-auditor-ok`)
-
-Phase B (`proofs/agda/EchoEpistemicResidue.agda`):
-
-* residue-based epistemic echoes via `EchoR`
-* lowering `to-epistemic` from full echo to residue
-* strict weakening witness (`no-section-to-epistemic`, `strict-epistemic-weakening`)
-
-Phase C (`proofs/agda/EchoRelational.agda`):
-
-* relational semantics `EchoStep Step o = Σ s , Step s o`
-* relational transport (`map-rel`, `map-rel-id`, `map-rel-comp`, `map-rel-square`)
-* nondeterministic fiber example (`StepND`, distinct echoes over `true`)
-
-Phase D (`proofs/agda/EchoCategorical.agda`):
-
-* slice packaging (`SliceHom`, `slice-act`, `slice-act-comp`)
-* relational/fibration packaging (`Fiber`, `Total`, `π`)
-* projection-fiber bridge (`fiber-to-echo`, `echo-to-fiber`)
-
-Cross-phase coherence (`proofs/agda/EchoScope.agda`):
-
-* graph roundtrips (`graph-roundtrip₁`, `graph-roundtrip₂`)
-* indexed-to-relational bridge (`indexed-to-graph`)
-* relational-to-residue bridge (`rel-to-residue`)
-* slice/fibration coherence (`slice-act-via-relmap`, `fiber-echo-to-residue`)
-
-Single-shot build entrypoint (`proofs/agda/All.agda`):
-
-* imports the full proof suite for one-command checking
-
-M11. Full-suite gate:
-
-* compile every module under `proofs/agda` from a clean `_build` cache
-* ensure no residual failing module after scope broadening
-
-Status: DONE (2026-04-18)
-
-Gate command:
-
-[source,bash]
-----
-cd /var/mnt/eclipse/repos/echo-types
-find _build/2.8.0/agda/proofs/agda -type f -name '*.agdai' -delete 2>/dev/null || true
-cd proofs/agda
-for f in *.agda; do agda -i . "$f"; done
-----
-
-M12. Cross-bridge integration:
-
-* add `proofs/agda/EchoIntegration.agda`
-* prove a theorem combining choreographic knowledge preservation with graded
-  controlled degradation behavior
-
-Status: DONE (2026-04-18)
-
-Delivered in `proofs/agda/EchoIntegration.agda`:
-
-* `knowledge-preserved-under-choreo`
-* `merged-at-residue`
-* `no-recovery-after-residue-degrade`
-* `knowledge-and-controlled-degradation`
-
-== Workstream E: Ordinal / Buchholz Infrastructure
-
-Goal: stand up a syntactic Buchholz-style collapsing notation system
-that is *separate from* the echo/fiber core, staged so that each
-milestone compiles before the next is attempted. This is the layer
-that must exist before any claim about `ψ(Ω_Ω)` is even stateable.
-
-Full plan: `docs/buchholz-plan.adoc`.
-
-E1. Ordinal syntax core (M1-equivalent for this workstream):
-
-* add `proofs/agda/Ordinal/Base.agda` — toy ordinal-term type `OT`
-  with constructors `zero`, `omega`, `plus`, `psi`
-* no semantics asserted; structural inequalities only
-
-Status: DONE (2026-04-22)
-
-Delivered in `proofs/agda/Ordinal/Base.agda`:
-
-* `OT`, `zero`, `omega`, `plus`, `psi`
-* `one`, `ω^ω`
-* `zero≢omega`, `zero≢one`, `omega≢one`
-* `psi-injective`, `plus-injective`
-
-E2. ℕ-staged closure discipline:
-
-* add `proofs/agda/Ordinal/Closure.agda` — staged closure family
-  `C : ℕ → OT → Set` with the Buchholz-style backward-referencing
-  `c-psi` rule
-* prove the headline lemma *before any ψ-value is defined*:
-  `C-monotone : ∀ {m n t} → m ≤ n → C m t → C n t`
-* pin `C-monotone` in `Smoke.agda`
-
-Status: DONE (2026-04-22)
-
-Delivered in `proofs/agda/Ordinal/Closure.agda`:
-
-* `C` with constructors `c-zero`, `c-omega`, `c-plus`, `c-psi`
-* `C-monotone` — closure monotonicity under stage increase
-* `C-refl-stage` — immediate corollary via `≤-refl`
-* `psi-omega-at-1`, `psi-omega-at-2` — worked instances
-
-Pass condition for E2:
-
-* `C-monotone` compiles without postulates
-* full-suite and smoke CI jobs both still pass
-
-E3. Cantor normal form:
-
-* add `proofs/agda/Ordinal/CNF.agda` — CNF fragment below ε₀
-* prove trichotomy of the CNF strict order
-
-Status: DONE (2026-04-24)
-
-Delivered in `proofs/agda/Ordinal/CNF.agda`:
-
-* `CNF`, `_<ᶜ_`
-* `<ᶜ-irrefl`, `<ᶜ-trans`
-* `cnf-trichotomy`
-* worked witnesses `one<ᶜtwo`, `two<ᶜω`, `one<ᶜω`
-
-E4. Pedagogical ψ:
-
-* add `proofs/agda/Ordinal/PsiSimple.agda`
-* prove `psi-notin-C` and `psi-least` on the ℕ-staged closure
-
-Status: DONE (2026-04-24)
-
-Delivered in `proofs/agda/Ordinal/PsiSimple.agda`:
-
-* `psi-notin-C`
-* `psi-at-1`
-* `psi-least`
-
-E5. Buchholz fragment (ν ≤ ω):
-
-* add `proofs/agda/Ordinal/Buchholz/{Syntax,Closure,Psi}.agda`
-* prove `Cν-monotone`, `psiν-notin-Cν`, `psiν-least-gap`
-
-Status: DONE (2026-04-24)
-
-Delivered in `proofs/agda/Ordinal/Buchholz/{Closure, Psi}.agda`:
-
-* `Cν-monotone`, `Cν-index-monotone`, `Cν-monotone-both`
-* `psiν-notin-Cν`, `psiν-stage-lb`, `psiν-index-bound`
-* `psiν-at-succ` — constructive entry at stage `suc k` from `Cν ν k β`
-* `psiν-least-gap` — least-gap decomposition `(k, suc k ≤ m, Cν ν k β)`
-
-E6. Target expressibility:
-
-* add `proofs/agda/Ordinal/Buchholz/Examples.agda`
-* formalise the first named milestones in order:
-  `ψ_0(0)`, `ψ_0(1)`, `ψ_0(Ω)`, `ψ_0(Ω_ω)` (Bachmann–Howard),
-  then the term corresponding to `ψ(Ω_Ω)` under the chosen reading
-
-Status: DONE (2026-04-24)
-
-Delivered in `proofs/agda/Ordinal/Buchholz/Examples.agda` + `WellFormed.agda`:
-
-* `bh-psi0-omega1`, `bh-psi0-omegaω` (Bachmann–Howard target term)
-* `psi0-expands`, `psi0-Omega1-target`
-* `BH`, `BH-wf`
-* `psi-OmegaOmega`, `psi-OmegaOmega-wf` (intended `ψ(Ω_Ω)` reading)
-
-E7. Echo bridge:
-
-* add `proofs/agda/EchoOrdinal.agda` — collapse-step as non-injective
-  map, echo-indexed retention of pre-collapse provenance
-* prove `ordinal-collapse-non-injective`,
-  `distinct-provenances-same-visible`, and a `no-section`-style
-  theorem over collapse
-
-Status: DONE (2026-04-24)
-
-Delivered in `proofs/agda/EchoOrdinal.agda`:
-
-* `ordinal-collapse : BT → OmegaIndex` — syntactic visible-level map
-* `ordinal-collapse-non-injective`
-* `ordinal-echo-left`, `ordinal-echo-right`,
-  `ordinal-echo-left≢ordinal-echo-right`
-  (aliased as `distinct-provenances-same-visible`)
-* sharper same-Ω-index ψ-argument collapse:
-  `ordinal-psi-arg-bzero`, `ordinal-psi-arg-omega1`,
-  `ordinal-psi-args-distinct`, `ordinal-psi-arg-collapse-agree`,
-  `ordinal-echo-psi-distinct`
-* `no-section-ordinal-collapse` — no right-inverse to collapse
-* `IsZeroSource`, `ordinal-collapse-classification` —
-  Omega0-preimage classification into the four BT heads
-
-M13. Headline-theorem smoke gate:
-
-* add `proofs/agda/Smoke.agda` pinning load-bearing names per bridge module
-  via `using` clauses
-* wire it into `All.agda` and a dedicated CI step so silent renames or
-  deletions fail CI fast even if the rest of the suite still typechecks
-* harden `.github/workflows/agda.yml`: SHA-pin checkout, add SPDX header,
-  set workflow-level `permissions: read-all`
-
-Status: DONE (2026-04-19)
-
-== Deferred Research Track
-
-These are open synthesis problems graduated from `docs/next-questions.adoc`.
-They are dissertation-scale or require extensions beyond the current
-`--safe --without-K` core, so they sit on the roadmap rather than on the
-near-term backlog. Each entry records the gap, what would close it, and
-why it is parked.
-
-R1. Unified dependent linear + choreographic + epistemic calculus
-
-* Gap: bridges exist pairwise but not as one typed calculus enforcing
-  usage discipline + role projection + knowledge operators simultaneously.
-* Closure: a core syntax/judgment layer with preservation/progress-style
+* If the claim is established at recognised type-theoretic standing,
+  continue and scale into broader research directions.
+* If it is refuted, narrow honestly (per the existing retraction
+  discipline) and either continue under the narrowed claim or stop the
+  identity claim and retain the suite as Agda exposition.
+
+== Identity claim verdict (per tag)
+
+The gates are reassessed at each tagged release. Verdict below is
+current as of `main` HEAD; check `docs/retractions.adoc` for the
+narrowing history and `roadmap-gates.adoc` for the test discipline.
+
+[cols="2,1,3", options="header"]
+|===
+| Gate | Status | Anchor
+
+| Gate 1: Distinct phenomenon
+| PROVISIONAL
+| `docs/adjacency/` — 5/5 REFINED adjacency notes per `docs/echo-types/decisions/gate1-adjacency-refresh.adoc`.
+
+| Gate 2: Characteristic theorem family
+| PASSED (narrowed)
+| `docs/characteristic.adoc` — 4 nominees, 3 survive threshold. Aggregate degrade-law family pinned in `docs/theorem-index.md`.
+
+| Gate 3: Canonical examples
+| PROVISIONAL
+| Positive examples landed (`EchoExample*.agda`); matched-negative companions planned (Track C, Lane 2).
+|===
+
+No gate is currently FAILED. No gate is currently STABLE-ESTABLISHED;
+re-assessment cadence is per tagged release.
+
+== Lanes
+
+*Cap = 5 open lanes.* Adding a 6th requires closing or parking an
+existing one. Each lane carries a falsifiable close-out criterion
+audited at every rung consolidation per CLAUDE.md §"Rung-consolidation
+policy". Closed lanes move to §"Closed lanes" with the closing artefact
+named.
+
+Priority ordering reflects the load-bearing question as of 2026-05-26:
+*expeditious type-theoretic grounding alongside choreographic, linear,
+and graded modal types*. Lanes are not equally important; Lane 1
+gates the project's external standing and gets the time.
+
+=== Lane 1 [LOAD-BEARING] — Type-theoretic grounding
+
+*Load-bearing question.* Does Echo land, externally, in the same
+conceptual neighbourhood as Granule (graded modal), Atkey QTT, the
+Hirsch et al. choreographic types, and substructural Linear Haskell —
+and is that landing both *visible* (paper-form, citable) and
+*defensible* (survives a referee pass)?
+
+*Bottleneck.* Pillar E (the paper) has `[EXPAND]` tags blocking
+submission. The consumer-side abstraction-barrier proof (Track B,
+under Lane 2) is the one new Agda artefact that materially strengthens
+the paper's narrowed-but-honest claim against the "is this just Σ?"
+objection.
+
+*Close-out criterion (falsifiable).* All three hold:
+
+. `docs/echo-types/paper.adoc` `[EXPAND]` tag 2 (related-work pass —
+  Granule / QTT, Uustalu–Vene comonads, coeffects, choreographic types,
+  lens/optic vs witness-transport leg) cleared. *(Tag 1, background /
+  notation primer, cleared 2026-05-20 via PR #73 — section "Background
+  and notation" in `paper.adoc`, covering type-theoretic setting +
+  HoTT fibres + coeffect / graded-modality lineage + thin-poset
+  reindexing modality + notation table, all within the R-2026-05-18
+  narrowing.)*
+. *LANDED 2026-05-26.* `proofs/agda/EchoAbstractionBarrier.agda`
+  ships the consumer-side free theorem at the affine instance
+  (`affine-consumer-cannot-distinguish`) + the raw-Σ counter-program
+  (`sigma-distinguishes`). Pinned in `Smoke.agda` under own
+  `using` block; wired into `All.agda`. Full suite exits 0 under
+  `--safe --without-K`. Companion essay
+  `docs/echo-types/abstraction-barrier.adoc`.
+. *LANDED 2026-05-26.* `docs/echo-types/comparators.adoc` ships the
+  single-page axis-by-axis comparison of Echo (narrowed) vs Granule,
+  Atkey QTT, Hirsch et al. choreographic types, and Linear Haskell.
+  Honest "What Echo does NOT do" section foregrounds the
+  R-2026-05-18 narrowings.
+
+*Artefacts (existing).* Pillars A–D landed (`EchoFiberBridge`,
+`EchoPullback`, `EchoSeparating`, `EchoGradedComonad`, `EchoRelModel`).
+`paper.adoc` and `types-abstract.adoc` exist as LIVING DRAFT and
+submission-ready abstract respectively.
+
+*Retraction-watch.* Pillar B's pullback is *pointwise, funext-relative*
+— never describe it as a categorical universal property. Pillar D is
+*carrier-parametricity over a fixed grade poset* — never
+"model-independence". The graded structure is a *thin-poset reindexing
+modality* — never "graded comonad". These three narrowings are the
+load-bearing R-2026-05-18 commitments.
+
+*Owner / cadence.* Claude session work + author-driven write-up.
+Re-checked at every rung consolidation.
+
+=== Lane 2 [ACTIVE] — Echo-vs-Σ identity claim
+
+*Load-bearing question.* Can a sceptic, walking the repo cold,
+convince themselves that Echo is not just renamed Σ within one
+sitting?
+
+*Bottleneck.* Today's session opened this lane; Track A (synthesis
+doc + reviewer-facing AsciiDoc companion + theorem-index aggregates +
+gate cross-links) landed in-session. Tracks B + C remain.
+
+*Close-out criterion (falsifiable).* All three hold:
+
+. *LANDED 2026-05-26.* Track B (consumer-side abstraction barrier) —
+  same artefact named in Lane 1's close-out. (Lane 1 and Lane 2 share
+  this artefact; that is intentional, not duplication.)
+. *LANDED 2026-05-26.* Track C (per-example raw-Σ counter-programs)
+  shipped as `proofs/agda/examples/EchoVsSigma.agda`, pairing each
+  headline example (parser, provenance, abs-int) with the small
+  Σ-misuse it blocks. Builds clean under `--safe --without-K`;
+  pinned in `Smoke.agda` under own `using` block.
+. *LANDED 2026-05-26.* The Gate 2 nominee list is re-audited (Rev 5,
+  `docs/characteristic.adoc` §"Revision-5 re-audit (2026-05-26)") and
+  still crosses the *comfortable* threshold: 4/4 surviving, margin of
+  one above the comfortable bar (≥ 3 of 4). The re-audit explicitly
+  re-checks the post-Rev-4 evidence (EI-2 termination,
+  `characteristic.NonTruncatable` Q2.1, the deliberately broken
+  `characteristic.N5Falsifier`) and finds none of it weakens any
+  surviving nominee.
+
+*Artefacts (landed today).* `core/skepticisms/is-this-just-sigma-types.md`
+(canonical answer doc, 5-section structure mirroring the demands);
+`docs/echo-types/sigma-distinctness-map.adoc` (AsciiDoc reviewer
+companion); `docs/theorem-index.md` (no-section and degrade-law
+aggregate rows); cross-link from `roadmap-gates.adoc` Gate 2 and
+`docs/characteristic.adoc` §"Inherited spec".
+
+*Retraction-watch.* Demand 3 ("categorical universality") must stay
+narrowed — no unique-mediator claim. Demand 4 ("parametricity") must
+be *consumer-side at the affine instance*, not full Reynolds. See
+respective §s in the synthesis doc.
+
+=== Lane 3 [PARALLEL, NOT LOAD-BEARING] — Ordinal / Buchholz
+
+*Echo Core does NOT depend on this lane.* This is a separate
+proof-theoretic research project that happens to share the
+repository. Treat as parallel-independent; Lane 1 progress is never
+gated on Lane 3 progress, and the README + roadmap surface the two as
+separate branches.
+
+*Bottleneck.* Unbudgeted `_<ᵇʳᶠ_` global well-foundedness; 10/13
+constructors closed via the budgeted route + `_<ᵇ⁰_` umbrella per the
+2026-05-20 evening session; 3 constructor cases (`<ᵇ-ψα`, `<ᵇ-ψΩ≤`,
+`<ᵇ-+1` joint-bplus) remain open under documented structural blockers
+(see `docs/echo-types/buchholz-rank-obstruction.adoc`).
+
+*Close-out criterion.* Either:
+
+* the three open constructor cases close via ψ-admissibility rank
+  refinement + leading-Ω-index domination (planned closure work; ~3
+  follow-on slices), unblocking full `rank-pow-mono-<ᵇ⁻` umbrella and
+  thereby `wf-<ᵇʳᶠ`; OR
+* a falsifiable verdict lands stating that the unbudgeted promotion
+  cannot close under `--safe --without-K` for the current `_<ᵇ_`,
+  with the WfCNF-restricted `_<ᵇ⁻_` accepted as the final form.
+
+*Artefacts.* See `docs/buchholz-plan.adoc` and the `Ordinal/Buchholz/`
+subtree. Per-session ledger in CLAUDE.md §"Session arc 2026-05-20".
+
+*Status.* Continue on parallel branches. Lane 1 does not wait.
+
+=== Lane 4 [PARKED] — Bridges-CI
+
+*Unblocking condition.* Lane 1 closes.
+
+*Scope decision (pre-resolved 2026-05-26).*
+`docs/echo-types/decisions/lane-4-bridges-ci-scope.adoc` adopts
+**option A** (separate `echo-bridges-ci` repository pulling
+echo-types and each target as submodules) per the recommendation
+this section already carried. The decision document also names the
+three triggers that would override the choice (all three must hold
+simultaneously) and lays out what option A looks like at unpark
+time, so an unparking session does not re-derive the architecture.
+Lane 4 itself remains PARKED.
+
+*Scope question to resolve when unparking.* End-to-end verified
+bridges to Janus, Tropical, CNO, etc. currently sit as in-tree
+modules (`EchoJanusBridge.agda`, `EchoTropical.agda`, `EchoCNOBridge.agda`,
+`DyadicEchoBridge.agda`) without CI-verified round-trips against the
+target codebases. Two architectural options when unparking:
+
+* A separate `echo-bridges-ci` repository pulling echo-types and each
+  target as submodules; runs the verified-translation lemmas in its
+  own CI. Preserves `--safe --without-K` here.
+* In-tree submodules of the target repos. Tighter coupling but
+  degrades the safety invariants this repo currently maintains.
+
+The first option is preferred unless the user's broader-research-plan
+priorities (per 2026-05-26) explicitly favour tighter integration.
+
+=== Lane 5 [PARKED] — Tutorial / pedagogy
+
+*Unblocking condition.* Lane 1 closes, OR a single "killer
+application" example emerges that justifies a tutorial track on its
+own merit.
+
+*Candidate killer example (suggested 2026-05-26).* A certified
+region-exit audit, modelled on ephapax L3's region-based memory
+discipline, where every `S_Region_Exit` produces a *consumed* Linear
+Echo with a machine-checked audit guarantee. Concrete, ties to an
+adjacent active project, demonstrates the affine-mode discipline at
+a real audit boundary.
+
+*Scope-when-unparking.* `tutorial/` directory with 3 walkthroughs:
+(1) the certified region-exit audit; (2) epistemic erasure (with
+explicit framing: Echo proves no section recovers the key, NOT that
+in-memory bytes are zeroed — conflating these is a category error a
+sceptic will catch); (3) provenance / debugging echo over a small
+state-reconstruction example.
+
+*Scaffold (pre-resolved 2026-05-26).* `tutorial/README.adoc` lands
+the three walkthroughs at design-doc level with their target file
+layouts, honest-bound disclosures, the per-walkthrough Smoke pin
+discipline, and the killer-app-candidate close-out check on
+Walkthrough 1. No Agda lands at this stage; the scaffold exists so
+an unparking session lands Agda directly rather than re-deriving
+the pedagogy. Lane 5 itself remains PARKED.
+
+== Closed lanes
+
+(none yet — populated when a lane closes per its close-out criterion).
+
+== Gates summary
+
+Pointer-only; see `roadmap-gates.adoc` for the full statements,
+adjacency tests, and failure actions.
+
+* *Gate 1.* Distinct phenomenon. Artefact: `docs/adjacency/`.
+  Failure action: drop identity claim; retain as Agda exposition.
+* *Gate 2.* Characteristic theorem family. Artefact:
+  `docs/characteristic.adoc`. Failure action: drop claim of a distinct
+  theorem family; modules remain.
+* *Gate 3.* Canonical examples. Artefact: `proofs/agda/examples/`.
+  Failure action: reframe as theoretical scaffolding awaiting
+  application.
+
+== Pillar status (establishment plan)
+
+Pointer summary; see `docs/echo-types/establishment-plan.adoc` for the
+five-pillar plan and `docs/retractions.adoc` R-2026-05-18 for the
+narrowings.
+
+[cols="1,2,4", options="header"]
+|===
+| Pillar | Status | Artefact / note
+
+| A — Pin the identity
+| LANDED (2026-05-17)
+| `EchoFiberBridge.echo↔fib` — definitional homotopy fibre identity, `refl` round-trips.
+
+| B — Universal property
+| LANDED, NARROWED
+| `EchoPullback.echo-pullback-univ` — *pointwise, funext-relative* mediator (not full universal property; see R-2026-05-18). `EchoGradedComonad` — three laws under thin-poset reindexing (not a graded comonad).
+
+| C — Separating model
+| LANDED (2026-05-17)
+| `EchoSeparating.sep-degrade-compose-fails` — characteristic law refuted at `true ≢ false` when `≤g-prop` removed.
+
+| D — Second model + carrier-parametricity
+| LANDED, NARROWED
+| `EchoRelModel.GradedLossModel` + generic `GCLaws` — *carrier-parametricity over a fixed grade poset* (not model-independence; see R-2026-05-18). `conservativity.adoc` — evidence-for, not proof-of, conservativity.
+
+| E — External validation (paper + outreach)
+| IN PROGRESS
+| `docs/echo-types/paper.adoc` LIVING DRAFT with `[EXPAND]` tags; `types-abstract.adoc` submission-ready. Lane 1's close-out criterion governs.
+|===
+
+== Historical milestone log (M1–M13)
+
+The structural milestones that built the suite. Retained for
+provenance; not load-bearing for ongoing lane planning.
+
+[cols="1,3,2", options="header"]
+|===
+| ID | Milestone | Status
+
+| M1 | Foundation: core `Echo.agda` functoriality | DONE
+| M2 | Characteristic theorem pack (`EchoCharacteristic.agda`) | DONE (2026-04-18)
+| M3 | Residue formalisation (`EchoResidue.agda`) | DONE (2026-04-18)
+| M4 | Example suite (`EchoExamples.agda`) | DONE (2026-04-18)
+| M5 | Assessment report (`docs/assessment.adoc`) | DONE (2026-04-18)
+| M6 | Choreographic bridge (`EchoChoreo.agda`) | DONE (2026-04-18)
+| M7 | Epistemic bridge (`EchoEpistemic.agda`) | DONE (2026-04-18)
+| M8 | Linear/affine bridge (`EchoLinear.agda`) | DONE (2026-04-18)
+| M9 | Graded bridge (`EchoGraded.agda`) | DONE (2026-04-18)
+| M10 | Tropical bridge (`EchoTropical.agda`) | DONE (2026-04-18)
+| M11 | Full-suite gate (`All.agda` + clean build) | DONE (2026-04-18)
+| M12 | Cross-bridge integration (`EchoIntegration.agda`) | DONE (2026-04-18)
+| M13 | Headline-theorem smoke gate (`Smoke.agda`) | DONE (2026-04-19)
+|===
+
+Per-rung session ledger lives in CLAUDE.md §"Current rung state". The
+ordinal-track E-series milestones (E1–E7) live there.
+
+== Deferred research track
+
+Open synthesis problems graduated from `docs/next-questions.adoc`.
+Dissertation-scale or requiring extensions beyond the current
+`--safe --without-K` core. Each entry records the gap, what would
+close it, and why it is parked.
+
+=== R1 — Unified dependent linear + choreographic + epistemic calculus
+
+* *Gap.* Bridges exist pairwise but not as one typed calculus
+  enforcing usage discipline + role projection + knowledge operators
+  simultaneously.
+* *Closure.* A core syntax/judgment layer with preservation/progress
   metatheory tying the three disciplines together.
-* Difficulty: extremely hard. Parked: this is the main synthesis target;
-  not advanced in single sessions.
+* *Difficulty.* Extremely hard. The main synthesis target; not
+  advanced in single sessions. Closely aligned with Lane 1's
+  external-recognition goal — if R1 ever opens as an active lane, it
+  would likely subsume Lane 1.
 
-R2. Cubical or quotient treatment of indistinguishability
+=== R2 — Cubical or quotient treatment of indistinguishability
 
-* Gap: indistinguishability is currently set-level/propositional; rich
-  observational equivalence classes need first-class identity handling.
-* Closure: a quotient-aware or cubical extension with proofs that echo
-  constructions commute with equivalence-class semantics.
-* Difficulty: very hard. Parked: requires moving off plain
-  `--safe --without-K` into cubical agda or a heavy quotient layer.
-* Current tooling stance (2026-04-23):
-** active development remains plain Agda with the standard library
-** if `R2` is activated, the first extension to try is Agda's
-   `--cubical` mode plus the separate Cubical Agda library
-** `RedPRL`, `redtt`, and `cooltt` are tracked as adjacent cubical
-   systems, not as primary tooling for this roadmap; see
-   `docs/adjacency/cubical-systems.adoc`
+* *Gap.* Indistinguishability is currently set-level / propositional;
+  rich observational equivalence classes need first-class identity
+  handling.
+* *Closure.* A quotient-aware or cubical extension with proofs that
+  echo constructions commute with equivalence-class semantics.
+* *Difficulty.* Very hard. Parked: requires moving off plain
+  `--safe --without-K` into cubical Agda or a heavy quotient layer.
+* *Current tooling stance (2026-04-23).* Active development remains
+  plain Agda with the standard library. If R2 activates, the first
+  extension to try is Agda's `--cubical` mode plus the separate
+  Cubical Agda library. `RedPRL`, `redtt`, and `cooltt` are tracked
+  as adjacent cubical systems, not as primary tooling; see
+  `docs/adjacency/cubical-systems.adoc`.
 
-R3. Probabilistic epistemic echoes
+=== R3 — Probabilistic epistemic echoes
 
-* Gap: no probability/distribution layer over echoes; evidence is
+* *Gap.* No probability/distribution layer over echoes; evidence is
   binary, not weighted.
-* Closure: distribution-valued observation semantics, posterior-style
+* *Closure.* Distribution-valued observation semantics, posterior-style
   residue objects, plus stability/transport theorems.
-* Difficulty: very hard. Parked: needs a measure/distribution
-  formalisation that the current core deliberately avoids.
+* *Difficulty.* Very hard. Parked: needs a measure/distribution
+  formalisation the current core deliberately avoids.
 
-R4. Tropical optimization beyond toy candidate sets
+=== R4 — Tropical optimisation beyond toy candidate sets
 
-* Gap: tropical development is finite/toy-level (3-element `Candidate`
-  set, hand-built `IsArgmin`).
-* Closure: scalable tropical witness/certificate framework with
-  composition laws and integration with graded degradation, generalised
-  over arbitrary finite candidate sets.
-* Difficulty: hard. Smallest-step start: lift `IsArgmin` over an
+* *Gap.* Tropical development is finite/toy-level (3-element
+  `Candidate` set, hand-built `IsArgmin`).
+* *Closure.* Scalable tropical witness/certificate framework with
+  composition laws and integration with graded degradation,
+  generalised over arbitrary finite candidate sets.
+* *Difficulty.* Hard. Smallest-step start: lift `IsArgmin` over an
   arbitrary `Fin n`-indexed score family; compose with `degrade`.
 
-== Operating Rules
+== Lane discipline rules
+
+. *Cap.* 5 open lanes maximum. Opening a 6th requires closing or
+  parking another.
+. *Close-out upfront.* Every lane row carries a falsifiable
+  close-out criterion when opened. Vague criteria are rejected.
+. *Audit cadence.* Each lane is reviewed at every rung consolidation
+  (CLAUDE.md §"Rung-consolidation policy"). Closed lanes move to
+  §"Closed lanes" with the closing artefact named.
+. *Parking discipline.* A parked lane keeps its number and gets a
+  `[PARKED]` tag with the explicit unblocking condition. Parked
+  lanes still count against the cap.
+. *Retraction discipline.* Any lane that touches a R-2026-05-18
+  narrowed claim must carry a *retraction-watch* line listing the
+  narrowings it must respect. Re-opening a retracted claim requires
+  a new audit recorded in `docs/retractions.adoc`.
+. *Load-bearing ordering.* Lanes are not equal. Lane 1 is the
+  load-bearing lane as of 2026-05-26 (expeditious type-theoretic
+  grounding); other lanes do not gate Lane 1 unless explicitly
+  marked as dependencies.
+
+== Operating rules
 
 * No postulates unless explicitly isolated and justified.
+* `--safe --without-K` throughout the core; cubical / `--cubical`
+  reserved for R2 if activated.
 * Keep universe levels explicit where needed.
 * Keep proofs minimal and computationally meaningful.
 * Every edit ends with an Agda compile command and captured output.
+* Every headline theorem is pinned in `Smoke.agda` via `using` clause.
+* Every new module goes into `All.agda` as an `open import` so the
+  verified suite covers it. Orphan modules that compile but are not
+  in `All.agda` are treated as dead code.
+* Per-module Smoke pins use their own `using` block with a header
+  comment, not shared paren-blocks (cuts merge-conflict noise in
+  swarm-merge sequences).
