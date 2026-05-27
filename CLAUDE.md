@@ -191,7 +191,95 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-05-20)
+## Current rung state (2026-05-27)
+
+### Session arc 2026-05-27 evening — Lane 5 Walkthrough 3 landed (read this first)
+
+*Where we started today (commit `4d77d75` on `docs/consolidate-roadmaps-
+and-sigma-skepticism-2026-05-26`, post-#123):* the consolidation branch
+carried Walkthroughs 1 (region-exit audit) and 2 (epistemic erasure)
+plus the Lane 3 `RankLex` slice closing `<ᵇ-ψΩ≤`. Walkthrough 3
+(provenance / debugging) was at scaffold/design-doc level in
+`tutorial/README.adoc`. The originally-scaffolded Lane 5 triplet was
+two-thirds landed.
+
+*Where we ended today:* Walkthrough 3 LANDS — the originally-scaffolded
+triplet is complete in Agda. One slice:
+
+1. *Walkthrough 3 — provenance / debugging echo* lands at
+   `tutorial/provenance_debugging/`. Domain: 4-element `State` with
+   two orthogonal sign bits (`firstSign`, `secondSign`); `firstSign`
+   is the echo's visible output, `secondSign` is the class predicate
+   the layer-1 residue carries. Three residue layers walked:
+     * Layer 0 — `Echo firstSign true`, distinguishing all sources;
+     * Layer 1 — `EchoR Bool ClassCert true` carrying `secondSign`;
+     * Layer 2 — `EchoR ⊤ TrivialCert' true` carrying nothing.
+   Headlines: `states-distinct-at-true` (Layer 0 distinguishes);
+   `classes-remain-distinct` (Layer 1 still distinguishes);
+   *`recover-section-at-layer-1`* (POSITIVE — Layer 1 has a section);
+   `trivials-collapse` (Layer 2 collapses); *`no-recovery-from-trivial`*
+   (NEGATIVE — Layer 2 has no section, structural mirror of
+   `EchoResidue.no-section-collapse-to-residue`); and
+   `provenance-walk-contrast` packaging the section / no-section pair.
+
+   *New pedagogical shape vs W1/W2.* Walkthroughs 1 and 2 each ship a
+   one-sided no-section result. Walkthrough 3 ships *both* a section
+   (at layer 1) and its absence (at layer 2), exhibiting the boundary
+   at which the type-level recovery property flips. The mechanical
+   load: `secondSign` is *injective within each `firstSign`-fibre*,
+   which is exactly the property the layer-1 section needs.
+
+   *Honest bound discipline inherited from W2.* The Agda file and the
+   README both open with the disclosure that this is type-level only —
+   no operational debugger, no runtime artefacts, fixed 4-element
+   domain. A `NotProved-*` matched-negative block at the file's
+   bottom lists four out-of-scope properties (runtime debugger,
+   reconstruction in general, completeness across classes, recovery
+   under side information) as `⊤`-aliases so `grep NotProved` catches
+   them.
+
+   *Files landed.*
+   * `tutorial/provenance_debugging/ProvenanceDebugging.agda` (worked
+     example);
+   * `tutorial/provenance_debugging/Smoke.agda` (per-walkthrough Smoke
+     pins, own `using` block, header comment);
+   * `tutorial/provenance_debugging/All.agda` (aggregator);
+   * `tutorial/provenance_debugging/README.adoc` (narrative).
+   * `tutorial/All.agda` registers the new walkthrough.
+   * `tutorial/README.adoc` §"Walkthrough 3" flipped from design-doc
+     status to LANDED 2026-05-27; the IMPORTANT scaffold-status note
+     updated.
+
+Build invariant held: `proofs/agda/All.agda`, `proofs/agda/Smoke.agda`,
+`tutorial/All.agda`, and `tutorial/provenance_debugging/Smoke.agda`
+all exit 0 under `--safe --without-K`, zero postulates, no funext.
+All headlines pinned in the per-walkthrough Smoke under their own
+`using` block per CLAUDE.md "Working rules".
+
+*Plan for the next Claude.* The originally-scaffolded Lane 5 triplet
+is complete. Open work:
+
+1. *Lane 3 follow-on — `<ᵇ-+1` joint-bplus.* The one remaining open
+   per-constructor case in the Buchholz rank-mono umbrella. Closure
+   options documented in `RankPow.agda` and the obstruction doc:
+   (A) leading-Ω-index dominator (`head-Ω : BT → OmegaIndex`),
+   recommended; (B) richer rank shape on `bplus`. Smallest useful
+   first slice = define `head-Ω` + definitional sanity lemmas only,
+   no rank-mono. Multi-session work.
+2. *Lane 5 unparking decision (user).* Walkthroughs 1+2+3 all
+   landed; Walkthrough 1 is the killer-app candidate per
+   `roadmap.adoc` §Lane 5 second unblocking condition. User
+   accept-or-defer pending; the lane remains [PARKED] at the lane-
+   policy level until the user decides.
+3. *Pillar E paper [EXPAND] clearing.* Gated on author-driven
+   material accruing.
+
+DO NOT reopen: the closed 11/13 Buchholz constructors (their
+primitives are correct under WfCNF + admissibility + lex-pair);
+the W1/W2 walkthroughs (their no-section headlines are the existing
+`EchoLinear.no-section-weaken` and `EchoResidue.no-section-collapse-
+to-residue` re-exported with honest-bound + matched-negative
+discipline); the R-2026-05-18 narrowings.
 
 ### Session arc 2026-05-20 daytime (theory closure waves 1 + 2 + 3)
 

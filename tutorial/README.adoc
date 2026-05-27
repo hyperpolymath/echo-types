@@ -13,15 +13,18 @@ rather than re-deriving the pedagogy.
 
 [IMPORTANT]
 ====
-*Lane 5 unpark status (updated 2026-05-27).* Walkthroughs 1
-(certified region-exit audit) and 2 (epistemic erasure with honest
-bound) are LANDED. Walkthrough 1 was accepted as the killer-app
+*Lane 5 unpark status (updated 2026-05-27, evening).* Walkthroughs
+1 (certified region-exit audit), 2 (epistemic erasure with honest
+bound), and 3 (provenance / debugging with layer-1 section + layer-2
+no-section) are all LANDED. The originally-scaffolded triplet is
+complete in Agda. Walkthrough 1 was accepted as the killer-app
 candidate per `roadmap.adoc` §"Lane 5 [PARKED]" second unblocking
 condition. Walkthrough 2 followed as the second realisation,
 addressing the "does echo-types prove key zeroing?" category-error
-question. Walkthrough 3 (provenance / debugging) remains at
-scaffold/design-doc level pending either Lane 1 close-out or
-independent unparking decisions.
+question. Walkthrough 3 lands the dual: a *positive* recovery
+result at layer 1 paired with the negative at layer 2, making
+explicit which residue layer carries the load-bearing information
+for source reconstruction in a small fixed domain.
 
 The Smoke gate (`proofs/agda/Smoke.agda`), the top-level
 `proofs/agda/All.agda`, and the identity-claim gates still do not
@@ -135,34 +138,54 @@ write-up of echo for an applied audience."
 
 === Walkthrough 3: provenance / debugging echo
 
-*Status.* Design-doc only. Agda lands at unpark time.
+*Status.* LANDED 2026-05-27. See
+`tutorial/provenance_debugging/ProvenanceDebugging.agda` for the
+worked example and `tutorial/provenance_debugging/README.adoc` for
+the narrative.
 
-*The pedagogy.* Model a small state-reconstruction example: an
-agent observes a single Boolean output `b : Bool` from an opaque
-computation `f : State → Bool` on a 4-element `State`. `Echo f b`
-retains the source state; iterated `degrade` operations
-(`keep → residue → forget` per `EchoResidue`) walk a debugger
-through what information is available at each provenance level.
-The walkthrough closes by exhibiting how the residue-level
-`collapse-via-residue` lemma supports a class-level claim ("the
-state was in the 'sign-positive' class") even when the full state
-is no longer recoverable.
+*The pedagogy.* A 4-element `State` with two orthogonal sign bits.
+The visible output of the echo is the first sign (`firstSign :
+State → Bool`); the residue carrier at layer 1 is the second sign
+(`secondSign : State → Bool`). The walkthrough walks the source
+through three layers — full echo, class residue, trivial residue
+— and exhibits the load-bearing contrast: at layer 1 a *section
+exists* (`recover-from-class` is a right inverse of
+`state-to-class`); at layer 2 *no section exists*
+(`no-recovery-from-trivial`, mirroring the structural argument of
+`EchoResidue.no-section-collapse-to-residue`). The pair is
+packaged as `provenance-walk-contrast`. The mechanical content:
+`secondSign` is injective within each `firstSign`-fibre, which is
+exactly the property that makes the layer-1 recovery work.
+
+*The crucial honest disclosure.* This walkthrough is *not* a
+runtime debugger. It is a *type-level* statement about which
+residue layer carries the load-bearing information for source
+reconstruction in a fixed 4-element domain. Conflating it with
+operational debugging is a category error — exactly the kind of
+mistake the project's retraction discipline
+(`docs/retractions.adoc`) exists to prevent. The walkthrough opens
+with the disclosure, then states the actual claims (layer-1
+section + layer-2 no-section), then walks the proofs.
 
 *Files when landed.*
 
-* `tutorial/provenance_debugging/README.adoc` — narrative.
+* `tutorial/provenance_debugging/README.adoc` — narrative with the
+  bound disclosure as the *opening* sentence, not a footnote.
 * `tutorial/provenance_debugging/ProvenanceDebugging.agda` — the
-  worked example, building on `EchoExampleProvenance.agda`.
+  worked example, building on `EchoExampleProvenance.agda` +
+  `EchoResidue.agda`.
 * `tutorial/provenance_debugging/Smoke.agda` — per-walkthrough
   Smoke pins.
+* `tutorial/provenance_debugging/All.agda` — walkthrough-local
+  aggregator, imported by `tutorial/All.agda`.
 
 *Why this walkthrough exists.* The two harder walkthroughs (audit,
-erasure) both ship as `LEcho affine` content where information is
-*not* recoverable. This third walkthrough exhibits the dual: where
-the iterated degradation makes some information unrecoverable but
-others survive (the residue layer). It is the gentlest of the
-three; readers who bounce off the audit and erasure walkthroughs
-land here.
+erasure) both ship as one-sided no-section content where
+information is *not* recoverable. This third walkthrough exhibits
+the dual: a positive recovery result paired with the negative,
+making explicit *which* residue layer is load-bearing for
+reconstruction. It is the gentlest of the three; readers who
+bounce off the audit and erasure walkthroughs land here.
 
 == Discipline that applies to all three walkthroughs
 
