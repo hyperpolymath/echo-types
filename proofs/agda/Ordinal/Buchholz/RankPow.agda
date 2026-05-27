@@ -537,20 +537,36 @@ rank-pow-bpsi-via-head-Ω _ _ = refl
 -- (ii) the consumer (Slice 3) does not need the additive-principal
 -- *of `ω-rank-pow-succ ω` itself* — it needs additive-principal of
 -- `ω-rank-pow (head-Ω target)`, which already lands via the existing
--- `additive-principal-ω-rank-pow {ω}` (lines 238–255).
+-- `additive-principal-ω-rank-pow {ω}` (lines 238–255);
+-- (iii) sanity-check the indexing.  The candidate's branches are
+-- `(ω-rank-pow ω) ·ℕ n = (… (oz ⊕ ω-rank-pow ω) … ⊕ ω-rank-pow ω)`
+-- — the leading `oz ⊕` is NOT definitionally `ω-rank-pow ω` under
+-- Brouwer's right-recursing `_⊕_`.  As an ordinal denotation the
+-- supremum is `ω^ω · ω = ω^(ω+1)` and is strictly above `ω^ω`, so
+-- the lemma *should* go through, but the proof needs the
+-- propositional `oz ⊕ X ≤′ X` (or a path-algebra equivalent) at the
+-- right step — this is exactly the same hazard ("same ordinal under
+-- different ℕ-indexing") that disqualified the original
+-- `olim (λ n → ω^(suc(suc n)))` shape.  Verify with a thin spike
+-- before committing the body.
 --
--- Slice 2-bplus.  Once the ω branch closes, prove the full lemma
+-- TODO(slice-2-bplus).  Once the ω branch closes, prove the full
+-- lemma
 --   rank-pow-dominated-by-head-Ω : (t : BT) → NonBzero t → WfCNF t
 --                                → rank-pow t <′ ω-rank-pow-succ (head-Ω t)
--- by structural recursion on the WfCNF carrier.  The bplus case needs
--- a `rank-pow-mono-≤ᵇ : x ≤ᵇ y → rank-pow x ≤′ rank-pow y` companion
--- for the original `<ᵇ` (the WfCNF tail bound is `_≤ᵇ_`, not `_≤ᵇ⁰_`).
--- The existing `rank-pow-mono-≤ᵇ⁰` in `RankMonoUmbrella` covers the
--- `<ᵇ⁰` carrier only.  A direct `_≤ᵇ_`-mono primitive would need
--- either (a) bridging `_≤ᵇ_` to `_≤ᵇ⁰_` (which is exactly the open
--- Slice 4 problem — full rank-mono umbrella over the original `_<ᵇ_`),
--- or (b) a head-Ω inversion lemma `bOmega ν <ᵇ x → ν <Ω head-Ω x`
--- (and ψ-analogue) that does not transitively depend on rank-mono.
--- Option (b) is the cleaner path; it parallels the existing
--- per-constructor rank-mono primitives without going through the
--- umbrella.
+-- by structural recursion on the WfCNF carrier.  The bplus case
+-- needs a `rank-pow-mono-≤ᵇ : x ≤ᵇ y → rank-pow x ≤′ rank-pow y`
+-- companion for the original `_<ᵇ_` — landing-site below this
+-- comment block — because the WfCNF tail bound is `_≤ᵇ_`, not
+-- `_≤ᵇ⁰_`.  The existing `rank-pow-mono-≤ᵇ⁰` in `RankMonoUmbrella`
+-- covers the `<ᵇ⁰` carrier only.  A direct `_≤ᵇ_`-mono primitive
+-- would need either (a) bridging `_≤ᵇ_` to `_≤ᵇ⁰_` (which is
+-- exactly the open Slice 4 problem — full rank-mono umbrella over
+-- the original `_<ᵇ_`), or (b) a head-Ω inversion lemma
+-- `bOmega ν <ᵇ x → ν <Ω head-Ω x` (and ψ-analogue) that does not
+-- transitively depend on rank-mono.  Option (b) is the cleaner
+-- path; it parallels the existing per-constructor rank-mono
+-- primitives without going through the umbrella, and keeps
+-- `rank-pow-dominated-by-head-Ω` independent of
+-- `rank-pow-mono-≤ᵇ` so that a future signature change to one
+-- does not silently break the other.
