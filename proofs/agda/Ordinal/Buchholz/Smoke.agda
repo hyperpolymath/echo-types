@@ -433,3 +433,19 @@ open import Ordinal.Buchholz.HeadOmegaInversion using
   ( head-Ω-inv-bOmega
   ; head-Ω-inv-bpsi
   )
+
+-- Lane 3 head-Ω Slice 2-bplus (own block per CLAUDE.md Working
+-- rules): the full WfCNF-carrier domination lemma.  Composes Slice
+-- 1 + Slice 2 + Slice 2-omega + the inversion family into THE
+-- headline that the eventual `<ᵇ-+1` joint-bplus discharge
+-- (Slice 3, follow-on) will consume.  No `NonBzero` premise needed
+-- — `rank-pow bzero = oz` is strictly below `ω-rank-pow-succ
+-- (fin 0) = ω^2`, so the bzero case discharges uniformly.  No
+-- rank-mono dependency anywhere in the chain (option (b)
+-- discipline preserved).
+open import Ordinal.Buchholz.RankPowDomination using
+  ( ω-rank-pow-mono-≤Ω
+  ; ω-rank-pow-succ-pos
+  ; additive-principal-ω-rank-pow-succ
+  ; rank-pow-dominated-by-head-Ω
+  )
