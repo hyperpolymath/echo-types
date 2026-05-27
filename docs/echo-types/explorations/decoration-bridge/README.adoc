@@ -1,0 +1,497 @@
+= Decoration bridge — exploratory
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[CAUTION]
+====
+*EXPLORATORY — not part of Gate theory.* Not load-bearing for the
+identity claim.  Subject to abandonment.  Does not constrain Pillar E
+or any Lane 1–4 close-out.  Status anchored at `roadmap.adoc` §
+"Deferred research track" § R5; the Agda artefact
+`proofs/agda/EchoDecorationBridge.agda` is deliberately omitted from
+`proofs/agda/All.agda` so the verified suite is unaffected by anything
+in this directory.
+====
+
+toc::[]
+
+== Scope, in one paragraph
+
+The integration construction `EchoIntegration.agda` combines
+`EchoChoreo`'s role-projection transport with `EchoGraded`'s
+compositional degradation.  This directory is a bounded exploration of
+whether the *one specific* `Choreo × Graded` axis pair that
+`EchoIntegration` integrates resembles the shape that arises when
+adjacent-domain constructions try to compose two different
+*decorations* on a shared state evolution — CRDT merge strategies,
+gossip partial views, local-first causal histories, and so on.  The
+exploration is scoped to candidate analogies for the `Choreo × Graded`
+shape.  It is not a generalisation claim, not a new identity claim,
+not a pillar, not a gate.  It is a place where the question "could the
+integration shape say something useful about adjacent-domain
+constructions?" can be asked without the answer back-propagating into
+load-bearing code.
+
+== Motivation
+
+Several adjacent-domain constructions exhibit a recurring pattern:
+state evolves over time, and *two* orthogonal disciplines decorate the
+same evolution.  In a CRDT, replicas and merge-order decorate update
+streams.  In a local-first system, client/server roles and causal
+history decorate document edits.  In a partial-view gossip protocol,
+membership views and view freshness decorate node knowledge.
+
+Each pattern resembles `EchoIntegration`'s shape: one decoration looks
+like a role projection (who sees what), the other looks like a graded
+loss order (what survives composition).  When the two decorations
+*commute*, the composed echo is well-behaved; when they do not, the
+echo retains a *residue* characterising the order in which the
+decorations were applied.  The question worth asking — bounded, not
+generalised — is whether that residue, in any of these external
+analogies, is the same residue the `EchoIntegration` claim names.
+
+The framing must be read carefully.  This is not the claim that the
+integration recipe generalises across decoration pairs; that is
+forbidden under the EI-2 termination
+(`.machine_readable/6a2/STATE.a2ml` § `forbidden-rebrandings`).  It is
+the strictly narrower question: does the *one* axis pair that
+`EchoIntegration` already integrates — `Choreo × Graded` — describe a
+shape that occurs in adjacent domains, well enough to be worth a
+documented analogy?  Each candidate gets a *falsifier* (see
+<<_three_candidate_instances>>).  Candidates that need a different
+axis pair fail the fit by construction; they are out of scope.
+
+== Scope discipline (read before adding content)
+
+. *One axis pair only.*  The bridge frames `Choreo × Graded`, the pair
+  `EchoIntegration` uses.  `Mode × Grade`, `Role × Role`, and 3D
+  combinations are foreclosed by EI-2 and not reopened here.
+. *External instances are analogies.*  Every candidate in
+  <<_three_candidate_instances>> is framed as an analogy that may or
+  may not fit.  It is never framed as evidence that the integration
+  recipe applies across other decoration pairs.
+. *Falsifier per candidate.*  Every candidate carries a falsifier — a
+  concrete condition under which the analogy fails and the candidate
+  is retired.  Retirement is silent; it does not require new gate
+  theory.
+. *No new identity claim.*  This directory does not assert that
+  decoration bridges are a distinct phenomenon.  Identity claims live
+  in `roadmap-gates.adoc`, not in `docs/echo-types/explorations/`.
+. *No promotion path is implied.*  Promotion of any content from this
+  directory into core would require its own rung-consolidation per
+  CLAUDE.md § "Rung-consolidation policy", including a fresh
+  forbidden-rebrandings audit.  This directory does not pre-authorise
+  any such promotion.
+
+== What this is NOT
+
+The exploration is *not*:
+
+* a smart-contract verifier or any kind of programmable-money artefact;
+* a reversibility claim about consensus, replication, or finality;
+* a zero-knowledge proof system;
+* a claim that echo types fix any production system's bugs or
+  reliability properties;
+* a reopening of EI-2 under a new framing (see
+  <<_forbidden_rebrandings_check>>);
+* an alternative to `EchoIntegration` or a wrapper around it that is
+  expected to land in core;
+* a Pillar, a Gate, or a Lane-1/2/3/4/5 deliverable;
+* a categorical characterisation of decoration-residue
+  (R-2026-05-18 retraction-watch applies — see
+  <<_retraction_watch>>).
+
+Anything that drifts toward one of the items above is out of scope and
+triggers immediate retirement of the offending content.
+
+== Echo-vs-Σ clearance argument
+
+Per `roadmap.adoc` Lane 2, any echo-types construction must clear the
+Track A/B/C bar set out in `core/skepticisms/is-this-just-sigma-types.md`:
+the construction has to lean on at least one echo-specific property
+that bare `Σ` + `≡` does not give.  The bridge clears the bar via four
+inherited properties, in descending order of confidence:
+
+. *Monotone reindexing on a propositional decoration order.*  The
+  bridge consumes `EchoGraded._≤g_`, `EchoGraded.≤g-prop`, and
+  `EchoGraded.degrade` to talk about *down-step under composition*.
+  Bare `Σ` has no notion of monotone reindexing along a thin poset;
+  the bridge inherits this property and depends on it (the
+  `merged-at-residue` fact, re-issued by the bridge's
+  `decoration-claim`, is the witness pair becoming definitionally
+  equal at `residue` grade — a statement that has no analogue for raw
+  `Σ`).
+. *No-section dual on the down-step.*  The bridge cites
+  `EchoResidue.no-section-collapse-to-residue` transitively through
+  `EchoIntegration.no-recovery-after-residue-degrade`, which is part
+  of the integration claim the bridge re-issues.  Raw `Σ` projects
+  trivially via `proj₁`; the no-section dual is the dual asymmetry
+  the bridge cares about.
+. *Choreographic transport along a commuting square.*  The bridge
+  consumes `EchoChoreo.client-stability` and the
+  `scramble-server`-stability discipline.  This is `Echo.map-square`
+  applied at a role-projection square; it has no `Σ`-only analogue
+  because the witness-transport leg `swap` (or `scramble-server`,
+  here) is part of the structure, not merely the index.
+. *Knowledge witness at a Bool target.*  The bridge consumes
+  `EchoEpistemic.Knows`, which is the role-indexed knowledge predicate
+  defined over role-echoes.  Bare `Σ` has no role-indexing primitive.
+
+The bridge depends on (1) and (3) substantively; (2) and (4) are
+inherited through the integration claim.  If the bridge content can be
+reproduced using only `Σ` + `≡` — that is, if the `DecorationFit`
+record's `Pred-stable` and `knowledge` fields can be discharged
+without using `client-stability` or `scramble-server` or `Knows` —
+then the bridge has failed Track A/B/C and is retired.  This is the
+explicit falsifier for the exploration's existence.
+
+== Relationship to `EchoIntegration`
+
+The bridge depends on `EchoIntegration` at four named surfaces.  No
+other surface of `EchoIntegration` is consumed.  The non-dependency
+list is given so the dependency is auditable if `EchoIntegration`
+later evolves.
+
+[cols="1,3", options="header"]
+|===
+| Used by the bridge | What the bridge does with it
+
+| `EchoIntegration.knowledge-and-controlled-degradation`
+| Re-issued *verbatim* through the `DecorationFit` record — the
+  bridge's `decoration-claim` is literally a one-line wrapper that
+  unpacks the record and applies this lemma.  If this lemma's
+  signature changes, the bridge is re-checked, and if patching it
+  would impose any constraint on upstream code the bridge is retired
+  (signature-change policy in the Agda module's prose header).
+
+| `EchoIntegration.knowledge-preserved-under-choreo`
+| Mentioned in the bridge's signature (the first conjunct of
+  `decoration-claim`'s return type names
+  `proj₁ (client-stability e)`, which is the value
+  `knowledge-preserved-under-choreo` operates on).
+
+| `EchoIntegration.merged-at-residue`
+| Mentioned by name in the Agda module's prose header and in
+  `02-non-commuting-residue.adoc` as the canonical "decorations
+  commute *at the residue grade*" witness — the second conjunct of
+  `decoration-claim` is this fact.
+
+| `EchoIntegration.distinct-at-keep`
+| Imported but not consumed in the current scaffold.  Retained in the
+  bridge's import list as a *witness of intent*: it names the
+  asymmetry between `keep` (witnesses distinct) and `residue`
+  (witnesses merged) the bridge is theorising about.
+|===
+
+Non-dependencies (explicit, for auditability if `EchoIntegration`
+evolves):
+
+* The bridge does *not* consume any non-`Choreo`-non-`Graded` content
+  in `EchoIntegration`.  In particular, it does not consume the
+  `EchoCharacteristic`-derived parts (`echo-true≢echo-false`) except
+  transitively via the integration claim's return type.
+* The bridge does not consume `EchoResidue` directly — only through
+  `EchoIntegration.no-recovery-after-residue-degrade`, which the
+  bridge does not re-export.  Adding a direct `EchoResidue` import
+  would widen the bridge's surface and trigger a scope re-audit.
+* The bridge does not consume any module under `Ordinal/`.  Lane 3 is
+  parallel-independent.
+
+== Three candidate instances
+
+The bridge ships three candidate external analogies for the
+`Choreo × Graded` shape, each as a short narrative in this README and
+a pseudocode sketch in `01-decoration-instances.adoc`.  All three are
+*possible* analogies, not committed instances.  Each carries a
+falsifier.
+
+=== Candidate A — CRDT join semilattices
+
+*The shape.*  A replicated value carries two decorations: which
+replica observed the update (the role-projection decoration) and at
+what merge-order rank (the graded-loss decoration).  A CRDT's merge
+operation is the analogue of `client-stability`: it can change the
+remote replica's state while preserving the local replica's
+observation.  The merge-order rank is the analogue of `_≤g_`:
+post-merge states are *more degraded* (less precisely attributable to
+a single replica) than pre-merge states.
+
+*What residue would mean.*  When two replicas merge their states out
+of order, the surviving witness records *which replica's update was
+absorbed first*.  This is the residue the bridge would name.
+
+*Falsifier.*  If the CRDT's merge is genuinely commutative
+(observation-preserving regardless of merge order), there is no
+residue to name; the analogy fits but says nothing the CRDT's own
+commutativity proof did not already say.  This is the candidate's
+"interesting only in the non-commutative case" failure mode.
+
+=== Candidate B — Local-first causal histories
+
+*The shape.*  A document evolves under client edits with optional
+server reconciliation.  The client / server split is the
+role-projection decoration directly (it *is*
+`EchoChoreo.Role = { Client, Server }`).  The causal history's depth
+or staleness is the graded-loss decoration: deeper-staleness states
+are more degraded than fresher ones.
+
+*What residue would mean.*  When a client edit and a server
+reconciliation interleave non-trivially, the surviving witness records
+which path through the interleaving the document took.  This is the
+provenance information local-first systems already track in vector
+clocks or operational-transform metadata.
+
+*Falsifier.*  If the local-first system already maintains a complete
+causal-history record on every document state, the bridge says
+nothing the system did not already say; the analogy fits but is
+redundant.  This is the candidate's "the residue is the metadata,
+already captured" failure mode.
+
+=== Candidate C — Gossip partial views
+
+*The shape.*  A node in a gossip protocol maintains a partial view of
+the cluster membership and forwards updates to a subset of peers.
+The view (which peers this node observes) is the role-projection
+decoration.  The view's freshness — how recently the node received a
+heartbeat — is the graded-loss decoration; stale views are more
+degraded than fresh ones.
+
+*What residue would mean.*  When a node's view goes stale and is
+refreshed by gossip, the surviving witness records *which peer's
+gossip restored which observation*.  This is provenance for the
+refresh path.
+
+*Falsifier.*  Most gossip protocols are designed to be view-oblivious:
+the node accepts any refresh that arrives without caring which peer
+sent it.  If view-obliviousness is the design intent, the residue the
+bridge would name is intentionally discarded; the bridge correctly
+characterises a property the protocol deliberately erases.  That is
+not a useful fit.  This is the candidate's "the protocol erases the
+residue on purpose" failure mode.
+
+[NOTE]
+====
+None of the three candidates is an *instance* in the Agda sense —
+none discharges `DecorationFit` for a concrete predicate.  They are
+narrative analogies to motivate the scaffold.  A future session that
+wanted to commit to one would need to discharge `DecorationFit` for a
+real `Pred`, a real stability proof, and a real `Knows`-witness, and
+that discharge would itself be the rung where the candidate either
+clears the bar or fails it.
+====
+
+== Open questions
+
+Bridge-only.  Scope-flagged.  Do NOT migrate into
+`docs/next-questions.adoc` or any main open-questions file — these are
+exploration-internal and have no priority claim on core work.
+
+[cols="1,3", options="header"]
+|===
+| Tag | Question
+
+| QB-1
+| Is there an adjacent-domain construction whose stability witness
+  (analogue of `scramble-server`-stability) is *not already* expressible
+  as a standard CRDT/state-machine invariant?  If every candidate's
+  stability is already a known invariant, the bridge's `Pred-stable`
+  field adds no information and the bridge is redundant.
+
+| QB-2
+| Does any candidate need a non-`Bool` visible codomain?  The bridge
+  currently fixes `y : Bool` (inherited from `EchoIntegration`).
+  Widening to arbitrary `B` is technically straightforward but a scope
+  change; flagging here so the decision is visible.
+
+| QB-3
+| If a candidate's residue characterisation matches `merged-at-residue`
+  literally (i.e. the candidate's "two distinct witnesses collapse at
+  the residue grade" reduces to the same `refl` proof
+  `EchoIntegration` already pins), does the analogy say anything the
+  retracted-prose `EchoGraded` framing did not already say?  This is
+  the question that drives <<_termination_criteria>> item 3 — if the
+  answer is no, the bridge retires.
+
+| QB-4
+| The three candidates here are deliberately *not* taken from the
+  rollup / consensus / ZK literature, to keep the framing away from
+  programmable-money territory.  Is the omission self-restraining
+  enough, or does it need a stronger boundary statement somewhere in
+  the project?
+|===
+
+== Forbidden-rebrandings check
+
+The framing was checked, item-by-item, against the two
+`forbidden-rebrandings` registers in
+`.machine_readable/6a2/STATE.a2ml`:
+
+. The EI-2 list under `(define forbidden-rebrandings ...)`
+  (lines 223–229).
+. The graded-comonad earn-back list under
+  `earn-back-summary`, field `forbidden-rebrandings`
+  (lines 317–321).
+
+[cols="1,2,2", options="header"]
+|===
+| Register entry | Adjacency to bridge framing | Verdict
+
+| "the integration argument carries gate-1's distinctness load"
+| The bridge re-issues `EchoIntegration.knowledge-and-controlled-degradation`.
+  Adjacency exists.
+| *Cleared.*  The bridge explicitly states (see <<_what_this_is_not>>)
+  that this directory does not assert distinctness; identity claims
+  live in `roadmap-gates.adoc`, not here.
+
+| "the recipe is uniformly applicable across all 2D axis pairs"
+| *Closest match.*  External candidate analogies could be mis-read as
+  "the recipe applies to CRDTs / gossip / local-first" — a
+  uniform-applicability claim.
+| *Cleared by construction.*  Scope is strictly `Choreo × Graded`
+  (the one axis pair `EchoIntegration` already uses).  Each candidate
+  is an *analogy that may or may not fit* and carries a falsifier;
+  no candidate is framed as evidence the recipe extends.  See
+  <<_scope_discipline_read_before_adding_content>> items 1 and 2.
+
+| "non-loss-only is sufficient for substantive simultaneous interaction"
+| The bridge does not invoke a non-loss-only criterion.
+| *Not engaged.*  No claim made.
+
+| "five axes simultaneously as a distinctness claim"
+| The bridge uses two axes.
+| *Not engaged.*  No claim made.
+
+| "Mode × Grade is a falsifier in some weaker sense"
+| The bridge does not address Mode × Grade.
+| *Not engaged.*  No claim made.
+
+| "Role × Role would have produced substantive content with a better family choice"
+| The bridge does not address Role × Role.
+| *Not engaged.*  No claim made.
+
+| "EchoGraded is a graded comonad"
+| The bridge consumes `EchoGraded.degrade`.  Adjacency exists.
+| *Cleared.*  The Agda module's retraction-watch header forbids
+  describing the records as a graded comonad; the README's
+  <<_retraction_watch>> section repeats the cite.
+
+| "the F1 construction reinstates EchoGraded's retracted comonad claim"
+| The bridge does not consume any F1/F3 surface.
+| *Not engaged.*
+
+| "the F3 two-models result reinstates EchoRelModel's retracted two-models claim"
+| The bridge does not consume `EchoRelModel`.
+| *Not engaged.*
+
+| "the title or central thesis of paper.adoc moves on F1 or F3 alone"
+| The bridge is an exploration; it does not propose paper edits.
+| *Not engaged.*
+|===
+
+There is no documented mechanism for prospectively adding entries to
+either register, and inventing one is out of scope for the bridge.
+If a future audit identifies a new forbidden-rebranding that the
+bridge would otherwise trip on, the correct response is to add the
+entry to the register via the normal audit process and trigger the
+automatic-termination clause in <<_termination_criteria>>.
+
+== Retraction-watch
+
+Per `docs/retractions.adoc` R-2026-05-18, the bridge inherits three
+narrowings from its upstream dependencies.  Each drift condition
+trips retraction-watch and closes the bridge pending review.
+
+[cols="1,2", options="header"]
+|===
+| Narrowing | Drift condition
+
+| Pillar B is funext-relative pointwise, not full universal property
+| If the bridge ever produces content described as a "categorical
+  universal property of decoration-residue" or a "limit of a
+  cospan of decorations" or any variant thereof.
+
+| `EchoGraded` is a thin-poset reindexing modality, not a graded comonad
+| If the bridge ever produces content described as a "graded
+  comonad of decorations" or "nested decoration degradation
+  satisfying the comonad laws" or any variant thereof.
+
+| `EchoRelModel` is carrier-parametricity over a fixed grade poset, not model-independence
+| If the bridge ever produces content described as a "model-independent
+  decoration semantics" or "decoration bridge across multiple
+  models" or any variant thereof.
+|===
+
+== Termination criteria
+
+The exploration closes — and the four files plus the roadmap
+references are deleted, returning the repo to its pre-scaffolding
+state — under any of the following conditions.  Closure is silent and
+does not require gate theory.
+
+. *Track A/B/C failure.*  The bridge content can be reproduced using
+  only `Σ` + `≡` (see <<_echo_vs_σ_clearance_argument>>).  In that
+  case the bridge is renamed `SigmaDecorationBridge.agda` and moved
+  to a draft branch, or — preferred — simply deleted, since the
+  point of the exploration is to study the *echo*-shape and a `Σ`-only
+  reduction proves there is no echo-shape to study.
+
+. *All three candidates fail their falsifiers without a replacement
+  surfacing.*  If Candidates A, B, C are all retired (per the
+  failure modes named in <<_three_candidate_instances>>) and no
+  fourth candidate surfaces within one rung-consolidation cycle, the
+  exploration has no remaining motivation and closes.
+
+. *Redundancy with retracted-prose framing (QB-3).*  If the analysis
+  in `02-non-commuting-residue.adoc` reduces to a re-statement of
+  the retracted `EchoGraded` graded-comonad framing — i.e. the
+  bridge's residue characterisation is exactly the graded-comonad
+  framing R-2026-05-18 narrowed — the bridge is closed because it
+  adds nothing the retraction did not already document.
+
+. *Forbidden-rebranding addition.*  If any subsequent audit pass adds
+  the bridge framing (or a near-paraphrase of it) to
+  `.machine_readable/6a2/STATE.a2ml § forbidden-rebrandings` or to
+  `earn-back-summary § forbidden-rebrandings`, the exploration
+  terminates immediately and the files are deleted as part of the
+  audit's closure, not reopened.  The audit's authority on closure
+  is final; the bridge does not get a say in whether its own framing
+  has been added to a register.
+
+. *Retraction-watch trip.*  If the bridge produces content matching
+  any of the three drift conditions in <<_retraction_watch>>, the
+  bridge closes pending review.  Review concludes with either the
+  drift being removed (bridge reopens at the pre-drift state) or
+  the bridge closing for cause (files deleted).
+
+. *Cleanup invariant.*  Closure under any clause above means
+  deleting `proofs/agda/EchoDecorationBridge.agda`,
+  `docs/echo-types/explorations/decoration-bridge/`, the R5 entry
+  in `roadmap.adoc`, the Lane 4 one-liner cross-reference in
+  `roadmap.adoc`, and the row in
+  `docs/echo-types/echo-kernel-note.adoc`.  No other file is touched
+  by closure.  The repo returns to its pre-scaffolding state with
+  zero residue.
+
+== Pointers
+
+* Companion documents in this directory:
+** `01-decoration-instances.adoc` — pseudocode sketches of the three
+   candidates above with their `DecorationFit` shapes and falsifiers.
+** `02-non-commuting-residue.adoc` — conceptual core: what
+   characterises the residue when two decorations do not commute,
+   and why this is not generic `Σ`.
+* Agda artefact: `proofs/agda/EchoDecorationBridge.agda` — scaffold
+  module with `DecorationFit` record and `decoration-claim` plug-in.
+  Not in `proofs/agda/All.agda`; typecheck standalone via
+  `agda -i proofs/agda proofs/agda/EchoDecorationBridge.agda`.
+* Roadmap anchor: `roadmap.adoc` § "Deferred research track" § R5,
+  with a one-liner cross-reference under Lane 4 for navigability.
+* Forbidden-rebrandings register:
+  `.machine_readable/6a2/STATE.a2ml` § `forbidden-rebrandings` and
+  the `earn-back-summary § forbidden-rebrandings` list.
+* EI-2 termination record: `docs/EI2_REPORT.adoc` § "Status".
+* R-2026-05-18 retraction record: `docs/retractions.adoc`.
+* Track A/B/C bar: `core/skepticisms/is-this-just-sigma-types.md`.

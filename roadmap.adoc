@@ -255,6 +255,11 @@ target codebases. Two architectural options when unparking:
 The first option is preferred unless the user's broader-research-plan
 priorities (per 2026-05-26) explicitly favour tighter integration.
 
+*Conceptual (non-cross-repo) bridge cross-reference.* See § R5
+(Deferred research track) for the exploratory decoration bridge —
+not in scope for Lane 4 cross-repo verification work; navigability
+pointer only.
+
 === Lane 5 [PARKED] — Tutorial / pedagogy
 
 *Unblocking condition.* Lane 1 closes, OR a single "killer
@@ -428,6 +433,61 @@ close it, and why it is parked.
   generalised over arbitrary finite candidate sets.
 * *Difficulty.* Hard. Smallest-step start: lift `IsArgmin` over an
   arbitrary `Fin n`-indexed score family; compose with `degrade`.
+
+=== R5 — Decoration bridge (exploratory, not identity-bearing)
+
+[NOTE]
+====
+*Schema note.* This entry carries an additional `*Termination*`
+bullet that R1–R4 do not.  The divergence is intentional: this lane
+has automatic-closure conditions tied to the forbidden-rebrandings
+register, so the termination criterion needs to be visible at the
+roadmap level rather than only in the bridge's own README.  Future
+R-series entries should not inherit the extra bullet by default —
+add it only if the new entry also has automatic-closure conditions.
+====
+
+* *Gap.* The integration construction `EchoIntegration.agda` combines
+  `EchoChoreo`'s role-projection transport with `EchoGraded`'s
+  compositional degradation.  Whether that *one* axis pair resembles
+  the shape adjacent-domain constructions exhibit when they compose
+  two decorations on a shared state evolution (CRDT merges, gossip
+  partial views, local-first causal histories) is unaddressed — and
+  asking the question inside core would re-attach it to load-bearing
+  code in a way EI-2's termination forbids.
+* *Closure.* A bounded set of analogies in
+  `docs/echo-types/explorations/decoration-bridge/` plus a scaffold
+  Agda module `proofs/agda/EchoDecorationBridge.agda` (not in
+  `All.agda`), each candidate carrying a falsifier.  Closure is
+  *either* the discovery of a candidate whose discharge would clear
+  Track A/B/C and warrant a separate rung-consolidation, *or*
+  retirement under one of the explicit termination conditions.
+* *Difficulty.* Unknown.  Bounded by construction — abandonment is
+  the default outcome, not a failure.
+* *Termination.* The exploration terminates immediately if any of
+  the following holds:
+  (i) the bridge content reduces to plain `Σ` + `≡` (Track A/B/C
+  failure);
+  (ii) all three candidate analogies fail their falsifiers without
+  a replacement surfacing;
+  (iii) the residue analysis reduces to the retracted-prose
+  `EchoGraded` graded-comonad framing (R-2026-05-18);
+  (iv) any subsequent audit pass adds the bridge framing (or a
+  near-paraphrase) to
+  `.machine_readable/6a2/STATE.a2ml § forbidden-rebrandings` or to
+  `earn-back-summary § forbidden-rebrandings`;
+  (v) retraction-watch trips on any of the three R-2026-05-18
+  narrowings (Pillar B pointwise mediator, `EchoGraded` thin-poset
+  reindexing, `EchoRelModel` carrier-parametricity).
+  Closure means deleting the bridge module, the docs directory,
+  this R5 entry, the Lane 4 cross-reference one-liner, and the row
+  in `docs/echo-types/echo-kernel-note.adoc`; no other file is
+  touched.
+* *Anchor.*
+  `docs/echo-types/explorations/decoration-bridge/README.adoc`.
+* *Retraction-watch.* Three drift conditions; see the bridge
+  README § "Retraction-watch".  Tripping any condition closes the
+  bridge pending review.
 
 == Lane discipline rules
 
