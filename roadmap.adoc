@@ -198,24 +198,31 @@ repository. Treat as parallel-independent; Lane 1 progress is never
 gated on Lane 3 progress, and the README + roadmap surface the two as
 separate branches.
 
-*Bottleneck.* Unbudgeted `_<ᵇʳᶠ_` global well-foundedness; 10/13
-constructors closed via the budgeted route + `_<ᵇ⁰_` umbrella per the
-2026-05-20 evening session; 3 constructor cases (`<ᵇ-ψα`, `<ᵇ-ψΩ≤`,
-`<ᵇ-+1` joint-bplus) remain open under documented structural blockers
-(see `docs/echo-types/buchholz-rank-obstruction.adoc`).
+*Bottleneck.* Unbudgeted `_<ᵇʳᶠ_` global well-foundedness; 11/13
+constructors closed via the budgeted route + `_<ᵇ⁰_` umbrella + Lane 3
+follow-ons (`<ᵇ⁺-ψα` via `RankAdm` 2026-05-26; `<ᵇ-ψΩ≤` at both
+`ν<μ` and the `ν=μ` boundary via `RankLex` 2026-05-27). One
+constructor case (`<ᵇ-+1` joint-bplus) remains open with the
+`Ordinal.Buchholz.HeadOmega` first slice landed 2026-05-27; rank-mono
+follow-ons designed in `RankPow.agda`'s preamble and the obstruction
+doc.
 
 *Close-out criterion.* Either:
 
-* the three open constructor cases close via ψ-admissibility rank
-  refinement + leading-Ω-index domination (planned closure work; ~3
-  follow-on slices), unblocking full `rank-pow-mono-<ᵇ⁻` umbrella and
-  thereby `wf-<ᵇʳᶠ`; OR
+* the remaining `<ᵇ-+1` joint-bplus case closes via the head-Ω
+  domination route (Slice 2 = `ω-rank-pow-succ` + the domination
+  lemma; Slice 3 = the headline `rank-mono-<ᵇ-+1-via-head-Ω`;
+  Slice 4 = full `rank-pow-mono-<ᵇ⁻` umbrella composition),
+  unblocking full `wf-<ᵇʳᶠ`; OR
 * a falsifiable verdict lands stating that the unbudgeted promotion
   cannot close under `--safe --without-K` for the current `_<ᵇ_`,
   with the WfCNF-restricted `_<ᵇ⁻_` accepted as the final form.
 
-*Artefacts.* See `docs/buchholz-plan.adoc` and the `Ordinal/Buchholz/`
-subtree. Per-session ledger in CLAUDE.md §"Session arc 2026-05-20".
+*Artefacts.* See `docs/buchholz-plan.adoc`,
+`docs/echo-types/buchholz-rank-obstruction.adoc` (live per-constructor
+verdict), and the `Ordinal/Buchholz/` subtree. Per-session ledger in
+CLAUDE.md §"Session arc 2026-05-20" and §"Session arc 2026-05-27 late
+evening".
 
 *Status.* Continue on parallel branches. Lane 1 does not wait.
 
@@ -272,9 +279,25 @@ state-reconstruction example.
 the three walkthroughs at design-doc level with their target file
 layouts, honest-bound disclosures, the per-walkthrough Smoke pin
 discipline, and the killer-app-candidate close-out check on
-Walkthrough 1. No Agda lands at this stage; the scaffold exists so
-an unparking session lands Agda directly rather than re-deriving
-the pedagogy. Lane 5 itself remains PARKED.
+Walkthrough 1.
+
+*Walkthroughs landed (2026-05-26/27).* The originally-scaffolded
+Lane 5 triplet is now complete in Agda — Walkthrough 1
+(`tutorial/region_exit_audit/`) landed 2026-05-26 as the killer-app
+candidate; Walkthrough 2 (`tutorial/epistemic_erasure/`) landed
+2026-05-27 with the KDF / no-section-via-residue framing;
+Walkthrough 3 (`tutorial/provenance_debugging/`) landed 2026-05-27
+with the section/no-section contrast across three residue layers.
+Each carries an honest-bound disclosure at the top and a
+matched-negative `NotProved-*` ⊤-aliases block at the bottom. The
+tutorial tree builds under `--safe --without-K` with zero postulates
+via `tutorial/All.agda`.
+
+Lane 5 itself remains PARKED at the lane-policy level pending the
+user's unpark decision (per §"Unblocking condition" above —
+either Lane 1 closes or Walkthrough 1's killer-app status is
+formally accepted). The walkthroughs landing did not auto-unpark
+the lane.
 
 == Closed lanes
 
@@ -321,8 +344,8 @@ narrowings.
 | `EchoRelModel.GradedLossModel` + generic `GCLaws` — *carrier-parametricity over a fixed grade poset* (not model-independence; see R-2026-05-18). `conservativity.adoc` — evidence-for, not proof-of, conservativity.
 
 | E — External validation (paper + outreach)
-| IN PROGRESS
-| `docs/echo-types/paper.adoc` LIVING DRAFT with `[EXPAND]` tags; `types-abstract.adoc` submission-ready. Lane 1's close-out criterion governs.
+| IN PROGRESS (in-repo half close-out; offline half author-driven)
+| `docs/echo-types/paper.adoc` LIVING DRAFT with `[EXPAND]` tags; `types-abstract.adoc` submission-ready. `docs/echo-types/pillar-e-offline.adoc` carries the venue matrix (TYPES → CPP → ITP → MSCS), Zenodo DOI mint plan, library packaging plan, and three pre-written outreach drafts. Pre-staged: `CITATION.cff`, `.zenodo.json` (placeholder DOI + ORCID-commented), `echo-types.agda-lib`, README §Citation + §"Installing as a library". Owner-action items: ORCID + Zenodo authorisation + TYPES/CPP submissions + outreach send. Lane 1's close-out criterion still governs the in-repo half.
 |===
 
 == Historical milestone log (M1–M13)
