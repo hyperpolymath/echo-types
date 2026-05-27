@@ -117,6 +117,17 @@ kernel** — the boundary is real and lives outside this core.
 | `EchoApprox`, `EchoApproxInstance`
 | Does **not** `import Echo`; a parallel stdlib-only approximation
   module. Listed so the DAG audit is complete.
+
+| *Exploratory (not in `All.agda`)*
+| `EchoDecorationBridge`
+| Deliberately omitted from `proofs/agda/All.agda` so the verified
+  suite is unaffected. Re-issues `EchoIntegration`'s integration
+  claim through a `DecorationFit` record. Listed here only to
+  satisfy the classification-drift lint
+  (`scripts/kernel-guard.sh` Check B); the module itself is
+  exploratory per `roadmap.adoc` § R5 and
+  `docs/echo-types/explorations/decoration-bridge/README.adoc`.
+  Not kernel, not load-bearing, subject to abandonment.
 |===
 
 `EchoOrdinal` is Tier-1 off `Echo` but additionally pulls the

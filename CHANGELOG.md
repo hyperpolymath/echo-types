@@ -23,6 +23,68 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
     a two-level compositional convenience) — first slice of option
     (A) for the remaining `<ᵇ-+1` joint-bplus discharge; no
     rank-mono yet.
+- *Lane 3 head-Ω route — Slice 2 + Slice 2-omega + inversion + Slice 2-bplus
+  ALL LANDED 2026-05-27.* Follow-on to the Slice 1 head-Ω landing above
+  (PRs #130 + #131 + #133 + #134):
+  - `Ordinal.Buchholz.RankPow` gains `ω-rank-pow-succ : OmegaIndex →
+    Ord` with per-marker strict dominance at *both* branches
+    (`ω-rank-pow-<-succ-fin` via `ω^-strict-mono-suc`;
+    `ω-rank-pow-<-succ-omega` via the `Brouwer/OmegaPow.ω^-strict-mono-suc`
+    template mirrored at `ω-rank-pow ω`) plus the unified
+    `ω-rank-pow-<-succ : ∀ μ → ω-rank-pow μ <′ ω-rank-pow-succ μ`,
+    plus atomic-rank factoring through `head-Ω`
+    (`rank-pow-bOmega-via-head-Ω`, `rank-pow-bpsi-via-head-Ω`).
+  - Slice 2-omega closes a Brouwer-encoding hazard the original
+    CLAUDE.md proposal would have tripped: the proposed
+    `ω-rank-pow-succ ω = olim (λ n → ω^(suc(suc n)))` is
+    equi-ordinal with `ω-rank-pow ω = olim (λ n → ω^(suc n))`
+    (both denote `ω^ω`), so cannot strictly dominate.  The
+    revised shape `olim (λ n → ω-rank-pow ω ·ℕ n)` denotes
+    `ω^(ω+1)` and goes strictly higher via `X≤′oz⊕X` +
+    `⊕-mono-<-right (ω-rank-pow-pos ω)`.  Full record in
+    `Ordinal.Buchholz.RankPow`'s "History note" block.
+  - New module `Ordinal.Buchholz.HeadOmegaInversion` lands the
+    option-(b) inversion lemmas `head-Ω-inv-bOmega` (strict) and
+    `head-Ω-inv-bpsi` (non-strict). Both proved by structural
+    recursion on the `<ᵇ` derivation; no rank-mono dependency.
+  - New module `Ordinal.Buchholz.RankPowDomination` lands the
+    Slice 2-bplus headline `rank-pow-dominated-by-head-Ω` by
+    structural recursion on WfCNF, plus the supporting lemmas
+    (`<′→≤′`, `≤′-<′-trans`, `<′-trans`, `ω-rank-pow-mono-≤Ω`,
+    `ω-rank-pow-succ-pos`, `additive-principal-ω-rank-pow-succ`,
+    `rank-y-bound`). PR #134 was the one-line explicit-implicit
+    fix for the initial `ω≤ω` case of `ω-rank-pow-mono-≤Ω`.
+- *Decoration bridge — R5 exploratory entry scaffolded (PR #129).*
+  `docs/echo-types/explorations/decoration-bridge/` lands a bounded
+  exploration of whether the Choreo × Graded integration shape
+  resembles adjacent-domain decoration constructions (CRDTs, gossip,
+  local-first causal histories).  Scope strictly the one axis pair
+  `EchoIntegration.agda` already integrates; external candidates
+  framed as analogies-with-falsifiers, never as evidence of recipe
+  generalisation.  Sits as `roadmap.adoc` § R5 (deferred research)
+  with explicit termination criteria (Track A/B/C failure, all
+  candidates retired, redundancy with retracted framing,
+  forbidden-rebrandings register addition, retraction-watch trip).
+  Companion Agda module `proofs/agda/EchoDecorationBridge.agda` —
+  deliberately not in `All.agda`, classified as "Exploratory (not in
+  All.agda)" in `docs/echo-types/echo-kernel-note.adoc` so CI's
+  classification-drift lint stays green.
+- *Tier-1+2+3 spine + audience moves + suite + F5 FULL PASS
+  LANDED 2026-05-27.* My session's contribution sitting on top of
+  the parallel-session ordinal work above. See CLAUDE.md's
+  "Slice-2 upstream adoption" + "broad-cleanup close" session arcs
+  for the deliverable list; key headlines: `EchoTotalCompletion.A↔ΣEcho`,
+  `EchoOrthogonalFactorizationSystem.ofs-witness`,
+  `EchoNoSectionGeneric.no-section-of-collapsing-map`, the four
+  Tier-2 classification-grid records (`ResidueForm` /
+  `DecorationStructure` / function-side / observational), the
+  Pillar F Gate F5 FULL PASS triple (F5-1 / F5-2 / F5-3) earning
+  back the qualified OFS, four audience-facing modules
+  (`EchoProvenance` / `EchoSecurity` / `EchoProbabilisticSupport`
+  / `EchoDifferential`), and the curated single-file entry
+  `EchoCanonicalIdentitySuite`. Two consolidation narratives
+  `docs/echo-types/{universal-property,fibration-package}.adoc`.
+  Retraction follow-up F-2026-05-27a logged in `docs/retractions.adoc`.
 - *Lane 5 tutorial track — the originally-scaffolded triplet is
   complete.* `tutorial/` ships three worked walkthroughs with
   honest-bound disclosure at top + matched-negative `NotProved-*`

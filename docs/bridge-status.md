@@ -23,13 +23,19 @@ This document strictly tracks the status of experimental extensions and bridges 
 - **Core Affect:** NO
 
 ## 4. Buchholz / Veblen Ordinals
-- **Status:** BLOCKED
+- **Status:** PARTIAL (11/13 constructors closed under WfCNF; 1 in flight)
 - **Dependencies:** Standard Agda
-- **Blockers:** Well-foundedness of shared-binder cases is blocked by the failure of the self-lift.
+- **Blockers:** `<ᵇ-+1` joint-bplus is the single remaining open constructor. The head-Ω domination route (option A) has its abstraction + per-marker dominances at both branches + the option-(b) head-Ω inversion lemmas all landed across 2026-05-27 (PRs #124 / #130 / #131); only the WfCNF-carrier structural recursion (Slice 2-bplus) remains. The earlier shared-binder-self-lift blocker is resolved (`RankAdm` + `RankLex` slices, 2026-05-26/27). Live tracker: `docs/echo-types/buchholz-rank-obstruction.adoc`.
 - **Core Affect:** NO
 
 ## 5. JanusKey / Categorical
 - **Status:** EXPLORATORY
 - **Dependencies:** Categorical foundations
 - **Blockers:** Higher-level abstractions (monads, adjunctions) are still evolving; core functors are stable.
+- **Core Affect:** NO
+
+## 6. Decoration bridge (conceptual, not cross-repo)
+- **Status:** EXPLORATORY (R5 deferred-research; cleanly abandonable)
+- **Dependencies:** `EchoIntegration`, `EchoChoreo`, `EchoGraded` (import only)
+- **Blockers:** Bridge is bounded by construction. Closes under any of the documented termination criteria: Track A/B/C failure, all candidate analogies retired, redundancy with retracted-prose graded-comonad framing, forbidden-rebrandings register addition, retraction-watch trip. Companion: `docs/echo-types/explorations/decoration-bridge/README.adoc`; module: `proofs/agda/EchoDecorationBridge.agda` (deliberately not in `All.agda`).
 - **Core Affect:** NO
