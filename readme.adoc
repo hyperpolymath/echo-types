@@ -1,4 +1,6 @@
 = echo-types
+:toc:
+:toclevels: 2
 
 image::docs/assets/banner.png[Echo Types — Proof-Relevant Information Residues,align="center"]
 
@@ -282,6 +284,5 @@ Open/gated work and cross-repo follow-ups are tracked in:
 
 == Licensing
 
-* code, proofs, and tooling in this repository are intended to be licensed under `MPL-2.0`; see `LICENSE`
-* prose documentation in `docs/`, `README.md`, `readme.adoc`, and roadmap files is intended to be licensed under `CC-BY-4.0`; see `LICENSE-docs`
-* practical follow-up: normalize per-file SPDX headers across source files so file-level notices match the top-level licensing intent
+* code, proofs, and tooling in this repository are licensed under `MPL-2.0`; see `LICENSE`
+* prose documentation in `docs/`, `README.md`, `readme.adoc`, and roadmap files is licensed under `CC-BY-4.0`; see `LICENSE-docs`
