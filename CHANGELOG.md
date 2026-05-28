@@ -6,6 +6,84 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added (2026-05-28)
+
+- *Lane 3 ordinal track — Slice 3 prerequisites.* PR #137 added
+  `proofs/agda/Ordinal/Buchholz/RankPowSlice3.agda` (220 lines) —
+  three primitives toward the Slice 3 headline:
+  - `NonBzero` — left-spine non-bzero predicate excluding the
+    degenerate `bplus bzero bzero` chains that WfCNF technically
+    allows but CNF normalisation excludes.
+  - `ω-rank-pow-succ-≤-via-<Ω` — strict-jump bridge from `μ <Ω ν`
+    to `ω-rank-pow-succ μ ≤′ ω-rank-pow ν`. Closes the gap between
+    Slice 2-bplus's upper bound on the source's rank and the lower
+    bound on the target's rank.
+  - `head-Ω-lower-bound` — head-Ω LOWER bound under WfCNF +
+    NonBzero. Dual of `rank-pow-dominated-by-head-Ω`.
+
+- *Lane 3 ordinal track — Slice 3 headline closed under a strict-head
+  premise.* PR #141 added
+  `proofs/agda/Ordinal/Buchholz/RankPowSlice3Headline.agda` (155
+  lines). The headline `rank-mono-<ᵇ-+1-via-head-Ω` closes the
+  joint-bplus rank-mono case for `_<ᵇ-+1_` via Route A from the
+  Slice 3 design note. The proof composes the four Slice 3
+  prerequisites in a clean chain (no structural recursion):
+  Slice 2-bplus + head-Ω-bplus → strict-jump bridge → head-Ω lower
+  bound → `⊕-left-≤-sum`, all via `≤′-trans`. The headline takes
+  the strict-head premise `head-Ω x₁ <Ω head-Ω y₁` as an EXTERNAL
+  HYPOTHESIS; the umbrella's case-split is the remaining wiring
+  (the `bpsi=bpsi` at equal markers sub-case still needs `α`'s
+  rank via rank-adm or rank-lex). Compiles standalone under
+  `--safe --without-K`, zero postulates. Smoke green.
+
+- *Canonical identity layer — (epi, mono) earn-back form.* PR #138:
+  `proofs/agda/EchoImageFactorizationProp.agda` lands the
+  (epi, mono) factorisation module-parameterised in a truncation
+  interface — the long-pending earn-back gate previously referenced
+  as "next" in `docs/echo-types/MAP.adoc`. Companion to
+  `EchoImageFactorization`. Classification: Tier 2 in
+  `docs/echo-types/echo-kernel-note.adoc`.
+
+- *Classification grid — Search + Epistemic ResidueForm instances.*
+  PR #139: `EchoResidueTaxonomy.agda` gains two further `ResidueForm
+  f R` instances (`Search` and `Epistemic`) alongside the existing
+  four (trivial, identity, generic Σ-cert, linear-affine). Brings
+  the total to six instances, with the other four decoration
+  modules documented as structurally compatible.
+
+- *Visual identity — banner kit ("Diagrammatic Hush").* PR #140:
+  `docs/assets/banner.{png,svg}`, `docs/assets/banner-philosophy.md`,
+  `tools/banner/build-banner.mjs`. The `README.md` and `readme.adoc`
+  both gained the banner image at the top. No content impact; purely
+  visual identity for the project's public surface.
+
+### Fixed (2026-05-28)
+
+- *CI hygiene: kernel-guard classification-drift unblocked.* PR #136:
+  18 previously-unclassified `Echo*.agda` modules (the canonical-
+  identity / OFS cohort plus the application/extension modules:
+  `EchoTotalCompletion`, `EchoOrthogonalFactorizationSystem`,
+  `EchoImageFactorization`, `EchoNoSectionGeneric`,
+  `EchoLossTaxonomy`, `EchoResidueTaxonomy`,
+  `EchoDecorationStructure`, `EchoObservationalEquivalence`,
+  `EchoOFSUnivF5`/`Diag`/`Iso`, `EchoCanonicalIdentitySuite`,
+  `EchoEntropy`, `EchoLLEncoding`, `EchoProvenance`, `EchoSecurity`,
+  `EchoProbabilisticSupport`, `EchoDifferential`) are now classified
+  in `docs/echo-types/echo-kernel-note.adoc`, unblocking
+  `scripts/kernel-guard.sh` Check B (classification-drift lint).
+
+- *CI hygiene: N5Falsifier xfail gate removed.* PR #136 also dropped
+  the `Expected-failure gate (N5Falsifier is known-broken)` step
+  from `.github/workflows/agda.yml`. `proofs/agda/characteristic/
+  N5Falsifier.agda` was resolved on 2026-05-27 by pinning the
+  implicit `r` / `grade` at four `applyRole` / `applyGrade` call
+  sites — the unsolved-metas were an inference blocker, not a
+  content blocker. The module is now imported by
+  `proofs/agda/characteristic/All.agda` (line 33). The xfail gate's
+  own self-disclosed instructions (`"register it in
+  characteristic/All.agda and remove this xfail gate"`) fired on
+  the previous CI run; this PR completed those instructions.
+
 ### Added (2026-05-27)
 
 - *Lane 3 ordinal track — 11/13 Buchholz constructors closed under

@@ -78,8 +78,13 @@ in the Pillar F4 template style.
 * *Image factorisation* — `Image f := Σ B (Echo f)`; the proof-
   relevant image IS the total Echo space. Three classifications
   (Surjective, Injective, projection-uniqueness under injectivity).
-  The (epi, mono) truncation form is the next earn-back gate.
   `proofs/agda/EchoImageFactorization.agda`.
+* *Image factorisation, (epi, mono) form (2026-05-28)* — the
+  (epi, mono) earn-back module, module-parameterised in a
+  truncation interface. Companion to `EchoImageFactorization`;
+  the previously-pending (epi, mono) form now lands without
+  committing the kernel to a specific truncation primitive.
+  `proofs/agda/EchoImageFactorizationProp.agda`.
 * *Generic no-section* — `no-section-of-collapsing-map`: for ANY
   collapsing map with two distinct elements landing on the same
   image, no section exists. Lifts the previous single-instance
@@ -93,10 +98,11 @@ in the Pillar F4 template style.
   `proofs/agda/EchoLossTaxonomy.agda`.
 * *Residue taxonomy* (residue-side) — `record ResidueForm f R`
   packaging the per-output residue carrier + lowering shared by the
-  eight decoration modules. Four instances: trivial (⊤), identity
-  (`Echo f`), generic Σ-cert (`echoR-residue`), and the worked
-  `linear-affine-residue`. The other six decoration modules
-  documented as structurally compatible.
+  eight decoration modules. Six instances (as of 2026-05-28): trivial
+  (⊤), identity (`Echo f`), generic Σ-cert (`echoR-residue`),
+  `linear-affine-residue`, and the newer `Search` + `Epistemic`
+  forms. The other four decoration modules documented as structurally
+  compatible.
   `proofs/agda/EchoResidueTaxonomy.agda`.
 * *Decoration structure* (observation-side) — `record
   DecorationStructure G` packaging the seven-field decoration
@@ -228,7 +234,12 @@ Staged Buchholz-style collapsing in `--safe --without-K`.
 
 * Proofs: `proofs/agda/Ordinal/` (`Buchholz/`, `Brouwer`, `CNF`,
   `Closure`, `Psi…`, `ExtendedOrder`, `RankPow`, `RankAdm`,
-  `RankLex`, `HeadOmega`, `HeadOmegaInversion`, `RankPowDomination`).
+  `RankLex`, `HeadOmega`, `HeadOmegaInversion`, `RankPowDomination`,
+  `RankPowSlice3` (2026-05-28 — `NonBzero` + strict-jump bridge +
+  head-Ω lower bound), `RankPowSlice3Headline` (2026-05-28 — Slice 3
+  headline `rank-mono-<ᵇ-+1-via-head-Ω` closed under a strict-head
+  premise; umbrella case-split bumps `bpsi=bpsi at equal markers`
+  to rank-adm / rank-lex)).
 * Docs: `docs/buchholz-plan.adoc`,
   `docs/echo-types/buchholz-extended-wf.md`,
   `docs/echo-types/buchholz-rank-obstruction.adoc` (per-constructor
