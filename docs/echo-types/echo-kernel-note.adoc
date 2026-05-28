@@ -64,11 +64,14 @@ kernel** — the boundary is real and lives outside this core.
 | `EchoCharacteristic`, `EchoChoreo`, `EchoDecidable`,
   `EchoFiberBridge`, `EchoFiberCount`, `EchoFiberTriangulation`,
   `EchoIndexed`, `EchoRelational`, `EchoTruncation`,
-  `EchoJanusBridge`, `EchoTropical`, `EchoSeparating`
+  `EchoJanusBridge`, `EchoTropical`, `EchoSeparating`,
+  `EchoTotalCompletion`
 | One hop off the kernel. `EchoJanusBridge`/`EchoTropical` are
   *Directions* (see MAP). `EchoFiberTriangulation` is the external
   stdlib triangulation hardening item. `EchoSeparating` carries
-  retracted prose framing (below).
+  retracted prose framing (below). `EchoTotalCompletion` is the
+  `A ↔ Σ Echo` encode/decode pair anchoring the F5 canonical-
+  identity cohort (Tier 2 below).
 
 | *Derived — Tier 2* +
 (depend on Tier-1 `Echo*`)
@@ -81,7 +84,14 @@ kernel** — the boundary is real and lives outside this core.
   `EchoExampleAbsInt`, `EchoExampleParser`, `EchoExampleProvenance`,
   `EchoExampleSignAnalysis`, `EchoExampleTruncation`,
   `EchoSearchExample`, `EchoThermodynamicsArbitrary`,
-  `EchoThermoCollapseImpossible`, `EchoAbstractionBarrier`
+  `EchoThermoCollapseImpossible`, `EchoAbstractionBarrier`,
+  `EchoOrthogonalFactorizationSystem`, `EchoImageFactorization`,
+  `EchoNoSectionGeneric`, `EchoLossTaxonomy`, `EchoResidueTaxonomy`,
+  `EchoDecorationStructure`, `EchoObservationalEquivalence`,
+  `EchoOFSUnivF5`, `EchoOFSUnivF5Diag`, `EchoOFSUnivF5Iso`,
+  `EchoCanonicalIdentitySuite`, `EchoDifferential`, `EchoEntropy`,
+  `EchoLLEncoding`, `EchoProbabilisticSupport`, `EchoProvenance`,
+  `EchoSecurity`
 | Multi-hop. `EchoThermodynamics` reaches the kernel via
   `EchoFiberCount` (no direct `Echo` import);
   `EchoThermodynamicsFinite` is its Bishop-finite transport layer.
@@ -93,6 +103,21 @@ kernel** — the boundary is real and lives outside this core.
   `EchoLinear`, landed 2026-05-26 via PR #119.  `EchoExample*` are
   derived domain
   applications.
+  *F5 canonical-identity / OFS cohort* (added via Slice-2b+ doc
+  sweep): `EchoOrthogonalFactorizationSystem` is the
+  (encode-mono / decode-epi) factorisation keystone;
+  `EchoImageFactorization` carries the image side;
+  `EchoOFSUnivF5`/`Diag`/`Iso` are the F5 universal-property work
+  routing composition through totality;
+  `EchoCanonicalIdentitySuite` re-exports the cohort as a single
+  entry point; `EchoNoSectionGeneric` / `EchoLossTaxonomy` /
+  `EchoResidueTaxonomy` / `EchoDecorationStructure` /
+  `EchoObservationalEquivalence` are the no-section / loss /
+  residue / decoration / observational classifications.
+  *Application/extension modules* (also added via the same sweep):
+  `EchoEntropy`, `EchoLLEncoding`, `EchoProvenance`, `EchoSecurity`,
+  `EchoProbabilisticSupport`, `EchoDifferential` are derived domain
+  applications mapped under their own headings in MAP.adoc.
 
 | *Earn-back gate modules* +
 (derived / scoped; not kernel)
