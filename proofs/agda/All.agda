@@ -107,6 +107,8 @@ open import Ordinal.Brouwer
 open import Ordinal.Brouwer.Arithmetic
 open import Ordinal.Brouwer.Phase13
 open import Ordinal.Brouwer.OmegaPow
+open import Ordinal.Brouwer.StrictLeftMonoRefuted
+open import Ordinal.Brouwer.AdditivePrincipalGenericRefuted
 open import Ordinal.Buchholz.Syntax
 open import Ordinal.Buchholz.Closure
 open import Ordinal.Buchholz.Order
