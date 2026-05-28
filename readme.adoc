@@ -68,12 +68,13 @@ Tier 1 (the canonical identity layer itself):
 * `EchoTotalCompletion.agda` — `A ≃ Σ B (Echo f)`
 * `EchoOrthogonalFactorizationSystem.agda` — `ofs-witness`
 * `EchoImageFactorization.agda` — `Image f := Σ B (Echo f)`
+* `EchoImageFactorizationProp.agda` — (epi, mono) earn-back form, module-parameterised in a truncation interface (2026-05-28)
 * `EchoNoSectionGeneric.agda` — `no-section-of-collapsing-map`
 
 Tier 2 (the classification grid):
 
 * `EchoLossTaxonomy.agda` — function-side four-axis (EQUIV / INJ / SURJ / CONST)
-* `EchoResidueTaxonomy.agda` — `ResidueForm` record + instances
+* `EchoResidueTaxonomy.agda` — `ResidueForm` record + 6 instances (trivial, identity, generic Σ-cert, linear-affine, Search, Epistemic; the last two added 2026-05-28)
 * `EchoDecorationStructure.agda` — `DecorationStructure` record + abstract degrade-compose
 * `EchoObservationalEquivalence.agda` — mode-indexed `_≡m_` on `LEcho`
 
