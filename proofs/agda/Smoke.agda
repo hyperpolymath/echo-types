@@ -1086,6 +1086,37 @@ open import Ordinal.Buchholz.RankBrouwer using
   ( rank
   )
 
+-- Brouwer-arithmetic CHECKED REFUTATIONS (2026-05-28).  Promote
+-- the two prose obstacles from `RankLexSlice3`'s design note and
+-- `Phase13`'s `⊕-mono-≤-left` block comment into named theorems:
+--
+-- (b) strict-left-mono of `_⊕_` is NOT a theorem
+--     (`strict-left-mono-refuted`).  Counterexample at α = oz,
+--     β = osuc oz, γ = ω: both sides equal ω, so the strict step
+--     fails.  Refutation derives ⊥ from the hypothesis + `<′-irrefl`
+--     (also exposed here for downstream use).
+--
+-- (a) "additive-principal closure on generic sums" is NOT a theorem
+--     (`additive-principal-generic-sum-refuted`).  Counterexample
+--     at X = Y = α = β = ω: `ω ⊕ ω <′ ω ⊕ ω` would follow,
+--     refuted by `<′-irrefl`.
+--
+-- These pin the two routes documented as "structurally blocked"
+-- in `Ordinal.Buchholz.RankLexSlice3` as CHECKED dead-ends
+-- rather than prose claims.
+open import Ordinal.Brouwer.StrictLeftMonoRefuted using
+  ( StrictLeftMonoSum
+  ; <′-irrefl
+  ; osuc-oz-⊕-ω≤oz-⊕-ω
+  ; strict-left-mono-refuted
+  )
+
+open import Ordinal.Brouwer.AdditivePrincipalGenericRefuted using
+  ( AdditivePrincipalGenericSum
+  ; ω<′ω⊕ω
+  ; additive-principal-generic-sum-refuted
+  )
+
 -- ω-power rank for Ω-markers and Buchholz terms.  Limit-shaped
 -- replacement for `nat-to-ord (suc n)` successor stacks.  Compositional
 -- rank-mono primitives (right-mono on `bplus`) reusable across both
