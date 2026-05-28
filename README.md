@@ -33,7 +33,7 @@ flowchart TD
     AD["<b>Pillars A–D</b> (establishment plan, LANDED 2026-05-17)<br/>A: echo↔fib · B: pullback UP · C: separating model · D: carrier-parametric"]
     PF["<b>Pillar F gates</b> (earn-back, ALL PASSED)<br/>F1: graded-comonad witness · F2: 2nd Echo-functor model<br/>F3: 2nd non-iso grade-monoid · F4: funext-qualified pullback UP<br/>F5: funext-qualified full OFS"]
     T1["<b>Tier 1 · Canonical identity layer</b> (2026-05-27, extended 2026-05-28)<br/>EchoTotalCompletion (A ≃ Σ B Echo f) · OFS-witness · Image · no-section-of-collapsing-map · ImageFactorizationProp (epi,mono earn-back)"]
-    T2["<b>Tier 2 · Classification grid</b><br/>LossTaxonomy (function-side) · ResidueTaxonomy (residue-side, 6 instances incl. Search + Epistemic) · DecorationStructure · _≡m_"]
+    T2["<b>Tier 2 · Classification grid</b><br/>LossTaxonomy (function-side) · ResidueTaxonomy (residue-side, 8 instances incl. Indexed, Cost, Search, Epistemic) · DecorationStructure · _≡m_"]
     T3["<b>Tier 3 · Qualified universal property</b> (Gate F5)<br/>echo-factorisation-strict · diagonal lifting · factorisation uniqueness up to iso"]
     AUD["<b>Audience surfaces</b><br/>EchoProvenance · EchoSecurity · EchoProbabilisticSupport · EchoDifferential"]
     SUITE["<b>EchoCanonicalIdentitySuite</b><br/>(curated single-file entry point)"]

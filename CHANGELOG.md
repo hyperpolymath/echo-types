@@ -47,9 +47,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - *Classification grid — Search + Epistemic ResidueForm instances.*
   PR #139: `EchoResidueTaxonomy.agda` gains two further `ResidueForm
   f R` instances (`Search` and `Epistemic`) alongside the existing
-  four (trivial, identity, generic Σ-cert, linear-affine). Brings
-  the total to six instances, with the other four decoration
+  six (trivial, identity, generic Σ-cert, linear-affine, indexed,
+  cost; the 2026-05-27 audit-follow-on lands of `indexed-residue` +
+  `cost-residue` are what made the pre-#139 count six). Brings the
+  total to **eight instances**, with the remaining two decoration
   modules documented as structurally compatible.
+
+- *Lane 3 ordinal track — Slice 3 umbrella + lex-rank companion.*
+  PR #142 extends `_<ᵇ¹_` with the joint-bplus constructor + the
+  strict-head dispatch that wires the Slice 3 headline
+  (`rank-mono-<ᵇ-+1-via-head-Ω` from PR #141) into the umbrella
+  case-split. PR #143 adds the lex-rank companion: the
+  `bpsi-source-at-equality` ψ-rank discharge — the very sub-case
+  PR #144's CHANGELOG described as still requiring `α`'s rank via
+  rank-adm or rank-lex. The `<ᵇ-+1` joint-bplus rank-mono closure
+  is now substantively complete via the head-Ω+lex-rank composition.
 
 - *Visual identity — banner kit ("Diagrammatic Hush").* PR #140:
   `docs/assets/banner.{png,svg}`, `docs/assets/banner-philosophy.md`,

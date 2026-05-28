@@ -98,11 +98,13 @@ in the Pillar F4 template style.
   `proofs/agda/EchoLossTaxonomy.agda`.
 * *Residue taxonomy* (residue-side) — `record ResidueForm f R`
   packaging the per-output residue carrier + lowering shared by the
-  eight decoration modules. Six instances (as of 2026-05-28): trivial
-  (⊤), identity (`Echo f`), generic Σ-cert (`echoR-residue`),
-  `linear-affine-residue`, and the newer `Search` + `Epistemic`
-  forms. The other four decoration modules documented as structurally
-  compatible.
+  eight decoration modules. Eight instances (as of 2026-05-28):
+  the original endpoint pair (trivial (⊤), identity (`Echo f`)),
+  the generic Σ-cert (`echoR-residue`), `linear-affine-residue`,
+  the 2026-05-27 audit-follow-ons `indexed-residue` +
+  `cost-residue`, and the 2026-05-28 additions `search-residue` +
+  `epistemic-residue`. The remaining two decoration modules
+  documented as structurally compatible.
   `proofs/agda/EchoResidueTaxonomy.agda`.
 * *Decoration structure* (observation-side) — `record
   DecorationStructure G` packaging the seven-field decoration

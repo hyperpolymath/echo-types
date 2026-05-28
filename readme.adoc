@@ -74,7 +74,7 @@ Tier 1 (the canonical identity layer itself):
 Tier 2 (the classification grid):
 
 * `EchoLossTaxonomy.agda` — function-side four-axis (EQUIV / INJ / SURJ / CONST)
-* `EchoResidueTaxonomy.agda` — `ResidueForm` record + 6 instances (trivial, identity, generic Σ-cert, linear-affine, Search, Epistemic; the last two added 2026-05-28)
+* `EchoResidueTaxonomy.agda` — `ResidueForm` record + 8 instances (trivial, identity, generic Σ-cert, linear-affine, indexed, cost, search, epistemic; indexed+cost from 2026-05-27 audit-follow-on, search+epistemic from 2026-05-28 PR #139)
 * `EchoDecorationStructure.agda` — `DecorationStructure` record + abstract degrade-compose
 * `EchoObservationalEquivalence.agda` — mode-indexed `_≡m_` on `LEcho`
 
