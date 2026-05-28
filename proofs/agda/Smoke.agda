@@ -105,6 +105,20 @@ open import EchoImageFactorization using
   ; image-membership-is-echo
   )
 
+-- EchoImageFactorizationProp — (epi, mono) image factorisation
+-- module-parameterised in a propositional-truncation interface
+-- (`TruncInterface`).  Closes the (epi, mono) earn-back gate the
+-- base module flagged: takes ∥_∥ as an explicit module parameter
+-- (mirroring the funext-as-module-parameter discipline of
+-- `EchoOFSUnivF5`), then ships the (-1)-truncated image + its
+-- monic right leg + its mere-surjective left leg.  Zero postulates
+-- in THIS module; the truncation interface is supplied by the
+-- consumer.
+open import EchoImageFactorizationProp using
+  ( TruncInterface
+  ; module ImageProp
+  )
+
 -- EchoLossTaxonomy — function-side classification of `f : A → B`
 -- by echo shape. Four cases: EQUIV (centre + projection unique),
 -- INJ (projection unique, re-export), SURJ (every fibre inhabited,

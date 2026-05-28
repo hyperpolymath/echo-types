@@ -6,6 +6,7 @@ open import Echo
 open import EchoTotalCompletion
 open import EchoOrthogonalFactorizationSystem
 open import EchoImageFactorization
+open import EchoImageFactorizationProp
 open import EchoNoSectionGeneric
 open import EchoLossTaxonomy
 open import EchoResidueTaxonomy
