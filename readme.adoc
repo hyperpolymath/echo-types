@@ -1,5 +1,7 @@
 = echo-types
 
+image::docs/assets/banner.png[Echo Types — Proof-Relevant Information Residues,align="center"]
+
 Constructive Agda development for *echo types* as a first-class notion of:
 
 *loss that is not total erasure*.
