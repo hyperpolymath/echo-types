@@ -465,3 +465,17 @@ open import Ordinal.Buchholz.RankPowSlice3 using
   ; ω-rank-pow-succ-≤-via-<Ω
   ; head-Ω-lower-bound
   )
+
+-- Slice 3 headline (own block per CLAUDE.md Working rules): closes
+-- the joint-bplus rank-mono case for `_<ᵇ-+1_` under a strict-head
+-- premise `head-Ω x₁ <Ω head-Ω y₁`.  The premise is the burden
+-- this primitive bumps up to the caller (the umbrella's case-split
+-- on `x₁ <ᵇ y₁`); for x₁ = bOmega it discharges via
+-- `head-Ω-inv-bOmega` directly, for x₁ = bpsi at strict ν<Ω head-Ω y₁
+-- via `head-Ω-inv-bpsi` + `<Ω→` upgrade, for x₁ = bpsi at equality
+-- via rank-adm / rank-lex combination (Route A from the design
+-- note in `RankPowSlice3`).  The Slice 3 closure is now headline-
+-- level; the umbrella's case-split is the remaining wiring.
+open import Ordinal.Buchholz.RankPowSlice3Headline using
+  ( rank-mono-<ᵇ-+1-via-head-Ω
+  )
