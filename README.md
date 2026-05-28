@@ -1,6 +1,10 @@
 <!-- SPDX-License-Identifier: MPL-2.0 -->
 <!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 
+<p align="center">
+  <img src="docs/assets/banner.png" alt="Echo Types — Proof-Relevant Information Residues" width="100%">
+</p>
+
 # echo-types
 
 [![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity)](https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/echo-types)

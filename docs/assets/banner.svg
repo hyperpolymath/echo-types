@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="480" viewBox="0 0 1920 480">
+  <rect width="1920" height="480" fill="#0d1620"/>
+  <g stroke="#3a4555" stroke-width="0.7" fill="none">
+    <line x1="36" y1="36" x2="50" y2="36"/>
+    <line x1="36" y1="36" x2="36" y2="50"/>
+    <line x1="1884" y1="36" x2="1870" y2="36"/>
+    <line x1="1884" y1="36" x2="1884" y2="50"/>
+    <line x1="36" y1="444" x2="50" y2="444"/>
+    <line x1="36" y1="444" x2="36" y2="430"/>
+    <line x1="1884" y1="444" x2="1870" y2="444"/>
+    <line x1="1884" y1="444" x2="1884" y2="430"/>
+  </g>
+  <line x1="80" y1="275" x2="1840" y2="275" stroke="#3a4555" stroke-width="0.6" stroke-dasharray="1 7"/>
+  <line x1="160" y1="272" x2="160" y2="278" stroke="#3a4555" stroke-width="0.6"/>
+  <line x1="330" y1="272" x2="330" y2="278" stroke="#3a4555" stroke-width="0.6"/>
+  <line x1="500" y1="272" x2="500" y2="278" stroke="#3a4555" stroke-width="0.6"/>
+  <line x1="670" y1="272" x2="670" y2="278" stroke="#3a4555" stroke-width="0.6"/>
+  <line x1="1250" y1="272" x2="1250" y2="278" stroke="#3a4555" stroke-width="0.6"/>
+  <line x1="1420" y1="272" x2="1420" y2="278" stroke="#3a4555" stroke-width="0.6"/>
+  <line x1="1590" y1="272" x2="1590" y2="278" stroke="#3a4555" stroke-width="0.6"/>
+  <line x1="1760" y1="272" x2="1760" y2="278" stroke="#3a4555" stroke-width="0.6"/>
+  <g>
+    <line x1="160" y1="283" x2="160" y2="412" stroke="#3a4555" stroke-width="0.5"/>
+  </g>
+  <g transform="translate(160 232) rotate(0)">
+    <line x1="-22" y1="-16" x2="22" y2="-16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="22" y1="-16" x2="22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="-22" y1="16" x2="22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="-22" y1="-16" x2="-22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="-22" y1="-16" x2="22" y2="16" stroke="#ede4d0" stroke-width="0.75" stroke-linecap="round" opacity="0.78"/>
+    <line x1="22" y1="-16" x2="-22" y2="16" stroke="#ede4d0" stroke-width="0.75" stroke-linecap="round" opacity="0.78"/>
+    <circle cx="-22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="-22" cy="16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="16" r="2.85" fill="#ede4d0"/>
+  </g>
+  <g>
+    <line x1="330" y1="283" x2="330" y2="412" stroke="#3a4555" stroke-width="0.5"/>
+    <circle cx="330" cy="292.2142857142857" r="2" fill="#c9a96e"/>
+  </g>
+  <g transform="translate(330 232.5) rotate(1.5)">
+    <line x1="-22" y1="-16" x2="22" y2="-16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="22" y1="-16" x2="22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="-22" y1="16" x2="22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="-22" y1="-16" x2="-22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="-22" y1="-16" x2="22" y2="16" stroke="#ede4d0" stroke-width="0.75" stroke-linecap="round" opacity="0.78"/>
+    <circle cx="-22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="-22" cy="16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="16" r="2.85" fill="#ede4d0"/>
+  </g>
+  <g>
+    <line x1="500" y1="283" x2="500" y2="412" stroke="#3a4555" stroke-width="0.5"/>
+    <circle cx="500" cy="292.2142857142857" r="1.55" fill="#c9a96e"/>
+    <circle cx="500" cy="310.64285714285717" r="2" fill="#c9a96e"/>
+  </g>
+  <g transform="translate(500 233) rotate(3)">
+    <line x1="-22" y1="-16" x2="22" y2="-16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="22" y1="-16" x2="22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="-22" y1="16" x2="22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="-22" y1="-16" x2="-22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <circle cx="-22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="-22" cy="16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="16" r="2.85" fill="#ede4d0"/>
+  </g>
+  <g>
+    <line x1="670" y1="283" x2="670" y2="412" stroke="#3a4555" stroke-width="0.5"/>
+    <circle cx="670" cy="292.2142857142857" r="1.55" fill="#c9a96e"/>
+    <circle cx="670" cy="310.64285714285717" r="1.55" fill="#c9a96e"/>
+    <circle cx="670" cy="329.07142857142856" r="2" fill="#c9a96e"/>
+  </g>
+  <g transform="translate(670 233.5) rotate(4.5)">
+    <line x1="-22" y1="-16" x2="22" y2="-16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="22" y1="-16" x2="22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="-22" y1="-16" x2="-22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <circle cx="-22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="-22" cy="16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="16" r="2.85" fill="#ede4d0"/>
+  </g>
+  <g>
+    <line x1="1250" y1="283" x2="1250" y2="412" stroke="#3a4555" stroke-width="0.5"/>
+    <circle cx="1250" cy="292.2142857142857" r="1.55" fill="#c9a96e"/>
+    <circle cx="1250" cy="310.64285714285717" r="1.55" fill="#c9a96e"/>
+    <circle cx="1250" cy="329.07142857142856" r="1.55" fill="#c9a96e"/>
+    <circle cx="1250" cy="347.5" r="2" fill="#c9a96e"/>
+  </g>
+  <g transform="translate(1250 234) rotate(6)">
+    <line x1="-22" y1="-16" x2="22" y2="-16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <line x1="-22" y1="-16" x2="-22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <circle cx="-22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="-22" cy="16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="16" r="2.85" fill="#ede4d0"/>
+  </g>
+  <g>
+    <line x1="1420" y1="283" x2="1420" y2="412" stroke="#3a4555" stroke-width="0.5"/>
+    <circle cx="1420" cy="292.2142857142857" r="1.55" fill="#c9a96e"/>
+    <circle cx="1420" cy="310.64285714285717" r="1.55" fill="#c9a96e"/>
+    <circle cx="1420" cy="329.07142857142856" r="1.55" fill="#c9a96e"/>
+    <circle cx="1420" cy="347.5" r="1.55" fill="#c9a96e"/>
+    <circle cx="1420" cy="365.92857142857144" r="2" fill="#c9a96e"/>
+  </g>
+  <g transform="translate(1420 234.5) rotate(7.5)">
+    <line x1="-22" y1="-16" x2="-22" y2="16" stroke="#ede4d0" stroke-width="1.05" stroke-linecap="round" opacity="0.96"/>
+    <circle cx="-22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="-22" cy="16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="16" r="2.85" fill="#ede4d0"/>
+  </g>
+  <g>
+    <line x1="1590" y1="283" x2="1590" y2="412" stroke="#3a4555" stroke-width="0.5"/>
+    <circle cx="1590" cy="292.2142857142857" r="1.55" fill="#c9a96e"/>
+    <circle cx="1590" cy="310.64285714285717" r="1.55" fill="#c9a96e"/>
+    <circle cx="1590" cy="329.07142857142856" r="1.55" fill="#c9a96e"/>
+    <circle cx="1590" cy="347.5" r="1.55" fill="#c9a96e"/>
+    <circle cx="1590" cy="365.92857142857144" r="1.55" fill="#c9a96e"/>
+    <circle cx="1590" cy="384.3571428571429" r="2" fill="#c9a96e"/>
+  </g>
+  <g transform="translate(1590 235) rotate(9)">
+    <circle cx="-22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="-22" cy="16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="16" r="2.85" fill="#ede4d0"/>
+  </g>
+  <g>
+    <line x1="1760" y1="283" x2="1760" y2="412" stroke="#3a4555" stroke-width="0.5"/>
+    <circle cx="1760" cy="292.2142857142857" r="1.55" fill="#c9a96e"/>
+    <circle cx="1760" cy="310.64285714285717" r="1.55" fill="#c9a96e"/>
+    <circle cx="1760" cy="329.07142857142856" r="1.55" fill="#c9a96e"/>
+    <circle cx="1760" cy="347.5" r="1.55" fill="#c9a96e"/>
+    <circle cx="1760" cy="365.92857142857144" r="1.55" fill="#c9a96e"/>
+    <circle cx="1760" cy="384.3571428571429" r="1.55" fill="#c9a96e"/>
+    <circle cx="1760" cy="402.7857142857143" r="2" fill="#c9a96e"/>
+  </g>
+  <g transform="translate(1760 235.5) rotate(10.5)">
+    <circle cx="-22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="-16" r="2.85" fill="#ede4d0"/>
+    <circle cx="-22" cy="16" r="2.85" fill="#ede4d0"/>
+    <circle cx="22" cy="16" r="2.85" fill="#ede4d0"/>
+  </g>
+  <text x="960" y="198" font-family="IBM Plex Serif" font-style="italic" font-size="14.5" fill="#7d8590" text-anchor="middle" letter-spacing="7.5">Proof-Relevant Information Residues</text>
+  <text x="960" y="265" font-family="IBM Plex Serif" font-size="72" font-weight="400" fill="#f0e8d4" text-anchor="middle" letter-spacing="2">Echo Types</text>
+</svg>
