@@ -137,6 +137,7 @@ open import Ordinal.Buchholz.RankPow
 open import Ordinal.Buchholz.RankAdm
 open import Ordinal.Buchholz.RankLex
 open import Ordinal.Buchholz.RankLexSlice3
+open import Ordinal.Buchholz.RankLexJointBplus
 open import Ordinal.Buchholz.HeadOmega
 open import Ordinal.Buchholz.HeadOmegaInversion
 open import Ordinal.Buchholz.RankPowDomination
