@@ -86,6 +86,7 @@ kernel** — the boundary is real and lives outside this core.
   `EchoSearchExample`, `EchoThermodynamicsArbitrary`,
   `EchoThermoCollapseImpossible`, `EchoAbstractionBarrier`,
   `EchoOrthogonalFactorizationSystem`, `EchoImageFactorization`,
+  `EchoImageFactorizationProp`,
   `EchoNoSectionGeneric`, `EchoLossTaxonomy`, `EchoResidueTaxonomy`,
   `EchoDecorationStructure`, `EchoObservationalEquivalence`,
   `EchoOFSUnivF5`, `EchoOFSUnivF5Diag`, `EchoOFSUnivF5Iso`,
@@ -109,6 +110,9 @@ kernel** — the boundary is real and lives outside this core.
   `EchoImageFactorization` carries the image side;
   `EchoOFSUnivF5`/`Diag`/`Iso` are the F5 universal-property work
   routing composition through totality;
+  `EchoImageFactorizationProp` is the (epi, mono) earn-back
+  module-parameterised in a `TruncInterface` (closes the
+  truncation gate flagged by `EchoImageFactorization`);
   `EchoCanonicalIdentitySuite` re-exports the cohort as a single
   entry point; `EchoNoSectionGeneric` / `EchoLossTaxonomy` /
   `EchoResidueTaxonomy` / `EchoDecorationStructure` /
