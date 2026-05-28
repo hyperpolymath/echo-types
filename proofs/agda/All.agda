@@ -145,6 +145,7 @@ open import Ordinal.Buchholz.RankPowSlice3
 open import Ordinal.Buchholz.RankPowSlice3Headline
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice3
+open import Ordinal.Buchholz.RankMonoUmbrellaSlice4
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
 open import Ordinal.Buchholz.RecursiveSurfaceBudget
 open import Ordinal.Buchholz.SurfaceOrder
