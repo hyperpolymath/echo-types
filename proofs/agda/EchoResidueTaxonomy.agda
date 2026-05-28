@@ -233,6 +233,71 @@ module CostInstance {ℓ} (K : CostAlgebra ℓ) where
     record { lower = λ {y} (x , p) → x , p , cost-meets x }
 
 ----------------------------------------------------------------------
+-- Search instance (2026-05-28, Tier-2 grid completion).
+--
+-- `EchoSearch.EchoS enum f y n` is the bounded-`n` witness-search
+-- echo: a step index `k < n` at which the enumerator returns a
+-- preimage of `y` under `f`.  Lowering from `Echo f y` requires
+-- a search-completeness witness — for every echo at `y`, an
+-- enumerator step `k < n` produces its source element.
+--
+-- The search-completeness assumption is exactly the per-fibre
+-- "enum exhausts A within n steps" property.  Compared to
+-- `cost-residue` (where the budget-meets witness is a numeric
+-- bound on cost), `search-residue` requires structural location
+-- information (a specific step).  Both fit the same parametric
+-- shape: an external witness supplied at the ResidueForm boundary.
+--
+-- Closes the "EchoSearch structurally compatible but not packaged"
+-- gap noted in the companion remark.  Fourth non-endpoint,
+-- non-generic decoration instance.
+----------------------------------------------------------------------
+
+open import EchoSearch using (EchoS; SearchStrategy)
+open import Data.Nat.Base using (ℕ; _<_)
+open import Data.Product.Base using (_×_; proj₁)
+open import Relation.Binary.PropositionalEquality using (cong; trans)
+
+search-residue :
+  ∀ {a b} {A : Set a} {B : Set b}
+  (enum : SearchStrategy A) (f : A → B) (n : ℕ)
+  (search-complete : ∀ {y : B} (e : Echo f y) →
+                     Σ ℕ (λ k → (k < n) × (enum k ≡ proj₁ e))) →
+  ResidueForm f (λ y → EchoS enum f y n)
+search-residue enum f n search-complete =
+  record { lower = λ {y} e@(x , p) →
+    let (k , k<n , eq) = search-complete e
+    in  k , k<n , trans (cong f eq) p }
+
+----------------------------------------------------------------------
+-- Epistemic instance (2026-05-28, Tier-2 grid completion).
+--
+-- For a role `r : Role` from `EchoChoreo`, the indistinguishability
+-- class at observation value `y` is exactly the fibre
+-- `Echo (obs r) y` — every global indistinguishable-at-r from a
+-- representative IS a fibre element.  The "knowledge-equivalence-
+-- class residue" interpretation thus DEFINITIONALLY collapses to
+-- `identity-residue` specialised to `obs r`.
+--
+-- Pinning under a separate name makes the epistemic reading
+-- discoverable at the taxonomy boundary without introducing a
+-- distinct carrier (which would require either propositional
+-- truncation of the class — same earn-back as `(epi, mono)` image
+-- factorisation, handled by `EchoImageFactorizationProp` — or a
+-- setoid carrier with an explicit equivalence relation).
+--
+-- Closes the "EchoEpistemic structurally compatible but
+-- relational" gap noted in the companion remark.  Fifth instance
+-- (degenerate-but-named: definitionally equal to `identity-residue
+-- (obs r)`, but the name pins the epistemic reading).
+----------------------------------------------------------------------
+
+open import EchoChoreo using (Role; obs)
+
+epistemic-residue : (r : Role) → ResidueForm (obs r) (Echo (obs r))
+epistemic-residue r = identity-residue (obs r)
+
+----------------------------------------------------------------------
 -- Companion remark.
 --
 -- The eight decoration modules in the repo's decoration zoo and
@@ -265,25 +330,40 @@ module CostInstance {ℓ} (K : CostAlgebra ℓ) where
 --      parametric record sits inside the `K`-parameterised
 --      sub-module to keep the carrier signature tidy.
 --
---   6. *EchoSearch*. Search-bound-indexed refinement (enumerator-
---      bounded). Search bound 0 = trivial-residue; unbounded search
---      = identity-residue.
+--   6. *EchoSearch*. LANDED 2026-05-28 as `search-residue` above.
+--      Per-output carrier `EchoS enum f y n` (bounded-`n` search
+--      witness); lowering requires a search-completeness witness
+--      `∀ {y} (e : Echo f y) → Σ ℕ λ k → (k < n) × (enum k ≡ proj₁ e)`
+--      passed at the boundary (mirrors `cost-residue`'s
+--      `cost-meets` parameter).  Degenerate endpoints: search bound
+--      0 trivialises (no echo lowers — the `EchoS f y 0` is empty
+--      via `echo-search-bound-zero`); unbounded search via a
+--      surjective enumerator recovers identity-residue.
 --
 --   7. *EchoIndexed*. LANDED 2026-05-27 as `indexed-residue`
 --      above. Per-output carrier `Σ I (λ idx → Echoᵢ I ι f idx y)`;
 --      lowering `(x, p) ↦ (ι x, x, refl, p)`.
 --
---   8. *EchoEpistemic*. Knowledge-equivalence-class residue
---      (`Indist`, `Knows`). Lowering quotients the echo by
---      indistinguishability; structurally compatible but uses a
---      relational rather than Σ-shape residue.
+--   8. *EchoEpistemic*. LANDED 2026-05-28 as `epistemic-residue`
+--      above.  Definitionally `identity-residue (obs r)`: the
+--      indistinguishability class at observation `y` IS the fibre
+--      `Echo (obs r) y`.  Pinned under a distinct name so the
+--      epistemic reading is discoverable at the taxonomy boundary;
+--      no new carrier (a setoid carrier with explicit equivalence
+--      relation or a propositional-truncation of the class would
+--      both be separate earn-back lifts).
 --
--- All eight are structurally compatible with `ResidueForm`. The
--- four instances pinned above demonstrate the pattern at the two
--- endpoints + the generic Σ-cert + one worked non-trivial
--- instance; adding the remaining seven as packaged `ResidueForm`
--- instances is mechanical wiring (each module already has the
--- `lower` map; the wiring just exposes it through the record).
+-- All eight are now packaged.  Endpoint instances (1-3:
+-- trivial-residue + identity-residue + echoR-residue) cover the
+-- generic shapes; six non-endpoint instances ship the worked
+-- decoration-specific wiring (linear-affine-residue,
+-- indexed-residue, module CostInstance.cost-residue,
+-- search-residue, epistemic-residue, and choreo-residue via
+-- echoR-residue with `C = Role`).  Each instance's `lower` either
+-- discharges definitionally (`linear-affine` / `indexed` /
+-- `epistemic`) or requires a parametric witness at the boundary
+-- (`cost-meets` for cost / `search-complete` for search) that
+-- locates the relevant point in the decoration's quantitative axis.
 --
 -- The DECORATION RECIPE (`order` / `order-prop` / `join` /
 -- `degrade-compose` / `degrade-via-join`) that each of the eight
