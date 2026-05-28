@@ -24,8 +24,9 @@ git commit -s -m "feat: ..."
 2. CHANGELOG.md updated under `[Unreleased]`.
 3. `.machine_readable/6a2/STATE.a2ml` `last-updated` bumped if the change is significant.
 4. **Banned constructs.** No new `believe_me`, `assert_total`, `postulate`, `sorry`, `Admitted`, `unsafeCoerce`, or `Obj.magic` introduced. Estate-wide policy.
-5. **EI-2 discipline.** Per `.machine_readable/6a2/STATE.a2ml § ei-2`, the integration-recipe distinctness investigation is *terminated negatively* and is not to be reopened. If a change touches that territory, read `STATE.a2ml § ei-2` first; the `forbidden-rebrandings` list is a hard fence.
-6. **Naming traps.** `ModeGraded` (with trailing `d`) is canonical; never `ModeGrade`. See `STATE.a2ml § naming-traps`.
+5. **Guardrails are CI-enforced.** All `.agda` files under `proofs/agda/**` must declare `{-# OPTIONS --safe --without-K #-}` at the top. `tools/check-guardrails.sh` runs at CI time across every file (regardless of `All.agda` membership) and fails on: missing `--safe` / `--without-K`, escape pragmas (`TERMINATING`, `REWRITE`, `NO_POSITIVITY_CHECK`, etc.), `postulate` in code, or unsafe primitives (`primTrustMe`, `primEraseEquality`, `trustMe`). The `Exploratory` classification in `docs/echo-types/echo-kernel-note.adoc` only excuses `All.agda` membership — it does NOT excuse the guardrail. If you need postulates for a demo or earn-back-gate consumer, the file must live outside `proofs/agda/` (no current non-guarded path exists; widening the guardrail's allowlist requires a separate design discussion).
+6. **EI-2 discipline.** Per `.machine_readable/6a2/STATE.a2ml § ei-2`, the integration-recipe distinctness investigation is *terminated negatively* and is not to be reopened. If a change touches that territory, read `STATE.a2ml § ei-2` first; the `forbidden-rebrandings` list is a hard fence.
+7. **Naming traps.** `ModeGraded` (with trailing `d`) is canonical; never `ModeGrade`. See `STATE.a2ml § naming-traps`.
 
 ## Reviews
 
