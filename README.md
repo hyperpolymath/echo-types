@@ -15,6 +15,27 @@ Constructive Agda development for echo types as a first-class notion of structur
 
 loss that is not total erasure.
 
+## Contents
+
+- [Where things are](#️-where-things-are)
+- [Structural overview](#-structural-overview)
+- [Recommended reading order](#-recommended-reading-order)
+- [Core Idea](#core-idea)
+- [Definition (Foundation)](#definition-foundation)
+- [Canonical identity layer (2026-05-27)](#canonical-identity-layer-2026-05-27)
+- [Current Status Snapshot](#current-status-snapshot)
+  - [Echo Core (load-bearing for the identity claim)](#echo-core-load-bearing-for-the-identity-claim)
+  - [Ordinal / Buchholz (parallel-independent, experimental)](#ordinal--buchholz-parallel-independent-experimental)
+- [External Bridge Targets (local workspace)](#external-bridge-targets-local-workspace)
+- [What Echo Types Are For](#what-echo-types-are-for)
+- [Identity Claim and Falsifiability](#identity-claim-and-falsifiability)
+- [Build](#build)
+  - [Installing as a library](#installing-as-a-library)
+- [Citation](#citation)
+- [Tooling Stance](#tooling-stance)
+- [Roadmap](#roadmap)
+- [Licensing](#licensing)
+
 ## 🗺️ Where things are
 
 **New here, or can't find something? Start with the
@@ -446,6 +467,5 @@ into `roadmap.adoc` and removed.
 
 ## Licensing
 
-- code, proofs, and tooling in this repository are intended to be licensed under `MPL-2.0`; see [LICENSE](LICENSE)
-- prose documentation in `docs/`, `README.md`, `readme.adoc`, and roadmap files is intended to be licensed under `CC-BY-4.0`; see [LICENSE-docs](LICENSE-docs)
-- current practical follow-up: normalize per-file SPDX headers across source files so file-level notices match the top-level licensing intent
+- code, proofs, and tooling in this repository are licensed under `MPL-2.0`; see [LICENSE](LICENSE)
+- prose documentation in `docs/`, `README.md`, `readme.adoc`, and roadmap files is licensed under `CC-BY-4.0`; see [LICENSE-docs](LICENSE-docs)

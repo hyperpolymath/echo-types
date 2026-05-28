@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: CC-BY-4.0
 = echo-types: explain me
 :icons: font
+:toc:
+:toclevels: 2
 
 == One paragraph
 
