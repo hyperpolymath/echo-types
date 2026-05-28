@@ -138,6 +138,7 @@ open import Ordinal.Buchholz.HeadOmega
 open import Ordinal.Buchholz.HeadOmegaInversion
 open import Ordinal.Buchholz.RankPowDomination
 open import Ordinal.Buchholz.RankPowSlice3
+open import Ordinal.Buchholz.RankPowSlice3Headline
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
 open import Ordinal.Buchholz.RecursiveSurfaceBudget
