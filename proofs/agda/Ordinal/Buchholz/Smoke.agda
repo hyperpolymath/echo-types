@@ -479,3 +479,21 @@ open import Ordinal.Buchholz.RankPowSlice3 using
 open import Ordinal.Buchholz.RankPowSlice3Headline using
   ( rank-mono-<ᵇ-+1-via-head-Ω
   )
+
+-- Slice 3 umbrella extension (own block per CLAUDE.md Working
+-- rules): the new `_<ᵇ¹_` relation extends `_<ᵇ⁰_` with a
+-- joint-bplus constructor `<ᵇ¹-+1-+` carrying the strict-head
+-- premise `head-Ω x₁ <Ω head-Ω y₁` plus WfCNF / NonBzero side
+-- conditions.  The umbrella `rank-pow-mono-<ᵇ¹` forwards the
+-- inherited cases to `rank-pow-mono-<ᵇ⁰` and the new case to
+-- the Slice 3 headline `rank-mono-<ᵇ-+1-via-head-Ω`.  The
+-- bpsi-source-at-equality sub-case is documented as gated:
+-- it requires a `<ᵇ-+1`-specific rank-lex primitive not yet
+-- in the repo (the existing `RankLex.rank-mono-<ᵇ-ψΩ≤-lex`
+-- discharges `<ᵇ-ψΩ≤`, not `<ᵇ-+1`).
+open import Ordinal.Buchholz.RankMonoUmbrellaSlice3 using
+  ( _<ᵇ¹_
+  ; <ᵇ¹-from-<ᵇ⁰
+  ; <ᵇ¹-+1-+
+  ; rank-pow-mono-<ᵇ¹
+  )
