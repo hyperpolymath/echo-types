@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- Earn-back of proof-debt ledger item B (Buchholz order), K-attributed
 -- part. See `docs/echo-types/earn-back-plan.adoc` (ledger item B) and

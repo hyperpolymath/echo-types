@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- Gate F5 first slice (docs/echo-types/earn-back-plan.adoc §"Gate F5
 -- — Full OFS, honestly qualified" — to be added).

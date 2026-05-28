@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- Lex-rank companion to the Slice 3 head-Ω discharge, covering the
 -- bpsi-source-at-equality sub-case of `<ᵇ-+1` joint-bplus, 2026-05-28.

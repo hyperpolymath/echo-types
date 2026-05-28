@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- Headline-theorem manifest. Pins the load-bearing names from each bridge
 -- module via `using` clauses so a silent rename or deletion fails CI fast,

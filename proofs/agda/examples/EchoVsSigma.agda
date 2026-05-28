@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- Track C of the Echo-vs-Σ identity claim consolidation
 -- (`roadmap.adoc` §Lane 2 close-out item 2; companion to

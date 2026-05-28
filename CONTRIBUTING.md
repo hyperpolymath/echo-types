@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Contributing to echo-types
 
 Thank you for your interest. Echo-types is a constructive Agda formalisation; contribution discipline reflects the proof-bearing nature of the codebase.
