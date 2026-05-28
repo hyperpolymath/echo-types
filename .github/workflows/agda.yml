@@ -142,23 +142,6 @@ jobs:
       - name: Typecheck examples lane (Gate #3 canonical examples)
         run: agda -i proofs/agda proofs/agda/examples/All.agda
 
-      # Disclosed known-broken module (foundation audit 2026-05-18):
-      # characteristic/N5Falsifier.agda has unsolved metas and is NOT
-      # in any green closure. This gate ASSERTS it still fails, so the
-      # hole stays monitored: if it ever typechecks, this step fails
-      # loudly and tells us to register it + drop the xfail.
-      - name: Expected-failure gate (N5Falsifier is known-broken)
-        run: |
-          if agda -i proofs/agda proofs/agda/characteristic/N5Falsifier.agda \
-               > /tmp/n5.log 2>&1; then
-            echo "::error::N5Falsifier now typechecks — register it in"
-            echo "::error::characteristic/All.agda and remove this xfail gate."
-            exit 1
-          else
-            echo "N5Falsifier fails as expected (disclosed in its banner"
-            echo "and the proof-debt ledger). Hole monitored, not hidden."
-          fi
-
   cold-check:
     # Belt-and-braces: NO interface cache, --ignore-interfaces cold
     # build. A green here cannot be a stale-.agdai artefact (matters

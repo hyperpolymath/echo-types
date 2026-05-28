@@ -305,22 +305,23 @@ constructors discharge by additive-principal closure.
 | `<ᵇ-+ψ`    | ✓ closed  | Same as `<ᵇ-+Ω` since `rank-pow (bpsi ν _) = ω-rank-pow ν`.
 | `<ᵇ⁺-ψα`   | ✓ closed (Lane 3, 2026-05-26) | `rank-adm (bpsi ν α) = ω-rank-pow ν ⊕ rank-pow α`; `⊕-mono-<-right` closes the shared-Ω-index lex case from `rank-pow α <′ rank-pow β` (which the existing `_<ᵇ⁰_` umbrella discharges).  Primitive `rank-mono-<ᵇ⁺-ψα-from-pow` in `Ordinal.Buchholz.RankAdm`.
 | `<ᵇ-ψΩ≤`   | ✓ closed (Lane 3 follow-on, 2026-05-27) | Lex-pair rank `rank-lex : BT → RankLex` in `Ordinal.Buchholz.RankLex`, with `rank-lex (bOmega ν) = mkLex (ω-rank-pow ν) (ω-rank-pow ν)` and `rank-lex (bpsi ν α) = mkLex (ω-rank-pow ν) (rank-pow α)`.  Both sub-cases close via `rank-mono-<ᵇ-ψΩ≤-lex`: ν<μ via `<lex-first` + `ω-rank-pow-mono`; ν=μ via `<lex-second` + the admissibility bound `rank-pow α <′ ω-rank-pow ν`.  The "structurally impossible under any rank shape with `ω-rank-pow ν ≤ rank-adm (bpsi ν α)`" verdict from `RankAdm.agda` was scoped to *scalar* ranks; option (A) lex-pair sidesteps it cleanly.
-| `<ᵇ-+1`    | ⏳ joint-bplus, head-Ω route in flight | The dominator-function unblock (option A from `RankPow.agda`'s preamble) is now partially landed: `head-Ω : BT → OmegaIndex` (Slice 1, `Ordinal.Buchholz.HeadOmega`), `ω-rank-pow-succ` + per-marker strict dominance at *both* branches (Slice 2 + Slice 2-omega, `Ordinal.Buchholz.RankPow`), the unified `ω-rank-pow-<-succ`, and the option-(b) head-Ω inversion lemmas `head-Ω-inv-{bOmega,bpsi}` (`Ordinal.Buchholz.HeadOmegaInversion`).  Remaining: the WfCNF-carrier structural recursion `rank-pow-dominated-by-head-Ω` (Slice 2-bplus) + the headline `rank-mono-<ᵇ-+1-via-head-Ω` discharge.  No further rank-mono dependency in the bplus case — option (b) bought independence from the still-open `rank-pow-mono-≤ᵇ`.
+| `<ᵇ-+1`    | ⏳ joint-bplus, headline `rank-mono-<ᵇ-+1-via-head-Ω` remaining (Slice 3) | The dominator-function unblock (option A from `RankPow.agda`'s preamble) is now COMPLETE on the WfCNF-carrier domination side: `head-Ω : BT → OmegaIndex` (Slice 1, `Ordinal.Buchholz.HeadOmega`), `ω-rank-pow-succ` + per-marker strict dominance at *both* branches (Slice 2 + Slice 2-omega, `Ordinal.Buchholz.RankPow`), the unified `ω-rank-pow-<-succ`, the option-(b) head-Ω inversion lemmas `head-Ω-inv-{bOmega,bpsi}` (`Ordinal.Buchholz.HeadOmegaInversion`), AND the WfCNF-carrier structural recursion `rank-pow-dominated-by-head-Ω : ∀ {t} → WfCNF t → rank-pow t <′ ω-rank-pow-succ (head-Ω t)` (Slice 2-bplus, `Ordinal.Buchholz.RankPowDomination` — landed via PRs #133+#134 2026-05-27).  Remaining: the headline `rank-mono-<ᵇ-+1-via-head-Ω` discharge (Slice 3), consuming the domination lemma plus a head-Ω lower-bound + strict-jump bridge.  No further rank-mono dependency anywhere in the chain — option (b) bought independence from the still-open `rank-pow-mono-≤ᵇ`.
 | `<ᵇ-0-+`   | ✓ closed* | `rank-pow bzero = oz`, and `rank-pow (bplus x y) ≥′ oz` strictly when *either* `x` or `y` is non-`bzero` and the term is WfCNF.  The degenerate `bplus bzero bzero` is excluded by WfCNF (atomic-right ≤ left forces both `bzero` and then the sum reduces to a `bzero`-shaped equivalent that doesn't pattern-match as a `bplus` under CNF normalisation — covered as a side-condition).
 |===
 
 *Score: 11/13 constructors closed (9 under the original `rank-pow`
 umbrella + 1 under the `rank-adm` slice + 1 under the `rank-lex`
-slice); 1 in flight under the head-Ω route with abstraction +
-per-marker dominances + inversion lemmas landed (`<ᵇ-+1` joint-bplus,
-Slice 2-bplus remaining); 1 closed conditionally with documented side
-condition. The Lane-3 active-push slice on 2026-05-26 closed `<ᵇ⁺-ψα`
-(rank-adm) and re-classified `<ᵇ-ψΩ≤` to "encoding mismatch"; the
-Lane-3 follow-on slice on 2026-05-27 closed `<ᵇ-ψΩ≤` via option (A)
-(lex pair); the head-Ω route landed in stages across 2026-05-27 (Slice 1,
-session-night PR #130 closing Slice 2, PR #131 closing Slice 2-omega +
-option (b) inversion).  Only `<ᵇ-+1` joint-bplus remains in the
-per-constructor matrix.*
+slice); 1 in flight under the head-Ω route with the WfCNF-carrier
+domination lemma `rank-pow-dominated-by-head-Ω` landed (the headline
+`rank-mono-<ᵇ-+1-via-head-Ω` Slice 3 discharge remaining); 1 closed
+conditionally with documented side condition.  The Lane-3 active-push
+slice on 2026-05-26 closed `<ᵇ⁺-ψα` (rank-adm) and re-classified
+`<ᵇ-ψΩ≤` to "encoding mismatch"; the Lane-3 follow-on slice on
+2026-05-27 closed `<ᵇ-ψΩ≤` via option (A) (lex pair); the head-Ω
+route landed in stages across 2026-05-27 (Slice 1 PR #124, Slice 2
+PR #130, Slice 2-omega + option (b) inversion PR #131, Slice 2-bplus
+domination PRs #133+#134).  Only the headline `rank-mono-<ᵇ-+1-via-head-Ω`
+discharge (Slice 3) remains in the per-constructor matrix.*
 
 === What remains open
 
@@ -335,22 +336,29 @@ per-constructor matrix.*
   case ν=μ no longer needs the additive-principal closure; the
   admissibility bound `rank-pow α <′ ω-rank-pow ν` discharges it
   directly on the second component of the lex pair.
-* *`<ᵇ-+1` joint-bplus* — *Slice 2-bplus remaining only.*  The
+* *`<ᵇ-+1` joint-bplus* — *Slice 3 headline remaining only.*  The
   head-Ω route's prerequisite slices are all landed: `head-Ω`
   (Slice 1), `ω-rank-pow-succ` + per-marker strict dominance at
-  both branches (Slice 2 + Slice 2-omega), and the option-(b)
-  head-Ω inversion lemmas (preserving the dependency-graph
-  invariant that the eventual `rank-pow-dominated-by-head-Ω`
-  doesn't depend on the still-open `rank-pow-mono-≤ᵇ`).
-  Slice 2-bplus proves the WfCNF-carrier structural recursion
-  `rank-pow-dominated-by-head-Ω : (t : BT) → NonBzero t → WfCNF t
-  → rank-pow t <′ ω-rank-pow-succ (head-Ω t)` and the headline
-  `rank-mono-<ᵇ-+1-via-head-Ω`.  The `Slice 2-omega` historical
-  hazard (the originally-proposed `ω-rank-pow-succ ω` shape
-  `olim (λ n → ω^(suc(suc n)))` is equi-ordinal with `ω-rank-pow ω`,
-  so doesn't strictly dominate) is resolved by the revised shape
-  `olim (λ n → ω-rank-pow ω ·ℕ n)` (denoting `ω^(ω+1)`) — see
-  `RankPow.agda`'s "History note" comment block for the full record.
+  both branches (Slice 2 + Slice 2-omega), the option-(b) head-Ω
+  inversion lemmas (preserving the dependency-graph invariant
+  that `rank-pow-dominated-by-head-Ω` doesn't depend on the
+  still-open `rank-pow-mono-≤ᵇ`), AND the WfCNF-carrier structural
+  recursion `rank-pow-dominated-by-head-Ω : ∀ {t} → WfCNF t →
+  rank-pow t <′ ω-rank-pow-succ (head-Ω t)` itself
+  (`Ordinal.Buchholz.RankPowDomination`, Slice 2-bplus, PRs
+  #133+#134 2026-05-27 — the `NonBzero` premise turned out
+  unnecessary: `rank-pow bzero = oz` is strictly below
+  `ω-rank-pow-succ (fin 0) = ω^2` via `ω^_-pos 2`).  Slice 3
+  consumes the domination lemma plus a head-Ω lower-bound
+  + strict-jump bridge to derive the headline
+  `rank-mono-<ᵇ-+1-via-head-Ω : ∀ {x₁ x₂ y₁ y₂} → WfCNF (bplus x₁ x₂)
+  → WfCNF (bplus y₁ y₂) → x₁ <ᵇ y₁ → rank-pow (bplus x₁ x₂) <′
+  rank-pow (bplus y₁ y₂)`.  The `Slice 2-omega` historical hazard
+  (the originally-proposed `ω-rank-pow-succ ω` shape `olim (λ n
+  → ω^(suc(suc n)))` is equi-ordinal with `ω-rank-pow ω`, so doesn't
+  strictly dominate) is resolved by the revised shape `olim (λ n →
+  ω-rank-pow ω ·ℕ n)` (denoting `ω^(ω+1)`) — see `RankPow.agda`'s
+  "History note" comment block for the full record.
 * *Mutual recursion for `rank-pow-mono-<ᵇ⁻`*.  The case-specific
   primitives above are individually proven, but the umbrella theorem
   `x <ᵇ⁻ y → rank-pow x <′ rank-pow y` needs a mutual `<ᵇ` / `≤ᵇ`
@@ -365,11 +373,17 @@ per-constructor matrix.*
 The "rank-embedding route is closed" framing from this document's
 introduction is *narrowed*: it remains true for the unrestricted
 `_<ᵇ_`, but the WfCNF restriction `_<ᵇ⁻_` together with the limit-
-shaped rank-pow discharges 9 of the 13 constructor cases.  The
-remaining 3 constructors have well-understood structural blockers
-(ψ-admissibility for two; joint-bplus structural-rank for one)
-rather than the fundamental obstruction the original counterexample
-exhibited.
+shaped rank-pow discharges 11 of the 13 constructor cases (9 under
+the original `rank-pow` umbrella + `<ᵇ⁺-ψα` via `rank-adm` + `<ᵇ-ψΩ≤`
+via `rank-lex`) plus 1 under documented side-condition (`<ᵇ-0-+`).
+The remaining `<ᵇ-+1` joint-bplus case has its head-Ω domination
+prerequisites all landed (Slice 1 + Slice 2 + Slice 2-omega + option-(b)
+inversion + Slice 2-bplus); only the headline Slice 3 discharge
+`rank-mono-<ᵇ-+1-via-head-Ω` remains.  The original "fundamental
+obstruction" verdict was scoped to unrestricted `_<ᵇ_` with scalar
+rank — the per-case closures all sidestep it via either WfCNF
+restriction (rank-pow + admissibility), lex-pair refinement
+(rank-lex), or head-Ω domination (the next slice).
 
 == See also
 
@@ -383,6 +397,11 @@ exhibited.
 * `proofs/agda/Ordinal/Buchholz/RankPow.agda` — Slice 2 + Slice 2-omega;
   `ω-rank-pow-succ` + per-marker strict dominance at both branches +
   the unified `ω-rank-pow-<-succ`.
+* `proofs/agda/Ordinal/Buchholz/RankPowDomination.agda` — Slice 2-bplus;
+  the WfCNF-carrier structural recursion `rank-pow-dominated-by-head-Ω`
+  + the `additive-principal-ω-rank-pow-succ` closure + the `rank-y-bound`
+  atomic-tail helper.  Consumed by the (still open) Slice 3 headline
+  `rank-mono-<ᵇ-+1-via-head-Ω`.
 * `proofs/agda/Ordinal/Buchholz/Order.agda` — the K-free core; the
   13 constructors that pin the syntactic order.
 * `proofs/agda/Ordinal/Buchholz/WellFounded.agda` — the direct
