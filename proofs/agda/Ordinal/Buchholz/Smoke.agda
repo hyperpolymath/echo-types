@@ -497,3 +497,23 @@ open import Ordinal.Buchholz.RankMonoUmbrellaSlice3 using
   ; <ᵇ¹-+1-+
   ; rank-pow-mono-<ᵇ¹
   )
+
+-- Slice 3 lex-rank companion 2026-05-28 (own block per CLAUDE.md
+-- Working rules): the bpsi-source-at-equality sub-case of
+-- `<ᵇ-+1` joint-bplus.  Closes the ψ-rank-level discharge (via
+-- `rank-adm-bpsi-strict-at-equality` / `rank-lex-bpsi-strict-at-
+-- equality`) under the α/β strict-rank witness from the umbrella;
+-- the bplus-chain-level extension to a strict step on the full
+-- bplus sum is structurally blocked (additive-principal closure on
+-- a generic `ω-rank-pow ν ⊕ rank-pow β` sum doesn't hold, and
+-- strict-left-mono of `_⊕_` is a non-theorem).  Honest scope: pins
+-- the ψ-rank discharge as a named theorem accessible from the
+-- joint-bplus umbrella consumer + documents the bplus-chain
+-- obstacle inline so the next session sees exactly which lemmas
+-- would unblock it.  Complements `RankMonoUmbrellaSlice3`'s
+-- gated documentation of the same sub-case from the umbrella side.
+open import Ordinal.Buchholz.RankLexSlice3 using
+  ( rank-adm-bpsi-strict-at-equality
+  ; rank-lex-bpsi-strict-at-equality
+  ; rank-adm-bplus-decompose-left
+  )
