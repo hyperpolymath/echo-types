@@ -517,3 +517,21 @@ open import Ordinal.Buchholz.RankLexSlice3 using
   ; rank-lex-bpsi-strict-at-equality
   ; rank-adm-bplus-decompose-left
   )
+
+-- Rank-lex pivot scaffold 2026-05-28 (own block per CLAUDE.md
+-- Working rules): the parallel `rank-lex-jb : BT → RankLex` whose
+-- `bplus` second component carries `leftmost-α` rather than `oz`.
+-- The pivot opens the only remaining viable forward path for the
+-- bplus-chain-level bpsi-source-at-equality discharge after PR
+-- #146's checked refutations of the two prior unblock routes
+-- (additive-principal closure on generic sums + strict-left-mono
+-- of `_⊕_`).  Honest scope: ships the rank function, the leftmost-α
+-- discriminator, and the `<lex-second`-at-equal-first primitive
+-- the next session will compose with a first-component
+-- trichotomy / case-split into a full headline.  See module
+-- preamble for the (a)+(b)+(c) follow-on assembly plan.
+open import Ordinal.Buchholz.RankLexJointBplus using
+  ( leftmost-α
+  ; rank-lex-jb
+  ; rank-lex-jb-strict-second-at-equal-first
+  )
