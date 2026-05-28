@@ -241,7 +241,15 @@ Staged Buchholz-style collapsing in `--safe --without-K`.
   head-Ω lower bound), `RankPowSlice3Headline` (2026-05-28 — Slice 3
   headline `rank-mono-<ᵇ-+1-via-head-Ω` closed under a strict-head
   premise; umbrella case-split bumps `bpsi=bpsi at equal markers`
-  to rank-adm / rank-lex)).
+  to rank-adm / rank-lex)), `RankLexJointBplus` (2026-05-28 PR #147
+  — parallel rank with `leftmost-α` discriminator for the bpsi-source-
+  at-equality joint-bplus sub-case; second-component strict-mono at
+  equal first components scaffolded), `RankMonoUmbrellaSlice4`
+  (2026-05-28 PR #149 — narrowed `_<ᵇ⁻ⁿ_` umbrella record bundling
+  WfCNF endpoints + `_<ᵇ¹_` derivation; covers all 10 inherited
+  `_<ᵇ⁰_` cases + the strict-head joint-bplus; two shortfalls
+  (`<ᵇ-ψΩ≤` boundary; `<ᵇ-+1` at equal-head) pinned as `⊤`-aliases
+  with explicit lex-rank / rank-lex-jb pointers).
 * Docs: `docs/buchholz-plan.adoc`,
   `docs/echo-types/buchholz-extended-wf.md`,
   `docs/echo-types/buchholz-rank-obstruction.adoc` (per-constructor
