@@ -161,6 +161,8 @@ open import EchoResidueTaxonomy using
   ; linear-affine-residue
   ; indexed-residue
   ; module CostInstance
+  ; search-residue
+  ; epistemic-residue
   )
 
 -- EchoDecorationStructure — observation-side companion to

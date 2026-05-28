@@ -449,3 +449,19 @@ open import Ordinal.Buchholz.RankPowDomination using
   ; additive-principal-ω-rank-pow-succ
   ; rank-pow-dominated-by-head-Ω
   )
+
+-- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
+-- the left-spine NonBzero predicate, the strict-jump bridge from
+-- `μ <Ω ν` to `ω-rank-pow-succ μ ≤′ ω-rank-pow ν`, and the head-Ω
+-- LOWER bound under WfCNF + NonBzero (dual of
+-- `rank-pow-dominated-by-head-Ω`).  The Slice 3 headline
+-- `rank-mono-<ᵇ-+1-via-head-Ω` itself remains open at the
+-- ψ-source-at-equality sub-case; design note inside the module.
+open import Ordinal.Buchholz.RankPowSlice3 using
+  ( NonBzero
+  ; nz-bOmega
+  ; nz-bpsi
+  ; nz-bplus
+  ; ω-rank-pow-succ-≤-via-<Ω
+  ; head-Ω-lower-bound
+  )
