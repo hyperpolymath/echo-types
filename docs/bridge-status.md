@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Bridge Status
 
 This document strictly tracks the status of experimental extensions and bridges between the minimal core of Echo Types and other domains.

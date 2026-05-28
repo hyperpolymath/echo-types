@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- Phase 1.3 — recursive `_≤′_` per Echidna's SA + 4-agent swarm
 -- recommendation (energy [0, 0, 1, 0]; both unanimous).  Replaces
