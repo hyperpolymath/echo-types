@@ -148,22 +148,15 @@ kernel** — the boundary is real and lives outside this core.
   module. Listed so the DAG audit is complete.
 
 | *Exploratory (not in `All.agda`)*
-| `EchoDecorationBridge`, `EchoImageFactorizationPropPostulated`
+| `EchoDecorationBridge`
 | Deliberately omitted from `proofs/agda/All.agda` so the verified
-  suite is unaffected. `EchoDecorationBridge` re-issues
-  `EchoIntegration`'s integration claim through a `DecorationFit`
-  record; exploratory per `roadmap.adoc` § R5 and
+  suite is unaffected. Re-issues `EchoIntegration`'s integration
+  claim through a `DecorationFit` record. Listed here only to
+  satisfy the classification-drift lint
+  (`scripts/kernel-guard.sh` Check B); the module itself is
+  exploratory per `roadmap.adoc` § R5 and
   `docs/echo-types/explorations/decoration-bridge/README.adoc`.
-  `EchoImageFactorizationPropPostulated` is the postulated-
-  truncation-interface consumer for `EchoImageFactorizationProp`
-  (flag profile `--without-K` only, no `--safe`, because
-  `postulate` is forbidden under `--safe`) — demonstrates the
-  parametric `TruncInterface` slot is plug-in-usable; the
-  postulates assert the standard (-1)-truncation laws without
-  proving them.  Both modules listed here to satisfy the
-  classification-drift lint (`scripts/kernel-guard.sh` Check B);
-  neither is kernel, neither load-bearing, both subject to
-  abandonment.
+  Not kernel, not load-bearing, subject to abandonment.
 |===
 
 `EchoOrdinal` is Tier-1 off `Echo` but additionally pulls the
