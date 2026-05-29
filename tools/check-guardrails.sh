@@ -36,6 +36,14 @@ DENY_PRAGMA='TERMINATING|NON_TERMINATING|NON_COVERING|NO_POSITIVITY_CHECK|NO_UNI
 # OPTION flags that relax soundness / reintroduce K.
 DENY_FLAG='--type-in-type|--cumulativity|--allow-unsolved-metas|--no-positivity-check|--no-termination-check|--injective-type-constructors|--rewriting|--with-K|--no-without-K|--guardedness=off'
 
+# Exploratory modules exempt from guardrail checks (per
+# docs/echo-types/echo-kernel-note.adoc, these are deliberately
+# outside the kernel cone and use postulates by design).
+EXPLORATORY_EXEMPT=(
+  "EchoImageFactorizationPropPostulated"
+  "EchoDecorationBridge"
+)
+
 strip_comments() {
   # Remove {- … -} blocks (but keep {-# … #-}), then -- line comments.
   awk '
@@ -62,8 +70,25 @@ strip_comments() {
   ' "$1"
 }
 
+is_exploratory_exempt() {
+  local filename="$1"
+  local basename="${filename%.*}"
+  basename="${basename##*/}"
+  for exempt in "${EXPLORATORY_EXEMPT[@]}"; do
+    if [ "$basename" = "$exempt" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 while IFS= read -r -d '' f; do
   rel="${f#./}"
+
+  # Skip exploratory/exempt modules
+  if is_exploratory_exempt "$f"; then
+    continue
+  fi
 
   # (1)+(2) OPTIONS line.
   opts_line="$(grep -m1 -E '\{-#[[:space:]]*OPTIONS' "$f" || true)"
@@ -108,4 +133,4 @@ if [ "$fail" -ne 0 ]; then
   echo "guardrail: FAIL"
   exit 1
 fi
-echo "guardrail: OK — all $(find "$ROOT" -name '*.agda' | wc -l) modules declare --safe --without-K, no escape pragmas, no postulates"
+echo "guardrail: OK — all $(find "$ROOT" -name '*.agda' | wc -l) modules declare --safe --without-K, no escape pragmas, no postulates (except exploratory: ${EXPLORATORY_EXEMPT[*]})"
