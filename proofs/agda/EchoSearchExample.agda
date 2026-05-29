@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- A worked axis-8 lattice exhibit: a concrete `BoundedSearch` for
 -- a small doubling function and its projections through the four

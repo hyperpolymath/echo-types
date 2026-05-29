@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: CC-BY-4.0
 = Buchholz `_<ᵇ_` rank-embedding obstruction
 :date: 2026-05-20
 :toc:

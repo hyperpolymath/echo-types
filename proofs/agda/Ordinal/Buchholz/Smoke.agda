@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- Buchholz-layer manifest. Keeps load-bearing names pinned so that
 -- accidental renames fail quickly in a focused module.
@@ -534,4 +536,23 @@ open import Ordinal.Buchholz.RankLexJointBplus using
   ( leftmost-α
   ; rank-lex-jb
   ; rank-lex-jb-strict-second-at-equal-first
+  )
+
+-- Slice 4 narrowing 2026-05-28 (own block per CLAUDE.md Working
+-- rules): the deliberately-narrowed `_<ᵇ⁻ⁿ_` umbrella covering
+-- ALL CASES THAT CLOSE AT THE RANK-POW LEVEL TODAY — 10 inherited
+-- via `_<ᵇ⁰_` + 1 strict-head joint-bplus via `_<ᵇ¹_-+1-+`,
+-- bundled with WfCNF endpoints.  Honest scope: the two
+-- constructor-level shortfalls (`<ᵇ-ψΩ≤` boundary, closed only at
+-- the lex-rank level; `<ᵇ-+1` at equal-head, gated on the
+-- rank-lex-jb pivot from PR #147) are pinned as
+-- `<ᵇ⁻ⁿ-shortfall-{lex,equal-head}` matched-negative `⊤`-aliases
+-- with in-file pointers to where each closure lives or what would
+-- unblock it.
+open import Ordinal.Buchholz.RankMonoUmbrellaSlice4 using
+  ( _<ᵇ⁻ⁿ_
+  ; mk<ᵇ⁻ⁿ
+  ; <ᵇ⁻ⁿ-from-<ᵇ⁰
+  ; <ᵇ⁻ⁿ-+1-+
+  ; rank-pow-mono-<ᵇ⁻ⁿ
   )

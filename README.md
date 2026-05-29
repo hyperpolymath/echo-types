@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MPL-2.0 -->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
 <!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 
 <p align="center">
@@ -14,6 +14,27 @@
 Constructive Agda development for echo types as a first-class notion of structured loss:
 
 loss that is not total erasure.
+
+## Contents
+
+- [Where things are](#️-where-things-are)
+- [Structural overview](#-structural-overview)
+- [Recommended reading order](#-recommended-reading-order)
+- [Core Idea](#core-idea)
+- [Definition (Foundation)](#definition-foundation)
+- [Canonical identity layer (2026-05-27)](#canonical-identity-layer-2026-05-27)
+- [Current Status Snapshot](#current-status-snapshot)
+  - [Echo Core (load-bearing for the identity claim)](#echo-core-load-bearing-for-the-identity-claim)
+  - [Ordinal / Buchholz (parallel-independent, experimental)](#ordinal--buchholz-parallel-independent-experimental)
+- [External Bridge Targets (local workspace)](#external-bridge-targets-local-workspace)
+- [What Echo Types Are For](#what-echo-types-are-for)
+- [Identity Claim and Falsifiability](#identity-claim-and-falsifiability)
+- [Build](#build)
+  - [Installing as a library](#installing-as-a-library)
+- [Citation](#citation)
+- [Tooling Stance](#tooling-stance)
+- [Roadmap](#roadmap)
+- [Licensing](#licensing)
 
 ## 🗺️ Where things are
 
@@ -308,6 +329,7 @@ CLAUDE.md):
 - the new `LiftedOrder n` / `SurfaceDepth n` family shows that arbitrary finite same-binder depth can already be handled by iterated mediated wrappers
 - the new `_ <ᵇʳᶠ _` candidate shows that direct recursive derivations also reduce to those finite-depth fragments; what is still open is a single global mediated well-foundedness theorem for that union
 - the new budgeted layer on `ℕ × BT` isolates the missing global step: the recursive surface route is now well-founded once explicit budget is carried, and the remaining task is to discharge or eliminate that budget in the unbudgeted theorem
+- 2026-05-28 ordinal-track progress: Slice 3 (`rank-mono-<ᵇ-+1-via-head-Ω` headline under a strict-head premise) closed via PRs #141–#143; Slice 4 narrowed umbrella `_<ᵇ⁻ⁿ_` (covering all 10 inherited `_<ᵇ⁰_` cases plus the strict-head joint-bplus) closed via PR #149 (`RankMonoUmbrellaSlice4`); rank-lex pivot scaffold for the bpsi-source-at-equality sub-case landed via PR #147 (`RankLexJointBplus`). Two constructor-level shortfalls remain pinned as `⊤`-aliases: `<ᵇ-ψΩ≤` boundary (closes at lex-rank level only) and `<ᵇ-+1` at equal-head (gated on `RankLexJointBplus`-pivot completion). The unbudgeted `_<ᵇʳᶠ_` global WF and full-order internalisation into `Order.agda` remain open.
 - this still does not internalize the historically blocked shared-binder shapes as actual constructors of `_ <ᵇ _`; the full intended Buchholz order remains open at that step
 - remaining live mathematical work is therefore not the current-core WF route, but the mediated internalization of the shared-binder cases back into the real order package
 - as of 2026-05-27: the Buchholz rank-monotonicity matrix closes 11/13 constructor cases via the WfCNF-restricted `_<ᵇ⁻_` umbrella (9 via `RankPow` + `<ᵇ⁺-ψα` via `RankAdm` 2026-05-26 + `<ᵇ-ψΩ≤` via `RankLex` 2026-05-27); the last open case is `<ᵇ-+1` joint-bplus, with the `Ordinal.Buchholz.HeadOmega` first slice (leading-Ω-index head function + 4 definitional sanity lemmas) landed 2026-05-27 as the structural opening of option (A) per the obstruction doc
@@ -446,6 +468,5 @@ into `roadmap.adoc` and removed.
 
 ## Licensing
 
-- code, proofs, and tooling in this repository are intended to be licensed under `MPL-2.0`; see [LICENSE](LICENSE)
-- prose documentation in `docs/`, `README.md`, `readme.adoc`, and roadmap files is intended to be licensed under `CC-BY-4.0`; see [LICENSE-docs](LICENSE-docs)
-- current practical follow-up: normalize per-file SPDX headers across source files so file-level notices match the top-level licensing intent
+- code, proofs, and tooling in this repository are licensed under `MPL-2.0`; see [LICENSE](LICENSE)
+- prose documentation in `docs/`, `README.md`, `readme.adoc`, and roadmap files is licensed under `CC-BY-4.0`; see [LICENSE-docs](LICENSE-docs)

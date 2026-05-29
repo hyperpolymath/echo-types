@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: CC-BY-4.0
+// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = echo-types Roadmap
 :toc: macro
 :toclevels: 3
@@ -308,9 +310,18 @@ the option-(b) head-Ω inversion lemmas, AND the WfCNF-carrier
 structural-recursion `rank-pow-dominated-by-head-Ω` have all landed
 across PRs #124 (Slice 1, 2026-05-27 late evening), #130 (Slice 2,
 session night), #131 (Slice 2-omega + inversion + ledger), and
-#133+#134 (Slice 2-bplus + the explicit-implicit fix). The remaining
-ordinal-track work is Slice 3 (`rank-mono-<ᵇ-+1-via-head-Ω` headline)
-+ Slice 4 (full `rank-pow-mono-<ᵇ⁻` umbrella composition).
+#133+#134 (Slice 2-bplus + the explicit-implicit fix). Slice 3 (`rank-mono-<ᵇ-+1-via-head-Ω` headline closed under a
+strict-head premise) LANDED 2026-05-28 via PRs #141–#143
+(`RankPowSlice3` + `RankPowSlice3Headline`). Slice 4 (the narrowed
+`_<ᵇ⁻ⁿ_` umbrella covering all 10 inherited `_<ᵇ⁰_` cases plus the
+strict-head joint-bplus) LANDED 2026-05-28 via PR #149
+(`RankMonoUmbrellaSlice4`); two constructor-level shortfalls
+(`<ᵇ-ψΩ≤` boundary closes at lex-rank level; `<ᵇ-+1` at equal-head
+gated on the `RankLexJointBplus` pivot from PR #147) are pinned as
+`⊤`-aliases. The remaining ordinal-track work is the unbudgeted
+`_<ᵇʳᶠ_` global well-foundedness (per `RankBrouwer.agda` preamble)
+and the full-order internalisation back into `Order.agda`'s main
+`_<ᵇ_` package.
 
 *Close-out criterion.* Either:
 
