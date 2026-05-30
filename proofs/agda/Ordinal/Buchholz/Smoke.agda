@@ -539,6 +539,15 @@ open import Ordinal.Buchholz.RankLexJointBplus using
   ; rank-lex-jb-strict-first
   ; leftmost-α-strict-from-bpsi-source
   ; rank-lex-jb-bpsi-at-equality
+  ; rank-pow-bplus-eq-from-summands
+  ; first-eq-from-bpsi-source-at-equal-head
+  ; BplusFirstTri
+  ; bplus-tri-strict
+  ; bplus-tri-equal
+  ; bplus-tri-from-strict
+  ; bplus-tri-from-equal
+  ; dispatch-trichotomy-to-<lex
+  ; rank-lex-jb-bpsi-equal-head-from-tail-eq
   )
 
 -- Slice 4 narrowing 2026-05-28 (own block per CLAUDE.md Working
