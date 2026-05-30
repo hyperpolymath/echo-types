@@ -397,3 +397,54 @@ Ranked by unblock-value. (1) and (2) landed; (3) onwards is open.
 None of these depend on the blocked Buchholz-WF / shared-binder
 work. All are Sonnet-class proofs; (5) is Opus 4.7 design and
 Sonnet execution.
+
+---
+
+## Anti-pattern — closing a degrade-map obligation within an endpoint
+
+*Status: methodological note (2026-05-30). Not Agda-backed; the
+upstream theorem it abstracts from IS Agda-backed.*
+
+The per-decoration composition rung (§6, "Decoration commuting") proves
+that for each decoration `D` the degrade map `degrade : ⊑ → Echo D₁ →
+Echo D₂` commutes with composition under a recipe: order →
+propositionality → join → factoring-free compose → via-join restatement.
+The recipe makes the cross-decoration obligation — "two successive
+weakenings agree with a single weakening along the composed proof" —
+*explicitly* a property of the degrade map, not of either endpoint.
+The upstream theorem is `EchoLinear.degradeMode-comp`
+(`proofs/agda/EchoLinear.agda:93-101`), three `refl` clauses pinning
+each reachable constructor pair.
+
+**The anti-pattern.** When a decoration `D₁ ≤ D₂` connects two
+indexed instances of a fiber, an obligation that mentions *both*
+endpoints does not close inside either endpoint alone. Attempting to
+discharge it by strengthening a typing rule of `D₁` (or `D₂`) with a
+premise that references the other endpoint's invariant is structurally
+ill-shaped: the load-bearing content lives on the degrade arrow.
+
+**Detection heuristic.** If a proof attempt requires adding a premise
+to a rule of one decoration that mentions a *different* decoration's
+invariant (e.g. a region-presence premise on a modality-indexed rule),
+the discipline is being violated. The corrective is to relocate the
+obligation to the decoration map, not to thicken the endpoint.
+
+**Empirical downstream test.** The `hyperpolymath/ephapax` project's
+L1 region-capability layer admits an analogue cross-decoration
+obligation. An empirical closure attempt (ephapax PR #170, merged
+2026-05-27) strengthened the L1 variable rule
+`T_Var_*_L1` with a region-well-formedness premise and verified the
+resulting axiom remained false on a concrete typing-level
+counterexample (`ERegion rv (EI32 5) : TBase TI32 at R = [rv]`). The
+honest closure path identified in ephapax's `PRESERVATION-DESIGN.md`
+§4.8.1 is cross-layer — the obligation lives at the L1→L2 boundary
+where the effect-typed `TFun` of `T_Lam_Linear_L2` carries the
+region-effect that L1's R-threading lacks. The pattern matches the
+echo-types abstraction: visible source-level discrepancies *can* be
+absorbed inside an endpoint (and PR #170 absorbed one), but the
+cross-decoration obligation cannot.
+
+The downstream test is not a proof of the upstream theorem — it is
+empirical evidence that the discipline detects ill-shaped attempts at
+the point the abstraction predicts. See echo-types#125 for the
+issue thread that surfaced this observation.

@@ -798,6 +798,24 @@ particular technical bridges (the Echo–CNO bridge and the eventual
 Echo–`<ᵇ` bridge respectively), and not of "Echo as a recognised
 modality" in the field.
 
+A third partial external-corroboration stream is the
+`hyperpolymath/ephapax` programming-language project, whose L3
+layer (`formal/Echo.v`) is an explicit Coq port of `EchoLinear.agda`
+and `EchoResidue.agda` under the same `--safe --without-K`-equivalent
+discipline (K-free, zero axioms, 24 `Qed`).  The ephapax headline
+`no_section_collapse_to_residue` (`formal/Echo.v:502-517`) is the
+same theorem, stated again in Coq, as
+`EchoResidue.no-section-collapse-to-residue`
+(`proofs/agda/EchoResidue.agda:52-65`), and lands constructively in
+both mechanisations.  We claim only that this is a faithful
+re-statement: the two artefacts are not independent derivations —
+ephapax was written *against* the Agda upstream — so the
+corroboration is at the level of "the Coq port carries through
+without uncovering a mechanisation gap," not at the level of
+independent corroboration of the fiber + thin-poset shape.  As with
+the `absolute-zero` consumer evidence, this validates one technical
+bridge, not the modality thesis.
+
 ==== Conservativity is evidence, not a theorem
 
 `docs/echo-types/conservativity.adoc` was retracted from

@@ -205,6 +205,45 @@ Template used for every entry:
 
 ---
 
+## 11. Region exit in a linear type system (ephapax L3)
+
+- **Source map.** `collapse_r : LiveAt r → ExitedAt r`, the
+  operational `S_Region_Exit` rule of the ephapax calculus: a region
+  scope `ERegion r e` reducing on a value `v` produces
+  `(mem_free_region μ r, remove_first r R, v)`. The map sends a
+  configuration with `r ∈ R` to one with `r ∉ R`, freeing the
+  region's memory.
+- **What is lost.** Which linear values (of types `TString r`,
+  `TRef Lin (TString r)`, …) were live in `r` immediately before
+  exit. After the step, `r` is unrecoverable as a region name,
+  and the typing system cannot reconstruct which preimage
+  configuration produced the post-step state.
+- **What remains.** A proof-relevant residue: the residue value typed
+  at `TEcho` in ephapax's L3 layer carries a witness of *which*
+  value-shape was erased. Under Linear mode the residue must be
+  observed (`T_Observe` consumes it); under Affine mode the residue
+  may be silently lowered to the trivial residue
+  `EchoR ⊤ TrivCert y`.
+- **Echo.** `Echo collapse_r exited = Σ (LiveAt r) (λ s → collapse_r s ≡ exited)`.
+  Under Linear mode the full fiber is retained; under Affine mode the
+  codomain collapses to ⊤ and the inhabitants become propositionally
+  equal (cf. `affine_canonical` / `affine_all_equal` in ephapax
+  `formal/Echo.v:291-301`).
+- **Extensional / intensional.** Intensional. The shadow
+  (`{R-after-exit : list region_name}`) lets the typing system
+  see the post-exit capability set, but the intensional core
+  distinguishes *which* configuration produced it.
+- **Reference.** `tutorial/region_exit_audit/RegionExitAudit.agda`
+  (the echo-types-side type-level audit walkthrough); ephapax
+  `formal/Echo.v` (Coq port of `EchoLinear.agda`); ephapax
+  `no_section_collapse_to_residue` (`formal/Echo.v:502-517`,
+  `Qed`, zero axioms) matches
+  `EchoResidue.no-section-collapse-to-residue`
+  (`proofs/agda/EchoResidue.agda:52-65`). See echo-types#127 for
+  the issue thread that seeded this entry.
+
+---
+
 ## Cross-cutting observations
 
 1. **Shadow collapse is the same across cases.** Every example's
