@@ -1,5 +1,7 @@
 {-# OPTIONS --without-K #-}
 
+-- hypatia: allow code_safety/agda_postulate -- ∥_∥ cannot be constructed in --safe --without-K without HITs / Cubical; the four postulates below are the scoped, documented TruncInterface demonstration. Exploratory per docs/echo-types/echo-kernel-note.adoc; guardrail-exempted in tools/check-guardrails.sh; base EchoImageFactorizationProp remains --safe --without-K with zero postulates.
+
 -- Postulated-truncation consumer for `EchoImageFactorizationProp`.
 --
 -- ## Purpose
