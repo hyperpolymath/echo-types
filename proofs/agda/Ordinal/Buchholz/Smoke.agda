@@ -568,3 +568,20 @@ open import Ordinal.Buchholz.RankMonoUmbrellaSlice4 using
   ; <ᵇ⁻ⁿ-+1-+
   ; rank-pow-mono-<ᵇ⁻ⁿ
   )
+
+-- Path-3 prototype 2026-05-30 (own block per CLAUDE.md Working
+-- rules): same-left joint-bplus rank-mono extension.  Bypasses
+-- the rank-lex-jb pivot's first-eq derivation obligation for the
+-- LITERAL-same-left sub-case by enriching the source rule
+-- (`<ᵇ⁺²-same-left`) rather than the rank function.  One-line
+-- closure via `rank-pow-bplus-right-mono` once the tail premise
+-- is grounded in `_<ᵇ⁰_`.  Complementary to rank-lex-jb, which
+-- remains load-bearing for the cross-head case (`bpsi ν α` vs
+-- `bOmega ν`, syntactically different but rank-equal).
+open import Ordinal.Buchholz.RankMonoSameLeft using
+  ( _<ᵇ⁺²_
+  ; <ᵇ⁺²-from-<ᵇ⁰
+  ; <ᵇ⁺²-same-left
+  ; rank-pow-mono-<ᵇ⁺²
+  ; rank-pow-mono-same-left
+  )
