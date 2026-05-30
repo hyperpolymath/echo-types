@@ -333,10 +333,42 @@ strict-head joint-bplus) LANDED 2026-05-28 via PR #149
 (`RankMonoUmbrellaSlice4`); two constructor-level shortfalls
 (`<ᵇ-ψΩ≤` boundary closes at lex-rank level; `<ᵇ-+1` at equal-head
 gated on the `RankLexJointBplus` pivot from PR #147) are pinned as
-`⊤`-aliases. The remaining ordinal-track work is the unbudgeted
+`⊤`-aliases.
+
+*Slice 3+4 Route A 6-PR arc* (2026-05-30) advanced the
+`<ᵇ-+1`-at-equal-head closure on TWO converging paths and shipped
+the union-of-extensions architecture:
+
+* PRs #165+#166 — rank-lex-jb (b) `<lex-first` primitive + (c)
+  `BplusFirstTri` trichotomy data type + `first-eq-from-bpsi-source-
+  at-equal-head` consumer-side derivation. Key insight: the
+  consumer's first-eq obligation reduces to *tail-rank-equality*
+  via `cong₂ _⊕_`; the same residual obligation gates BOTH the
+  ψ-rank-level and the bplus-chain-level closures.
+* PR #167 — Path-3 prototype `RankMonoSameLeft` (`_<ᵇ⁺²_` with
+  `<ᵇ⁺²-same-left`). Demonstrates that ENRICHING THE SOURCE RULE
+  is structurally simpler than enriching the rank function for
+  the literal-same-left sub-case; one-line closure via
+  `rank-pow-bplus-right-mono`.
+* PR #168 — `RankMonoUnion` architecture. Union umbrella
+  `_<ᵇᵘ_ = _<ᵇ¹_ ⊎ _<ᵇ⁺²_` via Sum + `[_,_]` mediator. Per-
+  extension proof work + structural composition; extension recipe
+  documented for future source-rule additions.
+* PR #169 — `RankMonoUnionWfCNF` WfCNF wrap (mirrors Slice 4 over
+  the union; canonical-form invariant propagates automatically
+  through new extensions).
+* PR #170 — Gate 2 closure: `WellFounded _<ᵇᵘ_` via the standard
+  `Subrelation` + `On.wellFounded` rank-embedding transport from
+  `wf-<′` (`Ordinal.Buchholz.RankBrouwer`'s preamble recipe).
+
+The remaining ordinal-track work is the unbudgeted
 `_<ᵇʳᶠ_` global well-foundedness (per `RankBrouwer.agda` preamble)
 and the full-order internalisation back into `Order.agda`'s main
-`_<ᵇ_` package.
+`_<ᵇ_` package. Gate 1 (cross-head rank-equal tail-rank-equality
+discharge) and Gate 3 (Path-4 and further source-rule extensions)
+both remain open at the close of the 2026-05-30 arc; Gate 1's
+both pre-identified unblock routes are CHECKED-REFUTED in PR #146,
+and Path-4 same-right is refuted by the same lemma.
 
 *Close-out criterion.* Either:
 
