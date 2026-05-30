@@ -375,10 +375,15 @@ time, so an unparking session does not re-derive the architecture.
 Lane 4 itself remains PARKED.
 
 *Scope question to resolve when unparking.* End-to-end verified
-bridges to Janus, Tropical, CNO, etc. currently sit as in-tree
-modules (`EchoJanusBridge.agda`, `EchoTropical.agda`, `EchoCNOBridge.agda`,
-`DyadicEchoBridge.agda`) without CI-verified round-trips against the
-target codebases. Two architectural options when unparking:
+bridges to Janus, Tropical, CNO, Ephapax-L3, etc. currently sit as
+in-tree modules (`EchoJanusBridge.agda`, `EchoTropical.agda`,
+`EchoCNOBridge.agda`, `DyadicEchoBridge.agda`,
+`EchoEphapaxBridge.agda`) without CI-verified round-trips against
+the target codebases. `EchoEphapaxBridge` is intentionally NARROW
+(definitional `refl`-renames only, no content claim — the cross-repo
+content correspondence is discharged by `coqc` on the ephapax side;
+see `docs/echo-types/MAP.adoc` §"Ephapax L3 — linear/affine modality
+bridge"). Two architectural options when unparking:
 
 * A separate `echo-bridges-ci` repository pulling echo-types and each
   target as submodules; runs the verified-translation lemmas in its
