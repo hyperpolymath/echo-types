@@ -140,22 +140,27 @@ Hirsch et al. choreographic types, and substructural Linear Haskell —
 and is that landing both *visible* (paper-form, citable) and
 *defensible* (survives a referee pass)?
 
-*Bottleneck.* Pillar E (the paper) has `[EXPAND]` tags blocking
-submission. The consumer-side abstraction-barrier proof (Track B,
-under Lane 2) is the one new Agda artefact that materially strengthens
-the paper's narrowed-but-honest claim against the "is this just Σ?"
-objection.
+*Bottleneck.* In-repo Pillar E is closed (all `[EXPAND]` tags below
+the ordinal appendix cleared, see below). The remaining bottleneck
+is the *offline* half of Pillar E — TYPES/CPP submission, Zenodo
+DOI mint, library packaging, outreach — which is author-driven
+(`docs/echo-types/pillar-e-offline.adoc`) and not auto-runnable.
 
 *Close-out criterion (falsifiable).* All three hold:
 
-. `docs/echo-types/paper.adoc` `[EXPAND]` tag 2 (related-work pass —
-  Granule / QTT, Uustalu–Vene comonads, coeffects, choreographic types,
-  lens/optic vs witness-transport leg) cleared. *(Tag 1, background /
-  notation primer, cleared 2026-05-20 via PR #73 — section "Background
-  and notation" in `paper.adoc`, covering type-theoretic setting +
-  HoTT fibres + coeffect / graded-modality lineage + thin-poset
-  reindexing modality + notation table, all within the R-2026-05-18
-  narrowing.)*
+. *LANDED 2026-05-26.* `docs/echo-types/paper.adoc` `[EXPAND]` tag 2
+  (related-work pass — Granule / QTT, Uustalu–Vene comonads,
+  coeffects, choreographic types, lens/optic vs witness-transport
+  leg) cleared in PR #120; landed sections §"HoTT homotopy fibres",
+  §"Graded comonads, coeffects, and QTT", §"Lenses and optics (the
+  witness-transport leg)" + the explicit 2-categorical rule-out
+  (`docs/echo-types/decisions/no-2-cat.adoc`). Tag 1 (background /
+  notation primer) cleared 2026-05-20 via PR #73; tag 3 (evaluation —
+  proof-size / cost table, common-upper-bound idiom) cleared in
+  PR #84 (§"Evaluation and discussion"). Tag 4 (ordinal
+  consumer-evidence appendix) is gated on the Lane 3 Buchholz
+  milestone and is not load-bearing for Lane 1 — see paper status
+  banner.
 . *LANDED 2026-05-26.* `proofs/agda/EchoAbstractionBarrier.agda`
   ships the consumer-side free theorem at the affine instance
   (`affine-consumer-cannot-distinguish`) + the raw-Σ counter-program
@@ -168,6 +173,16 @@ objection.
   Atkey QTT, Hirsch et al. choreographic types, and Linear Haskell.
   Honest "What Echo does NOT do" section foregrounds the
   R-2026-05-18 narrowings.
+
+*Lane-level status.* All three falsifiable in-repo criteria above
+hold. Lane 1 remains *open* at the lane-policy level only because
+the load-bearing question ("type-theoretic standing both visible
+and defensible") cannot be answered without the offline half —
+the venue acceptance and DOI mint. Treat Lane 1 as IN-REPO CLOSED,
+EXTERNALLY OPEN; promotion to fully CLOSED waits on the author-driven
+events tracked in `docs/echo-types/pillar-e-offline.adoc`. Do not
+re-open the in-repo half without a *new* `[EXPAND]` task arising
+from referee feedback.
 
 *Artefacts (existing).* Pillars A–D landed (`EchoFiberBridge`,
 `EchoPullback`, `EchoSeparating`, `EchoGradedComonad`, `EchoRelModel`).
@@ -379,53 +394,50 @@ priorities (per 2026-05-26) explicitly favour tighter integration.
 not in scope for Lane 4 cross-repo verification work; navigability
 pointer only.
 
-=== Lane 5 [PARKED] — Tutorial / pedagogy
-
-*Unblocking condition.* Lane 1 closes, OR a single "killer
-application" example emerges that justifies a tutorial track on its
-own merit.
-
-*Candidate killer example (suggested 2026-05-26).* A certified
-region-exit audit, modelled on ephapax L3's region-based memory
-discipline, where every `S_Region_Exit` produces a *consumed* Linear
-Echo with a machine-checked audit guarantee. Concrete, ties to an
-adjacent active project, demonstrates the affine-mode discipline at
-a real audit boundary.
-
-*Scope-when-unparking.* `tutorial/` directory with 3 walkthroughs:
-(1) the certified region-exit audit; (2) epistemic erasure (with
-explicit framing: Echo proves no section recovers the key, NOT that
-in-memory bytes are zeroed — conflating these is a category error a
-sceptic will catch); (3) provenance / debugging echo over a small
-state-reconstruction example.
-
-*Scaffold (pre-resolved 2026-05-26).* `tutorial/README.adoc` lands
-the three walkthroughs at design-doc level with their target file
-layouts, honest-bound disclosures, the per-walkthrough Smoke pin
-discipline, and the killer-app-candidate close-out check on
-Walkthrough 1.
-
-*Walkthroughs landed (2026-05-26/27).* The originally-scaffolded
-Lane 5 triplet is now complete in Agda — Walkthrough 1
-(`tutorial/region_exit_audit/`) landed 2026-05-26 as the killer-app
-candidate; Walkthrough 2 (`tutorial/epistemic_erasure/`) landed
-2026-05-27 with the KDF / no-section-via-residue framing;
-Walkthrough 3 (`tutorial/provenance_debugging/`) landed 2026-05-27
-with the section/no-section contrast across three residue layers.
-Each carries an honest-bound disclosure at the top and a
-matched-negative `NotProved-*` ⊤-aliases block at the bottom. The
-tutorial tree builds under `--safe --without-K` with zero postulates
-via `tutorial/All.agda`.
-
-Lane 5 itself remains PARKED at the lane-policy level pending the
-user's unpark decision (per §"Unblocking condition" above —
-either Lane 1 closes or Walkthrough 1's killer-app status is
-formally accepted). The walkthroughs landing did not auto-unpark
-the lane.
-
 == Closed lanes
 
-(none yet — populated when a lane closes per its close-out criterion).
+=== Lane 5 — Tutorial / pedagogy [CLOSED 2026-05-30]
+
+*Close-out route.* The "killer-application" branch of the unblocking
+condition fired: Walkthrough 1
+(`tutorial/region_exit_audit/RegionExitAudit.agda`) is formally
+accepted as the killer-app example. The audit-boundary discipline it
+demonstrates — every `S_Region_Exit` producing a *consumed* Linear
+Echo with a machine-checked guarantee, against ephapax L3's region
+memory model — is the concrete, externally-corroborable
+demonstration the lane existed to surface.
+
+*Closing artefacts (all under `--safe --without-K`, zero postulates;
+both via `tutorial/All.agda` and pinned in per-walkthrough Smoke).*
+
+* `tutorial/region_exit_audit/` — Walkthrough 1, killer-app accepted.
+  Landed 2026-05-26.
+* `tutorial/epistemic_erasure/` — Walkthrough 2 with the KDF /
+  no-section-via-residue framing. Landed 2026-05-27.
+* `tutorial/provenance_debugging/` — Walkthrough 3 with the
+  section / no-section contrast across three residue layers. Landed
+  2026-05-27.
+
+Each walkthrough carries an honest-bound disclosure at the top and a
+matched-negative `NotProved-*` ⊤-aliases block at the bottom. The
+tutorial tree typechecks alongside the kernel suite.
+
+*Retraction-watch.* Walkthrough 2's framing is "Echo proves no
+section recovers the key", NOT "in-memory bytes are zeroed" —
+conflating these is a category error a sceptic will catch.
+Walkthrough 1's audit guarantee is *type-level*, not a runtime
+attestation. Both are baked into the in-file headers; do not
+silently weaken when expanding the walkthroughs.
+
+*Why this counts as a kill, not a deferral.* The lane's original
+phrasing made unparking conditional on either Lane 1 closing OR a
+single killer-app example earning the tutorial track on its own
+merit. The Lane-1 close-out criterion is unrelated to tutorial
+content — Lane 1 is bottlenecked on Pillar E's paper, not on
+exposition. The walkthrough triple, with Walkthrough 1 carrying the
+ephapax-corroborated audit example, satisfies the second branch
+directly. Cross-referenced from `tutorial/README.adoc` (status
+banner) and `docs/echo-types/MAP.adoc` (lane index).
 
 == Gates summary
 

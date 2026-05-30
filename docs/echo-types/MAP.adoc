@@ -326,8 +326,9 @@ each following the honest-bound + matched-negative discipline
 
 * *Walkthrough 1 — certified region-exit audit*
   (`tutorial/region_exit_audit/`). ephapax-L3-style region exit
-  modelled type-level via `EchoLinear.no-section-weaken`. Killer-app
-  candidate per `roadmap.adoc` §Lane 5 second unblocking condition.
+  modelled type-level via `EchoLinear.no-section-weaken`.
+  Formally-accepted killer-app artefact per `roadmap.adoc` §"Closed
+  lanes" (Lane 5 close-out 2026-05-30).
 * *Walkthrough 2 — epistemic erasure*
   (`tutorial/epistemic_erasure/`). 4-seed → 2-key KDF with
   no-section-via-residue lifted from
@@ -340,9 +341,9 @@ each following the honest-bound + matched-negative discipline
   exhibiting the boundary at which type-level recovery flips.
 
 Track-level docs: `tutorial/README.adoc`, plus per-walkthrough
-`README.adoc` files. Lane policy status: see `roadmap.adoc` §Lane 5
-(currently [PARKED] at lane-policy level pending user unpark
-decision; all three walkthroughs landed regardless).
+`README.adoc` files. Lane policy status: see `roadmap.adoc` §"Closed
+lanes" — Lane 5 closed 2026-05-30 via the formally-accepted
+killer-app branch (Walkthrough 1).
 
 == Tooling
 
