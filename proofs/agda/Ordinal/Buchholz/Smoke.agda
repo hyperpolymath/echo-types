@@ -617,3 +617,20 @@ open import Ordinal.Buchholz.RankMonoUnionWF using
   ( wf-rank-pow-pullback
   ; wf-<ᵇᵘ
   )
+
+-- WfCNF wrap of the union umbrella 2026-05-30 (own block per
+-- CLAUDE.md Working rules): mirrors `RankMonoUmbrellaSlice4._<ᵇ⁻ⁿ_`'s
+-- WfCNF-bundling pattern over the union umbrella's `_<ᵇᵘ_`.
+-- Downstream Buchholz consumers needing the canonical-form
+-- invariant alongside the rank-relation use this narrowed form.
+-- The architectural-extension recipe documented in
+-- `RankMonoUnion`'s preamble automatically extends through this
+-- WfCNF wrap — new union disjuncts don't require edits here.
+open import Ordinal.Buchholz.RankMonoUnionWfCNF using
+  ( _<ᵇᵘⁿ_
+  ; mk<ᵇᵘⁿ
+  ; <ᵇᵘⁿ-from-<ᵇ⁰
+  ; <ᵇᵘⁿ-from-<ᵇ¹
+  ; <ᵇᵘⁿ-from-<ᵇ⁺²
+  ; rank-pow-mono-<ᵇᵘⁿ
+  )
