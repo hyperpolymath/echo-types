@@ -585,3 +585,21 @@ open import Ordinal.Buchholz.RankMonoSameLeft using
   ; rank-pow-mono-<ᵇ⁺²
   ; rank-pow-mono-same-left
   )
+
+-- Union umbrella 2026-05-30 (own block per CLAUDE.md Working rules):
+-- realises the architectural recommendation from PR #167's closing
+-- note — bplus-chain rank-mono umbrella as a UNION OF SOURCE-RULE
+-- EXTENSIONS rather than a single enriched rank function.  Combines
+-- `_<ᵇ¹_` (Slice 3 strict-head joint-bplus) with `_<ᵇ⁺²_` (Path-3
+-- same-left joint-bplus) via Sum + `[_,_]` mediator.  Zero new
+-- proof obligations; the union is purely structural over the two
+-- per-extension umbrellas.  Extension recipe (for new sub-cases)
+-- documented in the module preamble.
+open import Ordinal.Buchholz.RankMonoUnion using
+  ( _<ᵇᵘ_
+  ; rank-pow-mono-<ᵇᵘ
+  ; <ᵇᵘ-from-<ᵇ¹
+  ; <ᵇᵘ-from-<ᵇ⁺²
+  ; <ᵇᵘ-from-<ᵇ⁰
+  ; <ᵇᵘ-from-<ᵇ⁰-via-<ᵇ⁺²
+  )
