@@ -1,32 +1,35 @@
 // SPDX-License-Identifier: CC-BY-4.0
 // SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= Tutorial track scaffold (Lane 5)
+= Tutorial track (Lane 5 — CLOSED 2026-05-30)
 :toc: macro
 :toclevels: 2
 :sectnums:
 :icons: font
 
 [.lead]
-This directory is the scaffold for `roadmap.adoc` §"Lane 5 [PARKED]
-— Tutorial / pedagogy". Lane 5 is still parked; this scaffold
-exists so that when the lane unparks the next session has the
-structure and walkthrough plans in hand and can land Agda directly
-rather than re-deriving the pedagogy.
+Tutorial track for the echo-types identity claim. Lane 5 closed
+2026-05-30 with Walkthrough 1 formally accepted as the killer-app
+example, satisfying the second branch of the unblocking condition
+in `roadmap.adoc` §"Closed lanes" without waiting for Lane 1.
 
 [IMPORTANT]
 ====
-*Lane 5 unpark status (updated 2026-05-27, evening).* Walkthroughs
-1 (certified region-exit audit), 2 (epistemic erasure with honest
+*Lane 5 status (updated 2026-05-30).* CLOSED. Walkthroughs 1
+(certified region-exit audit), 2 (epistemic erasure with honest
 bound), and 3 (provenance / debugging with layer-1 section + layer-2
 no-section) are all LANDED. The originally-scaffolded triplet is
-complete in Agda. Walkthrough 1 was accepted as the killer-app
-candidate per `roadmap.adoc` §"Lane 5 [PARKED]" second unblocking
-condition. Walkthrough 2 followed as the second realisation,
-addressing the "does echo-types prove key zeroing?" category-error
-question. Walkthrough 3 lands the dual: a *positive* recovery
-result at layer 1 paired with the negative at layer 2, making
-explicit which residue layer carries the load-bearing information
-for source reconstruction in a small fixed domain.
+complete in Agda.
+
+* Walkthrough 1 is the formally-accepted killer-app artefact per
+  the second branch of `roadmap.adoc` §"Lane 5 [PARKED]" unblocking
+  condition (closed-out 2026-05-30 in `roadmap.adoc` §"Closed
+  lanes").
+* Walkthrough 2 follows as the second realisation, addressing the
+  "does echo-types prove key zeroing?" category-error question.
+* Walkthrough 3 lands the dual: a *positive* recovery result at
+  layer 1 paired with the negative at layer 2, making explicit
+  which residue layer carries the load-bearing information for
+  source reconstruction in a small fixed domain.
 
 The Smoke gate (`proofs/agda/Smoke.agda`), the top-level
 `proofs/agda/All.agda`, and the identity-claim gates still do not
@@ -209,22 +212,20 @@ verbatim:
   disclosure is the same discipline as the R-2026-05-18
   narrowings).
 
-== Killer-app close-out check
+== Killer-app close-out (ACCEPTED 2026-05-30)
 
-`roadmap.adoc` §Lane 5 records the second unblocking condition
-("a single killer-application example emerges that justifies a
-tutorial track on its own merit"). The certified region-exit audit
-(Walkthrough 1) is the candidate. Whether it *constitutes* a
-killer-app for Lane 5 unparking purposes is a judgment call the
-user can make when reviewing this scaffold. The candidate's claim
-to killer-app status rests on the three items in §"Walkthrough 1
-> Why this is the killer-app candidate". If the user accepts the
-candidate, Lane 5 can unpark on that basis without waiting for
-Lane 1's other closure.
+`roadmap.adoc` §"Closed lanes" records the killer-app branch of the
+unblocking condition as fired: Walkthrough 1
+(`tutorial/region_exit_audit/RegionExitAudit.agda`) is formally
+accepted as the killer-app example. The acceptance rests on the
+three items in §"Walkthrough 1 > Why this is the killer-app
+candidate" — concrete audit boundary, ephapax-L3 corroboration,
+machine-checked Linear-Echo discipline. Lane 5 closed on that basis
+without waiting for Lane 1.
 
 == References
 
-* `roadmap.adoc` §"Lane 5 [PARKED] — Tutorial / pedagogy"
+* `roadmap.adoc` §"Closed lanes" — Lane 5 close-out entry
 * `CLAUDE.md` §"Ecosystem context" — ephapax row
 * `proofs/agda/EchoLinear.agda` — `LEcho`, `weaken`, `no-section-weaken`
 * `proofs/agda/EchoResidue.agda` — `EchoR`, `collapse-to-residue`,
