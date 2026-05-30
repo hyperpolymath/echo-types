@@ -130,7 +130,12 @@ open import Ordinal.Buchholz.RankLex  using
   ( RankLex
   ; mkLex
   ; _<lex_
+  ; <lex-first
   ; <lex-second
+  )
+open import Ordinal.Buchholz.RankMonoUmbrella using
+  ( _<ᵇ⁰_
+  ; rank-pow-mono-<ᵇ⁰
   )
 
 ----------------------------------------------------------------------
@@ -273,3 +278,97 @@ rank-lex-jb-strict-second-at-equal-first {x₁} {x₂} {y₁} {y₂} first-eq st
     -- Local `sym` to avoid an extra stdlib import.
     sym-≡ : ∀ {ℓ} {A : Set ℓ} {a b : A} → a ≡ b → b ≡ a
     sym-≡ refl = refl
+
+----------------------------------------------------------------------
+-- Headline: `<lex-first` at strict first components (leg (b))
+----------------------------------------------------------------------
+
+-- The companion primitive to `rank-lex-jb-strict-second-at-equal-
+-- first`.  Trivial at the rank-lex-jb level: `<lex-first` fires
+-- directly on the supplied strict first-component witness.  The
+-- LOAD-BEARING content is the consumer-side derivation of the
+-- hypothesis `rank-pow (bplus x₁ x₂) <′ rank-pow (bplus y₁ y₂)`
+-- from a source `<ᵇ` derivation, which remains the multi-PR
+-- ordinal-arithmetic challenge documented in this module's
+-- preamble (both pre-identified unblock routes — additive-principal
+-- closure on a generic sum, strict-left-mono of `_⊕_` — are
+-- CHECKED-REFUTED in `Ordinal.Brouwer.{AdditivePrincipalGenericRefuted,
+-- StrictLeftMonoRefuted}` (PR #146, 2026-05-28)).  Shipping the
+-- primitive separates the trivial lex-rank wiring from the
+-- structural ordinal-arithmetic blocker — consumers that derive
+-- strict-first via a future bypass (or a restricted bplus-shape
+-- where rank-pow IS additive principal) fire `<lex-first` through
+-- this primitive without re-discovering the wiring.
+
+rank-lex-jb-strict-first :
+  ∀ {x₁ x₂ y₁ y₂}
+  → rank-pow (bplus x₁ x₂) <′ rank-pow (bplus y₁ y₂)
+  → rank-lex-jb (bplus x₁ x₂) <lex rank-lex-jb (bplus y₁ y₂)
+rank-lex-jb-strict-first strict = <lex-first strict
+
+----------------------------------------------------------------------
+-- Consumer helper: leftmost-α strict-mono from a bpsi-source `<ᵇ⁰`
+----------------------------------------------------------------------
+
+-- The bpsi-source-at-equality bplus-chain sub-case has
+-- `x₁ = bpsi ν α` and `y₁ = bpsi ν β` (same ν per the sub-case
+-- definition).  Given the source-side `α <ᵇ⁰ β` derivation, the
+-- leftmost-α discriminator on both bplus chains specialises:
+--
+--   leftmost-α (bplus (bpsi ν α) x₂) = leftmost-α (bpsi ν α)
+--                                    = rank-pow α
+--   leftmost-α (bplus (bpsi ν β) y₂) = rank-pow β
+--
+-- and `rank-pow α <′ rank-pow β` follows from
+-- `RankMonoUmbrella.rank-pow-mono-<ᵇ⁰` on the supplied `α <ᵇ⁰ β`.
+-- The reductions `leftmost-α-bplus` + `leftmost-α-bpsi` are
+-- definitional, so the helper is a one-step inhabitation: the
+-- supplied `<′` is already the goal's `<′` modulo definitional
+-- reduction on `leftmost-α`.
+--
+-- Honest scope: parameterised in `_<ᵇ⁰_`, not `_<ᵇ_`.  The
+-- 10-constructor `_<ᵇ⁰_` umbrella covers the bpsi sub-case (no
+-- `<ᵇ-+1` joint-bplus constructor in `_<ᵇ⁰_`), so consumers with
+-- a `_<ᵇ⁰_` derivation on the ψ-arguments compose directly.
+-- Lifting to the full `_<ᵇ_` would need the joint-bplus closure,
+-- which is the very problem this rank-lex-jb pivot was designed
+-- to attack.
+
+leftmost-α-strict-from-bpsi-source :
+  ∀ {ν α β x₂ y₂}
+  → α <ᵇ⁰ β
+  → leftmost-α (bplus (bpsi ν α) x₂) <′ leftmost-α (bplus (bpsi ν β) y₂)
+leftmost-α-strict-from-bpsi-source α<β = rank-pow-mono-<ᵇ⁰ α<β
+
+----------------------------------------------------------------------
+-- Named theorem: bpsi-source-at-equality sub-case at rank-lex-jb
+----------------------------------------------------------------------
+
+-- Composition of `rank-lex-jb-strict-second-at-equal-first` with
+-- `leftmost-α-strict-from-bpsi-source`.  Given:
+--
+--   * the FIRST-COMPONENT EQUALITY `rank-pow (bplus (bpsi ν α) x₂)
+--     ≡ rank-pow (bplus (bpsi ν β) y₂)` — consumer's input, gated
+--     on the structurally-blocked bplus-chain sum-bound work; AND
+--   * the source-side `α <ᵇ⁰ β` derivation on the ψ-arguments,
+--
+-- the headline fires `<lex-second` at equal first components with
+-- the leftmost-α strict witness.  This is the bpsi-source-at-
+-- equality sub-case CLOSED at the rank-lex-jb level (parallel to
+-- `RankLexSlice3.rank-lex-bpsi-strict-at-equality` for `rank-lex`).
+--
+-- The first-eq hypothesis remains the gating obligation; this
+-- theorem records that EVERY other discharge step composes
+-- cleanly, so resolving the structural blocker unblocks the named
+-- theorem mechanically.
+
+rank-lex-jb-bpsi-at-equality :
+  ∀ {ν α β x₂ y₂}
+  → rank-pow (bplus (bpsi ν α) x₂) ≡ rank-pow (bplus (bpsi ν β) y₂)
+  → α <ᵇ⁰ β
+  → rank-lex-jb (bplus (bpsi ν α) x₂) <lex rank-lex-jb (bplus (bpsi ν β) y₂)
+rank-lex-jb-bpsi-at-equality {ν} {α} {β} {x₂} {y₂} first-eq α<β =
+  rank-lex-jb-strict-second-at-equal-first
+    {x₁ = bpsi ν α} {x₂ = x₂} {y₁ = bpsi ν β} {y₂ = y₂}
+    first-eq
+    (leftmost-α-strict-from-bpsi-source {ν = ν} {α = α} {β = β} {x₂ = x₂} {y₂ = y₂} α<β)
