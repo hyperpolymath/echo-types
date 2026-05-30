@@ -9,7 +9,6 @@ Required:
 * `just`
 * `agda` (per `.tool-versions` — currently floats; pinning pending)
 * `ghc` + `cabal` (Agda runtime)
-* `rust` (for `arghda-core/`)
 * `podman` (for container builds, when `stapeln.toml` is wired)
 
 == First build

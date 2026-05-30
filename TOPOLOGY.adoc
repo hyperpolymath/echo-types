@@ -16,7 +16,6 @@ echo-types/
 │       ├── Ordinal/             # Buchholz / Veblen track
 │       ├── examples/            # concrete usage demos
 │       └── characteristic/      # characteristic-style results (RoleGraded, etc.)
-├── arghda-core/                 # Rust crate — companion tooling (TBD scope)
 ├── docs/                        # supplementary documentation
 │   ├── EI2_REPORT.adoc          # investigation EI-2 working record
 │   ├── gate-1-distinct-phenomenon.adoc
