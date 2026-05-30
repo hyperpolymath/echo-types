@@ -15,6 +15,15 @@ Constructive Agda development for echo types as a first-class notion of structur
 
 loss that is not total erasure.
 
+> **Executable companion.** [`hyperpolymath/EchoTypes.jl`](https://github.com/hyperpolymath/EchoTypes.jl)
+> (v0.2.0, 2026-05-27) runs the finite-domain shadow of the Tier-1 +
+> Tier-2 spine + the unconditional F5 OFS fragment on concrete data.
+> The Julia mirror is honestly scoped under R-2026-05-18 — it does
+> NOT replay the retracted graded-comonad / two-models / UP /
+> conservativity surface, nor the funext-qualified F5 clauses (Julia
+> has no funext). It falsifies-by-counterexample; the Agda here
+> remains the source of truth.
+
 ## Contents
 
 - [Where things are](#️-where-things-are)

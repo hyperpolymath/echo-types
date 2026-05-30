@@ -40,6 +40,17 @@ Adjacent projects, in one line each, for session bootstrapping:
   repo 2026-05-30 — see echo-types#159) + `arghda-panll`
   (Gossamer/ReScript presentation, planned). See docs/buchholz-plan.adoc
   appendix for the motivating proof pipeline.
+- EchoTypes.jl — executable Julia companion to echo-types, mirroring the
+  finite-domain shadow of the Tier-1 + Tier-2 spine + the unconditional
+  F5 OFS fragment. v0.2.0 (2026-05-27) extends v0.1.0's `Echo` /
+  `EchoResidue` / `EchoFiberCount` / `EchoThermodynamics` coverage with
+  seven new modules (`EchoTotalCompletion`, `EchoOrthogonalFactorizationSystem`,
+  `EchoImageFactorization`, `EchoNoSectionGeneric`, `EchoLossTaxonomy`,
+  `EchoEntropy`, `EchoObservationalEquivalence`). Honestly scoped under
+  R-2026-05-18 — the retracted surface and the funext-qualified F5
+  clauses are NOT mirrored. Falsifies-by-counterexample on concrete
+  data; the Agda here remains the source of truth.
+  https://github.com/hyperpolymath/EchoTypes.jl
 
 # This repo
 

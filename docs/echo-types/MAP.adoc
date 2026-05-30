@@ -358,6 +358,30 @@ the move record); was previously in-tree under `arghda-core/`.
   but operates on any `--safe --without-K` Agda workspace; not a
   build-dependency.
 
+=== EchoTypes.jl — Executable Julia companion `[REAL]`
+Mirrors the finite-domain shadow of the Tier-1 + Tier-2 spine + the
+unconditional fragment of the F5 OFS earn-back. v0.2.0 (2026-05-27,
+pinned to `e7dded6`) extends the original v0.1.0 coverage (`Echo`,
+`EchoResidue`, `EchoFiberCount`, `EchoThermodynamics`) with seven
+new shadows for the canonical-identity spine: `EchoTotalCompletion`,
+`EchoOrthogonalFactorizationSystem` (unconditional fragment),
+`EchoImageFactorization`, `EchoNoSectionGeneric`, `EchoLossTaxonomy`,
+`EchoEntropy`, `EchoObservationalEquivalence`.
+
+* Repo: https://github.com/hyperpolymath/EchoTypes.jl
+* Registry: `julia-professional-registry` (registered via PR #16).
+* Scope inheritance: R-2026-05-18 retraction surface NOT mirrored;
+  F5 funext-qualified clauses (uniqueness up to iso, diagonal
+  lifting) NOT mirrored — Julia has no funext, the claims would be
+  vacuous; UIP- and truncation-strength upgrades likewise honestly
+  not mirrored.
+* Discipline: falsifies-by-counterexample over concrete finite data;
+  the companion makes no proof claims, the Agda here remains the
+  source of truth. No in-repo CI dependency in either direction.
+
+Bridge-status row: `docs/bridges/cross-repo-bridge-status.md`
+§"EchoTypes.jl executable mirror".
+
 == Governance — proof-debt & retraction
 
 The honesty layer. *Read before citing any claim above as final.*
