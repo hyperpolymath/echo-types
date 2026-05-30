@@ -244,12 +244,27 @@ Staged Buchholz-style collapsing in `--safe --without-K`.
   to rank-adm / rank-lex)), `RankLexJointBplus` (2026-05-28 PR #147
   — parallel rank with `leftmost-α` discriminator for the bpsi-source-
   at-equality joint-bplus sub-case; second-component strict-mono at
-  equal first components scaffolded), `RankMonoUmbrellaSlice4`
+  equal first components scaffolded; (a)+(b)+(c) assembly
+  completed 2026-05-30 via PRs #165 (b lex-first primitive) + #166
+  (c `BplusFirstTri` trichotomy + `first-eq-from-bpsi-source-at-
+  equal-head` consumer-side derivation)), `RankMonoUmbrellaSlice4`
   (2026-05-28 PR #149 — narrowed `_<ᵇ⁻ⁿ_` umbrella record bundling
   WfCNF endpoints + `_<ᵇ¹_` derivation; covers all 10 inherited
   `_<ᵇ⁰_` cases + the strict-head joint-bplus; two shortfalls
   (`<ᵇ-ψΩ≤` boundary; `<ᵇ-+1` at equal-head) pinned as `⊤`-aliases
-  with explicit lex-rank / rank-lex-jb pointers).
+  with explicit lex-rank / rank-lex-jb pointers),
+  `RankMonoSameLeft` (2026-05-30 PR #167 — Path-3 prototype
+  source-rule enrichment via `<ᵇ⁺²-same-left`; one-line closure via
+  `rank-pow-bplus-right-mono`), `RankMonoUnion` (2026-05-30 PR #168
+  — architectural realisation: union umbrella
+  `_<ᵇᵘ_ = _<ᵇ¹_ ⊎ _<ᵇ⁺²_` via Sum + `[_,_]` mediator; per-extension
+  proof work + structural composition; extension recipe in preamble),
+  `RankMonoUnionWfCNF` (2026-05-30 PR #169 — WfCNF wrap `_<ᵇᵘⁿ_`
+  bundling canonical-form invariant alongside the union; mirrors
+  Slice 4's pattern, propagates automatically through new
+  extensions), `RankMonoUnionWF` (2026-05-30 PR #170 — Gate 2
+  closure: `WellFounded _<ᵇᵘ_` via `Subrelation.wellFounded` +
+  `On.wellFounded` rank-embedding transport from `wf-<′`).
 * Docs: `docs/buchholz-plan.adoc`,
   `docs/echo-types/buchholz-extended-wf.md`,
   `docs/echo-types/buchholz-rank-obstruction.adoc` (per-constructor

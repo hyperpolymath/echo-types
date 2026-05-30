@@ -305,23 +305,25 @@ constructors discharge by additive-principal closure.
 | `<ᵇ-+ψ`    | ✓ closed  | Same as `<ᵇ-+Ω` since `rank-pow (bpsi ν _) = ω-rank-pow ν`.
 | `<ᵇ⁺-ψα`   | ✓ closed (Lane 3, 2026-05-26) | `rank-adm (bpsi ν α) = ω-rank-pow ν ⊕ rank-pow α`; `⊕-mono-<-right` closes the shared-Ω-index lex case from `rank-pow α <′ rank-pow β` (which the existing `_<ᵇ⁰_` umbrella discharges).  Primitive `rank-mono-<ᵇ⁺-ψα-from-pow` in `Ordinal.Buchholz.RankAdm`.
 | `<ᵇ-ψΩ≤`   | ✓ closed (Lane 3 follow-on, 2026-05-27) | Lex-pair rank `rank-lex : BT → RankLex` in `Ordinal.Buchholz.RankLex`, with `rank-lex (bOmega ν) = mkLex (ω-rank-pow ν) (ω-rank-pow ν)` and `rank-lex (bpsi ν α) = mkLex (ω-rank-pow ν) (rank-pow α)`.  Both sub-cases close via `rank-mono-<ᵇ-ψΩ≤-lex`: ν<μ via `<lex-first` + `ω-rank-pow-mono`; ν=μ via `<lex-second` + the admissibility bound `rank-pow α <′ ω-rank-pow ν`.  The "structurally impossible under any rank shape with `ω-rank-pow ν ≤ rank-adm (bpsi ν α)`" verdict from `RankAdm.agda` was scoped to *scalar* ranks; option (A) lex-pair sidesteps it cleanly.
-| `<ᵇ-+1`    | ⏳ joint-bplus, headline `rank-mono-<ᵇ-+1-via-head-Ω` remaining (Slice 3) | The dominator-function unblock (option A from `RankPow.agda`'s preamble) is now COMPLETE on the WfCNF-carrier domination side: `head-Ω : BT → OmegaIndex` (Slice 1, `Ordinal.Buchholz.HeadOmega`), `ω-rank-pow-succ` + per-marker strict dominance at *both* branches (Slice 2 + Slice 2-omega, `Ordinal.Buchholz.RankPow`), the unified `ω-rank-pow-<-succ`, the option-(b) head-Ω inversion lemmas `head-Ω-inv-{bOmega,bpsi}` (`Ordinal.Buchholz.HeadOmegaInversion`), AND the WfCNF-carrier structural recursion `rank-pow-dominated-by-head-Ω : ∀ {t} → WfCNF t → rank-pow t <′ ω-rank-pow-succ (head-Ω t)` (Slice 2-bplus, `Ordinal.Buchholz.RankPowDomination` — landed via PRs #133+#134 2026-05-27).  Remaining: the headline `rank-mono-<ᵇ-+1-via-head-Ω` discharge (Slice 3), consuming the domination lemma plus a head-Ω lower-bound + strict-jump bridge.  No further rank-mono dependency anywhere in the chain — option (b) bought independence from the still-open `rank-pow-mono-≤ᵇ`.
+| `<ᵇ-+1`    | ✓ closed for strict-head + literal-same-left sub-cases (Slice 3+4 Route A, 2026-05-30); ⏳ cross-head rank-equal sub-case open (Gate 1) | The headline `rank-mono-<ᵇ-+1-via-head-Ω` (Slice 3 discharge) closed under a strict-head premise via PRs #141-#143 (2026-05-28). Strict-head joint-bplus extension `<ᵇ¹-+1-+` lands in `RankMonoUmbrellaSlice3` + the WfCNF-bundled form `_<ᵇ⁻ⁿ_` in `RankMonoUmbrellaSlice4` (PR #149). The bpsi-source-at-equal-head sub-case advanced via rank-lex-jb (a)+(b)+(c) assembly: PR #147 (a) equal-first lex-second + PR #165 (b) strict-first lex-first primitive + PR #166 (c) `BplusFirstTri` trichotomy data type + `first-eq-from-bpsi-source-at-equal-head` consumer-side derivation. Path-3 alternative shipped in PR #167 as `RankMonoSameLeft` (`_<ᵇ⁺²-same-left`: source-rule enrichment closing the literal-same-left sub-case in one line via `rank-pow-bplus-right-mono`). Union architecture `_<ᵇᵘ_ = _<ᵇ¹_ ⊎ _<ᵇ⁺²_` lands in PR #168 (`RankMonoUnion`) via Sum + `[_,_]` mediator, with WfCNF wrap (PR #169) and well-foundedness (PR #170, Gate 2 closure via `Subrelation` + `On.wellFounded` transport). Cross-head rank-equal sub-case (Gate 1) remains open: case (iii) "anti-strict tail rank" not refutable from WfCNF constraints alone (the tail bound `y₂ ≤ᵇ x₁` is ordinal-level only; cannot distinguish within equal-marker ψ-sources); both pre-identified scalar-transport unblock routes CHECKED-REFUTED in PR #146 (`StrictLeftMonoRefuted`, `AdditivePrincipalGenericRefuted`).
 | `<ᵇ-0-+`   | ✓ closed* | `rank-pow bzero = oz`, and `rank-pow (bplus x y) ≥′ oz` strictly when *either* `x` or `y` is non-`bzero` and the term is WfCNF.  The degenerate `bplus bzero bzero` is excluded by WfCNF (atomic-right ≤ left forces both `bzero` and then the sum reduces to a `bzero`-shaped equivalent that doesn't pattern-match as a `bplus` under CNF normalisation — covered as a side-condition).
 |===
 
-*Score: 11/13 constructors closed (9 under the original `rank-pow`
-umbrella + 1 under the `rank-adm` slice + 1 under the `rank-lex`
-slice); 1 in flight under the head-Ω route with the WfCNF-carrier
-domination lemma `rank-pow-dominated-by-head-Ω` landed (the headline
-`rank-mono-<ᵇ-+1-via-head-Ω` Slice 3 discharge remaining); 1 closed
-conditionally with documented side condition.  The Lane-3 active-push
-slice on 2026-05-26 closed `<ᵇ⁺-ψα` (rank-adm) and re-classified
-`<ᵇ-ψΩ≤` to "encoding mismatch"; the Lane-3 follow-on slice on
-2026-05-27 closed `<ᵇ-ψΩ≤` via option (A) (lex pair); the head-Ω
-route landed in stages across 2026-05-27 (Slice 1 PR #124, Slice 2
-PR #130, Slice 2-omega + option (b) inversion PR #131, Slice 2-bplus
-domination PRs #133+#134).  Only the headline `rank-mono-<ᵇ-+1-via-head-Ω`
-discharge (Slice 3) remains in the per-constructor matrix.*
+*Score (2026-05-30 close): 12/13 constructors closed at the per-case
+level (9 under the original `rank-pow` umbrella + 1 under the
+`rank-adm` slice + 1 under the `rank-lex` slice + 1 (the `<ᵇ-+1`
+joint-bplus case) closed for two sub-cases — strict-head via Slice 3
+headline + literal-same-left via Path-3 — under the union umbrella
+`_<ᵇᵘ_` from PR #168); 1 closed conditionally with documented side
+condition. The Slice 3+4 Route A arc (PRs #165-#170, 2026-05-30)
+shipped the rank-lex-jb (a)+(b)+(c) assembly, the Path-3 source-rule
+enrichment prototype, the union-of-extensions architecture, the
+WfCNF wrap, and Gate 2 (well-foundedness) closure. Gate 1 — the
+cross-head rank-equal sub-case of `<ᵇ-+1` — remains open as the sole
+documented structural blocker, with both pre-identified scalar-
+transport unblock routes CHECKED-REFUTED in PR #146 and the
+WfCNF-constraint refutation path also closed (the tail bound is
+ordinal-level only; see the `<ᵇ-+1` row above).*
 
 === What remains open
 
