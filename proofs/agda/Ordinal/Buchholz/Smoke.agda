@@ -603,3 +603,17 @@ open import Ordinal.Buchholz.RankMonoUnion using
   ; <ᵇᵘ-from-<ᵇ⁰
   ; <ᵇᵘ-from-<ᵇ⁰-via-<ᵇ⁺²
   )
+
+-- Union umbrella well-foundedness 2026-05-30 (own block per
+-- CLAUDE.md Working rules): closes Gate 2 of the Slice 3+4 Route
+-- A session arc.  `wf-<ᵇᵘ` derives WellFounded `_<ᵇᵘ_` via the
+-- standard Subrelation + InverseImage rank-embedding transport
+-- (rank-pow ∘ wf-<′).  Zero new proof obligations; purely
+-- structural.  Together with the WfCNF wrap (PR #169) this
+-- equips downstream Buchholz consumers with both the
+-- canonical-form invariant AND termination of union-derivation
+-- chains.
+open import Ordinal.Buchholz.RankMonoUnionWF using
+  ( wf-rank-pow-pullback
+  ; wf-<ᵇᵘ
+  )
