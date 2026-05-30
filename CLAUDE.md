@@ -33,11 +33,13 @@ Adjacent projects, in one line each, for session bootstrapping:
   for automatic detection and integration (e.g. discipline-specific
   analyzers becoming visible to PanLL without manual wiring).
   See GROOVE_PANLL_RESEARCH_SUMMARY.md in panll.
-- ArghDA (planned) — lightweight proof-workspace manager for Agda;
+- ArghDA — lightweight proof-workspace manager for Agda;
   triage folders (inbox → working → proven/rejected), linter, DAG view.
-  Split as `arghda-core` (language-agnostic engine) + `arghda-panll`
-  (Gossamer/ReScript presentation). See docs/buchholz-plan.adoc appendix
-  for the motivating proof pipeline.
+  Split as `arghda-core` (language-agnostic engine, separate repo at
+  https://github.com/hyperpolymath/arghda-core, extracted from this
+  repo 2026-05-30 — see echo-types#159) + `arghda-panll`
+  (Gossamer/ReScript presentation, planned). See docs/buchholz-plan.adoc
+  appendix for the motivating proof pipeline.
 
 # This repo
 

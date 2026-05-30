@@ -13,8 +13,10 @@
   #
   # PINNING DECISION (explicit, surfaced — not assumed):
   #   * Agda: nixpkgs `nixos-24.11` -> agda 2.7.0.1 (also ghc 9.6.6,
-  #     cabal 3.12.1.0, rustc 1.82.0, just 1.38.0 — .tool-versions
-  #     match). The verified-green local toolchain is agda 2.8.0; CI's
+  #     cabal 3.12.1.0, just 1.38.0 — .tool-versions match; rustc was
+  #     here pre-2026-05-30 for the in-tree arghda-core crate, removed
+  #     when arghda-core extracted to its own repo per echo-types#159).
+  #     The verified-green local toolchain is agda 2.8.0; CI's
   #     apt job runs yet another. The suite has so far proven robust
   #     across apt-agda and 2.8.0; whether it also typechecks under
   #     2.7.0.1 + stdlib v2.3 is VERIFIED BY the additive
@@ -66,7 +68,6 @@
             name = "echo-types";
             packages = [
               pkgs.agda pkgs.just pkgs.ghc pkgs.cabal-install
-              pkgs.rustc pkgs.cargo pkgs.rustfmt pkgs.clippy
             ];
             shellHook = ''
               export AGDA_DIR="$PWD/.agda"

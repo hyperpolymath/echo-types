@@ -349,9 +349,14 @@ killer-app branch (Walkthrough 1).
 
 === ArghDA — proof-ladder workspace manager `[REAL*]`
 Language-agnostic proof-workspace engine (`arghda-core`, Rust). MVP.
+Extracted to its own repository 2026-05-30 (see echo-types#159 for
+the move record); was previously in-tree under `arghda-core/`.
 
-* Code: `arghda-core/` (Rust crate).
-* Docs: `docs/arghda-spec.adoc`.
+* Repo: https://github.com/hyperpolymath/arghda-core
+* Docs: `docs/arghda-spec.adoc` (in the new repo).
+* Relationship to echo-types: motivated by the proof pipeline here
+  but operates on any `--safe --without-K` Agda workspace; not a
+  build-dependency.
 
 == Governance — proof-debt & retraction
 

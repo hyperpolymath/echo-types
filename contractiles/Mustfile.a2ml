@@ -20,8 +20,8 @@
   :cmd "test -f CHANGELOG.md")
 
 (must spdx-headers
-  :doc "Every Agda / Rust source file carries SPDX-License-Identifier."
-  :cmd "find proofs arghda-core -type f \\( -name '*.agda' -o -name '*.rs' \\) | xargs -r grep -L 'SPDX-License-Identifier' | wc -l | grep -q '^0$'")
+  :doc "Every Agda source file carries SPDX-License-Identifier."
+  :cmd "find proofs -type f -name '*.agda' | xargs -r grep -L 'SPDX-License-Identifier' | wc -l | grep -q '^0$'")
 
 (must stapeln-config
   :doc "stapeln.toml must exist."
@@ -55,6 +55,3 @@
   :doc "ModeGraded (with trailing d) is canonical; ModeGrade is forbidden."
   :cmd "test ! -f proofs/agda/characteristic/ModeGrade.agda")
 
-(must rust-compiles
-  :doc "arghda-core (Rust companion crate) compiles cleanly."
-  :cmd "test ! -d arghda-core || (cd arghda-core && cargo build --release)")

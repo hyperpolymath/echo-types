@@ -9,9 +9,9 @@
   :cmd "git checkout HEAD -- .")
 
 (dust clean-build
-  :doc "Remove all build artifacts (Agda .agdai files, Rust target/)."
+  :doc "Remove all build artifacts (Agda .agdai files)."
   :tag "clean"
-  :cmd "find proofs -name '*.agdai' -delete; rm -rf arghda-core/target")
+  :cmd "find proofs -name '*.agdai' -delete")
 
 (dust resync-from-template
   :doc "Re-run scaffold-component.{py,my} to restore drifted boilerplate."
