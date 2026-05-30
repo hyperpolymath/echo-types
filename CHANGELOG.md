@@ -8,6 +8,94 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added (2026-05-30)
+
+- *Lane 3 ordinal track — Slice 3+4 Route A 6-PR arc + doc sweep.*
+  Seven PRs (#165, #166, #167, #168, #169, #170, #171) build out
+  the rank-mono **union umbrella** over source-rule extensions:
+  - PR #165 — `RankLexJointBplus`'s `(b) lex-first` primitive +
+    `bpsi`-source-at-equal-head sub-case discharge.
+  - PR #166 — `(c)` trichotomy data type `BplusFirstTri` + the
+    consumer-side first-eq derivation via `cong₂ _⊕_` over the
+    definitional `rank-pow (bplus x y) = rank-pow x ⊕ rank-pow y`.
+    Key insight: same residual obligation gates BOTH the ψ-rank-
+    level closure AND the bplus-chain-level closure (halves the
+    apparent proof debt at this case).
+  - PR #167 — Path-3 prototype: `RankMonoSameLeft._<ᵇ⁺²_` adds
+    a literal-same-left source-rule extension that closes in one
+    line via `rank-pow-bplus-right-mono`. Source-rule enrichment
+    is structurally simpler than rank-function enrichment
+    (`rank-lex-jb`) for this sub-case.
+  - PR #168 — architectural umbrella `RankMonoUnion._<ᵇᵘ_` =
+    `_<ᵇ¹_ ⊎ _<ᵇ⁺²_` via `Sum` + `[_,_]` mediator. New
+    source-rule extensions ship as separate modules and union in
+    with two mechanical edits. WfCNF wrap propagates automatically.
+  - PR #169 — `RankMonoUnionWfCNF._<ᵇᵘⁿ_` mirrors Slice 4's
+    `_<ᵇ⁻ⁿ_` over the union umbrella, bundling the canonical-form
+    invariant alongside the rank-relation for downstream Buchholz
+    consumers.
+  - PR #170 — `RankMonoUnionWF.wf-<ᵇᵘ` derives `WellFounded _<ᵇᵘ_`
+    via `Subrelation.wellFounded` + `On.wellFounded` rank-embedding
+    transport from `wf-<′`. Closes Gate 2 of the arc (well-foundedness
+    of the union).
+  - PR #171 — doc sweep: `docs/echo-types/MAP.adoc` enumerates the
+    six new modules; `roadmap.adoc` gains a "Slice 3+4 Route A 6-PR
+    arc (2026-05-30)" subsection; `buchholz-rank-obstruction.adoc`
+    upgrades the `<ᵇ-+1` row from "Slice 3 headline remaining" to
+    "closed for strict-head + literal-same-left sub-cases".
+
+  163 modules at arc close, all `--safe --without-K`, zero new
+  postulates, no funext. Three documented gates: Gate 1 (tail-rank-
+  equality discharge for cross-head rank-equal case) **OPEN** —
+  structural blocker, both pre-identified unblock routes
+  CHECKED-REFUTED in PR #146; Gate 2 (WF) **CLOSED in #170**;
+  Gate 3 (Path-4+ further source-rule extensions) **OPEN** but
+  mechanical via the documented recipe.
+
+- *Trusted-Base Reduction Policy enforcement.* PR #172 adds
+  `docs/proof-debt.md` enumerating echo-types' sole soundness-
+  relevant escape hatch — the four propositional-truncation
+  postulates in `proofs/agda/EchoImageFactorizationPropPostulated.
+  agda` — under Disposition (c) NECESSARY AXIOM. Clears the
+  recurring `governance / Trusted-base reduction policy` red
+  check that had been failing on every echo-types PR since the
+  policy was adopted estate-wide (standards#211). No code change
+  beyond the new docs file.
+
+- *Cross-repo echo↔ephapax L3 bridge package.* Four PRs
+  (#161, #162, #163 + companion ephapax sync) establish the
+  named correspondence between echo-types L3 (`weaken : LEcho
+  linear → LEcho affine`, `no-section-collapse-to-residue`) and
+  ephapax-affine's L3 layer:
+  - PR #161 — `docs/bridges/EchoBridges.md` package layout
+    (§§1-4) + `EchoTypes.jl` v0.2.0 surfacing.
+  - PR #162 — `proofs/agda/EchoEphapaxBridge.agda` NARROW stub —
+    two definitional refl-renames + a docstring catalogue
+    (`ephapax-L3-weaken`, `ephapax-L3-no-section-collapse`).
+    Honest scope: L3 ONLY; ephapax-affine + L1/L2/L4 NOT mirrored.
+    Closes #126.
+  - PR #163 — adjacency cleanup: `EchoBridges.md` §5 + cross-repo
+    bridge-status row + roadmap Lane 4 list.
+
+- *arghda-core extraction.* PR #160 removes `arghda-core/` from
+  this repo's tree; it now lives as a standalone repo
+  (`hyperpolymath/arghda-core`) per the umbrella in #159. Reduces
+  echo-types' surface area to the propositional/proof-theoretic core.
+
+- *Roadmap close-out.* PR #157 closes Lane 5 (killer-app accepted)
+  and refreshes the stale Lane 1 close-out annotation.
+
+### Fixed (2026-05-30)
+
+- *Hypatia agda_postulate scope-narrowing.* PR #156: the
+  `EchoImageFactorizationPropPostulated.agda` exploratory module's
+  four postulates trigger Hypatia's `code_safety/agda_postulate`
+  rule. Inline `-- hypatia: allow code_safety/agda_postulate` at
+  the head of the file (with one-line justification pointing to
+  the kernel-note Tier-2 classification) scope-narrows the alert
+  to the single legitimate site, keeping the rule active for
+  unintended new postulates anywhere else.
+
 ### Added (2026-05-28)
 
 - *Lane 3 ordinal track — Slice 3 prerequisites.* PR #137 added
