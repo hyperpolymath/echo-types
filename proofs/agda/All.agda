@@ -51,6 +51,7 @@ open import EchoCategorical
 open import EchoScope
 open import EchoOrdinal
 open import EchoJanusBridge
+open import EchoEphapaxBridge
 open import Dyadic
 open import DyadicEchoBridge
 open import EchoThermodynamics

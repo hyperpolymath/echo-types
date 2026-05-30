@@ -289,6 +289,33 @@ loss".
 * Proofs: `proofs/agda/EchoJanusBridge.agda`.
 * Docs: `docs/EchoJanusBridge.md`, `docs/EchoBridges.md`.
 
+=== Ephapax L3 — linear/affine modality bridge `[REAL]`
+Cross-repo navigability marker for the `hyperpolymath/ephapax`
+programming-language project, whose L3 layer (`formal/Echo.v`, 584
+lines, 24 `Qed`, zero `Admitted` / zero `Axiom`) is an explicit Coq
+port of `EchoLinear.agda` + `EchoResidue.agda` under a K-free /
+zero-axiom discipline equivalent to `--safe --without-K`. The Coq
+headlines (`mode_le_prop`, `weaken_collapses_distinction`,
+`affine_canonical`, `degrade_mode_comp`,
+`no_section_collapse_to_residue`) each carry the same theorem as the
+Agda counterpart.
+
+Scope is intentionally NARROW: this is import-time documentation +
+two definitional `refl`-renames of the load-bearing Agda symbols
+under `ephapax-L3-`-prefixed names, so a silent upstream rename
+trips `Smoke.agda`. The cross-repo content correspondence is already
+discharged by `coqc` on the ephapax side; no Lane 4 CI dependency.
+
+* Proofs: `proofs/agda/EchoEphapaxBridge.agda` (`ephapax-L3-weaken` ↔
+  `EchoLinear.weaken` ↔ ephapax `formal/Echo.v` `weaken`;
+  `ephapax-L3-no-section-collapse` ↔
+  `EchoResidue.no-section-collapse-to-residue` ↔ ephapax
+  `formal/Echo.v:502-517` `no_section_collapse_to_residue`).
+* External corroboration scope: L3 only — ephapax-affine and L1/L2/L4
+  are NOT mechanised to the same standard (see ephapax
+  `formal/PRESERVATION-DESIGN.md` + `docs/echo-types/paper.adoc`
+  §"Threats to validity").
+
 === Tropical / Dyadic `[REAL*]`
 Bridge domains enumerated in `docs/EchoBridges.md` (JanusKey / CNO /
 Tropical / Dyadic). Dyadic is mechanised; Tropical is named/early.

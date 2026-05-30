@@ -956,6 +956,17 @@ open import EchoJanusBridge using
   ; keyrevoke-echo
   )
 
+-- Cross-repo bridges (NARROW): ephapax `formal/Echo.v` is a Coq port
+-- of `EchoLinear.agda` + `EchoResidue.agda` under a K-free / zero-axiom
+-- discipline.  `ephapax-L3-weaken` and `ephapax-L3-no-section-collapse`
+-- are definitional `refl`-renames of the load-bearing Agda symbols,
+-- pinned so a silent upstream rename trips CI fast.  See
+-- `EchoEphapaxBridge.agda` preamble.
+open import EchoEphapaxBridge using
+  ( ephapax-L3-weaken
+  ; ephapax-L3-no-section-collapse
+  )
+
 open import Ordinal.Base using
   ( OT
   ; zero
