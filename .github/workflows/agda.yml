@@ -27,6 +27,10 @@ permissions: read-all
 jobs:
   check:
     runs-on: ubuntu-latest
+    # Bound the job so a hung typecheck/clone cannot occupy a runner for
+    # the 6-hour default. Generous upper bound — the warm suite is a few
+    # minutes; a cold stdlib+suite build is well under this.
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
@@ -148,6 +152,9 @@ jobs:
     # given the documented WSL git-object-corruption risk). Runs in
     # parallel with `check`; both must pass.
     runs-on: ubuntu-latest
+    # Cold (--ignore-interfaces) build is the slowest path; still well
+    # under this bound. Caps a runaway/hung job below the 6-hour default.
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
