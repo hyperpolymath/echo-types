@@ -33,6 +33,12 @@ jobs:
         include:
           - language: javascript-typescript
             build-mode: none
+          # Also analyse the GitHub Actions workflows themselves
+          # (CodeQL `actions` language) — directly relevant given the
+          # workflow-hardening in this PR, and closes the Hypatia
+          # `codeql_missing_actions_language` finding.
+          - language: actions
+            build-mode: none
 
     steps:
       - name: Checkout
