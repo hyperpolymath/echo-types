@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: MPL-2.0
+#
+# .hypatia-ignore — per-rule scanner exemptions for echo-types.
+#
+# Format (one entry per line; `#` for comments):
+#   <rule_module>/<rule_type>:<path-fragment>
+# The path fragment is substring-matched against each finding's
+# repo-relative path. Consumed by the Hypatia scanner
+# (lib/hypatia/scanner_suppression.ex). Only content-pattern rule
+# modules (e.g. code_safety) are routed through this suppression path;
+# structural rules (workflow_audit / honest_completion / scorecard) are
+# not, and must be addressed by a real fix or an upstream rule change.
+#
+# Each entry below is a verified FALSE POSITIVE. Real findings are not
+# silenced here.
+
+# ── code_safety/agda_postulate on Smoke.agda — FALSE POSITIVE ──────────────
+# The rule is a naive `\bpostulate\b` regex over raw file content that does
+# NOT strip comments. The only "postulate" tokens in Smoke.agda are in
+# COMMENTS documenting the suite's postulate-free discipline ("Zero
+# postulates", "never a postulate", "no funext"); there is no `postulate`
+# declaration. The repo's own guardrail tools/check-guardrails.sh strips
+# comments before checking and passes — it is the real gate (a genuine
+# postulate in Smoke.agda would fail it). The single real postulate in
+# proofs/agda (EchoImageFactorizationPropPostulated.agda) is isolated,
+# guardrail-exempt by design, and not imported by All.agda or Smoke.agda.
+# Upstream fix: agda_postulate should strip comments (see PR notes).
+code_safety/agda_postulate:proofs/agda/Smoke.agda
+
+# ── code_safety/js_http_url_in_code on build-banner.mjs — FALSE POSITIVE ───
+# The flagged `http://` is the SVG XML namespace identifier
+# `xmlns="http://www.w3.org/2000/svg"` — a constant namespace URI that is
+# never dereferenced over the network. It MUST remain http:// (changing it
+# to https would be semantically wrong and break SVG handling). Not CWE-319.
+code_safety/js_http_url_in_code:tools/banner/build-banner.mjs
