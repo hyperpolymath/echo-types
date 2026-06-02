@@ -1,0 +1,118 @@
+// SPDX-License-Identifier: CC-BY-4.0
+// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Valence Shell / Ochránce accountable-shell bridge — exploratory
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[CAUTION]
+====
+*EXPLORATORY — downstream application evidence, not Gate theory.*
+Not load-bearing for the identity claim.  Subject to abandonment.
+Does not constrain Pillar E or any Lane 1–4 close-out.  *Core Affect:
+NO.*  There is no Agda artefact for this bridge; nothing here is
+imported into `proofs/agda/All.agda`, `proofs/agda/Smoke.agda`, or
+`proofs/agda/EchoCanonicalIdentitySuite.agda`, so the verified suite
+is unaffected by anything in this directory.
+====
+
+toc::[]
+
+== Scope, in one paragraph
+
+Valence Shell / Ochránce is a *possible downstream consumer* of Echo
+Types' structured-loss semantics.  The bridge is exploratory and has
+*Core Affect: NO*.  Valence Shell (`hyperpolymath/valence-shell`) is
+an accountable shell with reversible operations, undo/redo, named
+checkpoints, and diff/replay.  Ochránce (`hyperpolymath/ochrance`) is
+a filesystem verification framework that produces concrete receipt
+evidence — A2ML manifests, Merkle state commitments, and
+repair/attestation surfaces.  This directory records a *candidate*
+observation: that Echo Types' vocabulary for structured loss might
+serve as a semantic language for classifying the information change
+carried by a shell or filesystem state transition, and that Ochránce
+might supply the concrete evidence such a classification would
+consume.  The observation is exploratory.  It is not a generalisation
+claim, not a new identity claim, not a pillar, not a gate, and not a
+mechanised cross-repo theorem.
+
+== The candidate classification (reading aid only)
+
+A shell or filesystem state transition `s ↦ s'` carries an
+information change.  Echo Types already names several shapes of such
+change as *existing* artefacts in this repo, at the K-free honesty
+level:
+
+[cols="1,3", options="header"]
+|===
+| Informal class | Candidate Echo Types vocabulary (existing modules)
+
+| recoverable
+| a section / left-leg equivalence exists (`EchoTotalCompletion`,
+  `EchoLossTaxonomy` EQUIV case)
+
+| constrained
+| injective / graded narrowing (`EchoLossTaxonomy` INJ case,
+  `EchoGraded`)
+
+| residue-bearing
+| a lowering carries partial information (`EchoResidue`,
+  `EchoResidueTaxonomy`)
+
+| observationally equivalent
+| indistinguishable at the chosen observation mode
+  (`EchoObservationalEquivalence`)
+
+| genuinely lost
+| no section over the residue (`EchoNoSectionGeneric`,
+  trivial-residue collapse)
+|===
+
+The mapping is a reading aid only.  No claim is made that any Valence
+Shell or Ochránce operation *has been proved* to fall into any class.
+The table records which existing Echo Types theorem each informal
+class would correspond to *if* such a downstream classification were
+ever carried out.  The Agda named in the right column is the source
+of truth for what is actually proved; this directory adds nothing to
+it.
+
+== What this bridge does NOT claim
+
+* It does *not* claim Echo Types proves Valence Shell (or Ochránce)
+  implementation correctness.
+* It makes *no* claim about POSIX semantics, Rust, the Lean→Rust
+  correspondence, secure deletion, GDPR compliance, cryptographic
+  integrity, or Ochránce attestation.
+* It does *not* promote any cross-repo statement to core-theorem
+  status; *Core Affect: NO*.
+* It adds no postulates and no Agda modules.
+* Valence Shell's own RMR (Remove-Match-Reverse) / RMO
+  (Remove-Match-Obliterate) vocabulary is *downstream application
+  vocabulary*.  Where it appears here it is named only as the
+  consumer's own terminology; it is not adopted into, nor mirrored
+  by, the Echo Types core.
+
+== Direction of the bridge
+
+The bridge is one-directional by intent: Echo Types is *upstream*
+(the semantic vocabulary), Valence Shell and Ochránce are *downstream*
+(candidate consumers).  Downstream consumers must not alter the core
+theory.  Any future formal work would live in the consuming repos or
+in a clearly-separated bridge module, never in the canonical identity
+suite, the F5 / OFS universal-property story, or the establishment
+framing.
+
+== Status and termination
+
+Exploratory.  The bridge is retired if any of the following hold: the
+downstream repos adopt a different semantic foundation; no concrete
+Valence Shell / Ochránce operation is ever classified against the
+table above; or the relationship is found redundant with the existing
+in-repo residue / loss framing.
+
+Status anchors:
+
+* `docs/bridge-status.md` §7 (concise ledger, Core Affect: NO);
+* `docs/bridges/cross-repo-bridge-status.md` (cross-repo track table).

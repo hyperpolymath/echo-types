@@ -2,7 +2,7 @@
 <!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Cross-Repo Bridge Status
 
-Last updated: 2026-05-20.
+Last updated: 2026-06-02.
 
 This file is the single status ledger for echo-type bridge work that
 touches other repositories.
@@ -17,6 +17,7 @@ touches other repositories.
 | Tropical alignment | `proofs/agda/EchoTropical.agda` | `tropical-resource-typing/Tropical.thy`, `tropical-resource-typing/TropicalSessionTypes.lean` (and 8 other `.thy` files) | Adjacent repo audit complete (2026-05-20). Repo present at `repos-monorepo/verification-ecosystem/tropical-resource-typing`; remote `hyperpolymath/tropical-resource-typing` active (last push 2026-05-18, language=Isabelle). First alignable theorem pair identified: Agda `⊕-idem` ↔ Isabelle `trop_add_idem` ↔ Lean `add_comm_trop`+`add_assoc_trop`. | Agda cannot import `.thy` or `.lean` directly; alignment is citation-level (statement correspondence with build-side independent proof per language), not import-level. Long-game target: `Tropical_Ordinal_Bridge.thy` ↔ echo-types ordinal track. |
 | EchoTypes.jl executable mirror | Tier-1+Tier-2 spine + unconditional F5 OFS fragment (modules: `Echo`, `EchoResidue`, `EchoFiberCount`, `EchoThermodynamics`, plus 2026-05-27 v0.2.0 additions: `EchoTotalCompletion`, `EchoOrthogonalFactorizationSystem`, `EchoImageFactorization`, `EchoNoSectionGeneric`, `EchoLossTaxonomy`, `EchoEntropy`, `EchoObservationalEquivalence`) | [`hyperpolymath/EchoTypes.jl`](https://github.com/hyperpolymath/EchoTypes.jl) v0.2.0 (pinned to `e7dded6`); registered in `julia-professional-registry` | **Executable companion shipped.** Mirrors run the finite-domain shadow of the upstream theorems on concrete data and falsify-by-counterexample; the companion makes no proof claims, the Agda here remains the source of truth. R-2026-05-18 retraction surface NOT mirrored; F5 funext-qualified clauses (uniqueness up to iso, diagonal lifting) NOT mirrored — Julia has no funext, the claims would be vacuous. UIP- and truncation-strength upgrades likewise honestly not mirrored. | — (shipped; honest scope holds verbatim from upstream). Future advances on the Tier-1+Tier-2 spine are candidates for new shadows in subsequent EchoTypes.jl releases, but no in-repo CI dependency exists in either direction. |
 | Ephapax L3 bridge (Agda↔Coq) | `proofs/agda/EchoEphapaxBridge.agda` | `ephapax/formal/Echo.v` (Coq, 584 lines, 24 `Qed`, zero `Admitted` / zero `Axiom`) — explicit port of `EchoLinear.agda` + `EchoResidue.agda` under a K-free / zero-axiom discipline equivalent to `--safe --without-K` | **Navigability bridge done; content bridge NARROW** (2026-05-30). Two definitional `refl`-renames: `ephapax-L3-weaken = EchoLinear.weaken` and `ephapax-L3-no-section-collapse = EchoResidue.no-section-collapse-to-residue`. Coq headlines `mode_le_prop`, `weaken_collapses_distinction`, `affine_canonical`, `degrade_mode_comp`, `no_section_collapse_to_residue` (line 502-517) each match an Agda counterpart pinned in `Smoke.agda`. Scope: **L3 only** — ephapax-affine has Rust checkers only; L1 has 5 `Axiom` + 11 `Admitted`; L4 has no mechanised theorems yet (cf. ephapax `formal/PRESERVATION-DESIGN.md`, `docs/echo-types/paper.adoc` §"Threats to validity"). | Per-bridge docs `docs/bridges/ECHO-EPHAPAX-BRIDGE.adoc` (CNO-equivalent) not yet authored; tracked as follow-up issue. Full content bridge (round-trip CI between Agda + Coq) would require an Agda mirror of ephapax `formal/Echo.v` and is **not foreclosed** by the NARROW stub. |
+| Valence Shell / Ochránce accountable-shell bridge (exploratory, downstream) | Structured-loss vocabulary only — `EchoResidue` / `EchoResidueTaxonomy` / `EchoLossTaxonomy` / `EchoObservationalEquivalence` / `EchoNoSectionGeneric` cited at the reading-aid level. **No bridge module**; nothing added to `All.agda`, `Smoke.agda`, or `EchoCanonicalIdentitySuite.agda`. | Valence Shell (`hyperpolymath/valence-shell`) — shell state transitions, undo/redo, checkpoints, diff/replay. Ochránce (`hyperpolymath/ochrance`) — A2ML manifests, Merkle state commitments, repair/attestation surfaces. | **Exploratory — candidate downstream consumer. Core Affect: NO.** Echo Types' structured-loss semantics may *classify* shell state transitions by residue / loss form (recoverable / constrained / residue-bearing / observationally equivalent / genuinely lost); Ochránce may supply concrete receipt evidence. Downstream application evidence only — not a new foundation. No mechanised cross-repo theorem currently exists. Companion: `docs/bridge-status.md` §7 and `docs/echo-types/explorations/accountable-shell/README.adoc`. | No shared schema and no Agda↔Idris2 / Agda↔Rust import path; the relationship is citation-level only. Echo Types makes **no** claim about Valence Shell / Ochránce implementation correctness, and **no** claim about POSIX, Rust, the Lean→Rust correspondence, secure deletion, GDPR, cryptographic integrity, or attestation. Valence Shell's RMR/RMO vocabulary, if referenced, is downstream application vocabulary and is not adopted into the Echo Types core. |
 
 ## Immediate next actions
 
@@ -66,6 +67,12 @@ precisely to paper over this in the relational model.
 
 ## Revision history
 
+- 2026-06-02: Added the Valence Shell / Ochránce accountable-shell
+  bridge row as an exploratory downstream-consumer entry (Core Affect:
+  NO; citation-level only, no bridge module, nothing wired into
+  `All.agda` / `Smoke.agda` / `EchoCanonicalIdentitySuite.agda`).
+  Mirrored in `docs/bridge-status.md` §7 and the exploratory note
+  `docs/echo-types/explorations/accountable-shell/README.adoc`.
 - 2026-05-20: Closed CNO content-bridge row; baked Agda↔Coq↔Lean4
   correspondence table in; updated JanusKey row with the
   structural-mirror decision and the 4-vs-8 enum drift; closed the
