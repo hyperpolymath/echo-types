@@ -43,6 +43,9 @@ jobs:
   scan:
     name: Hypatia Neurosymbolic Analysis
     runs-on: ubuntu-latest
+    # Bound the job: clone + Elixir build + scan is minutes, not hours.
+    # Caps a hung clone/build below the 6-hour default.
+    timeout-minutes: 20
 
     steps:
       - name: Checkout repository
