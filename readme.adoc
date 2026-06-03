@@ -1,4 +1,8 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = echo-types
+image:https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=openssourcesecurity[OpenSSF Best Practices,link="https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/echo-types"]
+
 
 image::docs/assets/banner.png[Echo Types — Proof-Relevant Information Residues,align="center"]
 
@@ -18,6 +22,22 @@ Echo types target a third case:
 * irreversible, but with a retained proof-relevant constraint on what was lost
 
 This repository treats that third case as the primary object of study.
+
+== Semantic fibre and warrant prototype
+
+The public vocabulary talks about *semantic fibre*: the possible-origin
+structure that still lies over an observed artefact after a declared
+lossy map. An artefact used *avec fibre* carries enough such structure
+for the advertised inference; an artefact used *sans fibre* is only a
+target-side value. A *warrant* is the inferential licence supplied by
+the fibre or residue, but it is supporting vocabulary rather than the
+headline mathematical object.
+
+`docs/echo-types/prototypes/warrant_debugger_prototype.jsx` is the
+doc-side React sketch for that warrant/debugging layer. It visualises an
+empty fibre contradiction and then makes repair costs explicit when a
+tool weakens, widens, or softens the active obligations. It is an
+explanatory prototype, not an Agda proof artefact.
 
 == Definition (Foundation)
 
