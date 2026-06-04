@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = D-2026-05-20 — Presentation-dependence sub-theory (cluster + meta-pattern)
 :toc: macro
 :toclevels: 2

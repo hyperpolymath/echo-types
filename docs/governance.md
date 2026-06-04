@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Governance & Research Discipline
 
 This repository operates under strict stabilisation and proof-preservation rules. It is treated as a sensitive proof artifact.

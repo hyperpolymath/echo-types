@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = echo-types audit-output: index
 :toc: macro
 :source-highlighter: rouge
@@ -33,6 +35,22 @@ gate ledger). This file remains AS THE AUDIT INDEX for the EI-2
 work; the EI-2 termination + its forbidden-rebrandings still
 stand, and gate G-001 (no reopening EI-2) is still enforced.
 ====
+
+== Navigation addendum (2026-05-31)
+
+This audit index remains scoped to the April 29 EI-2 / 6a2 capture.
+Current reader navigation has two later additions relevant to the
+public description of the repo:
+
+* Semantic-fibre vocabulary now lives in `README.md`,
+  `docs/echo-types/overview.md`, and `docs/echo-types/taxonomy.md`.
+  It distinguishes semantic fibre, avec fibre, sans fibre, residue,
+  provenance/trace, and warrant.
+* Doc-side prototype sketches live under
+  `docs/echo-types/prototypes/`. The current
+  `warrant_debugger_prototype.jsx` is a React explanatory sketch for
+  empty-fibre contradictions and cost-disclosed repair moves. It is
+  not an Agda proof artefact and does not reopen EI-2.
 
 toc::[]
 
@@ -270,6 +288,7 @@ recipe is *organising vocabulary*, not the locus of distinctness.
 
 == End of index
 
-Last updated: 2026-04-29 (post-EI-2 termination, post-6a2 capture).
+Last updated: 2026-05-31 navigation addendum; audit body remains
+2026-04-29 (post-EI-2 termination, post-6a2 capture).
 Next update expected: when integration commits are pushed and the
 state moves from "staged" to "pushed".

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 use anyhow::{Context, Result};
 use arghda_core::{default_rules, run_lints, watcher, Workspace};
 use arghda_core::lint::LintContext;

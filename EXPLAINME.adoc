@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = echo-types: explain me
 :icons: font
 
@@ -19,6 +20,16 @@ Many real-world transforms lose information but not all of it: a checkpoint hash
 * Authors of formally-verified protocols where role projections / privacy collapses / lossy aggregations need typed witnesses for what was retained.
 * Authors of refinement-typed and graded type systems looking for a foundational vocabulary for loss-with-residue.
 * Anyone designing audit / provenance / hash-chain systems who wants a proof-relevant account of what the audit step preserves.
+
+== Applied prototype hook
+
+`docs/echo-types/prototypes/warrant_debugger_prototype.jsx` is the
+current doc-side React sketch for the warrant/debugging surface. It
+belongs below the semantic-fibre vocabulary, not in the README
+headline: it shows an empty-fibre contradiction and cost-disclosed
+repair moves (weaken, widen, soft support) for readers who want to see
+how "warrant" might appear in tooling. It is not an Agda proof artefact
+and does not change the kernel/status claims.
 
 == Status snapshot
 
@@ -44,6 +55,7 @@ Ongoing tracks at a glance (point-in-time, see `roadmap.adoc` for the live statu
 
 * `docs/echo-types/MAP.adoc` — the master map (every direction, status-tagged).
 * `docs/echo-types/echo-kernel-note.adoc` — kernel-vs-derived classification; status SoT for the `Echo*.agda` dependency cone.
+* `docs/echo-types/prototypes/README.adoc` — doc-side UI prototype index; currently the warrant debugger sketch.
 * `roadmap.adoc` + `roadmap-gates.adoc` — lane structure + identity-claim gates.
 * `tutorial/README.adoc` — the pedagogy track if you want to read worked examples first.
 * `docs/retractions.adoc` — read before citing any claim above as final.

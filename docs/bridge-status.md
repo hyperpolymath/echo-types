@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Bridge Status
 
 This document strictly tracks the status of experimental extensions and bridges between the minimal core of Echo Types and other domains.

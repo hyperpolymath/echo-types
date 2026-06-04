@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Ecosystem context
 
 This repo (echo-types) is one node in the hyperpolymath / PanLL ecosystem.

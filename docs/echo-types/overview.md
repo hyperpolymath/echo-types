@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Echo Types — Overview
 
 **Status:** working note. Paths marked *definition* are stable within
@@ -47,6 +51,56 @@ Echo Types names the remainder side explicitly. In the current
 formalization this is the dependent sum above; later stages may add
 residue quotients, graded annotations, relational witnesses,
 ordinal-indexed closure, etc.
+
+## Semantic fibre, avec fibre, sans fibre
+
+The current kernel is literally a preimage fibre, but the intended
+use-case is semantic: a value has crossed some declared observation or
+degradation map and the question is what typed-origin structure still
+lies over the observed artefact.
+
+- **Semantic fibre** names that possible-origin structure: the set,
+  approximation, or witness family of typed origins compatible with the
+  observation. In the exact Agda spine it is `Echo f y`; in approximate
+  or executable settings it may be a finite preimage set, bound, search
+  witness, or residue-backed approximation.
+- **Avec fibre** means the target-side artefact is accompanied by
+  enough semantic fibre to justify the inference being made. For
+  example, knowing an output is `true` under a declared projection may
+  license "the source was one of these witnesses" but not "the source
+  was this unique witness".
+- **Sans fibre** means the artefact is only valid on the target side.
+  It may be well-typed as a `B`, parse as a JSON object, validate at an
+  ABI boundary, or satisfy a checksum format, while still carrying no
+  declared possible-origin structure from the source side.
+
+This is deliberately weaker than a universal boundary-system claim.
+Echo Types do not replace exact typing, typed-wasm, ABI proofs, FFI
+discipline, or structural-fit systems. They become relevant after a
+crossing, compression, observation, corruption, archive step, or
+translation has already made exact preservation unavailable and a
+non-trivial "what could this still have come from?" question remains.
+
+The vocabulary also separates neighbouring notions:
+
+| Term | What it answers | Why it is not enough alone |
+|---|---|---|
+| Provenance | Where did it come from? | Often records one history or source, not the full compatible-origin type. |
+| Trace / lineage | How did it get here? | Records a path, not necessarily the fibre over the final observation. |
+| Residue | What lower-level evidence remains after degradation? | A residue may be weaker than the full possible-origin structure. |
+| Semantic fibre | What possible typed origins still lie over this observation? | Needs a declared map and honest scope. |
+| Warrant | What may we infer or do from this fibre/residue? | Useful internally, but not the headline mathematical object. |
+
+Use **semantic fibre** or **preimage fibre** when clarity matters:
+"fibre" aligns with the mathematical homotopy/preimage fibre, but can
+otherwise be confused with lightweight-thread fibers or network fibre.
+
+The doc-side prototype
+`docs/echo-types/prototypes/warrant_debugger_prototype.jsx` illustrates
+the warrant/debugging reading of this vocabulary. It is not a formal
+artefact: it shows how an interface might disclose an empty fibre and
+the epistemic cost of weakening, widening, or softening the obligations
+used to restore support.
 
 ## The loss / residue pairing
 

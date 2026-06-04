@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = echo-types: Master Map
 :toc: macro
@@ -55,6 +56,40 @@ remainder of information-losing computation: for `f : A → B`,
 * Concept doc: `docs/echo-types/overview.md`,
   `docs/echo-types/types-abstract.adoc`,
   `docs/echo-types/paper.adoc`.
+
+== Repository layers and companions
+
+This is a narrative split, not a physical repository split. No
+directory move is implied.
+
+* *Formal core.* Agda definitions, characteristic theorem families,
+  canonical identity layer, falsifiability gates, and retraction
+  discipline live here. The formal source of truth remains
+  `proofs/agda/` plus the gate/retraction docs.
+* *Applied / explanatory layer.* `docs/echo-types/`, `docs/adjacency/`,
+  and `tutorial/` carry the taxonomy, semantic-fibre vocabulary,
+  canonical examples, boundary/degradation use cases, and honest-bound
+  explanations. Doc-side interface sketches live in
+  `docs/echo-types/prototypes/`; they explain audience-facing tool
+  surfaces and are not proof artefacts.
+* *Warrant debugger prototype.* `docs/echo-types/prototypes/`
+  contains the React warrant/debugger sketch. It visualises an empty
+  fibre / contradiction and the cost-disclosed repair moves
+  (weakening, widening, soft support). Treat it as explanatory
+  vocabulary for semantic-fibre use, not as a kernel module or a new
+  claim about the formal status.
+* *Executable finite-domain companion.* `EchoTypes.jl`
+  (https://github.com/hyperpolymath/EchoTypes.jl) computes finite
+  shadows of selected Agda constructions. It is useful for examples,
+  counterexample search, and executable intuition; it is not a proof
+  repository and does not replace the Agda obligations.
+* *Separate language embodiment / consumer.* `Ephapax`
+  (https://github.com/hyperpolymath/ephapax) is a distinct language
+  project in which Echo Types are intended to become an embodied
+  language-level design principle. Existing Ephapax docs discuss an
+  L3 echo/residue layer (`STATUS.adoc`, `EXPLAINME.adoc`), but
+  Ephapax is an application/consumer, not the definition of the
+  formalism. `echo-types` does not depend on it.
 
 == Canonical identity layer `[REAL]`
 
@@ -387,7 +422,9 @@ are kept for history and **may overclaim** (pre-retraction).
   `roadmap.adoc`)
 
 | Concept / definition
-| `docs/echo-types/overview.md`, `docs/echo-types/paper.adoc`
+| `docs/echo-types/overview.md`, `docs/echo-types/taxonomy.md`,
+  `docs/echo-types/paper.adoc`; doc-side UI sketches:
+  `docs/echo-types/prototypes/`
 | `COMPREHENSIVE_DOCUMENTATION.md`
 
 | Bridges
