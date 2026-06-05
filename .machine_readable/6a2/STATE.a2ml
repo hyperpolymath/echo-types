@@ -1,5 +1,5 @@
 ;;; ============================================================
-;;; STATE.a2ml — echo-types EI-2 termination capture
+;;; STATE.a2ml — echo-types project state
 ;;; ============================================================
 ;;;
 ;;; Format: state-a2ml (S-expression, SRFI-30 conventions)
@@ -8,15 +8,21 @@
 ;;; Sibling reference (cached pattern):
 ;;;   github.com/hyperpolymath/standards/blob/main/meta-a2ml/spec/abnf/meta.abnf
 ;;;
-;;; Purpose: prevent EI-2 from being re-investigated. The investigation
-;;; concluded; the verdict is negative; the documentation cascade has been
-;;; applied; the recipe is no longer a candidate locus of distinctness.
+;;; last-updated: 2026-06-05
+;;;
+;;; Purpose: machine-readable current project state. The PRIMARY landed
+;;; workstream is now the Buchholz/Ordinal rank-monotonicity +
+;;; well-foundedness track (Slice 3+4 Route A arc). The EI-2 termination
+;;; capture (April 2026) is preserved below as history — it prevents
+;;; EI-2 from being re-investigated, but it is no longer the whole
+;;; document identity.
 ;;;
 ;;; SPDX-License-Identifier: MPL-2.0
 ;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
-(define-module (echo-types ei-2 state)
+(define-module (echo-types state)
   #:export (project
+            current-workstream
             session
             terminated-questions
             standing-decisions
@@ -35,12 +41,74 @@
     (repository     . "github.com/hyperpolymath/echo-types")
     (canonical-host . github)                ; per current forge workflow
     (mirrors        . (gitlab codeberg))
-    (version-target . "0.1.1")
+    (version-target . "0.1.1")               ; CHANGELOG still [Unreleased] over
+                                             ; [0.1.0+integration-pending]; no new
+                                             ; release tag minted as of 2026-06-05
     (license        . "MPL-2.0")))
 
 ;;; ============================================================
-;;; Session header
+;;; Current workstream (primary landed work as of 2026-06-05)
 ;;; ============================================================
+;;;
+;;; The active centre of gravity is the Lane 3 ordinal track. The April
+;;; 2026 EI-2 closure (recorded below under `session` /
+;;; `terminated-questions`) remains valid history but is no longer the
+;;; live work. Source of truth for the entries below: CHANGELOG.md
+;;; (current to 2026-05-30) + git log.
+
+(define current-workstream
+  '((as-of . "2026-06-05")
+    (primary
+     ((id . ordinal-rank-mono-wf)
+      (title . "Buchholz/Ordinal rank-monotonicity + well-foundedness — Slice 3+4 Route A arc")
+      (status . landed)
+      (date-range . "2026-05-30")
+      (prs . (#165 #166 #167 #168 #169 #170 #171))
+      (summary . "Rank-mono union umbrella over source-rule extensions. RankMonoUnion._<ᵇᵘ_ = _<ᵇ¹_ ⊎ _<ᵇ⁺²_ via Sum + [_,_] mediator (#168); RankMonoUnionWfCNF._<ᵇᵘⁿ_ bundles the canonical-form invariant alongside the rank-relation (#169 WfCNF wrap); RankMonoUnionWF.wf-<ᵇᵘ derives WellFounded _<ᵇᵘ_ via Subrelation.wellFounded + On.wellFounded rank-embedding transport from wf-<′ (#170, Gate 2 of the arc closed). Path-3 prototype RankMonoSameLeft._<ᵇ⁺²_ adds a literal-same-left source-rule extension closing in one line via rank-pow-bplus-right-mono (#167).")
+      (modules
+       . ("proofs/agda/Ordinal/Buchholz/RankMonoUnion.agda"
+          "proofs/agda/Ordinal/Buchholz/RankMonoUnionWfCNF.agda"
+          "proofs/agda/Ordinal/Buchholz/RankMonoUnionWF.agda"))
+      (gates
+       ((gate-1 . "tail-rank-equality discharge for cross-head rank-equal case — OPEN (structural blocker; both pre-identified unblock routes CHECKED-REFUTED in PR #146)")
+        (gate-2 . "well-foundedness of the union — CLOSED in #170")
+        (gate-3 . "Path-4+ further source-rule extensions — OPEN but mechanical via the documented recipe")))
+      (invariants . "163 modules at arc close; all --safe --without-K; zero new postulates; no funext.")))
+    (supporting
+     (((id . ephapax-bridge)
+       (title . "Cross-repo echo↔ephapax L3 bridge — EchoEphapaxBridge.agda NARROW stub")
+       (status . landed)
+       (date . "2026-05-30")
+       (prs . (#161 #162 #163))
+       (module . "proofs/agda/EchoEphapaxBridge.agda")
+       (summary . "Two definitional refl-renames + a docstring catalogue (ephapax-L3-weaken, ephapax-L3-no-section-collapse) establishing the named correspondence between echo-types L3 (weaken : LEcho linear → LEcho affine; no-section-collapse-to-residue) and ephapax-affine's L3 layer. Honest scope: L3 ONLY; ephapax-affine + L1/L2/L4 NOT mirrored. Closes #126. Package layout in docs/bridges/EchoBridges.md.")
+       (note . "NARROW-stub by design — definitional renames + catalogue, not a deep mechanised bridge."))
+      ((id . arghda-core-extraction)
+       (title . "arghda-core subtree extraction")
+       (status . landed)
+       (date . "2026-05-30")
+       (pr . #160)
+       (summary . "Removed arghda-core/ from this repo's tree; it now lives as a standalone repo (hyperpolymath/arghda-core) per the umbrella in #159. Reduces echo-types' surface area to the propositional/proof-theoretic core.")
+       (umbrella-issue . 159))))
+    (proof-debt
+     ((status . enumerated)
+      (pr . #172)
+      (doc . "docs/proof-debt.md")
+      (summary . "echo-types' sole soundness-relevant escape hatch — the four propositional-truncation postulates in proofs/agda/EchoImageFactorizationPropPostulated.agda — enumerated under Disposition (c) NECESSARY AXIOM. Clears the recurring governance/Trusted-base-reduction-policy red check (standards#211).")))
+    (recent-ci
+     ((id . hypatia-hardening)
+      (pr . #178)
+      (date . "2026-05-30")
+      (summary . "Hardened CI workflows + resolved Hypatia findings at source. Most recent commit on the branch as of this state refresh.")))))
+
+;;; ============================================================
+;;; Session header (HISTORICAL — EI-2 termination, April 2026)
+;;; ============================================================
+;;;
+;;; The EI-2 record below is retained as history. EI-2 closed negatively
+;;; in April 2026; it must not be re-investigated (see do-not-redo and
+;;; forbidden-rebrandings). It is NOT the current workstream — see
+;;; `current-workstream` above for the live ordinal-track work.
 
 (define session
   '((investigation-id   . "EI-2")
@@ -269,10 +337,10 @@
 
     ((id . ordinal-track-path-1)
      (title . "Ordinal track Path-1 — Brouwer rank-mono into _<ᵇ⁻_")
-     (status . in-flight)
-     (relevance . "Brouwer arithmetic + rank-mono for _<ᵇ⁻_ are in a parallel-session worktree; this echo-types session stays clear of `proofs/agda/Ordinal/**` per `feedback_parallel_session_branch_drift` discipline.")
+     (status . substantially-landed)
+     (relevance . "Substantially advanced by the Slice 3+4 Route A arc (PRs #165-#171, 2026-05-30) — see current-workstream. The rank-mono union umbrella RankMonoUnion._<ᵇᵘ_ + its WfCNF wrap landed, and well-foundedness wf-<ᵇᵘ via rank-embedding transport closed Gate 2 (#170).")
      (priority . high)
-     (owner . other-session))
+     (remaining . "Gate 1 (tail-rank-equality discharge for the cross-head rank-equal case) remains OPEN — structural blocker, both pre-identified unblock routes CHECKED-REFUTED in PR #146. Gate 3 (Path-4+ further source-rule extensions) is OPEN but mechanical via the documented recipe."))
 
     ((id . v0-2-recipe-extension)
      (title . "Recipe extension exploration (parked)")
