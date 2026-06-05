@@ -6,6 +6,8 @@
 ;;; Schema reference:
 ;;;   github.com/hyperpolymath/standards/blob/main/meta-a2ml/spec/abnf/meta.abnf
 ;;;
+;;; last-updated: 2026-06-05
+;;;
 ;;; SPDX-License-Identifier: MPL-2.0
 ;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
@@ -98,6 +100,28 @@
      (context . "R-2026-05-18 retracted five claims and reframed the project around what the Agda actually shows (thin-poset reindexing modality, not graded comonad; pointwise mediator, not terminal cone; carrier-parametricity, not model-independence; postulate-free build as evidence, not conservativity metatheorem; no funext anywhere, not 'quarantined'). The earn-back plan in docs/echo-types/earn-back-plan.adoc was the falsifiable program for converting the retracted claims back into theorems — or confirming, on the project's own gate discipline, that they cannot be earned at their original strength.")
      (decision . "All four gates have now passed at the strictly-bounded strength the earn-back plan asked for: F4 (terminal-cone UP as a function of an explicit funext parameter, never a postulate); F2 (genuine second model of the bare Echo functor on a non-graph StepND relation); F1 (genuine graded comonad on iterated-residue carrier with Echo as grade-unit object); F3 (the F1 construction is instantiable at non-isomorphic grade monoids). Each is exactly as strong as the gate specified; nothing is overclaimed. The conservativity metatheorem retraction (R-2026-05-18 finding 5) stays retracted with no gate attempting to earn it back — that one was a meta-statement over all propositions, not discharged by typechecking. The 'not two models for EchoGraded/GCLaws' finding 3 also stays retracted; the F3 earn-back is about the different F1 interface.")
      (consequences . "The retraction discipline is validated AS A METHODOLOGY: a retraction is not a failure but the mechanism by which claims become falsifiable. Four of five retracted claims were earned back at honest strength, one stays retracted, none was silently re-inflated. paper.adoc / types-abstract.adoc / conservativity.adoc are NOT moved by this ADR — those documents are about EchoGraded's thin-poset structure, which the F1+F3 side-construction does not change. Whether to add a bounded 'new contribution' paragraph is owner-gated.")
+     (supersedes . none))
+
+    (adr-010
+     (title . "Ordinal-track well-foundedness via rank-embedding transport")
+     (status . accepted)
+     (date . "2026-05-30")
+     (context . "Lane 3 (Buchholz/Ordinal) needed well-foundedness of the rank-mono union relation _<ᵇᵘ_ (= _<ᵇ¹_ ⊎ _<ᵇ⁺²_) under the WfCNF restriction. Proving WellFounded directly on a Buchholz term relation is hard; the unbudgeted global WF for the unrestricted surface route remains genuinely out of reach under --safe --without-K.")
+     (decision . "Derive WellFounded _<ᵇᵘ_ by TRANSPORTING well-foundedness along the rank embedding rank-pow : BT → Ord, rather than by direct structural well-founded recursion. RankMonoUnionWF.wf-<ᵇᵘ composes stdlib's Induction.WellFounded Subrelation.wellFounded + On.wellFounded against wf-<′ (well-foundedness of the Brouwer-ordinal order _<′_). The union umbrella RankMonoUnion._<ᵇᵘ_ is built from source-rule extensions via Sum + [_,_] mediator (PR #168) so that new source-rule extensions ship as separate modules and union in with two mechanical edits, with the WfCNF wrap (RankMonoUnionWfCNF._<ᵇᵘⁿ_, PR #169) propagating automatically.")
+     (consequences . "Gate 2 (well-foundedness of the union) CLOSED in PR #170 under --safe --without-K with zero new postulates. Gate 1 (tail-rank-equality discharge for the cross-head rank-equal case) stays OPEN — a structural blocker whose two pre-identified unblock routes were CHECKED-REFUTED in PR #146. Gate 3 (further source-rule extensions, Path-4+) stays OPEN but mechanical via the documented union recipe. The rank-embedding transport is the architectural pattern future source-rule extensions inherit.")
+     (modules . ("proofs/agda/Ordinal/Buchholz/RankMonoUnion.agda"
+                 "proofs/agda/Ordinal/Buchholz/RankMonoUnionWfCNF.agda"
+                 "proofs/agda/Ordinal/Buchholz/RankMonoUnionWF.agda"))
+     (supersedes . none))
+
+    (adr-011
+     (title . "echo↔ephapax cross-repo bridge as a NARROW definitional stub")
+     (status . accepted)
+     (date . "2026-05-30")
+     (context . "The hyperpolymath ecosystem wanted a named correspondence between echo-types' L3 layer (weaken : LEcho linear → LEcho affine; no-section-collapse-to-residue) and ephapax-affine's L3 layer. A full mechanised bridge across all of ephapax-affine's layers (L1/L2/L4) would be a large, speculative undertaking.")
+     (decision . "Ship proofs/agda/EchoEphapaxBridge.agda as a NARROW stub: two definitional refl-renames plus a docstring catalogue (ephapax-L3-weaken, ephapax-L3-no-section-collapse). Honest scope is L3 ONLY; ephapax-affine itself and L1/L2/L4 are explicitly NOT mirrored. Package layout documented in docs/bridges/EchoBridges.md.")
+     (consequences . "Closes echo-types#126. Establishes the bridge naming convention without overclaiming a deep correspondence. Extending to further ephapax layers is separate future work, not unfinished bridge business. Landed across PRs #161/#162/#163.")
+     (module . "proofs/agda/EchoEphapaxBridge.agda")
      (supersedes . none))))
 
 ;;; ============================================================
