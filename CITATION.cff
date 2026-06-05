@@ -7,7 +7,7 @@ type: software
 authors:
   - given-names: Jonathan
     family-names: Jewell
-    email: jonathan.jewell@gmail.com
+    email: j.d.a.jewell@open.ac.uk
     # PLACEHOLDER: insert ORCID once registered, e.g.
     # orcid: "https://orcid.org/0000-0000-0000-0000"
 repository-code: "https://github.com/hyperpolymath/echo-types"

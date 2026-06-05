@@ -1,4 +1,5 @@
 *.agdai
+_build/
 .claude/
 .agda/
 
