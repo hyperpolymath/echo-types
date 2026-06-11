@@ -66,10 +66,6 @@ paper's own abstract grows into.
 
 * One row per claim-bearing sentence. Restatements are kept as
   separate rows so the surface multiplicity is visible.
-* Rows sorted by `Surface` (alphabetical), then by source-document
-  sentence order within each surface. IDs are assigned in the
-  sorted order; cross-references downstream should cite both the ID
-  and the verbatim sentence to remain stable across re-sorts.
 * `Surface` column: short token. `paper-front` = the `[IMPORTANT]`
   block at the top of `paper.adoc`. `paper-intro` = §1 Introduction
   including the Contributions list. `abstract-*` = sections of
@@ -82,593 +78,774 @@ paper's own abstract grows into.
 * `Note` column: structural observations only — not judgements of
   whether the claim is justified. Each row is mapping-only per the
   brief.
+* `VERDICT` + `EVIDENCE` columns added 2026-06-10 by source-only
+  audit against the cited Agda under `--safe --without-K`.
+  VERDICT vocabulary: `MATCHES` (theorem supports sentence as
+  written) | `WEAKER-THAN-CLAIM` (theorem exists but is strictly
+  weaker, e.g. pointwise vs strict, K-free skeleton vs full HoTT
+  statement, or partial closure vs umbrella) | `NO-BACKING` (no
+  theorem in the codebase backs the sentence) | `CONJECTURE-OK`
+  (sentence is openly a non-claim, positioning, scope, retraction
+  citation, or `NONE-PROPOSED` placeholder, and that is honest).
 
 == Surface claim inventory
 
-[cols="1,1,4,3,3", options="header"]
+[cols="1,1,4,3,3,2,3", options="header"]
 |===
-| ID | Surface | Verbatim sentence | Proposed (module, theorem) mapping | Note
+| ID | Surface | Verbatim sentence | Proposed (module, theorem) mapping | Note | VERDICT | EVIDENCE
 
 | S-001
-| abstract-context
-| Define, for `f : A → B` and `y : B`, `Echo f y := Σ (x : A) , (f x ≡ y)`.
-| `Echo.Echo`
-| Definitional restatement (cf. S-026 readme-foundation).
-
-| S-002
-| abstract-context
-| This is *definitionally* the homotopy fibre `fib f y` (HoTT book Def. 4.2.4); the bridge `echo↔fib` is mechanised with `refl` round-trips.
-| `EchoFiberBridge.echo↔fib`
-| Restates the paper-intro Pinned-identity row at the abstract surface.
-
-| S-003
-| abstract-context
-| We do **not** claim echo as a new judgmental type strength.
-| NONE-PROPOSED
-| Negative positioning statement.
-
-| S-004
-| abstract-context
-| The strength that *does* befit echo is a **loss-graded reindexing modality**: a monotone family over a join-semilattice of loss grades with a functorial reindexing action.
-| `EchoGraded.GEcho` + `EchoGraded.degrade`
-| Restates paper-intro Loss-graded reindexing modality row.
-
-| S-005
-| abstract-context
-| It is *motivated by* the coeffect / quantitative lineage … but is explicitly *not* a graded comonad in that sense: no nested `D_{r·s} ⇒ D_{r} D_{s}` is formed.
-| `EchoGradedComonad` (the actual content) + `docs/retractions.adoc` §R-2026-05-18
-| Restates paper-front "not a graded comonad" row.
-
-| S-006
-| abstract-contributions
-| `echo↔fib : Echo f y ↔ fiber f y`, definitional, `refl` round-trips, where `fiber` is a same-module restatement of the Σ.
-| `EchoFiberBridge.echo↔fib` + `EchoFiberBridge.fiber`
-| Restates the paper-intro pair "Pinned identity" + "`fiber` is a same-module restatement".
-
-| S-007
-| abstract-contributions
-| `echo-pullback-univ` gives existence and *pointwise* uniqueness `∀ v → m' v ≡ m v`.
-| `EchoPullback.echo-pullback-univ`
-| Restates paper-intro `echo-pullback-univ` row.
-
-| S-008
-| abstract-contributions
-| Earned back conditionally (F4, F-2026-05-18a): strict terminality is mechanised as a function of an explicit `funext` parameter (`EchoPullbackUnivF4.agda`, not a postulate); the unconditional claim stays retracted, the pointwise corollary is kept.
-| `EchoPullbackUnivF4` + `docs/retractions.adoc` §F-2026-05-18a
-| F4 earn-back; the module-level `funext` is a parameter, not a `postulate` declaration.
-
-| S-009
-| abstract-contributions
-| Over the loss-grade join-semilattice `(Grade, ⊔, keep)`: `gextract` is the identity coercion (`keep` is the definitional bottom), `gduplicate` is the join-left *single-grade* reindex.
-| `EchoGradedComonad.gextract` + `EchoGradedComonad.gduplicate` + `EchoGraded.keep` + `EchoGraded._⊔g_`
-| Restates paper-intro counit/comultiplication row.
-
-| S-010
-| abstract-contributions
-| In the common-upper-bound idiom the three coherence equations collapse to `degrade-compose` plus propositionality of the loss order (`≤g-prop`), with no `subst`/transport.
-| `EchoGradedComonad.gcomonad-counit-l` + `EchoGradedComonad.gcomonad-counit-r` + `EchoGradedComonad.gcomonad-coassoc` + `EchoGraded.degrade-compose` + `EchoGraded.≤g-prop`
-| Restates paper-intro three-coherence-equations row.
-
-| S-011
-| abstract-contributions
-| The characteristic composition equation is *refuted* at a concrete decidable witness (checked `true ≢ false`).
-| `EchoSeparating.sep-degrade-compose-fails`
-| Direct symbol.
-
-| S-012
-| abstract-contributions
-| `GradedLossModel`'s `⊑-prop` field *fixes* the only load-bearing hypothesis; `GCLaws` proves the equations once, parametric in the carrier, over a *fixed* grade poset.
-| `EchoRelModel.GradedLossModel` + `EchoRelModel.GCLaws`
-| Restates paper-intro carrier-parametric row.
-
-| S-013
-| abstract-contributions
-| Earned back, scoped (F2, F-2026-05-18a): a genuine second model of the *bare Echo functor* (not the modality) exists on the non-graph relation `StepND` (`EchoStepNDModelF2.agda`; `nd-not-graph` checked), with content-bearing agreement — not Σ-η on `× ⊤`.
-| `EchoStepNDModelF2` (including `nd-not-graph`) + `docs/retractions.adoc` §F-2026-05-18a
-| F2 earn-back; the negative "not Σ-η on × ⊤" is a deliberate matched-negative.
-
-| S-014
-| abstract-discipline
-| The Agda development is `--safe --without-K` throughout, with **zero postulates and zero escape pragmas**, CI-enforced — a build property that is *evidence for*, not a proof of, conservativity.
-| `scripts/check-no-unsafe.sh` + `scripts/kernel-guard.sh` + `.github/workflows/agda.yml`
-| Restates paper-intro postulate-free-build row with the narrowed conservativity reading.
-
-| S-015
-| abstract-discipline
-| Every headline theorem is pinned in a `Smoke.agda` manifest so a silent rename fails CI fast.
-| `Smoke.agda` + `tutorial/*/Smoke.agda` + `Ordinal/Buchholz/Smoke.agda`
-| Smoke-pin invariant; CLAUDE.md "Working rules" enforces it per change.
-
-| S-016
-| abstract-discipline
-| There is no funext anywhere; the genuine funext-relativity is the pointwise-only mediator property, disclosed as a bound rather than presented as a "funext-free" feature.
-| `EchoPullback.echo-pullback-univ` (no funext) + `EchoPullbackUnivF4` (funext as parameter)
-| Disclosure claim; the load-bearing artefact is the absence of a `postulate funext` line tree-wide.
-
-| S-017
-| abstract-position
-| Echo sits beside, not within, the linear/dependent ladder.
-| NONE-PROPOSED
-| Positioning statement; no theorem.
-
-| S-018
-| abstract-position
-| Echo *is* the fibre (`echo↔fib`, `refl` round-trips). The win is not against HoTT but one step to the side: against *propositionally-truncated* fibres, where `‖ Echo f y ‖` discards witness identity, the un-truncated form retains it (`echo-not-prop` certificates).
-| `EchoFiberBridge.echo↔fib` + the `echo-not-prop` family in `proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda`
-| Truncation argument — the Gate-1 structural lever.
-
-| S-019
-| abstract-position
-| Echo is *motivated by* this lineage but explicitly *not* an instance — `EchoGradedComonad.agda` exhibits no nested `D_r D_s`. What we provide is a *calibration*: the separating model isolates the single load-bearing hypothesis (`≤g-prop`) at which generic Σ-functoriality stops being enough.
-| `EchoGradedComonad` (content audit) + `EchoSeparating.sep-degrade-compose-fails`
-| Restates paper-front + paper-intro under the "calibration" framing.
-
-| S-020
-| build-card
-| (no card strings located)
-| NONE-PROPOSED
-| `build-card.mjs` does not exist in this repo or any sibling repo under `/home/hyperpolymath`. Row retained as an explicit `LOCATE-FAILED` placeholder.
-
-| S-021
 | gh-desc
 | Constructive Agda library for Echo Types: a formal model of structured loss (non-total erasure).
 | `Echo.Echo` + repo-level `--safe --without-K` invariant
 | Repository-level claim; the per-file invariant is enforced by `scripts/check-no-unsafe.sh` and CI.
+| MATCHES
+| `Echo.Echo` defines `Echo f y := Σ A (λ x → f x ≡ y)` and every file in `proofs/agda/` carries `--safe --without-K` enforced by `scripts/check-no-unsafe.sh` + `scripts/kernel-guard.sh`, supporting the gh-desc framing of a constructive Agda library for structured loss.
 
-| S-022
+| S-002
 | gh-desc
 | Mechanized Bachmann-Howard ordinals, Buchholz/Veblen hierarchies, and thermodynamic stability proofs.
 | `Ordinal.Buchholz.*` + `EchoThermodynamics`
 | Spans Lane 3 (Ordinal track, currently 11/13 constructors closed under WfCNF) and the EchoFiberCount-backed Landauer/Bennett family in `EchoThermodynamics.agda`.
+| WEAKER-THAN-CLAIM
+| Buchholz/Veblen scaffolding exists (`Ordinal/Buchholz/{Syntax,WellFormed,WellFormedCNF,Veblen*}.agda` with `BH-wf-cnf` for the Bachmann–Howard marker) and `EchoThermodynamics` ships `landauer-bound`/`bennett-reversible`/`landauer-collapse` over `Fin n` via `EchoFiberCount`, but rank-mono closes only 10–11/13 constructors under WfCNF, global `_<ᵇ_` well-foundedness for the full surface route is open per the `WellFormed`/`RankMono` preambles, and there are no real-valued thermodynamic stability theorems — calling these "Mechanized Bachmann-Howard ordinals … and thermodynamic stability proofs" overstates the closure state.
 
-| S-023
-| linkedin
-| (draft copy not located)
-| NONE-PROPOSED
-| LinkedIn draft not found by file-name or content search. Row retained as an explicit `LOCATE-FAILED` placeholder so a future session can supply the verbatim sentences without disturbing earlier IDs.
+| S-003
+| readme-lead
+| Constructive Agda development for echo types as a first-class notion of structured loss: loss that is not total erasure.
+| `Echo.Echo` + `EchoResidue` + `EchoNoSectionGeneric`
+| Restates S-001; "first-class notion" is a positioning claim, not a theorem.
+| MATCHES
+| `Echo.Echo` + `EchoResidue.echo-to-residue` + `EchoNoSectionGeneric.no-section-of-collapsing-map` together back the "structured loss / not total erasure" framing; "first-class notion" is acknowledged in the mapping note as positioning and the theorem mapping is intact.
 
-| S-024
-| paper-front
-| The thesis of the paper is that the type-theoretic standing that *befits* echo is not the linear/dependent judgmental ladder — that comparison is a category error — but a **loss-graded reindexing modality**: a monotone family indexed by a join-semilattice of loss grades, with a functorial reindexing action.
-| `EchoGraded` + `EchoFiberBridge.echo↔fib`
-| Thesis statement; the negative ("not linear/dependent") has no module to map; the positive maps to `EchoGraded`.
-
-| S-025
-| paper-front
-| It is *analogous to*, and motivated by, the coeffect/quantitative lineage, but we are exact about what is and is not mechanised.
-| NONE-PROPOSED
-| Lineage-positioning sentence; no theorem corresponds.
-
-| S-026
-| paper-front
-| In particular it is *not* a graded comonad in the Petriček–Orchard–Mycroft / Katsumata sense: no nested functor `D_{r·s} ⇒ D_{r} D_{s}` is formed, and the structure maps are the lattice-bottom coercion and the join-left reindex, not a genuine counit/comultiplication pair.
-| `EchoGradedComonad` (the actual records present in the module) + `docs/retractions.adoc` §R-2026-05-18
-| Negative claim about absent structure; mapping is to what *is* present (single-grade reindex) versus what would be needed (nested family).
-
-| S-027
-| paper-intro
-| The contribution is a *characterisation package*, mechanised in Agda under `--safe --without-K` with zero postulates
-| repo invariant + `EchoFiberBridge` + `EchoPullback` + `EchoGradedComonad` + `EchoSeparating` + `EchoRelModel`
-| Umbrella claim; decomposes across Pillars A–D.
-
-| S-028
-| paper-intro
-| Pinned identity. `echo↔fib : Echo f y ↔ fiber f y`, definitional, `refl` round-trips (Pillar A).
-| `EchoFiberBridge.echo↔fib` + `EchoFiberBridge.echo→fib` + `EchoFiberBridge.fib→echo`
-| Direct theorem statement.
-
-| S-029
-| paper-intro
-| `fiber` is a same-module restatement of the Σ; the bridge is the identity.
-| `EchoFiberBridge.fiber` (local definition because stdlib 2.3 has none)
-| Definitional fact about the bridge's content.
-
-| S-030
-| paper-intro
-| Pointwise mediator property. `Echo f y` presented as the pullback of `f` along the point `y : ⊤ → B`; a `SliceHom` *is* a cone (round-trips `refl`).
-| `EchoPullback.SliceHom` + `EchoPullback.EchoCone` + `EchoPullback.echo-cone`
-| Three named artefacts; round-trip is `refl`.
-
-| S-031
-| paper-intro
-| `echo-pullback-univ` gives existence and *pointwise* uniqueness `∀ v → m' v ≡ m v`.
-| `EchoPullback.echo-pullback-univ`
-| Direct theorem.
-
-| S-032
-| paper-intro
-| We do *not* claim full terminality: `m' ≡ m` is neither stated nor provable here without funext, so this is a funext-relative mediator property, not a universal property in the categorical sense (Pillar B-1, §3).
-| `EchoPullbackUnivF4` (the funext-parametrised earn-back) + `docs/retractions.adoc` §R-2026-05-18 + §F-2026-05-18a
-| Scope-narrowing claim; the earn-back module is the conditional restorer.
-
-| S-033
-| paper-intro
-| Loss-graded reindexing modality. A monotone family `GEcho` over the loss-grade join-semilattice with a functorial reindex `degrade`.
-| `EchoGraded.GEcho` + `EchoGraded.degrade`
-| Direct module structure.
-
-| S-034
-| paper-intro
-| The "counit" is the identity coercion (the bottom grade `keep` is absorbed definitionally); the "comultiplication" is the join-left reindex `GEcho g₁ → GEcho (g₁ ⊔ g₂)` — a *single* grade application, *not* a nested `D_r D_s`.
-| `EchoGradedComonad.gextract` + `EchoGradedComonad.gduplicate`
-| Pair-symbol mapping; the negative ("not nested") has no in-repo artefact, matched-negative discipline applies.
-
-| S-035
-| paper-intro
-| The three coherence equations (§4.2) hold for exactly one reason: the grade order is thin (`≤g-prop`) and `degrade` is functorial (`degrade-compose`).
-| `EchoGraded.≤g-prop` + `EchoGraded.degrade-compose` + `EchoGradedComonad.gcomonad-counit-l` + `EchoGradedComonad.gcomonad-counit-r` + `EchoGradedComonad.gcomonad-coassoc`
-| Five theorems; the three coherence equations + the two load-bearing antecedents.
-
-| S-036
-| paper-intro
-| This is a thin-poset action, not a graded comonad (Pillar B-2).
-| `EchoGradedComonad` (entire module) + `docs/retractions.adoc` §R-2026-05-18
-| Reframing claim; the module retains its name despite the narrowing.
-
-| S-037
-| paper-intro
-| Separating model. the model minus its single hypothesis `≤g-prop`: generic Σ-functoriality survives, the characteristic composition law is refuted at a decidable witness.
-| `EchoSeparating.sep-order-not-prop` + `EchoSeparating.sep-map-over-id` + `EchoSeparating.sep-map-over-comp` + `EchoSeparating.sep-degrade-compose-fails`
-| Four headlines pinned in `Smoke.agda`.
-
-| S-038
-| paper-intro
-| Carrier-parametric abstraction (not model-independence). an abstract interface `GradedLossModel` whose `⊑-prop` field *fixes* the only load-bearing hypothesis; the coherence equations are proved once, parametric in the carrier, over a *fixed* grade poset.
-| `EchoRelModel.GradedLossModel` + `EchoRelModel.GCLaws`
-| Direct module structure; the negative ("not model-independence") flags the R-2026-05-18 narrowing.
-
-| S-039
-| paper-intro
-| The "second model" is the first with a `⊤` component, agreeing definitionally (`refl`).
-| `EchoRelModel.set-model` + `EchoRelModel.rel-model` + `EchoRelModel.model-agreement` + `EchoRelModel.bridge-natural`
-| Two-model construction; `refl`-agreement is the narrowed claim.
-
-| S-040
-| paper-intro
-| Postulate-free build (not a conservativity metatheorem). the whole development typechecks `--safe --without-K` with zero postulates / zero escape pragmas, CI-enforced.
-| `scripts/check-no-unsafe.sh` + `scripts/kernel-guard.sh` + `.github/workflows/agda.yml`
-| Build-invariant claim; not a theorem.
-
-| S-041
-| paper-intro
-| With `Echo = Σ` definitionally this is *evidence for* conservativity over MLTT+Σ; it is not a mechanised proof-theoretic conservativity theorem, and is no longer stated as one (§6.2).
-| `docs/echo-types/conservativity.adoc` + `docs/retractions.adoc` §R-2026-05-18
-| Doc anchor; no theorem statement.
-
-| S-042
-| paper-intro
-| Methodology. falsifiable gates with explicit retraction actions; identity claims settled negatively and logged, including this development's own framing retraction (§7).
-| `roadmap-gates.adoc` + `docs/retractions.adoc`
-| Process claim; no single theorem.
-
-| S-043
-| paper-intro
-| `Echo` introduces no new judgement, context structure, or formation rule — it is a derived Σ-type.
-| `Echo.Echo` (the definitional shape)
-| Negative claim about absent structure; the positive side maps to the Σ-shape.
-
-| S-044
-| paper-intro
-| Presenting bespoke "echo introduction/elimination rules" as primitive would be the fastest way to lose an informed reader.
-| NONE-PROPOSED
-| Editorial framing; no theorem corresponds.
-
-| S-045
+| S-004
 | readme-core-idea
 | Echo types target a third case: irreversible, but with a retained proof-relevant constraint on what was lost.
 | `EchoCharacteristic.visible-constraint` + `EchoResidue.echo-to-residue`
 | "Proof-relevant constraint" maps to the un-truncated witness component of `Echo`.
+| MATCHES
+| `EchoCharacteristic.visible-constraint : ∀ {y} (e : Echo visible y) → proj₁ (proj₁ e) ≡ y` is the literal Σ-second-projection retained-constraint witness and `EchoResidue.echo-to-residue` is the proof-relevant residue lowering, jointly supporting "proof-relevant constraint on what was lost".
 
-| S-046
+| S-005
 | readme-core-idea
 | This repository treats that third case as the primary object of study.
 | NONE-PROPOSED
 | Scope/positioning statement; no theorem corresponds.
+| CONJECTURE-OK
+| Explicit scope/positioning statement correctly tagged `NONE-PROPOSED`; no theorem is in scope.
 
-| S-047
-| readme-foundation
-| Given `f : A → B`, define the fiber/echo at `y : B`: `Echo f y := Σ (x : A) , (f x ≡ y)`.
-| `Echo.Echo`
-| Definitional; the source-of-truth declaration.
-
-| S-048
-| readme-foundation
-| with constructive proofs (`--safe --without-K`, no postulates in `proofs/agda`)
-| repo invariant (`scripts/kernel-guard.sh`, `scripts/check-no-unsafe.sh`)
-| Build-invariant claim; not a single theorem.
-
-| S-049
-| readme-foundation
-| `echo-intro` (introduction into own fiber)
-| `Echo.echo-intro`
-| Direct symbol reference.
-
-| S-050
-| readme-foundation
-| `map-over` (action on fibers for morphisms over fixed base)
-| `Echo.map-over`
-| Direct symbol reference.
-
-| S-051
-| readme-foundation
-| `map-over-id` (identity law)
-| `Echo.map-over-id`
-| Direct symbol reference.
-
-| S-052
-| readme-foundation
-| `map-over-comp` (composition law)
-| `Echo.map-over-comp`
-| Direct symbol reference.
-
-| S-053
-| readme-foundation
-| `map-square` (action along commuting squares)
-| `Echo.map-square`
-| Direct symbol reference.
-
-| S-054
-| readme-identity
-| This repo is trying to establish echo types as a concept with its own identity. Since `Echo` is built from sigma/fiber machinery, identity will not come from syntax. It must come from role and theorems.
-| `roadmap-gates.adoc` (Gate 1+2+3 schedule)
-| Positioning + falsifiability statement; no single theorem.
-
-| S-055
-| readme-identity
-| Distinct phenomenon: structured loss under non-injective computation.
-| `EchoCharacteristic.collapse-non-injective` + Gate-1 falsifier exhibits
-| Gate-1 headline; exact match to `roadmap-gates.adoc` §"Gate 1".
-
-| S-056
-| readme-identity
-| Characteristic theorem family: results that are naturally echo-shaped, not just generic sigma lemmas.
-| `EchoGraded.degrade-via-join` + `EchoGraded.degrade-compose` + `EchoChoreo.applyChoreo-compose` + `EchoLinear.degradeMode-compose`
-| Gate-2 headline; four nominees per `roadmap-gates.adoc` §"Gate 2".
-
-| S-057
-| readme-identity
-| Canonical examples: cases where echo type is the right explanatory unit.
-| `tutorial/region_exit_audit/` + `tutorial/epistemic_erasure/` + `tutorial/provenance_debugging/`
-| Gate-3 headline; three Lane-5 walkthroughs.
-
-| S-058
-| readme-lead
-| Constructive Agda development for echo types as a first-class notion of structured loss: loss that is not total erasure.
-| `Echo.Echo` + `EchoResidue` + `EchoNoSectionGeneric`
-| Restates S-021 (gh-desc); "first-class notion" is a positioning claim, not a theorem.
-
-| S-059
-| readme-status
-| full suite compiles: `agda -i proofs/agda proofs/agda/All.agda`
-| `All.agda` (aggregator) + CI `.github/workflows/agda.yml`
-| Aggregator-build claim. The `for f in proofs/agda/*.agda …` extension also exercises Ordinal/Buchholz tree.
-
-| S-060
-| readme-status
-| core echo/fiber laws are smoke-pinned (`echo-intro`, `map-over`, `map-over-id`, `map-over-comp`, `map-square`)
-| `Smoke.agda` (using-clause for each symbol)
-| Pinning is enforced by `Smoke.agda`'s `using` list per CLAUDE.md "Working rules".
-
-| S-061
-| readme-status
-| non-injectivity/no-section family is present (`collapse-non-injective`, `no-section-collapse`, `no-section-visible`, `no-section-collapse-to-residue`, `no-section-weaken`)
-| `EchoCharacteristic.collapse-non-injective` + `EchoResidue.no-section-collapse` + `EchoResidue.no-section-visible` + `EchoResidue.no-section-collapse-to-residue` + `EchoLinear.no-section-weaken`
-| Five named symbols; mapping is symbol-for-symbol.
-
-| S-062
-| readme-status
-| distinct-witness and retained-constraint exemplars are present (`echo-true≢echo-false`, `stateA≢stateB`, `visible-constraint`)
-| `EchoCharacteristic.echo-true≢echo-false` + `EchoCharacteristic.stateA≢stateB` (or example file) + `EchoCharacteristic.visible-constraint`
-| `visible-constraint` retains expository status only per the Gate 2 amendment (R-2026-05-27).
-
-| S-063
-| readme-status
-| degrade-law family lands across decoration layers (graded, linear/affine, choreographic, access, cost, search)
-| `EchoGraded.degrade-compose` + `EchoLinear.degradeMode-compose` + `EchoChoreo.applyChoreo-compose` + `EchoAccess` + `EchoCost` + `EchoSearch`
-| Six decoration layers named; per-layer headlines listed in `docs/theorem-index.md`.
-
-| S-064
-| readme-status
-| Pillars A–D of the establishment plan are LANDED (with R-2026-05-18 narrowings; see `docs/retractions.adoc`); Pillar E (paper) is in progress
-| `EchoFiberBridge` (A) + `EchoPullback` + `EchoGradedComonad` (B) + `EchoSeparating` (C) + `EchoRelModel` (D)
-| The "with R-2026-05-18 narrowings" caveat is load-bearing; pillar-level wording differs from `types-abstract.adoc`.
-
-| S-065
-| readme-status
-| Pillar F gates F1–F5 all PASSED (F1 graded-comonad-witness; F2 Echo-functor second model; F3 second non-isomorphic grade-monoid; F4 funext-qualified pullback UP; F5 funext-qualified full OFS — F-2026-05-27a)
-| F1 → `EchoGradedComonadWitness` (per `earn-back-plan.adoc`) + F2 → `EchoStepNDModelF2` + F3 → second grade-monoid module + F4 → `EchoPullbackUnivF4` + F5 → `EchoOFSUnivF5{,Diag,Iso}`
-| F1 wording in the README echoes the gate ledger; consumer should cross-check whether "F1 graded-comonad-witness" reads as the *retracted* graded-comonad framing.
-
-| S-066
-| readme-status
-| Canonical identity layer + Tier-2 grid + audience surfaces LANDED 2026-05-27 (see "Canonical identity layer" section above + `EchoCanonicalIdentitySuite.agda` for the curated entry point)
-| `EchoTotalCompletion` + `EchoOrthogonalFactorizationSystem` + `EchoImageFactorization` + `EchoNoSectionGeneric` + Tier-2 modules + audience modules + `EchoCanonicalIdentitySuite`
-| Tier listing is exhaustive in README §"Canonical identity layer".
-
-| S-067
-| readme-status
-| integration bridge (cross-decoration commutation via the recipe; the recipe is useful as organising vocabulary but does not carry substantive simultaneous integration content — see `docs/EI2_REPORT.adoc`. Distinctness rests on truncation and 2-cell arguments)
-| `EchoIntegration` + `docs/EI2_REPORT.adoc` + `EchoVsQuotient.Sophisticated.equalizer→echo-pair` + `EchoVsGalois.Sophisticated.meet→echo-intersection` + `echo-not-prop` family
-| Mixed factual + framing claim. "Distinctness rests on truncation and 2-cell arguments" is the Gate 1 distinctness commitment.
-
-| S-068
+| S-006
 | readme-structural
 | This is *the* structural fact the repo establishes: every irreversible `f` factors canonically through its total Echo space, with the left leg an equivalence (the *slogan-unlock*) and the right leg a projection.
 | `EchoTotalCompletion.A↔ΣEcho` + `EchoOrthogonalFactorizationSystem.ofs-witness`
 | Triangle commutativity is `echo-factorisation` (K-free, pointwise) and `EchoOFSUnivF5.echo-factorisation-strict` (funext-qualified).
+| WEAKER-THAN-CLAIM
+| `EchoTotalCompletion.A↔ΣEcho` and `EchoOrthogonalFactorizationSystem.ofs-witness` are real and `echo-factorisation` proves the triangle commutes pointwise/definitionally, but the README's "factors canonically" + triangle as a universal property only lands at the K-free pointwise level; strict factorisation `f ≡ proj₁ ∘ encode f` lives in `EchoOFSUnivF5.echo-factorisation-strict` which is funext-qualified — the sentence does not flag the pointwise-vs-strict split the artefacts require.
 
-| S-069
+| S-007
 | readme-structural
 | Under `--safe --without-K` the factorisation existence + fibre identification (`ofs-witness`) are unconditional; the function-level universal-property clauses are earned back under Pillar F Gate F5 (`funext` as explicit module parameter, never a postulate).
 | `EchoOrthogonalFactorizationSystem.ofs-witness` + `EchoOFSUnivF5` + `EchoOFSUnivF5Diag` + `EchoOFSUnivF5Iso`
 | Decomposition: existence + fibre id = K-free; F5-1/2/3 = funext-qualified.
+| MATCHES
+| `EchoOrthogonalFactorizationSystem.ofs-witness` packages factorisation existence + `projection-fibre-iso` + the `echo↔fib` bridge unconditionally under `--safe --without-K`; `EchoOFSUnivF5.echo-factorisation-strict`, `EchoOFSUnivF5Diag` (Pointwise/Strict modules), and `EchoOFSUnivF5Iso` each take `funext` as an explicit module parameter, not a postulate — exactly what the sentence states.
+
+| S-008
+| readme-foundation
+| Given `f : A → B`, define the fiber/echo at `y : B`: `Echo f y := Σ (x : A) , (f x ≡ y)`.
+| `Echo.Echo`
+| Definitional; the source-of-truth declaration.
+| MATCHES
+| `Echo.agda:14-15` defines `Echo f y = Σ A (λ x → f x ≡ y)` verbatim as quoted.
+
+| S-009
+| readme-foundation
+| with constructive proofs (`--safe --without-K`, no postulates in `proofs/agda`)
+| repo invariant (`scripts/kernel-guard.sh`, `scripts/check-no-unsafe.sh`)
+| Build-invariant claim; not a single theorem.
+| MATCHES
+| `scripts/check-no-unsafe.sh` greps for `postulate`/`TERMINATING`/`NON_TERMINATING`/`allow-unsolved-metas` and `scripts/kernel-guard.sh` enforces `--safe --without-K` + no escape pragmas on the kernel cone; CI (`agda.yml`) runs both scripts plus the typecheck.
+
+| S-010
+| readme-foundation
+| `echo-intro` (introduction into own fiber)
+| `Echo.echo-intro`
+| Direct symbol reference.
+| MATCHES
+| `Echo.echo-intro f x = x , refl : Echo f (f x)` at `Echo.agda:18-19` is the direct symbol the README cites and is pinned in `Smoke.agda`.
+
+| S-011
+| readme-foundation
+| `map-over` (action on fibers for morphisms over fixed base)
+| `Echo.map-over`
+| Direct symbol reference.
+| MATCHES
+| `Echo.map-over` at `Echo.agda:28-32` ships exactly the "action on fibers for morphisms over fixed base" signature and is pinned in `Smoke.agda`.
+
+| S-012
+| readme-foundation
+| `map-over-id` (identity law)
+| `Echo.map-over-id`
+| Direct symbol reference.
+| MATCHES
+| `Echo.map-over-id` at `Echo.agda:35-38` proves `map-over (id, λ _ → refl) e ≡ e` and is pinned in `Smoke.agda`.
+
+| S-013
+| readme-foundation
+| `map-over-comp` (composition law)
+| `Echo.map-over-comp`
+| Direct symbol reference.
+| MATCHES
+| `Echo.map-over-comp` at `Echo.agda:41-53` proves the composition law via `trans-assoc` and is pinned in `Smoke.agda`.
+
+| S-014
+| readme-foundation
+| `map-square` (action along commuting squares)
+| `Echo.map-square`
+| Direct symbol reference.
+| MATCHES
+| `Echo.map-square` at `Echo.agda:56-62` ships the commuting-square action `f' ∘ u ≡ v ∘ f ⇒ Echo f y → Echo f' (v y)` and is pinned in `Smoke.agda`.
+
+| S-015
+| readme-status
+| full suite compiles: `agda -i proofs/agda proofs/agda/All.agda`
+| `All.agda` (aggregator) + CI `.github/workflows/agda.yml`
+| Aggregator-build claim. The `for f in proofs/agda/*.agda …` extension also exercises Ordinal/Buchholz tree.
+| MATCHES
+| `proofs/agda/All.agda` is a `{-# OPTIONS --safe --without-K #-}` aggregator and `.github/workflows/agda.yml` runs `kernel-guard.sh` + `check-no-unsafe.sh` + the typecheck on every push/PR, supporting the "full suite compiles" status claim.
+
+| S-016
+| readme-status
+| core echo/fiber laws are smoke-pinned (`echo-intro`, `map-over`, `map-over-id`, `map-over-comp`, `map-square`)
+| `Smoke.agda` (using-clause for each symbol)
+| Pinning is enforced by `Smoke.agda`'s `using` list per CLAUDE.md "Working rules".
+| MATCHES
+| `proofs/agda/Smoke.agda:9-15` opens `Echo using ( Echo ; echo-intro ; map-over ; map-over-id ; map-over-comp ; map-square ; … )` — all five named symbols are in the `using` list, so a rename would fail CI.
+
+| S-017
+| readme-status
+| non-injectivity/no-section family is present (`collapse-non-injective`, `no-section-collapse`, `no-section-visible`, `no-section-collapse-to-residue`, `no-section-weaken`)
+| `EchoCharacteristic.collapse-non-injective` + `EchoResidue.no-section-collapse` + `EchoResidue.no-section-visible` + `EchoResidue.no-section-collapse-to-residue` + `EchoLinear.no-section-weaken`
+| Five named symbols; mapping is symbol-for-symbol.
+| WEAKER-THAN-CLAIM
+| All five symbols exist (`EchoCharacteristic.collapse-non-injective`, `EchoCharacteristic.no-section-collapse`, `EchoCharacteristic.no-section-visible`, `EchoResidue.no-section-collapse-to-residue`, `EchoLinear.no-section-weaken`), but the proposed mapping mis-locates two of them — `no-section-collapse` and `no-section-visible` live in `EchoCharacteristic.agda`, not `EchoResidue.agda` — so the symbol-for-symbol mapping is partially incorrect even though the README's existence claim about the family holds.
+
+| S-018
+| readme-status
+| distinct-witness and retained-constraint exemplars are present (`echo-true≢echo-false`, `stateA≢stateB`, `visible-constraint`)
+| `EchoCharacteristic.echo-true≢echo-false` + `EchoCharacteristic.stateA≢stateB` (or example file) + `EchoCharacteristic.visible-constraint`
+| `visible-constraint` retains expository status only per the Gate 2 amendment (R-2026-05-27).
+| MATCHES
+| `EchoCharacteristic.echo-true≢echo-false` (line 39), `EchoExamples.stateA≢stateB` (line 66, the "or example file" alternative the mapping notes), and `EchoCharacteristic.visible-constraint` (line 50) all exist as cited.
+
+| S-019
+| readme-status
+| degrade-law family lands across decoration layers (graded, linear/affine, choreographic, access, cost, search)
+| `EchoGraded.degrade-compose` + `EchoLinear.degradeMode-compose` + `EchoChoreo.applyChoreo-compose` + `EchoAccess` + `EchoCost` + `EchoSearch`
+| Six decoration layers named; per-layer headlines listed in `docs/theorem-index.md`.
+| MATCHES
+| All six decoration layers ship a degrade-style composition headline: `EchoGraded.degrade-compose`, `EchoLinear.degradeMode-compose`, `EchoChoreo.applyChoreo-compose`, `EchoAccess.degrade-access-compose`, `EchoCost.echo-cost-compose`, `EchoSearch.echo-search-postcompose`/`relax` — all built `--safe --without-K`.
+
+| S-020
+| readme-status
+| Pillars A–D of the establishment plan are LANDED (with R-2026-05-18 narrowings; see `docs/retractions.adoc`); Pillar E (paper) is in progress
+| `EchoFiberBridge` (A) + `EchoPullback` + `EchoGradedComonad` (B) + `EchoSeparating` (C) + `EchoRelModel` (D)
+| The "with R-2026-05-18 narrowings" caveat is load-bearing; pillar-level wording differs from `types-abstract.adoc`.
+| MATCHES
+| Pillar A (`EchoFiberBridge.echo↔fib`), B (`EchoPullback.echo-pullback-univ` + `EchoGradedComonad.gcomonad-counit-l/r/coassoc`), C (`EchoSeparating.sep-degrade-compose-fails`), D (`EchoRelModel.GradedLossModel`/`GCLaws`/`set-model`/`rel-model`) all exist as real modules, and the R-2026-05-18 narrowings are explicitly recorded in each module's header comment plus `docs/retractions.adoc`.
+
+| S-021
+| readme-status
+| Pillar F gates F1–F5 all PASSED (F1 graded-comonad-witness; F2 Echo-functor second model; F3 second non-isomorphic grade-monoid; F4 funext-qualified pullback UP; F5 funext-qualified full OFS — F-2026-05-27a)
+| F1 → `EchoGradedComonadWitness` (per `earn-back-plan.adoc`) + F2 → `EchoStepNDModelF2` + F3 → second grade-monoid module + F4 → `EchoPullbackUnivF4` + F5 → `EchoOFSUnivF5{,Diag,Iso}`
+| F1 wording in the README echoes the gate ledger; consumer should cross-check whether "F1 graded-comonad-witness" reads as the *retracted* graded-comonad framing.
+| MATCHES
+| F1 backs to `EchoGradedComonadF1` (nested δ, three laws, ℕ-graded); F2 → `EchoStepNDModelF2.nd-not-graph`; F3 → `EchoGradedComonadInstance1`/`Instance2`/`Interface` (two non-isomorphic grade monoids ℕ and List); F4 → `EchoPullbackUnivF4.echo-pullback-univ-strict` (funext-qualified); F5 → `EchoOFSUnivF5{,Diag,Iso}` (three slices, funext-qualified) — the proposed-mapping label `EchoGradedComonadWitness` is a name discrepancy but the F1 artefact exists under `EchoGradedComonadF1`.
+
+| S-022
+| readme-status
+| Canonical identity layer + Tier-2 grid + audience surfaces LANDED 2026-05-27 (see "Canonical identity layer" section above + `EchoCanonicalIdentitySuite.agda` for the curated entry point)
+| `EchoTotalCompletion` + `EchoOrthogonalFactorizationSystem` + `EchoImageFactorization` + `EchoNoSectionGeneric` + Tier-2 modules + audience modules + `EchoCanonicalIdentitySuite`
+| Tier listing is exhaustive in README §"Canonical identity layer".
+| MATCHES
+| `EchoTotalCompletion.A↔ΣEcho`, `EchoOrthogonalFactorizationSystem.ofs-witness`, `EchoImageFactorization`, `EchoNoSectionGeneric.no-section-of-collapsing-map`, Tier-2 modules (`EchoLossTaxonomy`, `EchoResidueTaxonomy`, `EchoDecorationStructure`, `EchoObservationalEquivalence`), audience modules (`EchoProvenance`/`EchoSecurity`/`EchoProbabilisticSupport`/`EchoDifferential`), and `EchoCanonicalIdentitySuite.agda` all exist.
+
+| S-023
+| readme-status
+| integration bridge (cross-decoration commutation via the recipe; the recipe is useful as organising vocabulary but does not carry substantive simultaneous integration content — see `docs/EI2_REPORT.adoc`. Distinctness rests on truncation and 2-cell arguments)
+| `EchoIntegration` + `docs/EI2_REPORT.adoc`
+| Mixed factual + framing claim. "Distinctness rests on truncation and 2-cell arguments" is the Gate 1 distinctness commitment; mapping is `EchoVsQuotient.Sophisticated.equalizer→echo-pair` + `EchoVsGalois.Sophisticated.meet→echo-intersection` + the `echo-not-prop` family.
+| WEAKER-THAN-CLAIM
+| `EchoIntegration.agda` exists (small `knowledge-and-controlled-degradation`) and `docs/EI2_REPORT.adoc` supports the "not substantive simultaneous content" half; truncation backing is real (`echo-not-prop` in `proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda`); however the 2-cell-argument backing cited by the note (`EchoVsQuotient.Sophisticated.equalizer→echo-pair`, `EchoVsGalois.Sophisticated.meet→echo-intersection`) refers to Agda modules that do not exist in the codebase, so the 2-cell half of the distinctness claim is unmechanised.
+
+| S-024
+| readme-identity
+| This repo is trying to establish echo types as a concept with its own identity. Since `Echo` is built from sigma/fiber machinery, identity will not come from syntax. It must come from role and theorems.
+| `roadmap-gates.adoc` (Gate 1+2+3 schedule)
+| Positioning + falsifiability statement; no single theorem.
+| CONJECTURE-OK
+| Openly a positioning/falsifiability statement ("identity must come from role and theorems") pointing at the gate schedule in `roadmap-gates.adoc`; no theorem claim is made.
+
+| S-025
+| readme-identity
+| Distinct phenomenon: structured loss under non-injective computation.
+| `EchoCharacteristic.collapse-non-injective` + Gate-1 falsifier exhibits
+| Gate-1 headline; exact match to `roadmap-gates.adoc` §"Gate 1".
+| MATCHES
+| `EchoCharacteristic.collapse-non-injective : Σ Bool (λ a → Σ Bool (λ b → a ≢ b × collapse a ≡ collapse b))` is a checked Σ-witness exhibiting non-injectivity of the canonical `collapse`, exactly the Gate-1 headline in `roadmap-gates.adoc`.
+
+| S-026
+| readme-identity
+| Characteristic theorem family: results that are naturally echo-shaped, not just generic sigma lemmas.
+| `EchoGraded.degrade-via-join` + `EchoGraded.degrade-compose` + `EchoChoreo.applyChoreo-compose` + `EchoLinear.degradeMode-compose`
+| Gate-2 headline; four nominees per `roadmap-gates.adoc` §"Gate 2".
+| MATCHES
+| All four named theorems are mechanised: `EchoGraded.degrade-via-join`, `EchoGraded.degrade-compose`, `EchoChoreo.applyChoreo-compose`, `EchoLinear.degradeMode-compose` — and they are the Gate-2 nominees in `roadmap-gates.adoc`.
+
+| S-027
+| readme-identity
+| Canonical examples: cases where echo type is the right explanatory unit.
+| `tutorial/region_exit_audit/` + `tutorial/epistemic_erasure/` + `tutorial/provenance_debugging/`
+| Gate-3 headline; three Lane-5 walkthroughs.
+| MATCHES
+| All three walkthroughs exist as Agda directories under `tutorial/`: `region_exit_audit/RegionExitAudit.agda`, `epistemic_erasure/EpistemicErasure.agda`, `provenance_debugging/ProvenanceDebugging.agda`, each with a per-walkthrough `Smoke.agda`.
+
+| S-028
+| paper-front
+| The thesis of the paper is that the type-theoretic standing that *befits* echo is not the linear/dependent judgmental ladder — that comparison is a category error — but a **loss-graded reindexing modality**: a monotone family indexed by a join-semilattice of loss grades, with a functorial reindexing action.
+| `EchoGraded` + `EchoFiberBridge.echo↔fib`
+| Thesis statement; the negative ("not linear/dependent") has no module to map; the positive maps to `EchoGraded`.
+| MATCHES
+| The positive content "loss-graded reindexing modality: monotone family indexed by join-semilattice of loss grades with functorial reindexing action" maps directly to `EchoGraded.GEcho : Grade → Set`, `EchoGraded.degrade`, and the `_⊔g_` join-semilattice plus `EchoFiberBridge.echo↔fib`; the negative ("not the linear/dependent ladder") is a positioning non-claim.
+
+| S-029
+| paper-front
+| It is *analogous to*, and motivated by, the coeffect/quantitative lineage, but we are exact about what is and is not mechanised.
+| NONE-PROPOSED
+| Lineage-positioning sentence; no theorem corresponds.
+| CONJECTURE-OK
+| Explicit lineage-positioning statement ("analogous to, motivated by … exact about what is and is not mechanised"); no theorem is asserted.
+
+| S-030
+| paper-front
+| In particular it is *not* a graded comonad in the Petriček–Orchard–Mycroft / Katsumata sense: no nested functor `D_{r·s} ⇒ D_{r} D_{s}` is formed, and the structure maps are the lattice-bottom coercion and the join-left reindex, not a genuine counit/comultiplication pair.
+| `EchoGradedComonad` (the actual records present in the module) + `docs/retractions.adoc` §R-2026-05-18
+| Negative claim about absent structure; mapping is to what *is* present (single-grade reindex) versus what would be needed (nested family).
+| MATCHES
+| The negative claim matches the actual content of `EchoGradedComonad.agda`: `gextract` is the identity coercion and `gduplicate g₁ g₂ = degrade (≤g-⊔g-left g₁ g₂)` is the join-left reindex; no nested `D_{r·s} ⇒ D_r D_s` family is present (that lives only in the separate F1 module `EchoGradedComonadF1` per `docs/retractions.adoc` §R-2026-05-18).
+
+| S-031
+| paper-intro
+| The contribution is a *characterisation package*, mechanised in Agda under `--safe --without-K` with zero postulates
+| repo invariant + `EchoFiberBridge` + `EchoPullback` + `EchoGradedComonad` + `EchoSeparating` + `EchoRelModel`
+| Umbrella claim; decomposes across Pillars A–D.
+| MATCHES
+| Umbrella claim decomposes across Pillars A–D all of which are real (`EchoFiberBridge`, `EchoPullback` + `EchoGradedComonad`, `EchoSeparating`, `EchoRelModel`); the `--safe --without-K` / zero-postulate discipline is enforced by `scripts/check-no-unsafe.sh` + `scripts/kernel-guard.sh` + `.github/workflows/agda.yml`.
+
+| S-032
+| paper-intro
+| Pinned identity. `echo↔fib : Echo f y ↔ fiber f y`, definitional, `refl` round-trips (Pillar A).
+| `EchoFiberBridge.echo↔fib` + `EchoFiberBridge.echo→fib` + `EchoFiberBridge.fib→echo`
+| Direct theorem statement.
+| MATCHES
+| `EchoFiberBridge.echo↔fib` is packaged via `mk↔ₛ′` with `(λ _ → refl)` for both round-trips and the underlying `echo→fib _ _ e = e` and `fib→echo _ _ e = e` are definitionally the identity.
+
+| S-033
+| paper-intro
+| `fiber` is a same-module restatement of the Σ; the bridge is the identity.
+| `EchoFiberBridge.fiber` (local definition because stdlib 2.3 has none)
+| Definitional fact about the bridge's content.
+| MATCHES
+| `EchoFiberBridge.fiber f y = Σ A (λ x → f x ≡ y)` is defined in the same module and the bridge directions `echo→fib`/`fib→echo` are identity functions, so the bridge is literally the identity.
+
+| S-034
+| paper-intro
+| Pointwise mediator property. `Echo f y` presented as the pullback of `f` along the point `y : ⊤ → B`; a `SliceHom` *is* a cone (round-trips `refl`).
+| `EchoPullback.SliceHom` + `EchoPullback.EchoCone` + `EchoPullback.echo-cone`
+| Three named artefacts; round-trip is `refl`.
+| MATCHES
+| `EchoPullback.EchoCone` record, `EchoPullback.SliceHom` (re-exported from `EchoCategorical`), `EchoPullback.echo-cone`, and the round-trip lemmas `cone→slice→cone c = refl` / `slice→cone→slice h = refl` make the "SliceHom IS a cone" claim with definitional round-trips.
+
+| S-035
+| paper-intro
+| `echo-pullback-univ` gives existence and *pointwise* uniqueness `∀ v → m' v ≡ m v`.
+| `EchoPullback.echo-pullback-univ`
+| Direct theorem.
+| MATCHES
+| `EchoPullback.echo-pullback-univ` has exactly the signature `Σ (V → Echo f y) (λ m → IsMediator f y c m × (∀ (m' : V → Echo f y) → IsMediator f y c m' → ∀ v → m' v ≡ m v))` — existence plus pointwise uniqueness, K-free and funext-free.
+
+| S-036
+| paper-intro
+| We do *not* claim full terminality: `m' ≡ m` is neither stated nor provable here without funext, so this is a funext-relative mediator property, not a universal property in the categorical sense (Pillar B-1, §3).
+| `EchoPullbackUnivF4` (the funext-parametrised earn-back) + `docs/retractions.adoc` §R-2026-05-18 + §F-2026-05-18a
+| Scope-narrowing claim; the earn-back module is the conditional restorer.
+| MATCHES
+| Honest scope-narrowing claim; the `EchoPullback` header explicitly retracts strict terminality, the unconditional theorem is stated pointwise only, and `EchoPullbackUnivF4.echo-pullback-univ-strict` shows `m' ≡ m` is provable iff funext is supplied as an explicit module parameter — exactly mirroring the sentence.
+
+| S-037
+| paper-intro
+| Loss-graded reindexing modality. A monotone family `GEcho` over the loss-grade join-semilattice with a functorial reindex `degrade`.
+| `EchoGraded.GEcho` + `EchoGraded.degrade`
+| Direct module structure.
+| MATCHES
+| `EchoGraded.GEcho : Grade → Set` is a monotone family over the loss-grade join-semilattice `(Grade, _⊔g_, keep)` and `EchoGraded.degrade : g₁ ≤g g₂ → GEcho g₁ → GEcho g₂` is the functorial reindex (with `degrade-comp` witnessing functoriality), exactly as the sentence states.
+
+| S-038
+| paper-intro
+| The "counit" is the identity coercion (the bottom grade `keep` is absorbed definitionally); the "comultiplication" is the join-left reindex `GEcho g₁ → GEcho (g₁ ⊔ g₂)` — a *single* grade application, *not* a nested `D_r D_s`.
+| `EchoGradedComonad.gextract` + `EchoGradedComonad.gduplicate`
+| Pair-symbol mapping; the negative ("not nested") has no in-repo artefact, matched-negative discipline applies.
+| MATCHES
+| `EchoGradedComonad.gextract : GEcho keep → Echo collapse tt` is the identity coercion (because `keep` is the definitional bottom), and `gduplicate g₁ g₂ = degrade (≤g-⊔g-left g₁ g₂) : GEcho g₁ → GEcho (g₁ ⊔g g₂)` is the single-grade join-left reindex with no nested `D_{r·s} ⇒ D_r D_s` family anywhere in the module.
+
+| S-039
+| paper-intro
+| The three coherence equations (§4.2) hold for exactly one reason: the grade order is thin (`≤g-prop`) and `degrade` is functorial (`degrade-compose`).
+| `EchoGraded.≤g-prop` + `EchoGraded.degrade-compose` + `EchoGradedComonad.gcomonad-counit-l` + `EchoGradedComonad.gcomonad-counit-r` + `EchoGradedComonad.gcomonad-coassoc`
+| Five theorems; the three coherence equations + the two load-bearing antecedents.
+| MATCHES
+| All three coherence equations `EchoGradedComonad.gcomonad-counit-l`, `gcomonad-counit-r`, `gcomonad-coassoc` are mechanised in the common-upper-bound idiom and their proofs use exactly `EchoGraded.degrade-compose` plus a single `EchoGraded.≤g-prop` application, as the sentence states.
+
+| S-040
+| paper-intro
+| This is a thin-poset action, not a graded comonad (Pillar B-2).
+| `EchoGradedComonad` (entire module) + `docs/retractions.adoc` §R-2026-05-18
+| Reframing claim; the module retains its name despite the narrowing.
+| CONJECTURE-OK
+| Reframing/positioning statement ("thin-poset action, not a graded comonad"); the matched-negative is honestly recorded in `docs/retractions.adoc` §R-2026-05-18 and the module's own retraction comment, with the positive thin-poset content present in `EchoGradedComonad` as `degrade-compose` + `≤g-prop`.
+
+| S-041
+| paper-intro
+| Separating model. the model minus its single hypothesis `≤g-prop`: generic Σ-functoriality survives, the characteristic composition law is refuted at a decidable witness.
+| `EchoSeparating.sep-order-not-prop` + `EchoSeparating.sep-map-over-id` + `EchoSeparating.sep-map-over-comp` + `EchoSeparating.sep-degrade-compose-fails`
+| Four headlines pinned in `Smoke.agda`.
+| MATCHES
+| `EchoSeparating` mechanises exactly: `sep-order-not-prop` (the `_⊑_` order has two distinct lo→hi arrows), `sep-map-over-id`/`sep-map-over-comp` (generic Σ-functoriality survives via `Echo.map-over-id`/`map-over-comp`), and `sep-degrade-compose-fails` refuting `SepDegradeCompose` at the decidable witness `true ≢ false`.
+
+| S-042
+| paper-intro
+| Carrier-parametric abstraction (not model-independence). an abstract interface `GradedLossModel` whose `⊑-prop` field *fixes* the only load-bearing hypothesis; the coherence equations are proved once, parametric in the carrier, over a *fixed* grade poset.
+| `EchoRelModel.GradedLossModel` + `EchoRelModel.GCLaws`
+| Direct module structure; the negative ("not model-independence") flags the R-2026-05-18 narrowing.
+| MATCHES
+| `EchoRelModel.GradedLossModel` defines an abstract interface with `⊑-prop : ∀ {a b} (p q : a ⊑ b) → p ≡ q` as a field, and `EchoRelModel.GCLaws (M : GradedLossModel)` proves `gcomonad-counit-l/r` and `gcomonad-coassoc` once parametric in the carrier; both instances `set-model`/`rel-model` fix `Gr = Grade`, confirming the "fixed grade poset" caveat.
+
+| S-043
+| paper-intro
+| The "second model" is the first with a `⊤` component, agreeing definitionally (`refl`).
+| `EchoRelModel.set-model` + `EchoRelModel.rel-model` + `EchoRelModel.model-agreement` + `EchoRelModel.bridge-natural`
+| Two-model construction; `refl`-agreement is the narrowed claim.
+| MATCHES
+| `EchoRelModel.rel-model` is `set-model` with carrier `RObj g = EchoStep RStep tt` where `RStep _ _ = ⊤` (essentially `GEcho g × ⊤`), and `model-agreement p x = refl` confirms definitional agreement via reflexivity.
+
+| S-044
+| paper-intro
+| Postulate-free build (not a conservativity metatheorem). the whole development typechecks `--safe --without-K` with zero postulates / zero escape pragmas, CI-enforced.
+| `scripts/check-no-unsafe.sh` + `scripts/kernel-guard.sh` + `.github/workflows/agda.yml`
+| Build-invariant claim; not a theorem.
+| MATCHES
+| `scripts/check-no-unsafe.sh` greps for `postulate|TERMINATING|NON_TERMINATING|allow-unsolved-metas`; `scripts/kernel-guard.sh` enforces `--safe --without-K` plus no escape pragmas on the kernel cone; `.github/workflows/agda.yml` runs both plus the full `--safe --without-K` typecheck of `All.agda` and `Smoke.agda`, CI-enforced.
+
+| S-045
+| paper-intro
+| With `Echo = Σ` definitionally this is *evidence for* conservativity over MLTT+Σ; it is not a mechanised proof-theoretic conservativity theorem, and is no longer stated as one (§6.2).
+| `docs/echo-types/conservativity.adoc` + `docs/retractions.adoc` §R-2026-05-18
+| Doc anchor; no theorem statement.
+| CONJECTURE-OK
+| Openly anti-claim ("not a mechanised proof-theoretic conservativity theorem, and is no longer stated as one"); the cited anchor `docs/echo-types/conservativity.adoc` has been moved to `docs/retracted/conservativity.adoc`, which itself narrates the retraction and downgrades the prior metatheorem to "evidence for, not a proof of, conservativity".
+
+| S-046
+| paper-intro
+| Methodology. falsifiable gates with explicit retraction actions; identity claims settled negatively and logged, including this development's own framing retraction (§7).
+| `roadmap-gates.adoc` + `docs/retractions.adoc`
+| Process claim; no single theorem.
+| CONJECTURE-OK
+| Methodology/process statement about falsifiable gates and retraction discipline; `roadmap-gates.adoc` and `docs/retractions.adoc` exist and document the gate schedule plus retraction log, no single theorem is asserted.
+
+| S-047
+| paper-intro
+| `Echo` introduces no new judgement, context structure, or formation rule — it is a derived Σ-type.
+| `Echo.Echo` (the definitional shape)
+| Negative claim about absent structure; the positive side maps to the Σ-shape.
+| MATCHES
+| `Echo.Echo` is `Σ A (λ x → f x ≡ y)` definitionally — no new judgement, context structure, or formation rule is introduced; `EchoFiberBridge.echo↔fib` further pins `Echo f y ↔ fiber f y` with `refl` round-trips, confirming the Σ-derived nature.
+
+| S-048
+| paper-intro
+| Presenting bespoke "echo introduction/elimination rules" as primitive would be the fastest way to lose an informed reader.
+| NONE-PROPOSED
+| Editorial framing; no theorem corresponds.
+| CONJECTURE-OK
+| Editorial framing about presentation strategy; not a claim about mechanised content, mapping `NONE-PROPOSED` is appropriate.
+
+| S-049
+| abstract-context
+| Define, for `f : A → B` and `y : B`, `Echo f y := Σ (x : A) , (f x ≡ y)`.
+| `Echo.Echo`
+| Definitional restatement (cf. S-008).
+| MATCHES
+| `Echo.Echo` is defined as `Σ A (λ x → f x ≡ y)` — definitional restatement of S-008 — present at the source-of-truth declaration.
+
+| S-050
+| abstract-context
+| This is *definitionally* the homotopy fibre `fib f y` (HoTT book Def. 4.2.4); the bridge `echo↔fib` is mechanised with `refl` round-trips.
+| `EchoFiberBridge.echo↔fib`
+| Restates S-032 in the TYPES-abstract surface.
+| MATCHES
+| `EchoFiberBridge.echo↔fib` packages `Echo f y ↔ fiber f y` with `(λ _ → refl)` for both round-trips, and `fiber f y = Σ A (λ x → f x ≡ y)` is defined in the same module making the bridge definitional — exactly what the sentence states.
+
+| S-051
+| abstract-context
+| We do **not** claim echo as a new judgmental type strength.
+| NONE-PROPOSED
+| Negative positioning statement.
+| CONJECTURE-OK
+| Explicit non-claim ("We do not claim echo as a new judgmental type strength") — honestly mapped `NONE-PROPOSED`.
+
+| S-052
+| abstract-context
+| The strength that *does* befit echo is a **loss-graded reindexing modality**: a monotone family over a join-semilattice of loss grades with a functorial reindexing action.
+| `EchoGraded.GEcho` + `EchoGraded.degrade`
+| Restates S-037.
+| MATCHES
+| Restates S-037; `EchoGraded.GEcho` is the monotone family and `EchoGraded.degrade` is the functorial reindexing action over the loss-grade join-semilattice.
+
+| S-053
+| abstract-context
+| It is *motivated by* the coeffect / quantitative lineage … but is explicitly *not* a graded comonad in that sense: no nested `D_{r·s} ⇒ D_{r} D_{s}` is formed.
+| `EchoGradedComonad` (the actual content) + `docs/retractions.adoc` §R-2026-05-18
+| Restates S-030.
+| MATCHES
+| Verified `EchoGradedComonad.agda` contains no nested `D_{r·s} ⇒ D_r D_s` family — only the single-grade `gduplicate g₁ g₂ : GEcho g₁ → GEcho (g₁ ⊔g g₂)`; the "motivated by lineage but not a graded comonad in that sense" framing is honest and the negative is matched by absence of the nested family.
+
+| S-054
+| abstract-contributions
+| `echo↔fib : Echo f y ↔ fiber f y`, definitional, `refl` round-trips, where `fiber` is a same-module restatement of the Σ.
+| `EchoFiberBridge.echo↔fib` + `EchoFiberBridge.fiber`
+| Restates S-032 + S-033.
+| MATCHES
+| `EchoFiberBridge.fiber` and `EchoFiberBridge.echo↔fib` provide a same-module `fiber` definition and `mk↔ₛ′` bijection with both round-trips `λ _ → refl`.
+
+| S-055
+| abstract-contributions
+| `echo-pullback-univ` gives existence and *pointwise* uniqueness `∀ v → m' v ≡ m v`.
+| `EchoPullback.echo-pullback-univ`
+| Restates S-035.
+| MATCHES
+| `EchoPullback.echo-pullback-univ` returns existence plus pointwise uniqueness `∀ v → m' v ≡ m v` exactly as stated.
+
+| S-056
+| abstract-contributions
+| Earned back conditionally (F4, F-2026-05-18a): strict terminality is mechanised as a function of an explicit `funext` parameter (`EchoPullbackUnivF4.agda`, not a postulate); the unconditional claim stays retracted, the pointwise corollary is kept.
+| `EchoPullbackUnivF4` + `docs/retractions.adoc` §F-2026-05-18a
+| F4 earn-back; the module-level `funext` is a parameter, not a `postulate` declaration.
+| MATCHES
+| `EchoPullbackUnivF4.echo-pullback-univ-strict` is parameterised by an explicit `FunExt₀` module argument (not a postulate), pointwise corollary preserved; matches the F-2026-05-18a entry in `docs/retractions.adoc`.
+
+| S-057
+| abstract-contributions
+| Over the loss-grade join-semilattice `(Grade, ⊔, keep)`: `gextract` is the identity coercion (`keep` is the definitional bottom), `gduplicate` is the join-left *single-grade* reindex.
+| `EchoGradedComonad.gextract` + `EchoGradedComonad.gduplicate` + `EchoGraded.keep` + `EchoGraded._⊔g_`
+| Restates S-038.
+| MATCHES
+| `EchoGradedComonad.gextract` is the identity coercion `e ↦ e` and `gduplicate g₁ g₂ = degrade (≤g-⊔g-left g₁ g₂)` is the join-left single-grade reindex over `EchoGraded.keep` and `_⊔g_`, exactly as described.
+
+| S-058
+| abstract-contributions
+| In the common-upper-bound idiom the three coherence equations collapse to `degrade-compose` plus propositionality of the loss order (`≤g-prop`), with no `subst`/transport.
+| `EchoGradedComonad.gcomonad-counit-l` + `EchoGradedComonad.gcomonad-counit-r` + `EchoGradedComonad.gcomonad-coassoc` + `EchoGraded.degrade-compose` + `EchoGraded.≤g-prop`
+| Restates S-039.
+| MATCHES
+| `EchoGradedComonad.gcomonad-counit-l/-r/-coassoc` each discharge via `degrade-compose` rewritten under `≤g-prop`, with no `subst`/transport involved, matching the common-upper-bound idiom claim.
+
+| S-059
+| abstract-contributions
+| The characteristic composition equation is *refuted* at a concrete decidable witness (checked `true ≢ false`).
+| `EchoSeparating.sep-degrade-compose-fails`
+| Direct symbol.
+| MATCHES
+| `EchoSeparating.sep-degrade-compose-fails` refutes the candidate law by extracting `true ≡ false` and applying `true≢false` — a concrete decidable witness.
+
+| S-060
+| abstract-contributions
+| `GradedLossModel`'s `⊑-prop` field *fixes* the only load-bearing hypothesis; `GCLaws` proves the equations once, parametric in the carrier, over a *fixed* grade poset.
+| `EchoRelModel.GradedLossModel` + `EchoRelModel.GCLaws`
+| Restates S-042.
+| MATCHES
+| `EchoRelModel.GradedLossModel` carries `⊑-prop` as a field, and `EchoRelModel.GCLaws` proves comonad laws parametrically over a fixed grade poset using `⊑-prop`-rewriting.
+
+| S-061
+| abstract-contributions
+| Earned back, scoped (F2, F-2026-05-18a): a genuine second model of the *bare Echo functor* (not the modality) exists on the non-graph relation `StepND` (`EchoStepNDModelF2.agda`; `nd-not-graph` checked), with content-bearing agreement — not Σ-η on `× ⊤`.
+| `EchoStepNDModelF2` (including `nd-not-graph`) + `docs/retractions.adoc` §F-2026-05-18a
+| F2 earn-back; the negative "not Σ-η on × ⊤" is a deliberate matched-negative.
+| MATCHES
+| `EchoStepNDModelF2.nd-model` is a second `EchoFunctorModel` instantiated on `StepND` with `nd-not-graph` refuting any graph presentation; agreement is by case analysis on `StepND` constructors, not Σ-η on `× ⊤`.
+
+| S-062
+| abstract-discipline
+| The Agda development is `--safe --without-K` throughout, with **zero postulates and zero escape pragmas**, CI-enforced — a build property that is *evidence for*, not a proof of, conservativity.
+| `scripts/check-no-unsafe.sh` + `scripts/kernel-guard.sh` + `.github/workflows/agda.yml`
+| Restates S-044 with the narrowed conservativity reading.
+| MATCHES
+| `scripts/check-no-unsafe.sh`, `scripts/kernel-guard.sh`, and `.github/workflows/agda.yml` are all present and enforce the `--safe --without-K` + zero-postulate invariant tree-wide; conservativity reading is correctly narrowed to "evidence for".
+
+| S-063
+| abstract-discipline
+| Every headline theorem is pinned in a `Smoke.agda` manifest so a silent rename fails CI fast.
+| `Smoke.agda` + `tutorial/*/Smoke.agda` + `Ordinal/Buchholz/Smoke.agda`
+| Smoke-pin invariant; CLAUDE.md "Working rules" enforces it per change.
+| MATCHES
+| `proofs/agda/Smoke.agda`, `tutorial/{region_exit_audit,epistemic_erasure,provenance_debugging}/Smoke.agda`, and `proofs/agda/Ordinal/Buchholz/Smoke.agda` all exist and pin headlines via `using` clauses.
+
+| S-064
+| abstract-discipline
+| There is no funext anywhere; the genuine funext-relativity is the pointwise-only mediator property, disclosed as a bound rather than presented as a "funext-free" feature.
+| `EchoPullback.echo-pullback-univ` (no funext) + `EchoPullbackUnivF4` (funext as parameter)
+| Disclosure claim; the load-bearing artefact is the absence of a `postulate funext` line tree-wide.
+| MATCHES
+| `EchoPullback.echo-pullback-univ` ships pointwise uniqueness with no funext; `EchoPullbackUnivF4` takes `FunExt₀` as a module parameter, never a postulate (preamble explicitly states "never a postulate"); no `postulate funext` appears tree-wide.
+
+| S-065
+| abstract-position
+| Echo sits beside, not within, the linear/dependent ladder.
+| NONE-PROPOSED
+| Positioning statement; no theorem.
+| CONJECTURE-OK
+| Verbatim sentence is a positioning statement with mapping `NONE-PROPOSED`; the audit row openly disclaims any theorem mapping.
+
+| S-066
+| abstract-position
+| Echo *is* the fibre (`echo↔fib`, `refl` round-trips). The win is not against HoTT but one step to the side: against *propositionally-truncated* fibres, where `‖ Echo f y ‖` discards witness identity, the un-truncated form retains it (`echo-not-prop` certificates).
+| `EchoFiberBridge.echo↔fib` + the `echo-not-prop` family in `proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda`
+| Truncation argument — the Gate-1 structural lever.
+| MATCHES
+| `EchoFiberBridge.echo↔fib` provides the `refl`-round-trip identification, and `proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda` each define `echo-not-prop` refuting `is-prop (Echo …)` constructively.
+
+| S-067
+| abstract-position
+| Echo is *motivated by* this lineage but explicitly *not* an instance — `EchoGradedComonad.agda` exhibits no nested `D_r D_s`. What we provide is a *calibration*: the separating model isolates the single load-bearing hypothesis (`≤g-prop`) at which generic Σ-functoriality stops being enough.
+| `EchoGradedComonad` (content audit) + `EchoSeparating.sep-degrade-compose-fails`
+| Restates S-030 + S-041 under the "calibration" framing.
+| MATCHES
+| `EchoGradedComonad` content audit confirms no nested `D_r D_s` family (only the single-grade `gduplicate g₁ g₂`), and `EchoSeparating.sep-degrade-compose-fails` isolates the breakdown when `≤g-prop` is dropped — the "calibration" framing accurately summarises both modules.
+
+| S-068
+| build-card
+| (no card strings located)
+| NONE-PROPOSED
+| `build-card.mjs` does not exist in this repo or any sibling repo under `/home/hyperpolymath`. Row retained as an explicit `LOCATE-FAILED` placeholder.
+| CONJECTURE-OK
+| Row openly records `(no card strings located)` + `NONE-PROPOSED` as an explicit `LOCATE-FAILED` placeholder; `build-card.mjs` is documented absent and the row is honest scope-loss.
+
+| S-069
+| linkedin
+| (draft copy not located)
+| NONE-PROPOSED
+| LinkedIn draft not found by file-name or content search. Row retained as an explicit `LOCATE-FAILED` placeholder so a future session can supply the verbatim sentences without disturbing earlier IDs.
+| CONJECTURE-OK
+| Row openly records `(draft copy not located)` + `NONE-PROPOSED` as a `LOCATE-FAILED` placeholder for LinkedIn draft; honest scope-loss.
 |===
 
 == Phrase sweep — "graded comonad", "genuinely different"
 
 Literal-string sweep over the in-scope surfaces *plus* `CLAUDE.md`,
-per the brief. Rows sorted by `Phrase` (alphabetical), then by
-`Surface` (alphabetical), then by file:line ascending. No-hit
-summary rows for surfaces with zero occurrences are placed inside
-their phrase block in surface-alphabetical position so the sweep
-is exhaustive.
-
-Hits on retracted/legacy documents (`docs/retracted/`) are
-excluded except where they are the only surface that carries the
+per the brief. Hits on retracted/legacy documents (`docs/retracted/`)
+are excluded except where they are the only surface that carries the
 phrase.
 
-[cols="1,1,1,4,3,3", options="header"]
+[cols="1,1,1,4,3,3,2,3", options="header"]
 |===
-| ID | Phrase | Surface (file:line) | Verbatim sentence (or quoted span) | Proposed mapping | Note
+| ID | Phrase | Surface (file:line) | Verbatim sentence (or quoted span) | Proposed mapping | Note | VERDICT | EVIDENCE
 
 | P-001
-| genuinely different
-| CLAUDE.md (sweep result: no hit)
-| (no occurrence)
-| n/a
-| Phrase absent from CLAUDE.md.
-
-| P-002
-| genuinely different
-| paper.adoc / types-abstract.adoc / README.md / gh-desc (sweep result: no hit)
-| (no occurrence)
-| n/a
-| Phrase does not appear on any in-scope surface. The phrase does appear in non-scope surfaces (`docs/gate-3-handoff.adoc:60`, `docs/adjacency/provenance-semirings.adoc:103`, `docs/echo-types/explorations/decoration-bridge/01-decoration-instances.adoc:206`) — recorded here for traceability only; not part of Gate G1 input.
-
-| P-003
-| graded comonad
-| CLAUDE.md:91
-| "Path to recognised type-theoretic standing as a *characterised graded comonad of structured loss* (coeffect/quantitative lineage)"
-| `docs/echo-types/establishment-plan.adoc`
-| **Framing risk flagged** — this restates the retracted graded-comonad framing as the active "path to standing". See §"CLAUDE.md framing assessment" below.
-
-| P-004
-| graded comonad
-| CLAUDE.md:94
-| "B universal property + graded-comonad laws"
-| `EchoGradedComonad` (the actual gcomonad-counit-*/coassoc names) + `docs/retractions.adoc` §R-2026-05-18
-| **Framing risk flagged** — uses retracted nomenclature for Pillar B inside the ledger.
-
-| P-005
-| graded comonad
-| CLAUDE.md:1830
-| "Path to recognised type-theoretic standing as a characterised *graded comonad of structured loss*"
-| `docs/echo-types/establishment-plan.adoc` (legacy entry)
-| **Framing risk flagged** — duplicate of P-003 inside the original establishment-track entry; predates the R-2026-05-18 narrowing and was never rewritten.
-
-| P-006
-| graded comonad
-| CLAUDE.md:1899
-| "Background/notation primer (graded comonads + HoTT fibres)"
-| NONE-PROPOSED
-| Plan-language only; not a claim about what is present in the artefact.
-
-| P-007
-| graded comonad
-| gh-desc (sweep result: no hit)
-| (no occurrence)
-| n/a
-| Confirms the GitHub description has been swept.
-
-| P-008
 | graded comonad
 | paper.adoc:59
 | "it is *not* a graded comonad in the Petriček–Orchard–Mycroft / Katsumata sense"
 | `EchoGradedComonad` (content) + `docs/retractions.adoc` §R-2026-05-18
-| Negative use; cf. S-026.
+| Negative use; cf. S-030.
+| MATCHES
+| `EchoGradedComonad`'s content (single-grade reindex via `gduplicate`) plus `docs/retractions.adoc` §R-2026-05-18 directly support the negative use at paper.adoc:59.
 
-| P-009
+| P-002
 | graded comonad
 | paper.adoc:73
 | "The earlier framing of this development as a 'graded comonad with two independent models and a conservativity metatheorem' was retracted on 2026-05-18"
 | `docs/retractions.adoc` §R-2026-05-18
 | Self-referential retraction citation.
+| MATCHES
+| `docs/retractions.adoc` `[#R-2026-05-18]` anchor directly hosts the retraction the paper sentence at line 73 cites by date.
 
-| P-010
+| P-003
 | graded comonad
 | paper.adoc:111
 | "This is a thin-poset action, not a graded comonad (Pillar B-2)."
 | `EchoGradedComonad` (content) + `EchoGraded.degrade-compose`
-| Negative use; cf. S-036.
+| Negative use; cf. S-040.
+| MATCHES
+| `EchoGradedComonad` content + `EchoGraded.degrade-compose` (and `≤g-prop`) supply the thin-poset-action reading; paper §"H2 verdict" framing and the retraction together support "thin-poset action, not a graded comonad".
 
-| P-011
+| P-004
 | graded comonad
 | paper.adoc:631
 | "B (graded comonad)" — Pillar-listing row label inside the §"Evaluation and discussion" comparator table
 | `EchoGradedComonad` (module name) + `docs/echo-types/earn-back-plan.adoc` §"Gate F1"
 | Table-label use; not a fresh claim but echoes the retracted nomenclature.
+| MATCHES
+| `EchoGradedComonad.agda` exists as the named module and `docs/echo-types/earn-back-plan.adoc` §"Gate F1" carries the retracted "graded comonad" terminology consciously as a comparator label.
 
-| P-012
+| P-005
 | graded comonad
 | paper.adoc:698
 | "what a genuine graded comonad in the Petriček–Orchard–Mycroft sense"
 | NONE-PROPOSED
 | Comparator wording inside §"Evaluation and discussion".
+| CONJECTURE-OK
+| Sentence at paper.adoc:698 describes hypothetically what a "genuine" graded comonad would carry to contrast with the present development; mapping is openly `NONE-PROPOSED` because the phrase is a hypothetical comparator, not a claim about the artefact.
 
-| P-013
+| P-006
 | graded comonad
 | paper.adoc:704
 | "does not exhibit a graded comonad in that sense — that claim was [retracted]"
 | `docs/retractions.adoc` §R-2026-05-18
-| Restates S-026 inside the evaluation section.
+| Restates S-030 inside the evaluation section.
+| MATCHES
+| paper.adoc:704 reads "does not exhibit a graded comonad in that sense — that claim was retracted on 2026-05-18", citing the `R-2026-05-18` anchor that exists in `docs/retractions.adoc`.
 
-| P-014
+| P-007
 | graded comonad
 | paper.adoc:884, 915–916
 | §"Graded comonads, coeffects, and QTT (the lineage we are motivated by)" — header + body "sits one rung *below* a graded comonad"
 | `EchoGradedComonad` + `EchoGraded`
 | Related-work section; positions Echo strictly below the graded-comonad structure in the comparator ladder.
+| MATCHES
+| paper.adoc:884 §"Graded comonads, coeffects, and QTT" + line 915 "sits one rung *below* a graded comonad" maps fairly to `EchoGradedComonad` (single-grade `gduplicate`, no nested family) + `EchoGraded` (`degrade`, `_⊔g_`, `≤g-prop`), which together are exactly the "one rung below" content.
 
-| P-015
+| P-008
 | graded comonad
 | paper.adoc:1188, 1211
 | "has been delivered above in §… §'Graded comonads, …'" + table row "'graded comonad' (counit/comultiplication, three comonad laws)"
 | `EchoGradedComonad.gextract` + `EchoGradedComonad.gduplicate` + `EchoGradedComonad.gcomonad-{counit-l,counit-r,coassoc}`
 | Cross-reference + claim-list table row.
+| MATCHES
+| paper.adoc:1188 cross-references the §"Graded comonads…" section discharged above and the line-1211 table row enumerates the retracted "counit/comultiplication, three comonad laws" — the proposed mapping symbols `EchoGradedComonad.{gextract, gduplicate, gcomonad-counit-l, gcomonad-counit-r, gcomonad-coassoc}` all exist.
 
-| P-016
-| graded comonad
-| README.md (sweep result: no hit)
-| (no occurrence)
-| n/a
-| Confirms the README has been swept of the retracted-framing phrase.
-
-| P-017
+| P-009
 | graded comonad
 | types-abstract.adoc:16
 | "This abstract previously claimed a graded comonad, two independent models, a conservativity metatheorem and a terminal-cone universal property."
 | `docs/retractions.adoc` §R-2026-05-18
 | Self-referential retraction citation.
+| MATCHES
+| types-abstract.adoc:15-18 contains the verbatim "This abstract previously claimed a graded comonad..." retraction-citation; the proposed mapping to `docs/retractions.adoc` §R-2026-05-18 correctly tracks this self-referential retraction use.
 
-| P-018
+| P-010
 | graded comonad
 | types-abstract.adoc:82
 | "this is a thin-poset action, not a graded comonad."
 | `EchoGradedComonad` (content)
-| Restates S-036 in the abstract.
+| Restates S-040 in the abstract.
+| MATCHES
+| types-abstract.adoc:82 verbatim states "this is a thin-poset action, not a graded comonad" and the mapping to `EchoGradedComonad` (content) correctly characterises the in-repo artefact as the thin-poset action that lacks nested `D_r D_s` structure.
 
-| P-019
+| P-011
 | graded comonad
 | types-abstract.adoc:136
 | "explicitly not a graded comonad — it is an *exactly-bounded package*"
 | `EchoGradedComonad` (content) + `EchoSeparating`
 | Restates the positive reframing.
+| MATCHES
+| types-abstract.adoc:136 verbatim contains "explicitly not a graded comonad — it is an *exactly-bounded package*"; the mapping to `EchoGradedComonad` (content) + `EchoSeparating` correctly supports the negative reframing (the separating model isolates `≤g-prop` as the load-bearing hypothesis).
 
-| P-020
+| P-012
 | graded comonad
 | types-abstract.adoc:152
 | §"Graded comonads / coeffects / QTT (Uustalu–Vene; Petriček et al.; …)" related-work heading
 | `EchoGradedComonad`
 | Related-work header; not a fresh claim.
+| MATCHES
+| types-abstract.adoc:152 contains the related-work bullet "*Graded comonads / coeffects / QTT* (Uustalu–Vene; Petriček et al.; …)" — a positioning/related-work heading, not a fresh claim; the mapping to `EchoGradedComonad` correctly anchors the comparator without exceeding its scope.
+
+| P-013
+| graded comonad
+| README.md (sweep result: no hit)
+| (no occurrence)
+| n/a
+| Confirms the README has been swept of the retracted-framing phrase.
+| MATCHES
+| `grep "graded comonad" /home/hyperpolymath/developer/repos/echo-types/README.md` returns no match, confirming the sweep result — README has been swept of the retracted-framing phrase.
+
+| P-014
+| graded comonad
+| gh-desc (sweep result: no hit)
+| (no occurrence)
+| n/a
+| Confirms the GitHub description has been swept.
+| MATCHES
+| gh-desc sweep claim is not in-tree verifiable but consistent with the in-repo positioning (echo types as "structured loss" rather than "graded comonad"); accepted as a truthful negative sweep result.
+
+| P-015
+| graded comonad
+| CLAUDE.md:91
+| "Path to recognised type-theoretic standing as a *characterised graded comonad of structured loss* (coeffect/quantitative lineage)"
+| `docs/echo-types/establishment-plan.adoc`
+| **Framing risk flagged** — this restates the retracted graded-comonad framing as the active "path to standing". See §"CLAUDE.md framing assessment" below.
+| CONJECTURE-OK
+| CLAUDE.md:89-91 verbatim contains "Path to recognised type-theoretic standing as a *characterised graded comonad of structured loss*" without an inline R-2026-05-18 retraction marker; the framing-risk flag is correctly raised on a non-public ambient-context file and the row's mapping notes the risk explicitly.
+
+| P-016
+| graded comonad
+| CLAUDE.md:94
+| "B universal property + graded-comonad laws"
+| `EchoGradedComonad` (the actual gcomonad-counit-*/coassoc names) + `docs/retractions.adoc` §R-2026-05-18
+| **Framing risk flagged** — uses retracted nomenclature for Pillar B inside the ledger.
+| CONJECTURE-OK
+| CLAUDE.md:93-94 verbatim contains "B universal property + graded-comonad laws" inside the active Pillar B descriptor; the framing-risk flag is correctly raised (retracted nomenclature reused in the ledger), with the mapping pointing both at the present `EchoGradedComonad` symbols and the R-2026-05-18 retraction.
+
+| P-017
+| graded comonad
+| CLAUDE.md:1830
+| "Path to recognised type-theoretic standing as a characterised *graded comonad of structured loss*"
+| `docs/echo-types/establishment-plan.adoc` (legacy entry)
+| **Framing risk flagged** — duplicate of P-015 inside the original establishment-track entry; predates the R-2026-05-18 narrowing and was never rewritten.
+| CONJECTURE-OK
+| CLAUDE.md:1828-1833 verbatim contains "Path to recognised type-theoretic standing as a characterised *graded comonad of structured loss*" inside the §"Establishment-track opening rung (the original 2026-05-17 entry)" — predates R-2026-05-18 and lacks an inline retraction marker, matching the flagged framing-risk note.
+
+| P-018
+| graded comonad
+| CLAUDE.md:1899
+| "Background/notation primer (graded comonads + HoTT fibres)"
+| NONE-PROPOSED
+| Plan-language only; not a claim about what is present in the artefact.
+| MATCHES
+| CLAUDE.md:1899 verbatim contains "Background/notation primer (graded comonads + HoTT fibres)" inside the next-Claude work plan; this is plan-language for an `[EXPAND]` tag, not a claim, so `NONE-PROPOSED` is the correct mapping.
+
+| P-019
+| genuinely different
+| paper.adoc / types-abstract.adoc / README.md / gh-desc (sweep result: no hit on any in-scope surface)
+| (no occurrence)
+| n/a
+| Phrase does not appear on any in-scope surface. The phrase does appear in non-scope surfaces (`docs/gate-3-handoff.adoc:60`, `docs/adjacency/provenance-semirings.adoc:103`, `docs/echo-types/explorations/decoration-bridge/01-decoration-instances.adoc:206`) — recorded here for traceability only; not part of Gate G1 input.
+| MATCHES
+| `grep "genuinely different"` against paper.adoc, types-abstract.adoc, and README.md returns no in-scope hits, confirming the sweep's negative result; out-of-scope hits noted in the row are traceability-only.
+
+| P-020
+| genuinely different
+| CLAUDE.md (sweep result: no hit)
+| (no occurrence)
+| n/a
+| Phrase absent from CLAUDE.md.
+| MATCHES
+| `grep "genuinely different" /home/hyperpolymath/developer/repos/echo-types/CLAUDE.md` returns no match, confirming the sweep's negative result.
 |===
 
 == CLAUDE.md framing assessment
 
-The literal sweep flags four CLAUDE.md occurrences of "graded comonad"
-(P-003, P-004, P-005, P-006). Of these, three sit in framing positions
-(P-003, P-004, P-005) that an independent auditor reading CLAUDE.md
-*first* — before reading `docs/retractions.adoc` — could read as the
-active framing of the establishment track. Specifically:
+The literal sweep flags three CLAUDE.md occurrences of "graded comonad"
+in framing positions (P-015, P-016, P-017) that an independent
+auditor reading CLAUDE.md *first* — before reading
+`docs/retractions.adoc` — could read as the active framing of the
+establishment track. Specifically:
 
 * CLAUDE.md:89–91 frames the establishment track as the path to
   standing "as a characterised graded comonad of structured loss",
@@ -689,27 +866,46 @@ preserves every other word, line, and session-arc verbatim, and
 only adjusts the three framing spans.
 
 The variant lives at `/home/hyperpolymath/developer/repos/echo-types/CLAUDE.md.audit`
-and is built by inserting an inline `[CLAIMS_AUDIT 2026-06-10 —
-RETRACTED 2026-05-18 …]` marker after each of the three flagged
-framings. No content is deleted; the bias-reducing edit is additive.
+and is built by inserting an inline `[RETRACTED 2026-05-18: now stated
+as a *loss-graded reindexing modality* — see docs/retractions.adoc
+§R-2026-05-18]` marker after each of the three flagged framings.
+No content is deleted; the bias-reducing edit is additive.
 
 == Provenance and follow-up
 
 * Constructor brief executed verbatim except for the absent surfaces
   noted in §"Scope and absent surfaces". Each absent surface keeps
-  an explicit row (S-020 build-card / S-023 linkedin) so a
-  downstream session can fill it without renumbering surrounding
-  IDs.
+  an explicit row (S-068 / S-069) so a downstream session can fill
+  it without renumbering.
 * This file is mapping-only. No claim above is judged justified or
   unjustified; that judgement is the next gate session's
   responsibility.
 * All `(module, theorem)` proposals correspond to symbols present
   on the current `session/slice-4-narrowing` branch as of
   2026-06-10. Branch-divergence handling is left to the consumer.
-* ID stability: this revision (2026-06-10b) sorted the surface
-  inventory by `Surface` (alphabetical) then by source-document
-  sentence order, and the phrase sweep by `Phrase` (alphabetical)
-  then by `Surface` (alphabetical) then by file:line. IDs were
-  reassigned in the sorted order. Cross-references downstream
-  should cite both the ID *and* the verbatim sentence to remain
-  stable across future re-sorts.
+* VERDICT/EVIDENCE columns added 2026-06-10 by a source-only audit
+  against the cited Agda under `--safe --without-K`; verdicts judge
+  only what the mechanised source proves, not the framing intent or
+  prose around it. Four rows received `WEAKER-THAN-CLAIM` (S-002,
+  S-006, S-017, S-023) and one received a name discrepancy noted in
+  EVIDENCE without a downgrade (S-021); no row received
+  `NO-BACKING`.
+
+== Verdict-count summary
+
+Audit performed 2026-06-10 against `session/slice-4-narrowing` HEAD;
+verdicts judge only the mechanised content under `--safe --without-K`,
+not prose intent. Counts cover the 69 surface rows (`S-*`) plus the
+20 phrase-sweep rows (`P-*`), totalling 89 rows. MATCHES: 70 (54
+`S-*` rows + 16 `P-*` rows) — theorem(s) mechanised support the
+sentence as written. WEAKER-THAN-CLAIM: 4 (S-002 Bachmann–Howard /
+thermodynamic-stability closure overstated; S-006 pointwise-vs-strict
+triangle split unflagged; S-017 no-section family symbols mis-located
+in the proposed mapping; S-023 cited 2-cell-argument backing modules
+do not exist). NO-BACKING: 0 — every claim row carries at least a
+weaker backing. CONJECTURE-OK: 15 (11 `S-*` + 4 `P-*`), covering
+explicit positioning statements, retraction citations, doc anchors,
+and `NONE-PROPOSED` / `LOCATE-FAILED` placeholders. The four
+WEAKER-THAN-CLAIM rows are the load-bearing follow-ups for the next
+Gate G1 session; the remainder of the inventory is either backed at
+strength or honestly framed as a non-claim.
