@@ -23,6 +23,22 @@ Echo types target a third case:
 
 This repository treats that third case as the primary object of study.
 
+== Semantic fibre and warrant prototype
+
+The public vocabulary talks about *semantic fibre*: the possible-origin
+structure that still lies over an observed artefact after a declared
+lossy map. An artefact used *avec fibre* carries enough such structure
+for the advertised inference; an artefact used *sans fibre* is only a
+target-side value. A *warrant* is the inferential licence supplied by
+the fibre or residue, but it is supporting vocabulary rather than the
+headline mathematical object.
+
+`docs/echo-types/prototypes/warrant_debugger_prototype.jsx` is the
+doc-side React sketch for that warrant/debugging layer. It visualises an
+empty fibre contradiction and then makes repair costs explicit when a
+tool weakens, widens, or softens the active obligations. It is an
+explanatory prototype, not an Agda proof artefact.
+
 == Definition (Foundation)
 
 Given `f : A -> B`, define the fiber/echo at `y : B`:
