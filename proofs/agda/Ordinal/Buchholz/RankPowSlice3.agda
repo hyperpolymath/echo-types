@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- Slice 3 prerequisites for the `<ᵇ-+1` joint-bplus headline
 -- `rank-mono-<ᵇ-+1-via-head-Ω`.  Three primitives land here:

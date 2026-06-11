@@ -1,7 +1,5 @@
-<!--
-SPDX-License-Identifier: MPL-2.0
-Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
--->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Bridge Status
 
 This document strictly tracks the status of experimental extensions and bridges between the minimal core of Echo Types and other domains.
@@ -42,4 +40,16 @@ This document strictly tracks the status of experimental extensions and bridges 
 - **Status:** EXPLORATORY (R5 deferred-research; cleanly abandonable)
 - **Dependencies:** `EchoIntegration`, `EchoChoreo`, `EchoGraded` (import only)
 - **Blockers:** Bridge is bounded by construction. Closes under any of the documented termination criteria: Track A/B/C failure, all candidate analogies retired, redundancy with retracted-prose graded-comonad framing, forbidden-rebrandings register addition, retraction-watch trip. Companion: `docs/echo-types/explorations/decoration-bridge/README.adoc`; module: `proofs/agda/EchoDecorationBridge.agda` (deliberately not in `All.agda`).
+- **Core Affect:** NO
+
+## 7. Valence Shell / Ochránce accountable-shell bridge (candidate downstream consumer)
+- **Status:** EXPLORATORY (candidate downstream consumer; no Agda artefact, no cross-repo theorem)
+- **Dependencies:** None in this repo. Adjacent (downstream) only: Valence Shell (`hyperpolymath/valence-shell` — shell state transitions, undo/redo, checkpoints, diff/replay); Ochránce (`hyperpolymath/ochrance` — A2ML manifests, Merkle state commitments, repair/attestation surfaces).
+- **Blockers:** No shared schema and no mechanised cross-repo theorem exist. The relationship is citation-level only: Echo Types' structured-loss vocabulary (recoverable / constrained / residue-bearing / observationally equivalent / genuinely lost) is a *candidate* classifier for shell state transitions, and Ochránce may supply concrete receipt evidence. This is downstream application evidence, not a new foundation. Echo Types makes **no** claim about Valence Shell or Ochránce implementation correctness, and **no** claim about POSIX, Rust, the Lean→Rust correspondence, secure deletion, GDPR, cryptographic integrity, or attestation. Companion note: `docs/echo-types/explorations/accountable-shell/README.adoc`. Nothing for this bridge is imported into `proofs/agda/All.agda`, `proofs/agda/Smoke.agda`, or `proofs/agda/EchoCanonicalIdentitySuite.agda`.
+- **Core Affect:** NO
+
+## 8. Eclexia consumer (thermodynamic resource bridge)
+- **Status:** LANDED (downstream consumer-side, in `hyperpolymath/eclexia` — PR eclexia#32). No artefact in *this* repo.
+- **Dependencies:** None in this repo. Adjacent (downstream) only: Eclexia (`hyperpolymath/eclexia` — the resource-typed "economics-as-code" language).
+- **Blockers:** None outstanding on the consumer side; this is application evidence, not a new foundation here. Eclexia integrates Echo as a first-class `Echo[A, B]` type former and, separately in its *own* Coq metatheory, mirrors the **discrete** thermodynamic shadow of this repo's `EchoThermodynamics` (`formal/coq/src/EchoThermo.v`: `bennett_reversible_is_free`, `free_iff_reversible`, `irreversible_costs_at_least_one_bit`, `erasure_monotone` — axiom-free, `Print Assumptions` clean), and exposes it at the language level as `landauer_cost(states, T) : Resource[Energy]` — pricing the erasure of a collapsed fibre (`k_B·T·ln N`; reversible retention is free). Echo Types makes **no** claim about Eclexia's implementation correctness; the real-valued `k T ln 2` scaling and the language runtime live entirely in that repo. The infinite-carrier collapse functional here remains negatively closed (`collapse-cost-impossible`, see §2) — eclexia consumes only the finite/discrete shadow. Nothing for this bridge is imported into `proofs/agda/All.agda` or `proofs/agda/Smoke.agda`.
 - **Core Affect:** NO

@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: MPL-2.0
+# Dependabot configuration for echo-types.
+#
+# echo-types is an Agda proof repository with no language package
+# manifests (no Cargo.toml / package.json / mix.exs / requirements).
+# The relevant ecosystem is GitHub Actions — this keeps the SHA-pinned
+# reusable workflows and third-party actions current, and satisfies the
+# OSSF Scorecard "Dependency-Update-Tool" check.
+
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      actions:
+        patterns:
+          - "*"

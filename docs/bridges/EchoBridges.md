@@ -1,12 +1,10 @@
-<!--
-SPDX-License-Identifier: MPL-2.0
-Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
--->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Echo Types Bridge Documentation
 
 ## Overview
 
-This document provides comprehensive documentation for the echo types bridge modules, which extend the core echo type theory to various domains including JanusKey, CNO, Tropical, and Dyadic systems.
+This document provides comprehensive documentation for the echo types bridge modules, which extend the core echo type theory to various domains including JanusKey, CNO, Tropical, Dyadic, and Ephapax-L3 systems.
 
 ## Bridge Modules
 
@@ -116,6 +114,37 @@ distinct-candidates-same-visible-distinct-echo :
 ```agda
 DyadicEchoBridgeTheorem : 
   Σ (Session Alice) (λ S → Σ (Session Bob) (λ T → EchoSafe S × EchoSafe T × EchoDual S T))
+```
+
+### 5. EchoEphapaxBridge `[NARROW]`
+
+**Location**: `proofs/agda/EchoEphapaxBridge.agda`
+
+**Purpose**: Cross-repo navigability marker for the `hyperpolymath/ephapax` programming-language project, whose L3 layer (`formal/Echo.v`, 584 lines, 24 `Qed`, zero `Admitted` / zero `Axiom`) is an explicit Coq port of `EchoLinear.agda` + `EchoResidue.agda` under a K-free / zero-axiom discipline equivalent to `--safe --without-K`.
+
+**Scope** (intentionally NARROW, per `/tmp/ephapax-bridge-proposal.md` §4): import-time documentation + two definitional `refl`-renames pinning load-bearing Agda symbols under `ephapax-L3-`-prefixed names. The cross-repo content correspondence is already discharged by `coqc` on the ephapax side; **no Lane 4 CI dependency**.
+
+**Key Components**:
+
+- **`ephapax-L3-weaken`**: definitional alias for `EchoLinear.weaken` (Coq counterpart: ephapax `formal/Echo.v` `weaken`)
+- **`ephapax-L3-no-section-collapse`**: definitional alias for `EchoResidue.no-section-collapse-to-residue` (Coq counterpart: ephapax `formal/Echo.v:502-517` `no_section_collapse_to_residue`)
+
+**Cross-repo theorem table** (correspondence catalogued in the module docstring):
+
+| Agda (echo-types) | Coq (ephapax `formal/Echo.v`) |
+|---|---|
+| `EchoLinear` mode order (linear ≤ affine) | `mode_le_prop` |
+| `EchoLinear.weaken-collapses-distinction` | `weaken_collapses_distinction` |
+| Affine canonicality on `LEcho affine` | `affine_canonical`, `affine_all_equal` |
+| `EchoLinear.degradeMode-comp` | `degrade_mode_comp` |
+| `EchoResidue.no-section-collapse-to-residue` | `no_section_collapse_to_residue` |
+
+**Scope discipline (honest)**: corroboration claim is **L3 only**. Ephapax-affine has Rust checkers only (no Coq mechanisation); L1 has 5 `Axiom` + 11 `Admitted`; L4 has no mechanised theorems yet. See `docs/echo-types/paper.adoc` §"Threats to validity" for the full honest-scope statement.
+
+**Main entry**:
+```agda
+ephapax-L3-weaken : LEcho linear → LEcho affine
+ephapax-L3-weaken = weaken
 ```
 
 ## Integration Patterns

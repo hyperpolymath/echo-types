@@ -1,0 +1,34 @@
+;; SPDX-License-Identifier: MPL-2.0
+;; Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+;;
+;; Assail Classifications — echo-types
+;; See panic-attack/.claude/CLAUDE.md § "User-Classification Registry".
+;;
+;; First populated 2026-05-30 in response to the Track-C panic-attack
+;; sweep tracked at echo-types#113. One real-path finding classified;
+;; ten path-duplicates flagged at `.claude/worktrees/*` paths are
+;; scan-artefact noise (those paths are gitignored and not present in
+;; the committed tree) and are not enumerated below.
+;;
+;; The 2026-05-26 sweep also flagged `arghda-core/src/lint/orphan_module.rs`
+;; UnboundedAllocation (and 5 stale `.claude/worktrees/<id>/arghda-core/...`
+;; path-duplicates). That file no longer lives in echo-types — arghda-core
+;; was extracted to its own repo at https://github.com/hyperpolymath/arghda-core
+;; on 2026-05-30 per echo-types#159. Re-classification of that finding,
+;; if needed, belongs in the new repo's own assail-classifications.
+
+(assail-classifications
+  (metadata
+    (version "1.0.0")
+    (project "echo-types")
+    (last-updated "2026-05-30")
+    (entries 1)
+    (status "active")
+    (notes "Ten additional findings on .claude/worktrees/<id>/* paths from the 2026-05-26 sweep are excluded as scan artefacts: .claude/ is gitignored, those subtrees are not in the committed repo, the scanner picked up the developer's local worktree state. Future scans against the committed tree should not re-raise them; if they do, the panic-attack scanner is reading workspace state outside the repo and the carve-out belongs upstream in panic-attack. The arghda-core/src/lint/orphan_module.rs finding also from that sweep moved to the standalone arghda-core repo per echo-types#159."))
+
+  (classification
+    (file "flake.nix")
+    (category "SupplyChain")
+    (classification "flake-lock-present-tag-and-sha-pins")
+    (audit "echo-types#113 triage 2026-05-30")
+    (rationale "Scanner flagged 'inputs without narHash, rev pinning, or sibling flake.lock'. As of main HEAD: (a) flake.lock exists adjacent to flake.nix; (b) nixpkgs is locked in flake.lock with rev + narHash; (c) agda-stdlib input declares flake = false with tag pin github:agda/agda-stdlib/v2.3; (d) absolute-zero input declares flake = false with explicit commit SHA pin 3ff5cee7f3fd002378089cd02f0c90a3747b45f0. The CI workflow .github/workflows/agda.yml additionally re-pins absolute-zero by SHA at runtime with an explicit ABSZ_REF check, which would fail on any drift. The finding was correct on the 2026-05-26 scan date if flake.lock was absent or had fewer locked nodes at that time; it is stale at current main.")))

@@ -1,5 +1,4 @@
-// SPDX-License-Identifier: MPL-2.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+// SPDX-License-Identifier: CC-BY-4.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = echo-types: Master Map
 :toc: macro
@@ -276,7 +275,30 @@ Staged Buchholz-style collapsing in `--safe --without-K`.
   head-Ω lower bound), `RankPowSlice3Headline` (2026-05-28 — Slice 3
   headline `rank-mono-<ᵇ-+1-via-head-Ω` closed under a strict-head
   premise; umbrella case-split bumps `bpsi=bpsi at equal markers`
-  to rank-adm / rank-lex)).
+  to rank-adm / rank-lex)), `RankLexJointBplus` (2026-05-28 PR #147
+  — parallel rank with `leftmost-α` discriminator for the bpsi-source-
+  at-equality joint-bplus sub-case; second-component strict-mono at
+  equal first components scaffolded; (a)+(b)+(c) assembly
+  completed 2026-05-30 via PRs #165 (b lex-first primitive) + #166
+  (c `BplusFirstTri` trichotomy + `first-eq-from-bpsi-source-at-
+  equal-head` consumer-side derivation)), `RankMonoUmbrellaSlice4`
+  (2026-05-28 PR #149 — narrowed `_<ᵇ⁻ⁿ_` umbrella record bundling
+  WfCNF endpoints + `_<ᵇ¹_` derivation; covers all 10 inherited
+  `_<ᵇ⁰_` cases + the strict-head joint-bplus; two shortfalls
+  (`<ᵇ-ψΩ≤` boundary; `<ᵇ-+1` at equal-head) pinned as `⊤`-aliases
+  with explicit lex-rank / rank-lex-jb pointers),
+  `RankMonoSameLeft` (2026-05-30 PR #167 — Path-3 prototype
+  source-rule enrichment via `<ᵇ⁺²-same-left`; one-line closure via
+  `rank-pow-bplus-right-mono`), `RankMonoUnion` (2026-05-30 PR #168
+  — architectural realisation: union umbrella
+  `_<ᵇᵘ_ = _<ᵇ¹_ ⊎ _<ᵇ⁺²_` via Sum + `[_,_]` mediator; per-extension
+  proof work + structural composition; extension recipe in preamble),
+  `RankMonoUnionWfCNF` (2026-05-30 PR #169 — WfCNF wrap `_<ᵇᵘⁿ_`
+  bundling canonical-form invariant alongside the union; mirrors
+  Slice 4's pattern, propagates automatically through new
+  extensions), `RankMonoUnionWF` (2026-05-30 PR #170 — Gate 2
+  closure: `WellFounded _<ᵇᵘ_` via `Subrelation.wellFounded` +
+  `On.wellFounded` rank-embedding transport from `wf-<′`).
 * Docs: `docs/buchholz-plan.adoc`,
   `docs/echo-types/buchholz-extended-wf.md`,
   `docs/echo-types/buchholz-rank-obstruction.adoc` (per-constructor
@@ -316,6 +338,33 @@ loss".
 * Proofs: `proofs/agda/EchoJanusBridge.agda`.
 * Docs: `docs/EchoJanusBridge.md`, `docs/EchoBridges.md`.
 
+=== Ephapax L3 — linear/affine modality bridge `[REAL]`
+Cross-repo navigability marker for the `hyperpolymath/ephapax`
+programming-language project, whose L3 layer (`formal/Echo.v`, 584
+lines, 24 `Qed`, zero `Admitted` / zero `Axiom`) is an explicit Coq
+port of `EchoLinear.agda` + `EchoResidue.agda` under a K-free /
+zero-axiom discipline equivalent to `--safe --without-K`. The Coq
+headlines (`mode_le_prop`, `weaken_collapses_distinction`,
+`affine_canonical`, `degrade_mode_comp`,
+`no_section_collapse_to_residue`) each carry the same theorem as the
+Agda counterpart.
+
+Scope is intentionally NARROW: this is import-time documentation +
+two definitional `refl`-renames of the load-bearing Agda symbols
+under `ephapax-L3-`-prefixed names, so a silent upstream rename
+trips `Smoke.agda`. The cross-repo content correspondence is already
+discharged by `coqc` on the ephapax side; no Lane 4 CI dependency.
+
+* Proofs: `proofs/agda/EchoEphapaxBridge.agda` (`ephapax-L3-weaken` ↔
+  `EchoLinear.weaken` ↔ ephapax `formal/Echo.v` `weaken`;
+  `ephapax-L3-no-section-collapse` ↔
+  `EchoResidue.no-section-collapse-to-residue` ↔ ephapax
+  `formal/Echo.v:502-517` `no_section_collapse_to_residue`).
+* External corroboration scope: L3 only — ephapax-affine and L1/L2/L4
+  are NOT mechanised to the same standard (see ephapax
+  `formal/PRESERVATION-DESIGN.md` + `docs/echo-types/paper.adoc`
+  §"Threats to validity").
+
 === Tropical / Dyadic `[REAL*]`
 Bridge domains enumerated in `docs/EchoBridges.md` (JanusKey / CNO /
 Tropical / Dyadic). Dyadic is mechanised; Tropical is named/early.
@@ -353,8 +402,9 @@ each following the honest-bound + matched-negative discipline
 
 * *Walkthrough 1 — certified region-exit audit*
   (`tutorial/region_exit_audit/`). ephapax-L3-style region exit
-  modelled type-level via `EchoLinear.no-section-weaken`. Killer-app
-  candidate per `roadmap.adoc` §Lane 5 second unblocking condition.
+  modelled type-level via `EchoLinear.no-section-weaken`.
+  Formally-accepted killer-app artefact per `roadmap.adoc` §"Closed
+  lanes" (Lane 5 close-out 2026-05-30).
 * *Walkthrough 2 — epistemic erasure*
   (`tutorial/epistemic_erasure/`). 4-seed → 2-key KDF with
   no-section-via-residue lifted from
@@ -367,17 +417,46 @@ each following the honest-bound + matched-negative discipline
   exhibiting the boundary at which type-level recovery flips.
 
 Track-level docs: `tutorial/README.adoc`, plus per-walkthrough
-`README.adoc` files. Lane policy status: see `roadmap.adoc` §Lane 5
-(currently [PARKED] at lane-policy level pending user unpark
-decision; all three walkthroughs landed regardless).
+`README.adoc` files. Lane policy status: see `roadmap.adoc` §"Closed
+lanes" — Lane 5 closed 2026-05-30 via the formally-accepted
+killer-app branch (Walkthrough 1).
 
 == Tooling
 
 === ArghDA — proof-ladder workspace manager `[REAL*]`
 Language-agnostic proof-workspace engine (`arghda-core`, Rust). MVP.
+Extracted to its own repository 2026-05-30 (see echo-types#159 for
+the move record); was previously in-tree under `arghda-core/`.
 
-* Code: `arghda-core/` (Rust crate).
-* Docs: `docs/arghda-spec.adoc`.
+* Repo: https://github.com/hyperpolymath/arghda-core
+* Docs: `docs/arghda-spec.adoc` (in the new repo).
+* Relationship to echo-types: motivated by the proof pipeline here
+  but operates on any `--safe --without-K` Agda workspace; not a
+  build-dependency.
+
+=== EchoTypes.jl — Executable Julia companion `[REAL]`
+Mirrors the finite-domain shadow of the Tier-1 + Tier-2 spine + the
+unconditional fragment of the F5 OFS earn-back. v0.2.0 (2026-05-27,
+pinned to `e7dded6`) extends the original v0.1.0 coverage (`Echo`,
+`EchoResidue`, `EchoFiberCount`, `EchoThermodynamics`) with seven
+new shadows for the canonical-identity spine: `EchoTotalCompletion`,
+`EchoOrthogonalFactorizationSystem` (unconditional fragment),
+`EchoImageFactorization`, `EchoNoSectionGeneric`, `EchoLossTaxonomy`,
+`EchoEntropy`, `EchoObservationalEquivalence`.
+
+* Repo: https://github.com/hyperpolymath/EchoTypes.jl
+* Registry: `julia-professional-registry` (registered via PR #16).
+* Scope inheritance: R-2026-05-18 retraction surface NOT mirrored;
+  F5 funext-qualified clauses (uniqueness up to iso, diagonal
+  lifting) NOT mirrored — Julia has no funext, the claims would be
+  vacuous; UIP- and truncation-strength upgrades likewise honestly
+  not mirrored.
+* Discipline: falsifies-by-counterexample over concrete finite data;
+  the companion makes no proof claims, the Agda here remains the
+  source of truth. No in-repo CI dependency in either direction.
+
+Bridge-status row: `docs/bridges/cross-repo-bridge-status.md`
+§"EchoTypes.jl executable mirror".
 
 == Governance — proof-debt & retraction
 

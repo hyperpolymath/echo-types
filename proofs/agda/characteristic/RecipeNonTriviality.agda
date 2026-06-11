@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- RETRACTION 2026-05-18 (docs/retractions.adoc R-2026-05-18): the
 -- "characteristic recipe" this module exercises is, per the repo's

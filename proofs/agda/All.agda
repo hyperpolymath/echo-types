@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 module All where
 
@@ -49,6 +51,7 @@ open import EchoCategorical
 open import EchoScope
 open import EchoOrdinal
 open import EchoJanusBridge
+open import EchoEphapaxBridge
 open import Dyadic
 open import DyadicEchoBridge
 open import EchoThermodynamics
@@ -146,6 +149,10 @@ open import Ordinal.Buchholz.RankPowSlice3Headline
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice3
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice4
+open import Ordinal.Buchholz.RankMonoSameLeft
+open import Ordinal.Buchholz.RankMonoUnion
+open import Ordinal.Buchholz.RankMonoUnionWF
+open import Ordinal.Buchholz.RankMonoUnionWfCNF
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
 open import Ordinal.Buchholz.RecursiveSurfaceBudget
 open import Ordinal.Buchholz.SurfaceOrder

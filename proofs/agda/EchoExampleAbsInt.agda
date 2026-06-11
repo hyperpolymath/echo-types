@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- EchoExampleAbsInt: Example 10 from `docs/echo-types/examples.md`
 -- (abstract interpretation via Sign lattice), realised as the

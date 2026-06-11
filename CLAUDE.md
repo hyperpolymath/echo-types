@@ -1,7 +1,5 @@
-<!--
-SPDX-License-Identifier: MPL-2.0
-Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
--->
+<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Ecosystem context
 
 This repo (echo-types) is one node in the hyperpolymath / PanLL ecosystem.
@@ -35,11 +33,24 @@ Adjacent projects, in one line each, for session bootstrapping:
   for automatic detection and integration (e.g. discipline-specific
   analyzers becoming visible to PanLL without manual wiring).
   See GROOVE_PANLL_RESEARCH_SUMMARY.md in panll.
-- ArghDA (planned) — lightweight proof-workspace manager for Agda;
+- ArghDA — lightweight proof-workspace manager for Agda;
   triage folders (inbox → working → proven/rejected), linter, DAG view.
-  Split as `arghda-core` (language-agnostic engine) + `arghda-panll`
-  (Gossamer/ReScript presentation). See docs/buchholz-plan.adoc appendix
-  for the motivating proof pipeline.
+  Split as `arghda-core` (language-agnostic engine, separate repo at
+  https://github.com/hyperpolymath/arghda-core, extracted from this
+  repo 2026-05-30 — see echo-types#159) + `arghda-panll`
+  (Gossamer/ReScript presentation, planned). See docs/buchholz-plan.adoc
+  appendix for the motivating proof pipeline.
+- EchoTypes.jl — executable Julia companion to echo-types, mirroring the
+  finite-domain shadow of the Tier-1 + Tier-2 spine + the unconditional
+  F5 OFS fragment. v0.2.0 (2026-05-27) extends v0.1.0's `Echo` /
+  `EchoResidue` / `EchoFiberCount` / `EchoThermodynamics` coverage with
+  seven new modules (`EchoTotalCompletion`, `EchoOrthogonalFactorizationSystem`,
+  `EchoImageFactorization`, `EchoNoSectionGeneric`, `EchoLossTaxonomy`,
+  `EchoEntropy`, `EchoObservationalEquivalence`). Honestly scoped under
+  R-2026-05-18 — the retracted surface and the funext-qualified F5
+  clauses are NOT mirrored. Falsifies-by-counterexample on concrete
+  data; the Agda here remains the source of truth.
+  https://github.com/hyperpolymath/EchoTypes.jl
 
 # This repo
 

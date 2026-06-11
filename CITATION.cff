@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: CC-BY-4.0
+# SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 cff-version: 1.2.0
 title: "echo-types: a definitionally-grounded, loss-graded reindexing modality (Agda)"
 message: "If you cite this software, please cite the Zenodo DOI."
@@ -5,7 +7,7 @@ type: software
 authors:
   - given-names: Jonathan
     family-names: Jewell
-    email: jonathan.jewell@gmail.com
+    email: j.d.a.jewell@open.ac.uk
     # PLACEHOLDER: insert ORCID once registered, e.g.
     # orcid: "https://orcid.org/0000-0000-0000-0000"
 repository-code: "https://github.com/hyperpolymath/echo-types"

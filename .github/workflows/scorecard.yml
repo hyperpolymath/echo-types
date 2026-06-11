@@ -8,10 +8,19 @@ on:
   push:
     branches: [main]
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   analysis:
+    # Caller-granted permissions per the scorecard-reusable contract
+    # (its header documents: the caller MUST grant security-events:write
+    # + id-token:write; contents:read lets it read the repo). Closes the
+    # Hypatia `scorecard_wrapper_missing_job_permissions` finding.
+    permissions:
+      contents: read
+      security-events: write
+      id-token: write
     uses: hyperpolymath/standards/.github/workflows/scorecard-reusable.yml@e0caf11508a3989574713c78f5f444f2ce5e33ef
     timeout-minutes: 10
     secrets: inherit

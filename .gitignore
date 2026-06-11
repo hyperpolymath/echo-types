@@ -1,5 +1,5 @@
 *.agdai
-arghda-core/target/
+_build/
 .claude/
 .agda/
 

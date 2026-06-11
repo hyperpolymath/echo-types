@@ -1,4 +1,6 @@
 {-# OPTIONS --safe --without-K #-}
+-- SPDX-License-Identifier: MPL-2.0
+-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 -- Buchholz-layer manifest. Keeps load-bearing names pinned so that
 -- accidental renames fail quickly in a focused module.
@@ -534,6 +536,18 @@ open import Ordinal.Buchholz.RankLexJointBplus using
   ( leftmost-α
   ; rank-lex-jb
   ; rank-lex-jb-strict-second-at-equal-first
+  ; rank-lex-jb-strict-first
+  ; leftmost-α-strict-from-bpsi-source
+  ; rank-lex-jb-bpsi-at-equality
+  ; rank-pow-bplus-eq-from-summands
+  ; first-eq-from-bpsi-source-at-equal-head
+  ; BplusFirstTri
+  ; bplus-tri-strict
+  ; bplus-tri-equal
+  ; bplus-tri-from-strict
+  ; bplus-tri-from-equal
+  ; dispatch-trichotomy-to-<lex
+  ; rank-lex-jb-bpsi-equal-head-from-tail-eq
   )
 
 -- Slice 4 narrowing 2026-05-28 (own block per CLAUDE.md Working
@@ -553,4 +567,70 @@ open import Ordinal.Buchholz.RankMonoUmbrellaSlice4 using
   ; <ᵇ⁻ⁿ-from-<ᵇ⁰
   ; <ᵇ⁻ⁿ-+1-+
   ; rank-pow-mono-<ᵇ⁻ⁿ
+  )
+
+-- Path-3 prototype 2026-05-30 (own block per CLAUDE.md Working
+-- rules): same-left joint-bplus rank-mono extension.  Bypasses
+-- the rank-lex-jb pivot's first-eq derivation obligation for the
+-- LITERAL-same-left sub-case by enriching the source rule
+-- (`<ᵇ⁺²-same-left`) rather than the rank function.  One-line
+-- closure via `rank-pow-bplus-right-mono` once the tail premise
+-- is grounded in `_<ᵇ⁰_`.  Complementary to rank-lex-jb, which
+-- remains load-bearing for the cross-head case (`bpsi ν α` vs
+-- `bOmega ν`, syntactically different but rank-equal).
+open import Ordinal.Buchholz.RankMonoSameLeft using
+  ( _<ᵇ⁺²_
+  ; <ᵇ⁺²-from-<ᵇ⁰
+  ; <ᵇ⁺²-same-left
+  ; rank-pow-mono-<ᵇ⁺²
+  ; rank-pow-mono-same-left
+  )
+
+-- Union umbrella 2026-05-30 (own block per CLAUDE.md Working rules):
+-- realises the architectural recommendation from PR #167's closing
+-- note — bplus-chain rank-mono umbrella as a UNION OF SOURCE-RULE
+-- EXTENSIONS rather than a single enriched rank function.  Combines
+-- `_<ᵇ¹_` (Slice 3 strict-head joint-bplus) with `_<ᵇ⁺²_` (Path-3
+-- same-left joint-bplus) via Sum + `[_,_]` mediator.  Zero new
+-- proof obligations; the union is purely structural over the two
+-- per-extension umbrellas.  Extension recipe (for new sub-cases)
+-- documented in the module preamble.
+open import Ordinal.Buchholz.RankMonoUnion using
+  ( _<ᵇᵘ_
+  ; rank-pow-mono-<ᵇᵘ
+  ; <ᵇᵘ-from-<ᵇ¹
+  ; <ᵇᵘ-from-<ᵇ⁺²
+  ; <ᵇᵘ-from-<ᵇ⁰
+  ; <ᵇᵘ-from-<ᵇ⁰-via-<ᵇ⁺²
+  )
+
+-- Union umbrella well-foundedness 2026-05-30 (own block per
+-- CLAUDE.md Working rules): closes Gate 2 of the Slice 3+4 Route
+-- A session arc.  `wf-<ᵇᵘ` derives WellFounded `_<ᵇᵘ_` via the
+-- standard Subrelation + InverseImage rank-embedding transport
+-- (rank-pow ∘ wf-<′).  Zero new proof obligations; purely
+-- structural.  Together with the WfCNF wrap (PR #169) this
+-- equips downstream Buchholz consumers with both the
+-- canonical-form invariant AND termination of union-derivation
+-- chains.
+open import Ordinal.Buchholz.RankMonoUnionWF using
+  ( wf-rank-pow-pullback
+  ; wf-<ᵇᵘ
+  )
+
+-- WfCNF wrap of the union umbrella 2026-05-30 (own block per
+-- CLAUDE.md Working rules): mirrors `RankMonoUmbrellaSlice4._<ᵇ⁻ⁿ_`'s
+-- WfCNF-bundling pattern over the union umbrella's `_<ᵇᵘ_`.
+-- Downstream Buchholz consumers needing the canonical-form
+-- invariant alongside the rank-relation use this narrowed form.
+-- The architectural-extension recipe documented in
+-- `RankMonoUnion`'s preamble automatically extends through this
+-- WfCNF wrap — new union disjuncts don't require edits here.
+open import Ordinal.Buchholz.RankMonoUnionWfCNF using
+  ( _<ᵇᵘⁿ_
+  ; mk<ᵇᵘⁿ
+  ; <ᵇᵘⁿ-from-<ᵇ⁰
+  ; <ᵇᵘⁿ-from-<ᵇ¹
+  ; <ᵇᵘⁿ-from-<ᵇ⁺²
+  ; rank-pow-mono-<ᵇᵘⁿ
   )
