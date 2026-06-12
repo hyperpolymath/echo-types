@@ -8,7 +8,7 @@
 # echo-types
 
 [![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity)](https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/echo-types)
-[![License: MPL-2.0](https://img.shields.io/badge/License-PMPL--1.0-blue.svg)](https://github.com/hyperpolymath/palimpsest-license)
+[![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](LICENSE)
 [![Green Web](https://api.thegreenwebfoundation.org/greencheckimage/github.com)](https://www.thegreenwebfoundation.org/green-web-check/?url=github.com)
 
 Constructive Agda development for echo types as a first-class notion of structured loss:
@@ -446,6 +446,19 @@ Intended proof-use cases include:
 - classification up to equivalence
 - forensic inference from residues
 - refined taxonomies of information loss
+
+Within the hyperpolymath ecosystem, echo-types serves the *foundation*
+role for proof-relevant lossy computation.
+
+Who is this for? (folded from `EXPLAINME.adoc` at the 2026-06-12 README dedup)
+
+- Authors of formally-verified protocols where role projections /
+  privacy collapses / lossy aggregations need typed witnesses for what
+  was retained.
+- Authors of refinement-typed and graded type systems looking for a
+  foundational vocabulary for loss-with-residue.
+- Anyone designing audit / provenance / hash-chain systems who wants a
+  proof-relevant account of what the audit step preserves.
 
 ## Identity Claim and Falsifiability
 

@@ -49,7 +49,7 @@ sceptic might want.
 
 | Prose | `docs/characteristic.adoc`,
 `docs/proof-obligations.md` §"No-section" entries,
-`readme.adoc` §"Characteristic family".
+`README.md` §"Characteristic family".
 
 | Narrowing | None. The family lemmas are clean negative results under
 `--safe --without-K`.
