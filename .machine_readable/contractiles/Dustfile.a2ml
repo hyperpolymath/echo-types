@@ -1,0 +1,76 @@
+# SPDX-License-Identifier: MPL-2.0
+# Dustfile.a2ml — cleanup, hygiene & recovery contract for echo-types
+#
+# Format: TOML-A2ML (parses with tomllib; `#` comments, [section], key = "value")
+#
+# Provenance: the flat-contractile completion of the estate layout
+# (PR #185 supplied Adjustfile/Intentfile/Justfile/Mustfile/Trustfile but
+# no Dustfile). The [[tasks]] entries below PORT the full content of the
+# pre-estate root `contractiles/Dustfile.a2ml` (S-expression form,
+# deleted by PR #185); section shape follows the estate dust reference
+# (nextgen-languages contractiles/dust/Dustfile.a2ml). Added 2026-06-12.
+
+[dustfile]
+version = "1.0.0"
+format = "a2ml"
+repo = "echo-types"
+last-updated = "2026-06-12"
+
+# ============================================================
+# Recovery & rollback tasks (ported from the pre-estate root Dustfile)
+# ============================================================
+
+[[tasks]]
+name = "source-rollback"
+doc = "Revert all source changes to last commit."
+tag = "rollback"
+cmd = "git checkout HEAD -- ."
+
+[[tasks]]
+name = "clean-build"
+doc = "Remove all build artifacts (Agda .agdai files)."
+tag = "clean"
+cmd = "find proofs -name '*.agdai' -delete"
+
+[[tasks]]
+name = "resync-from-template"
+doc = "Re-run scaffold-component.{py,my} to restore drifted boilerplate."
+tag = "scaffold"
+cmd = "echo 'Manual: run scaffold-component for echo-types resync.'"
+
+# ============================================================
+# Cleanup policy
+# ============================================================
+
+[cleanup]
+build-artifacts = "Agda interface files (*.agdai) under proofs/ and tutorial/; never committed (.gitignore); removed by the clean-build task"
+generated-dirs = "_build/ is gitignored (commit 9c00087); safe to delete at any time"
+stale-branch-policy = "session/* and consolidation branches are enumerated and dispositioned (landing / superseded / abandoned) at each rung consolidation, per the CLAUDE.md rung-consolidation policy; bots never delete branches"
+artifact-retention = "not-applicable"
+artifact-retention-reason = "echo-types publishes no build artifacts; the proof suite is re-checked from source on every CI run"
+cache-policy = "CI caches the Agda toolchain + stdlib only; cache invalidation follows .github/workflows/agda.yml"
+
+# ============================================================
+# Hygiene
+# ============================================================
+
+[hygiene]
+proof-hygiene = "agda All.agda + Smoke.agda must exit 0 under --safe --without-K; zero postulates outside the enumerated proof-debt module (docs/proof-debt.md)"
+guardrails = "tools/check-guardrails.sh + scripts/kernel-guard.sh are the repo-native hygiene gates; scripts/check-no-unsafe.sh supplements"
+dead-code-rule = "modules that compile but are not imported by proofs/agda/All.agda are treated as dead code (CLAUDE.md working rules)"
+todo-tracking = "inline TODOs on the ordinal track are slice-scoped and tracked in the obstruction docs (docs/echo-types/buchholz-rank-obstruction.adoc); repo-wide notes go to issues"
+linting = "not-applicable"
+linting-reason = "no general-purpose linter for Agda; the typechecker + guardrail scripts fill the role"
+formatting = "not-applicable"
+formatting-reason = "no enforced Agda formatter; .editorconfig + .gitattributes (LF, .agdai binary) carry the file-hygiene load"
+
+# ============================================================
+# Reversibility
+# ============================================================
+
+[reversibility]
+backup-before-destructive = true
+rollback-mechanism = "git-revert (history is append-only; superseded docs get SUPERSEDED banners rather than deletion, per STATE standing-decision sd-006)"
+retracted-content-policy = "retractions are recorded in docs/retractions.adoc + docs/retracted/ and are never silently resurrected (R-2026-05-18 discipline)"
+data-retention-policy = "not-applicable"
+data-retention-reason = "echo-types holds no runtime data; everything reproducible is derived from source under version control"

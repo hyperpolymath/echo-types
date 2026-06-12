@@ -1,0 +1,62 @@
+# SPDX-License-Identifier: MPL-2.0
+# gitbot-fleet.a2ml — gitbot fleet directives for echo-types.
+# Net-new at the 2026-06-12 governance checkpoint per the estate
+# bot_directives standard.
+
+[metadata]
+repo = "echo-types"
+last-updated = "2026-06-12"
+owner = "hyperpolymath"
+
+[fleet]
+bots = ["rhodibot", "echidnabot", "sustainabot", "glambot", "seambot", "finishbot"]
+
+[fleet.roles]
+rhodibot = "git operations"
+echidnabot = "code quality"
+sustainabot = "dependency updates"
+glambot = "documentation"
+seambot = "integration"
+finishbot = "task completion"
+
+[branch-policy]
+working-branch-pattern = "<bot>/<topic>"     # human sessions use session/<topic>; bots use their own prefix
+draft-PRs-only = true
+ci-green-before-merge = true                 # repo-level discipline: admin-merge-before-CI-green is a recorded anti-pattern (CLAUDE.md, PR #133 note)
+never-touch = [
+  ".claude/CLAUDE.md",
+  "CLAUDE.md",
+  "proofs/",
+  "tutorial/",
+  "*.agda",
+  ".github/workflows/agda.yml",
+  "docs/retracted/",
+]
+
+# ============================================================
+# Per-bot constraints where this repo gives specific reason;
+# defaults apply otherwise.
+# ============================================================
+
+[per-bot.rhodibot]
+deny = ["force-push to main", "branch deletion", "history rewrites"]
+note = "History is append-only here; superseded docs get SUPERSEDED banners, reverts are git-revert."
+
+[per-bot.echidnabot]
+deny = ["editing proof code", "introducing postulates", "weakening --safe --without-K"]
+note = "Code quality in this repo is gated by the Agda typechecker + scripts/kernel-guard.sh + tools/check-guardrails.sh; the only sanctioned postulates are the enumerated proof-debt module (docs/proof-debt.md)."
+
+[per-bot.sustainabot]
+allow = ["GitHub Actions group bumps (precedent: PRs #179 and the codeql-action bump)"]
+deny = ["bumping the Agda or agda-stdlib pins without a green full-suite run"]
+note = "CI installs agda-stdlib v2.3 (see .github/workflows/agda.yml); the proof suite is the compatibility gate."
+
+[per-bot.glambot]
+deny = ["resurrecting anything under docs/retracted/", "moving claims past the R-2026-05-18 narrowings"]
+note = "Docs are AsciiDoc by convention (README.md is the GitHub-render exception and the canonical README after the 2026-06-12 dedup). Honest labels (Landed/Partial/Open) per CLAUDE.md."
+
+[per-bot.seambot]
+note = "Cross-repo bridge edits follow docs/echo-types/cross-repo-bridge-status.md; bridge stubs are NARROW by design (META adr-011) — do not widen scope mechanically."
+
+[per-bot.finishbot]
+note = "Task completion must respect the repo's gate ledger (docs/echo-types/earn-back-plan.adoc, roadmap-gates.adoc); gates pass only with explicit ledger entries, never silently."

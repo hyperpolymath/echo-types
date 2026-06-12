@@ -1,0 +1,100 @@
+# SPDX-License-Identifier: MPL-2.0
+# Bustfile.a2ml — breakage contract for echo-types: what counts as a
+# busted state, how it is detected, and how to respond.
+#
+# Format: TOML-A2ML (parses with tomllib; `#` comments, [section], key = "value")
+#
+# Provenance: the flat-contractile completion of the estate layout
+# (PR #185 supplied Adjustfile/Intentfile/Justfile/Mustfile/Trustfile but
+# no Bustfile, and no nested bust/ contractile ever existed in this repo
+# or its visible siblings). Written fully from repo-true obligations on
+# 2026-06-12: the busted-state definitions, detection commands, and
+# response ladder below are the repo's own existing gates (Agda suite,
+# kernel-guard, guardrail scripts, CI workflows), not new policy.
+
+[bustfile]
+version = "1.0.0"
+format = "a2ml"
+repo = "echo-types"
+last-updated = "2026-06-12"
+
+# ============================================================
+# Busted-state definition (any one of these means the repo is busted)
+# ============================================================
+
+[definition]
+busted-states = [
+  "proofs/agda/All.agda fails to typecheck under --safe --without-K",
+  "proofs/agda/Smoke.agda fails to typecheck (a pinned headline theorem broke)",
+  "a postulate appears outside the enumerated proof-debt module (docs/proof-debt.md: proofs/agda/EchoImageFactorizationPropPostulated.agda)",
+  "scripts/kernel-guard.sh fails (kernel/derived classification drift)",
+  "tools/check-guardrails.sh fails (guardrail policy violation)",
+  "a retracted claim from docs/retractions.adoc reappears in canonical docs",
+  "main is red on the agda / governance / hypatia-scan workflows",
+]
+
+# ============================================================
+# Detection (run these to decide whether the repo is busted)
+# ============================================================
+
+[[detection]]
+name = "full-suite"
+doc = "The verified suite: every module imported by All.agda typechecks."
+run = "agda -i proofs/agda proofs/agda/All.agda"
+severity = "critical"
+
+[[detection]]
+name = "smoke-pins"
+doc = "Every headline theorem pinned via `using` clauses still exists."
+run = "agda -i proofs/agda proofs/agda/Smoke.agda"
+severity = "critical"
+
+[[detection]]
+name = "kernel-guard"
+doc = "Kernel-vs-derived module classification is consistent (docs/echo-types/echo-kernel-note.adoc)."
+run = "scripts/kernel-guard.sh"
+severity = "high"
+
+[[detection]]
+name = "guardrails"
+doc = "Repo guardrail checks (incl. comment-stripping postulate check, the real postulate gate)."
+run = "tools/check-guardrails.sh"
+severity = "high"
+
+[[detection]]
+name = "no-unsafe"
+doc = "No unsafe escape hatches outside the documented exceptions."
+run = "scripts/check-no-unsafe.sh"
+severity = "high"
+
+# ============================================================
+# Response ladder (in order; stop at the first step that restores green)
+# ============================================================
+
+[response]
+step-1 = "Do not merge anything while a critical detection fails on main; CI green precedes merge (admin-merges before CI green are a known anti-pattern in this repo's history — see CLAUDE.md PR #133 note)."
+step-2 = "If the breakage is uncommitted local work: run the Dustfile source-rollback task (git checkout HEAD -- .) and clean-build, then re-run detection."
+step-3 = "If the breakage landed on a branch: fix forward on that branch or close it as superseded at the next rung consolidation; never force-push over another session's work without re-fetching first."
+step-4 = "If the breakage landed on main: git revert the offending commit (history is append-only; no force-push to main)."
+step-5 = "Record the incident: open an issue with the failing command + output; if a proof rung was lost, note it in the session ledger per the CLAUDE.md rung-consolidation policy."
+
+[escalation]
+owner = "hyperpolymath"
+contact = "MAINTAINERS.adoc"
+bot-rule = "automated agents open an issue and stop; they do not auto-revert main, do not auto-merge fixes, and do not spam PR comments"
+
+# ============================================================
+# Known exceptions (NOT busted states; do not 'fix' these)
+# ============================================================
+
+[[known-exceptions]]
+name = "proof-debt-postulates"
+detail = "The four propositional-truncation postulates in proofs/agda/EchoImageFactorizationPropPostulated.agda are enumerated proof debt under Disposition (c) NECESSARY AXIOM (docs/proof-debt.md, PR #172). The module is isolated, guardrail-exempt by design, and not imported by All.agda or Smoke.agda."
+
+[[known-exceptions]]
+name = "hypatia-verified-false-positives"
+detail = "The entries in .hypatia-ignore (agda_postulate on Smoke.agda comments; the SVG xmlns http:// constant in tools/banner/build-banner.mjs) are verified false positives with in-file rationale; see bot_directives/hypatia.a2ml."
+
+[[known-exceptions]]
+name = "ordinal-track-open-gates"
+detail = "Ordinal-track Gate 1 (tail-rank-equality discharge, CHECKED-REFUTED unblock routes per PR #146) and Gate 3 (Path-4+ extensions) are documented OPEN work, not breakage. See STATE [blockers]."
