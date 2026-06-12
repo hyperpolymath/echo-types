@@ -8,6 +8,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added (2026-06-12)
+
+- *Cross-repo typesystem-integration sweep recorded in
+  `docs/bridges/cross-repo-bridge-status.md`.* echo-types is now
+  integrated into the hyperpolymath type systems (all merged to the
+  consumers' `main`), with four new ledger rows:
+  - **nextgen-typing** — `EchoTyping.agda` imports `EchoLinear`/`Echo`:
+    AffineScript `linear ⊑ affine` subtyping IS `weaken` (irreversible,
+    distinction-forgetting, proof-irrelevant at affine); refinement
+    erasure IS a fiber. Content bridge, `agda --safe` 3/3.
+  - **phronesis** — `PhronesisEcho.agda`: an ethical verdict's
+    provenance IS `Echo verdict v`. Content bridge.
+  - **nextgen-languages/kitchenspeak** — `EchoBridge.agda` status
+    upgraded hand-verified → machine-checked against the real `Echo`.
+  - **invariant-path** — Rust application example
+    (`classify_candidate` non-injective; retained candidate + `losses`
+    IS the echo). Citation-level.
+  No echo-types proof source changed; this is a documentation/ledger
+  sweep recording downstream adoption.
+
 ### Added (2026-05-30)
 
 - *Lane 3 ordinal track — Slice 3+4 Route A 6-PR arc + doc sweep.*
