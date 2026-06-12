@@ -1,177 +1,395 @@
-;;; ============================================================
-;;; META.a2ml — echo-types architecture decisions from EI-2
-;;; ============================================================
-;;;
-;;; Format: meta-a2ml (S-expression, SRFI-30 conventions)
-;;; Schema reference:
-;;;   github.com/hyperpolymath/standards/blob/main/meta-a2ml/spec/abnf/meta.abnf
-;;;
-;;; last-updated: 2026-06-05
-;;;
-;;; SPDX-License-Identifier: MPL-2.0
-;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+#
+# META.a2ml — echo-types architecture decisions
+#
+# Format: TOML-A2ML (estate convention; `#` comments, [section], key = "value")
+#
+# Provenance: converted 2026-06-12 from the Guile S-expression body
+# `(define-module (echo-types meta) ...)` that previously occupied this
+# file (S-expr last-updated: 2026-06-05). Faithful translation: all
+# eleven ADRs, the development practices, and the design rationale are
+# preserved in full. The original S-expr schema reference was:
+#   https://github.com/hyperpolymath/standards/blob/main/meta-a2ml/spec/abnf/meta.abnf
 
-(define-module (echo-types meta)
-  #:export (architecture-decisions
-            development-practices
-            design-rationale))
+[metadata]
+project = "echo-types"
+last-updated = "2026-06-12"
 
-;;; ============================================================
-;;; Architecture Decision Records
-;;; ============================================================
+# ============================================================
+# Architecture Decision Records
+# ============================================================
 
-(define architecture-decisions
-  '((adr-001
-     (title . "Distinctness load rests on truncation + 2-cell arguments")
-     (status . accepted)
-     (date . "2026-04-29")
-     (context . "EI-2 investigation across seven data points found the integration recipe does not carry substantive simultaneous cross-axis content. The non-loss-only criterion is necessary but not sufficient; even Choreo × Choreo (the only available NLO self-pairing) degenerates to coordinate-product commutation.")
-     (decision . "Gate-1's distinctness claim narrows: the recipe is organising vocabulary; the load-bearing distinctness arguments are (1) truncation (echo-not-prop family) and (2) 2-cell (Σ-over-preimages-shaped natural 2-cells in neighbour frameworks).")
-     (consequences . "Five-document cascade: gate-1, gate-2-handoff, roadmap-gates, adjacency README, top-level README. Recipe extension parked for v0.2+.")
-     (supersedes . none))
+[[architecture-decisions]]
+id = "adr-001"
+title = "Distinctness load rests on truncation + 2-cell arguments"
+status = "accepted"
+date = "2026-04-29"
+context = """
+EI-2 investigation across seven data points found the integration recipe
+does not carry substantive simultaneous cross-axis content. The
+non-loss-only criterion is necessary but not sufficient; even
+Choreo × Choreo (the only available NLO self-pairing) degenerates to
+coordinate-product commutation.
+"""
+decision = """
+Gate-1's distinctness claim narrows: the recipe is organising vocabulary;
+the load-bearing distinctness arguments are (1) truncation (echo-not-prop
+family) and (2) 2-cell (Σ-over-preimages-shaped natural 2-cells in
+neighbour frameworks).
+"""
+consequences = "Five-document cascade: gate-1, gate-2-handoff, roadmap-gates, adjacency README, top-level README. Recipe extension parked for v0.2+."
+supersedes = "none"
 
-    (adr-002
-     (title . "Drop READING 2 as the EI-2 closure framing")
-     (status . accepted)
-     (date . "2026-04-29")
-     (context . "Two candidate readings for EI-2 closure were drafted (READING 1: weaken gate-1; READING 2: NLO-as-recipe-precondition). The prior session's RoleRole.agda finding established that NLO is necessary but not sufficient, refuting READING 2 as drafted.")
-     (decision . "Adopt the stronger-negative reading: distinctness rerouted to truncation + 2-cell, recipe explicitly removed from distinctness load. Both originally-drafted reading patches are kept as historical record with SUPERSEDED banners.")
-     (consequences . "EI-2 terminates negatively via PATH B (partial formalisation accepted as sufficient). Three legacy doc files are SUPERSEDED-banner'd, not deleted.")
-     (supersedes . none))
+[[architecture-decisions]]
+id = "adr-002"
+title = "Drop READING 2 as the EI-2 closure framing"
+status = "accepted"
+date = "2026-04-29"
+context = """
+Two candidate readings for EI-2 closure were drafted (READING 1: weaken
+gate-1; READING 2: NLO-as-recipe-precondition). The prior session's
+RoleRole.agda finding established that NLO is necessary but not
+sufficient, refuting READING 2 as drafted.
+"""
+decision = """
+Adopt the stronger-negative reading: distinctness rerouted to truncation
++ 2-cell, recipe explicitly removed from distinctness load. Both
+originally-drafted reading patches are kept as historical record with
+SUPERSEDED banners.
+"""
+consequences = "EI-2 terminates negatively via PATH B (partial formalisation accepted as sufficient). Three legacy doc files are SUPERSEDED-banner'd, not deleted."
+supersedes = "none"
 
-    (adr-003
-     (title . "Accept partial formalisation (PATH B) for EI-2 closure")
-     (status . accepted)
-     (date . "2026-04-29")
-     (context . "The full 2D iff theorem (recipe-non-triviality ↔ NLO criterion) is not formalisable in safe Agda without postulates: decidable equality on decoration types, F-collapses axioms, extensionality on cell actions.")
-     (decision . "Accept the per-axis halves (proved in RecipeTheorem.agda) plus the concrete construction halves (proved in RecipeNonTriviality.agda) plus the seven empirical data points as sufficient evidence for termination. Document the formal generic theorem as future work, not as a blocker for EI-2 closure.")
-     (consequences . "EI-2 closes; the recipe-non-triviality theorem in its full generic form is parked. Gate-1's distinctness narrowing does not depend on the parked theorem since the negative finding removes the recipe from the distinctness load entirely.")
-     (supersedes . none))
+[[architecture-decisions]]
+id = "adr-003"
+title = "Accept partial formalisation (PATH B) for EI-2 closure"
+status = "accepted"
+date = "2026-04-29"
+context = """
+The full 2D iff theorem (recipe-non-triviality ↔ NLO criterion) is not
+formalisable in safe Agda without postulates: decidable equality on
+decoration types, F-collapses axioms, extensionality on cell actions.
+"""
+decision = """
+Accept the per-axis halves (proved in RecipeTheorem.agda) plus the
+concrete construction halves (proved in RecipeNonTriviality.agda) plus
+the seven empirical data points as sufficient evidence for termination.
+Document the formal generic theorem as future work, not as a blocker for
+EI-2 closure.
+"""
+consequences = """
+EI-2 closes; the recipe-non-triviality theorem in its full generic form
+is parked. Gate-1's distinctness narrowing does not depend on the parked
+theorem since the negative finding removes the recipe from the
+distinctness load entirely.
+"""
+supersedes = "none"
 
-    (adr-004
-     (title . "Recipe extension scope: v0.2+, not v0.1.x")
-     (status . accepted)
-     (date . "2026-04-29")
-     (context . "The positive-termination route from EI-2 — extending the recipe to allow coupled state across axes or multiple live positions per axis — is conceptually distinct from the EI-2 question (does the existing recipe with the existing five axes carry substantive content?).")
-     (decision . "Park recipe extension as a separate v0.2+ work item. Do not file it as an EI-2 reopening or as unfinished EI-2 business. When v0.2 work begins, file as a new question (e.g., EI-3).")
-     (consequences . "EI-2 stays terminated. Future investigators cannot reopen it under the framing 'EI-2 wasn't really finished, the recipe just needs extending'.")
-     (supersedes . none))
+[[architecture-decisions]]
+id = "adr-004"
+title = "Recipe extension scope: v0.2+, not v0.1.x"
+status = "accepted"
+date = "2026-04-29"
+context = """
+The positive-termination route from EI-2 — extending the recipe to allow
+coupled state across axes or multiple live positions per axis — is
+conceptually distinct from the EI-2 question (does the existing recipe
+with the existing five axes carry substantive content?).
+"""
+decision = """
+Park recipe extension as a separate v0.2+ work item. Do not file it as an
+EI-2 reopening or as unfinished EI-2 business. When v0.2 work begins,
+file as a new question (e.g., EI-3).
+"""
+consequences = "EI-2 stays terminated. Future investigators cannot reopen it under the framing 'EI-2 wasn't really finished, the recipe just needs extending'."
+supersedes = "none"
 
-    (adr-005
-     (title . "Forge workflow: GitHub canonical, mirror outward")
-     (status . accepted)
-     (date . "2026-04-28")
-     (context . "User has a static stylistic preference for GitLab > GitHub but the actual git workflow has GitHub as canonical with hub-and-spoke mirroring outward. The static preference does not apply to git operations specifically.")
-     (decision . "echo-types canonical at github.com/hyperpolymath/echo-types; mirror to GitLab and Codeberg via .github/workflows/mirror.yml. Tokens configured per MIRROR_SETUP.adoc; missing-token cases silently skip rather than fail.")
-     (consequences . "Hub-and-spoke pattern; PRs and Issues live on GitHub; mirrors are read-only.")
-     (supersedes . none))
+[[architecture-decisions]]
+id = "adr-005"
+title = "Forge workflow: GitHub canonical, mirror outward"
+status = "accepted"
+date = "2026-04-28"
+context = """
+User has a static stylistic preference for GitLab > GitHub but the actual
+git workflow has GitHub as canonical with hub-and-spoke mirroring
+outward. The static preference does not apply to git operations
+specifically.
+"""
+decision = """
+echo-types canonical at github.com/hyperpolymath/echo-types; mirror to
+GitLab and Codeberg via .github/workflows/mirror.yml. Tokens configured
+per MIRROR_SETUP.adoc; missing-token cases silently skip rather than fail.
+"""
+consequences = "Hub-and-spoke pattern; PRs and Issues live on GitHub; mirrors are read-only."
+supersedes = "none"
 
-    (adr-006
-     (title . "Cross-platform builds: Linux primary, Windows secondary")
-     (status . accepted)
-     (date . "2026-04-28")
-     (context . "User works across two machines: Fedora Kinoite (primary, Nushell) and a Windows machine for travel.")
-     (decision . "Build instructions are path-agnostic; line endings normalised via .gitattributes (LF for Agda/AsciiDoc/YAML, .agdai marked binary). Cross-platform considerations apply throughout.")
-     (consequences . "Path-agnostic build instructions are required, not optional, for any new tooling.")
-     (supersedes . none))
+[[architecture-decisions]]
+id = "adr-006"
+title = "Cross-platform builds: Linux primary, Windows secondary"
+status = "accepted"
+date = "2026-04-28"
+context = "User works across two machines: Fedora Kinoite (primary, Nushell) and a Windows machine for travel."
+decision = """
+Build instructions are path-agnostic; line endings normalised via
+.gitattributes (LF for Agda/AsciiDoc/YAML, .agdai marked binary).
+Cross-platform considerations apply throughout.
+"""
+consequences = "Path-agnostic build instructions are required, not optional, for any new tooling."
+supersedes = "none"
 
-    (adr-007
-     (title . "F1 earn-back via monoid-graded iterated-residue construction")
-     (status . accepted)
-     (date . "2026-05-20")
-     (context . "R-2026-05-18 retracted the graded-comonad claim about EchoGraded — the structure was a thin-poset reindexing with no nested family, no monoid multiplication, no genuine δ. Pillar F gate F1 (docs/echo-types/earn-back-plan.adoc §F1) asked whether ANY genuine graded comonad with Echo as the grade-unit object could be mechanised under --safe --without-K with zero postulates.")
-     (decision . "The candidate construction passes: proofs/agda/EchoGradedComonadF1.agda ships a monoid-graded iterated-residue comonad at the grade monoid (ℕ, +, 0) with D 0 A = A; D (suc r) A = R (D r A) where R X = X × Bool (an informative residue layer, not ⊤). All three graded-comonad laws (gc-counit-l, gc-counit-r, gc-coassoc) typecheck under --safe --without-K with zero postulates; gc-coassoc closes via the predicted δ-naturality-over-R factoring (δ-suc + subst-D-suc). The separating witness D2-nontrivial certifies D r is not collapsing to ⊤ / a prop.")
-     (consequences . "F1 PASSED; the graded-comonad claim is earned back FOR THIS WITNESS ONLY. EchoGraded itself remains a thin-poset reindexing modality per R-2026-05-18 — F1 enters as an *additional* mechanised contribution beside EchoGraded, not as a reinstatement of it. Paper title and central thesis (Echo as a reindexing modality) stand unchanged. Unblocks F3 (independent second comonad model). Retraction follow-up F-2026-05-20a appended to docs/retractions.adoc.")
-     (supersedes . none))
+[[architecture-decisions]]
+id = "adr-007"
+title = "F1 earn-back via monoid-graded iterated-residue construction"
+status = "accepted"
+date = "2026-05-20"
+context = """
+R-2026-05-18 retracted the graded-comonad claim about EchoGraded — the
+structure was a thin-poset reindexing with no nested family, no monoid
+multiplication, no genuine δ. Pillar F gate F1
+(docs/echo-types/earn-back-plan.adoc §F1) asked whether ANY genuine
+graded comonad with Echo as the grade-unit object could be mechanised
+under --safe --without-K with zero postulates.
+"""
+decision = """
+The candidate construction passes: proofs/agda/EchoGradedComonadF1.agda
+ships a monoid-graded iterated-residue comonad at the grade monoid
+(ℕ, +, 0) with D 0 A = A; D (suc r) A = R (D r A) where R X = X × Bool
+(an informative residue layer, not ⊤). All three graded-comonad laws
+(gc-counit-l, gc-counit-r, gc-coassoc) typecheck under --safe --without-K
+with zero postulates; gc-coassoc closes via the predicted
+δ-naturality-over-R factoring (δ-suc + subst-D-suc). The separating
+witness D2-nontrivial certifies D r is not collapsing to ⊤ / a prop.
+"""
+consequences = """
+F1 PASSED; the graded-comonad claim is earned back FOR THIS WITNESS ONLY.
+EchoGraded itself remains a thin-poset reindexing modality per
+R-2026-05-18 — F1 enters as an *additional* mechanised contribution
+beside EchoGraded, not as a reinstatement of it. Paper title and central
+thesis (Echo as a reindexing modality) stand unchanged. Unblocks F3
+(independent second comonad model). Retraction follow-up F-2026-05-20a
+appended to docs/retractions.adoc.
+"""
+supersedes = "none"
 
-    (adr-008
-     (title . "F3 earn-back via two non-isomorphic-grade-monoid instances of an abstract interface")
-     (status . accepted)
-     (date . "2026-05-20")
-     (context . "F1 (adr-007) earned back the existence of a graded comonad with Echo as grade-unit object. Gate F3 (docs/echo-types/earn-back-plan.adoc §F3) asked whether the construction is genuinely model-independent — instantiable at non-isomorphic grade monoids without a single hypothesis (no ⊑-prop-equivalent field) baking in the result.")
-     (decision . "EchoGradedComonadInterface.GradedComonadStructure is an abstract record packaging the F1 signature (grade monoid + monoid laws + graded functor + functor laws + counit + nested δ + the three comonad laws stated against subst along the monoid's propositional identities). The record carries NO ⊑-prop-equivalent field — only structure, monoid laws, and comonad laws. Two non-isomorphic-grade-monoid instances inhabit it: EchoGradedComonadInstance1.nat-instance at the commutative monoid (ℕ, +, 0); EchoGradedComonadInstance2.list-instance at the non-commutative free monoid (List Tag, ++, []) over a two-element Tag with per-element residue layers R smol A = A × Bool and R big A = A × ℕ. Non-isomorphism is constructively witnessed by tag-list-non-commutative.")
-     (consequences . "F3 PASSED; the two-models claim is earned back FOR THE F1-STYLE GRADED-COMONAD WITNESS. It does NOT reinstate the older EchoRelModel/GCLaws two-models claim retracted at R-2026-05-18 finding 3 — that situation (same grade poset, ⊑-prop baked in as a field, rel-model = set-model × ⊤, agreement by refl) is unchanged. The two earn-backs are about different abstract interfaces and are not interconvertible. Retraction follow-up F-2026-05-20b appended to docs/retractions.adoc. Pillar F earn-back programme now CLOSED: F4 + F2 (2026-05-18), F1 + F3 (2026-05-20).")
-     (supersedes . none))
+[[architecture-decisions]]
+id = "adr-008"
+title = "F3 earn-back via two non-isomorphic-grade-monoid instances of an abstract interface"
+status = "accepted"
+date = "2026-05-20"
+context = """
+F1 (adr-007) earned back the existence of a graded comonad with Echo as
+grade-unit object. Gate F3 (docs/echo-types/earn-back-plan.adoc §F3)
+asked whether the construction is genuinely model-independent —
+instantiable at non-isomorphic grade monoids without a single hypothesis
+(no ⊑-prop-equivalent field) baking in the result.
+"""
+decision = """
+EchoGradedComonadInterface.GradedComonadStructure is an abstract record
+packaging the F1 signature (grade monoid + monoid laws + graded functor
++ functor laws + counit + nested δ + the three comonad laws stated
+against subst along the monoid's propositional identities). The record
+carries NO ⊑-prop-equivalent field — only structure, monoid laws, and
+comonad laws. Two non-isomorphic-grade-monoid instances inhabit it:
+EchoGradedComonadInstance1.nat-instance at the commutative monoid
+(ℕ, +, 0); EchoGradedComonadInstance2.list-instance at the
+non-commutative free monoid (List Tag, ++, []) over a two-element Tag
+with per-element residue layers R smol A = A × Bool and R big A = A × ℕ.
+Non-isomorphism is constructively witnessed by tag-list-non-commutative.
+"""
+consequences = """
+F3 PASSED; the two-models claim is earned back FOR THE F1-STYLE
+GRADED-COMONAD WITNESS. It does NOT reinstate the older
+EchoRelModel/GCLaws two-models claim retracted at R-2026-05-18 finding 3
+— that situation (same grade poset, ⊑-prop baked in as a field,
+rel-model = set-model × ⊤, agreement by refl) is unchanged. The two
+earn-backs are about different abstract interfaces and are not
+interconvertible. Retraction follow-up F-2026-05-20b appended to
+docs/retractions.adoc. Pillar F earn-back programme now CLOSED:
+F4 + F2 (2026-05-18), F1 + F3 (2026-05-20).
+"""
+supersedes = "none"
 
-    (adr-009
-     (title . "Retraction-discipline succeeded: R-2026-05-18 reframing converted into four earn-back gate passes")
-     (status . accepted)
-     (date . "2026-05-20")
-     (context . "R-2026-05-18 retracted five claims and reframed the project around what the Agda actually shows (thin-poset reindexing modality, not graded comonad; pointwise mediator, not terminal cone; carrier-parametricity, not model-independence; postulate-free build as evidence, not conservativity metatheorem; no funext anywhere, not 'quarantined'). The earn-back plan in docs/echo-types/earn-back-plan.adoc was the falsifiable program for converting the retracted claims back into theorems — or confirming, on the project's own gate discipline, that they cannot be earned at their original strength.")
-     (decision . "All four gates have now passed at the strictly-bounded strength the earn-back plan asked for: F4 (terminal-cone UP as a function of an explicit funext parameter, never a postulate); F2 (genuine second model of the bare Echo functor on a non-graph StepND relation); F1 (genuine graded comonad on iterated-residue carrier with Echo as grade-unit object); F3 (the F1 construction is instantiable at non-isomorphic grade monoids). Each is exactly as strong as the gate specified; nothing is overclaimed. The conservativity metatheorem retraction (R-2026-05-18 finding 5) stays retracted with no gate attempting to earn it back — that one was a meta-statement over all propositions, not discharged by typechecking. The 'not two models for EchoGraded/GCLaws' finding 3 also stays retracted; the F3 earn-back is about the different F1 interface.")
-     (consequences . "The retraction discipline is validated AS A METHODOLOGY: a retraction is not a failure but the mechanism by which claims become falsifiable. Four of five retracted claims were earned back at honest strength, one stays retracted, none was silently re-inflated. paper.adoc / types-abstract.adoc / conservativity.adoc are NOT moved by this ADR — those documents are about EchoGraded's thin-poset structure, which the F1+F3 side-construction does not change. Whether to add a bounded 'new contribution' paragraph is owner-gated.")
-     (supersedes . none))
+[[architecture-decisions]]
+id = "adr-009"
+title = "Retraction-discipline succeeded: R-2026-05-18 reframing converted into four earn-back gate passes"
+status = "accepted"
+date = "2026-05-20"
+context = """
+R-2026-05-18 retracted five claims and reframed the project around what
+the Agda actually shows (thin-poset reindexing modality, not graded
+comonad; pointwise mediator, not terminal cone; carrier-parametricity,
+not model-independence; postulate-free build as evidence, not
+conservativity metatheorem; no funext anywhere, not 'quarantined'). The
+earn-back plan in docs/echo-types/earn-back-plan.adoc was the falsifiable
+program for converting the retracted claims back into theorems — or
+confirming, on the project's own gate discipline, that they cannot be
+earned at their original strength.
+"""
+decision = """
+All four gates have now passed at the strictly-bounded strength the
+earn-back plan asked for: F4 (terminal-cone UP as a function of an
+explicit funext parameter, never a postulate); F2 (genuine second model
+of the bare Echo functor on a non-graph StepND relation); F1 (genuine
+graded comonad on iterated-residue carrier with Echo as grade-unit
+object); F3 (the F1 construction is instantiable at non-isomorphic grade
+monoids). Each is exactly as strong as the gate specified; nothing is
+overclaimed. The conservativity metatheorem retraction (R-2026-05-18
+finding 5) stays retracted with no gate attempting to earn it back —
+that one was a meta-statement over all propositions, not discharged by
+typechecking. The 'not two models for EchoGraded/GCLaws' finding 3 also
+stays retracted; the F3 earn-back is about the different F1 interface.
+"""
+consequences = """
+The retraction discipline is validated AS A METHODOLOGY: a retraction is
+not a failure but the mechanism by which claims become falsifiable. Four
+of five retracted claims were earned back at honest strength, one stays
+retracted, none was silently re-inflated. paper.adoc / types-abstract.adoc
+/ conservativity.adoc are NOT moved by this ADR — those documents are
+about EchoGraded's thin-poset structure, which the F1+F3
+side-construction does not change. Whether to add a bounded 'new
+contribution' paragraph is owner-gated.
+"""
+supersedes = "none"
 
-    (adr-010
-     (title . "Ordinal-track well-foundedness via rank-embedding transport")
-     (status . accepted)
-     (date . "2026-05-30")
-     (context . "Lane 3 (Buchholz/Ordinal) needed well-foundedness of the rank-mono union relation _<ᵇᵘ_ (= _<ᵇ¹_ ⊎ _<ᵇ⁺²_) under the WfCNF restriction. Proving WellFounded directly on a Buchholz term relation is hard; the unbudgeted global WF for the unrestricted surface route remains genuinely out of reach under --safe --without-K.")
-     (decision . "Derive WellFounded _<ᵇᵘ_ by TRANSPORTING well-foundedness along the rank embedding rank-pow : BT → Ord, rather than by direct structural well-founded recursion. RankMonoUnionWF.wf-<ᵇᵘ composes stdlib's Induction.WellFounded Subrelation.wellFounded + On.wellFounded against wf-<′ (well-foundedness of the Brouwer-ordinal order _<′_). The union umbrella RankMonoUnion._<ᵇᵘ_ is built from source-rule extensions via Sum + [_,_] mediator (PR #168) so that new source-rule extensions ship as separate modules and union in with two mechanical edits, with the WfCNF wrap (RankMonoUnionWfCNF._<ᵇᵘⁿ_, PR #169) propagating automatically.")
-     (consequences . "Gate 2 (well-foundedness of the union) CLOSED in PR #170 under --safe --without-K with zero new postulates. Gate 1 (tail-rank-equality discharge for the cross-head rank-equal case) stays OPEN — a structural blocker whose two pre-identified unblock routes were CHECKED-REFUTED in PR #146. Gate 3 (further source-rule extensions, Path-4+) stays OPEN but mechanical via the documented union recipe. The rank-embedding transport is the architectural pattern future source-rule extensions inherit.")
-     (modules . ("proofs/agda/Ordinal/Buchholz/RankMonoUnion.agda"
-                 "proofs/agda/Ordinal/Buchholz/RankMonoUnionWfCNF.agda"
-                 "proofs/agda/Ordinal/Buchholz/RankMonoUnionWF.agda"))
-     (supersedes . none))
+[[architecture-decisions]]
+id = "adr-010"
+title = "Ordinal-track well-foundedness via rank-embedding transport"
+status = "accepted"
+date = "2026-05-30"
+context = """
+Lane 3 (Buchholz/Ordinal) needed well-foundedness of the rank-mono union
+relation _<ᵇᵘ_ (= _<ᵇ¹_ ⊎ _<ᵇ⁺²_) under the WfCNF restriction. Proving
+WellFounded directly on a Buchholz term relation is hard; the unbudgeted
+global WF for the unrestricted surface route remains genuinely out of
+reach under --safe --without-K.
+"""
+decision = """
+Derive WellFounded _<ᵇᵘ_ by TRANSPORTING well-foundedness along the rank
+embedding rank-pow : BT → Ord, rather than by direct structural
+well-founded recursion. RankMonoUnionWF.wf-<ᵇᵘ composes stdlib's
+Induction.WellFounded Subrelation.wellFounded + On.wellFounded against
+wf-<′ (well-foundedness of the Brouwer-ordinal order _<′_). The union
+umbrella RankMonoUnion._<ᵇᵘ_ is built from source-rule extensions via
+Sum + [_,_] mediator (PR #168) so that new source-rule extensions ship
+as separate modules and union in with two mechanical edits, with the
+WfCNF wrap (RankMonoUnionWfCNF._<ᵇᵘⁿ_, PR #169) propagating automatically.
+"""
+consequences = """
+Gate 2 (well-foundedness of the union) CLOSED in PR #170 under --safe
+--without-K with zero new postulates. Gate 1 (tail-rank-equality
+discharge for the cross-head rank-equal case) stays OPEN — a structural
+blocker whose two pre-identified unblock routes were CHECKED-REFUTED in
+PR #146. Gate 3 (further source-rule extensions, Path-4+) stays OPEN but
+mechanical via the documented union recipe. The rank-embedding transport
+is the architectural pattern future source-rule extensions inherit.
+"""
+modules = [
+  "proofs/agda/Ordinal/Buchholz/RankMonoUnion.agda",
+  "proofs/agda/Ordinal/Buchholz/RankMonoUnionWfCNF.agda",
+  "proofs/agda/Ordinal/Buchholz/RankMonoUnionWF.agda",
+]
+supersedes = "none"
 
-    (adr-011
-     (title . "echo↔ephapax cross-repo bridge as a NARROW definitional stub")
-     (status . accepted)
-     (date . "2026-05-30")
-     (context . "The hyperpolymath ecosystem wanted a named correspondence between echo-types' L3 layer (weaken : LEcho linear → LEcho affine; no-section-collapse-to-residue) and ephapax-affine's L3 layer. A full mechanised bridge across all of ephapax-affine's layers (L1/L2/L4) would be a large, speculative undertaking.")
-     (decision . "Ship proofs/agda/EchoEphapaxBridge.agda as a NARROW stub: two definitional refl-renames plus a docstring catalogue (ephapax-L3-weaken, ephapax-L3-no-section-collapse). Honest scope is L3 ONLY; ephapax-affine itself and L1/L2/L4 are explicitly NOT mirrored. Package layout documented in docs/bridges/EchoBridges.md.")
-     (consequences . "Closes echo-types#126. Establishes the bridge naming convention without overclaiming a deep correspondence. Extending to further ephapax layers is separate future work, not unfinished bridge business. Landed across PRs #161/#162/#163.")
-     (module . "proofs/agda/EchoEphapaxBridge.agda")
-     (supersedes . none))))
+[[architecture-decisions]]
+id = "adr-011"
+title = "echo↔ephapax cross-repo bridge as a NARROW definitional stub"
+status = "accepted"
+date = "2026-05-30"
+context = """
+The hyperpolymath ecosystem wanted a named correspondence between
+echo-types' L3 layer (weaken : LEcho linear → LEcho affine;
+no-section-collapse-to-residue) and ephapax-affine's L3 layer. A full
+mechanised bridge across all of ephapax-affine's layers (L1/L2/L4) would
+be a large, speculative undertaking.
+"""
+decision = """
+Ship proofs/agda/EchoEphapaxBridge.agda as a NARROW stub: two
+definitional refl-renames plus a docstring catalogue (ephapax-L3-weaken,
+ephapax-L3-no-section-collapse). Honest scope is L3 ONLY; ephapax-affine
+itself and L1/L2/L4 are explicitly NOT mirrored. Package layout
+documented in docs/bridges/EchoBridges.md.
+"""
+consequences = """
+Closes echo-types#126. Establishes the bridge naming convention without
+overclaiming a deep correspondence. Extending to further ephapax layers
+is separate future work, not unfinished bridge business. Landed across
+PRs #161/#162/#163.
+"""
+module = "proofs/agda/EchoEphapaxBridge.agda"
+supersedes = "none"
 
-;;; ============================================================
-;;; Development practices (relevant subset)
-;;; ============================================================
+# ============================================================
+# Development practices (relevant subset)
+# ============================================================
 
-(define development-practices
-  '((code-style
-     (agda . "--safe --without-K mandatory; no postulates")
-     (asciidoc . "narrow-true claims preferred over broader-easy; honest qualification visible in source")
-     (commit-messages . "structured per INTEGRATION_COMMITS.adoc; include rationale in body, not just title"))
+[development-practices.code-style]
+agda = "--safe --without-K mandatory; no postulates"
+asciidoc = "narrow-true claims preferred over broader-easy; honest qualification visible in source"
+commit-messages = "structured per INTEGRATION_COMMITS.adoc; include rationale in body, not just title"
 
-    (versioning
-     (scheme . "SemVer 2.0.0")
-     (current-target . "0.1.1")
-     (recipe-extension-target . "0.2.0+"))
+[development-practices.versioning]
+scheme = "SemVer 2.0.0"
+current-target = "0.1.1"
+recipe-extension-target = "0.2.0+"
 
-    (review
-     (gate-pattern . "three identity gates with explicit retraction conditions per gate")
-     (lane-discipline . "gate-1, gate-2, gate-3 work in parallel lanes; integration via cross-lane audit")
-     (falsifier-format . "explicit FALSIFIER callouts in AsciiDoc + comment block above corresponding Agda definition"))
+[development-practices.review]
+gate-pattern = "three identity gates with explicit retraction conditions per gate"
+lane-discipline = "gate-1, gate-2, gate-3 work in parallel lanes; integration via cross-lane audit"
+falsifier-format = "explicit FALSIFIER callouts in AsciiDoc + comment block above corresponding Agda definition"
 
-    (documentation
-     (cascade-discipline . "narrowings to gate-1's claim must propagate to all five canonical doc locations: gate-1-distinct-phenomenon, gate-2-handoff, roadmap-gates, adjacency README, top README")
-     (do-not-redo . "STATE.scm tracks terminated questions and forbidden rebrandings; consult before starting any investigation framed as a follow-up to a closed question"))
+[development-practices.documentation]
+cascade-discipline = "narrowings to gate-1's claim must propagate to all five canonical doc locations: gate-1-distinct-phenomenon, gate-2-handoff, roadmap-gates, adjacency README, top README"
+do-not-redo = "STATE.a2ml tracks terminated questions and forbidden rebrandings; consult before starting any investigation framed as a follow-up to a closed question"
 
-    (versioning-of-decisions
-     (status-values . "proposed / accepted / deprecated / superseded / rejected")
-     (supersedes-pattern . "when an ADR replaces another, mark the old one with status=superseded and (superseded-by . <new-id>); never delete"))))
+[development-practices.versioning-of-decisions]
+status-values = "proposed / accepted / deprecated / superseded / rejected"
+supersedes-pattern = "when an ADR replaces another, mark the old one with status=superseded and superseded-by = <new-id>; never delete"
 
-;;; ============================================================
-;;; Design rationale
-;;; ============================================================
+# ============================================================
+# Design rationale
+# ============================================================
 
-(define design-rationale
-  '((why-narrower-true
-     "Gate-1's original framing (five axes simultaneously) was overstrong. The honest narrower-true claim — distinctness rests on truncation + 2-cell — is provably correct, formally certified, and removes the integration recipe from a load it cannot bear. Narrowing claims toward what the formalisation actually shows, rather than maintaining ambition the formalisation does not support, is the project's standing epistemic posture.")
+[design-rationale]
+why-narrower-true = """
+Gate-1's original framing (five axes simultaneously) was overstrong. The
+honest narrower-true claim — distinctness rests on truncation + 2-cell —
+is provably correct, formally certified, and removes the integration
+recipe from a load it cannot bear. Narrowing claims toward what the
+formalisation actually shows, rather than maintaining ambition the
+formalisation does not support, is the project's standing epistemic
+posture.
+"""
+why-path-b = """
+Full formalisation of the recipe-non-triviality theorem requires
+postulates that --safe Agda forbids. PATH B (partial formalisation
+accepted as sufficient given empirical + structural evidence) is the
+honest closure: per-axis halves are proved, concrete construction halves
+are proved, the generic 2D iff is documented as out of safe-Agda scope.
+The negative gate-1 finding does not depend on the generic theorem.
+"""
+why-keep-superseded-readings = """
+The two reading-decision documents (READING 1 and READING 2) plus their
+comparison are kept with SUPERSEDED banners rather than deleted. They
+record the alternatives that were considered, which prevents future
+investigators from re-deriving them from scratch under different names.
+This is the canonical anti-duplicate-work pattern for this codebase.
+"""
+why-recipe-stays-as-vocabulary = """
+Even though the recipe doesn't carry distinctness, it still organises the
+per-axis lemma family (composition, join, propositionality of order) and
+provides a uniform shape for stating per-axis transport actions. Removing
+it from the codebase would lose useful organisation. Keeping it as
+'organising vocabulary, not locus of distinctness' is the right framing.
+"""
+why-state-not-ad-hoc-handover = """
+Earlier sessions used ad-hoc handover documents (text files, conversation
+summaries). The EI-2 termination was captured in machine-readable state
+form so future sessions can parse and consult it programmatically; since
+2026-06-12 the six 6a2 files carry that record in TOML-A2ML (estate
+convention), converted faithfully from the earlier S-expression bodies.
+"""
 
-    (why-path-b
-     "Full formalisation of the recipe-non-triviality theorem requires postulates that --safe Agda forbids. PATH B (partial formalisation accepted as sufficient given empirical + structural evidence) is the honest closure: per-axis halves are proved, concrete construction halves are proved, the generic 2D iff is documented as out of safe-Agda scope. The negative gate-1 finding does not depend on the generic theorem.")
-
-    (why-keep-superseded-readings
-     "The two reading-decision documents (READING 1 and READING 2) plus their comparison are kept with SUPERSEDED banners rather than deleted. They record the alternatives that were considered, which prevents future investigators from re-deriving them from scratch under different names. This is the canonical anti-duplicate-work pattern for this codebase.")
-
-    (why-recipe-stays-as-vocabulary
-     "Even though the recipe doesn't carry distinctness, it still organises the per-axis lemma family (composition, join, propositionality of order) and provides a uniform shape for stating per-axis transport actions. Removing it from the codebase would lose useful organisation. Keeping it as 'organising vocabulary, not locus of distinctness' is the right framing.")
-
-    (why-state-not-ad-hoc-handover
-     "Earlier sessions used ad-hoc handover documents (text files, conversation summaries). This session captures the termination in state-a2ml STATE.scm form so it is machine-readable, schema-validated against standards/state-a2ml/spec/abnf/state.abnf, and joins the ecosystem of *-a2ml documents the user maintains. Future Claude sessions can parse and consult it programmatically.")))
-
-;;; ============================================================
-;;; END OF META
-;;; ============================================================
+# ============================================================
+# END OF META
+# ============================================================
