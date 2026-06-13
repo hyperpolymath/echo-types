@@ -1,0 +1,114 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <6759885+hyperpolymath@users.noreply.github.com>
+#
+# methodology.a2ml — AI agent methodology configuration (echo-types)
+# Declares how agents should approach work in this Agda proof library.
+# Read at session start by any AI agent, alongside CLAUDE.md.
+#
+# Reference: ADR-002 in standards/agentic-a2ml/docs/
+
+[metadata]
+version = "1.0.0"
+last-updated = "2026-06-12"
+spec = "https://github.com/hyperpolymath/standards/blob/main/agentic-a2ml/docs/ADR-002-methodology-layer.adoc"
+
+# ============================================================================
+# MODE SELECTION
+# ============================================================================
+# convergent: find gaps, fill them, build infrastructure
+# divergent:  find what's strongest, push it further (research/proof)
+# hybrid:     audit a slice of budget, then focus on top MUSTs
+#
+# echo-types is a research proof library: the default is divergent — deepen
+# the structured-loss identity (canonical-identity spine, ordinal milestone),
+# do not broaden into parallel formalisms.
+
+[methodology]
+default-mode = "divergent"
+ring-ceiling = 2              # Hard ceiling for ring expansion (0-3)
+wave-cap = 2                  # Max waves before requiring user "keep going"
+spike-required = true         # Every session must land verified Agda, not just designs
+
+# ============================================================================
+# PROOF INVARIANTS (the riverbanks — non-negotiable)
+# ============================================================================
+
+[methodology.proof-invariants]
+safe-without-k = true                 # --safe --without-K on every module
+postulate-ceiling = 0                 # zero in load-bearing tracks (outside Ordinal/)
+believe-me-ceiling = 0                # no believe_me / primTrustMe / primEraseEquality
+escape-hatch-ceiling = 0              # no sorry / Admitted / unsafeCoerce / Obj.magic
+escape-pragma-ceiling = 0             # no TERMINATING / NON_TERMINATING / allow-unsolved-metas
+funext-policy = "explicit-parameter-only"   # never a postulate; isolated from the trusted base
+pin-every-headline = true             # each headline pinned in Smoke.agda via `using`
+wire-every-module = true              # each module in All.agda; orphans are dead code
+kernel-cone-guard = "scripts/kernel-guard.sh"
+
+# ============================================================================
+# PRIORITY WEIGHTS
+# ============================================================================
+# MUST (3x): blocking current proof work → fix immediately
+# SHOULD (2x): degrading quality of current work → fix if in zone
+# COULD (1x): improving adjacent work → add to debt list
+
+[methodology.priority-weights]
+must = 3
+should = 2
+could = 1
+
+# ============================================================================
+# CONVERGENT BUDGET (when mode = convergent or hybrid)
+# ============================================================================
+
+[methodology.convergent-budget]
+structural = 70   # new modules / proofs / wiring / Smoke pins
+corrective = 20   # broken imports, stale doc tags, drift
+perfective = 10   # SPDX headers, doc polish, formatting
+
+# ============================================================================
+# UNIQUE STRENGTH (when mode = divergent)
+# ============================================================================
+
+[methodology.unique-strength]
+description = "Echo as the proof-relevant fiber of structured loss: Echo f y := Σ (x : A) , (f x ≡ y), characterised as a reindexing modality (coeffect/quantitative lineage). The strength is the machine-checked, --safe --without-K, postulate-free identity claim plus its honest matched-negatives."
+deepen-not-broaden = true
+
+# ============================================================================
+# DIVERGENT INVARIANTS
+# ============================================================================
+# Test before any divergent action:
+#   "Does this deepen the existing identity, or add a parallel strength?"
+#   If parallel → stop. Note as cross-project insight.
+
+[methodology.divergent-invariants]
+rules = [
+  "Agda only for the formal core — no Lean4 / Coq / Idris2 inside this repo (cross-prover work is citation-level bridges only).",
+  "Never weaken --safe or --without-K to land a proof.",
+  "Never introduce a postulate in a load-bearing track; exploratory truncation postulates, if any, go in docs/proof-debt.md and stay out of All.agda's trusted closure.",
+  "Honest scope: every identity claim ships with its matched-negatives; narrow-true beats broad-easy.",
+  "Do not reopen retracted claims (R-2026-05-18) or closed gates (Pillars A-D, F1-F4, EI-2).",
+]
+language-invariant = "agda"
+
+# ============================================================================
+# KNOWN CONSTRAINTS (help Phase 0 find the critical chain faster)
+# ============================================================================
+
+[methodology.known-constraints]
+constraints = [
+  "stdlib >= 2.3 is required (apt's 1.7.3 lacks Data.Product.Base) — see CLAUDE.md § Build.",
+  "The ordinal track is solo, not swarmable; the unbudgeted _<ᵇʳᶠ_ global WF is the named next bottleneck.",
+  "Multiple Claude sessions may run concurrently — respect declared territory; use `--only <paths>` if both commit before sync.",
+  "Pillar E paper [EXPAND] tags are author-driven; the ordinal consumer-evidence appendix is gated on the Bachmann-Howard milestone.",
+]
+
+# ============================================================================
+# STATE FILE VALIDATION
+# ============================================================================
+
+[methodology.state-validation]
+reject-if-contains = ["{{PLACEHOLDER}}", "rsr-template-repo"]
+reject-if-project-name-mismatch = true
+staleness-threshold-days = 120
+authoritative-state = "CLAUDE.md (current-rung-state) + .machine_readable/6a2/STATE.a2ml (current-state block)"
+fallback-files = ["roadmap-gates.adoc", "roadmap.adoc", "docs/echo-types/MAP.adoc", "README.md"]
