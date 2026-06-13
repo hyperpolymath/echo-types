@@ -87,6 +87,12 @@ open import EchoSecurity         -- Region-exit audit (generalises RegionExitAud
 open import EchoProbabilisticSupport  -- Support tracking (audience-facing sampling)
 open import EchoDifferential     -- Perturbation tracking (audience-facing sensitivity)
 
+-- Deniability (2026-06-13). Formalises residue deniability as a
+-- first-class property: the collapse/no-section story (perfect case)
+-- and the injective/section-exists story (partial case), with the
+-- IsConstantOpener boundary tying deniability to the affine mode.
+open import EchoDeniability
+
 -- Narrative deliverable: curated index of "why Echo deserves a name".
 open import EchoCanonicalIdentitySuite
 open import EchoStepNDModelF2   -- Gate F2 PASSED (StepND second model)

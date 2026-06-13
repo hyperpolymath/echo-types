@@ -1,0 +1,244 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Deniability
+:toc: macro
+:toclevels: 3
+
+[.lead]
+*Residue deniability* is a first-class echo property: whether an observer
+(`d : Residue → History`) can distinguish which history produced a given
+residue.  The module `EchoDeniability.agda` formalises both the perfect and
+partial cases and proves the structural duality between deniability and the
+existence of a section.
+
+toc::[]
+
+== The core question
+
+Given a production function `f : History → Residue` and an opener
+`d : Residue → History`, can the opener distinguish histories via their
+residues?  Concretely:
+
+[source,agda]
+----
+d (f Intact) ≡ d (f Lost)
+----
+
+If this holds for *every* `d`, then `f` is *perfectly deniable*.
+If it fails for *some* `d`, then `f` leaks history information.
+
+== Two histories, two residues
+
+[source,agda]
+----
+data History : Set where
+  Intact : History
+  Lost   : History
+
+data Residue : Set where
+  Trace  : Residue   -- a retained mark
+  Erased : Residue   -- an absent one
+----
+
+The two-constructor `Residue` is the minimal type where
+non-trivial deniability questions arise.  With a single constructor
+(`⊤`), collapse is free and the question is trivially answered by `refl`.
+
+== The two production functions
+
+[cols="1,2,2,2", options="header"]
+|===
+| Function | Definition | Deniable? | Has section?
+
+| `produce-perfect`
+| `_ ↦ Trace` (constant)
+| YES — for all openers
+| NO — `no-section-produce-perfect`
+
+| `produce-partial`
+| `Intact ↦ Trace`, `Lost ↦ Erased` (injective)
+| NO — `partial-witness` distinguishes
+| YES — `partial-has-section`
+|===
+
+The contrast is load-bearing: the same structural fact (constant vs injective)
+simultaneously determines deniability and the existence of a section.
+
+=== Perfect case
+
+[source,agda]
+----
+produce-perfect : History → Residue
+produce-perfect _ = Trace
+
+perfect-deniable : IsDeniable produce-perfect
+perfect-deniable d = refl   -- d Trace ≡ d Trace
+----
+
+Both histories produce `Trace`, so the opener sees the same residue
+regardless of which history was at play.  The proof is `refl`.
+
+This mirrors `EchoCharacteristic.collapse : Bool → ⊤` — the canonical
+collapsing map in the echo-types suite — and the structural fact that
+`collapse-residue-same` makes `echo-true` and `echo-false` equal after
+residue-lowering.
+
+=== Partial case and the distinguishing witness
+
+[source,agda]
+----
+produce-partial : History → Residue
+produce-partial Intact = Trace
+produce-partial Lost   = Erased
+
+-- Concrete opener that reads off the history from the residue:
+partial-witness : Residue → History
+partial-witness Trace  = Intact
+partial-witness Erased = Lost
+
+partial-distinguishable :
+  ¬ (partial-witness (produce-partial Intact) ≡
+     partial-witness (produce-partial Lost))
+partial-distinguishable ()   -- reduces to ¬ (Intact ≡ Lost)
+----
+
+`partial-witness` is a left-inverse of `produce-partial`:
+
+[source,agda]
+----
+partial-witness-is-section : ∀ h → partial-witness (produce-partial h) ≡ h
+partial-witness-is-section Intact = refl
+partial-witness-is-section Lost   = refl
+
+partial-has-section :
+  Σ (Residue → History) (λ s → ∀ h → s (produce-partial h) ≡ h)
+partial-has-section = partial-witness , partial-witness-is-section
+----
+
+Since `partial-witness` distinguishes the two histories, deniability fails for
+unrestricted openers:
+
+[source,agda]
+----
+partial-not-deniable : ¬ IsDeniable produce-partial
+partial-not-deniable den = partial-distinguishable (den partial-witness)
+----
+
+== The no-section / deniability duality
+
+`no-section-of-collapsing-map` (from `EchoNoSectionGeneric`) applies directly
+to the perfect case:
+
+[source,agda]
+----
+no-section-produce-perfect :
+  ¬ Σ (Residue → History) (λ s → ∀ h → s (produce-perfect h) ≡ h)
+no-section-produce-perfect =
+  no-section-of-collapsing-map produce-perfect Intact Lost Intact≢Lost refl
+----
+
+The dual `partial-has-section` witnesses that injective production admits a
+section.  Together they form a *checked duality pair*:
+
+|===
+| `produce-perfect` (constant) | `produce-partial` (injective)
+
+| `perfect-deniable` holds
+| `partial-not-deniable` holds
+
+| `no-section-produce-perfect` holds
+| `partial-has-section` holds
+|===
+
+This is the type-level version of the information-theoretic intuition: a
+one-way (non-injective) function destroys history information (no recovery,
+full deniability); an injective function preserves it (section exists,
+deniability fails).
+
+== The restricted class: constant openers
+
+When `produce-partial` is in use, deniability is restored for the class of
+*constant openers* — those that ignore the residue entirely:
+
+[source,agda]
+----
+IsConstantOpener : (Residue → History) → Set
+IsConstantOpener d = d Trace ≡ d Erased
+
+partial-deniable-restricted :
+  (d : Residue → History) →
+  IsConstantOpener d →
+  d (produce-partial Intact) ≡ d (produce-partial Lost)
+partial-deniable-restricted d const = const
+----
+
+The goal reduces by computation to `d Trace ≡ d Erased`, which is exactly
+the `const` hypothesis.  A constant opener cannot exploit residue differences
+because it never looks at them.
+
+=== Connection to the affine mode
+
+`IsConstantOpener` is the type-level analogue of the `affine` mode in
+`EchoObservationalEquivalence._≡m_`:
+
+[source,agda]
+----
+-- From EchoObservationalEquivalence:
+_≡m_ {affine} _ _ = ⊤   -- all pairs affine-equal: the witness is gone
+----
+
+At affine mode, the residue collapses to `⊤` — there is nothing left to
+observe.  A constant opener does the same: it commits its verdict before
+reading the residue, making the residue content irrelevant.
+
+== Echo witnesses in the perfect case
+
+Both `Intact` and `Lost` produce valid echoes at the same residue `Trace`
+under `produce-perfect`:
+
+[source,agda]
+----
+echo-intact-perfect : Echo produce-perfect Trace
+echo-intact-perfect = echo-intro Intact refl
+
+echo-lost-perfect : Echo produce-perfect Trace
+echo-lost-perfect = echo-intro Lost refl
+
+echo-intact-lost-distinct : echo-intact-perfect ≢ echo-lost-perfect
+echo-intact-lost-distinct ()
+----
+
+Two distinct echoes, same residue — the same structural pattern as
+`EchoCharacteristic.echo-true` and `echo-false` at `Echo collapse tt`.
+
+== Honest scope
+
+What this module proves::
+- The type-level boundary between constant production (full deniability, no section)
+  and injective production (deniability only for constant openers, section exists).
+- All proofs hold under `--safe --without-K`, zero postulates.
+
+What this module does *not* prove::
+- `NotProved-side-channel-safe` — no claim about timing or memory leaks.
+- `NotProved-cryptographic-deniability` — no claim about adversaries with
+  state, oracle access, or computational hardness.
+- `NotProved-adaptive-adversary` — no claim about adaptive chosen-residue
+  adversaries or multi-round protocols.
+
+These are `⊤`-aliased matched-negatives in `EchoDeniability.agda`;
+`grep NotProved` catches them.
+
+== Module location
+
+`proofs/agda/EchoDeniability.agda` — wired into `All.agda` and pinned in `Smoke.agda`.
+
+Companion explorations (not part of the verified suite, standalone Agda files):
+
+- `Deniability.agda` — perfect case only (two histories, one residue constructor).
+- `DeniabilityPartial.agda` — both cases side by side; failing proofs as commented
+  blocks with error annotations; counterexample `witness-distinguishes`; restricted
+  `cannotDistinguishConstant`.
+
+See also: `EchoObservationalEquivalence.adoc`, `EchoSecurity.adoc` in
+`docs/echo-types/`, and `EchoNoSectionGeneric.agda` for the generic
+no-section theorem this module instantiates.
