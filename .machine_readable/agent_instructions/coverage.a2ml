@@ -1,0 +1,72 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <6759885+hyperpolymath@users.noreply.github.com>
+#
+# coverage.a2ml — Session coverage tracking (echo-types)
+# Updated at the end of each AI agent session.
+# Tracks which workstreams/modules were visited and which have open MUSTs.
+#
+# Reference: ADR-002 in standards/agentic-a2ml/docs/
+
+[metadata]
+version = "1.0.0"
+last-updated = "2026-06-12"
+
+# ============================================================================
+# COVERAGE STATE
+# ============================================================================
+# "Components" here = the three workstreams + the cross-repo bridge surface.
+# Authoritative per-rung detail lives in CLAUDE.md current-rung-state.
+
+[coverage]
+total-components = 4
+visited-components = 4
+coverage-percent = 100
+note = "All three workstreams + the bridge ledger have current status; the open work is named in debt.a2ml."
+
+# ============================================================================
+# VISITED COMPONENTS (workstream → last-known status)
+# ============================================================================
+
+[coverage.visited.composition-track]
+date = "2026-04-28"
+status = "landed"
+notes = "Echo-comp-iso + cancel-iso + pentagon (Echo-comp-pent-Σ-assoc) all packaged as _↔_."
+
+[coverage.visited.ordinal-track]
+date = "2026-05-30"
+status = "partial"
+notes = "Slice 3+4 Route A arc (PRs #165-#170): RankMonoUnion umbrella + wf of _<ᵇᵘ_ via rank-embedding transport (#170). Target: Bachmann-Howard."
+
+[coverage.visited.establishment-track]
+date = "2026-05-27"
+status = "partial"
+notes = "Pillars A-D complete (2026-05-17); Pillar F closed (2026-05-20); Tier-1+2+3 spine + audience moves + EchoCanonicalIdentitySuite. Pillar E open."
+
+[coverage.visited.cross-repo-bridges]
+date = "2026-06-02"
+status = "ledgered"
+notes = "cross-repo-bridge-status.md current: CNO done, Ephapax NARROW, EchoTypes.jl shipped, Janus name-only, Tropical citation-level, Valence/Ochrance exploratory."
+
+# ============================================================================
+# SKIPPED / OPEN MUSTS (P1 inputs for next session's Phase 0)
+# ============================================================================
+
+[coverage.skipped-musts.ordinal-unbudgeted-wf]
+priority = "P1"
+issue = "Unbudgeted _<ᵇʳᶠ_ global WF — eliminate the ℕ budget from wf-<ᵇʳᶠᵇ without leaving --safe --without-K. Solo, not swarmable; named next bottleneck."
+discovered = "2026-05-20"
+
+[coverage.skipped-musts.full-buchholz-constructor-set]
+priority = "P2"
+issue = "K-limited shared-binder cases (<ᵇ-ψα, <ᵇ-+2) beyond the admitted core; push surface-route WF back into Order.agda's main _<ᵇ_."
+discovered = "2026-04-28"
+
+# ============================================================================
+# CHERRY-PICKING AUDIT (accountability for the weighted priority system)
+# ============================================================================
+# At session end agents report whether they chose easy work over hard work.
+#
+# [coverage.cherry-picking]
+# easy-high-completed = 0
+# hard-high-completed = 0
+# assessment = "..."

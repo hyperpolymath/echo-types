@@ -1,0 +1,146 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Architecture
+:toc: macro
+:toclevels: 3
+
+[.lead]
+echo-types is organised as three proof workstreams over a shared core, plus a
+cross-repo bridge surface. All of it lives under `proofs/agda/` and builds as a
+single verified suite.
+
+toc::[]
+
+== The shared core
+
+[cols="1,3", options="header"]
+|===
+| Module | Role
+
+| `Echo.agda`
+| The core definition `Echo f y := Σ (x : A) , (f x ≡ y)`, plus `echo-intro`.
+  The *stdlib-only root* of the kernel cone (imports zero in-repo modules).
+
+| `EchoKernel.agda`
+| The second (and only other) member of the funext-free kernel cone; its
+  in-repo imports are a subset of `{ Echo }`. Enforced by `scripts/kernel-guard.sh`.
+
+| `All.agda`
+| The import-everything target. Every module must be wired in here; orphans
+  that compile but are absent are treated as dead code.
+
+| `Smoke.agda`
+| Pins every headline theorem via a `using` clause, each in its own
+  open-import block with a header comment.
+|===
+
+== Track 1 — Composition (landed)
+
+The Σ-algebra of echoes under function composition.
+
+* Base accumulation iso `Echo-comp-iso : Echo (g ∘ f) y ↔ Σ B (λ b → Echo f b × g b ≡ y)`.
+* Cancellation iso `cancel-iso`, parameterised by `s-left` / `s-right` and both
+  triangle identities (PR #25).
+* Pentagon coherence: `Echo-comp-iso-pent-{B,echo}` as `refl`; the full
+  Σ-associativity iso `Echo-comp-pent-Σ-assoc` packaged via stdlib
+  `Function.Bundles._↔_`.
+
+Docs: `docs/echo-types/{composition,fibration-package,universal-property}.adoc`.
+
+== Track 2 — Ordinal (partial)
+
+A Buchholz collapsing layer; the consumer-evidence that echo's
+non-injectivity bridges to ordinal-collapsing non-injectivity.
+
+* Target: *Bachmann–Howard* ψ₀(Ω_ω) as the first credible milestone; stretch
+  ψ(Ω_Ω) ≈ TFBO.
+* E1–E7 landed: OT syntax, ℕ-staged closure, CNF, pedagogical ψ, Buchholz
+  scaffold, well-formedness, echo bridge (`ordinal-collapse-non-injective`).
+* Rank-monotonicity under the *WfCNF* restriction with a limit-shaped ω-power
+  rank: `RankPow` / `RankPowDomination` / `HeadOmega` / `HeadOmegaInversion`.
+* Slice 3+4 Route A arc (PRs #165–#170): the `RankMonoUnion` umbrella over
+  source-rule extensions, and well-foundedness of `_<ᵇᵘ_` via rank-embedding
+  transport (#170).
+
+*Open:* the unbudgeted `_<ᵇʳᶠ_` global WF (eliminate the ℕ budget without
+leaving `--safe --without-K`); the K-limited shared-binder cases (`<ᵇ-ψα`,
+`<ᵇ-+2`); push the surface-route WF back into `Order.agda`'s main `_<ᵇ_`. This
+track is *solo, not swarmable*.
+
+Docs: `docs/echo-types/buchholz-plan.adoc`, `buchholz-rank-obstruction.adoc`.
+
+== Track 3 — Establishment (Pillars A–D + F closed; E open)
+
+The path to recognised type-theoretic standing as a *characterised reindexing
+modality of structured loss* — explicitly *not* the linear/dependent judgmental
+ladder (Echo adds no new judgment; it is definitionally `fib`).
+
+[cols="1,3", options="header"]
+|===
+| Pillar | Status
+
+| A — pin the identity
+| Complete. `EchoFiberBridge.agda` (`echo↔fib` definitional bridge).
+
+| B — universal property + comonad laws
+| Complete. `EchoPullback.agda` (funext-free, K-free terminal-cone UP);
+  `EchoGradedComonad.agda`.
+
+| C — separating model
+| Complete. `EchoSeparating.agda` (separating model = EchoGraded minus ≤g-prop).
+
+| D — second model + conservativity
+| Complete (modulo retraction). `EchoRelModel.agda` (model-independence
+  theorem). The conservativity metatheorem was retracted (R-2026-05-18) and
+  stays retracted.
+
+| F — earn-back gates
+| CLOSED 2026-05-20. F4 + F2 (2026-05-18), F1 + F3 (2026-05-20). A genuine
+  monoid-graded iterated-residue comonad (`EchoGradedComonadF1`) + two
+  non-isomorphic grade-monoid instances. See META adr-007/008/009.
+
+| E — external validation
+| OPEN. TYPES extended abstract drafted; `paper.adoc` is a living draft with
+  `[EXPAND]` tags. The ordinal consumer-evidence appendix is gated on the
+  Bachmann–Howard milestone. Outreach / Zenodo / packaging are author-driven —
+  do *not* auto-run.
+|===
+
+On top of A–D + F sit the *canonical-identity spine* (Tier-1+2+3: totality,
+OFS, image, no-section, the loss/residue/decoration/observational grid, the
+F5 qualified OFS), the *audience moves* (Provenance, Security, Probabilistic,
+Differential), and the curated `EchoCanonicalIdentitySuite.agda`.
+
+Docs: `docs/echo-types/{establishment-plan,earn-back-plan,paper,types-abstract}.adoc`.
+
+== Terminated investigation: EI-2 (do not reopen)
+
+EI-2 ("robustness of the integration recipe under richer 2D combinations")
+*terminated negatively* on 2026-04-29 via PATH B: the integration recipe with
+the five named axes does not carry substantive simultaneous cross-axis content
+(seven data points; even the only non-loss-only self-pairing, `RoleRole.agda`,
+degenerates). The full record is `.machine_readable/6a2/STATE.a2ml` and is
+guarded by AGENTIC gates G-001/G-005. The recipe survives as *organising
+vocabulary*, not a distinctness locus.
+
+[[ecosystem]]
+== Ecosystem and cross-repo bridges
+
+echo-types is a foundational node in the hyperpolymath / PanLL constellation.
+The authoritative ledger is `docs/bridges/cross-repo-bridge-status.md`.
+
+[cols="1,1,2", options="header"]
+|===
+| Project | Kind | Status
+
+| EchoTypes.jl | executable companion | v0.2.0 (pinned `e7dded6`); finite-domain Julia shadow; *no proof claims* — Agda is source of truth.
+| arghda-core | extracted tool | Proof-workspace engine, extracted 2026-05-30 (#159).
+| absolute-zero | content bridge | `EchoCNOBridge.agda` — done.
+| ephapax | content bridge (NARROW) | `EchoEphapaxBridge.agda` — L3 only.
+| januskey | name bridge | `EchoJanusBridge.agda` — structural-mirror decided.
+| tropical-resource-typing | citation-level | `EchoTropical.agda` — statement correspondence only.
+| PanLL | constellation consumer | foundation it can cite; no build dependency.
+| Valence Shell / Ochránce | exploratory | citation-level only; *no bridge module*; Core Affect = NO.
+|===
+
+The machine-readable index of these lives in `.machine_readable/integrations/`.
