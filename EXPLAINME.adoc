@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: CC-BY-4.0
+// SPDX-License-Identifier: CC-BY-SA-4.0
 = echo-types: explain me
 
 This file is a pointer: the canonical README is link:README.md[README.md]. The quick-orientation content formerly kept here was deduplicated on 2026-06-12 — the ecosystem-role line and the "who is this for" audience list were folded into README.md §"What Echo Types Are For"; the status snapshot lives at README.md §"Current Status Snapshot" (with `docs/echo-types/MAP.adoc` and `roadmap.adoc` as the live status sources). The full prior content remains available in git history.
