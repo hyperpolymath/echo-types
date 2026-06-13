@@ -1,160 +1,192 @@
-;;; ============================================================
-;;; ECOSYSTEM.a2ml — echo-types relationships across the
-;;; hyperpolymath repository constellation
-;;; ============================================================
-;;;
-;;; Format: ecosystem-a2ml (S-expression, SRFI-30 conventions)
-;;; Schema reference:
-;;;   github.com/hyperpolymath/standards/blob/main/ecosystem-a2ml/spec/abnf/ecosystem.abnf
-;;; Sibling reference (cached pattern):
-;;;   github.com/hyperpolymath/standards/blob/main/playbook-a2ml/spec/PLAYBOOK-FORMAT-SPEC.adoc
-;;;
-;;; Purpose: record cross-repo dependencies and conventions so a future
-;;; session understands echo-types' position in the constellation
-;;; without re-deriving it.
-;;;
-;;; SPDX-License-Identifier: MPL-2.0
-;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+#
+# ECOSYSTEM.a2ml — echo-types relationships across the hyperpolymath
+# repository constellation
+#
+# Format: TOML-A2ML (estate convention; `#` comments, [section], key = "value")
+#
+# Provenance: converted 2026-06-12 from the Guile S-expression body
+# `(define-module (echo-types ecosystem) ...)` that previously occupied
+# this file. Faithful translation; stale references to the .scm-era file
+# names and the pre-estate layout were updated at conversion time (noted
+# inline). The original S-expr schema reference was:
+#   https://github.com/hyperpolymath/standards/blob/main/ecosystem-a2ml/spec/abnf/ecosystem.abnf
+#
+# Purpose: record cross-repo dependencies and conventions so a future
+# session understands echo-types' position in the constellation without
+# re-deriving it.
 
-(define-module (echo-types ecosystem)
-  #:export (constellation-membership
-            schema-dependencies
-            sibling-projects
-            cross-repo-conventions
-            integrity-checks))
+[metadata]
+project = "echo-types"
+last-updated = "2026-06-12"
 
-;;; ============================================================
-;;; Constellation membership
-;;; ============================================================
+# ============================================================
+# Constellation membership
+# ============================================================
 
-(define constellation-membership
-  '((primary-constellation . governance)
-    (constellation-rationale
-     . "echo-types is a formal-verification library but its docs are governed by RSR 2026 / 6SCM Architecture, placing it under the governance constellation for operational purposes.")
-    (other-constellations-touched
-     . ((languages . "Imports from agda-stdlib; conceptual proximity to formal-methods work in nextgen-languages.")
-        (research . "Theoretical artefact; downstream consumer of HoTT and category-theoretic concepts.")))))
+[constellation-membership]
+primary-constellation = "governance"
+constellation-rationale = """
+echo-types is a formal-verification library but its docs are governed by
+RSR 2026 / 6SCM Architecture, placing it under the governance
+constellation for operational purposes.
+"""
 
-;;; ============================================================
-;;; Schema dependencies (other hyperpolymath repos echo-types relies on)
-;;; ============================================================
+[constellation-membership.other-constellations-touched]
+languages = "Imports from agda-stdlib; conceptual proximity to formal-methods work in nextgen-languages."
+research = "Theoretical artefact; downstream consumer of HoTT and category-theoretic concepts."
 
-(define schema-dependencies
-  '(((repo . "github.com/hyperpolymath/standards")
-     (subpath . "a2ml/SPEC-v1.0.adoc")
-     (consumes-as . "a2ml surface markup spec (Djot-like)")
-     (consumed-by . "documentation files (.adoc)")
-     (status . current))
+# ============================================================
+# Schema dependencies (other hyperpolymath repos echo-types relies on)
+# ============================================================
 
-    ((repo . "github.com/hyperpolymath/standards")
-     (subpath . "meta-a2ml/spec/abnf/meta.abnf")
-     (consumes-as . "ABNF metalanguage governing all six *-a2ml types")
-     (consumed-by . "META.scm, STATE.scm, ECOSYSTEM.scm, AGENTIC.scm, NEUROSYM.scm, PLAYBOOK.scm in this audit-output/")
-     (status . current))
+[[schema-dependencies]]
+repo = "https://github.com/hyperpolymath/standards"
+subpath = "a2ml/SPEC-v1.0.adoc"
+consumes-as = "a2ml surface markup spec (Djot-like)"
+consumed-by = "documentation files (.adoc)"
+status = "current"
 
-    ((repo . "github.com/hyperpolymath/standards")
-     (subpath . "playbook-a2ml/spec/PLAYBOOK-FORMAT-SPEC.adoc")
-     (consumes-as . "Concrete shape exemplar for module-form S-expression files")
-     (consumed-by . "All .scm files in audit-output/")
-     (status . current))
+[[schema-dependencies]]
+repo = "https://github.com/hyperpolymath/standards"
+subpath = "meta-a2ml/spec/abnf/meta.abnf"
+consumes-as = "ABNF metalanguage that governed the S-expr-era *-a2ml types"
+consumed-by = ".machine_readable/6a2/{META,STATE,ECOSYSTEM,AGENTIC,NEUROSYM,PLAYBOOK}.a2ml (S-expr bodies until 2026-06-12; now TOML-A2ML per estate convention)"
+status = "historical"  # refreshed 2026-06-12: the 6a2 bodies are TOML-A2ML now
 
-    ((repo . "github.com/hyperpolymath/standards")
-     (subpath . "k9-svc/")
-     (consumes-as . "Service definition format (not yet inspected)")
-     (consumed-by . "n/a yet — would govern any k9 service descriptors")
-     (status . unread)
-     (note . "URL was provided but not yet fetched; if k9-svc descriptors are added to echo-types in future, this entry must be filled in."))
+[[schema-dependencies]]
+repo = "https://github.com/hyperpolymath/standards"
+subpath = "playbook-a2ml/spec/PLAYBOOK-FORMAT-SPEC.adoc"
+consumes-as = "Concrete shape exemplar for the S-expr-era module-form files"
+consumed-by = "6a2 files (S-expr era); retained as historical shape reference"
+status = "historical"  # refreshed 2026-06-12, same reason as above
 
-    ((repo . "github.com/hyperpolymath/rhodium-standard-repositories")
-     (subpath . "RSR-2026/")
-     (consumes-as . "Repository compliance standard")
-     (consumed-by . "echo-types repository structure conventions (e.g., docs/ layout, MAINTAINERS.md, CODE_OF_CONDUCT.md)")
-     (status . current))))
+[[schema-dependencies]]
+repo = "https://github.com/hyperpolymath/k9-svc"
+subpath = "SPEC.adoc"
+consumes-as = "K9 self-validating component format (Nickel, leash security model)"
+consumed-by = ".machine_readable/self-validating/ (template set + examples, added at the 2026-06-12 governance checkpoint)"
+status = "current"
+# Pre-2026-06-12 this entry was status = "unread" with a note that no k9
+# descriptors existed in echo-types yet; the self-validating/ set now
+# exists, so the entry is filled in as the original note required.
 
-;;; ============================================================
-;;; Sibling projects (same constellation or close conceptual relation)
-;;; ============================================================
+[[schema-dependencies]]
+repo = "https://github.com/hyperpolymath/rhodium-standard-repositories"
+subpath = "RSR-2026/"
+consumes-as = "Repository compliance standard"
+consumed-by = "echo-types repository structure conventions (e.g., docs/ layout, MAINTAINERS.adoc, CODE_OF_CONDUCT.md, GOVERNANCE.adoc)"
+status = "current"
 
-(define sibling-projects
-  '(((name . "echidna")
-     (relation . "Conceptual sibling — neurosymbolic theorem-proving platform; echo-types is a single-domain formal verification library, echidna is the broader prover ecosystem.")
-     (cross-references . none-yet))
+# ============================================================
+# Sibling projects (same constellation or close conceptual relation)
+# ============================================================
 
-    ((name . "affinescript")
-     (relation . "Languages-constellation sibling — affine-typed WASM language. Conceptually downstream of echo-types' formal-loss reasoning if cross-disciplinary tie-ins are pursued.")
-     (cross-references . none-yet))
+[[sibling-projects]]
+name = "echidna"
+relation = "Conceptual sibling — neurosymbolic theorem-proving platform; echo-types is a single-domain formal verification library, echidna is the broader prover ecosystem."
+cross-references = "none-yet"
 
-    ((name . "my-lang")
-     (relation . "Conceptual neighbour — Me/Solo/Duet/Ensemble dialect family. Could consume echo-types-style fiber reasoning in a future axis but no current dependency.")
-     (cross-references . none-yet))
+[[sibling-projects]]
+name = "affinescript"
+relation = "Languages-constellation sibling — affine-typed WASM language. Conceptually downstream of echo-types' formal-loss reasoning if cross-disciplinary tie-ins are pursued."
+cross-references = "none-yet"
 
-    ((name . "manifesto")
-     (relation . "Constellation overview document referencing all hyperpolymath projects. echo-types is one of 275+ governed by RSR 2026.")
-     (cross-references . "Listed under Research / Formal Verification."))))
+[[sibling-projects]]
+name = "my-lang"
+relation = "Conceptual neighbour — Me/Solo/Duet/Ensemble dialect family. Could consume echo-types-style fiber reasoning in a future axis but no current dependency."
+cross-references = "none-yet"
 
-;;; ============================================================
-;;; Cross-repo conventions echo-types follows
-;;; ============================================================
+[[sibling-projects]]
+name = "manifesto"
+relation = "Constellation overview document referencing all hyperpolymath projects. echo-types is one of 275+ governed by RSR 2026."
+cross-references = "Listed under Research / Formal Verification."
 
-(define cross-repo-conventions
-  '(((convention . "Forge workflow: GitHub canonical, GitLab and Codeberg as mirrors")
-     (source . "Standing decision sd-003 in STATE.scm")
-     (artefacts . (".github/workflows/mirror.yml" "MIRROR_SETUP.adoc")))
+# Cross-repo bridge consumers recorded since the original S-expr entry
+# (see docs/echo-types/cross-repo-bridge-status.md for the live ledger):
+# ephapax (L3 NARROW bridge, PRs #161-#163), EchoTypes.jl (finite-domain
+# Julia companion), eclexia (thermodynamic consumer bridge, PR #180),
+# Valence Shell / Ochránce (exploratory downstream consumer, PR #177),
+# arghda-core (extracted to standalone repo, PR #160).
 
-    ((convention . "License: MPL-2.0 for code and docs")
-     (source . "META.scm SPDX header pattern; constellation default")
-     (artefacts . ("LICENSE-PMPL-1.0.txt" ; if present
-                   "SPDX headers in all .scm files")))
+# ============================================================
+# Cross-repo conventions echo-types follows
+# ============================================================
 
-    ((convention . "Cross-platform builds: Linux primary, Windows secondary")
-     (source . "Standing decision sd-004 in STATE.scm")
-     (artefacts . (".gitattributes")))
+[[cross-repo-conventions]]
+convention = "Forge workflow: GitHub canonical, GitLab and Codeberg as mirrors"
+source = "Standing decision sd-003 in STATE.a2ml"
+artefacts = [".github/workflows/mirror.yml", "MIRROR_SETUP.adoc"]
 
-    ((convention . "Documentation: AsciiDoc, not Markdown")
-     (source . "User preference (avoid Python-adjacent ecosystems where possible; AsciiDoc preferred over Markdown for technical docs)")
-     (note . "README.md is the exception per GitHub default-render convention; everything in docs/ is AsciiDoc."))
+[[cross-repo-conventions]]
+convention = "License: MPL-2.0 for code; CC-BY-4.0 for prose docs"
+source = "SPDX header pattern (PR #150 normalization); constellation default; LICENSE + LICENSE-docs at root"
+artefacts = ["LICENSE", "LICENSE-docs", "SPDX headers in all machine-readable files"]
+# Refreshed 2026-06-12: the S-expr entry referenced a conditional
+# LICENSE-PMPL-1.0.txt; the repo migrated to MPL-2.0 (PR #115) with
+# prose under CC-BY-4.0 (PR #150).
 
-    ((convention . "Configuration: Nickel/CUE/Dhall preferred over YAML")
-     (source . "User standing preference")
-     (note . "echo-types currently uses YAML only for GitHub Actions (no choice); no other config files."))
+[[cross-repo-conventions]]
+convention = "Cross-platform builds: Linux primary, Windows secondary"
+source = "Standing decision sd-004 in STATE.a2ml"
+artefacts = [".gitattributes"]
 
-    ((convention . "Containers: Podman > Docker")
-     (source . "User preference")
-     (note . "echo-types has no current container needs; if added in v0.2+, must be Podman-first."))
+[[cross-repo-conventions]]
+convention = "Documentation: AsciiDoc, not Markdown"
+source = "User preference (avoid Python-adjacent ecosystems where possible; AsciiDoc preferred over Markdown for technical docs)"
+note = "README.md is the exception per GitHub default-render convention; it is the canonical README after the 2026-06-12 dedup (readme.adoc and EXPLAINME.adoc are pointers). docs/ is predominantly AsciiDoc."
 
-    ((convention . "justfile over Makefile, AsciiDoc over Markdown")
-     (source . "User standing preference")
-     (note . "echo-types has neither justfile nor Makefile currently; uses agda --compile direct invocation. If a build-driver is added, justfile."))))
+[[cross-repo-conventions]]
+convention = "Configuration: Nickel/CUE/Dhall preferred over YAML"
+source = "User standing preference"
+note = "echo-types uses YAML only for GitHub Actions (no choice); the self-validating/ k9 set is Nickel."
 
-;;; ============================================================
-;;; Integrity checks (cross-file invariants ECOSYSTEM enforces)
-;;; ============================================================
+[[cross-repo-conventions]]
+convention = "Containers: Podman > Docker"
+source = "User preference"
+note = "Containerfile + stapeln.toml at root are Podman-first; no Dockerfile."
 
-(define integrity-checks
-  '(((check . "STATE.scm and META.scm referenced ADRs must exist")
-     (assertion . "Every standing-decision sd-NNN in STATE.scm should have a corresponding adr-NNN in META.scm or a clear rationale embedded.")
-     (current-status . pass)
-     (note . "sd-001..sd-006 in STATE.scm align with adr-001..adr-006 in META.scm."))
+[[cross-repo-conventions]]
+convention = "justfile over Makefile"
+source = "User standing preference"
+note = "Root Justfile is the primary command runner (build-echo / build-tests / per-bridge test recipes); .machine_readable/contractiles/Justfile is the estate-supplied governance copy."
+# Refreshed 2026-06-12: the S-expr entry predated the root Justfile and
+# claimed neither justfile nor Makefile existed; contradicted by reality.
 
-    ((check . "Forbidden rebrandings list is non-empty post-EI-2")
-     (assertion . "STATE.forbidden-rebrandings must contain at least the six EI-2-related entries.")
-     (current-status . pass))
+# ============================================================
+# Integrity checks (cross-file invariants ECOSYSTEM enforces)
+# ============================================================
 
-    ((check . "do-not-redo register coverage")
-     (assertion . "Every artefact in artefacts.agda-characteristic-lane must appear either in cascade-applied or in do-not-redo, or be flagged as 'still active work'.")
-     (current-status . pass-by-inspection)
-     (note . "All EI-2 phase files are referenced in either artefacts list or via do-not-redo entries."))
+[[integrity-checks]]
+check = "STATE and META referenced ADRs must exist"
+assertion = "Every standing-decision sd-NNN in STATE.a2ml should have a corresponding adr-NNN in META.a2ml or a clear rationale embedded."
+current-status = "pass"
+note = "sd-001..sd-006 in STATE.a2ml align with adr-001..adr-006 in META.a2ml (adr-007..adr-011 extend beyond the sd list with their own rationale)."
 
-    ((check . "Schema dependency completeness")
-     (assertion . "All a2ml-family files must reference their schema (meta-a2ml ABNF) in their header comment.")
-     (current-status . pass)
-     (note . "All .scm files in audit-output/ reference meta-a2ml ABNF in header comments."))
+[[integrity-checks]]
+check = "Forbidden rebrandings list is non-empty post-EI-2"
+assertion = "STATE forbidden-rebrandings must contain at least the six EI-2-related entries."
+current-status = "pass"
 
-    ((check . "Reading order alignment")
-     (assertion . "INDEX.adoc reading order must be consistent across STATE.scm header, STATE.a2ml header, and INDEX.adoc itself.")
-     (current-status . pass)
-     (verification . "Cross-checked at last update."))))
+[[integrity-checks]]
+check = "do-not-redo register coverage"
+assertion = "Every artefact in artefacts.agda-characteristic-lane must appear either in cascade-applied or in do-not-redo, or be flagged as 'still active work'."
+current-status = "pass-by-inspection"
+note = "All EI-2 phase files are referenced in either artefacts list or via do-not-redo entries."
 
-;;; ============================================================
-;;; END OF ECOSYSTEM
-;;; ============================================================
+[[integrity-checks]]
+check = "Schema dependency completeness"
+assertion = "All 6a2 files must carry their format + provenance reference in their header comment."
+current-status = "pass"
+note = "All six 6a2 .a2ml files carry TOML-A2ML format + S-expr-conversion provenance headers (2026-06-12)."
+
+[[integrity-checks]]
+check = "Reading order alignment"
+assertion = "INDEX.adoc reading order must be consistent with the 6a2 headers and INDEX.adoc itself."
+current-status = "pass"
+verification = "Cross-checked at last update."
+
+# ============================================================
+# END OF ECOSYSTEM
+# ============================================================

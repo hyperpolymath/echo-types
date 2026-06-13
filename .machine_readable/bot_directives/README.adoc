@@ -1,0 +1,38 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+= Bot directives — echo-types
+:toc:
+
+== Purpose
+
+Per-repo directives for automated agents operating on
+`hyperpolymath/echo-types`. These files tell bots what this repository
+considers safe, what is forbidden, and which findings are already
+adjudicated, so automated runs do not relitigate settled decisions or
+touch protected surfaces.
+
+== Precedence
+
+. Maintainer instruction (see `MAINTAINERS.adoc`) — always wins.
+. These directives.
+. Bot built-in defaults.
+
+== Scope
+
+These directives apply to:
+
+* the *Hypatia* scanner (`hypatia.a2ml` — scanner config pointers and
+  accepted findings with reasons);
+* the *gitbot fleet* (`gitbot-fleet.a2ml` — fleet roster, branch policy,
+  never-touch paths, per-bot constraints);
+* *.git-private-farm propagation* (`git-private-farm.a2ml` — propagation
+  is currently disabled here; the file records the contract for if/when
+  an `instant-sync.yml` workflow is added).
+
+== Repo-specific ground rules (summary)
+
+* This is a proof repository: `proofs/`, `tutorial/`, `All.agda`,
+  `Smoke.agda`, and `.github/workflows/agda.yml` are bot-off-limits.
+* CI green precedes merge; bots never auto-merge and never delete
+  branches.
+* Escalation channel is an issue, not PR-comment spam.

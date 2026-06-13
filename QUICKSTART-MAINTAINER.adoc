@@ -31,7 +31,7 @@ A new `Echo<Domain>Bridge.agda` module joins the bridge family. To add one:
 . Add a `test-<domain>` recipe to the `Justfile` mirroring the existing pattern.
 . Add the new module to `proofs/agda/All.agda` (the import-everything compile target).
 . Update `.machine_readable/6a2/STATE.a2ml § core-results` with the new module path.
-. Update `EXPLAINME.adoc` § Status snapshot if the bridge changes the load-bearing distinctness story.
+. Update `README.md` § Current Status Snapshot if the bridge changes the load-bearing distinctness story.
 
 == Escalation
 

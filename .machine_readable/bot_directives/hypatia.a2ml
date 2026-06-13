@@ -1,0 +1,74 @@
+# SPDX-License-Identifier: MPL-2.0
+# hypatia.a2ml — Hypatia scanner directives for echo-types.
+# Net-new at the 2026-06-12 governance checkpoint per the estate
+# bot_directives standard.
+
+[metadata]
+repo = "echo-types"
+last-updated = "2026-06-12"
+owner = "hyperpolymath"
+
+[scanner]
+ignore-file = ".hypatia-ignore"   # present at repo root; each entry carries a verified-false-positive rationale
+workflow = ".github/workflows/hypatia-scan.yml"
+
+# ============================================================
+# Accepted findings (known false positives / adjudicated advisories).
+# Each entry mirrors an in-repo rationale; do not re-raise these.
+# ============================================================
+
+[[accepted-findings]]
+rule = "code_safety/agda_postulate"
+path = "proofs/agda/Smoke.agda"
+status = "verified-false-positive"
+reason = """
+The rule is a naive \\bpostulate\\b regex over raw file content that does
+not strip comments. The only 'postulate' tokens in Smoke.agda are in
+comments documenting the suite's postulate-free discipline; there is no
+postulate declaration. The repo's own guardrail (tools/check-guardrails.sh)
+strips comments before checking and is the real gate. Suppressed in
+.hypatia-ignore with full rationale.
+"""
+
+[[accepted-findings]]
+rule = "code_safety/js_http_url_in_code"
+path = "tools/banner/build-banner.mjs"
+status = "verified-false-positive"
+reason = """
+The flagged http:// is the SVG XML namespace identifier
+xmlns="http://www.w3.org/2000/svg" — a constant namespace URI never
+dereferenced over the network; changing it to https would be semantically
+wrong and break SVG handling. Not CWE-319. Suppressed in .hypatia-ignore.
+"""
+
+[[accepted-findings]]
+rule = "code_safety/agda_postulate"
+path = "proofs/agda (Exploratory cohort)"
+status = "scope-narrowed"
+reason = """
+The agda_postulate alert on the Exploratory module was scope-narrowed via
+inline allow in PR #156. The four propositional-truncation postulates in
+proofs/agda/EchoImageFactorizationPropPostulated.agda are enumerated
+proof debt under Disposition (c) NECESSARY AXIOM (docs/proof-debt.md,
+PR #172); the module is isolated and not imported by All.agda/Smoke.agda.
+"""
+
+[[accepted-findings]]
+rule = "workflow hardening (general)"
+path = ".github/workflows/"
+status = "resolved-at-source"
+reason = """
+PR #178 hardened CI workflows and resolved the then-outstanding Hypatia
+findings at source rather than by suppression. New findings in workflows
+should be fixed at source in the same spirit, not added here.
+"""
+
+# ============================================================
+# Prohibited actions
+# ============================================================
+
+[prohibited-actions]
+auto-delete-branches = false
+auto-merge = false
+modify-workflows = false
+escalation = "open an issue, do not spam PR comments"

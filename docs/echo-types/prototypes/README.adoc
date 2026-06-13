@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= echo-types prototypes
+:toc: macro
+
+toc::[]
+
+== Scope
+
+This directory holds doc-side interface sketches for explaining how
+Echo Types terminology may appear in user-facing tools. These files are
+not Agda proof artefacts, are not part of the kernel, and do not alter
+the theorem status recorded in `../MAP.adoc`.
+
+== Warrant debugger
+
+`warrant_debugger_prototype.jsx` is a React prototype for the
+warrant/debugging layer of the semantic-fibre vocabulary. It starts
+from an empty fibre / contradiction, then shows repair choices that
+either weaken a proof obligation, widen a bound, or switch to a soft
+support field. The point is disclosure: a restored fibre remains marked
+with the epistemic cost of the repair instead of being presented as an
+unqualified proof.
+
+Read this as an explanatory companion to:
+
+* `../overview.md` - semantic fibre, avec fibre, sans fibre, warrant.
+* `../taxonomy.md` - cross-axis fibre status and access distinctions.
+* `../../../README.md` - public README placement.

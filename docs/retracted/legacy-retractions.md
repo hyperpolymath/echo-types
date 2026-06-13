@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MPL-2.0
+Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+-->
 # Legacy Retractions and Spikes
 
 This document records exploratory branches that were discarded or retracted as part of the refactoring into a minimal defensible core. These branches exist on GitHub for historical reference but have been removed from the local workspace to maintain structural integrity.

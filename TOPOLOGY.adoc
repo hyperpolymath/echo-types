@@ -31,7 +31,7 @@ echo-types/
 ├── Containerfile                # podman-build fallback
 ├── Justfile                     # primary command runner
 ├── INDEX.adoc                   # legacy file map (parallel to this TOPOLOGY)
-├── readme.adoc + README.md      # legacy duplicate; canonical is README.adoc (rename pending)
+├── README.md                    # canonical README (readme.adoc + EXPLAINME.adoc are pointers since the 2026-06-12 dedup)
 ├── roadmap.adoc + roadmap-gates.adoc  # legacy lowercase; canonical is ROADMAP.adoc (rename pending)
 ├── flake.nix + flake.lock       # (pending)
 ├── guix.scm                     # (pending)
