@@ -431,9 +431,14 @@ open import Ordinal.Buchholz.RankPow using
 -- domination lemma's dependency-graph clean against future signature
 -- changes to `rank-pow-mono-≤ᵇ`.  Strict on the Ω-source, non-strict
 -- on the ψ-source (tracks the `<ᵇ-ψΩ≤` constructor).
+-- `head-Ω-mono` generalises the two atomic inversions to an
+-- arbitrary `_<ᵇ_` source shape (incl. bzero + left-nested bplus):
+-- `x <ᵇ y → head-Ω x ≤Ω head-Ω y`.  The non-strict leading-Ω bound
+-- that the joint-bplus (`<ᵇ-+1`) rank-mono closure consumes.
 open import Ordinal.Buchholz.HeadOmegaInversion using
   ( head-Ω-inv-bOmega
   ; head-Ω-inv-bpsi
+  ; head-Ω-mono
   )
 
 -- Lane 3 head-Ω Slice 2-bplus (own block per CLAUDE.md Working
