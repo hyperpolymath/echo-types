@@ -66,6 +66,13 @@ The project's standing posture is *narrow-true over broad-easy*:
 
 * Echo adds *no new judgment* — it is definitionally `fib`. The
   linear/dependent judgmental ladder is explicitly the *wrong* target.
+* Echo is *not a resource / semiring instance*. It is an orthogonal
+  indexed/residual modality: a resource algebra may *measure* Echo residues
+  (the `Echo.Measure` seam), but it does not *define* Echo. Equal residue
+  measure does not imply equal Echo — mechanised in
+  `Echo.Separation.NotResourceInstance`, stated in `FOUNDATION_CONTRACT.md`.
+  Downstream languages must not model Echo as a `Soundness(S)` resource
+  instance.
 * The integration recipe across the five decoration axes is *organising
   vocabulary*, not a locus of distinctness (the EI-2 finding: recipe
   commutations carry one-axis-at-a-time content, not substantive simultaneous

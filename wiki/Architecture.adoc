@@ -32,6 +32,14 @@ toc::[]
 | `Smoke.agda`
 | Pins every headline theorem via a `using` clause, each in its own
   open-import block with a header comment.
+
+| `Echo.*` (under `proofs/agda/Echo/`)
+| The *foundation contract surface* — the curated, stable interface
+  downstream languages build against: `Echo.Index.ThinPoset` (echo index),
+  `Echo.Modality.{Interface,Core}` (the modality, measure-independent),
+  `Echo.Separation.NotResourceInstance` (the *Echo IS-NOT a resource
+  instance* invariant), `Echo.Measure.{Interface,Examples}` (the
+  residue-measure observation seam). Contract: `FOUNDATION_CONTRACT.md`.
 |===
 
 == Track 1 — Composition (landed)

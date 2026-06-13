@@ -460,6 +460,30 @@ Who is this for? (folded from `EXPLAINME.adoc` at the 2026-06-12 README dedup)
 - Anyone designing audit / provenance / hash-chain systems who wants a
   proof-relevant account of what the audit step preserves.
 
+## Foundation Contract (for downstream languages)
+
+If you are wiring Echo into another language (e.g. my-lang), the stable
+entry point is **`FOUNDATION_CONTRACT.md`** plus the curated `Echo.*`
+namespace under `proofs/agda/Echo/`. It re-exports the proven core behind
+a small, documented surface so you depend on the contract, not the research
+sprawl:
+
+| Concern | Module |
+|---|---|
+| Echo index (thin poset `keep ≤ residue ≤ forget`) | `Echo.Index.ThinPoset` |
+| Echo modality (`degrade`, `degrade-id`, `degrade-compose`, no-section) — **measure-independent** | `Echo.Modality.Core` / `.Interface` |
+| Anti-collapse separation | `Echo.Separation.NotResourceInstance` |
+| Residue-measure observation seam (cost / tropical / confidence) | `Echo.Measure.Interface` / `.Examples` |
+
+**Boundary invariant — `Echo IS-NOT a resource instance`.** Echo is an
+orthogonal indexed/residual modality. A resource algebra may *measure* Echo
+residues, but it does not *define* Echo: **equal residue measure does not
+imply equal Echo** (mechanised: `equal-measure-does-not-imply-equal-echo`,
+`measure-not-injective`). Do **not** model Echo as a `Soundness(S)`
+resource-algebra instance. Vocabulary: *resource grade* (semiring axis) ≠
+*echo index* (modality index) ≠ *residue measure* (a lossy observation);
+avoid "echo-grade".
+
 ## Identity Claim and Falsifiability
 
 This repo is trying to establish echo types as a concept with its own identity.

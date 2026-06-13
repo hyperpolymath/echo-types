@@ -160,4 +160,16 @@ open import Ordinal.Buchholz.SurfaceOrder
 open import Ordinal.Buchholz.VeblenObligations
 open import Ordinal.Buchholz.Smoke
 
+-- Foundation contract surface (FOUNDATION_CONTRACT.md): the curated,
+-- stable `Echo.*` public interface exported to downstream languages.
+-- Index + modality are measure-independent; the measure seam may
+-- observe residues but never defines Echo (Echo IS-NOT a resource
+-- instance). See docs/echo-types/echo-kernel-note.adoc.
+open import Echo.Index.ThinPoset
+open import Echo.Modality.Interface
+open import Echo.Modality.Core
+open import Echo.Separation.NotResourceInstance
+open import Echo.Measure.Interface
+open import Echo.Measure.Examples
+
 open import Smoke

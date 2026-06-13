@@ -47,6 +47,11 @@ This wiki is a *distillation*. The authoritative records are:
 * `CLAUDE.md` — current rung-state + the "DO NOT reopen" lists (read first).
 * `roadmap-gates.adoc` — the three identity gates and their failure actions.
 * `docs/echo-types/MAP.adoc` — the module map.
+* `FOUNDATION_CONTRACT.md` — the *downstream-facing contract*: the stable
+  `Echo.*` interface (index / modality / separation / measure seam) that
+  consuming languages build against, and the boundary invariant
+  *Echo IS-NOT a resource instance*. Read this first if you are wiring Echo
+  into another language.
 * `.machine_readable/6a2/STATE.a2ml` — EI-2 record (permanent) + current-state block.
 * `docs/bridges/cross-repo-bridge-status.md` — cross-repo bridge ledger.
 

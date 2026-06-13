@@ -1302,3 +1302,52 @@ open import Ordinal.Buchholz.WellFormed using
   ; psi-OmegaOmega-wf
   )
 
+-- Foundation contract surface (FOUNDATION_CONTRACT.md). The curated,
+-- stable `Echo.*` public interface: echo index (thin poset), the Echo
+-- modality core (measure-independent), the anti-collapse separation
+-- (Echo IS-NOT a resource instance), and the residue-measure seam.
+-- Pinned so a silent rename of any contract name fails CI fast.
+
+open import Echo.Index.ThinPoset using
+  ( ThinPoset
+  ; grade-thinPoset
+  ; ≤g-refl
+  )
+
+open import Echo.Modality.Interface using
+  ( EchoModality
+  )
+
+open import Echo.Modality.Core using
+  ( Echo
+  ; GEcho
+  ; degrade
+  ; degrade-id
+  ; degrade-compose
+  ; no-section-of-collapsing-map
+  ; grade-echoModality
+  )
+
+open import Echo.Separation.NotResourceInstance using
+  ( echo-degrade-not-generic-sigma
+  ; residue-measure
+  ; measure-agrees
+  ; echo-distinguishes
+  ; equal-measure-does-not-imply-equal-echo
+  ; measure-not-injective
+  ; visible-measure
+  ; visible-measure-informative
+  ; equal-informative-measure-does-not-imply-equal-echo
+  )
+
+open import Echo.Measure.Interface using
+  ( OrderedCarrier
+  ; ResidueMeasure
+  )
+
+open import Echo.Measure.Examples using
+  ( cost-measure
+  ; tropical-cost-measure
+  ; confidence-measure
+  )
+
