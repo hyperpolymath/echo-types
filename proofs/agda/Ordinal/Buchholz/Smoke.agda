@@ -612,10 +612,14 @@ open import Ordinal.Buchholz.RankMonoUnion using
 -- structural.  Together with the WfCNF wrap (PR #169) this
 -- equips downstream Buchholz consumers with both the
 -- canonical-form invariant AND termination of union-derivation
--- chains.
+-- chains.  `wf-<ᵇᵘⁿ` closes the previously-deferred WfCNF-narrowed
+-- form's well-foundedness via the same transport through the
+-- bundled `rank-pow-mono-<ᵇᵘⁿ` mediator — the form the surface-route
+-- WF consumer in `RecursiveSurfaceOrder` actually needs.
 open import Ordinal.Buchholz.RankMonoUnionWF using
   ( wf-rank-pow-pullback
   ; wf-<ᵇᵘ
+  ; wf-<ᵇᵘⁿ
   )
 
 -- WfCNF wrap of the union umbrella 2026-05-30 (own block per

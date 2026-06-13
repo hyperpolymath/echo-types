@@ -45,13 +45,14 @@
 --   * Gate 3 — Path-4 + further source-rule extensions
 --     (future-work, mechanical per the extension recipe).
 --
--- ## What this does NOT do
+-- ## Scope notes
 --
--- * Does NOT prove well-foundedness of the WfCNF-narrowed
---   `_<ᵇᵘⁿ_` (PR #169) separately — it follows by the same
---   Subrelation transport from `wf-<ᵇᵘ` via the canonical
---   `<ᵇᵘⁿ → <ᵇᵘ` projection.  Left for a thin follow-on if a
---   consumer needs the WfCNF-bundled form's WF specifically.
+-- * The WfCNF-narrowed `_<ᵇᵘⁿ_` (PR #169) well-foundedness,
+--   previously deferred here, is now provided as `wf-<ᵇᵘⁿ`
+--   below — the same Subrelation transport routed through its
+--   `rank-pow-mono-<ᵇᵘⁿ` mediator (equivalently, through the
+--   canonical `<ᵇᵘⁿ → <ᵇᵘ` projection).  This serves the
+--   surface-route WF consumer in `RecursiveSurfaceOrder`.
 -- * Does NOT add a Brouwer-rank embedding stronger than
 --   `rank-pow` — `rank-pow` is K-free + lands in `Ord` (Brouwer
 --   ordinals) + already discharges the WF transport.  Nothing
@@ -73,6 +74,10 @@ open import Ordinal.Buchholz.RankMonoUnion      using
   ( _<ᵇᵘ_
   ; rank-pow-mono-<ᵇᵘ
   )
+open import Ordinal.Buchholz.RankMonoUnionWfCNF using
+  ( _<ᵇᵘⁿ_
+  ; rank-pow-mono-<ᵇᵘⁿ
+  )
 
 ----------------------------------------------------------------------
 -- Well-foundedness of `_<ᵇᵘ_`
@@ -93,3 +98,19 @@ wf-rank-pow-pullback = On.wellFounded rank-pow wf-<′
 
 wf-<ᵇᵘ : WellFounded _<ᵇᵘ_
 wf-<ᵇᵘ = Subrelation.wellFounded rank-pow-mono-<ᵇᵘ wf-rank-pow-pullback
+
+----------------------------------------------------------------------
+-- Well-foundedness of the WfCNF-narrowed `_<ᵇᵘⁿ_`
+----------------------------------------------------------------------
+
+-- The consumer-facing bundled form (`RankMonoUnionWfCNF._<ᵇᵘⁿ_`)
+-- carries the WfCNF endpoint witnesses alongside the union
+-- derivation.  Its well-foundedness is the same two-step transport
+-- as `wf-<ᵇᵘ`: the bundled `rank-pow-mono-<ᵇᵘⁿ` mediator witnesses
+-- that `_<ᵇᵘⁿ_` is a sub-relation of `_<′_ on rank-pow`, so it
+-- inherits well-foundedness from `wf-rank-pow-pullback`.  (The WfCNF
+-- fields ride along unused in the WF proof, exactly as they do in
+-- the rank-mono mediator.)
+
+wf-<ᵇᵘⁿ : WellFounded _<ᵇᵘⁿ_
+wf-<ᵇᵘⁿ = Subrelation.wellFounded rank-pow-mono-<ᵇᵘⁿ wf-rank-pow-pullback
