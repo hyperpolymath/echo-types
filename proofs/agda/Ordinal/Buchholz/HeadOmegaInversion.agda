@@ -70,8 +70,11 @@ open import Ordinal.OmegaMarkers   using
   ; fin≤fin
   ; fin≤ω
   ; <Ω→≤Ω
+  ; ≤Ω-split
   )
 open import Data.Nat using (z≤n)
+open import Data.Sum.Base using (_⊎_)
+open import Relation.Binary.PropositionalEquality using (_≡_)
 open import Ordinal.Buchholz.Syntax using
   ( BT
   ; bzero
@@ -177,3 +180,27 @@ head-Ω-mono (<ᵇ-ψ+ p)       = head-Ω-mono p
 head-Ω-mono (<ᵇ-+Ω p)       = head-Ω-mono p
 head-Ω-mono (<ᵇ-+ψ p)       = head-Ω-mono p
 head-Ω-mono (<ᵇ-+1 p)       = head-Ω-mono p
+
+----------------------------------------------------------------------
+-- Leading-Ω classification along a `_<ᵇ_` step
+----------------------------------------------------------------------
+
+-- Combining `head-Ω-mono` with `≤Ω-split`: every `x <ᵇ y` either
+-- strictly raises the leading Ω-marker, or leaves it equal.
+--
+--   * LEFT  (`head-Ω x <Ω head-Ω y`): the strict-head case the
+--     joint-bplus headline `RankPowSlice3Headline.rank-mono-<ᵇ-+1-
+--     via-head-Ω` consumes directly — the CNF-dominance chain has
+--     the room it needs.
+--   * RIGHT (`head-Ω x ≡ head-Ω y`): the equal-marker boundary
+--     (e.g. `bpsi ν α <ᵇ bOmega ν` via `<ᵇ-ψΩ≤`), where rank-pow
+--     collapses the ψ/Ω distinction and the discharge must come
+--     from the lex / admissibility second component instead.
+--
+-- This is the exact case-split a `<ᵇ-+1` rank-mono umbrella performs
+-- on its source derivation: feed LEFT to the head-Ω headline, route
+-- RIGHT to the boundary discharge.
+head-Ω-strict-or-eq : ∀ {x y}
+  → x <ᵇ y
+  → (head-Ω x <Ω head-Ω y) ⊎ (head-Ω x ≡ head-Ω y)
+head-Ω-strict-or-eq p = ≤Ω-split (head-Ω-mono p)
