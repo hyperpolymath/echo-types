@@ -1,0 +1,72 @@
+// SPDX-License-Identifier: MPL-2.0
+= K9 Contractiles (echo-types)
+:toc: left
+:icons: font
+
+== What Are K9 Contractiles?
+
+K9 contractiles are self-validating components that combine configuration,
+validation, and deployment logic in a single Nickel file. They implement the
+RSR principle of "self-describing artifacts" by embedding contracts and
+orchestration directly in the component. echo-types uses them for repository
+self-validation against the `--safe --without-K` zero-postulate proof
+discipline.
+
+== The Three Security Levels ("The Leash")
+
+[horizontal]
+`'Kennel`:: Pure data, no execution (safest)
+`'Yard`:: Nickel evaluation with contracts (medium trust)
+`'Hunt`:: Full execution with Just recipes (requires signature)
+
+== Components in this directory
+
+[cols="1,3"]
+|===
+| File | Purpose
+
+| `methodology-guard.k9.ncl`
+| The echo-types-specific guard: enforces `--safe --without-K`, the zero
+  postulate ceiling (outside the Ordinal track), the believe_me / sorry /
+  Admitted / unsafeCoerce / Obj.magic ban, Smoke-pin + All-wiring coverage,
+  and the funext-free kernel cone via `scripts/kernel-guard.sh`.
+
+| `examples/project-metadata.k9.ncl`
+| Kennel-level echo-types project metadata (name, version target, license,
+  the three workstreams).
+
+| `examples/ci-config.k9.ncl`
+| Yard-level CI shape mirroring `.github/workflows/agda.yml` (Agda + stdlib
+  versions, the All.agda / Smoke.agda / kernel-guard gate).
+
+| `examples/setup-repo.k9.ncl`
+| Hunt-level toolchain bootstrap (Agda >= 2.6.3 + stdlib v2.3 from source).
+
+| `template-kennel.k9.ncl` / `template-yard.k9.ncl` / `template-hunt.k9.ncl`
+| Starting-point templates for new components at each leash level.
+|===
+
+== Validate / run
+
+[source,sh]
+----
+# Kennel: export as JSON
+nickel export examples/project-metadata.k9.ncl > project-metadata.json
+
+# Yard: typecheck contracts
+nickel typecheck examples/ci-config.k9.ncl
+
+# Hunt (signature required): dry-run first
+./must --dry-run run examples/setup-repo.k9.ncl
+----
+
+== Integration with the rest of .machine_readable/
+
+* `6a2/STATE.a2ml` — K9 can validate the current-state surface is non-template.
+* `6a2/META.a2ml` — K9 enforces the architectural / proof-discipline decisions.
+* `agent_instructions/methodology.a2ml` — the methodology-guard ceilings live there.
+
+== Reference
+
+* K9-SVC Specification: https://github.com/hyperpolymath/k9-svc/blob/main/SPEC.adoc
+* IANA Media Type: `application/vnd.k9+nickel`

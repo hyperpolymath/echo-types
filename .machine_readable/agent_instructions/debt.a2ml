@@ -1,0 +1,86 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <6759885+hyperpolymath@users.noreply.github.com>
+#
+# debt.a2ml — Meander debt list (echo-types)
+# Proof obligations and chores found but not discharged. Carried between
+# sessions; becomes the next session's Phase 0 input.
+#
+# Items are consumed (removed) when discharged. New items added at session end.
+#
+# Reference: ADR-002 in standards/agentic-a2ml/docs/
+
+[metadata]
+version = "1.0.0"
+last-updated = "2026-06-12"
+
+# ============================================================================
+# SHOULD — would fix next wave
+# ============================================================================
+
+[[debt.should]]
+component = "ordinal-track / Ordinal.Buchholz"
+issue = "Unbudgeted _<ᵇʳᶠ_ global WF: eliminate the explicit ℕ budget from wf-<ᵇʳᶠᵇ without leaving --safe --without-K."
+effort = "hard"
+impact = "high"
+discovered = "2026-05-20"
+note = "Solo, not swarmable; the named next bottleneck toward Bachmann-Howard."
+
+[[debt.should]]
+component = "ordinal-track / Order.agda"
+issue = "Push the surface-route WF back into Order.agda's main _<ᵇ_ package; close the K-limited shared-binder cases (<ᵇ-ψα, <ᵇ-+2)."
+effort = "hard"
+impact = "high"
+discovered = "2026-04-28"
+
+[[debt.should]]
+component = "establishment-track / docs/echo-types/paper.adoc"
+issue = "Clear remaining [EXPAND] tags (related work; evaluation; ordinal consumer-evidence appendix)."
+effort = "medium"
+impact = "medium"
+discovered = "2026-05-17"
+note = "Author-driven; the ordinal appendix is gated on the Bachmann-Howard milestone. Do NOT auto-run outreach / Zenodo / packaging."
+
+[[debt.should]]
+component = "establishment-track / EchoImageFactorization"
+issue = "Image factorisation (epi, mono) earn-back requires propositional truncation (Cubical Agda, or a postulated ∥_∥ interface with scoped honest-scope). Substantial design decision."
+effort = "hard"
+impact = "medium"
+discovered = "2026-05-27"
+
+# ============================================================================
+# COULD — would fix eventually
+# ============================================================================
+
+[[debt.could]]
+component = "establishment-track / decoration zoo"
+issue = "Wire the remaining decoration modules (Cost / Search / Indexed / Epistemic) as ResidueForm / DecorationStructure instances; mechanical per-module work."
+effort = "medium"
+impact = "low"
+discovered = "2026-05-27"
+
+[[debt.could]]
+component = "establishment-track / Q2.1 truncation generalisation"
+issue = "Generalise echo-not-prop: for non-injective f with two distinct preimages of y, is-prop (Echo f y) → ⊥. High-leverage for the truncation distinctness argument but currently low-priority."
+effort = "medium"
+impact = "medium"
+discovered = "2026-04-29"
+
+[[debt.could]]
+component = "rsr-conformance (root Intentfile)"
+issue = "Pin @sha256: digests on stapeln.toml + Containerfile base images; resolve readme.adoc/README.md and roadmap.adoc/roadmap-gates.adoc duplication; migrate doc-format-rule .md → .adoc."
+effort = "easy"
+impact = "low"
+discovered = "2026-04-28"
+
+[[debt.could]]
+component = "cross-repo bridges / JanusKey"
+issue = "Rewrite EchoJanusBridge.JanusOp from the 4-variant local enum to the 8-variant Idris2 OpKind (Copy/Move/Delete/Modify/Obliterate/KeyGen/KeyRotate/KeyRevoke); add IsFileOp/IsKeyOp analogues; re-pin in Smoke.agda."
+effort = "medium"
+impact = "low"
+discovered = "2026-06-02"
+
+# ============================================================================
+# PARKED — explicitly out of scope (do not treat as debt to clear)
+# ============================================================================
+# - Recipe extension (coupled state across axes): v0.2+, NOT EI-2 follow-up. File as EI-3 when v0.2 begins.
+# - Full 2D iff for recipe-non-triviality: not formalisable in safe Agda without postulates (PATH B accepted).

@@ -1,0 +1,110 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Roadmap
+:toc: macro
+:toclevels: 2
+
+[.lead]
+Two layers: the *identity-claim gates* (the falsifiable conditions the project
+must keep meeting) and the *live open work* per track. Authoritative sources:
+`roadmap-gates.adoc` and `CLAUDE.md` current-rung-state.
+
+toc::[]
+
+== Identity-claim decision gates
+
+The identity claim rests on three gates. Each has an explicit failure action;
+failure is recorded in `docs/retractions.adoc`, not silently revised. Gates are
+reassessed at each tagged release — surviving one round does not grant immunity
+in the next.
+
+[cols="1,3,2", options="header"]
+|===
+| Gate | Condition | Failure action
+
+| 1. Distinct phenomenon
+| Echo types name structured loss under non-injective computation as distinct
+  from refinement types, lens/optic theory, HoTT fibers, setoid quotients,
+  provenance semirings. Carried by the *truncation argument* (`echo-not-prop`)
+  + the *2-cell argument* (`Sophisticated.*` in EchoVsQuotient / EchoVsGalois).
+| Drop identity claim; retain as Agda exposition.
+
+| 2. Characteristic theorems
+| At least two theorems are naturally echo-shaped and not reducible to generic
+  Σ lemmas. Current nominees: `EchoGraded.degrade-via-join`,
+  `EchoGraded.degrade-compose`, `EchoChoreo.applyChoreo-compose`,
+  `EchoLinear.degradeMode-compose` (survives the audit 4-of-4).
+| Drop claim of a distinct theorem family; modules remain.
+
+| 3. Canonical examples
+| At least one fully worked example where echo types are the right explanatory
+  unit (preferable to, not merely compatible with, existing framings).
+| Reframe as theoretical scaffolding awaiting application.
+|===
+
+NOTE: The integration recipe across the five decoration axes does *not* carry
+the Gate 1 distinctness load — that was established (negatively) by EI-2 and is
+*terminated*. Do not reopen it under any reframing in
+`.machine_readable/6a2/STATE.a2ml § forbidden-rebrandings`.
+
+== Live open work per track
+
+=== Composition track — landed
+
+The base accumulation iso, cancellation iso, and pentagon coherence are all
+landed and packaged as `_↔_`. No open headline items; further work is
+consolidation / doc-threading.
+
+=== Ordinal track — partial (the active bottleneck)
+
+Target: *Bachmann–Howard* ψ₀(Ω_ω). Open, in priority order:
+
+. *Unbudgeted `_<ᵇʳᶠ_` global WF* — eliminate the explicit ℕ budget from
+  `wf-<ᵇʳᶠᵇ` without leaving `--safe --without-K`. The named next bottleneck;
+  solo, not swarmable.
+. *Full constructor set beyond the admitted core* — the K-limited shared-binder
+  cases `<ᵇ-ψα`, `<ᵇ-+2`.
+. *Push the surface-route WF back* into `Order.agda`'s main `_<ᵇ_` package.
+
+=== Establishment track — Pillar E only
+
+Pillars A–D and F (F1–F4) are closed. Remaining:
+
+. Clear the `paper.adoc` `[EXPAND]` tags: related-work pass, evaluation
+  (proof-size/cost table), and the *ordinal consumer-evidence appendix* — the
+  last *gated on the Bachmann–Howard milestone*.
+. *Then*, author-driven and *not* auto-run: Zenodo DOI, installable library
+  packaging, outreach. Flag to the user; do not start unprompted.
+
+== Carried debt (machine-readable)
+
+The full debt list, with effort/impact, lives in
+`.machine_readable/agent_instructions/debt.a2ml`. Highlights:
+
+* *Should:* the two ordinal WF items above; image factorisation (epi, mono)
+  earn-back (needs propositional truncation — a substantial design decision).
+* *Could:* decoration-zoo wiring (Cost/Search/Indexed/Epistemic as
+  ResidueForm/DecorationStructure instances); the Q2.1 truncation
+  generalisation; rsr-conformance chores (@sha256 pins, README/roadmap
+  de-duplication, doc-format migration); the JanusKey 4→8-variant enum mirror.
+
+== Explicitly parked (not debt to clear)
+
+* *Recipe extension* (coupled state across axes): v0.2+, *not* EI-2 follow-up.
+  File as EI-3 when v0.2 work begins.
+* *Full 2D iff for recipe-non-triviality:* not formalisable in safe Agda
+  without postulates; PATH B (partial formalisation) accepted.
+
+== Gate resolution
+
+[cols="1,3", options="header"]
+|===
+| Outcome | Action
+
+| All three gates pass | Identity claim upheld; proceed to peer review.
+| Any gate fails | Identity claim retracted in README + on Zenodo (new version,
+  revised abstract). Modules remain; the claim does not.
+|===
+
+TIP: Retractions are not failures of the repository. They are the mechanism by
+which the identity claim is made falsifiable in the first place.

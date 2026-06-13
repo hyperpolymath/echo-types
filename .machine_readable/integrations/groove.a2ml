@@ -1,0 +1,38 @@
+; SPDX-License-Identifier: MPL-2.0
+; Groove Protocol Manifest — declares API surfaces this project exposes.
+;
+; echo-types is a constructive Agda PROOF LIBRARY. It exposes no runtime
+; service: there is no daemon, no HTTP surface, no port. This manifest is
+; therefore declared but inert — kept for constellation consistency and so a
+; future service layer (if ever added) has a slot.
+;
+; See: https://github.com/hyperpolymath/standards/tree/main/groove-protocol
+
+(groove-manifest
+  (version "1.0")
+
+  (service "echo-types")
+  (service-version "0.1.1")
+
+  ; Port — MUST be unique across the ecosystem; echo-types has no service,
+  ; so none is assigned. Do not assign a port to a library.
+  (port 0)  ; 0 = not assigned (no service surface)
+
+  ; API surfaces — echo-types exposes none.
+  (api-surfaces
+    (rest      (enabled false))
+    (grpc      (enabled false))
+    (graphql   (enabled false))
+    (websocket (enabled false))
+    (sse       (enabled false))
+    (groove    (enabled false)))
+
+  (health "")  ; no health endpoint — not a service
+
+  ; Capabilities — what this artefact offers others (concept-level only).
+  (capabilities
+    ("structured-loss-vocabulary: Echo / EchoResidue / EchoLossTaxonomy classification of lossy maps")
+    ("machine-checked identity claim: --safe --without-K, postulate-free"))
+
+  ; Dependencies — what this artefact needs from others at runtime.
+  (dependencies ()))  ; none — build-time only (agda-stdlib)

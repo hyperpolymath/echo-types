@@ -1,0 +1,113 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Working Rules
+:toc: macro
+:toclevels: 2
+
+[.lead]
+These are the non-negotiable rules for working in echo-types. They are the
+riverbanks of the project: divergent proof work happens *within* them, never
+across them. The authoritative source is `CLAUDE.md` § "Working rules in this
+repo"; this page distils it.
+
+toc::[]
+
+== The proof discipline
+
+* *`--safe --without-K` throughout.* Every module declares both in its OPTIONS
+  pragma. Never weaken either to land a proof.
+* *No postulates* unless explicitly isolated and justified. Load-bearing tracks
+  carry *zero*. Exploratory truncation postulates, where they exist, are
+  enumerated in `docs/proof-debt.md` and stay out of `All.agda`'s trusted closure.
+* *No escape hatches:* no `believe_me`, `primTrustMe`, `primEraseEquality`,
+  `sorry`, `Admitted`, `unsafeCoerce`, `Obj.magic`.
+* *No escape pragmas:* no `{-# TERMINATING #-}`, `{-# NON_TERMINATING #-}`, or
+  `--allow-unsolved-metas`.
+* *funext is never a postulate.* Where strict forms need it (e.g. the F4 / F5
+  strict clauses) it is taken as an *explicit module parameter*, isolated from
+  the trusted base.
+
+== Build invariant (run after every edit)
+
+[source,sh]
+----
+agda -i proofs/agda proofs/agda/All.agda
+agda -i proofs/agda proofs/agda/Smoke.agda
+scripts/kernel-guard.sh
+----
+
+All three must exit 0. Every edit ends with an Agda compile command and
+captured output. (Toolchain: Agda ≥ 2.6.3, agda-stdlib ≥ 2.3 — apt's 1.7.3
+lacks `Data.Product.Base`; install v2.3 from source, see `CLAUDE.md` § Build.)
+
+== Smoke pins and All wiring
+
+* *Pin every headline.* Each headline theorem must be pinned in `Smoke.agda`
+  via a `using` clause, in its *own* open-import block with a header comment
+  (not sharing a paren-block with another lane — cuts merge-conflict noise).
+* *Wire every module.* Each new module goes into `All.agda` as an open import.
+  Orphan modules that compile but are not in `All.agda` are *dead code*.
+* For parameterised modules, pin via a concrete trivial instance (the
+  `EchoApproxInstance` trivial-on-`⊤` pattern).
+
+== The kernel cone
+
+The funext-free kernel cone is *exactly* `{ Echo, EchoKernel }`, enforced by
+`scripts/kernel-guard.sh`:
+
+* `Echo.agda` imports zero in-repo modules (stdlib-only root).
+* `EchoKernel.agda`'s in-repo imports ⊆ `{ Echo }`.
+* Neither imports a funext / `Axiom.Extensionality` module.
+* Every `proofs/agda/Echo*.agda` module must be classified in
+  `docs/echo-types/echo-kernel-note.adoc` (the classification-drift lint).
+
+== Naming traps
+
+* *`ModeGraded`* (with trailing `d`) is canonical;
+  `proofs/agda/characteristic/ModeGrade.agda` is *forbidden*.
+* In `DecorationStructure`, the abstract join field is `join`, not `_⊔_`
+  (avoids a `Level._⊔_` collision). Per-decoration modules keep their suffixed
+  forms (`_⊔g_`, `_⊔m_`, `_⊔a_`).
+
+== Honesty posture
+
+* *Narrow-true over broad-easy.* Prefer a provably-correct narrower claim to
+  unsupported ambition. Honest qualification is visible in source.
+* *Matched-negatives.* Every identity claim ships with the things it does *not*
+  prove, as checked artefacts where possible.
+* *Retractions, not silent revisions.* A claim that does not survive a gate is
+  recorded in `docs/retractions.adoc`. Do not reopen retracted claims
+  (R-2026-05-18) or terminated investigations (EI-2).
+
+== Rung-consolidation policy
+
+Each time a named theorem or iso-shape lands on the composition or ordinal
+tracks:
+
+. Branch housekeeping; cherry-pick to a consolidation branch in dependency order.
+. Update human docs (`composition.md`, `roadmap.adoc`, `overview.md`,
+  `cross-repo-bridge-status.md`) — sweep stale `(Open)`/`[unblocked]` tags;
+  honest labels `(Landed)` / `(Partial)` / `(Open)`.
+. Update machine docs (`CLAUDE.md` current-rung-state + the `6a2/` files).
+. Verify `All.agda` + `Smoke.agda` exit 0; no postulates introduced.
+. Fast-forward `main`; record the rung + commits + remaining open pieces + the
+  smallest useful next advance in the session ledger.
+
+== Parallel-session discipline
+
+Multiple Claude sessions may work the repo concurrently. Stay clear of another
+session's declared territory; use `--only <paths>` when both must commit before
+sync (`Smoke.agda` / `All.agda` are the common collision points). Re-fetch and
+verify the other session's branch builds clean before taking over or backing
+off. Ordinal-track admin-merges wait for CI green (the PR #133/#134 lesson).
+
+== Estate conventions
+
+* *License:* MPL-2.0 for code (CC-BY-4.0 on some prose docs); SPDX header on
+  every file.
+* *Forge:* GitHub canonical; GitLab + Codeberg read-only mirrors.
+* *Docs:* AsciiDoc preferred over Markdown (README.md is the GitHub-render
+  exception).
+* *Config:* Nickel/CUE/Dhall over YAML (YAML only where GitHub Actions forces it).
+* *Containers:* Containerfile (Podman), never Dockerfile; base images @sha256-pinned.
+* *Build driver:* Justfile, not Makefile.
