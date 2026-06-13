@@ -439,6 +439,7 @@ open import Ordinal.Buchholz.HeadOmegaInversion using
   ( head-Ω-inv-bOmega
   ; head-Ω-inv-bpsi
   ; head-Ω-mono
+  ; head-Ω-strict-or-eq
   )
 
 -- Lane 3 head-Ω Slice 2-bplus (own block per CLAUDE.md Working
