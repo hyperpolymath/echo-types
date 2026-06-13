@@ -206,7 +206,88 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-05-27)
+## Current rung state (2026-06-13)
+
+### Session arc 2026-06-13 Deniability track — EchoDeniability + wiki (read this first)
+
+*Where we started:* user pasted `Deniability.agda` (standalone exploration: perfect
+deniability via constant production, `refl` proof) and asked for a `DeniabilityPartial.agda`
+companion showing both proof failures (commented with error messages) and the restricted proof
+for constant openers (`IsConstantOpener` / `cannotDistinguishConstant`). Then asked to integrate
+the learning into echo-types proper with a dedicated wiki section.
+
+*Where we ended:* `EchoDeniability.agda` lands on `origin/main` as a new Tier-2 audience-move
+module. Two commits:
+
+* `cc06c45` — `feat(deniability): add EchoDeniability module and wiki page`
+* `0ca71a5` — `fix(ci): classify EchoDeniability in kernel-note and MAP.adoc`
+  (kernel-guard Check B failure; fixed by adding `EchoDeniability` to Tier 2 table
+  in `echo-kernel-note.adoc` and a `[REAL]`-tagged bullet in `MAP.adoc`).
+
+Both GPG-signed. All five substantive CI checks green (Agda, CodeQL, Governance, Secret
+Scanner, Hypatia). Pre-existing `scorecard.yml` / `mirror.yml` startup_failure at 0s are
+billing-wall pattern B — parked, not caused by this work.
+
+*Deliverables:*
+
+1. *`proofs/agda/EchoDeniability.agda`* — new Tier-2 module (`--safe --without-K`, zero
+   postulates). Core theorems:
+   * `perfect-deniable` — `IsDeniable produce-perfect` (`refl`, the collapsing-map case).
+   * `partial-not-deniable` — `¬ IsDeniable produce-partial` (via `partial-witness`).
+   * `partial-deniable-restricted` — restricted deniability for `IsConstantOpener` openers.
+   * `no-section-produce-perfect` — via `EchoNoSectionGeneric.no-section-of-collapsing-map`.
+   * `partial-has-section` — `partial-witness` is a genuine left-inverse.
+   * `echo-intact-perfect` / `echo-lost-perfect` / `echo-intact-lost-distinct` — two distinct
+     Echo witnesses at the same residue (the collapsing-map echo-count story).
+   * Matched-negative block: `NotProved-side-channel-safe`, `NotProved-cryptographic-deniability`,
+     `NotProved-adaptive-adversary`.
+
+2. *`wiki/Deniability.adoc`* — new wiki reference page: both production functions, duality
+   table, `IsConstantOpener` and affine-mode connection, honest scope, module location.
+
+3. *`wiki/Home.adoc`* — deniability row added to start-here table; one-line status updated.
+
+4. *`CHANGELOG.md`* — `### Added (2026-06-13)` entry.
+
+5. *`docs/echo-types/echo-kernel-note.adoc`* — `EchoDeniability` classified as Tier 2.
+
+6. *`docs/echo-types/MAP.adoc`* — `*Deniability*` bullet added in audience-moves section.
+
+7. *`proofs/agda/All.agda`* / *`proofs/agda/Smoke.agda`* — wired.
+
+*Standalone companion (not in repo):*
+`/home/hyperpolymath/developer/repos/DeniabilityPartial.agda` — module `DeniabilityPartial`
+with two-constructor `Residue` (Trace / Erased), failing proof block comments,
+`witness-distinguishes` counterexample, `IsConstant` / `cannotDistinguishConstant` restricted
+proof. Kept as a local exploration sketch; intentionally not added to echo-types.
+
+*Key design notes:*
+
+* `echo-intro f x` takes the function explicitly: signature is
+  `(f : A → B) → (x : A) → Echo f (f x)`. NOT `echo-intro x refl`.
+* `no-section-of-collapsing-map produce-perfect Intact Lost Intact≢Lost refl` — the final
+  `refl` witnesses `produce-perfect Intact ≡ produce-perfect Lost` (both reduce to `Trace`
+  definitionally).
+
+*CI notes:*
+
+* `scorecard.yml` / `mirror.yml` startup_failure = billing-wall pattern B (structural
+  reusable failure). Do not re-attempt. See [[scorecard-startup-failure-2026-06-02-park]].
+* bag-of-actions cannot address these: (1) Agda runs fine on public-repo runners; (2)
+  scorecard/mirror are pattern B, not billing-addressable.
+
+*Plan for the next Claude.*
+
+1. *Ordinal Slice 3+* — back to the main track: push `_<ᵇ_` order + WF toward Bachmann–Howard.
+
+2. *EchoTypes.jl mirror* — add `EchoDeniability` to the Julia falsifier shadow.
+
+3. *Pillar E paper [EXPAND] tags* — ordinal consumer-evidence appendix gated on BH milestone.
+
+DO NOT reopen: `EchoDeniability`'s `IsDeniable` definition (∀ d, not ∃ d — full deniability
+= no opener can distinguish); the `IsConstantOpener` boundary (minimum-sufficient class;
+adding cryptographic axioms is a separate work-item); the `no-section-of-collapsing-map`
+call signature (5 args: f, e₁, e₂, e₁≢e₂, f-e₁≡f-e₂).
 
 ### Session arc 2026-05-27 Slice-2 upstream adoption (READ FIRST after the broad-cleanup arc below)
 
