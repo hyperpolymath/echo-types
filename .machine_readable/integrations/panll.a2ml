@@ -1,0 +1,19 @@
+# SPDX-License-Identifier: MPL-2.0
+# Integration: PanLL — constellation interface consumer
+# echo-types is a foundation PanLL can cite, NOT a build dependency.
+
+[integration]
+name = "panll"
+type = "constellation-consumer"
+repository = "https://github.com/hyperpolymath/panll"
+
+[relationship]
+description = "PanLL is a three-pane cognitive-relief HTI (Ambient / Symbolic / Neural / World panes). echo-types sits below it as a foundational formal-verification artefact in the same constellation."
+direction = "echo-types is upstream-foundation; PanLL is a downstream interface."
+coupling = "none — no shared schema, no import path, no CI dependency in either direction. The relationship is citation / constellation membership only."
+
+[substrate]
+# PanLL's own runtime substrate, recorded for constellation context.
+presentation = "Gossamer (Zig + WebKitGTK webview shell, ~5 MB binary)"
+voice = "Burble (Zig SIMD audio, IEEE-1588 PTP sync, browser-based)"
+discovery = "Groove protocol (HTTP service discovery)"

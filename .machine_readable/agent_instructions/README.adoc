@@ -1,0 +1,47 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <6759885+hyperpolymath@users.noreply.github.com>
+= Agent Instructions (echo-types)
+:toc: preamble
+
+Methodology-aware configuration for AI agents working on echo-types. Read by
+any AI agent (Claude, Gemini, Copilot, etc.) at session start, alongside the
+top-level `CLAUDE.md` (which carries the authoritative current-rung-state) and
+`.machine_readable/6a2/`.
+
+== Files
+
+[cols="1,3"]
+|===
+| File | Purpose
+
+| `methodology.a2ml`
+| Default mode, the proof-discipline invariants (`--safe --without-K`, zero
+  postulates, ceilings), priority weights, convergent budget, known constraints.
+
+| `coverage.a2ml`
+| Session coverage tracking — which workstreams/modules were visited, what was
+  skipped, what has open MUSTs.
+
+| `debt.a2ml`
+| Meander debt — proof obligations and chores found but not discharged, carried
+  between sessions.
+|===
+
+== How Agents Use These
+
+1. Read `CLAUDE.md` first — it has the live rung-state and the "DO NOT reopen" lists.
+2. Read `methodology.a2ml` — know mode, invariants, ceilings.
+3. Read `coverage.a2ml` and `debt.a2ml` — know what was visited and what is outstanding.
+4. At session end, update `coverage.a2ml` and `debt.a2ml`, and (on a landed rung)
+   the `CLAUDE.md` current-rung-state + the `6a2/STATE.a2ml` current-state block.
+
+== Relationship to Other Files
+
+* `6a2/AGENTIC.a2ml` says WHAT agents can do (gating, escalation, redo-traps).
+* `agent_instructions/` says HOW agents should work (methodology).
+* `bot_directives/` says what the gitbot-fleet / Hypatia does (fleet-specific).
+* `CLAUDE.md` says how Claude specifically should work (Claude-specific, authoritative state).
+
+== Reference
+
+ADR-002 in `standards/agentic-a2ml/docs/ADR-002-methodology-layer.adoc`.

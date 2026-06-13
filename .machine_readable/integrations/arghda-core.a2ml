@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: MPL-2.0
+# Integration: arghda-core — extracted proof-workspace engine
+# Extracted from echo-types 2026-05-30 (echo-types#159); subtree removed (PR #160).
+
+[integration]
+name = "arghda-core"
+type = "extracted-tool"
+repository = "https://github.com/hyperpolymath/arghda-core"
+
+[provenance]
+origin = "extracted from echo-types"
+extracted = "2026-05-30"
+issue = "echo-types#159"
+removal-pr = "echo-types#160"
+note = "The arghda-core/ subtree and its cross-refs were removed from this repo on extraction; arghda-core is now a standalone repo."
+
+[capabilities]
+description = "Language-agnostic proof-workspace manager for Agda: triage folders (inbox -> working -> proven/rejected), linter, DAG view."
+companion-planned = "arghda-panll (Gossamer/ReScript presentation layer)"
+
+[relationship]
+motivating-pipeline = "docs/buchholz-plan.adoc appendix"
+direction = "downstream tool; no in-repo build dependency on echo-types"
