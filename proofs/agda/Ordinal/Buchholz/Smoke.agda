@@ -456,6 +456,7 @@ open import Ordinal.Buchholz.RankPowDomination using
   ; ω-rank-pow-succ-pos
   ; additive-principal-ω-rank-pow-succ
   ; rank-pow-dominated-by-head-Ω
+  ; ω-rank-pow-⊕-below-succ
   )
 
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
