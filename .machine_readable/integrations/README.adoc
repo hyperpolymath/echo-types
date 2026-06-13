@@ -1,0 +1,52 @@
+// SPDX-License-Identifier: MPL-2.0
+= Integrations (echo-types)
+:toc:
+
+echo-types' cross-repo integrations. The authoritative status ledger is
+`docs/bridges/cross-repo-bridge-status.md` (last updated 2026-06-02); these
+files are the machine-readable index of it.
+
+[cols="1,1,3"]
+|===
+| File | Kind | Summary
+
+| `echotypes-jl.a2ml`
+| executable-companion
+| EchoTypes.jl v0.2.0 (pinned `e7dded6`) — finite-domain Julia shadow of the
+  Tier-1+2 spine + unconditional F5 OFS. Falsifies-by-counterexample; makes
+  no proof claims; the Agda here is the source of truth.
+
+| `arghda-core.a2ml`
+| extracted-tool
+| Language-agnostic Agda proof-workspace engine, extracted from echo-types
+  2026-05-30 (#159); subtree removed (#160). Now standalone.
+
+| `panll.a2ml`
+| constellation-consumer
+| Three-pane cognitive-relief HTI. echo-types is a cited foundation, not a
+  build dependency.
+
+| `groove.a2ml`
+| service-discovery (inert)
+| Declared but inert — echo-types is a library and exposes no service / port.
+
+| `verisim.a2ml`
+| constellation-placeholder
+| No current dependency; recorded for constellation completeness.
+|===
+
+== Active Agda↔prover bridges (in `proofs/agda/`, ledgered separately)
+
+These are in-repo bridge *modules*, not external integrations, and live in
+`proofs/agda/` + `docs/bridges/`:
+
+* `EchoCNOBridge.agda` ↔ absolute-zero `CNO.agda` — content-bridge done.
+* `EchoEphapaxBridge.agda` ↔ ephapax `formal/Echo.v` — navigability done, content NARROW (L3).
+* `EchoJanusBridge.agda` ↔ januskey Idris2 `OpKind` — name-bridge only.
+* `EchoTropical.agda` ↔ tropical-resource-typing `.thy`/`.lean` — citation-level.
+
+== Exploratory (citation-level, Core Affect = NO)
+
+* Valence Shell / Ochránce accountable-shell — candidate downstream consumer of
+  the structured-loss vocabulary; no bridge module, nothing wired into
+  `All.agda` / `Smoke.agda`.

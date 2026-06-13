@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: MPL-2.0
+# Integration: EchoTypes.jl — executable Julia companion (falsifying shadow)
+# Source of truth for status: docs/bridges/cross-repo-bridge-status.md (2026-06-02)
+
+[integration]
+name = "echotypes-jl"
+type = "executable-companion"
+repository = "https://github.com/hyperpolymath/EchoTypes.jl"
+version = "0.2.0"
+pinned-commit = "e7dded6"
+registry = "julia-professional-registry"
+
+[scope]
+mirrors = "finite-domain shadow of the Tier-1 + Tier-2 spine + the unconditional F5 OFS fragment"
+modules = [
+  "Echo", "EchoResidue", "EchoFiberCount", "EchoThermodynamics",
+  "EchoTotalCompletion", "EchoOrthogonalFactorizationSystem",
+  "EchoImageFactorization", "EchoNoSectionGeneric", "EchoLossTaxonomy",
+  "EchoEntropy", "EchoObservationalEquivalence",
+]
+not-mirrored = [
+  "the R-2026-05-18 retracted surface",
+  "F5 funext-qualified clauses (uniqueness up to iso, diagonal lifting) — Julia has no funext, the claims would be vacuous",
+  "UIP- and truncation-strength upgrades",
+]
+
+[claim-policy]
+makes-proof-claims = false
+behaviour = "falsifies-by-counterexample on concrete data"
+source-of-truth = "the Agda in echo-types remains authoritative; the Julia companion is a shadow"
+ci-coupling = "none in either direction"

@@ -1,0 +1,94 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <6759885+hyperpolymath@users.noreply.github.com>
+#
+# ANCHOR.a2ml - authoritative anchor for the echo-types repository.
+# Canonical identity + policy boundaries for downstream/satellite repos.
+
+[metadata]
+version = "1.0.0"
+last-updated = "2026-06-12"
+
+[anchor]
+schema = "hyperpolymath.anchor/1"
+repo = "hyperpolymath/echo-types"
+authority = "upstream-canonical"
+
+purpose = [
+  "Define canonical semantics and policy boundaries for the echo-types proof library.",
+  "Declare what downstream/companion repos (EchoTypes.jl, arghda-core) can extend but not redefine.",
+  "Provide a stable golden path and invariant contract for release readiness.",
+]
+
+[identity]
+id = "org.hyperpolymath.echo-types"
+project = "echo-types"
+kind = "library"                # constructive Agda proof library
+one-sentence = "Constructive Agda formalisation of fiber-based structured loss (\"echo types\"): Echo f y := Σ (x : A) , (f x ≡ y); --safe --without-K throughout."
+domain = "formal-verification / type-theory"
+status = "active"
+
+# Registry-assigned identity. echo-types has NOT yet been assigned a clade
+# in the gv-clade-index registry; do not invent a UUID/clade.
+[clade]
+# TODO: assign via gv-clade-index registry (https://github.com/hyperpolymath/gv-clade-index).
+#       Until assigned, no CLADE.a2ml exists for this repo and these fields
+#       MUST stay as TODO rather than carrying fabricated values.
+uuid = "TODO: assign via gv-clade-index registry"
+primary = "TODO: assign via gv-clade-index registry"      # candidate observation: a research / formal-verification clade
+assigned = "TODO: assign via gv-clade-index registry"
+
+[semantic-authority]
+policy = "canonical"
+
+owns = [
+  "The Echo type definition and the structured-loss semantics (Echo f y := Σ (x : A) , (f x ≡ y)).",
+  "The composition / ordinal / establishment workstream invariants and gate discipline.",
+  "Reference theorem statements mirrored by companions (EchoTypes.jl is a falsifying shadow, NOT an authority).",
+]
+
+[implementation-policy]
+# echo-types is an Agda proof repo with shell/Nix/Just tooling around it.
+allowed = ["Agda", "Scheme", "Nickel", "Shell", "Just", "AsciiDoc", "Markdown"]
+forbidden = ["TypeScript", "Node.js", "npm", "Go", "Python", "Kotlin", "Swift"]
+
+[golden-path]
+# No `just test` shortcut is assumed; the canonical smoke is the Agda build.
+smoke-test-command = [
+  "agda -i proofs/agda proofs/agda/All.agda",
+  "agda -i proofs/agda proofs/agda/Smoke.agda",
+  "scripts/kernel-guard.sh",
+]
+
+success-criteria = [
+  "All.agda and Smoke.agda both exit 0 under --safe --without-K.",
+  "Zero postulates in load-bearing tracks; no believe_me / sorry / Admitted / unsafeCoerce / Obj.magic.",
+  "kernel-guard.sh PASS (funext-free kernel cone = { Echo, EchoKernel }).",
+  "Every headline theorem pinned in Smoke.agda; every module wired into All.agda.",
+]
+
+[satellite-policy]
+must-pin-upstream = true
+must-declare-authority = true
+must-have-anchor = true
+must-have-golden-path = true
+
+[semantic-authority-files]
+core-definition = "proofs/agda/Echo.agda"
+verified-suite = "proofs/agda/All.agda"
+headline-pins = "proofs/agda/Smoke.agda"
+roadmap-gates = "roadmap-gates.adoc"
+establishment-plan = "docs/echo-types/establishment-plan.adoc"
+ordinal-plan = "docs/echo-types/buchholz-plan.adoc"
+cross-repo-bridges = "docs/bridges/cross-repo-bridge-status.md"
+
+[relationships]
+# Verifiable from CLAUDE.md + cross-repo-bridge-status.md. No fabricated edges.
+companions = [
+  "org.hyperpolymath.echotypes-jl",     # executable Julia shadow (v0.2.0, pinned e7dded6)
+  "org.hyperpolymath.arghda-core",      # extracted proof-workspace engine (echo-types#159)
+]
+active-bridges = [
+  "org.hyperpolymath.ephapax",          # EchoEphapaxBridge.agda (L3, NARROW)
+  "org.hyperpolymath.absolute-zero",    # EchoCNOBridge.agda (content-bridge done)
+]
+constellation = "org.hyperpolymath.panll"
