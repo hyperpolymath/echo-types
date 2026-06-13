@@ -235,6 +235,16 @@ honest-bound matched-negative block.
   `bool-perturbed-nat-sensitivity`. Honest-bound: NOT ε-DP /
   Lipschitz bound / noise calibration / adversary model.
   `proofs/agda/EchoDifferential.agda`.
+* *Deniability* — `IsDeniable` predicate + `IsConstantOpener`
+  restricted class. Two production functions: `produce-perfect`
+  (constant — perfectly deniable, no section via
+  `no-section-of-collapsing-map`) and `produce-partial` (injective
+  — not deniable for arbitrary openers, section exists via
+  `partial-witness`). The no-section/has-section pair is a checked
+  duality theorem. `IsConstantOpener` is the type-level analogue of
+  the `affine` mode in `EchoObservationalEquivalence`. Honest-bound:
+  NOT side-channel-safe / cryptographic deniability / adaptive
+  adversary. `proofs/agda/EchoDeniability.agda`. `[REAL]`
 
 *Curated suite — single-file entry point.* The narrative
 deliverable that pulls the Tier-1 / Tier-2 / Tier-3 named theorems
