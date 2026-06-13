@@ -459,6 +459,18 @@ open import Ordinal.Buchholz.RankPowDomination using
   ; ω-rank-pow-⊕-below-succ
   )
 
+-- Doubled-ladder rank foundation (own block per CLAUDE.md Working
+-- rules): the two interleaving ω-power facts that resolve the
+-- equal-Ω boundary's cross-index obstruction by giving ψ and Ω
+-- their own exponent blocks (2ν+1 and 2ν+2).  `ψ-block-below-Ω-block`
+-- is the doubled room fact; `Ω-block-below-next-ψ` is the strict
+-- cross-index gap the single ladder lacked.  Slice 1 of the rank2
+-- design; see the module preamble for the build-out plan.
+open import Ordinal.Buchholz.RankDoubledLadder using
+  ( ψ-block-below-Ω-block
+  ; Ω-block-below-next-ψ
+  )
+
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
 -- the left-spine NonBzero predicate, the strict-jump bridge from
 -- `μ <Ω ν` to `ω-rank-pow-succ μ ≤′ ω-rank-pow ν`, and the head-Ω
