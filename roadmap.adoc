@@ -401,9 +401,19 @@ there is no faithful native projection (native `_<ᵇ_` is ordinally
 unsound — see the `<ᵇ-+Ω` counterexample in the obstruction note),
 and native WF is already proved directly in `WellFounded.wf-<ᵇ`. So
 this closes the *carrier* Gate-1 story but does NOT discharge the
-three open items above (unbudgeted `_<ᵇʳᶠ_` WF; the K-limited
-shared-binder cases; native-`_<ᵇ_` internalisation, which is
-rank-embedding-impossible).
+native-`_<ᵇ_` internalisation (rank-embedding-impossible) or the
+K-limited shared-binder cases above.
+
+*Recursive-surface budget eliminated on the sound carrier (2026-06-14,
+PR #212).* Open item 1 ("unbudgeted `_<ᵇʳᶠ_` WF") is discharged in its
+achievable form: `Ordinal.Buchholz.RecursiveSurfaceSound` lands
+`_<ᵇʳᶠ²_` (= the sound carrier `_<ᵇ²_` + the two same-binder
+congruences `ψα`/`+2`) and its UNBUDGETED `wf-<ᵇʳᶠ²` via the `rank2`
+embedding — no ℕ budget. The budget in `RecursiveSurfaceBudget` was an
+artefact of native `_<ᵇ_`'s unsoundness, not of the recursion. The
+GLOBAL form over native `_<ᵇ_` stays walled (all five routes; `rank2`
+does not escape the `<ᵇ-+Ω` counterexample); its realistic close-out
+is the falsifiable verdict, not a positive proof.
 
 *Artefacts.* See `docs/buchholz-plan.adoc`,
 `docs/echo-types/buchholz-rank-obstruction.adoc` (live per-constructor

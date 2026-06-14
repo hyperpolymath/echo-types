@@ -265,6 +265,20 @@ single-ladder union `_<ᵇᵘ_`: it closes the equal-Ω boundary
 `<ᵇ-ψΩ≤` and the bplus-target `<ᵇ-+1` (the single-ladder Gate 1's
 open blocker) with ONE ordinally-sound scalar rank.
 
+*Follow-on (PR #212): the recursive-surface budget eliminated on the
+sound carrier.* `Ordinal.Buchholz.RecursiveSurfaceSound` lands
+`_<ᵇʳᶠ²_` (= `_<ᵇ²_` core + the two same-binder congruences `ψα`/`+2`)
+and its UNBUDGETED `wf-<ᵇʳᶠ²` via the `rank2` embedding: `<ᵇʳᶠ²-core`
+→ `rank2-mono-<ᵇ²`, the two congruences → `⊕-mono-<-right`. This is
+roadmap open-item #1 ("eliminate the ℕ budget from `wf-<ᵇʳᶠᵇ`") in its
+ACHIEVABLE form. The budget was an artefact of native `_<ᵇ_`'s
+unsoundness, not of the same-binder recursion. DO NOT reopen the
+GLOBAL unbudgeted `wf-<ᵇʳᶠ` over native `_<ᵇ_`: all five routes are
+walled (`RankBrouwer.agda` preamble) and `rank2` does NOT escape the
+`<ᵇ-+Ω` counterexample — its realistic close-out is the falsifiable
+"cannot close under `--safe --without-K`" verdict, not a positive
+proof.
+
 *The `<ᵇ-+ψ` leading-power subtlety (load-bearing).* `rank2-mono-+ψ`
 needs the source pieces below the ψ-block's LEADING power
 `ω-rank-pow (double ν)` — strictly stronger than "below the whole

@@ -59,9 +59,14 @@ consolidation / doc-threading.
 
 Target: *Bachmann–Howard* ψ₀(Ω_ω). Open, in priority order:
 
-. *Unbudgeted `_<ᵇʳᶠ_` global WF* — eliminate the explicit ℕ budget from
-  `wf-<ᵇʳᶠᵇ` without leaving `--safe --without-K`. The named next bottleneck;
-  solo, not swarmable.
+. *Unbudgeted `_<ᵇʳᶠ_` global WF* — the GLOBAL form over native `_<ᵇ_`
+  is *walled* (all five standard routes; native `_<ᵇ_` is ordinally
+  unsound — see `buchholz-rank-obstruction.adoc`). The SOUND-CARRIER
+  form is *DONE* (2026-06-14, PR #212): `RecursiveSurfaceSound.wf-<ᵇʳᶠ²`
+  is unbudgeted, built over `_<ᵇ²_` + the doubled-ladder `rank2`
+  embedding. Remaining open is only the global-over-native form, whose
+  realistic close-out is a falsifiable "cannot close under
+  `--safe --without-K`" verdict rather than a positive proof.
 . *Full constructor set beyond the admitted core* — the K-limited shared-binder
   cases `<ᵇ-ψα`, `<ᵇ-+2`.
 . *Push the surface-route WF back* into `Order.agda`'s main `_<ᵇ_` package.
