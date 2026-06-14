@@ -486,6 +486,16 @@ open import Ordinal.Buchholz.RankDoubledLadderMono using
   ; rank2-mono-ψΩ≤
   )
 
+-- Doubled-ladder bzero-source + plus-source rank2-mono primitives
+-- (own block per CLAUDE.md Working rules).
+open import Ordinal.Buchholz.RankDoubledLadderMonoPlus using
+  ( rank2-pos-bOmega
+  ; rank2-pos-bpsi
+  ; rank2-mono-0-+
+  ; rank2-mono-Ω+
+  ; rank2-mono-ψ+
+  )
+
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
 -- the left-spine NonBzero predicate, the strict-jump bridge from
 -- `μ <Ω ν` to `ω-rank-pow-succ μ ≤′ ω-rank-pow ν`, and the head-Ω
