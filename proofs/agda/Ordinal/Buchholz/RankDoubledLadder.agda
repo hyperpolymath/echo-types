@@ -78,12 +78,13 @@ open import Data.Nat using (ℕ; suc; _+_; _<_; _≤_; s≤s)
 open import Data.Nat.Properties using (+-suc; +-mono-≤)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong)
 
-open import Ordinal.Brouwer               using (Ord; osuc; oz)
+open import Ordinal.Brouwer               using (Ord; osuc; oz; olim)
 open import Ordinal.Brouwer.Phase13       using
   ( _≤′_
   ; _<′_
   ; ≤′-trans
   ; ≤′-self-osuc
+  ; f-in-lim′
   )
 open import Ordinal.Brouwer.Arithmetic    using (_⊕_)
 open import Ordinal.Brouwer.OmegaPow       using
@@ -92,7 +93,7 @@ open import Ordinal.Brouwer.OmegaPow       using
   ; ω^-strict-mono-suc
   ; additive-principal
   )
-open import Ordinal.OmegaMarkers          using (OmegaIndex; fin; ω)
+open import Ordinal.OmegaMarkers          using (OmegaIndex; fin; ω; _<Ω_; fin<fin; fin<ω)
 open import Ordinal.Buchholz.Syntax       using (BT; bzero; bOmega; bpsi; bplus)
 open import Ordinal.Buchholz.RankPow      using (ω-rank-pow; ω-rank-pow-succ)
 open import Ordinal.Buchholz.RankPowDomination using (ω-rank-pow-⊕-below-succ)
@@ -234,3 +235,39 @@ rank2-bpsi-below-bOmega : ∀ {ν α}
   → rank2 (bpsi ν α) <′ rank2 (bOmega ν)
 rank2-bpsi-below-bOmega {ν} {α} adm =
   ω-rank-pow-⊕-below-succ {double ν} {rank2 α} adm
+
+----------------------------------------------------------------------
+-- Cross-index gap at the doubled scale (the `<ᵇ-Ωψ` arithmetic)
+----------------------------------------------------------------------
+
+-- The doubled ladder's STRICT cross-index gap, lifted to the
+-- `double`-of-OmegaIndex form and total over the marker (fin AND ω):
+--
+--   ν <Ω μ  →  rank2 (bOmega ν)  <′  ω-rank-pow (double μ)
+--           =  ω-rank-pow-succ (double ν) <′ ω-rank-pow (double μ)
+--
+-- i.e. Ω_ν's rank-block (2·idx ν + 2) lands strictly below μ's
+-- ψ-block (2·idx μ + 1) whenever ν <Ω μ.  This is the fact that the
+-- single ω-power ladder could NOT provide (there, `ω-rank-pow-succ
+-- μ ≤′ ω-rank-pow ν` was only NON-strict at the boundary
+-- ν = suc μ); the doubling buys the strict inequality, here for
+-- both the fin markers (via the Slice-1 fact `Ω-block-below-next-ψ`,
+-- definitionally aligned through `double (fin n) = fin (n+n)`) and
+-- the limit marker `ω` (via one-step strict-mono into the limit's
+-- (2a+3)-th approximant).
+--
+-- This is the arithmetic the cross-index `<ᵇ-Ωψ` constructor's
+-- `rank2`-mono will consume (with `⊕`-left-weakening to absorb the
+-- target's ψ-argument), and the bOmega case of the WfAdm→rank2
+-- scale-transfer bridge.
+double-cross-gap : ∀ {ν μ}
+  → ν <Ω μ
+  → ω-rank-pow-succ (double ν) <′ ω-rank-pow (double μ)
+double-cross-gap {fin a} {fin b} (fin<fin a<b) = Ω-block-below-next-ψ a<b
+double-cross-gap {fin a} {ω}     fin<ω         =
+  ≤′-trans
+    {osuc (ω^ (suc (suc (a + a))))}
+    {ω^ (suc (suc (suc (a + a))))}
+    {olim (λ n → ω^ (suc n))}
+    (ω^-strict-mono-suc (suc (suc (a + a))))
+    (f-in-lim′ (λ n → ω^ (suc n)) (suc (suc (a + a))))
