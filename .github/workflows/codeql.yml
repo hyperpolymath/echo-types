@@ -31,11 +31,10 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - language: javascript-typescript
-            build-mode: none
-          # Also analyse the GitHub Actions workflows themselves
-          # (CodeQL `actions` language) — directly relevant given the
-          # workflow-hardening in this PR, and closes the Hypatia
+          # CodeQL `actions` language scans the GitHub Actions workflow
+          # files (present in every repo). The repo has no JS/TS source,
+          # so the prior JS/TS matrix entry recorded zero results /
+          # failed "no source files"; closes the Hypatia
           # `codeql_missing_actions_language` finding.
           - language: actions
             build-mode: none
