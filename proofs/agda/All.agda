@@ -155,6 +155,8 @@ open import Ordinal.Buchholz.RankPowSlice3Headline
 open import Ordinal.Buchholz.RankDoubledLadder
 open import Ordinal.Buchholz.RankDoubledLadderMono
 open import Ordinal.Buchholz.RankDoubledLadderMonoPlus
+open import Ordinal.Buchholz.RankDoubledLadderAddPrincipal
+open import Ordinal.Buchholz.RankDoubledLadderMonoPlus2
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice3
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice4
