@@ -75,7 +75,9 @@
 module Ordinal.Buchholz.RankDoubledLadder where
 
 open import Data.Nat using (ℕ; suc; _+_; _<_; _≤_; s≤s)
-open import Data.Nat.Properties using (+-suc; +-mono-≤)
+open import Data.Nat.Properties using (+-suc; +-mono-≤; ≰⇒>)
+open import Data.Empty using (⊥; ⊥-elim)
+open import Induction.WellFounded using (wf⇒asym)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong)
 
 open import Ordinal.Brouwer               using (Ord; osuc; oz; olim)
@@ -85,12 +87,14 @@ open import Ordinal.Brouwer.Phase13       using
   ; ≤′-trans
   ; ≤′-self-osuc
   ; f-in-lim′
+  ; wf-<′
   )
 open import Ordinal.Brouwer.Arithmetic    using (_⊕_)
 open import Ordinal.Brouwer.OmegaPow       using
   ( ω^_
   ; ω^-strict-mono
   ; ω^-strict-mono-suc
+  ; ω^-mono-≤
   ; additive-principal
   )
 open import Ordinal.OmegaMarkers          using (OmegaIndex; fin; ω; _<Ω_; fin<fin; fin<ω)
@@ -271,3 +275,51 @@ double-cross-gap {fin a} {ω}     fin<ω         =
     {olim (λ n → ω^ (suc n))}
     (ω^-strict-mono-suc (suc (suc (a + a))))
     (f-in-lim′ (λ n → ω^ (suc n)) (suc (suc (a + a))))
+
+----------------------------------------------------------------------
+-- `ω-rank-pow` reflects `_<Ω_` (the bridge's bOmega-case inversion)
+----------------------------------------------------------------------
+
+-- Irreflexivity of `_<′_`, from its well-foundedness.
+<′-irrefl : ∀ {α} → α <′ α → ⊥
+<′-irrefl {α} p = wf⇒asym wf-<′ {α} {α} p p
+
+-- Every approximant of `ω-rank-pow ω`'s limit lies below the limit:
+-- `ω^(suc b) <′ olim (λ n → ω^(suc n)) = ω-rank-pow ω`.
+ω^-suc-below-lim : ∀ b → ω^ (suc b) <′ ω-rank-pow ω
+ω^-suc-below-lim b =
+  ≤′-trans
+    {osuc (ω^ (suc b))}
+    {ω^ (suc (suc b))}
+    {olim (λ n → ω^ (suc n))}
+    (ω^-strict-mono-suc (suc b))
+    (f-in-lim′ (λ n → ω^ (suc n)) (suc b))
+
+-- `ω-rank-pow` reflects the strict Ω-order: the converse of
+-- `ω-rank-pow-mono`.  Needed by the bOmega case of the WfAdm→rank2
+-- bridge — from `rank-pow (bOmega ν) = ω-rank-pow ν <′ ω-rank-pow μ`
+-- recover `ν <Ω μ`, then feed `double-cross-gap`.  By marker cases:
+--   * fin/fin: reflect `ω^`-mono via irreflexivity (`b ≤ a` would
+--              force `ω^(suc a) <′ ω^(suc a)`);
+--   * fin/ω:   `fin _ <Ω ω` holds unconditionally;
+--   * ω/fin:   absurd — `ω-rank-pow ω` is a limit ABOVE every
+--              `ω^(suc b)` (asymmetry);
+--   * ω/ω:     absurd by irreflexivity.
+ω-rank-pow-reflects-<Ω : ∀ {ν μ}
+  → ω-rank-pow ν <′ ω-rank-pow μ
+  → ν <Ω μ
+ω-rank-pow-reflects-<Ω {fin a} {fin b} p = fin<fin (reflect-nat p)
+  where
+    reflect-nat : ω^ (suc a) <′ ω^ (suc b) → a < b
+    reflect-nat q =
+      ≰⇒> (λ b≤a →
+        <′-irrefl {ω^ (suc a)}
+          (≤′-trans
+            {osuc (ω^ (suc a))} {ω^ (suc b)} {ω^ (suc a)}
+            q
+            (ω^-mono-≤ (s≤s b≤a))))
+ω-rank-pow-reflects-<Ω {fin a} {ω}     _ = fin<ω
+ω-rank-pow-reflects-<Ω {ω}     {fin b} p =
+  ⊥-elim (wf⇒asym wf-<′ {olim (λ n → ω^ (suc n))} {ω^ (suc b)}
+                  p (ω^-suc-below-lim b))
+ω-rank-pow-reflects-<Ω {ω}     {ω}     p = ⊥-elim (<′-irrefl {ω-rank-pow ω} p)
