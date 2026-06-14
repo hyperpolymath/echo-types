@@ -234,6 +234,21 @@ losing well-foundedness. Pinned in `Smoke.agda`; wired into
    into Brouwer or directly. Substantial: the 13-constructor
    matrix + the inversion lemmas all need restating. Likely 2–3
    weeks of disciplined proof work.
++
+*UPDATE 2026-06-14 — this route is now realised on the sound carrier.*
+The doubled-ladder `rank2` (§"Doubled-ladder closure") IS the
+WF-restricted rank: `_<ᵇ²_` is the sound carrier and
+`rank2-mono-<ᵇ²` ranks all 12 core constructors. For the
+*recursive-surface* consumer specifically, this discharges the
+"eliminate the ℕ budget" goal — `Ordinal.Buchholz.RecursiveSurfaceSound`
+lands `_<ᵇʳᶠ²_` (= `_<ᵇ²_` core + the two same-binder congruences) and
+its UNBUDGETED `wf-<ᵇʳᶠ²` via the `rank2` embedding (the two congruence
+cases are the `⊕-mono-<-right` discharges this note already identified;
+the doubled ladder supplies the core). The budget in
+`RecursiveSurfaceBudget._<ᵇʳᶠᵇ_` was an artefact of native
+unsoundness, not of the same-binder recursion. What remains genuinely
+open is only the GLOBAL form over *native* `_<ᵇ_` (route still walled;
+realistic close-out is the falsifiable verdict of move 3, NOT move 2).
 
 2. *Non-additive denotational measure*. Replace the Brouwer-rank
    shape with a function `BT → α` for some target `α` whose order
