@@ -75,7 +75,7 @@
 module Ordinal.Buchholz.RankDoubledLadder where
 
 open import Data.Nat using (ℕ; suc; _+_; _<_; _≤_; s≤s)
-open import Data.Nat.Properties using (+-suc; +-mono-≤; ≰⇒>)
+open import Data.Nat.Properties using (+-suc; +-mono-≤; +-mono-<; ≰⇒>)
 open import Data.Empty using (⊥; ⊥-elim)
 open import Induction.WellFounded using (wf⇒asym)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong)
@@ -85,7 +85,10 @@ open import Ordinal.Brouwer.Phase13       using
   ( _≤′_
   ; _<′_
   ; ≤′-trans
+  ; ≤′-zero
   ; ≤′-self-osuc
+  ; ⊕-left-≤-sum
+  ; ⊕-mono-≤-left
   ; f-in-lim′
   ; wf-<′
   )
@@ -95,12 +98,27 @@ open import Ordinal.Brouwer.OmegaPow       using
   ; ω^-strict-mono
   ; ω^-strict-mono-suc
   ; ω^-mono-≤
+  ; X≤′oz⊕X
   ; additive-principal
   )
 open import Ordinal.OmegaMarkers          using (OmegaIndex; fin; ω; _<Ω_; fin<fin; fin<ω)
 open import Ordinal.Buchholz.Syntax       using (BT; bzero; bOmega; bpsi; bplus)
-open import Ordinal.Buchholz.RankPow      using (ω-rank-pow; ω-rank-pow-succ)
+open import Ordinal.Buchholz.RankPow      using
+  ( ω-rank-pow
+  ; ω-rank-pow-succ
+  ; rank-pow
+  ; ω-rank-pow-pos
+  ; ω-rank-pow-mono
+  ; additive-principal-ω-rank-pow
+  )
 open import Ordinal.Buchholz.RankPowDomination using (ω-rank-pow-⊕-below-succ)
+open import Ordinal.Buchholz.WellFormedAdmissible using
+  ( WfAdm
+  ; wf-adm-bzero
+  ; wf-adm-bomega
+  ; wf-adm-bpsi
+  ; wf-adm-bplus
+  )
 
 ----------------------------------------------------------------------
 -- Local strict transitivity (Phase13 exports only ≤′-trans)
@@ -323,3 +341,81 @@ double-cross-gap {fin a} {ω}     fin<ω         =
   ⊥-elim (wf⇒asym wf-<′ {olim (λ n → ω^ (suc n))} {ω^ (suc b)}
                   p (ω^-suc-below-lim b))
 ω-rank-pow-reflects-<Ω {ω}     {ω}     p = ⊥-elim (<′-irrefl {ω-rank-pow ω} p)
+
+----------------------------------------------------------------------
+-- The WfAdm → rank2 scale-transfer bridge (Gate 1 equal-Ω closure)
+----------------------------------------------------------------------
+
+-- Mixed transitivity `≤′ ⨾ <′`.  `α <′ β` is `osuc α ≤′ β`, and
+-- `osuc α ≤′ osuc β` reduces definitionally to `α ≤′ β`, so the
+-- `≤′`-step plugs straight into `≤′-trans` at the successor.
+≤′-<′-trans : ∀ {α β γ} → α ≤′ β → β <′ γ → α <′ γ
+≤′-<′-trans {α} {β} {γ} p q = ≤′-trans {osuc α} {osuc β} {γ} p q
+
+-- Right addend ≤ sum: `β ≤′ α ⊕ β`.  (Phase13 ships only the LEFT
+-- form `⊕-left-≤-sum`; the right form factors through the left-unit
+-- bound `X≤′oz⊕X` + left-monotonicity `oz ≤′ α`.)
+⊕-right-≤-sum : ∀ {α} β → β ≤′ α ⊕ β
+⊕-right-≤-sum {α} β =
+  ≤′-trans {β} {oz ⊕ β} {α ⊕ β}
+    (X≤′oz⊕X {β})
+    (⊕-mono-≤-left {oz} {α} {β} (≤′-zero {α}))
+
+-- `double` preserves the strict marker order.  Only the two
+-- inhabited `_<Ω_` shapes arise (nothing is above `ω`); doubling a
+-- fin index doubles the witness gap via `+-mono-<`.
+double-mono-<Ω : ∀ {ν μ} → ν <Ω μ → double ν <Ω double μ
+double-mono-<Ω {fin a} {fin b} (fin<fin a<b) = fin<fin (+-mono-< a<b a<b)
+double-mono-<Ω {fin a} {ω}     fin<ω         = fin<ω
+
+-- THE BRIDGE.  Transfer an admissibility bound from the single
+-- ladder (`rank-pow t <′ ω-rank-pow μ`) to the doubled ladder
+-- (`rank2 t <′ ω-rank-pow (double μ)`), by induction on the
+-- admissibility witness `WfAdm t`.
+--
+-- The naive map `rank-pow t → rank2 t` is NOT a transfer (rank-pow
+-- collapses the ψ-argument α that rank2 keeps); the WfAdm witness
+-- supplies exactly the per-ψ admissibility field
+-- `rank-pow α <′ ω-rank-pow ν` that lets the bpsi case recurse on α.
+--
+-- Cases:
+--   * bzero  — `oz <′ ω-rank-pow (double μ)` is `ω-rank-pow-pos`.
+--   * bOmega — reflect the bound to `ν <Ω μ`, then `double-cross-gap`.
+--   * bpsi   — head `ω-rank-pow (double ν)` below target via reflect +
+--              `double-mono-<Ω` + `ω-rank-pow-mono`; tail `rank2 α`
+--              below by IH-on-α (at index ν, from the WfAdm field) +
+--              `<′-trans` up to `double μ`; recombine by additive
+--              principality.
+--   * bplus  — split the hypothesis through `⊕-left-≤-sum` /
+--              `⊕-right-≤-sum`, recurse on each summand, recombine
+--              by additive principality.
+rank2-bounded : ∀ {t μ}
+  → WfAdm t
+  → rank-pow t <′ ω-rank-pow μ
+  → rank2 t <′ ω-rank-pow (double μ)
+rank2-bounded {bzero} {μ} wf-adm-bzero _ =
+  ω-rank-pow-pos (double μ)
+rank2-bounded {bOmega ν} {μ} (wf-adm-bomega _) h =
+  double-cross-gap (ω-rank-pow-reflects-<Ω {ν} {μ} h)
+rank2-bounded {bpsi ν α} {μ} (wf-adm-bpsi _ wfα admα) h =
+  additive-principal-ω-rank-pow {double μ}
+    head<
+    tail<
+  where
+    ν<μ : ν <Ω μ
+    ν<μ = ω-rank-pow-reflects-<Ω h
+
+    head< : ω-rank-pow (double ν) <′ ω-rank-pow (double μ)
+    head< = ω-rank-pow-mono (double-mono-<Ω ν<μ)
+
+    tail< : rank2 α <′ ω-rank-pow (double μ)
+    tail< = <′-trans {rank2 α} {ω-rank-pow (double ν)} {ω-rank-pow (double μ)}
+              (rank2-bounded {α} {ν} wfα admα) head<
+rank2-bounded {bplus x y} {μ} (wf-adm-bplus wfx wfy _ _) h =
+  additive-principal-ω-rank-pow {double μ}
+    (rank2-bounded {x} {μ} wfx
+      (≤′-<′-trans {rank-pow x} {rank-pow x ⊕ rank-pow y} {ω-rank-pow μ}
+        (⊕-left-≤-sum {rank-pow x} (rank-pow y)) h))
+    (rank2-bounded {y} {μ} wfy
+      (≤′-<′-trans {rank-pow y} {rank-pow x ⊕ rank-pow y} {ω-rank-pow μ}
+        (⊕-right-≤-sum {rank-pow x} (rank-pow y)) h))
