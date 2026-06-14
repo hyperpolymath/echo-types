@@ -11,41 +11,68 @@
 
 [metadata]
 version = "1.0.0"
-last-updated = "2026-06-12"
+last-updated = "2026-06-14"
+
+# ============================================================================
+# OUTSTANDING PROOFS — the live frontier (single inventory, 2026-06-14)
+#
+# Status legend:
+#   OPEN-EXTERNAL  — mechanisable, but needs new external mathematics
+#                    (no in-repo route exists yet).
+#   WALLED         — proven not closable on the current object under
+#                    --safe --without-K; close-out is a falsifiable verdict.
+#   OPEN-DESIGN    — closable, but gated on a substantial design decision
+#                    (e.g. truncation / Cubical).
+#   MECHANICAL     — closable now, bounded, no new ideas needed.
+#
+# 2026-06-14 progress note: the two long-standing ordinal "should"
+# items (unbudgeted _<ᵇʳᶠ_; K-limited shared-binder; surface-route WF)
+# are now DONE in their ACHIEVABLE (sound-carrier) form — wf-<ᵇ²,
+# wf-<ᵇʳᶠ², wf-<ᵇ⁺² (PRs #208/#212/#214). What remains of them is the
+# native-order form, which is WALLED. All four paper.adoc [EXPAND]
+# tags are cleared (#215). The genuine remaining ordinal frontier is
+# now order-type fidelity (D-2026-06-14).
+# ============================================================================
 
 # ============================================================================
 # SHOULD — would fix next wave
 # ============================================================================
 
 [[debt.should]]
-component = "ordinal-track / Ordinal.Buchholz"
-issue = "Unbudgeted _<ᵇʳᶠ_ global WF: eliminate the explicit ℕ budget from wf-<ᵇʳᶠᵇ without leaving --safe --without-K."
+component = "ordinal-track / Bachmann-Howard order-type fidelity"
+issue = "Order-type fidelity: prove the well-formed Buchholz notation IS the Bachmann-Howard ordinal order, not merely well-founded. Either (a) a verified order-preserving denotation ‖·‖ : BT → 𝒪 of height ψ₀(Ω_ω) with s <ᵇ t iff ‖s‖ < ‖t‖ on the well-formed fragment, or (b) a direct order-type computation (fundamental sequences / collapsing-function correctness)."
+status = "OPEN-EXTERNAL"
 effort = "hard"
 impact = "high"
-discovered = "2026-05-20"
-note = "Solo, not swarmable; the named next bottleneck toward Bachmann-Howard."
+discovered = "2026-06-14"
+note = "Decision-log D-2026-06-14 (decisions/ordinal-bh-order-type-fidelity-open.adoc). The genuine remaining ordinal-strength frontier; WF (done, sound-carrier) is the prerequisite, not the result. Gates the Pillar E ordinal appendix's strong reading (the WF-milestone appendix is already written, #215)."
 
 [[debt.should]]
-component = "ordinal-track / Order.agda"
-issue = "Push the surface-route WF back into Order.agda's main _<ᵇ_ package; close the K-limited shared-binder cases (<ᵇ-ψα, <ᵇ-+2)."
+component = "ordinal-track / Order.agda (native _<ᵇ_)"
+issue = "Global-native well-foundedness: unbudgeted wf-<ᵇʳᶠ AND the K-limited shared-binder cases (<ᵇ-ψα, <ᵇ-+2) over NATIVE _<ᵇ_ (not the sound carrier)."
+status = "WALLED"
 effort = "hard"
-impact = "high"
+impact = "low"
 discovered = "2026-04-28"
+note = "Native _<ᵇ_ is ordinally unsound (the <ᵇ-+Ω counterexample); all five rank/direct/lex/tower/inverse-image routes are walled (RankBrouwer.agda preamble + buchholz-rank-obstruction.adoc), and rank2 does not escape it. The ACHIEVABLE (sound-carrier) forms are DONE: wf-<ᵇ² / wf-<ᵇʳᶠ² / wf-<ᵇ⁺². Realistic close-out for the native form is a FALSIFIABLE VERDICT, not a positive proof — write it when this item is next picked up."
 
 [[debt.should]]
-component = "establishment-track / docs/echo-types/paper.adoc"
-issue = "Clear remaining [EXPAND] tags (related work; evaluation; ordinal consumer-evidence appendix)."
-effort = "medium"
-impact = "medium"
-discovered = "2026-05-17"
-note = "Author-driven; the ordinal appendix is gated on the Bachmann-Howard milestone. Do NOT auto-run outreach / Zenodo / packaging."
-
-[[debt.should]]
-component = "establishment-track / EchoImageFactorization"
-issue = "Image factorisation (epi, mono) earn-back requires propositional truncation (Cubical Agda, or a postulated ∥_∥ interface with scoped honest-scope). Substantial design decision."
+component = "establishment-track / EchoImageFactorization (epi, mono)"
+issue = "Image factorisation (epi, mono) earn-back requires propositional truncation. The postulated-interface placeholder lives in EchoImageFactorizationPropPostulated.agda (the tree's ONLY postulate; not in All.agda)."
+status = "OPEN-DESIGN"
 effort = "hard"
 impact = "medium"
 discovered = "2026-05-27"
+note = "Cubical Agda (different --safe flag profile) OR a postulated ∥_∥ interface with scoped honest-scope. Substantial design decision; the (equivalence, projection) upper form is already done (Tier 1 + F5)."
+
+[[debt.should]]
+component = "earn-back-track / examples/Transport.agda (Gate-3)"
+issue = "Two disclosed open items in the transport/Gate-3 example, pending a K-free reformulation (coe-cong-R ∘ sym push). Stated in-file as precise OPENs."
+status = "OPEN-DESIGN"
+effort = "medium"
+impact = "low"
+discovered = "2026-05-20"
+note = "See earn-back-plan.adoc; nothing is postulated — the items are honestly-stated gaps awaiting a K-free route."
 
 # ============================================================================
 # COULD — would fix eventually
@@ -54,6 +81,7 @@ discovered = "2026-05-27"
 [[debt.could]]
 component = "establishment-track / decoration zoo"
 issue = "Wire the remaining decoration modules (Cost / Search / Indexed / Epistemic) as ResidueForm / DecorationStructure instances; mechanical per-module work."
+status = "MECHANICAL"
 effort = "medium"
 impact = "low"
 discovered = "2026-05-27"
@@ -61,9 +89,11 @@ discovered = "2026-05-27"
 [[debt.could]]
 component = "establishment-track / Q2.1 truncation generalisation"
 issue = "Generalise echo-not-prop: for non-injective f with two distinct preimages of y, is-prop (Echo f y) → ⊥. High-leverage for the truncation distinctness argument but currently low-priority."
+status = "OPEN-DESIGN"
 effort = "medium"
 impact = "medium"
 discovered = "2026-04-29"
+note = "Shares the propositional-truncation design decision with the (epi, mono) earn-back; resolving one likely informs the other."
 
 [[debt.could]]
 component = "rsr-conformance (root Intentfile)"
