@@ -76,14 +76,15 @@ module Ordinal.Buchholz.RankDoubledLadder where
 
 open import Data.Nat using (ℕ; suc; _+_; _<_; _≤_; s≤s)
 open import Data.Nat.Properties using (+-suc; +-mono-≤)
-open import Relation.Binary.PropositionalEquality using (_≡_; subst; cong)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong)
 
-open import Ordinal.Brouwer               using (Ord; osuc)
+open import Ordinal.Brouwer               using (Ord; osuc; oz; olim)
 open import Ordinal.Brouwer.Phase13       using
   ( _≤′_
   ; _<′_
   ; ≤′-trans
   ; ≤′-self-osuc
+  ; f-in-lim′
   )
 open import Ordinal.Brouwer.Arithmetic    using (_⊕_)
 open import Ordinal.Brouwer.OmegaPow       using
@@ -92,6 +93,10 @@ open import Ordinal.Brouwer.OmegaPow       using
   ; ω^-strict-mono-suc
   ; additive-principal
   )
+open import Ordinal.OmegaMarkers          using (OmegaIndex; fin; ω; _<Ω_; fin<fin; fin<ω)
+open import Ordinal.Buchholz.Syntax       using (BT; bzero; bOmega; bpsi; bplus)
+open import Ordinal.Buchholz.RankPow      using (ω-rank-pow; ω-rank-pow-succ)
+open import Ordinal.Buchholz.RankPowDomination using (ω-rank-pow-⊕-below-succ)
 
 ----------------------------------------------------------------------
 -- Local strict transitivity (Phase13 exports only ≤′-trans)
@@ -160,3 +165,109 @@ open import Ordinal.Brouwer.OmegaPow       using
     -- 2m+2 < 2n+1
     Ωexp-m<ψexp-n : Ωexp m < ψexp n
     Ωexp-m<ψexp-n = s≤s Ωexp-m≤n+n
+
+----------------------------------------------------------------------
+-- Slice 2 — the doubled-ladder rank `rank2 : BT → Ord`
+----------------------------------------------------------------------
+
+-- The doubled ladder is just the EXISTING `ω-rank-pow` /
+-- `ω-rank-pow-succ` on a DOUBLED OmegaIndex.  Doubling the fin index
+-- by `n ↦ n + n` lands the ψ-block on `ω-rank-pow (fin (n+n)) =
+-- ω^(suc (n+n)) = ω^(2n+1) = ω^(ψexp n)` and the Ω-block on
+-- `ω-rank-pow-succ (fin (n+n)) = ω^(2n+2) = ω^(Ωexp n)`, both
+-- DEFINITIONALLY (no transport).  So the whole `Ordinal.Brouwer`
+-- machinery — additive-principal closure, the room fact
+-- `RankPowDomination.ω-rank-pow-⊕-below-succ` (which is ∀ OmegaIndex,
+-- so it covers the limit `ω` marker too), strict-mono — transfers to
+-- the doubled ladder for free, by instantiating its index at
+-- `double ν`.
+
+double : OmegaIndex → OmegaIndex
+double (fin n) = fin (n + n)
+double ω       = ω
+
+-- `rank2 : BT → Ord` — ψ_ν(α) into the 2ν+1 block (offset by the
+-- α-rank), Ω_ν at the 2ν+2 block, bplus by ordinal sum, bzero at oz.
+rank2 : BT → Ord
+rank2 bzero       = oz
+rank2 (bOmega ν)  = ω-rank-pow-succ (double ν)
+rank2 (bpsi ν α)  = ω-rank-pow (double ν) ⊕ rank2 α
+rank2 (bplus x y) = rank2 x ⊕ rank2 y
+
+----------------------------------------------------------------------
+-- Definitional sanity
+----------------------------------------------------------------------
+
+rank2-bzero : rank2 bzero ≡ oz
+rank2-bzero = refl
+
+rank2-bOmega : ∀ ν → rank2 (bOmega ν) ≡ ω-rank-pow-succ (double ν)
+rank2-bOmega _ = refl
+
+rank2-bpsi : ∀ ν α → rank2 (bpsi ν α) ≡ ω-rank-pow (double ν) ⊕ rank2 α
+rank2-bpsi _ _ = refl
+
+rank2-bplus : ∀ x y → rank2 (bplus x y) ≡ rank2 x ⊕ rank2 y
+rank2-bplus _ _ = refl
+
+----------------------------------------------------------------------
+-- Headline: the equal-Ω boundary discharge at `rank2`
+----------------------------------------------------------------------
+
+-- The payoff of the doubled ladder.  At the SAME leading marker ν, an
+-- admissibility-bounded ψ_ν(α) ranks strictly below Ω_ν:
+--
+--   rank2 (bpsi ν α) = ω-rank-pow (double ν) ⊕ rank2 α
+--                    <′ ω-rank-pow-succ (double ν) = rank2 (bOmega ν)
+--
+-- given `rank2 α <′ ω-rank-pow (double ν)` (the rank2-level
+-- admissibility bound — the WfAdm bridge that supplies it from
+-- `WfAdm`'s `rank-pow α <′ ω-rank-pow ν` field is the follow-on).
+--
+-- This is EXACTLY `RankPowDomination.ω-rank-pow-⊕-below-succ`
+-- instantiated at the doubled index `double ν` — covering both the
+-- fin AND the limit (`ω`) marker, since that lemma is total over
+-- OmegaIndex.  This is the case the single-ladder rank-pow/rank-adm
+-- could not discharge (rank-pow collapses ψ_ν/Ω_ν; rank-adm ranks
+-- ψ ABOVE Ω); the doubled ladder closes it directly.
+rank2-bpsi-below-bOmega : ∀ {ν α}
+  → rank2 α <′ ω-rank-pow (double ν)
+  → rank2 (bpsi ν α) <′ rank2 (bOmega ν)
+rank2-bpsi-below-bOmega {ν} {α} adm =
+  ω-rank-pow-⊕-below-succ {double ν} {rank2 α} adm
+
+----------------------------------------------------------------------
+-- Cross-index gap at the doubled scale (the `<ᵇ-Ωψ` arithmetic)
+----------------------------------------------------------------------
+
+-- The doubled ladder's STRICT cross-index gap, lifted to the
+-- `double`-of-OmegaIndex form and total over the marker (fin AND ω):
+--
+--   ν <Ω μ  →  rank2 (bOmega ν)  <′  ω-rank-pow (double μ)
+--           =  ω-rank-pow-succ (double ν) <′ ω-rank-pow (double μ)
+--
+-- i.e. Ω_ν's rank-block (2·idx ν + 2) lands strictly below μ's
+-- ψ-block (2·idx μ + 1) whenever ν <Ω μ.  This is the fact that the
+-- single ω-power ladder could NOT provide (there, `ω-rank-pow-succ
+-- μ ≤′ ω-rank-pow ν` was only NON-strict at the boundary
+-- ν = suc μ); the doubling buys the strict inequality, here for
+-- both the fin markers (via the Slice-1 fact `Ω-block-below-next-ψ`,
+-- definitionally aligned through `double (fin n) = fin (n+n)`) and
+-- the limit marker `ω` (via one-step strict-mono into the limit's
+-- (2a+3)-th approximant).
+--
+-- This is the arithmetic the cross-index `<ᵇ-Ωψ` constructor's
+-- `rank2`-mono will consume (with `⊕`-left-weakening to absorb the
+-- target's ψ-argument), and the bOmega case of the WfAdm→rank2
+-- scale-transfer bridge.
+double-cross-gap : ∀ {ν μ}
+  → ν <Ω μ
+  → ω-rank-pow-succ (double ν) <′ ω-rank-pow (double μ)
+double-cross-gap {fin a} {fin b} (fin<fin a<b) = Ω-block-below-next-ψ a<b
+double-cross-gap {fin a} {ω}     fin<ω         =
+  ≤′-trans
+    {osuc (ω^ (suc (suc (a + a))))}
+    {ω^ (suc (suc (suc (a + a))))}
+    {olim (λ n → ω^ (suc n))}
+    (ω^-strict-mono-suc (suc (suc (a + a))))
+    (f-in-lim′ (λ n → ω^ (suc n)) (suc (suc (a + a))))
