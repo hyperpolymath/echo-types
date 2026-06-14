@@ -1,0 +1,104 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Echo-Additive Experimental — Decision Log
+:revdate: 2026-06-14
+
+Decision log for the `experimental/echo-additive/` subtree. Each entry records
+a named, dated, author-authorised decision with its rationale and downstream
+constraints. Entries are append-only. Superseding decisions reference the entry
+they override.
+
+[IMPORTANT]
+====
+This log holds decisions, not findings. Findings (what the Agda proves or fails to
+prove) live in STATE.adoc. Decisions (what to attempt, what to stop, what to merge)
+live here. A finding without a corresponding decision is not authorization to merge.
+====
+
+---
+
+== D-2026-06-14-R1: Comparative protocol — primary and secondary lines
+
+*Date:* 2026-06-14 +
+*Author authorization:* explicit, in-session +
+*Supersedes:* none (first decision for this tree)
+
+=== Decision
+
+R1 is resolved as a *comparative protocol*, not as a choice of one reading over the
+other. Both the monadic and comonadic readings of the grade composition map are to
+be constructed in parallel in the experimental tree. Neither is declared the winner
+before construction.
+
+=== Rationale
+
+The variance analysis at R1 established:
+
+* The combining direction of Echo-comp-iso has monadic variance (μ direction;
+  `D_r(D_s A) → D_{r+s} A`). Building this gives the primary line.
+* The splitting direction has comonadic variance (δ direction;
+  `D_{r+s} A → D_r(D_s A)`). Building this gives the secondary line.
+
+The question of whether *recoverability* — given a lossy output, what inputs were
+possible? — lives naturally in the monadic direction, the comonadic direction, or
+genuinely requires both, cannot be settled by structural analysis alone. It requires
+attempting the laws in `--safe --without-K` Agda and seeing what can and cannot be
+discharged. Choosing before construction would discard potentially live evidence.
+
+=== Three enforcement specifics
+
+[cols="1,4", options="header"]
+|===
+| Enforcement specific | Binding constraint
+
+| *WHERE*
+| Scope is `proofs/agda/experimental/echo-additive/` exclusively. Shipped modules
+(`EchoGraded.agda`, `EchoGradedComonad.agda`, `EchoTruncation.agda`) are read-only.
+Nothing in shipped code imports from experimental/. R-2026-05-18 retraction stands.
+
+| *WHAT HOLDS YOU (the gate)*
+| Nothing from experimental/ goes to main — no merge, no claim, no retraction
+reversal — until one of the two terminating conditions is met AND the author
+explicitly authorizes the merge. "Both lines compile" alone does not satisfy the gate.
+Author authorization alone does not satisfy the gate. Both required together.
+
+| *LINE-SEPARATION FIREWALL*
+| Primary (`GradedMonad.agda`) and secondary (`GradedComonad.agda`) are separate files.
+Neither imports the other during the law-discharge phase. No postulates anywhere in
+experimental/ (a postulate in one line corrupts the comparison). Synthesis happens in
+a dedicated file created only after both lines have been independently evaluated.
+|===
+
+=== Terminating condition
+
+[cols="1,4", options="header"]
+|===
+| Case | Consequence
+
+| *(i)* One reading discharges its laws; the other provably cannot (park point reached
+  with named obstruction and no postulate escape)
+| The discharging reading is the correct structural home. The other is parked with the
+  named obstruction. Author decides whether to proceed to R4+ on the surviving line.
+
+| *(ii)* Both readings discharge their laws
+| Proceed to adjunction proof: construct F_r, U_r, and the witness `F_r ⊣ U_r`
+  in `--safe --without-K` Agda. The adjunction is *not assumed* from the law
+  discharge — it must be proven as a separate construction. Only after the witness
+  compiles does this satisfy (ii). If the adjunction proof itself fails (postulate
+  needed), document the obstruction explicitly and park. Report to author; do not
+  auto-merge.
+|===
+
+=== Files in scope at decision point
+
+* `proofs/agda/experimental/echo-additive/Grade.agda` — R0 grade semiring, exit 0.
+* `proofs/agda/experimental/echo-additive/VarianceGate.agda` — R1 variance frame,
+  §3 records this decision.
+* `experimental/echo-additive/STATE.adoc` — running state; records the protocol,
+  enforcement specifics, and terminating condition in detail.
+* `experimental/echo-additive/DECISIONS.adoc` — this file.
+
+=== Next action (author-gated)
+
+R2 (per-grade `degrade` coherence in ℕ∪{∞}) is the next rung. Await author return
+before beginning R2 or R3.
