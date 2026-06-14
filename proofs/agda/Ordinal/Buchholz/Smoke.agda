@@ -530,6 +530,14 @@ open import Ordinal.Buchholz.RecursiveSurfaceSound using
   ; wf-<ᵇʳᶠ²
   )
 
+-- Sound-carrier extended order — the K-limited shared-binder cases,
+-- unbudgeted (own block per CLAUDE.md Working rules).
+open import Ordinal.Buchholz.OrderExtendedSound using
+  ( _<ᵇ⁺²_
+  ; <ᵇ⁺²⇒<ᵇʳᶠ²
+  ; wf-<ᵇ⁺²
+  )
+
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
 -- the left-spine NonBzero predicate, the strict-jump bridge from
 -- `μ <Ω ν` to `ω-rank-pow-succ μ ≤′ ω-rank-pow ν`, and the head-Ω
