@@ -1,0 +1,106 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= D-2026-06-14 — Bachmann–Howard order-type fidelity (named open problem)
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+Records the remaining ordinal-track frontier in the same dated idiom
+as the retraction log's `R-2026-05-18`, so it is findable in the
+record a cold review reads — not buried in appendix prose. This entry
+is the *named non-claim* behind the Pillar E ordinal appendix
+(`paper.adoc` §"Ordinal / Buchholz consumer-evidence"), which was
+written at the *well-foundedness* milestone (machinery + WF exists),
+NOT at the order-type-fidelity milestone. It is an open-problem /
+scope-boundary record, not a retraction of an asserted claim (the
+order-type claim was never asserted).
+
+toc::[]
+
+== The bounded claim (what IS established)
+
+The Buchholz ordinal-notation track has reached its Bachmann–Howard
+milestone in the following bounded sense, and only this sense:
+
+. *Notation machinery E1–E7 mechanised* — OT syntax, CNF below ε₀
+  (`cnf-trichotomy`), the ℕ-staged closure `C-monotone`, the
+  pedagogical ψ (`psi-notin-C` / `psi-least`), the Buchholz Ω_ν scale
+  + C_ν + ψ_ν (`Cν-monotone`), well-formed *target terms* up to
+  ψ₀(Ω_ω) (`BH-wf` / `psi-OmegaOmega-wf`), and the echo collapse
+  bridge (`ordinal-collapse-non-injective`). The Bachmann–Howard
+  target term ψ₀(Ω_ω) is expressible and well-formed.
+. *Well-foundedness of the ν ≤ ω fragment* under `--safe --without-K`,
+  zero postulates: the native accessibility proof
+  `WellFounded.wf-<ᵇ`, and the ordinally-sound, *unbudgeted*
+  doubled-ladder routes `RankDoubledLadderUmbrella.wf-<ᵇ²`,
+  `RecursiveSurfaceSound.wf-<ᵇʳᶠ²`, and `OrderExtendedSound.wf-<ᵇ⁺²`.
+
+== The open problem (what is NOT established)
+
+*Order-type fidelity.* Well-foundedness is necessary but not
+sufficient: the notation is proven to be a *well-founded order*, and
+is NOT proven to be *the Bachmann–Howard ordinal order*. The two
+carriers each fall short of fidelity in precisely identified ways:
+
+* *Native `_<ᵇ_`* is well-founded but ordinally *unsound* — a
+  syntactic order engineered for the accessibility proof. The
+  constructor `<ᵇ-+Ω` admits
+  `bplus bzero (bOmega (fin 1)) <ᵇ bOmega (fin 0)`, a comparison with
+  no ordinal meaning (`buchholz-rank-obstruction.adoc`). So `wf-<ᵇ`
+  certifies termination, not order-type.
+* *The sound carrier `_<ᵇ²_`* (via the doubled-ladder rank `rank2`)
+  *is* ordinally sound but is a *termination measure*: it maps ψ_ν /
+  Ω_ν into small ω-power blocks `ω^(2ν+1)` / `ω^(2ν+2)` in Brouwer
+  ordinals, *collapsing the actual ordinal heights*. It is not a
+  height-preserving denotation and reaches nothing near ψ₀(Ω_ω) as a
+  height — by design; its job is well-foundedness.
+
+To close the frontier, supply *either*:
+
+[loweralpha]
+. a verified order-preserving denotation `‖·‖ : BT → 𝒪` into a
+  reference ordinal structure `𝒪` of height ψ₀(Ω_ω), with
+  order-preservation proved on the well-formed fragment
+  (`s <ᵇ t` iff `‖s‖ < ‖t‖`); or
+. a direct order-type computation showing the well-founded restricted
+  order has order-type ψ₀(Ω_ω) (fundamental sequences / a
+  collapsing-function correctness argument).
+
+No current module establishes either. This is the classical
+order-type-correctness content of an ordinal-notation system;
+well-foundedness (extensively hardened) is the prerequisite, not the
+result.
+
+== Echo's non-role
+
+Echo-types' role in the Buchholz track is the collapse bridge — a
+component only. Echo does not supply, and is not claimed to supply,
+the order-type fidelity proof. Loss-grading and ordinal-collapsing
+are structurally analogous, but the analogy is not an instance, and
+no part of the Bachmann–Howard milestone is discharged by echo's
+framing. This is the dual of the paper's existing firewall (which
+keeps the ordinal track from inflating the identity claim): here,
+echo gets no credit for the ordinal work, and the ordinal work leans
+on echo for none of its strength.
+
+== Status
+
+* Pillar E ordinal appendix: *written at WF milestone; order-type
+  fidelity OPEN.*
+* This frontier is the realistic remaining ordinal-track advance that
+  does not require external mathematical input; it is distinct from
+  the *walled* global-native `wf-<ᵇʳᶠ` (whose close-out is a
+  falsifiable verdict, per `buchholz-rank-obstruction.adoc`).
+
+== See also
+
+* `docs/echo-types/paper.adoc` §"Ordinal / Buchholz consumer-evidence"
+  — the appendix this record anchors.
+* `docs/echo-types/buchholz-rank-obstruction.adoc` — the carrier
+  soundness analysis + the doubled-ladder closure.
+* `docs/bridges/buchholz-plan.adoc` — the E-stage matrix and the
+  S1/S2/S3 Bachmann–Howard staging.
+* `roadmap.adoc` §Lane 3 — the ordinal-track open items.
