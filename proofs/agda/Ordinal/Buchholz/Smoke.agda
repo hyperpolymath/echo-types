@@ -511,6 +511,16 @@ open import Ordinal.Buchholz.RankDoubledLadderMonoPlus2 using
   ; rank2-mono-+1
   )
 
+-- Doubled-ladder umbrella + well-foundedness (own block per CLAUDE.md
+-- Working rules) — the Gate 1 capstone: a complete rank2-ready
+-- relation over all 12 core `_<ᵇ_` constructors and its WF proof.
+open import Ordinal.Buchholz.RankDoubledLadderUmbrella using
+  ( _<ᵇ²_
+  ; rank2-mono-<ᵇ²
+  ; rank2-mono-≤ᵇ²
+  ; wf-<ᵇ²
+  )
+
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
 -- the left-spine NonBzero predicate, the strict-jump bridge from
 -- `μ <Ω ν` to `ω-rank-pow-succ μ ≤′ ω-rank-pow ν`, and the head-Ω
