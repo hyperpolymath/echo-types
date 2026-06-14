@@ -153,6 +153,7 @@ open import Ordinal.Buchholz.RankPowDomination
 open import Ordinal.Buchholz.RankPowSlice3
 open import Ordinal.Buchholz.RankPowSlice3Headline
 open import Ordinal.Buchholz.RankDoubledLadder
+open import Ordinal.Buchholz.RankDoubledLadderMono
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice3
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice4
