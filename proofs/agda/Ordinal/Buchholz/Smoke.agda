@@ -496,6 +496,13 @@ open import Ordinal.Buchholz.RankDoubledLadderMonoPlus using
   ; rank2-mono-ψ+
   )
 
+-- Doubled-ladder Ω-block additive principality + the `<ᵇ-+Ω`
+-- primitive (own block per CLAUDE.md Working rules).
+open import Ordinal.Buchholz.RankDoubledLadderAddPrincipal using
+  ( additive-principal-ω-rank-pow-succ
+  ; rank2-mono-+Ω
+  )
+
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
 -- the left-spine NonBzero predicate, the strict-jump bridge from
 -- `μ <Ω ν` to `ω-rank-pow-succ μ ≤′ ω-rank-pow ν`, and the head-Ω
