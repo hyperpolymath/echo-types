@@ -206,9 +206,95 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-06-13)
+## Current rung state (2026-06-14)
 
-### Session arc 2026-06-13 Deniability track — EchoDeniability + wiki (read this first)
+### Session arc 2026-06-14 Ordinal track — doubled-ladder Gate 1 closure (read this first)
+
+*Where we started:* Gate 1's residual was the EQUAL-Ω boundary
+`bpsi ν α <ᵇ bOmega ν` (ψ_ν(α) < Ω_ν at the SAME marker). The
+single ω-power ladder gives ψ and Ω the same exponent block, so
+`rank-pow` collapses them (can't order `<ᵇ-ψΩ≤`) and `rank-adm`
+inverts `<ᵇ-Ωψ`. A doubled-ladder design (ψ_ν ↦ ω^(2ν+1),
+Ω_ν ↦ ω^(2ν+2)) had its arithmetic spine + `rank2` + the equal-Ω
+discharge landed (PRs #202/#203); the WfAdm→rank2 bridge was the
+next piece.
+
+*Where we ended:* the doubled-ladder programme is COMPLETE — Gate 1
+closed for the sound carrier. Six PRs (#204-#209), all
+`--safe --without-K`, zero postulates, structural recursion (no
+`TERMINATING`):
+
+* `#204` — `rank2-bounded : WfAdm t → rank-pow t <′ ω-rank-pow μ →
+  rank2 t <′ ω-rank-pow (double μ)`, the scale-transfer bridge.
+  NOT a plain map: `rank-pow (bpsi ν _) = ω-rank-pow ν` collapses the
+  ψ-argument α that `rank2` keeps, so the WfAdm `wf-adm-bpsi` field
+  supplies the per-ψ admissibility bound the bpsi case recurses on.
+* `#205` — 4 atomic-boundary primitives (`RankDoubledLadderMono`):
+  `rank2-mono-{ΩΩ,Ωψ,ψΩ,ψΩ≤}`. The `<ᵇ-ψΩ≤` equal-Ω boundary splits
+  `ν ≤Ω μ` via `≤Ω-split`.
+* `#206` — 5 bzero/via-left primitives (`RankDoubledLadderMonoPlus`):
+  `rank2-pos-{bOmega,bpsi}`, `rank2-mono-{0-+,Ω+,ψ+}`.
+* `#207` — 3 bplus-on-left primitives. `RankDoubledLadderAddPrincipal`
+  adds Ω-block additive principality (`additive-principal-base` — the
+  OmegaPow proof re-stated over an arbitrary base, for the ω-marker
+  target `ω-rank-pow-succ ω = olim (λ n → ω-rank-pow ω ·ℕ n)`) +
+  `rank2-mono-+Ω`; `RankDoubledLadderMonoPlus2` adds `rank2-mono-+ψ`
+  (ψ-block additive principality) + `rank2-mono-+1` (joint-bplus,
+  ⊕-left-weakening).
+* `#208` — THE CAPSTONE (`RankDoubledLadderUmbrella`): the
+  rank2-soundness-ready relation `_<ᵇ²_` over all 12 core
+  constructors (WfAdm witnesses + the `<ᵇ-+ψ` leading-power bound
+  `rank-pow x <′ ω-rank-pow ν` + WfCNF tail bounds `y ≤ᵇ² x` baked
+  in), the umbrella `rank2-mono-<ᵇ² : s <ᵇ² t → rank2 s <′ rank2 t`
+  (structural recursion dispatching to the 12 primitives), the
+  `≤ᵇ²` companion, and `wf-<ᵇ² : WellFounded _<ᵇ²_` via the standard
+  `Subrelation` + `On.wellFounded rank2 wf-<′` transport.
+* `#209` — doc consolidation in `buchholz-rank-obstruction.adoc`.
+
+*Key honest-scope insight (DO NOT reopen as "incomplete").* `_<ᵇ²_`
+is a SOUND CARRIER, exactly like the existing `_<ᵇ⁰_` / `_<ᵇᵘ_`.
+It excludes the ordinally-unsound native witnesses (the `<ᵇ-+Ω`
+counterexample `bplus bzero (bOmega (fin 1)) <ᵇ bOmega (fin 0)` is
+NOT an `_<ᵇ²_` derivation — its tail bound `y ≤ᵇ² x` fails). There is
+NO faithful projection `<ᵇ → <ᵇ²` and that is not a gap: native
+`_<ᵇ_` is ordinally unsound, so no rank embedding maps it, and its
+well-foundedness is ALREADY proved directly in
+`WellFounded.wf-<ᵇ` (structural, no rank). The doubled ladder's
+contribution is a STRICTLY STRONGER sound carrier than the
+single-ladder union `_<ᵇᵘ_`: it closes the equal-Ω boundary
+`<ᵇ-ψΩ≤` and the bplus-target `<ᵇ-+1` (the single-ladder Gate 1's
+open blocker) with ONE ordinally-sound scalar rank.
+
+*The `<ᵇ-+ψ` leading-power subtlety (load-bearing).* `rank2-mono-+ψ`
+needs the source pieces below the ψ-block's LEADING power
+`ω-rank-pow (double ν)` — strictly stronger than "below the whole
+ψ-rank" (which is all plain recursion gives, and `ω-rank-pow(double ν)
+⊕ rank2 α` is NOT additive principal). So `<ᵇ²-+ψ` carries
+`WfAdm x` + `rank-pow x <′ ω-rank-pow ν`, and the umbrella transfers
+it via `rank2-bounded`. Do not try to reformulate `rank2-mono-+ψ`
+with whole-ψ-rank premises — it is mathematically insufficient.
+
+*Module map (all under `proofs/agda/Ordinal/Buchholz/`):*
+`RankDoubledLadder` (rank2 + spine + bridge), `…Mono` (4 atomic),
+`…MonoPlus` (5 bzero/via-left), `…AddPrincipal` (+Ω + base-generic
+additive principality), `…MonoPlus2` (+ψ, +1), `…Umbrella`
+(`_<ᵇ²_`, umbrella, `wf-<ᵇ²`). All wired into `All.agda` +
+pinned in `Ordinal/Buchholz/Smoke.agda`.
+
+*Plan for the next Claude.* The doubled-ladder programme is closed.
+Genuinely-open ordinal-track frontier (separate, larger scope):
+(1) unbudgeted `_<ᵇʳᶠ_` global WF — eliminate the ℕ budget from
+`wf-<ᵇʳᶠᵇ` under `--safe --without-K`; (2) the single-ladder Gate 1
+`<ᵇ-+1` cross-head rank-equal sub-case, IF one wants it closed on the
+ORIGINAL `rank-pow`/union umbrella rather than via the doubled
+ladder (the doubled ladder already closes `<ᵇ-+1` on its own carrier);
+(3) Pillar E paper `[EXPAND]` ordinal consumer-evidence appendix,
+gated on the Bachmann–Howard milestone. DO NOT reopen: the doubled
+ladder design (rank2/double/the 12 primitives/the `_<ᵇ²_` carrier
+shape are correct); the honest-scope verdict above; the `<ᵇ-+ψ`
+leading-power formulation.
+
+### Session arc 2026-06-13 Deniability track — EchoDeniability + wiki
 
 *Where we started:* user pasted `Deniability.agda` (standalone exploration: perfect
 deniability via constant production, `refl` proof) and asked for a `DeniabilityPartial.agda`
