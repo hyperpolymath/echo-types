@@ -42,6 +42,7 @@ DENY_FLAG='--type-in-type|--cumulativity|--allow-unsolved-metas|--no-positivity-
 EXPLORATORY_EXEMPT=(
   "EchoImageFactorizationPropPostulated"
   "EchoDecorationBridge"
+  "Fidelity"
 )
 
 strip_comments() {
