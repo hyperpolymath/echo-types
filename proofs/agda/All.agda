@@ -166,6 +166,7 @@ open import Ordinal.Buchholz.RankMonoUnion
 open import Ordinal.Buchholz.RankMonoUnionWF
 open import Ordinal.Buchholz.RankMonoUnionWfCNF
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
+open import Ordinal.Buchholz.RecursiveSurfaceSound
 open import Ordinal.Buchholz.RecursiveSurfaceBudget
 open import Ordinal.Buchholz.SurfaceOrder
 open import Ordinal.Buchholz.VeblenObligations

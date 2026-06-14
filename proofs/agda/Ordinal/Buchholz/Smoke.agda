@@ -521,6 +521,15 @@ open import Ordinal.Buchholz.RankDoubledLadderUmbrella using
   ; wf-<ᵇ²
   )
 
+-- Unbudgeted sound-carrier recursive surface (own block per CLAUDE.md
+-- Working rules): the recursive same-binder closure over `_<ᵇ²_` and
+-- its budget-free well-foundedness.
+open import Ordinal.Buchholz.RecursiveSurfaceSound using
+  ( _<ᵇʳᶠ²_
+  ; rank2-mono-<ᵇʳᶠ²
+  ; wf-<ᵇʳᶠ²
+  )
+
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
 -- the left-spine NonBzero predicate, the strict-jump bridge from
 -- `μ <Ω ν` to `ω-rank-pow-succ μ ≤′ ω-rank-pow ν`, and the head-Ω
