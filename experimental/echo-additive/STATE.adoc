@@ -1,0 +1,317 @@
+// SPDX-License-Identifier: MPL-2.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Echo-Additive Experimental — Session State
+:revdate: 2026-06-14
+:status: R1 resolved — comparative protocol active (2026-06-14)
+:session-guard: R-2026-05-18 do-not-reopen preserved
+
+[IMPORTANT]
+====
+This directory is EXPERIMENTAL. No file here may be imported by any shipped
+module in `proofs/agda/`. The shipped modules (`EchoGraded.agda`,
+`EchoGradedComonad.agda`, `EchoTruncation.agda`) are READ-ONLY; their
+retraction banners are the honest record and have not been touched.
+====
+
+== Phase 0 — Survey
+
+=== EchoGraded.agda
+
+Confirmed: the structure is a *thin-poset reindexing action*, not a graded comonad.
+
+* `Grade` is a 3-element type `{keep, residue, forget}` with join `_⊔g_` (max in
+  the loss order: keep ≤ residue ≤ forget).
+* `GEcho : Grade → Set` — `GEcho keep = Echo collapse tt`, `GEcho residue = EchoR ⊤ TrivialCert tt`,
+  `GEcho forget = ⊤`.
+* `degrade : g₁ ≤g g₂ → GEcho g₁ → GEcho g₂` — monotone reindexing down the loss order.
+* `degrade-compose` + `≤g-prop` are the ONLY content beyond generic Σ-functoriality.
+* *Banner lines quoted:* "RETRACTION 2026-05-18 (docs/retractions.adoc R-2026-05-18):
+  comments in this module that assert a 'graded comonad' [...] are RETRACTED claims.
+  The Agda is unchanged and correct; read it as a loss-graded *reindexing modality*
+  (thin-poset action; no nested D_r D_s)."
+
+=== EchoGradedComonad.agda
+
+Confirmed:
+
+* `gduplicate : ∀ g₁ g₂ → GEcho g₁ → GEcho (g₁ ⊔g g₂)` — a *single-grade reindex
+  into a join*, not a nested composition. There is no `GEcho (GEcho …)` anywhere.
+* `gcomonad-coassoc` uses the *common-upper-bound idiom*: both sides are degraded into
+  a common `GEcho g'`, so no additive grade equation of the form `r + s ≡ t` appears.
+  The proof reduces to `degrade-compose` + `≤g-prop` with zero transport.
+* Banner lines quoted verbatim from EchoGradedComonad.agda lines 1–10 (same retraction
+  banner as EchoGraded.agda): "no nested D_r D_s".
+
+=== EchoTruncation.agda
+
+Confirmed:
+
+* The module concerns `isProp T = (x y : T) → x ≡ y` — *propositional truncation*,
+  i.e., the HoTT (−1)-truncation level only.
+* Its headline result `echo-not-prop` proves that `Echo f y` is NOT a mere proposition
+  (not (−1)-truncated) when `f` has two distinct preimages of `y`.
+* This is NOT an n-indexed truncation tower. There is no `‖−‖_n` type family indexed
+  by natural numbers anywhere in the module.
+* Reconciliation note for R5 (cap): `D_∞` in the new Grade tower corresponds to
+  `GEcho forget = ⊤` (total collapse to a singleton), which IS propositional
+  (isProp ⊤ trivially). But `⊤` is NOT a HoTT n-truncation for any specific finite n —
+  it is the (−1)-truncation only. Do not equate `D_∞` with `‖A‖_n` for any finite n.
+  R5 must reconcile these explicitly.
+
+=== docs/retractions.adoc §R-2026-05-18
+
+*Absence diagnosis (quoted from the retraction):*
+
+"Tree-wide there is no `Comonad` record, no `δ : D_{r·s} ⇒ D_r D_s`, no nested
+`GEcho (GEcho …)`, no co-Kleisli. `gextract` is the identity coercion (`keep` is the
+definitional lattice bottom); `gduplicate` is the join-left *single-grade* reindex.
+The structure is a thin-poset reindexing action."
+
+*Follow-up F-2026-05-18a:*
+
+"What is NOT earned back by this follow-up. The graded-comonad claim (no nested
+`D_r D_s`), model-independence of the *graded* structure, and the conservativity
+metatheorem remain fully retracted."
+
+Fixable only by restructuring the object, not by prose. This constraint applies
+equally to the ℕ∪{∞} additive extension: adding a richer grade monoid does not change
+the directional obstruction.
+
+== Phase R0 — Grade semiring
+
+*File:* `proofs/agda/experimental/echo-additive/Grade.agda`
+
+*Module:* `experimental.echo-additive.Grade`
+
+*Status:* Written. Keystone lemmas discharged:
+
+[cols="2,3,1", options="header"]
+|===
+| Lemma | Statement | Status
+
+| `+g-assoc`          | `(g +g h) +g k ≡ g +g (h +g k)` | ✓ pattern-match
+| `+g-identityˡ`      | `fin 0 +g g ≡ g`                  | ✓ refl / +-identityʳ
+| `+g-identityʳ`      | `g +g fin 0 ≡ g`                  | ✓ Nat.+-identityʳ
+| `+g-comm`           | `g +g h ≡ h +g g`                 | ✓ Nat.+-comm
+| `+g-absorbˡ/ʳ`      | `inf +g g ≡ inf`, `g +g inf ≡ inf` | ✓ refl
+| `⊓g-assoc/comm/idem`| semilattice laws                  | ✓ Nat.⊓-*
+| `⊓g-identityˡ/ʳ`    | `inf ⊓g g ≡ g`, `g ⊓g inf ≡ g`   | ✓ refl
+| `+g-distribˡ-⊓g`    | left distribution over ⊓g          | ✓ (1 OBLIGATION below)
+| `+g-distribʳ-⊓g`    | right distribution over ⊓g         | ✓ (1 OBLIGATION below)
+| `+g-inf-idem`       | `inf +g inf ≡ inf`                | ✓ refl (KEYSTONE A)
+| `+g-zero-idem`      | `fin 0 +g fin 0 ≡ fin 0`          | ✓ refl
+| `+g-suc-not-idempotent` | `fin (suc n) +g fin (suc n) ≢ fin (suc n)` | ✓ (KEYSTONE B)
+| `embed-preserves-join`  | old ⊔g embeds as new ⊔g       | ✓ all 9 cases refl
+|===
+
+*Keystone confirmed:* finite grades accumulate (`n + n = 2n ≠ n`), only `inf` is
+`+g`-idempotent. The cap IS the absorbing element — not a separate gadget.
+
+*Outstanding OBLIGATION items (stdlib name uncertainty; not postulates):*
+
+. `Nat.+-distribˡ-⊓ : ∀ m n p → m + (n ⊓ p) ≡ (m + n) ⊓ (m + p)` — verify
+  this name in the local stdlib 2.3. If absent, prove inline by induction on m
+  (~12 lines). Does not affect the module structure; only one case in
+  `+g-distribˡ-⊓g`.
+. `Nat.+-distribʳ-⊓ : ∀ p m n → (m ⊓ n) + p ≡ (m + p) ⊓ (n + p)` — same
+  caveat.
+
+These are stdlib-name lookups, not mathematical obligations. The proofs are
+structurally complete; the only question is which Data.Nat.Properties name to call.
+
+== Phase R1 — Variance gate (STOP)
+
+*File:* `proofs/agda/experimental/echo-additive/VarianceGate.agda`
+
+=== The composition candidate
+
+`gduplicate keep g : GEcho keep → GEcho g` instantiates, since `GEcho keep = A`, to:
+
+----
+A → D_g A
+----
+
+*Direction:* this is a UNIT in the MONADIC direction (`Id ⇒ D`).
+
+*What a graded comonad requires:*
+
+* Counit ε : D₀ A → A (extraction — goes D → Id)
+* Comultiplication δ : D_{r+s} A → D_r(D_s A) (grade splitting — goes D_{r+s} → D_r ∘ D_s)
+
+*The obstruction:* `gduplicate keep g` gives η (A → D_g A), not δ. Any "gradewise
+section" that would supply D_r ∘ D_s ≅ D_{r+s} in the additive Grade setting uses
+the combining direction of Echo-comp-iso — which is the monadic multiplication μ,
+not the comonadic comultiplication δ. Using it as δ conflates comonad with monad and
+breaks coeffect tracking (resources measured in the wrong direction).
+
+This is exactly the obstruction R-2026-05-18 diagnosed as an *absence* ("no nested
+D_r D_s"). The R1 gate names the *cause*: the available combining map has monadic
+variance, so the absence cannot be filled without inverting the direction.
+
+=== A/B decision record (C withdrawn)
+
+[cols="1,3,2", options="header"]
+|===
+| Option | Structure | Verdict
+
+| *A*
+| Graded comonad + separately axiomatized section family (σ : A → D_r A per grade r)
+| Collapses into B. Not a stable distinct option.
+
+| *B*
+| Full graded adjunction F_r ⊣ U_r (monad-comonad pair)
+| Correct structural home for the composition law. First obligation: F_r and U_r
+  as functors plus the adjunction. Substantial; requires categorical framework
+  not present in repo.
+
+| *C'* (was part of C)
+| Extend the monotone action to ℕ∪{∞}: `degrade` lifted to all Nat.≤ cases
+| Trivially achievable. Adds NO composition structure. Does not answer D_r ∘ D_s.
+
+| *C''* (was part of C)
+| Lax monoidal functor (Grade, +g) → (Endo(Set), ∘); laxator φ_{r,s} : D_r(D_s A) → D_{r+s} A
+| Constructible via Echo-comp-iso combining direction. Has monadic variance (μ
+  direction). Gives a graded monad, not a comonad. Coeffect interpretation lost.
+|===
+
+*Option C is withdrawn.* The original Option C conflated C' (trivial monotone
+extension) with C'' (genuine lax monoidal functor requiring D_r(D_s A) nesting).
+The OBLIGATION comment claiming C'' "does NOT require nested D_r(D_s A)" was false
+and is retracted in VarianceGate.agda (2026-06-14).
+
+=== R1 resolved — comparative protocol (2026-06-14)
+
+R1 is closed. The resolution is *comparative, not exclusive*: both the monadic
+and comonadic readings will be constructed and compared in the experimental tree.
+Neither claims primacy in shipped code until the terminating condition is met.
+
+==== What this is and why
+
+The variance analysis established that the combining direction of the composition
+map (Echo-comp-iso "from") is monadic and the splitting direction is comonadic.
+Rather than choosing one and discarding the other before construction, both are
+pursued so that the comparison can determine what each reading captures that the
+other cannot — specifically whether *recoverability* (the section/retraction
+structure, the map that lets you ask "given the lossy output, what inputs were
+possible") is naturally monadic, naturally comonadic, or genuinely needs both.
+That question cannot be answered by reasoning alone; it requires the laws to be
+attempted in Agda.
+
+==== Primary line: graded monad
+
+*Structure:* laxator `φ_{r,s}(A) : D_r(D_s A) → D_{r+s} A`, natural in A,
+constructed via Echo-comp-iso's combining ("from") direction.
+
+*Variance:* monadic (μ direction). Accepted explicitly. This reading gives
+algebraic composition D_r ∘ D_s and is where D_r ∘ D_s ≅ D_{r+s} lives.
+
+*First target (R3):* discharge the three coherence laws in `--safe --without-K` Agda:
+
+. Pentagon (associativity):
+  `φ_{r,s+t} ∘ D_r(φ_{s,t}) = φ_{r+s,t} ∘ φ_{r,s}(D_t(-))`.
+. Left unit:
+  `D_{fin 0}(D_r A) → D_r A` reduces to the `D_{fin 0} ≅ Id` coercion.
+. Right unit:
+  `D_r(D_{fin 0} A) → D_r A` reduces to `D_r` applied to the same coercion.
+
+==== Secondary line: comonadic reading (parallel, experimental only)
+
+*Structure:* colaxator `δ_{r,s}(A) : D_{r+s} A → D_r(D_s A)`, the splitting
+direction. This is the comonadic comultiplication direction.
+
+*Status:* exploration. Lives in `experimental/echo-additive/` only. No claim is
+made about shipped `EchoGraded.agda` or `EchoGradedComonad.agda`.
+
+*First target (R3, secondary):* attempt to discharge the coassociativity law
+`D_r(δ_{s,t}) ∘ δ_{r,s+t} = δ_{r+s,t} ∘ δ_{r,s}` in `--safe --without-K` Agda.
+If it cannot be discharged without a postulate, the secondary line parks there
+and that is the finding.
+
+==== Non-negotiable guards on both lines
+
+Three enforcement specifics bind both lines unconditionally.
+
+===== WHERE this applies
+
+[IMPORTANT]
+====
+*Scope:* `proofs/agda/experimental/echo-additive/` — the full experimental subtree.
+
+. *R-2026-05-18 retraction remains in force and is NOT reopened.* The false
+  graded-comonad claim about shipped echo-types was retracted in May 2026; the
+  experimental comonadic construction here is exploration of a new structure in
+  the experimental tree, not a reinstatement of that claim.
+. *No comonad claim is made about shipped modules.* `EchoGraded.agda` and
+  `EchoGradedComonad.agda` are read-only; their retraction banners stand.
+. *Neither experimental construction is imported by any shipped module.* The import
+  graph must be: experimental/ → stdlib and EchoGraded (read-only). Nothing in
+  `proofs/agda/` (outside experimental/) imports anything in experimental/.
+====
+
+===== WHAT HOLDS YOU — the terminating condition as a hard gate
+
+[IMPORTANT]
+====
+*Nothing from experimental/ goes to main.* No claim from either line appears in
+shipped code, documentation, or retraction reversals until one of the two terminating
+conditions below is met and the author explicitly authorizes the merge. This is not a
+soft norm — it is the specific gate. "Both lines compile" does not satisfy the gate;
+"author says merge" does not satisfy the gate alone. The gate is: terminating condition
+met AND author authorization. Both required. Not either.
+====
+
+===== LINE-SEPARATION FIREWALL
+
+[IMPORTANT]
+====
+The primary (monadic) line and the secondary (comonadic) line are built in
+*separate files*. Neither line imports from the other during construction:
+
+* Primary: `GradedMonad.agda` (to be created at R3)
+* Secondary: `GradedComonad.agda` (to be created at R3, secondary)
+
+No `import experimental.echo-additive.GradedMonad` from `GradedComonad.agda` or
+vice versa during the law-discharge phase. The comparison happens in a *synthesis
+file* created only after both lines have been independently evaluated — not inline.
+Cross-pollination before termination would corrupt the comparison.
+
+The no-postulate rule is itself part of this firewall: a postulate in one line would
+make its law discharge a fiction, and if the other line cannot postulate, the
+comparison is meaningless. No postulates anywhere in experimental/.
+====
+
+==== Terminating condition
+
+The comparison terminates when EITHER:
+
+*(i) One reading discharges all its coherence laws in `--safe --without-K` and
+the other provably cannot* — at which point the discharging reading is the
+correct structural home, the other is parked with the named obstruction, and the
+author decides whether to proceed to R4+ on the surviving line.
+
+*(ii) Both readings discharge their laws* — at which point the discharge result
+warrants an adjunction attempt: construct F_r and U_r explicitly as functors in
+the echo-types setting, and produce the adjunction witness `F_r ⊣ U_r` in
+`--safe --without-K` Agda. The adjunction is *not assumed* from the law discharge;
+it must be *proven* as a separate construction. Only after F_r, U_r, and the adjunction
+witness are assembled does this count as finding (ii). Report the result to the author;
+do not conflate with either line alone; do not auto-merge. If the adjunction proof
+itself fails (laws discharge but adjunction unprovable without postulate), that is its
+own finding: document the obstruction explicitly and park.
+
+Until (i) or (ii): both lines are live. R2 through R7 on each line proceed
+independently. No line is merged to `main` without explicit author authorisation.
+
+== R1 gate — STOP / resolved
+
+Deliverables at gate close:
+
+. `proofs/agda/experimental/echo-additive/Grade.agda` — R0 grade semiring,
+  exit 0 under `--safe --without-K`.
+. `proofs/agda/experimental/echo-additive/VarianceGate.agda` — R1 frame:
+  variance diagnosis, corrected A/B/C record (C withdrawn 2026-06-14),
+  comparative protocol recorded.
+. `experimental/echo-additive/STATE.adoc` — this file.
+
+No shipped module edited. No postulate introduced. R2 (per-grade degrade
+coherence in ℕ∪{∞}) is the next rung, gated on author return.

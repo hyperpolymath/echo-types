@@ -783,6 +783,39 @@ open import EchoDifferential using
   ; bool-perturbed-nat-sensitivity
   )
 
+-- EchoDeniability — residue deniability as a first-class echo property
+-- (2026-06-13). Two production functions at opposite ends of the
+-- deniability spectrum: produce-perfect (constant → fully deniable,
+-- no section) and produce-partial (injective → not deniable for
+-- arbitrary openers, has section). IsConstantOpener is the exact
+-- cut-point at which deniability is restored for the partial case;
+-- it is the type-level analogue of the `affine` mode in
+-- EchoObservationalEquivalence. no-section-produce-perfect / partial-
+-- has-section make the duality a checked theorem pair.
+open import EchoDeniability using
+  ( History
+  ; Residue
+  ; Trace
+  ; Erased
+  ; produce-perfect
+  ; produce-partial
+  ; IsDeniable
+  ; IsConstantOpener
+  ; perfect-deniable
+  ; partial-witness
+  ; partial-distinguishable
+  ; partial-not-deniable
+  ; partial-deniable-restricted
+  ; no-section-produce-perfect
+  ; partial-has-section
+  ; echo-intact-perfect
+  ; echo-lost-perfect
+  ; echo-intact-lost-distinct
+  ; NotProved-side-channel-safe
+  ; NotProved-cryptographic-deniability
+  ; NotProved-adaptive-adversary
+  )
+
 -- EchoCanonicalIdentitySuite — the curated entry point for "why
 -- Echo deserves a name". Re-exports the load-bearing headlines
 -- from every Tier-1 / Tier-2 / Tier-3 module in a single readable

@@ -38,6 +38,12 @@ toc::[]
 
 | <<Roadmap.adoc#,Roadmap>>
 | The three identity-claim decision gates and the live open work per track.
+
+| <<Deniability.adoc#,Deniability>>
+| Residue deniability as a first-class echo property: the perfect
+  (constant / no-section) case and the partial (injective / has-section)
+  case, with the `IsConstantOpener` boundary and its connection to the
+  affine mode.
 |===
 
 == Canonical sources of truth
@@ -55,11 +61,13 @@ This wiki is a *distillation*. The authoritative records are:
 * `.machine_readable/6a2/STATE.a2ml` — EI-2 record (permanent) + current-state block.
 * `docs/bridges/cross-repo-bridge-status.md` — cross-repo bridge ledger.
 
-== One-line status (as of 2026-06-12)
+== One-line status (as of 2026-06-13)
 
 * *Composition track* — landed (Echo-comp-iso, cancel-iso, pentagon).
 * *Ordinal track* — partial (Buchholz; Slice 3+4 Route A; target Bachmann–Howard ψ₀(Ω_ω)).
 * *Establishment track* — Pillars A–D + Pillar F (F1–F4) closed; Pillar E paper open.
+* *Deniability track* — `EchoDeniability.agda` landed: perfect/partial duality,
+  `IsConstantOpener` boundary, no-section / section duality as a checked theorem pair.
 
 == Ecosystem
 
