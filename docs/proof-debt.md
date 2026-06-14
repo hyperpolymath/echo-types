@@ -36,8 +36,30 @@ under one of (a) discharged / (b) budgeted / (c) necessary axiom / (d) debt.
 
 ## (d) DEBT — actively to be closed
 
-- (none — the kernel is `--safe --without-K` clean; all
-  `…Postulated` modules are intentionally scoped to (c).)
+- `proofs/agda/Ordinal/Buchholz/Fidelity.agda` — three top-level
+  `postulate`s forming the trust boundary of the **order-type fidelity
+  scaffold** (open problem `D-2026-06-14`,
+  `docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc`):
+  - `bh-notation` — assumed checked Bachmann–Howard order structure.
+  - `denotation` — assumed faithful, height-preserving order-embedding
+    `⟦·⟧ : BT → 𝒪` (the missing object; **not** `rank2`, which
+    deliberately collapses heights and is a termination measure only).
+  - `ordinal-upper-bound` — the `⟦·⟧`-level upper half of the sandwich
+    (downstream of `denotation`).
+  - **Classification**: DEBT, to be discharged when order-type fidelity
+    is proved — these are *not* permanently-accepted axioms. Each is
+    annotated inline with an `AXIOM:` leading comment.
+  - **Justification / scope**: the module is quarantined — `--without-K`
+    only, NOT imported by `All.agda` / `Smoke.agda` — so the `--safe`
+    kernel cone depends on none of these. Nothing in the module asserts
+    that order type ψ₀(Ω_ω) is *proven*; the status surfaces (appendix,
+    decision log, roadmap) read "written at WF milestone; order-type
+    fidelity OPEN".
+  - **Citation**: `D-2026-06-14`; full per-postulate spec (statement /
+    what closes it / owner) in `Fidelity-OPEN-postulates.md`.
+  - **Guardrail status**: allow-listed in `tools/check-guardrails.sh`
+    (`EXPLORATORY_EXEMPT`) and the inline `hypatia: allow` pragma at the
+    module head.
 
 ## Notes
 

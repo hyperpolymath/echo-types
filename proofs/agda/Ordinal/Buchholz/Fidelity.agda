@@ -126,6 +126,7 @@ record DenotesBH (N : BHNotation) : Set where
 -- TRUST BOUNDARY #1. Supplying a checked Bachmann–Howard structure is
 -- external mathematics (owner / external). This postulate is the
 -- assumption that such a structure exists; nothing here constructs it.
+-- AXIOM: bh-notation — assumed; OPEN proof-debt for order-type fidelity (D-2026-06-14); see docs/proof-debt.md (d) + Fidelity-OPEN-postulates.md. NOT a permanently accepted axiom — a hole to be discharged.
 postulate
   bh-notation : BHNotation
 
@@ -134,6 +135,7 @@ open BHNotation bh-notation
 -- TRUST BOUNDARY #2. The faithful, height-preserving denotation is the
 -- missing object. This postulate assumes it exists; this module makes
 -- its absence typed, not filled.
+-- AXIOM: denotation — assumed; OPEN proof-debt for order-type fidelity (D-2026-06-14); see docs/proof-debt.md (d) + Fidelity-OPEN-postulates.md. NOT a permanently accepted axiom — a hole to be discharged.
 postulate
   denotation : DenotesBH bh-notation
 
@@ -161,6 +163,7 @@ fidelity-lower = BH , (BH-wf , pins-BH)
 -- proved for real; the step from that shadow to this ⟦·⟧-level bound
 -- is the height calculation through a real `⟦·⟧`, available once
 -- `denotation` is discharged.
+-- AXIOM: ordinal-upper-bound — assumed; OPEN proof-debt for order-type fidelity (D-2026-06-14); see docs/proof-debt.md (d) + Fidelity-OPEN-postulates.md. NOT a permanently accepted axiom — a hole to be discharged.
 postulate
   ordinal-upper-bound : ∀ {t} → WfBT t → ¬ (bh-height <𝒪 ⟦ t ⟧)
 
