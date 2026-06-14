@@ -472,6 +472,7 @@ open import Ordinal.Buchholz.RankDoubledLadder using
   ; rank2
   ; rank2-bpsi-below-bOmega
   ; double-cross-gap
+  ; ω-rank-pow-reflects-<Ω
   )
 
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
