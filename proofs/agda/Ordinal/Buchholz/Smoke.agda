@@ -476,6 +476,16 @@ open import Ordinal.Buchholz.RankDoubledLadder using
   ; rank2-bounded
   )
 
+-- Doubled-ladder atomic-boundary rank2-mono primitives (own block per
+-- CLAUDE.md Working rules): the four atomic-vs-atomic `_<ᵇ_`
+-- constructors the doubled ladder was built to order.
+open import Ordinal.Buchholz.RankDoubledLadderMono using
+  ( rank2-mono-ΩΩ
+  ; rank2-mono-Ωψ
+  ; rank2-mono-ψΩ
+  ; rank2-mono-ψΩ≤
+  )
+
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
 -- the left-spine NonBzero predicate, the strict-jump bridge from
 -- `μ <Ω ν` to `ω-rank-pow-succ μ ≤′ ω-rank-pow ν`, and the head-Ω
