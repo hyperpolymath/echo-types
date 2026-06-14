@@ -76,9 +76,9 @@ module Ordinal.Buchholz.RankDoubledLadder where
 
 open import Data.Nat using (ℕ; suc; _+_; _<_; _≤_; s≤s)
 open import Data.Nat.Properties using (+-suc; +-mono-≤)
-open import Relation.Binary.PropositionalEquality using (_≡_; subst; cong)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; subst; cong)
 
-open import Ordinal.Brouwer               using (Ord; osuc)
+open import Ordinal.Brouwer               using (Ord; osuc; oz)
 open import Ordinal.Brouwer.Phase13       using
   ( _≤′_
   ; _<′_
@@ -92,6 +92,10 @@ open import Ordinal.Brouwer.OmegaPow       using
   ; ω^-strict-mono-suc
   ; additive-principal
   )
+open import Ordinal.OmegaMarkers          using (OmegaIndex; fin; ω)
+open import Ordinal.Buchholz.Syntax       using (BT; bzero; bOmega; bpsi; bplus)
+open import Ordinal.Buchholz.RankPow      using (ω-rank-pow; ω-rank-pow-succ)
+open import Ordinal.Buchholz.RankPowDomination using (ω-rank-pow-⊕-below-succ)
 
 ----------------------------------------------------------------------
 -- Local strict transitivity (Phase13 exports only ≤′-trans)
@@ -160,3 +164,73 @@ open import Ordinal.Brouwer.OmegaPow       using
     -- 2m+2 < 2n+1
     Ωexp-m<ψexp-n : Ωexp m < ψexp n
     Ωexp-m<ψexp-n = s≤s Ωexp-m≤n+n
+
+----------------------------------------------------------------------
+-- Slice 2 — the doubled-ladder rank `rank2 : BT → Ord`
+----------------------------------------------------------------------
+
+-- The doubled ladder is just the EXISTING `ω-rank-pow` /
+-- `ω-rank-pow-succ` on a DOUBLED OmegaIndex.  Doubling the fin index
+-- by `n ↦ n + n` lands the ψ-block on `ω-rank-pow (fin (n+n)) =
+-- ω^(suc (n+n)) = ω^(2n+1) = ω^(ψexp n)` and the Ω-block on
+-- `ω-rank-pow-succ (fin (n+n)) = ω^(2n+2) = ω^(Ωexp n)`, both
+-- DEFINITIONALLY (no transport).  So the whole `Ordinal.Brouwer`
+-- machinery — additive-principal closure, the room fact
+-- `RankPowDomination.ω-rank-pow-⊕-below-succ` (which is ∀ OmegaIndex,
+-- so it covers the limit `ω` marker too), strict-mono — transfers to
+-- the doubled ladder for free, by instantiating its index at
+-- `double ν`.
+
+double : OmegaIndex → OmegaIndex
+double (fin n) = fin (n + n)
+double ω       = ω
+
+-- `rank2 : BT → Ord` — ψ_ν(α) into the 2ν+1 block (offset by the
+-- α-rank), Ω_ν at the 2ν+2 block, bplus by ordinal sum, bzero at oz.
+rank2 : BT → Ord
+rank2 bzero       = oz
+rank2 (bOmega ν)  = ω-rank-pow-succ (double ν)
+rank2 (bpsi ν α)  = ω-rank-pow (double ν) ⊕ rank2 α
+rank2 (bplus x y) = rank2 x ⊕ rank2 y
+
+----------------------------------------------------------------------
+-- Definitional sanity
+----------------------------------------------------------------------
+
+rank2-bzero : rank2 bzero ≡ oz
+rank2-bzero = refl
+
+rank2-bOmega : ∀ ν → rank2 (bOmega ν) ≡ ω-rank-pow-succ (double ν)
+rank2-bOmega _ = refl
+
+rank2-bpsi : ∀ ν α → rank2 (bpsi ν α) ≡ ω-rank-pow (double ν) ⊕ rank2 α
+rank2-bpsi _ _ = refl
+
+rank2-bplus : ∀ x y → rank2 (bplus x y) ≡ rank2 x ⊕ rank2 y
+rank2-bplus _ _ = refl
+
+----------------------------------------------------------------------
+-- Headline: the equal-Ω boundary discharge at `rank2`
+----------------------------------------------------------------------
+
+-- The payoff of the doubled ladder.  At the SAME leading marker ν, an
+-- admissibility-bounded ψ_ν(α) ranks strictly below Ω_ν:
+--
+--   rank2 (bpsi ν α) = ω-rank-pow (double ν) ⊕ rank2 α
+--                    <′ ω-rank-pow-succ (double ν) = rank2 (bOmega ν)
+--
+-- given `rank2 α <′ ω-rank-pow (double ν)` (the rank2-level
+-- admissibility bound — the WfAdm bridge that supplies it from
+-- `WfAdm`'s `rank-pow α <′ ω-rank-pow ν` field is the follow-on).
+--
+-- This is EXACTLY `RankPowDomination.ω-rank-pow-⊕-below-succ`
+-- instantiated at the doubled index `double ν` — covering both the
+-- fin AND the limit (`ω`) marker, since that lemma is total over
+-- OmegaIndex.  This is the case the single-ladder rank-pow/rank-adm
+-- could not discharge (rank-pow collapses ψ_ν/Ω_ν; rank-adm ranks
+-- ψ ABOVE Ω); the doubled ladder closes it directly.
+rank2-bpsi-below-bOmega : ∀ {ν α}
+  → rank2 α <′ ω-rank-pow (double ν)
+  → rank2 (bpsi ν α) <′ rank2 (bOmega ν)
+rank2-bpsi-below-bOmega {ν} {α} adm =
+  ω-rank-pow-⊕-below-succ {double ν} {rank2 α} adm

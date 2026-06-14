@@ -469,6 +469,8 @@ open import Ordinal.Buchholz.RankPowDomination using
 open import Ordinal.Buchholz.RankDoubledLadder using
   ( ψ-block-below-Ω-block
   ; Ω-block-below-next-ψ
+  ; rank2
+  ; rank2-bpsi-below-bOmega
   )
 
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
