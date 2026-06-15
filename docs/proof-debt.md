@@ -19,6 +19,20 @@ under one of (a) discharged / (b) budgeted / (c) necessary axiom / (d) debt.
   `prop-factor-left-mere-surjective` (epi). This realises the axiom
   the `--without-K` demo under (c) only assumes — see (c).
 
+- **Bachmann–Howard target structure (`BHNotation` + its
+  well-foundedness)** — discharged 2026-06-15 in the `--safe --without-K`
+  kernel by `proofs/agda/Ordinal/Buchholz/BHTarget.agda` (zero
+  postulates; wired into `All.agda`, pinned in
+  `Ordinal/Buchholz/Smoke.agda`). The abstract `BHNotation` interface and
+  a concrete `bh-notation-from : Ord → BHNotation` are CONSTRUCTED from
+  the repo's existing Brouwer order (`Ord` / `_<′_` / `wf-<′`), so the
+  fidelity target's order AND its well-foundedness are now proved, not
+  assumed. This reduces the order-type fidelity trust boundary under (d)
+  from three postulates to two; the candidate BH HEIGHT (which `Ord`
+  value is ψ₀(Ω_ω)) is now an explicit module parameter
+  (`Fidelity.AtHeight`), not a postulate. Order-type fidelity ITSELF
+  remains OPEN — see (d).
+
 ## (b) Budgeted — tested with refutation budget
 
 - (none)
@@ -52,30 +66,39 @@ under one of (a) discharged / (b) budgeted / (c) necessary axiom / (d) debt.
 
 ## (d) DEBT — actively to be closed
 
-- `proofs/agda/Ordinal/Buchholz/Fidelity.agda` — three top-level
-  `postulate`s forming the trust boundary of the **order-type fidelity
-  scaffold** (open problem `D-2026-06-14`,
+- `proofs/agda/Ordinal/Buchholz/Fidelity.agda` — **two** top-level
+  `postulate`s (reduced from three on 2026-06-15; see (a)) forming the
+  trust boundary of the **order-type fidelity scaffold** (open problem
+  `D-2026-06-14`,
   `docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc`):
-  - `bh-notation` — assumed checked Bachmann–Howard order structure.
   - `denotation` — assumed faithful, height-preserving order-embedding
-    `⟦·⟧ : BT → 𝒪` (the missing object; **not** `rank2`, which
-    deliberately collapses heights and is a termination measure only).
+    `⟦·⟧ : BT → 𝒪` into the (now-real) Brouwer target (the missing
+    object; **not** `rank2`, which deliberately collapses heights and is
+    a termination measure only).
   - `ordinal-upper-bound` — the `⟦·⟧`-level upper half of the sandwich
     (downstream of `denotation`).
+  - **Discharged (2026-06-15)**: the former `bh-notation` postulate (an
+    opaque whole BH structure) is gone — the `BHNotation` interface and a
+    real `bh-notation-from` instance now live in the `--safe` kernel
+    module `Ordinal.Buchholz.BHTarget`, so the target order and its
+    well-foundedness (Brouwer `_<′_` / `wf-<′`) are proved, not assumed.
+    The candidate BH height is an explicit parameter to
+    `Fidelity.AtHeight`, not a postulate. See (a).
   - **Classification**: DEBT, to be discharged when order-type fidelity
     is proved — these are *not* permanently-accepted axioms. Each is
     annotated inline with an `AXIOM:` leading comment.
   - **Justification / scope**: the module is quarantined — `--without-K`
     only, NOT imported by `All.agda` / `Smoke.agda` — so the `--safe`
-    kernel cone depends on none of these. Nothing in the module asserts
-    that order type ψ₀(Ω_ω) is *proven*; the status surfaces (appendix,
-    decision log, roadmap) read "written at WF milestone; order-type
-    fidelity OPEN".
+    kernel cone depends on neither postulate. Nothing in the module
+    asserts that order type ψ₀(Ω_ω) is *proven*; the status surfaces
+    (appendix, decision log, roadmap) read "written at WF milestone;
+    order-type fidelity OPEN".
   - **Citation**: `D-2026-06-14`; full per-postulate spec (statement /
     what closes it / owner) in `Fidelity-OPEN-postulates.md`.
   - **Guardrail status**: allow-listed in `tools/check-guardrails.sh`
     (`EXPLORATORY_EXEMPT`) and the inline `hypatia: allow` pragma at the
-    module head.
+    module head. (`BHTarget` is NOT exempt — it is real kernel content
+    and passes the guardrail.)
 
 ## Notes
 

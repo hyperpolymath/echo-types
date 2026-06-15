@@ -747,3 +747,20 @@ open import Ordinal.Buchholz.RankMonoUnionWfCNF using
   ; <ᵇᵘⁿ-from-<ᵇ⁺²
   ; rank-pow-mono-<ᵇᵘⁿ
   )
+
+-- BH order-type fidelity TARGET 2026-06-15 (own block per CLAUDE.md
+-- Working rules): the real, postulate-free part of the order-type
+-- fidelity target (open problem D-2026-06-14). `BHNotation` is the
+-- abstract well-founded strict order + distinguished element;
+-- `bh-notation-from` builds a genuine instance from the Brouwer order
+-- (Ord / _<′_ / wf-<′), discharging the target order AND its
+-- well-foundedness FOR REAL inside the --safe kernel. The candidate BH
+-- height is the only remaining free input — an explicit parameter to
+-- `Fidelity.AtHeight` (quarantined outside the --safe cone). This
+-- reduces the Fidelity trust boundary from three postulates to two
+-- (denotation, ordinal-upper-bound). See Fidelity-OPEN-postulates.md +
+-- docs/proof-debt.md (d).
+open import Ordinal.Buchholz.BHTarget using
+  ( BHNotation
+  ; bh-notation-from
+  )
