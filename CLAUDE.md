@@ -148,6 +148,10 @@ Cross-repo bridge status lives in `docs/echo-types/cross-repo-bridge-status.md`.
 
 # Build
 
+To provision the toolchain (Agda 2.6.3 + stdlib 2.3 + the `absolute-zero`
+dependency) in one idempotent step, run `bash scripts/provision-agda.sh`.
+It automates the manual steps documented below. Then:
+
 ```
 cd /home/user/echo-types
 agda -i proofs/agda proofs/agda/All.agda
