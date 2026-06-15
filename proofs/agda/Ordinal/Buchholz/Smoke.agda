@@ -636,6 +636,29 @@ open import Ordinal.Buchholz.RankLexJointBplus using
   ; rank-lex-jb-bpsi-equal-head-from-tail-eq
   )
 
+-- Direct rank-pow refutation 2026-06-15 (own block per CLAUDE.md
+-- Working rules): the `rank-pow`-level companion to
+-- `StrictLeftMonoRefuted` / `AdditivePrincipalGenericRefuted`.  Where
+-- those refute the two arithmetic ROUTES a closure would consume,
+-- this refutes the rank-monotonicity GOAL itself — a concrete pair of
+-- WfCNF terms `s <ᵇ t` at the `<ᵇ-+1` ψ/Ω cross-head boundary where
+-- `rank-pow` strictly REVERSES the order.  Upgrades the Slice 4
+-- `<ᵇ⁻ⁿ-shortfall-equal-head` ⊤-alias placeholder to a checked
+-- counterexample; pins exactly the case `RankLexJointBplus`'s
+-- `rank-lex-jb` pivot is load-bearing for.
+open import Ordinal.Buchholz.RankPowMonoRefuted using
+  ( s
+  ; t
+  ; wf-s
+  ; wf-t
+  ; s<ᵇt
+  ; rank-pow-strictly-reverses
+  ; RankPowMono
+  ; rank-pow-mono-refuted
+  ; RankPowMonoPlus1
+  ; rank-pow-mono-plus1-refuted
+  )
+
 -- Slice 4 narrowing 2026-05-28 (own block per CLAUDE.md Working
 -- rules): the deliberately-narrowed `_<ᵇ⁻ⁿ_` umbrella covering
 -- ALL CASES THAT CLOSE AT THE RANK-POW LEVEL TODAY — 10 inherited
