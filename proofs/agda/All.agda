@@ -153,6 +153,11 @@ open import Ordinal.Buchholz.RankPowDomination
 open import Ordinal.Buchholz.RankPowSlice3
 open import Ordinal.Buchholz.RankPowSlice3Headline
 open import Ordinal.Buchholz.RankDoubledLadder
+open import Ordinal.Buchholz.RankDoubledLadderMono
+open import Ordinal.Buchholz.RankDoubledLadderMonoPlus
+open import Ordinal.Buchholz.RankDoubledLadderAddPrincipal
+open import Ordinal.Buchholz.RankDoubledLadderMonoPlus2
+open import Ordinal.Buchholz.RankDoubledLadderUmbrella
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice3
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice4
@@ -161,6 +166,8 @@ open import Ordinal.Buchholz.RankMonoUnion
 open import Ordinal.Buchholz.RankMonoUnionWF
 open import Ordinal.Buchholz.RankMonoUnionWfCNF
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
+open import Ordinal.Buchholz.RecursiveSurfaceSound
+open import Ordinal.Buchholz.OrderExtendedSound
 open import Ordinal.Buchholz.RecursiveSurfaceBudget
 open import Ordinal.Buchholz.SurfaceOrder
 open import Ordinal.Buchholz.VeblenObligations

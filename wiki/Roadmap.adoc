@@ -59,20 +59,31 @@ consolidation / doc-threading.
 
 Target: *Bachmann–Howard* ψ₀(Ω_ω). Open, in priority order:
 
-. *Unbudgeted `_<ᵇʳᶠ_` global WF* — eliminate the explicit ℕ budget from
-  `wf-<ᵇʳᶠᵇ` without leaving `--safe --without-K`. The named next bottleneck;
-  solo, not swarmable.
+. *Unbudgeted `_<ᵇʳᶠ_` global WF* — the GLOBAL form over native `_<ᵇ_`
+  is *walled* (all five standard routes; native `_<ᵇ_` is ordinally
+  unsound — see `buchholz-rank-obstruction.adoc`). The SOUND-CARRIER
+  form is *DONE* (2026-06-14, PR #212): `RecursiveSurfaceSound.wf-<ᵇʳᶠ²`
+  is unbudgeted, built over `_<ᵇ²_` + the doubled-ladder `rank2`
+  embedding. Remaining open is only the global-over-native form, whose
+  realistic close-out is a falsifiable "cannot close under
+  `--safe --without-K`" verdict rather than a positive proof.
 . *Full constructor set beyond the admitted core* — the K-limited shared-binder
   cases `<ᵇ-ψα`, `<ᵇ-+2`.
 . *Push the surface-route WF back* into `Order.agda`'s main `_<ᵇ_` package.
 
 === Establishment track — Pillar E only
 
-Pillars A–D and F (F1–F4) are closed. Remaining:
+Pillars A–D and F (F1–F4) are closed. All four `paper.adoc` `[EXPAND]`
+tags are cleared, the last (ordinal consumer-evidence appendix) on
+2026-06-14 — *written at the well-foundedness milestone, with
+order-type fidelity recorded as a named OPEN problem*
+(decision-log `D-2026-06-14`), NOT claimed. The in-repo half of
+Pillar E is complete at the bounded-claim level. Remaining:
 
-. Clear the `paper.adoc` `[EXPAND]` tags: related-work pass, evaluation
-  (proof-size/cost table), and the *ordinal consumer-evidence appendix* — the
-  last *gated on the Bachmann–Howard milestone*.
+. *Order-type fidelity* (the named open problem `D-2026-06-14`): a
+  verified order-preserving denotation `BT → 𝒪` of height ψ₀(Ω_ω), or
+  a direct order-type computation. The genuine remaining
+  ordinal-strength frontier; no current module establishes it.
 . *Then*, author-driven and *not* auto-run: Zenodo DOI, installable library
   packaging, outreach. Flag to the user; do not start unprompted.
 
