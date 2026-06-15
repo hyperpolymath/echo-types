@@ -1,6 +1,9 @@
 *.agdai
 _build/
-.claude/
+# Ignore personal Claude config but share the SessionStart toolchain hook.
+.claude/*
+!.claude/hooks/
+!.claude/settings.json
 .agda/
 
 # direnv / nix local cache
