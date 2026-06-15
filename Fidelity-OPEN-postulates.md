@@ -27,12 +27,19 @@ fidelity claim, plus one genuinely-proved structural fact:
   term is `≤Ω ω` (the carrier lives in the ν ≤ ω fragment; the notation
   never names a marker above Ω_ω). This is the structural precondition
   of the upper bound, *not* the upper bound itself.
+- The **target structure** `(𝒪, _<𝒪_, wf-<𝒪)` is now **real,
+  postulate-free** (2026-06-15): `Ordinal.Buchholz.BHTarget` constructs
+  it from the Brouwer order (`Ord` / `_<′_` / `wf-<′`) via
+  `bh-notation-from`, inside the `--safe` kernel (wired into `All.agda`,
+  pinned in `Ordinal/Buchholz/Smoke.agda`). Only the candidate BH
+  *height* remains a free input — an explicit `Fidelity.AtHeight`
+  module parameter.
 
 **What remains genuinely open.** The two pieces of real content — the
 **order-reflecting, height-preserving denotation** `⟦·⟧` and its
-**cofinality** — are postulated, together with the existence of a
-checked Bachmann–Howard target structure. These are the missing
-*objects*, not missing *plumbing*.
+**cofinality** — are postulated. (The checked Bachmann–Howard target
+*structure* is no longer assumed — see the last bullet above.) These are
+the missing *objects*, not missing *plumbing*.
 
 **Explicit non-claim.** *Nothing in this module asserts that order type
 ψ₀(Ω_ω) is proven.* `fidelity` is only as strong as the three
@@ -46,18 +53,25 @@ commit.
 
 ## The postulates (complete list — `grep postulate Fidelity.agda`)
 
+As of 2026-06-15 there are **two** (reduced from three). The former
+`bh-notation` postulate is **discharged**: the target structure is now
+constructed for real in the `--safe` module `Ordinal.Buchholz.BHTarget`
+(`bh-notation-from` over the Brouwer order `Ord` / `_<′_` / `wf-<′`), and
+the candidate BH height is an explicit `Fidelity.AtHeight` module
+parameter rather than an axiom.
+
 | # | Name | Statement (in words) | What closes it | Owner |
 |---|------|----------------------|----------------|-------|
-| 1 | `bh-notation : BHNotation` | A checked well-founded strict order `(𝒪, _<𝒪_)` with a distinguished element `bh-height` whose initial segment is the Bachmann–Howard ordinal ψ₀(Ω_ω). | Construct (or import) a verified Bachmann–Howard ordinal structure in Agda — e.g. a checked ordinal-notation library, or a Cantor/Veblen normal-form development carried to ψ₀(Ω_ω). | **External mathematics** (owner / external) |
-| 2 | `denotation : DenotesBH bh-notation` | A denotation `⟦·⟧ : BT → 𝒪` that is **order-preserving** (`s <ᵇ² t → ⟦s⟧ <𝒪 ⟦t⟧`), **order-reflecting** (`⟦s⟧ <𝒪 ⟦t⟧ → s <ᵇ² t`), **cofinal** (image unbounded in `𝒪`), and **pins BH** (`⟦BH⟧ ≡ bh-height`). The height-preserving embedding `rank2` is *not*. | Define `⟦·⟧` mapping each ψ_ν / Ω_ν / + to its genuine ordinal height (not the collapsed ω-power blocks of `rank2`) and prove the four fields. This is the core order-type-correctness work (a denotational semantics for the notation faithful to `_<ᵇ²_`). | **External mathematics** (owner / external); the design route is option (a) in `D-2026-06-14`. |
-| 3 | `ordinal-upper-bound : ∀ {t} → WfBT t → ¬ (bh-height <𝒪 ⟦ t ⟧)` | No well-formed carrier term denotes strictly above the BH height (the ⟦·⟧-level upper half of the sandwich). | Cheap *given* postulate #2: combine the real `markers-≤ω` (every marker `≤Ω ω`) with a height calculation through the real `⟦·⟧` (markers `≤ ω` ⇒ denotation `≤ ψ₀(Ω_ω)`). It is postulated only because it quantifies over the not-yet-real `⟦·⟧`; it is **not** independent external mathematics beyond #2. | Discharged alongside / just after #2 (in-repo, once `⟦·⟧` is real). |
+| 1 | `denotation : DenotesBH bh-notation` | A denotation `⟦·⟧ : BT → 𝒪` (with `𝒪 = Ord`, `_<𝒪_ = _<′_`) that is **order-preserving** (`s <ᵇ² t → ⟦s⟧ <′ ⟦t⟧`), **order-reflecting** (`⟦s⟧ <′ ⟦t⟧ → s <ᵇ² t`), **cofinal** (image unbounded in `Ord`), and **pins BH** (`⟦BH⟧ ≡ bh-height`). The height-preserving embedding `rank2` is *not*. | Define `⟦·⟧` mapping each ψ_ν / Ω_ν / + to its genuine ordinal height (not the collapsed ω-power blocks of `rank2`) and prove the four fields. This is the core order-type-correctness work (a denotational semantics for the notation faithful to `_<ᵇ²_`). | **External mathematics** (owner / external); the design route is option (a) in `D-2026-06-14`. |
+| 2 | `ordinal-upper-bound : ∀ {t} → WfBT t → ¬ (bh-height <𝒪 ⟦ t ⟧)` | No well-formed carrier term denotes strictly above the BH height (the ⟦·⟧-level upper half of the sandwich). | Cheap *given* postulate #1: combine the real `markers-≤ω` (every marker `≤Ω ω`) with a height calculation through the real `⟦·⟧` (markers `≤ ω` ⇒ denotation `≤ ψ₀(Ω_ω)`). It is postulated only because it quantifies over the not-yet-real `⟦·⟧`; it is **not** independent external mathematics beyond #1. | Discharged alongside / just after #1 (in-repo, once `⟦·⟧` is real). |
 
 ## Discharge order
 
-`bh-notation` (#1) and `denotation` (#2) are the genuine external
-content and are independent of each other only up to #2 referencing
-#1's `𝒪`. `ordinal-upper-bound` (#3) is downstream of #2 and in-repo
-once #2 lands. When all three are real, `fidelity : OrderTypeBH`
-becomes an unconditional theorem and a **human** may then update the
-appendix / decision-log / roadmap from "OPEN" to discharged — per the
-hard rule, this commit does not pre-empt that sign-off.
+`denotation` (#1) is the genuine external content — the faithful
+height-preserving embedding into the now-real Brouwer target.
+`ordinal-upper-bound` (#2) is downstream of #1 and in-repo once #1
+lands. When both are real, `fidelity : OrderTypeBH` becomes an
+unconditional theorem (for the supplied `AtHeight` height) and a
+**human** may then update the appendix / decision-log / roadmap from
+"OPEN" to discharged — per the hard rule, this commit does not pre-empt
+that sign-off.
