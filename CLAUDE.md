@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 <!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Ecosystem context
 
@@ -210,7 +210,188 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-05-27)
+## Current rung state (2026-06-14)
+
+### Session arc 2026-06-14 Ordinal track — doubled-ladder Gate 1 closure (read this first)
+
+*Where we started:* Gate 1's residual was the EQUAL-Ω boundary
+`bpsi ν α <ᵇ bOmega ν` (ψ_ν(α) < Ω_ν at the SAME marker). The
+single ω-power ladder gives ψ and Ω the same exponent block, so
+`rank-pow` collapses them (can't order `<ᵇ-ψΩ≤`) and `rank-adm`
+inverts `<ᵇ-Ωψ`. A doubled-ladder design (ψ_ν ↦ ω^(2ν+1),
+Ω_ν ↦ ω^(2ν+2)) had its arithmetic spine + `rank2` + the equal-Ω
+discharge landed (PRs #202/#203); the WfAdm→rank2 bridge was the
+next piece.
+
+*Where we ended:* the doubled-ladder programme is COMPLETE — Gate 1
+closed for the sound carrier. Six PRs (#204-#209), all
+`--safe --without-K`, zero postulates, structural recursion (no
+`TERMINATING`):
+
+* `#204` — `rank2-bounded : WfAdm t → rank-pow t <′ ω-rank-pow μ →
+  rank2 t <′ ω-rank-pow (double μ)`, the scale-transfer bridge.
+  NOT a plain map: `rank-pow (bpsi ν _) = ω-rank-pow ν` collapses the
+  ψ-argument α that `rank2` keeps, so the WfAdm `wf-adm-bpsi` field
+  supplies the per-ψ admissibility bound the bpsi case recurses on.
+* `#205` — 4 atomic-boundary primitives (`RankDoubledLadderMono`):
+  `rank2-mono-{ΩΩ,Ωψ,ψΩ,ψΩ≤}`. The `<ᵇ-ψΩ≤` equal-Ω boundary splits
+  `ν ≤Ω μ` via `≤Ω-split`.
+* `#206` — 5 bzero/via-left primitives (`RankDoubledLadderMonoPlus`):
+  `rank2-pos-{bOmega,bpsi}`, `rank2-mono-{0-+,Ω+,ψ+}`.
+* `#207` — 3 bplus-on-left primitives. `RankDoubledLadderAddPrincipal`
+  adds Ω-block additive principality (`additive-principal-base` — the
+  OmegaPow proof re-stated over an arbitrary base, for the ω-marker
+  target `ω-rank-pow-succ ω = olim (λ n → ω-rank-pow ω ·ℕ n)`) +
+  `rank2-mono-+Ω`; `RankDoubledLadderMonoPlus2` adds `rank2-mono-+ψ`
+  (ψ-block additive principality) + `rank2-mono-+1` (joint-bplus,
+  ⊕-left-weakening).
+* `#208` — THE CAPSTONE (`RankDoubledLadderUmbrella`): the
+  rank2-soundness-ready relation `_<ᵇ²_` over all 12 core
+  constructors (WfAdm witnesses + the `<ᵇ-+ψ` leading-power bound
+  `rank-pow x <′ ω-rank-pow ν` + WfCNF tail bounds `y ≤ᵇ² x` baked
+  in), the umbrella `rank2-mono-<ᵇ² : s <ᵇ² t → rank2 s <′ rank2 t`
+  (structural recursion dispatching to the 12 primitives), the
+  `≤ᵇ²` companion, and `wf-<ᵇ² : WellFounded _<ᵇ²_` via the standard
+  `Subrelation` + `On.wellFounded rank2 wf-<′` transport.
+* `#209` — doc consolidation in `buchholz-rank-obstruction.adoc`.
+
+*Key honest-scope insight (DO NOT reopen as "incomplete").* `_<ᵇ²_`
+is a SOUND CARRIER, exactly like the existing `_<ᵇ⁰_` / `_<ᵇᵘ_`.
+It excludes the ordinally-unsound native witnesses (the `<ᵇ-+Ω`
+counterexample `bplus bzero (bOmega (fin 1)) <ᵇ bOmega (fin 0)` is
+NOT an `_<ᵇ²_` derivation — its tail bound `y ≤ᵇ² x` fails). There is
+NO faithful projection `<ᵇ → <ᵇ²` and that is not a gap: native
+`_<ᵇ_` is ordinally unsound, so no rank embedding maps it, and its
+well-foundedness is ALREADY proved directly in
+`WellFounded.wf-<ᵇ` (structural, no rank). The doubled ladder's
+contribution is a STRICTLY STRONGER sound carrier than the
+single-ladder union `_<ᵇᵘ_`: it closes the equal-Ω boundary
+`<ᵇ-ψΩ≤` and the bplus-target `<ᵇ-+1` (the single-ladder Gate 1's
+open blocker) with ONE ordinally-sound scalar rank.
+
+*Follow-on (PR #212): the recursive-surface budget eliminated on the
+sound carrier.* `Ordinal.Buchholz.RecursiveSurfaceSound` lands
+`_<ᵇʳᶠ²_` (= `_<ᵇ²_` core + the two same-binder congruences `ψα`/`+2`)
+and its UNBUDGETED `wf-<ᵇʳᶠ²` via the `rank2` embedding: `<ᵇʳᶠ²-core`
+→ `rank2-mono-<ᵇ²`, the two congruences → `⊕-mono-<-right`. This is
+roadmap open-item #1 ("eliminate the ℕ budget from `wf-<ᵇʳᶠᵇ`") in its
+ACHIEVABLE form. The budget was an artefact of native `_<ᵇ_`'s
+unsoundness, not of the same-binder recursion. DO NOT reopen the
+GLOBAL unbudgeted `wf-<ᵇʳᶠ` over native `_<ᵇ_`: all five routes are
+walled (`RankBrouwer.agda` preamble) and `rank2` does NOT escape the
+`<ᵇ-+Ω` counterexample — its realistic close-out is the falsifiable
+"cannot close under `--safe --without-K`" verdict, not a positive
+proof.
+
+*The `<ᵇ-+ψ` leading-power subtlety (load-bearing).* `rank2-mono-+ψ`
+needs the source pieces below the ψ-block's LEADING power
+`ω-rank-pow (double ν)` — strictly stronger than "below the whole
+ψ-rank" (which is all plain recursion gives, and `ω-rank-pow(double ν)
+⊕ rank2 α` is NOT additive principal). So `<ᵇ²-+ψ` carries
+`WfAdm x` + `rank-pow x <′ ω-rank-pow ν`, and the umbrella transfers
+it via `rank2-bounded`. Do not try to reformulate `rank2-mono-+ψ`
+with whole-ψ-rank premises — it is mathematically insufficient.
+
+*Module map (all under `proofs/agda/Ordinal/Buchholz/`):*
+`RankDoubledLadder` (rank2 + spine + bridge), `…Mono` (4 atomic),
+`…MonoPlus` (5 bzero/via-left), `…AddPrincipal` (+Ω + base-generic
+additive principality), `…MonoPlus2` (+ψ, +1), `…Umbrella`
+(`_<ᵇ²_`, umbrella, `wf-<ᵇ²`). All wired into `All.agda` +
+pinned in `Ordinal/Buchholz/Smoke.agda`.
+
+*Plan for the next Claude.* The doubled-ladder programme is closed.
+Genuinely-open ordinal-track frontier (separate, larger scope):
+(1) unbudgeted `_<ᵇʳᶠ_` global WF — eliminate the ℕ budget from
+`wf-<ᵇʳᶠᵇ` under `--safe --without-K`; (2) the single-ladder Gate 1
+`<ᵇ-+1` cross-head rank-equal sub-case, IF one wants it closed on the
+ORIGINAL `rank-pow`/union umbrella rather than via the doubled
+ladder (the doubled ladder already closes `<ᵇ-+1` on its own carrier);
+(3) Pillar E paper `[EXPAND]` ordinal consumer-evidence appendix,
+gated on the Bachmann–Howard milestone. DO NOT reopen: the doubled
+ladder design (rank2/double/the 12 primitives/the `_<ᵇ²_` carrier
+shape are correct); the honest-scope verdict above; the `<ᵇ-+ψ`
+leading-power formulation.
+
+### Session arc 2026-06-13 Deniability track — EchoDeniability + wiki
+
+*Where we started:* user pasted `Deniability.agda` (standalone exploration: perfect
+deniability via constant production, `refl` proof) and asked for a `DeniabilityPartial.agda`
+companion showing both proof failures (commented with error messages) and the restricted proof
+for constant openers (`IsConstantOpener` / `cannotDistinguishConstant`). Then asked to integrate
+the learning into echo-types proper with a dedicated wiki section.
+
+*Where we ended:* `EchoDeniability.agda` lands on `origin/main` as a new Tier-2 audience-move
+module. Two commits:
+
+* `cc06c45` — `feat(deniability): add EchoDeniability module and wiki page`
+* `0ca71a5` — `fix(ci): classify EchoDeniability in kernel-note and MAP.adoc`
+  (kernel-guard Check B failure; fixed by adding `EchoDeniability` to Tier 2 table
+  in `echo-kernel-note.adoc` and a `[REAL]`-tagged bullet in `MAP.adoc`).
+
+Both GPG-signed. All five substantive CI checks green (Agda, CodeQL, Governance, Secret
+Scanner, Hypatia). Pre-existing `scorecard.yml` / `mirror.yml` startup_failure at 0s are
+billing-wall pattern B — parked, not caused by this work.
+
+*Deliverables:*
+
+1. *`proofs/agda/EchoDeniability.agda`* — new Tier-2 module (`--safe --without-K`, zero
+   postulates). Core theorems:
+   * `perfect-deniable` — `IsDeniable produce-perfect` (`refl`, the collapsing-map case).
+   * `partial-not-deniable` — `¬ IsDeniable produce-partial` (via `partial-witness`).
+   * `partial-deniable-restricted` — restricted deniability for `IsConstantOpener` openers.
+   * `no-section-produce-perfect` — via `EchoNoSectionGeneric.no-section-of-collapsing-map`.
+   * `partial-has-section` — `partial-witness` is a genuine left-inverse.
+   * `echo-intact-perfect` / `echo-lost-perfect` / `echo-intact-lost-distinct` — two distinct
+     Echo witnesses at the same residue (the collapsing-map echo-count story).
+   * Matched-negative block: `NotProved-side-channel-safe`, `NotProved-cryptographic-deniability`,
+     `NotProved-adaptive-adversary`.
+
+2. *`wiki/Deniability.adoc`* — new wiki reference page: both production functions, duality
+   table, `IsConstantOpener` and affine-mode connection, honest scope, module location.
+
+3. *`wiki/Home.adoc`* — deniability row added to start-here table; one-line status updated.
+
+4. *`CHANGELOG.md`* — `### Added (2026-06-13)` entry.
+
+5. *`docs/echo-types/echo-kernel-note.adoc`* — `EchoDeniability` classified as Tier 2.
+
+6. *`docs/echo-types/MAP.adoc`* — `*Deniability*` bullet added in audience-moves section.
+
+7. *`proofs/agda/All.agda`* / *`proofs/agda/Smoke.agda`* — wired.
+
+*Standalone companion (not in repo):*
+`/home/hyperpolymath/developer/repos/DeniabilityPartial.agda` — module `DeniabilityPartial`
+with two-constructor `Residue` (Trace / Erased), failing proof block comments,
+`witness-distinguishes` counterexample, `IsConstant` / `cannotDistinguishConstant` restricted
+proof. Kept as a local exploration sketch; intentionally not added to echo-types.
+
+*Key design notes:*
+
+* `echo-intro f x` takes the function explicitly: signature is
+  `(f : A → B) → (x : A) → Echo f (f x)`. NOT `echo-intro x refl`.
+* `no-section-of-collapsing-map produce-perfect Intact Lost Intact≢Lost refl` — the final
+  `refl` witnesses `produce-perfect Intact ≡ produce-perfect Lost` (both reduce to `Trace`
+  definitionally).
+
+*CI notes:*
+
+* `scorecard.yml` / `mirror.yml` startup_failure = billing-wall pattern B (structural
+  reusable failure). Do not re-attempt. See [[scorecard-startup-failure-2026-06-02-park]].
+* bag-of-actions cannot address these: (1) Agda runs fine on public-repo runners; (2)
+  scorecard/mirror are pattern B, not billing-addressable.
+
+*Plan for the next Claude.*
+
+1. *Ordinal Slice 3+* — back to the main track: push `_<ᵇ_` order + WF toward Bachmann–Howard.
+
+2. *EchoTypes.jl mirror* — add `EchoDeniability` to the Julia falsifier shadow.
+
+3. *Pillar E paper [EXPAND] tags* — ordinal consumer-evidence appendix gated on BH milestone.
+
+DO NOT reopen: `EchoDeniability`'s `IsDeniable` definition (∀ d, not ∃ d — full deniability
+= no opener can distinguish); the `IsConstantOpener` boundary (minimum-sufficient class;
+adding cryptographic axioms is a separate work-item); the `no-section-of-collapsing-map`
+call signature (5 args: f, e₁, e₂, e₁≢e₂, f-e₁≡f-e₂).
 
 ### Session arc 2026-05-27 Slice-2 upstream adoption (READ FIRST after the broad-cleanup arc below)
 

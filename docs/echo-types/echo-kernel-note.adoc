@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: CC-BY-4.0
+// SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = echo-types: kernel vs derived (one-page note)
 :toc: macro
@@ -121,8 +121,12 @@ kernel** — the boundary is real and lives outside this core.
   residue / decoration / observational classifications.
   *Application/extension modules* (also added via the same sweep):
   `EchoEntropy`, `EchoLLEncoding`, `EchoProvenance`, `EchoSecurity`,
-  `EchoProbabilisticSupport`, `EchoDifferential` are derived domain
-  applications mapped under their own headings in MAP.adoc.
+  `EchoProbabilisticSupport`, `EchoDifferential`, `EchoDeniability`
+  are derived domain applications mapped under their own headings in
+  MAP.adoc.  `EchoDeniability` formalises residue deniability: the
+  perfect (constant / no-section) case and the partial (injective /
+  has-section) case, with `IsConstantOpener` as the exact cut-point.
+  Imports `Echo` + `EchoNoSectionGeneric`.
 
 | *Earn-back gate modules* +
 (derived / scoped; not kernel)
@@ -165,6 +169,27 @@ kernel** — the boundary is real and lives outside this core.
   classification-drift lint (`scripts/kernel-guard.sh` Check B);
   neither is kernel, neither load-bearing, both subject to
   abandonment.
+
+| *Foundation contract surface* +
+(dotted `Echo.*` namespace; curated public interface)
+| `Echo.Index.ThinPoset`, `Echo.Modality.Interface`,
+  `Echo.Modality.Core`, `Echo.Separation.NotResourceInstance`,
+  `Echo.Measure.Interface`, `Echo.Measure.Examples`
+| The stable exported foundation for downstream languages
+  (`FOUNDATION_CONTRACT.md`). Thin re-export / packaging over the
+  proven flat modules: `ThinPoset` / `grade-thinPoset` (echo index),
+  `EchoModality` / `grade-echoModality` with
+  `degrade` / `degrade-id` / `degrade-compose` + no-section
+  (modality), `echo-degrade-not-generic-sigma` +
+  `equal-measure-does-not-imply-equal-echo` (anti-collapse), and the
+  `ResidueMeasure` / `OrderedCarrier` seam with cost / tropical /
+  confidence examples. `Echo.Measure.*` may depend on the order
+  interface; `Echo.Modality.*` and `Echo.Index.*` are
+  measure-independent (no semiring import) — the boundary invariant
+  *Echo IS-NOT a resource instance*. These files live under
+  `proofs/agda/Echo/` (dotted submodules), so they are outside the
+  flat `Echo*.agda` glob that Check B lints; recorded here for
+  discoverability. Not kernel (the kernel remains exactly `Echo`).
 |===
 
 `EchoOrdinal` is Tier-1 off `Echo` but additionally pulls the

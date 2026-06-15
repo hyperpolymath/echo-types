@@ -1,0 +1,198 @@
+{-# OPTIONS --safe --without-K #-}
+
+-- EXPERIMENTAL — R1 deliverable: variance gate framing.
+-- This file contains NO proven theorems. Every type signature below is
+-- an -- OBLIGATION: comment, deliberately left as a named placeholder.
+-- The no-postulate rule means unmet conditions park HERE, not as axioms.
+--
+-- Purpose: diagnose the direction of the composition map that would be
+-- needed for D_r ∘ D_s ≅ D_{r+s}, name the obstruction precisely, and
+-- record the A/B/C structural home decision. Then STOP.
+--
+-- R-2026-05-18 status: the graded-comonad claim (no nested D_r D_s)
+-- remains fully retracted. This file does not re-open it.
+
+module experimental.echo-additive.VarianceGate where
+
+open import experimental.echo-additive.Grade
+import EchoGraded as Old
+
+----------------------------------------------------------------------
+-- R1 §1 — The composition candidate and its direction
+--
+-- In EchoGradedComonad, gduplicate has type:
+--
+--   gduplicate : ∀ g₁ g₂ → GEcho g₁ → GEcho (g₁ ⊔g g₂)
+--
+-- Instantiated at g₁ = keep (the lattice bottom, GEcho keep = base type A):
+--
+--   gduplicate keep g₂ : GEcho keep → GEcho (keep ⊔g g₂) = GEcho g₂
+--
+-- Since GEcho keep IS Echo collapse tt = A definitionally, this is:
+--
+--   gduplicate keep g₂ : A → D_{g₂} A
+--
+-- DIAGNOSIS: this map goes A → D_g A.
+-- That is a UNIT in the MONADIC direction (Id ⇒ D), NOT a counit.
+-- A graded comonad requires:
+--   counit ε : D₀ A → A    (extract at zero loss — D reduces to A)
+--   comultiplication δ : D_{r+s} A → D_r(D_s A)  (grade splitting)
+-- gextract gives ε. gduplicate keep g gives η (the monad unit), not δ.
+--
+-- The same obstruction is present in the additive Grade setting:
+-- to establish D_r ∘ D_s ≅ D_{r+s}, the combining direction of
+-- Echo-comp-iso ("from": Σ B (Echo f b × g b ≡ y) → Echo (g∘f) y)
+-- is the monadic multiplication μ : D_r(D_s A) → D_{r+s} A.
+-- The comonadic comultiplication δ goes the other way.
+-- Any "gradewise section" to δ would be μ — a unit in the opposite direction.
+-- Using μ as if it were δ conflates graded comonad with graded monad
+-- and breaks the coeffect interpretation (resources tracked in wrong variance).
+--
+-- CONSEQUENCE: the variance obstruction from R-2026-05-18 is NOT specific
+-- to the 3-grade lattice {keep, residue, forget}. It applies equally to the
+-- ℕ∪{∞} additive tower. Adding grades cannot fix the directional problem.
+-- The problem is structural: it is about which way the composition map points.
+
+-- OBLIGATION (R3, gated): the nested composition type
+--   D_r ∘ D_s : Grade → Grade → Set → Set
+-- would need to be defined and the iso
+--   D_{r+s} A ↔ D_r (D_s A)
+-- established in ONE direction as comonadic (δ) and the other as monadic (μ).
+-- Neither direction is a theorem in the current tree.
+-- Park. Do not postulate. Gate: R3 (separate, later, deliberately gated).
+
+----------------------------------------------------------------------
+-- R1 §2 — Structural home: A/B/C decision record
+
+-- OPTION A: Graded comonad + separately axiomatized section family.
+--
+-- Structure: keep the comonad (ε, δ) and add a "section" σ : A → D_r A
+-- for each r, separately.
+--
+-- Problem: having BOTH ε : D₀ A → A AND σ : A → D₀ A makes (D₀, ε, σ)
+-- an adjunction unit/counit pair. In the absence of further conditions,
+-- this collapses into a full monad-comonad adjunction (Option B), since
+-- the comonad comultiplication and monad multiplication would need to
+-- interact coherently via the section family. The compatibility condition
+-- IS the adjunction condition. So A collapses into B.
+-- VERDICT: A is not a stable distinct option. It slides into B.
+
+-- OPTION B: Full graded adjunction F_r ⊣ U_r.
+--
+-- Structure: a free-grade functor F_r : C → C_r (introducing r-loss)
+-- and a forgetful U_r : C_r → C, with F_r ⊣ U_r. The comonad is U_r ∘ F_r;
+-- the monad is F_r ∘ U_r. This is the standard coeffect semantics.
+--
+-- First obligation: construct F_r and U_r as functors on an explicit
+-- category, and exhibit the adjunction.
+-- In the Echo context: identify what "category" echo-types lives in
+-- (currently: SET with Σ-fiber structure), then construct the adjoint pair.
+-- This is a significant proof obligation that requires choosing a categorical
+-- framework beyond the current Agda, which works at the level of individual
+-- types and functions.
+-- VERDICT: Correct structural home but carries a substantial first obligation
+-- that is not authorized for this session. Parks at R3 (adjunction construction
+-- is the R3 target IF the author chooses B).
+
+-- OPTION C: [ASSESSED — original framing was a nudge; corrected below.]
+--
+-- The original Option C conflated two distinct structures under the label
+-- "lax monoidal action." They are separated here.
+--
+-- OPTION C' — Extend the monotone action to ℕ∪{∞}.
+--   Coherence maps:
+--     degrade_{r,s} : D_r(A) → D_s(A)   for r ≤ s in ℕ∪{∞}
+--     unit          : D_{fin 0}(A) ≅ A   [identity coercion]
+--   No nesting. No new variance question.
+--   This IS what echo-types already is, lifted from 3 grades to ℕ∪{∞}.
+--   Achievable: extend `degrade` to all ℕ cases by induction on Nat.≤.
+--   Does NOT supply D_r ∘ D_s ≅ D_{r+s}. Answers nothing about composition.
+--
+-- OPTION C'' — Lax monoidal functor (Grade, +g, fin 0) → (Endo(Set), ∘, Id).
+--   A genuine lax monoidal functor requires a laxator:
+--
+--     φ_{r,s}(A) : D_r(D_s A) → D_{r+s} A,   natural in A.
+--
+--   THIS REQUIRES NESTED D_r(D_s A).
+--   The original OBLIGATION comment ("does NOT require nested D_r(D_s A)")
+--   was FALSE and is retracted by this correction.
+--
+--   Variance of φ: D_r(D_s A) → D_{r+s} A is the MONADIC direction (μ).
+--   It is constructible via Echo-comp-iso's combining ("from") direction.
+--   Building it gives a GRADED MONAD, not a comonad.
+--   Coeffect interpretation is lost; variance problem renamed, not resolved.
+--
+--   Coherence laws required (omitted in original OBLIGATION; stated here):
+--     Associativity (pentagon):
+--       φ_{r,s+t} ∘ D_r(φ_{s,t}) = φ_{r+s,t} ∘ φ_{r,s}(D_t(-))
+--     Left unit:
+--       D_{fin 0}(D_r A) → D_{fin 0 +g r} A = D_r A
+--       must reduce to the D_{fin 0}(−) ≅ Id iso (i.e. gextract at D_r A)
+--     Right unit:
+--       D_r(D_{fin 0} A) → D_{r +g fin 0} A = D_r A
+--       must reduce to D_r applied to the D_{fin 0}(−) ≅ Id iso
+--
+-- VERDICT on C:
+--   C' is trivially achievable but adds no composition structure — it is
+--   the existing thin-poset action extended, nothing more.
+--   C'' is constructible but has monadic variance; it is a graded monad.
+--   Neither is the "low-obligation, variance-free home" the original implied.
+--
+-- RECOMMENDATION: C — WITHDRAWN.
+-- The real decision is between C' (monotone action, no composition) and
+-- C'' (lax monoidal / graded monad, monadic variance). See STATE.adoc.
+
+----------------------------------------------------------------------
+-- R1 §3 — Resolution: comparative protocol (2026-06-14)
+--
+-- R1 is RESOLVED, not parked. The resolution is comparative, not exclusive.
+--
+-- WHAT THIS MEANS FOR A READER:
+-- Two experimental lines will be built in this tree. Neither claims to be
+-- a theorem about shipped echo-types. Both are attempts to discharge
+-- algebraic laws in --safe Agda; the comparison of what each can and cannot
+-- prove is the finding.
+--
+-- PRIMARY LINE — graded monad:
+--   Construct φ_{r,s}(A) : D_r(D_s A) → D_{r+s} A via Echo-comp-iso "from".
+--   Monadic variance (μ direction) accepted explicitly.
+--   Target: discharge pentagon + left/right unit laws in --safe --without-K.
+--   This is where D_r ∘ D_s ≅ D_{r+s} lives. Entry point: R3.
+--
+-- SECONDARY LINE — comonadic reading (parallel, experimental only):
+--   Construct δ_{r,s}(A) : D_{r+s} A → D_r(D_s A), the splitting direction.
+--   Comonadic variance (δ direction).
+--   Target: attempt coassociativity in --safe --without-K.
+--   If undischargeable without postulate, that IS the finding for this line.
+--
+-- NON-NEGOTIABLE GUARDS (read before touching either line):
+--   (1) R-2026-05-18 retraction is NOT reopened. The false graded-comonad
+--       claim about shipped EchoGraded/EchoGradedComonad is retracted and
+--       stays retracted. The experimental comonadic construction here is a
+--       NEW structure in a NEW tree, not a reinstatement of anything.
+--   (2) No comonad claim is made about shipped modules. Their retraction
+--       banners are correct and stand.
+--   (3) Nothing in experimental/ is imported by any shipped module.
+--   (4) No postulates. Unmet obligations surface as -- OBLIGATION: or ?,
+--       never as postulate. This is the firewall that makes failure legible.
+--   (5) Neither line claims primacy in shipped code until the terminating
+--       condition is met (see STATE.adoc §"Terminating condition").
+--
+-- TERMINATING CONDITION (summary; full text in STATE.adoc):
+--   (i)  One line discharges its laws; the other provably cannot → winner named.
+--   (ii) Both lines discharge → BEGIN the adjunction proof: construct F_r, U_r,
+--        and the adjunction witness F_r ⊣ U_r explicitly in --safe --without-K.
+--        The adjunction is NOT assumed from the law discharge; it must be proven
+--        as a separate construction. Only after the witness compiles is this finding
+--        (ii). If it fails (postulate needed), document and park that obstruction.
+--
+-- PURPOSE OF THE COMPARISON:
+--   Determine what each reading captures that the other cannot. Specifically:
+--   whether recoverability (the section/retraction — given a lossy output, what
+--   inputs were possible?) is naturally monadic, naturally comonadic, or
+--   genuinely requires both sides.
+
+----------------------------------------------------------------------
+-- STOP — R1 gate reached and resolved.
+-- R2 (per-grade degrade coherence in ℕ∪{∞}) is the next rung.
+-- Do not begin R2 or R3 in this session; await author return.

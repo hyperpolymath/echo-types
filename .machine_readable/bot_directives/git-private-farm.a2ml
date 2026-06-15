@@ -1,0 +1,31 @@
+# SPDX-License-Identifier: MPL-2.0
+# git-private-farm.a2ml — .git-private-farm propagation directives for
+# echo-types. Net-new at the 2026-06-12 governance checkpoint per the
+# estate bot_directives standard.
+
+[metadata]
+repo = "echo-types"
+last-updated = "2026-06-12"
+owner = "hyperpolymath"
+
+[propagation]
+enabled = false
+# echo-types has NO .github/workflows/instant-sync.yml as of 2026-06-12
+# (workflows present: agda, codeql, governance, hypatia-scan, mirror,
+# scorecard, secret-scanner). The keys below record the estate contract
+# that applies if/when the workflow is added.
+workflow = ".github/workflows/instant-sync.yml"   # absent; enabled = false until it exists
+target = "hyperpolymath/.git-private-farm"
+event-type = "propagate"
+secret-name = "FARM_DISPATCH_TOKEN"                    # secret NAME only; value lives in repo secrets
+presence-gated = false                            # no workflow present, so no gate exists yet; gate it on addition
+
+[never-propagate]
+items = [
+  "secrets",
+  "unmerged branches",
+  "work-in-progress",
+]
+
+[on-token-rotation]
+command = "gh secret set FARM_DISPATCH_TOKEN --repo hyperpolymath/echo-types"   # name only; paste the new value when prompted

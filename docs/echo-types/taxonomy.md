@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 <!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Echo Types — Taxonomy
 
@@ -19,6 +19,50 @@ distinguishing example that forces the distinction to be real.
 > artefacts rather than comments. Citers should reference the
 > modules; this taxonomy doc remains as the longer-form narrative
 > around the axes.
+
+---
+
+## Cross-axis vocabulary — semantic fibre status
+
+The axes below classify shapes of echo. A separate, cross-axis
+distinction is whether a target-side artefact is being used **avec
+fibre** or **sans fibre**.
+
+- **Semantic fibre** is the possible-origin structure over an observed
+  artefact under a declared map. In the exact kernel this is
+  `Echo f y`; in finite-domain tools it may be the computed preimage
+  set; in approximate or residue settings it may be a bound, witness,
+  or lower carrier with an honest lowering map.
+- **Avec fibre**: the artefact carries, or is accompanied by, enough
+  semantic fibre for the advertised inference. The inference must be
+  stated at the same strength as the fibre: non-empty, finite,
+  singleton, approximate, computationally searchable, proof-relevant,
+  residue-only, etc.
+- **Sans fibre**: the artefact is only known as a valid target-side
+  value. No source-side origin constraint follows merely from its
+  validity unless a map and fibre evidence are supplied.
+
+This status is not a new top-level project name and not a replacement
+for the axes. It is a usage discipline: a local exact echo, a global
+family, an approximate echo, and a residue-lowered echo can each be
+used avec fibre or misused sans fibre.
+
+Related terms split as follows. Provenance identifies origin or source
+history; trace/lineage records the route; residue records evidence left
+after a degradation; semantic fibre records the compatible-origin
+structure over the observation; warrant is the inferential or
+operational licence provided by that structure. Warrant is useful as an
+internal design word, but the public taxonomy should keep "echo",
+"residue", and "semantic fibre" as the primary terms.
+
+Prototype hook:
+`docs/echo-types/prototypes/warrant_debugger_prototype.jsx` visualises
+that usage discipline as an empty-fibre contradiction followed by
+cost-disclosed repair moves. It is an explanatory interface sketch, not
+a taxonomy axis and not a proof artefact.
+
+Terminology guardrail: where "fibre" could be confused with CS fibers
+or network fibre, prefer **semantic fibre** or **preimage fibre**.
 
 ---
 

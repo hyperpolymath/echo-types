@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: CC-BY-4.0
+// SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 = PMPL as Narrative Overlay
@@ -9,7 +9,7 @@
 
 [.lead]
 This repository is licensed under *MPL-2.0* (see `LICENSE`). The
-*PMPL* (Palimpsest-MPL) name remains as a *narrative / cultural /
+*PMPL* (MPL-2.0) name remains as a *narrative / cultural /
 discipline overlay* documented here, NOT as an SPDX identifier and
 NOT as a separate legal text. This file exists to record what the
 PMPL framing contributes that the bare MPL-2.0 identifier does not.
@@ -19,10 +19,10 @@ PMPL framing contributes that the bare MPL-2.0 identifier does not.
 *Stated licence (legal):* MPL-2.0. This is the licence the SPDX
 headers carry, the LICENSE file contains, the README badge displays,
 and downstream consumers / registries / scanners see. There is no
-"PMPL-1.0-or-later" SPDX identifier in this repository.
+"MPL-2.0-or-later" SPDX identifier in this repository.
 
 *PMPL (narrative):* the working-discipline framing under which this
-code was developed. Palimpsest-MPL was, in its prior incarnation, an
+code was developed. MPL-2.0 was, in its prior incarnation, an
 overlay licence whose text incorporated MPL-2.0 by reference. The
 owner direction of 2026-05-20 collapsed the overlay into MPL-2.0
 proper and lifted the *posture* it represented into this narrative
@@ -57,7 +57,7 @@ under MPL-2.0:
 
 . *That PMPL is a distinct licence at registries.* It never was at
   any standard SPDX registry. crates.io, npm, Hackage, Debian's
-  copyright scanners and similar all treated `PMPL-1.0-or-later` as
+  copyright scanners and similar all treated `MPL-2.0-or-later` as
   foreign and required an OSI-recognised fallback (which is
   precisely MPL-2.0). Carrying both identifiers was friction
   without legal effect.
@@ -78,7 +78,7 @@ SPDX-License-Identifier: CC-BY-4.0
 SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 ----
 
-No `PMPL-1.0-or-later`, no compound `MPL-2.0 OR …` clauses, no
+No `MPL-2.0-or-later`, no compound `MPL-2.0 OR …` clauses, no
 inline comment explaining "MPL-2.0 is the legal fallback for PMPL".
 The header is the legal statement; this document is the narrative.
 Authoring new files: use the two lines above verbatim (substitute
@@ -86,13 +86,13 @@ copyright holder as appropriate); do not invent overlays.
 
 == History
 
-* *Prior to 2026-05-20*: `PMPL-1.0-or-later` was the stated SPDX
+* *Prior to 2026-05-20*: `MPL-2.0-or-later` was the stated SPDX
   identifier across this and ~69 other repositories in the estate.
   MPL-2.0 was named as the automatic legal fallback (lawyer-confirmed).
 * *2026-05-20 (owner direction)*: collapse the SPDX identifier to
   MPL-2.0; preserve the PMPL framing as this narrative document.
 * *Drift note*: SPDX headers across the wider estate may still carry
-  `PMPL-1.0-or-later` and will be migrated in their own time. The
+  `MPL-2.0-or-later` and will be migrated in their own time. The
   legal effect is unchanged (MPL-2.0 is the operative licence in
   either case); the stated identifier is the only thing that
   differs. Migration is owner-paced and manual.

@@ -1,426 +1,610 @@
-;;; ============================================================
-;;; STATE.a2ml — echo-types project state
-;;; ============================================================
-;;;
-;;; Format: state-a2ml (S-expression, SRFI-30 conventions)
-;;; Schema reference:
-;;;   github.com/hyperpolymath/standards/blob/main/state-a2ml/spec/abnf/state.abnf
-;;; Sibling reference (cached pattern):
-;;;   github.com/hyperpolymath/standards/blob/main/meta-a2ml/spec/abnf/meta.abnf
-;;;
-;;; last-updated: 2026-06-05
-;;;
-;;; Purpose: machine-readable current project state. The PRIMARY landed
-;;; workstream is now the Buchholz/Ordinal rank-monotonicity +
-;;; well-foundedness track (Slice 3+4 Route A arc). The EI-2 termination
-;;; capture (April 2026) is preserved below as history — it prevents
-;;; EI-2 from being re-investigated, but it is no longer the whole
-;;; document identity.
-;;;
-;;; SPDX-License-Identifier: MPL-2.0
-;;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+# SPDX-License-Identifier: MPL-2.0
+# SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+#
+# STATE.a2ml — echo-types project state
+#
+# Format: TOML-A2ML (estate convention; `#` comments, [section], key = "value")
+#
+# Provenance: converted 2026-06-12 from the Guile S-expression body
+# `(define-module (echo-types state) ...)` that previously occupied this
+# file (S-expr last-updated: 2026-06-05). The conversion is faithful: the
+# EI-2 termination record, standing decisions, artefact lists, cascade
+# record, do-not-redo register, forbidden rebrandings, earn-back and
+# theory-work closure summaries are preserved in full. The original
+# S-expr schema reference was:
+#   https://github.com/hyperpolymath/standards/blob/main/state-a2ml/spec/abnf/state.abnf
+#
+# Purpose: machine-readable current project state. The PRIMARY landed
+# workstream is the Buchholz/Ordinal rank-monotonicity + well-foundedness
+# track (Slice 3+4 Route A arc). The EI-2 termination capture (April
+# 2026) is preserved below as history — it prevents EI-2 from being
+# re-investigated, but it is no longer the whole document identity.
 
-(define-module (echo-types state)
-  #:export (project
-            current-workstream
-            session
-            terminated-questions
-            standing-decisions
-            artefacts
-            cascade-applied
-            do-not-redo
-            next-actions
-            forbidden-rebrandings))
+[metadata]
+project = "echo-types"
+repository = "https://github.com/hyperpolymath/echo-types"
+canonical-host = "github"            # per current forge workflow
+mirrors = ["gitlab", "codeberg"]
+version-target = "0.1.1"             # CHANGELOG still [Unreleased] over
+                                     # [0.1.0+integration-pending]; no new
+                                     # release tag minted as of 2026-06-12
+license = "MPL-2.0"
+last-updated = "2026-06-12"
+status = "active development"
+phase = "ordinal track (Gate 1 blocked, Gate 3 mechanical-open) + Pillar E write-up + estate governance adopted"
 
-;;; ============================================================
-;;; Project identity
-;;; ============================================================
+# ============================================================
+# Recent work (2026-05-30 → 2026-06-12, from git log origin/main)
+# ============================================================
+# Source of truth: `git log --since=2026-04-29 --oneline origin/main`
+# plus CHANGELOG.md and the CLAUDE.md session arcs. Honest summary;
+# proof-side invariants (--safe --without-K, zero unisolated postulates)
+# held throughout.
 
-(define project
-  '((name           . "echo-types")
-    (repository     . "github.com/hyperpolymath/echo-types")
-    (canonical-host . github)                ; per current forge workflow
-    (mirrors        . (gitlab codeberg))
-    (version-target . "0.1.1")               ; CHANGELOG still [Unreleased] over
-                                             ; [0.1.0+integration-pending]; no new
-                                             ; release tag minted as of 2026-06-05
-    (license        . "MPL-2.0")))
+[recent-work]
+window = "2026-05-30 .. 2026-06-12"
+summary = """
+Ordinal-track Slice 3+4 Route A arc landed (PRs #165-#171): rank-mono
+union umbrella RankMonoUnion._<ᵇᵘ_ over source-rule extensions, WfCNF
+wrap (#169), and well-foundedness wf-<ᵇᵘ via rank-embedding transport
+(#170, Gate 2 closed). Proof-debt enumeration landed as docs/proof-debt.md
+(#172). Cross-repo: EchoEphapaxBridge.agda NARROW L3 stub (#161/#162/#163),
+arghda-core subtree extracted to its own repo (#160), eclexia thermodynamic
+consumer bridge recorded (#180), Valence Shell / Ochránce recorded as
+exploratory downstream consumer (#177). CI: workflows hardened + Hypatia
+findings resolved at source (#178); actions group bumps (#179 + codeql-action).
+Docs: 6a2 STATE/META refreshed to ordinal-track reality (2026-06-05);
+CLAIMS_AUDIT.adoc added and refined as Gate-G1 mapping-only input
+(VERDICT + EVIDENCE columns); CITATION email corrected; _build/ gitignored.
+Estate standardization adopted into main via PR #185 (GOVERNANCE.adoc,
+MAINTAINERS.adoc, .github/CODEOWNERS, 6a2 manifest + README, flat
+contractiles, Guix manifest.scm, flake.lock removed, banner/README work);
+LICENSE SPDX header restored post-merge. 2026-06-12 governance checkpoint:
+six 6a2 files converted from Guile S-expr bodies to TOML-A2ML, README
+trio deduplicated (README.md canonical), bot_directives trio + flat
+Dustfile/Bustfile + self-validating/ k9 set added.
+"""
+prs = [160, 161, 162, 163, 165, 166, 167, 168, 169, 170, 171, 172, 177, 178, 179, 180, 185]
 
-;;; ============================================================
-;;; Current workstream (primary landed work as of 2026-06-05)
-;;; ============================================================
-;;;
-;;; The active centre of gravity is the Lane 3 ordinal track. The April
-;;; 2026 EI-2 closure (recorded below under `session` /
-;;; `terminated-questions`) remains valid history but is no longer the
-;;; live work. Source of truth for the entries below: CHANGELOG.md
-;;; (current to 2026-05-30) + git log.
+# ============================================================
+# Current workstream (primary landed work as of 2026-06-05 refresh)
+# ============================================================
+# The active centre of gravity is the Lane 3 ordinal track. The April
+# 2026 EI-2 closure (recorded below under [session-ei2-historical] /
+# [[terminated-questions]]) remains valid history but is no longer the
+# live work. Source of truth for the entries below: CHANGELOG.md
+# (current to 2026-05-30) + git log.
 
-(define current-workstream
-  '((as-of . "2026-06-05")
-    (primary
-     ((id . ordinal-rank-mono-wf)
-      (title . "Buchholz/Ordinal rank-monotonicity + well-foundedness — Slice 3+4 Route A arc")
-      (status . landed)
-      (date-range . "2026-05-30")
-      (prs . (#165 #166 #167 #168 #169 #170 #171))
-      (summary . "Rank-mono union umbrella over source-rule extensions. RankMonoUnion._<ᵇᵘ_ = _<ᵇ¹_ ⊎ _<ᵇ⁺²_ via Sum + [_,_] mediator (#168); RankMonoUnionWfCNF._<ᵇᵘⁿ_ bundles the canonical-form invariant alongside the rank-relation (#169 WfCNF wrap); RankMonoUnionWF.wf-<ᵇᵘ derives WellFounded _<ᵇᵘ_ via Subrelation.wellFounded + On.wellFounded rank-embedding transport from wf-<′ (#170, Gate 2 of the arc closed). Path-3 prototype RankMonoSameLeft._<ᵇ⁺²_ adds a literal-same-left source-rule extension closing in one line via rank-pow-bplus-right-mono (#167).")
-      (modules
-       . ("proofs/agda/Ordinal/Buchholz/RankMonoUnion.agda"
-          "proofs/agda/Ordinal/Buchholz/RankMonoUnionWfCNF.agda"
-          "proofs/agda/Ordinal/Buchholz/RankMonoUnionWF.agda"))
-      (gates
-       ((gate-1 . "tail-rank-equality discharge for cross-head rank-equal case — OPEN (structural blocker; both pre-identified unblock routes CHECKED-REFUTED in PR #146)")
-        (gate-2 . "well-foundedness of the union — CLOSED in #170")
-        (gate-3 . "Path-4+ further source-rule extensions — OPEN but mechanical via the documented recipe")))
-      (invariants . "163 modules at arc close; all --safe --without-K; zero new postulates; no funext.")))
-    (supporting
-     (((id . ephapax-bridge)
-       (title . "Cross-repo echo↔ephapax L3 bridge — EchoEphapaxBridge.agda NARROW stub")
-       (status . landed)
-       (date . "2026-05-30")
-       (prs . (#161 #162 #163))
-       (module . "proofs/agda/EchoEphapaxBridge.agda")
-       (summary . "Two definitional refl-renames + a docstring catalogue (ephapax-L3-weaken, ephapax-L3-no-section-collapse) establishing the named correspondence between echo-types L3 (weaken : LEcho linear → LEcho affine; no-section-collapse-to-residue) and ephapax-affine's L3 layer. Honest scope: L3 ONLY; ephapax-affine + L1/L2/L4 NOT mirrored. Closes #126. Package layout in docs/bridges/EchoBridges.md.")
-       (note . "NARROW-stub by design — definitional renames + catalogue, not a deep mechanised bridge."))
-      ((id . arghda-core-extraction)
-       (title . "arghda-core subtree extraction")
-       (status . landed)
-       (date . "2026-05-30")
-       (pr . #160)
-       (summary . "Removed arghda-core/ from this repo's tree; it now lives as a standalone repo (hyperpolymath/arghda-core) per the umbrella in #159. Reduces echo-types' surface area to the propositional/proof-theoretic core.")
-       (umbrella-issue . 159))))
-    (proof-debt
-     ((status . enumerated)
-      (pr . #172)
-      (doc . "docs/proof-debt.md")
-      (summary . "echo-types' sole soundness-relevant escape hatch — the four propositional-truncation postulates in proofs/agda/EchoImageFactorizationPropPostulated.agda — enumerated under Disposition (c) NECESSARY AXIOM. Clears the recurring governance/Trusted-base-reduction-policy red check (standards#211).")))
-    (recent-ci
-     ((id . hypatia-hardening)
-      (pr . #178)
-      (date . "2026-05-30")
-      (summary . "Hardened CI workflows + resolved Hypatia findings at source. Most recent commit on the branch as of this state refresh.")))))
+[current-workstream]
+as-of = "2026-06-05"
 
-;;; ============================================================
-;;; Session header (HISTORICAL — EI-2 termination, April 2026)
-;;; ============================================================
-;;;
-;;; The EI-2 record below is retained as history. EI-2 closed negatively
-;;; in April 2026; it must not be re-investigated (see do-not-redo and
-;;; forbidden-rebrandings). It is NOT the current workstream — see
-;;; `current-workstream` above for the live ordinal-track work.
+[current-workstream.primary]
+id = "ordinal-rank-mono-wf"
+title = "Buchholz/Ordinal rank-monotonicity + well-foundedness — Slice 3+4 Route A arc"
+status = "landed"
+date-range = "2026-05-30"
+prs = [165, 166, 167, 168, 169, 170, 171]
+summary = """
+Rank-mono union umbrella over source-rule extensions. RankMonoUnion._<ᵇᵘ_
+= _<ᵇ¹_ ⊎ _<ᵇ⁺²_ via Sum + [_,_] mediator (#168); RankMonoUnionWfCNF._<ᵇᵘⁿ_
+bundles the canonical-form invariant alongside the rank-relation (#169
+WfCNF wrap); RankMonoUnionWF.wf-<ᵇᵘ derives WellFounded _<ᵇᵘ_ via
+Subrelation.wellFounded + On.wellFounded rank-embedding transport from
+wf-<′ (#170, Gate 2 of the arc closed). Path-3 prototype
+RankMonoSameLeft._<ᵇ⁺²_ adds a literal-same-left source-rule extension
+closing in one line via rank-pow-bplus-right-mono (#167).
+"""
+modules = [
+  "proofs/agda/Ordinal/Buchholz/RankMonoUnion.agda",
+  "proofs/agda/Ordinal/Buchholz/RankMonoUnionWfCNF.agda",
+  "proofs/agda/Ordinal/Buchholz/RankMonoUnionWF.agda",
+]
+invariants = "163 modules at arc close; all --safe --without-K; zero new postulates; no funext."
 
-(define session
-  '((investigation-id   . "EI-2")
-    (investigation-name . "Robustness of the integration recipe under richer 2D combinations")
-    (opened             . "2026-04-28")
-    (closed             . "2026-04-29")
-    (verdict            . negative)
-    (route              . path-b)
-    (closing-rationale  . "Empirical evidence (7 data points) and structural argument (RoleRole.agda) overwhelming; full 2D iff theorem documented as not formalisable in safe Agda without postulates; per-axis halves and concrete construction halves proved.")))
+[current-workstream.primary.gates]
+gate-1 = "tail-rank-equality discharge for cross-head rank-equal case — OPEN (structural blocker; both pre-identified unblock routes CHECKED-REFUTED in PR #146)"
+gate-2 = "well-foundedness of the union — CLOSED in #170"
+gate-3 = "Path-4+ further source-rule extensions — OPEN but mechanical via the documented recipe"
 
-;;; ============================================================
-;;; Terminated questions (do not reopen)
-;;; ============================================================
+[[current-workstream.supporting]]
+id = "ephapax-bridge"
+title = "Cross-repo echo↔ephapax L3 bridge — EchoEphapaxBridge.agda NARROW stub"
+status = "landed"
+date = "2026-05-30"
+prs = [161, 162, 163]
+module = "proofs/agda/EchoEphapaxBridge.agda"
+summary = """
+Two definitional refl-renames + a docstring catalogue (ephapax-L3-weaken,
+ephapax-L3-no-section-collapse) establishing the named correspondence
+between echo-types L3 (weaken : LEcho linear → LEcho affine;
+no-section-collapse-to-residue) and ephapax-affine's L3 layer. Honest
+scope: L3 ONLY; ephapax-affine + L1/L2/L4 NOT mirrored. Closes #126.
+Package layout in docs/bridges/EchoBridges.md.
+"""
+note = "NARROW-stub by design — definitional renames + catalogue, not a deep mechanised bridge."
 
-(define terminated-questions
-  '(((id      . "EI-2")
-     (status  . closed-negatively)
-     (verdict . "Integration recipe with the existing five named axes does NOT carry substantive simultaneous cross-axis content.")
-     (data-points
-      ((RoleGraded         . (cells . 18) (non-trivial . 1) (axis-pair . "Role x Grade"))
-       (RoleMode           . (cells . 9)  (non-trivial . 1) (axis-pair . "Role x Mode"))
-       (ModeGraded         . (cells . 18) (non-trivial . 0) (axis-pair . "Mode x Grade"))
-       (RoleModeGrade-RM   . (cells . 27) (non-trivial . 1) (axis-pair . "Role x Mode @ 3D pairwise"))
-       (RoleModeGrade-RG   . (cells . 36) (non-trivial . 1) (axis-pair . "Role x Grade @ 3D pairwise"))
-       (RoleModeGrade-MG   . (cells . 36) (non-trivial . 0) (axis-pair . "Mode x Grade @ 3D pairwise"))
-       (RoleModeGrade-trip . (cells . 54) (non-trivial . 1) (axis-pair . "Role x Mode x Grade @ triple"))
-       (RoleRole-pair      . (cells . 9)  (non-trivial . 0) (axis-pair . "Role x Role independent product; trivial by categorical product"))
-       (RoleRole-shared    . (cells . n/a) (non-trivial . n/a) (axis-pair . "Role x Role shared state; recipe does not apply"))))
-     (load-bearing-content . "Every non-trivial cell carries one-axis-at-a-time content; the load-bearing transport is always Choreo's client-to-server at the c⊑s strict step.")
-     (criterion-status     . "Non-loss-only criterion is necessary but NOT sufficient for substantive simultaneous interaction.")
-     (forbidden-reopen-framings
-      . ("non-loss-only as recipe precondition (READING 2)"
-         "weakened gate-1 with NLO precondition (READING 2)"
-         "richer family choice for ModeGrade (would not change the structural finding)"
-         "alternative axis pair within the existing five named axes"))
-     (authoritative-record-files
-      . ("docs/EI2_REPORT.adoc"                ; top Status section
-         "docs/next-questions.adoc"             ; closed section
-         "proofs/agda/characteristic/RecipeNonTriviality.agda"))
-     (date . "2026-04-29"))))
+[[current-workstream.supporting]]
+id = "arghda-core-extraction"
+title = "arghda-core subtree extraction"
+status = "landed"
+date = "2026-05-30"
+pr = 160
+umbrella-issue = 159
+summary = """
+Removed arghda-core/ from this repo's tree; it now lives as a standalone
+repo (hyperpolymath/arghda-core) per the umbrella in #159. Reduces
+echo-types' surface area to the propositional/proof-theoretic core.
+"""
 
-;;; ============================================================
-;;; Standing decisions (treat as load-bearing; do not relitigate)
-;;; ============================================================
+[current-workstream.proof-debt]
+status = "enumerated"
+pr = 172
+doc = "docs/proof-debt.md"
+summary = """
+echo-types' sole soundness-relevant escape hatch — the four
+propositional-truncation postulates in
+proofs/agda/EchoImageFactorizationPropPostulated.agda — enumerated under
+Disposition (c) NECESSARY AXIOM. Clears the recurring
+governance/Trusted-base-reduction-policy red check (standards#211).
+"""
 
-(define standing-decisions
-  '(((id . sd-001)
-     (title  . "Distinctness load is carried by truncation + 2-cell arguments")
-     (status . accepted)
-     (date   . "2026-04-29")
-     (rationale . "Across all attempted axis pairings (including the only NLO self-pairing), the integration recipe produces only one-axis-at-a-time content. Truncation (echo-not-prop family) and 2-cell (Sophisticated submodules) carry the gate-1 distinctness load independently of the recipe.")
-     (artefacts . ("proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda"
-                   "proofs/agda/EchoVsQuotient.Sophisticated"
-                   "proofs/agda/EchoVsGalois.Sophisticated"))
-     (consequences . "Gate-1's claim has been narrowed across 5 doc locations. The recipe remains useful as organising vocabulary."))
+[current-workstream.recent-ci]
+id = "hypatia-hardening"
+pr = 178
+date = "2026-05-30"
+summary = "Hardened CI workflows + resolved Hypatia findings at source."
 
-    ((id . sd-002)
-     (title  . "Recipe is organising vocabulary, NOT locus of distinctness")
-     (status . accepted)
-     (date   . "2026-04-29")
-     (rationale . "EI-2 termination established that recipe-level commutation theorems are vacuous when no axis is non-loss-only, and degenerate to coordinate-product or undefined transport when both are. The recipe still organises the per-axis lemma family (composition, join, propositionality) but does not produce substantive simultaneous integration content.")
-     (forbidden-claims . ("recipe carries cross-axis distinctness"
-                          "five axes simultaneously as a distinctness claim"
-                          "non-loss-only is sufficient for substantive integration content"))
-     (authoritative-text . "gate-2-handoff.adoc § Observation G"))
+# ============================================================
+# Session header (HISTORICAL — EI-2 termination, April 2026)
+# ============================================================
+# The EI-2 record below is retained as history. EI-2 closed negatively
+# in April 2026; it must not be re-investigated (see [[do-not-redo]] and
+# forbidden-rebrandings). It is NOT the current workstream — see
+# [current-workstream] above for the live ordinal-track work.
 
-    ((id . sd-003)
-     (title  . "Forge workflow: GitHub canonical, hub-and-spoke mirror outward")
-     (status . accepted)
-     (date   . "2026-04-28")
-     (rationale . "User's standing forge workflow (overrides the static gitlab>github preference for git operations specifically). Mirror to GitLab and Codeberg via Actions workflow with token-based auth.")
-     (artefacts . (".github/workflows/mirror.yml" "MIRROR_SETUP.adoc")))
+[session-ei2-historical]
+investigation-id = "EI-2"
+investigation-name = "Robustness of the integration recipe under richer 2D combinations"
+opened = "2026-04-28"
+closed = "2026-04-29"
+verdict = "negative"
+route = "path-b"
+closing-rationale = """
+Empirical evidence (7 data points) and structural argument (RoleRole.agda)
+overwhelming; full 2D iff theorem documented as not formalisable in safe
+Agda without postulates; per-axis halves and concrete construction halves
+proved.
+"""
 
-    ((id . sd-004)
-     (title  . "Cross-platform compatibility: Linux primary, Windows secondary")
-     (status . accepted)
-     (date   . "2026-04-28")
-     (rationale . "User works across two machines (Fedora Kinoite primary, Windows for travel). Build instructions must be path-agnostic; line endings normalised via .gitattributes.")
-     (artefacts . (".gitattributes")))
+# ============================================================
+# Terminated questions (do not reopen)
+# ============================================================
 
-    ((id . sd-005)
-     (title  . "Recipe extension parked for v0.2+, NOT v0.1.x scope")
-     (status . accepted)
-     (date   . "2026-04-29")
-     (rationale . "The positive-termination route — extending the recipe to allow coupled state across axes or multiple live positions per axis — is genuinely separate work, not unfinished EI-2 business. It would require new modules, not a rerun of EI-2.")
-     (when-active . "When v0.2 work begins, file as a new question (e.g., EI-3) rather than reopening EI-2."))
+[[terminated-questions]]
+id = "EI-2"
+status = "closed-negatively"
+verdict = "Integration recipe with the existing five named axes does NOT carry substantive simultaneous cross-axis content."
+load-bearing-content = "Every non-trivial cell carries one-axis-at-a-time content; the load-bearing transport is always Choreo's client-to-server at the c⊑s strict step."
+criterion-status = "Non-loss-only criterion is necessary but NOT sufficient for substantive simultaneous interaction."
+forbidden-reopen-framings = [
+  "non-loss-only as recipe precondition (READING 2)",
+  "weakened gate-1 with NLO precondition (READING 2)",
+  "richer family choice for ModeGrade (would not change the structural finding)",
+  "alternative axis pair within the existing five named axes",
+]
+authoritative-record-files = [
+  "docs/EI2_REPORT.adoc",                                  # top Status section
+  "docs/next-questions.adoc",                              # closed section
+  "proofs/agda/characteristic/RecipeNonTriviality.agda",
+]
+date = "2026-04-29"
 
-    ((id . sd-006)
-     (title  . "Two-document-family doc surface: Reading 1 and Reading 2 patches superseded")
-     (status . accepted)
-     (date   . "2026-04-29")
-     (rationale . "Both candidate readings drafted during EI-2 investigation (READING 1: weaken gate-1 with NLO precondition; READING 2: refine recipe with NLO precondition) were superseded by the stronger-negative trajectory found via RoleRole.agda. Files kept as historical record only; SUPERSEDED banners applied.")
-     (superseded-files . ("docs/EI2_READING1_PATCHES.adoc"
-                          "docs/EI2_READING2_PATCHES.adoc"
-                          "docs/EI2_READINGS_COMPARISON.adoc")))))
+[terminated-questions.data-points]
+RoleGraded = { cells = 18, non-trivial = 1, axis-pair = "Role x Grade" }
+RoleMode = { cells = 9, non-trivial = 1, axis-pair = "Role x Mode" }
+ModeGraded = { cells = 18, non-trivial = 0, axis-pair = "Mode x Grade" }
+RoleModeGrade-RM = { cells = 27, non-trivial = 1, axis-pair = "Role x Mode @ 3D pairwise" }
+RoleModeGrade-RG = { cells = 36, non-trivial = 1, axis-pair = "Role x Grade @ 3D pairwise" }
+RoleModeGrade-MG = { cells = 36, non-trivial = 0, axis-pair = "Mode x Grade @ 3D pairwise" }
+RoleModeGrade-trip = { cells = 54, non-trivial = 1, axis-pair = "Role x Mode x Grade @ triple" }
+RoleRole-pair = { cells = 9, non-trivial = 0, axis-pair = "Role x Role independent product; trivial by categorical product" }
+RoleRole-shared = { cells = "n/a", non-trivial = "n/a", axis-pair = "Role x Role shared state; recipe does not apply" }
 
-;;; ============================================================
-;;; Artefacts produced during EI-2 (canonical file list)
-;;; ============================================================
+# ============================================================
+# Standing decisions (treat as load-bearing; do not relitigate)
+# ============================================================
 
-(define artefacts
-  '((agda-characteristic-lane
-     . ("proofs/agda/characteristic/RoleGraded.agda"          ; original EI-1 closure
-        "proofs/agda/characteristic/RoleMode.agda"            ; phase 3 sibling
-        "proofs/agda/characteristic/ModeGraded.agda"          ; phase 2 sibling (note trailing 'd')
-        "proofs/agda/characteristic/RoleModeGrade.agda"       ; 3D obligation 4
-        "proofs/agda/characteristic/RoleRole.agda"            ; phase 5 critical test
-        "proofs/agda/characteristic/InteractionTest.agda"     ; phase 4 simultaneity obstacle
-        "proofs/agda/characteristic/RecipeSpec.agda"          ; phase 5 recipe-as-record
-        "proofs/agda/characteristic/RecipeTheorem.agda"       ; partial generic, per-axis halves
-        "proofs/agda/characteristic/RecipeNonTriviality.agda" ; concrete construction halves (PATH B)
-        "proofs/agda/characteristic/ChoreoInjective.agda"     ; NLO certificate for Choreo
-        "proofs/agda/characteristic/IntegrationAudit.agda"    ; EI-1 falsifier exhibit
-        "proofs/agda/characteristic/VisibleConstraintAudit.agda"))
-    (docs
-     . ("docs/EI2_REPORT.adoc"             ; authoritative report (top Status section)
-        "docs/EI2_READING1_PATCHES.adoc"   ; superseded
-        "docs/EI2_READING2_PATCHES.adoc"   ; superseded
-        "docs/EI2_READINGS_COMPARISON.adoc" ; superseded
-        "docs/next-questions.adoc"))         ; EI-2 closed section
-    (modified
-     . ("docs/gate-1-distinct-phenomenon.adoc"  ; § The Gate #1 claim narrowed
-        "docs/gate-2-handoff.adoc"              ; § Observation G updated
-        "docs/adjacency/README.adoc"            ; EI-2 cascade note
-        "roadmap-gates.adoc"                    ; § Gate 1 Claim narrowed
-        "README.md"))                            ; integration-bridge bullet updated
-    (integration-tracking
-     . ("INTEGRATION_COMMITS.adoc"))             ; 7 commits, EI-2 termination = commit 7
-    (staging-area
-     . "/mnt/user-data/outputs/audit-output/")))
+[[standing-decisions]]
+id = "sd-001"
+title = "Distinctness load is carried by truncation + 2-cell arguments"
+status = "accepted"
+date = "2026-04-29"
+rationale = """
+Across all attempted axis pairings (including the only NLO self-pairing),
+the integration recipe produces only one-axis-at-a-time content.
+Truncation (echo-not-prop family) and 2-cell (Sophisticated submodules)
+carry the gate-1 distinctness load independently of the recipe.
+"""
+artefacts = [
+  "proofs/agda/examples/{TropicalArgmin,EpistemicUpdate,LinearErasure}.agda",
+  "proofs/agda/EchoVsQuotient.Sophisticated",
+  "proofs/agda/EchoVsGalois.Sophisticated",
+]
+consequences = "Gate-1's claim has been narrowed across 5 doc locations. The recipe remains useful as organising vocabulary."
 
-;;; ============================================================
-;;; Documentation cascade applied (where the narrowed claim lives)
-;;; ============================================================
+[[standing-decisions]]
+id = "sd-002"
+title = "Recipe is organising vocabulary, NOT locus of distinctness"
+status = "accepted"
+date = "2026-04-29"
+rationale = """
+EI-2 termination established that recipe-level commutation theorems are
+vacuous when no axis is non-loss-only, and degenerate to coordinate-product
+or undefined transport when both are. The recipe still organises the
+per-axis lemma family (composition, join, propositionality) but does not
+produce substantive simultaneous integration content.
+"""
+forbidden-claims = [
+  "recipe carries cross-axis distinctness",
+  "five axes simultaneously as a distinctness claim",
+  "non-loss-only is sufficient for substantive integration content",
+]
+authoritative-text = "gate-2-handoff.adoc § Observation G"
 
-(define cascade-applied
-  '(((file . "docs/gate-1-distinct-phenomenon.adoc")
-     (section . "§ The Gate #1 claim")
-     (change . "Distinctness rerouted to truncation + 2-cell arguments; integration explicitly removed from distinctness load."))
-    ((file . "docs/gate-2-handoff.adoc")
-     (section . "§ Observation G")
-     (change . "Recipe characterised as organising vocabulary; EI-2 finding recorded in NOTE block; NLO-vs-loss-only column added to instances table."))
-    ((file . "roadmap-gates.adoc")
-     (section . "§ Gate 1 Claim")
-     (change . "Same narrowing as gate-1-distinct-phenomenon.adoc."))
-    ((file . "docs/adjacency/README.adoc")
-     (section . "Where the wins live (NOTE after table)")
-     (change . "EI-2 cascade note added explaining recipe-vs-2-cell-level distinction."))
-    ((file . "README.md")
-     (section . "integration-bridge bullet in feature list")
-     (change . "Updated to reflect recipe as organising vocabulary, with link to EI2_REPORT."))
-    ((file . "docs/next-questions.adoc")
-     (section . "§ Closed questions")
-     (change . "Full EI-2 entry with seven-data-point evidence table, file list, and termination rationale."))))
+[[standing-decisions]]
+id = "sd-003"
+title = "Forge workflow: GitHub canonical, hub-and-spoke mirror outward"
+status = "accepted"
+date = "2026-04-28"
+rationale = """
+User's standing forge workflow (overrides the static gitlab>github
+preference for git operations specifically). Mirror to GitLab and
+Codeberg via Actions workflow with token-based auth.
+"""
+artefacts = [".github/workflows/mirror.yml", "MIRROR_SETUP.adoc"]
 
-;;; ============================================================
-;;; Do-not-redo register (anti-duplicate-work checklist)
-;;; ============================================================
+[[standing-decisions]]
+id = "sd-004"
+title = "Cross-platform compatibility: Linux primary, Windows secondary"
+status = "accepted"
+date = "2026-04-28"
+rationale = """
+User works across two machines (Fedora Kinoite primary, Windows for
+travel). Build instructions must be path-agnostic; line endings
+normalised via .gitattributes.
+"""
+artefacts = [".gitattributes"]
 
-(define do-not-redo
-  '(("Build a fourth 2D sibling construction with NLO criterion to test recipe-non-triviality"
-     . "Done in spirit: RoleRole.agda showed even Choreo×Choreo doesn't help. Adding a fourth pair would not change the structural finding.")
-    ("Draft READING 1 (weaken gate-1) or READING 2 (refine recipe) doc patches"
-     . "Both drafted and superseded. SUPERSEDED banners on EI2_READING{1,2}_PATCHES.adoc.")
-    ("Attempt to formalise the full recipe-non-triviality 2D iff theorem in safe Agda"
-     . "Documented as not formalisable without postulates (decidable equality, F-collapses axioms, extensionality). PATH B accepted partial formalisation.")
-    ("Re-run RoleGraded with a different family choice F : Role × Grade → Set"
-     . "Three structural choices were evaluated; the negative finding is family-independent.")
-    ("Re-investigate whether Choreo's transport is genuinely non-loss-only"
-     . "Formal certificate exists: client-to-server-injective-on-proj₁ in ChoreoInjective.agda. Do not redo.")
-    ("Open a new EI-2 entry to track the recipe extension"
-     . "Recipe extension is genuinely separate work; track as a new question (e.g., EI-3) when v0.2 work begins, not as EI-2 reopening.")
-    ("Add ModeGrade.agda (without trailing 'd')"
-     . "ModeGraded.agda (with trailing 'd') is canonical. The duplicate without trailing 'd' was created in error during this session and removed.")))
+[[standing-decisions]]
+id = "sd-005"
+title = "Recipe extension parked for v0.2+, NOT v0.1.x scope"
+status = "accepted"
+date = "2026-04-29"
+rationale = """
+The positive-termination route — extending the recipe to allow coupled
+state across axes or multiple live positions per axis — is genuinely
+separate work, not unfinished EI-2 business. It would require new
+modules, not a rerun of EI-2.
+"""
+when-active = "When v0.2 work begins, file as a new question (e.g., EI-3) rather than reopening EI-2."
 
-;;; ============================================================
-;;; Forbidden rebrandings (to prevent recurrence under new names)
-;;; ============================================================
+[[standing-decisions]]
+id = "sd-006"
+title = "Two-document-family doc surface: Reading 1 and Reading 2 patches superseded"
+status = "accepted"
+date = "2026-04-29"
+rationale = """
+Both candidate readings drafted during EI-2 investigation (READING 1:
+weaken gate-1 with NLO precondition; READING 2: refine recipe with NLO
+precondition) were superseded by the stronger-negative trajectory found
+via RoleRole.agda. Files kept as historical record only; SUPERSEDED
+banners applied.
+"""
+superseded-files = [
+  "docs/EI2_READING1_PATCHES.adoc",
+  "docs/EI2_READING2_PATCHES.adoc",
+  "docs/EI2_READINGS_COMPARISON.adoc",
+]
 
-(define forbidden-rebrandings
-  '("the integration argument carries gate-1's distinctness load"
-    "the recipe is uniformly applicable across all 2D axis pairs"
-    "non-loss-only is sufficient for substantive simultaneous interaction"
-    "five axes simultaneously as a distinctness claim"
-    "Mode × Grade is a falsifier in some weaker sense"
-    "Role × Role would have produced substantive content with a better family choice"))
+# ============================================================
+# Artefacts produced during EI-2 (canonical file list)
+# ============================================================
 
-;;; ============================================================
-;;; Next actions (post-termination, gate-1/gate-2/gate-3 work that
-;;; remains open and is NOT EI-2 follow-up)
-;;; ============================================================
+[artefacts]
+agda-characteristic-lane = [
+  "proofs/agda/characteristic/RoleGraded.agda",           # original EI-1 closure
+  "proofs/agda/characteristic/RoleMode.agda",             # phase 3 sibling
+  "proofs/agda/characteristic/ModeGraded.agda",           # phase 2 sibling (note trailing 'd')
+  "proofs/agda/characteristic/RoleModeGrade.agda",        # 3D obligation 4
+  "proofs/agda/characteristic/RoleRole.agda",             # phase 5 critical test
+  "proofs/agda/characteristic/InteractionTest.agda",      # phase 4 simultaneity obstacle
+  "proofs/agda/characteristic/RecipeSpec.agda",           # phase 5 recipe-as-record
+  "proofs/agda/characteristic/RecipeTheorem.agda",        # partial generic, per-axis halves
+  "proofs/agda/characteristic/RecipeNonTriviality.agda",  # concrete construction halves (PATH B)
+  "proofs/agda/characteristic/ChoreoInjective.agda",      # NLO certificate for Choreo
+  "proofs/agda/characteristic/IntegrationAudit.agda",     # EI-1 falsifier exhibit
+  "proofs/agda/characteristic/VisibleConstraintAudit.agda",
+]
+docs = [
+  "docs/EI2_REPORT.adoc",              # authoritative report (top Status section)
+  "docs/EI2_READING1_PATCHES.adoc",    # superseded
+  "docs/EI2_READING2_PATCHES.adoc",    # superseded
+  "docs/EI2_READINGS_COMPARISON.adoc", # superseded
+  "docs/next-questions.adoc",          # EI-2 closed section
+]
+modified = [
+  "docs/gate-1-distinct-phenomenon.adoc",  # § The Gate #1 claim narrowed
+  "docs/gate-2-handoff.adoc",              # § Observation G updated
+  "docs/adjacency/README.adoc",            # EI-2 cascade note
+  "roadmap-gates.adoc",                    # § Gate 1 Claim narrowed
+  "README.md",                             # integration-bridge bullet updated
+]
+integration-tracking = ["INTEGRATION_COMMITS.adoc"]      # 7 commits, EI-2 termination = commit 7
+staging-area = "/mnt/user-data/outputs/audit-output/"
 
-(define next-actions
-  ;; Updated 2026-05-20: the April 2026 next-actions list is largely
-  ;; superseded by intervening session activity. Resolutions:
-  ;;   * `integration` (apply 7-commit integration sequence) — DONE,
-  ;;     long since merged.
-  ;;   * `t-3` (Gate-1 falsification test 3) — superseded by the
-  ;;     Gate 1 adjacency refresh (`decisions/gate1-adjacency-refresh.adoc`,
-  ;;     PR #77) which closed gate-1 work at 5/5 REFINED.
-  ;;   * `q2-4` (falsifier attempts) — partially absorbed into
-  ;;     `IntegrationAudit.agda` EI-2 negative result; further
-  ;;     falsifier attempts are now bookkeeping not load-bearing.
-  ;;   * `q2-1` (echo-not-prop generalisation) — still open.
-  ;;   * `q2-3` (RoleGraded as N5) — still open (low priority).
-  ;;   * `v0-2-recipe-extension` — still parked.
-  '(((id . q2-1)
-     (title . "Generalisation of echo-not-prop")
-     (status . open)
-     (relevance . "n=2 special case proofs generalise to: for non-injective f with at least two distinct preimages of y, is-prop (Echo f y) → ⊥. Closing this also discharges the truncation-argument gap for refinement, IFC, and provenance adjacency notes.")
-     (priority . high)
-     (rationale . "Truncation argument is one of the two load-bearing distinctness arguments post-EI-2; strengthening it has high leverage."))
+# ============================================================
+# Documentation cascade applied (where the narrowed claim lives)
+# ============================================================
 
-    ((id . q2-3)
-     (title . "Adopt RoleGraded.choreo-grade-commute as nominee N5")
-     (status . open)
-     (relevance . "Gate-2's audit flagged it as candidate fifth nominee but did not adopt. Adoption pushes the audit count to 5-of-5 across four constructions.")
-     (priority . low)
-     (note . "Mostly bookkeeping post-EI-2 since the recipe is no longer the distinctness locus."))
+[[cascade-applied]]
+file = "docs/gate-1-distinct-phenomenon.adoc"
+section = "§ The Gate #1 claim"
+change = "Distinctness rerouted to truncation + 2-cell arguments; integration explicitly removed from distinctness load."
 
-    ((id . owner-gated-paper-update)
-     (title . "Bounded new-contribution paragraph in paper.adoc / types-abstract.adoc / conservativity.adoc for F1+F3")
-     (status . owner-gated)
-     (relevance . "F1 + F3 (see META adr-007, adr-008) introduce a separate graded-comonad construction beside EchoGraded. The paper bodies are about EchoGraded's thin-poset structure — the title and central thesis should not move on these gates alone. Whether to add a bounded contribution paragraph mentioning the F1/F3 side-construction is an editorial decision.")
-     (priority . deferred))
+[[cascade-applied]]
+file = "docs/gate-2-handoff.adoc"
+section = "§ Observation G"
+change = "Recipe characterised as organising vocabulary; EI-2 finding recorded in NOTE block; NLO-vs-loss-only column added to instances table."
 
-    ((id . ordinal-track-path-1)
-     (title . "Ordinal track Path-1 — Brouwer rank-mono into _<ᵇ⁻_")
-     (status . substantially-landed)
-     (relevance . "Substantially advanced by the Slice 3+4 Route A arc (PRs #165-#171, 2026-05-30) — see current-workstream. The rank-mono union umbrella RankMonoUnion._<ᵇᵘ_ + its WfCNF wrap landed, and well-foundedness wf-<ᵇᵘ via rank-embedding transport closed Gate 2 (#170).")
-     (priority . high)
-     (remaining . "Gate 1 (tail-rank-equality discharge for the cross-head rank-equal case) remains OPEN — structural blocker, both pre-identified unblock routes CHECKED-REFUTED in PR #146. Gate 3 (Path-4+ further source-rule extensions) is OPEN but mechanical via the documented recipe."))
+[[cascade-applied]]
+file = "roadmap-gates.adoc"
+section = "§ Gate 1 Claim"
+change = "Same narrowing as gate-1-distinct-phenomenon.adoc."
 
-    ((id . v0-2-recipe-extension)
-     (title . "Recipe extension exploration (parked)")
-     (status . parked-v0.2)
-     (relevance . "Coupled state across axes; multiple live positions per axis. New module work, not a re-investigation of EI-2.")
-     (priority . deferred))))
+[[cascade-applied]]
+file = "docs/adjacency/README.adoc"
+section = "Where the wins live (NOTE after table)"
+change = "EI-2 cascade note added explaining recipe-vs-2-cell-level distinction."
 
-;;; ============================================================
-;;; Pillar F earn-back closure summary (2026-05-20)
-;;; ============================================================
-;;;
-;;; The Pillar F earn-back programme launched by R-2026-05-18 is now
-;;; CLOSED. All four gates passed at strictly-bounded strength; see
-;;; META.adr-{007,008,009} and docs/retractions.adoc follow-ups
-;;; F-2026-05-18a + F-2026-05-20a + F-2026-05-20b.
+[[cascade-applied]]
+file = "README.md"
+section = "integration-bridge bullet in feature list"
+change = "Updated to reflect recipe as organising vocabulary, with link to EI2_REPORT."
 
-(define earn-back-summary
-  '((status . closed)
-    (closing-date . "2026-05-20")
-    (gates
-     ((F4 (status . passed) (date . "2026-05-18")
-          (module . "proofs/agda/EchoPullbackUnivF4.agda")
-          (claim . "Terminal-cone universal property as a function of an explicit funext module parameter, never a postulate")
-          (retraction-followup . "F-2026-05-18a"))
-      (F2 (status . passed) (date . "2026-05-18")
-          (module . "proofs/agda/EchoStepNDModelF2.agda")
-          (claim . "Genuine second model of the bare Echo functor on the non-graph relation StepND; content-bearing agreement")
-          (retraction-followup . "F-2026-05-18a"))
-      (F1 (status . passed) (date . "2026-05-20")
-          (module . "proofs/agda/EchoGradedComonadF1.agda")
-          (claim . "Monoid-graded iterated-residue comonad at (ℕ, +, 0) with Echo as grade-unit object; nested δ; all three comonad laws; D2-nontrivial separating witness")
-          (retraction-followup . "F-2026-05-20a")
-          (adr . adr-007))
-      (F3 (status . passed) (date . "2026-05-20")
-          (modules . ("proofs/agda/EchoGradedComonadInterface.agda"
-                      "proofs/agda/EchoGradedComonadInstance1.agda"
-                      "proofs/agda/EchoGradedComonadInstance2.agda"))
-          (claim . "Abstract GradedComonadStructure record (no ⊑-prop-equivalent field) + two non-isomorphic-grade-monoid instances: nat-instance at commutative (ℕ, +, 0), list-instance at non-commutative free monoid (List Tag, ++, [])")
-          (retraction-followup . "F-2026-05-20b")
-          (adr . adr-008))))
-    (scope-qualifier . "F1+F3 earn back the graded-comonad and two-models claims FOR A NEW SIDE-CONSTRUCTION. EchoGraded remains a thin-poset reindexing modality per R-2026-05-18; EchoRelModel's two-models claim remains retracted. Different abstract interfaces; not interconvertible.")
-    (forbidden-rebrandings
-     . ("EchoGraded is a graded comonad"
-        "the F1 construction reinstates EchoGraded's retracted comonad claim"
-        "the F3 two-models result reinstates EchoRelModel's retracted two-models claim"
-        "the title or central thesis of paper.adoc moves on F1 or F3 alone"))
-    (unmoved-retractions
-     . ("R-2026-05-18 finding 5 (conservativity metatheorem) — stays retracted; no gate attempted to earn it back, no gate could (meta-statement over all propositions, not discharged by typechecking)"
-        "R-2026-05-18 finding 3 (\"Not two models\" for EchoRelModel/GCLaws) — stays retracted; F3 earned a different two-models claim at a different interface"))))
+[[cascade-applied]]
+file = "docs/next-questions.adoc"
+section = "§ Closed questions"
+change = "Full EI-2 entry with seven-data-point evidence table, file list, and termination rationale."
 
-;;; ============================================================
-;;; Theory-work closure summary (2026-05-20)
-;;; ============================================================
-;;;
-;;; The §"Theory work — no proof assistant needed" section in
-;;; docs/echo-types/roadmap.md is now empty. Every item is landed,
-;;; ruled out, or refreshed.
+# ============================================================
+# Do-not-redo register (anti-duplicate-work checklist)
+# ============================================================
 
-(define theory-work-summary
-  '((status . closed)
-    (closing-date . "2026-05-20")
-    (closure-prs . (#67 #68 #69 #70 #71 #72 #74 #75 #76 #77 #78 #79 #82 #84 #86 #88 #90 #91 #92))
-    (axes-fully-mechanised
-     . ((axis-2-approximate-echo . "EchoApprox.agda + EchoApproxInstance.agda; Rung C BalancedTolerance at #78")
-        (axis-8-decidability    . "EchoDecidable.agda")
-        (axis-8-cost            . "EchoCost.agda + EchoCostInstance.agda (PR #85)")
-        (axis-8-access          . "EchoAccess.agda (PRs #68, #75)")
-        (axis-8-search          . "EchoSearch.agda + EchoSearchInstance.agda (PR #80)")
-        (negative-coecho        . "AntiEcho.agda (PR #69) + AntiEchoTropical.agda (PR #72) + AntiEchoTropicalGeneric.agda (PR #91) + antiecho-partition-dec (PR #90)")))
-    (ruled-out
-     . ((two-categorical-shape . "decisions/no-2-cat.adoc — every would-be 2-cell is refl or forced trivial")))
-    (refreshed
-     . ((presentation-dependence-cluster . "decisions/presentation-dependence.adoc — examples 5, 9, 10 cluster; meta-pattern only, no new module needed")
-        (gate-1-adjacency-refresh        . "decisions/gate1-adjacency-refresh.adoc — 5/5 REFINED, 0 RE-EVALUATE")))
-    (canonical-examples-cluster
-     . ((example-5-database-provenance . "EchoExampleProvenance.agda (PR #81)")
-        (example-9-parser              . "EchoExampleParser.agda (PR #83)")
-        (example-10-abstract-interp    . "EchoExampleAbsInt.agda (PR #82)")
-        (example-6-numeric             . "still unblocked, only remaining example item")))))
+[[do-not-redo]]
+item = "Build a fourth 2D sibling construction with NLO criterion to test recipe-non-triviality"
+resolution = "Done in spirit: RoleRole.agda showed even Choreo×Choreo doesn't help. Adding a fourth pair would not change the structural finding."
 
-;;; ============================================================
-;;; END OF STATE
-;;; ============================================================
+[[do-not-redo]]
+item = "Draft READING 1 (weaken gate-1) or READING 2 (refine recipe) doc patches"
+resolution = "Both drafted and superseded. SUPERSEDED banners on EI2_READING{1,2}_PATCHES.adoc."
+
+[[do-not-redo]]
+item = "Attempt to formalise the full recipe-non-triviality 2D iff theorem in safe Agda"
+resolution = "Documented as not formalisable without postulates (decidable equality, F-collapses axioms, extensionality). PATH B accepted partial formalisation."
+
+[[do-not-redo]]
+item = "Re-run RoleGraded with a different family choice F : Role × Grade → Set"
+resolution = "Three structural choices were evaluated; the negative finding is family-independent."
+
+[[do-not-redo]]
+item = "Re-investigate whether Choreo's transport is genuinely non-loss-only"
+resolution = "Formal certificate exists: client-to-server-injective-on-proj₁ in ChoreoInjective.agda. Do not redo."
+
+[[do-not-redo]]
+item = "Open a new EI-2 entry to track the recipe extension"
+resolution = "Recipe extension is genuinely separate work; track as a new question (e.g., EI-3) when v0.2 work begins, not as EI-2 reopening."
+
+[[do-not-redo]]
+item = "Add ModeGrade.agda (without trailing 'd')"
+resolution = "ModeGraded.agda (with trailing 'd') is canonical. The duplicate without trailing 'd' was created in error during this session and removed."
+
+# ============================================================
+# Forbidden rebrandings (to prevent recurrence under new names)
+# ============================================================
+
+[forbidden-rebrandings]
+entries = [
+  "the integration argument carries gate-1's distinctness load",
+  "the recipe is uniformly applicable across all 2D axis pairs",
+  "non-loss-only is sufficient for substantive simultaneous interaction",
+  "five axes simultaneously as a distinctness claim",
+  "Mode × Grade is a falsifier in some weaker sense",
+  "Role × Role would have produced substantive content with a better family choice",
+]
+
+# ============================================================
+# Blockers (honest, as of 2026-06-12)
+# ============================================================
+
+[blockers]
+ordinal-gate-1 = "Tail-rank-equality discharge for the cross-head rank-equal case — structural blocker; both pre-identified unblock routes CHECKED-REFUTED in PR #146."
+release = "v0.1.1 not yet tagged; CHANGELOG remains [Unreleased]."
+pillar-e = "paper.adoc [EXPAND] tags remain; venue/template + Zenodo DOI + outreach are author-driven (do not auto-run)."
+estate-license-review = "PR #185 was merged as DRAFT-titled estate standardization pending owner-only LICENSE review; LICENSE SPDX header already restored post-merge."
+
+# ============================================================
+# Next actions (post-termination gate-1/gate-2/gate-3 work that
+# remains open and is NOT EI-2 follow-up)
+# ============================================================
+# Updated 2026-05-20 (status notes carried forward at the 2026-06-05
+# and 2026-06-12 refreshes): the April 2026 next-actions list is largely
+# superseded by intervening session activity. Resolutions:
+#   * `integration` (apply 7-commit integration sequence) — DONE,
+#     long since merged.
+#   * `t-3` (Gate-1 falsification test 3) — superseded by the Gate 1
+#     adjacency refresh (decisions/gate1-adjacency-refresh.adoc, PR #77)
+#     which closed gate-1 work at 5/5 REFINED.
+#   * `q2-4` (falsifier attempts) — partially absorbed into
+#     IntegrationAudit.agda EI-2 negative result; further falsifier
+#     attempts are now bookkeeping not load-bearing.
+#   * `q2-1` (echo-not-prop generalisation) — still open.
+#   * `q2-3` (RoleGraded as N5) — still open (low priority).
+#   * `v0-2-recipe-extension` — still parked.
+
+[[next-actions]]
+id = "q2-1"
+title = "Generalisation of echo-not-prop"
+status = "open"
+priority = "high"
+relevance = """
+n=2 special case proofs generalise to: for non-injective f with at least
+two distinct preimages of y, is-prop (Echo f y) → ⊥. Closing this also
+discharges the truncation-argument gap for refinement, IFC, and
+provenance adjacency notes.
+"""
+rationale = "Truncation argument is one of the two load-bearing distinctness arguments post-EI-2; strengthening it has high leverage."
+
+[[next-actions]]
+id = "q2-3"
+title = "Adopt RoleGraded.choreo-grade-commute as nominee N5"
+status = "open"
+priority = "low"
+relevance = "Gate-2's audit flagged it as candidate fifth nominee but did not adopt. Adoption pushes the audit count to 5-of-5 across four constructions."
+note = "Mostly bookkeeping post-EI-2 since the recipe is no longer the distinctness locus."
+
+[[next-actions]]
+id = "owner-gated-paper-update"
+title = "Bounded new-contribution paragraph in paper.adoc / types-abstract.adoc / conservativity.adoc for F1+F3"
+status = "owner-gated"
+priority = "deferred"
+relevance = """
+F1 + F3 (see META adr-007, adr-008) introduce a separate graded-comonad
+construction beside EchoGraded. The paper bodies are about EchoGraded's
+thin-poset structure — the title and central thesis should not move on
+these gates alone. Whether to add a bounded contribution paragraph
+mentioning the F1/F3 side-construction is an editorial decision.
+"""
+
+[[next-actions]]
+id = "ordinal-track-path-1"
+title = "Ordinal track Path-1 — Brouwer rank-mono into _<ᵇ⁻_"
+status = "substantially-landed"
+priority = "high"
+relevance = """
+Substantially advanced by the Slice 3+4 Route A arc (PRs #165-#171,
+2026-05-30) — see [current-workstream]. The rank-mono union umbrella
+RankMonoUnion._<ᵇᵘ_ + its WfCNF wrap landed, and well-foundedness
+wf-<ᵇᵘ via rank-embedding transport closed Gate 2 (#170).
+"""
+remaining = """
+Gate 1 (tail-rank-equality discharge for the cross-head rank-equal case)
+remains OPEN — structural blocker, both pre-identified unblock routes
+CHECKED-REFUTED in PR #146. Gate 3 (Path-4+ further source-rule
+extensions) is OPEN but mechanical via the documented recipe.
+"""
+
+[[next-actions]]
+id = "v0-2-recipe-extension"
+title = "Recipe extension exploration (parked)"
+status = "parked-v0.2"
+priority = "deferred"
+relevance = "Coupled state across axes; multiple live positions per axis. New module work, not a re-investigation of EI-2."
+
+# ============================================================
+# Pillar F earn-back closure summary (2026-05-20)
+# ============================================================
+# The Pillar F earn-back programme launched by R-2026-05-18 is CLOSED.
+# All four gates passed at strictly-bounded strength; see META
+# adr-{007,008,009} and docs/retractions.adoc follow-ups F-2026-05-18a
+# + F-2026-05-20a + F-2026-05-20b.
+
+[earn-back-summary]
+status = "closed"
+closing-date = "2026-05-20"
+scope-qualifier = """
+F1+F3 earn back the graded-comonad and two-models claims FOR A NEW
+SIDE-CONSTRUCTION. EchoGraded remains a thin-poset reindexing modality
+per R-2026-05-18; EchoRelModel's two-models claim remains retracted.
+Different abstract interfaces; not interconvertible.
+"""
+forbidden-rebrandings = [
+  "EchoGraded is a graded comonad",
+  "the F1 construction reinstates EchoGraded's retracted comonad claim",
+  "the F3 two-models result reinstates EchoRelModel's retracted two-models claim",
+  "the title or central thesis of paper.adoc moves on F1 or F3 alone",
+]
+unmoved-retractions = [
+  "R-2026-05-18 finding 5 (conservativity metatheorem) — stays retracted; no gate attempted to earn it back, no gate could (meta-statement over all propositions, not discharged by typechecking)",
+  "R-2026-05-18 finding 3 (\"Not two models\" for EchoRelModel/GCLaws) — stays retracted; F3 earned a different two-models claim at a different interface",
+]
+
+[earn-back-summary.gates.F4]
+status = "passed"
+date = "2026-05-18"
+module = "proofs/agda/EchoPullbackUnivF4.agda"
+claim = "Terminal-cone universal property as a function of an explicit funext module parameter, never a postulate"
+retraction-followup = "F-2026-05-18a"
+
+[earn-back-summary.gates.F2]
+status = "passed"
+date = "2026-05-18"
+module = "proofs/agda/EchoStepNDModelF2.agda"
+claim = "Genuine second model of the bare Echo functor on the non-graph relation StepND; content-bearing agreement"
+retraction-followup = "F-2026-05-18a"
+
+[earn-back-summary.gates.F1]
+status = "passed"
+date = "2026-05-20"
+module = "proofs/agda/EchoGradedComonadF1.agda"
+claim = "Monoid-graded iterated-residue comonad at (ℕ, +, 0) with Echo as grade-unit object; nested δ; all three comonad laws; D2-nontrivial separating witness"
+retraction-followup = "F-2026-05-20a"
+adr = "adr-007"
+
+[earn-back-summary.gates.F3]
+status = "passed"
+date = "2026-05-20"
+modules = [
+  "proofs/agda/EchoGradedComonadInterface.agda",
+  "proofs/agda/EchoGradedComonadInstance1.agda",
+  "proofs/agda/EchoGradedComonadInstance2.agda",
+]
+claim = "Abstract GradedComonadStructure record (no ⊑-prop-equivalent field) + two non-isomorphic-grade-monoid instances: nat-instance at commutative (ℕ, +, 0), list-instance at non-commutative free monoid (List Tag, ++, [])"
+retraction-followup = "F-2026-05-20b"
+adr = "adr-008"
+
+# ============================================================
+# Theory-work closure summary (2026-05-20)
+# ============================================================
+# The §"Theory work — no proof assistant needed" section in
+# docs/echo-types/roadmap.md is empty. Every item is landed, ruled out,
+# or refreshed.
+
+[theory-work-summary]
+status = "closed"
+closing-date = "2026-05-20"
+closure-prs = [67, 68, 69, 70, 71, 72, 74, 75, 76, 77, 78, 79, 82, 84, 86, 88, 90, 91, 92]
+
+[theory-work-summary.axes-fully-mechanised]
+axis-2-approximate-echo = "EchoApprox.agda + EchoApproxInstance.agda; Rung C BalancedTolerance at #78"
+axis-8-decidability = "EchoDecidable.agda"
+axis-8-cost = "EchoCost.agda + EchoCostInstance.agda (PR #85)"
+axis-8-access = "EchoAccess.agda (PRs #68, #75)"
+axis-8-search = "EchoSearch.agda + EchoSearchInstance.agda (PR #80)"
+negative-coecho = "AntiEcho.agda (PR #69) + AntiEchoTropical.agda (PR #72) + AntiEchoTropicalGeneric.agda (PR #91) + antiecho-partition-dec (PR #90)"
+
+[theory-work-summary.ruled-out]
+two-categorical-shape = "decisions/no-2-cat.adoc — every would-be 2-cell is refl or forced trivial"
+
+[theory-work-summary.refreshed]
+presentation-dependence-cluster = "decisions/presentation-dependence.adoc — examples 5, 9, 10 cluster; meta-pattern only, no new module needed"
+gate-1-adjacency-refresh = "decisions/gate1-adjacency-refresh.adoc — 5/5 REFINED, 0 RE-EVALUATE"
+
+[theory-work-summary.canonical-examples-cluster]
+example-5-database-provenance = "EchoExampleProvenance.agda (PR #81)"
+example-9-parser = "EchoExampleParser.agda (PR #83)"
+example-10-abstract-interp = "EchoExampleAbsInt.agda (PR #82)"
+example-6-numeric = "still unblocked, only remaining example item"
+
+# ============================================================
+# END OF STATE
+# ============================================================

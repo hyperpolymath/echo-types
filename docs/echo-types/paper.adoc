@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: CC-BY-4.0
+// SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Echo Types: A Definitionally-Grounded, Loss-Graded Reindexing Modality
 :toc: macro
@@ -11,12 +11,14 @@
 ====
 *STATUS: living draft, not for submission.* Written 2026-05-17 while
 the formal result is fresh, so the narrative is captured at full
-strength now. Sections tagged *[EXPAND]* are deliberate stubs to be
-filled as more context accrues; only the ordinal/Buchholz
-consumer-evidence appendix remains, and is gated on the ordinal
-track reaching Bachmann–Howard (see <<ordinal-appendix>>). Do not
-submit until that tag clears and the venue/template are chosen
-(Pillar E logistics are offline/author-driven). The TYPES extended
+strength now. All four `[EXPAND]` tags are now cleared: the
+ordinal/Buchholz consumer-evidence appendix was written 2026-06-14 at
+the *well-foundedness* milestone — "notation machinery + WF exists" —
+with order-type fidelity recorded as a named OPEN problem, not
+claimed (see <<ordinal-appendix>> and decision-log `D-2026-06-14`).
+Do not submit until the venue/template are chosen (Pillar E logistics
+are offline/author-driven) and the standing order-type-fidelity
+caveat is judged acceptable for the chosen venue. The TYPES extended
 abstract
 (`types-abstract.adoc`) is the short, already-submission-ready
 companion; this is the full CPP/ITP-style mechanised-metatheory
@@ -31,11 +33,14 @@ leg) cleared in PR #120, with the single-page reviewer companion at
 summary; tag 3 (evaluation — proof-size / cost table, honest
 account of the common-upper-bound idiom) cleared earlier in PR #84
 (see §"Evaluation and discussion"). Tag 4 (ordinal consumer-evidence
-appendix) is the only one remaining open, and it is *gated* on the
-ordinal-track milestone per `roadmap.adoc` §Lane 3 — not a missing
-deliverable for the in-repo half of Pillar E. Everything else
-(venue choice, Zenodo DOI, library packaging, outreach) is
-author-driven and is flagged but not auto-run.
+appendix) was cleared 2026-06-14: written at the well-foundedness
+milestone, with order-type fidelity stated as a named open problem
+(decision-log `D-2026-06-14`) rather than claimed. The in-repo half
+of Pillar E is therefore complete at the bounded-claim level; the
+order-type-fidelity proof remains the recorded ordinal-track
+frontier. Everything else (venue choice, Zenodo DOI, library
+packaging, outreach) is author-driven and is flagged but not
+auto-run.
 ====
 
 toc::[]
@@ -789,9 +794,12 @@ reading accordingly.
 ==== Sample-size on consumer evidence
 
 The two consumer-evidence streams (`absolute-zero` for compute-side
-identity programs; the planned Buchholz ordinal-notation track) are
-each *one* downstream; the ordinal track is gated on reaching
-Bachmann–Howard and is not yet in scope (see <<ordinal-appendix>>).
+identity programs; the Buchholz ordinal-notation track) are each
+*one* downstream; the ordinal track is summarised in
+<<ordinal-appendix>> at the *well-foundedness* milestone only, with
+order-type fidelity recorded as a named open problem (decision-log
+`D-2026-06-14`) — so it corroborates the Echo–`<ᵇ` collapse bridge,
+not any ordinal-strength claim.
 A failure mode of this paper would be over-reading either as
 external validation of the *thesis*; both are validations of
 particular technical bridges (the Echo–CNO bridge and the eventual
@@ -1363,14 +1371,90 @@ instance. External validation is the remaining step.
 
 [appendix]
 [#ordinal-appendix]
-== Ordinal / Buchholz consumer-evidence [EXPAND]
+== Ordinal / Buchholz consumer-evidence
 
-NOTE: *[EXPAND]* — the ordinal-notation / Buchholz collapsing track
-is *consumer evidence* (an independent heavy user of the echo
-machinery), firewalled from the identity claim exactly as
-`roadmap.md` mandates. Summarise it here as an appendix only, with
-the firewall stated explicitly, once that track reaches its
-Bachmann–Howard milestone.
+*Status: written at the well-foundedness milestone; order-type
+fidelity OPEN (decision-log `D-2026-06-14`,
+`docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc`).*
+
+The ordinal-notation / Buchholz collapsing track is *consumer
+evidence* — an independent heavy user of the echo machinery (the
+Echo–`<ᵇ` collapse bridge), firewalled from the identity claim
+exactly as `roadmap.adoc` §Lane 3 mandates. This appendix summarises
+it at a *deliberately bounded* milestone, and fixes that reading on
+the page so it is not left to interpretation.
+
+=== What "milestone reached" means here
+
+For this appendix, "the Buchholz track has reached its Bachmann–Howard
+milestone" means exactly, and only, the following two things:
+
+. *Notation machinery (E1–E7) is mechanised.* OT syntax + structural
+  induction (E1); the CNF fragment below ε₀ with `cnf-trichotomy`
+  (E2); the ℕ-staged closure family `C-monotone` (E3); the
+  pedagogical ψ as least gap, `psi-notin-C` / `psi-least` (E4); the
+  Buchholz Ω_ν scale + C_ν + ψ_ν, `Cν-monotone` / `psiν-notin-Cν`
+  (E5); well-formed *target terms* up to ψ₀(Ω_ω), `BH-wf` /
+  `psi-OmegaOmega-wf` (E6); and the echo collapse bridge
+  `ordinal-collapse-non-injective` (E7). The Bachmann–Howard target
+  term ψ₀(Ω_ω) is expressible and well-formed.
+. *Well-foundedness of the ν ≤ ω fragment is established*, under
+  `--safe --without-K`, zero postulates. The direct accessibility
+  proof `WellFounded.wf-<ᵇ` covers the native core; the doubled-ladder
+  sound carrier adds the ordinally-sound, *unbudgeted* routes
+  `RankDoubledLadderUmbrella.wf-<ᵇ²`,
+  `RecursiveSurfaceSound.wf-<ᵇʳᶠ²`, and `OrderExtendedSound.wf-<ᵇ⁺²`,
+  all via the `rank2` embedding into Brouwer ordinals.
+
+"Machinery + well-foundedness exists" is the whole of what this
+appendix asserts the track has reached. Nothing else.
+
+=== The named non-claim (an open problem, not a hedge)
+
+This appendix does NOT claim *order-type fidelity*. Well-foundedness
+is necessary but not sufficient: the notation is proven to be a
+*well-founded order*, and is NOT proven to be *the Bachmann–Howard
+ordinal order*. The two carriers each fall short of fidelity in
+precisely identified ways:
+
+* *Native `_<ᵇ_`* is well-founded (`WellFounded.wf-<ᵇ`) but ordinally
+  *unsound*: a syntactic order engineered for the accessibility
+  proof, not the genuine ordinal order. The constructor `<ᵇ-+Ω`
+  admits `bplus bzero (bOmega (fin 1)) <ᵇ bOmega (fin 0)` — a
+  comparison with *no ordinal meaning* (a sum dominated by a large
+  tail placed below a small Ω). So `wf-<ᵇ` certifies termination, not
+  order-type.
+* *The sound carrier `_<ᵇ²_`* (via the doubled-ladder rank `rank2`)
+  *is* ordinally sound, but `rank2` is a *termination measure*: it
+  maps ψ_ν and Ω_ν into small ω-power blocks `ω^(2ν+1)` / `ω^(2ν+2)`
+  in Brouwer ordinals, *collapsing the actual ordinal heights*. It is
+  not a height-preserving denotation, and reaches nothing near
+  ψ₀(Ω_ω) as a height — by design; its job is well-foundedness.
+
+The open problem, stated precisely, is to supply *either*:
+
+[loweralpha]
+. a verified order-preserving denotation `‖·‖ : BT → 𝒪` into a
+  reference ordinal structure `𝒪` of height ψ₀(Ω_ω), with
+  order-preservation proved on the well-formed fragment
+  (`s <ᵇ t` iff `‖s‖ < ‖t‖`); or
+. a direct order-type computation showing the well-founded restricted
+  order has order-type ψ₀(Ω_ω) (fundamental sequences / a
+  collapsing-function correctness argument).
+
+No current module establishes either. This is the remaining frontier,
+recorded as decision-log `D-2026-06-14`.
+
+=== Echo's non-role
+
+Echo-types' role in the Buchholz track is the collapse bridge — a
+component only. Echo does not supply, and is not claimed to supply,
+the order-type fidelity proof. Loss-grading and ordinal-collapsing
+are structurally analogous, but the analogy is not an instance, and
+no part of the Bachmann–Howard milestone is discharged by echo's
+framing. This is the dual of the paper's existing firewall: echo gets
+no credit for the ordinal work, and the ordinal work leans on echo
+for none of its strength.
 
 [appendix]
 == Artefact statement

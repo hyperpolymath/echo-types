@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 <!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Changelog
 
@@ -7,6 +7,49 @@ All notable changes to echo-types will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
+
+### Added (2026-06-13)
+
+- *`EchoDeniability.agda` — residue deniability as a first-class echo
+  property.* Formalises the deniability exploration (`Deniability.agda` /
+  `DeniabilityPartial.agda`) inside the echo-types framework.  Two production
+  functions at opposite ends of the deniability spectrum:
+  - `produce-perfect` (constant, mirrors `collapse : Bool → ⊤`): perfectly
+    deniable for all openers; `no-section-produce-perfect` closes via
+    `no-section-of-collapsing-map`.
+  - `produce-partial` (injective): deniability fails for arbitrary openers
+    (`partial-not-deniable`); section exists (`partial-has-section` with
+    `partial-witness`).
+  The `IsConstantOpener` class is the exact cut-point at which deniability is
+  restored for the partial case; it is the type-level analogue of the `affine`
+  mode in `EchoObservationalEquivalence._≡m_`.  Honest-bound matched-negative
+  block: `NotProved-{side-channel-safe, cryptographic-deniability,
+  adaptive-adversary}`.  Zero postulates; `--safe --without-K`.
+  Wired into `All.agda`, pinned in `Smoke.agda`.
+- *`wiki/Deniability.adoc`* — dedicated wiki page covering both production
+  functions, the no-section/section duality, the `IsConstantOpener` boundary,
+  the connection to `EchoObservationalEquivalence`, and the honest scope.
+  Linked from `wiki/Home.adoc` start-here table.
+
+### Added (2026-06-12)
+
+- *Cross-repo typesystem-integration sweep recorded in
+  `docs/bridges/cross-repo-bridge-status.md`.* echo-types is now
+  integrated into the hyperpolymath type systems (all merged to the
+  consumers' `main`), with four new ledger rows:
+  - **nextgen-typing** — `EchoTyping.agda` imports `EchoLinear`/`Echo`:
+    AffineScript `linear ⊑ affine` subtyping IS `weaken` (irreversible,
+    distinction-forgetting, proof-irrelevant at affine); refinement
+    erasure IS a fiber. Content bridge, `agda --safe` 3/3.
+  - **phronesis** — `PhronesisEcho.agda`: an ethical verdict's
+    provenance IS `Echo verdict v`. Content bridge.
+  - **nextgen-languages/kitchenspeak** — `EchoBridge.agda` status
+    upgraded hand-verified → machine-checked against the real `Echo`.
+  - **invariant-path** — Rust application example
+    (`classify_candidate` non-injective; retained candidate + `losses`
+    IS the echo). Citation-level.
+  No echo-types proof source changed; this is a documentation/ledger
+  sweep recording downstream adoption.
 
 ### Added (2026-05-30)
 

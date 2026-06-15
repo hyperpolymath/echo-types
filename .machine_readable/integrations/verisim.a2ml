@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: MPL-2.0
+# OPTIONAL: VeriSim / VeriSimDB — constellation state/database layer.
+# echo-types has NO current dependency on VeriSim; this is a constellation
+# placeholder. Delete if no relationship is established.
+
+[integration]
+name = "verisim"
+type = "constellation-placeholder"
+repository = "https://github.com/hyperpolymath/nextgen-databases"
+
+[relationship]
+description = "VeriSim / VeriSimDB is the constellation's identity-state capture layer with filesystem fallback; VCL-total (formerly VCL-UT) is its next-gen interaction language designed to satisfy all 10 levels of type safety against a consonance engine."
+direction = "potential-future-consumer of echo-types' structured-loss vocabulary"
+coupling = "none today — no shared schema, no import path, no feed. Recorded for constellation completeness only."
+
+[feed-config]
+# No feed is emitted. If echo-types ever feeds build/proof metrics to a
+# constellation analytics store, configure it here.
+emit-scan-results = false
+emit-build-metrics = false

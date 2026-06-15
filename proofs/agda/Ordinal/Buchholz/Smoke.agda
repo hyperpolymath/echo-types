@@ -431,9 +431,15 @@ open import Ordinal.Buchholz.RankPow using
 -- domination lemma's dependency-graph clean against future signature
 -- changes to `rank-pow-mono-≤ᵇ`.  Strict on the Ω-source, non-strict
 -- on the ψ-source (tracks the `<ᵇ-ψΩ≤` constructor).
+-- `head-Ω-mono` generalises the two atomic inversions to an
+-- arbitrary `_<ᵇ_` source shape (incl. bzero + left-nested bplus):
+-- `x <ᵇ y → head-Ω x ≤Ω head-Ω y`.  The non-strict leading-Ω bound
+-- that the joint-bplus (`<ᵇ-+1`) rank-mono closure consumes.
 open import Ordinal.Buchholz.HeadOmegaInversion using
   ( head-Ω-inv-bOmega
   ; head-Ω-inv-bpsi
+  ; head-Ω-mono
+  ; head-Ω-strict-or-eq
   )
 
 -- Lane 3 head-Ω Slice 2-bplus (own block per CLAUDE.md Working
@@ -450,6 +456,86 @@ open import Ordinal.Buchholz.RankPowDomination using
   ; ω-rank-pow-succ-pos
   ; additive-principal-ω-rank-pow-succ
   ; rank-pow-dominated-by-head-Ω
+  ; ω-rank-pow-⊕-below-succ
+  )
+
+-- Doubled-ladder rank foundation (own block per CLAUDE.md Working
+-- rules): the two interleaving ω-power facts that resolve the
+-- equal-Ω boundary's cross-index obstruction by giving ψ and Ω
+-- their own exponent blocks (2ν+1 and 2ν+2).  `ψ-block-below-Ω-block`
+-- is the doubled room fact; `Ω-block-below-next-ψ` is the strict
+-- cross-index gap the single ladder lacked.  Slice 1 of the rank2
+-- design; see the module preamble for the build-out plan.
+open import Ordinal.Buchholz.RankDoubledLadder using
+  ( ψ-block-below-Ω-block
+  ; Ω-block-below-next-ψ
+  ; rank2
+  ; rank2-bpsi-below-bOmega
+  ; double-cross-gap
+  ; ω-rank-pow-reflects-<Ω
+  ; rank2-bounded
+  )
+
+-- Doubled-ladder atomic-boundary rank2-mono primitives (own block per
+-- CLAUDE.md Working rules): the four atomic-vs-atomic `_<ᵇ_`
+-- constructors the doubled ladder was built to order.
+open import Ordinal.Buchholz.RankDoubledLadderMono using
+  ( rank2-mono-ΩΩ
+  ; rank2-mono-Ωψ
+  ; rank2-mono-ψΩ
+  ; rank2-mono-ψΩ≤
+  )
+
+-- Doubled-ladder bzero-source + plus-source rank2-mono primitives
+-- (own block per CLAUDE.md Working rules).
+open import Ordinal.Buchholz.RankDoubledLadderMonoPlus using
+  ( rank2-pos-bOmega
+  ; rank2-pos-bpsi
+  ; rank2-mono-0-+
+  ; rank2-mono-Ω+
+  ; rank2-mono-ψ+
+  )
+
+-- Doubled-ladder Ω-block additive principality + the `<ᵇ-+Ω`
+-- primitive (own block per CLAUDE.md Working rules).
+open import Ordinal.Buchholz.RankDoubledLadderAddPrincipal using
+  ( additive-principal-ω-rank-pow-succ
+  ; rank2-mono-+Ω
+  )
+
+-- Doubled-ladder last two bplus-on-left primitives `<ᵇ-+ψ`, `<ᵇ-+1`
+-- (own block per CLAUDE.md Working rules) — completes all 12
+-- core `_<ᵇ_` constructors' rank2-mono primitives.
+open import Ordinal.Buchholz.RankDoubledLadderMonoPlus2 using
+  ( rank2-mono-+ψ
+  ; rank2-mono-+1
+  )
+
+-- Doubled-ladder umbrella + well-foundedness (own block per CLAUDE.md
+-- Working rules) — the Gate 1 capstone: a complete rank2-ready
+-- relation over all 12 core `_<ᵇ_` constructors and its WF proof.
+open import Ordinal.Buchholz.RankDoubledLadderUmbrella using
+  ( _<ᵇ²_
+  ; rank2-mono-<ᵇ²
+  ; rank2-mono-≤ᵇ²
+  ; wf-<ᵇ²
+  )
+
+-- Unbudgeted sound-carrier recursive surface (own block per CLAUDE.md
+-- Working rules): the recursive same-binder closure over `_<ᵇ²_` and
+-- its budget-free well-foundedness.
+open import Ordinal.Buchholz.RecursiveSurfaceSound using
+  ( _<ᵇʳᶠ²_
+  ; rank2-mono-<ᵇʳᶠ²
+  ; wf-<ᵇʳᶠ²
+  )
+
+-- Sound-carrier extended order — the K-limited shared-binder cases,
+-- unbudgeted (own block per CLAUDE.md Working rules).
+open import Ordinal.Buchholz.OrderExtendedSound using
+  ( _<ᵇ⁺²_
+  ; <ᵇ⁺²⇒<ᵇʳᶠ²
+  ; wf-<ᵇ⁺²
   )
 
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
@@ -612,10 +698,14 @@ open import Ordinal.Buchholz.RankMonoUnion using
 -- structural.  Together with the WfCNF wrap (PR #169) this
 -- equips downstream Buchholz consumers with both the
 -- canonical-form invariant AND termination of union-derivation
--- chains.
+-- chains.  `wf-<ᵇᵘⁿ` closes the previously-deferred WfCNF-narrowed
+-- form's well-foundedness via the same transport through the
+-- bundled `rank-pow-mono-<ᵇᵘⁿ` mediator — the form the surface-route
+-- WF consumer in `RecursiveSurfaceOrder` actually needs.
 open import Ordinal.Buchholz.RankMonoUnionWF using
   ( wf-rank-pow-pullback
   ; wf-<ᵇᵘ
+  ; wf-<ᵇᵘⁿ
   )
 
 -- WfCNF wrap of the union umbrella 2026-05-30 (own block per

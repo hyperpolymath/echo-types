@@ -1,0 +1,93 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Overview
+:toc: macro
+:toclevels: 2
+
+toc::[]
+
+== What is an echo type?
+
+When a function `f : A → B` is not injective, it *loses* information: several
+inputs collapse onto the same output. An *echo type* keeps a proof-relevant
+record of that collapse:
+
+[source,agda]
+----
+Echo f y := Σ (x : A) , (f x ≡ y)
+----
+
+`Echo f y` is the fiber of `f` over `y` — the type of inputs `x` together with
+a witness that `f x ≡ y`. It is *proof-relevant*: for a non-injective `f` with
+two distinct preimages of `y`, `Echo f y` is genuinely not a mere proposition.
+That non-truncatability is the load-bearing distinction from frameworks that
+forget the witness.
+
+The slogan: *irreversible computation + echo = reversible representation.* The
+totality completion `A ≃ Σ B (Echo f)` (the `EchoTotalCompletion` keystone)
+makes that precise.
+
+== The identity claim
+
+echo-types advances a falsifiable claim that "echo types" name a phenomenon of
+their own. The claim rests on three *decision gates* (see <<Roadmap.adoc#,Roadmap>>
+and `roadmap-gates.adoc`):
+
+. *Distinct phenomenon* — structured loss under non-injective computation is
+  distinct from refinement types, lens/optic theory, HoTT fibers, setoid
+  quotients, and provenance semirings.
+. *Characteristic theorems* — at least two theorems are naturally echo-shaped
+  and not reducible to generic Σ lemmas.
+. *Canonical examples* — at least one worked example where echo types are the
+  right explanatory unit.
+
+Each gate has an explicit failure action; failures are recorded in
+`docs/retractions.adoc`, not silently revised. Retractions are the *mechanism*
+that makes the claim falsifiable — not a failure of the repository.
+
+== What echo types add
+
+* *Non-truncatable witnesses.* For non-injective `f`, the fiber retains the
+  multiplicity neighbour theories propositionally truncate away (the
+  `echo-not-prop` family).
+* *Structured residue.* `EchoResidue` / `EchoLossTaxonomy` /
+  `EchoResidueTaxonomy` classify *what* is lost and *what shape* the residue
+  takes (the "kinds-of-loss × shapes-of-residue" grid).
+* *A reindexing modality.* The establishment track characterises Echo as a
+  *reindexing modality of structured loss* (coeffect / quantitative lineage),
+  with a genuine graded-comonad side-construction (Pillar F).
+* *Honest matched-negatives.* Every identity claim ships with the things it
+  does *not* prove (e.g. `EchoEntropy` pairs "Shannon entropy can't
+  distinguish" with "the witness can").
+
+== What echo types do NOT add
+
+The project's standing posture is *narrow-true over broad-easy*:
+
+* Echo adds *no new judgment* — it is definitionally `fib`. The
+  linear/dependent judgmental ladder is explicitly the *wrong* target.
+* Echo is *not a resource / semiring instance*. It is an orthogonal
+  indexed/residual modality: a resource algebra may *measure* Echo residues
+  (the `Echo.Measure` seam), but it does not *define* Echo. Equal residue
+  measure does not imply equal Echo — mechanised in
+  `Echo.Separation.NotResourceInstance`, stated in `FOUNDATION_CONTRACT.md`.
+  Downstream languages must not model Echo as a `Soundness(S)` resource
+  instance.
+* The integration recipe across the five decoration axes is *organising
+  vocabulary*, not a locus of distinctness (the EI-2 finding: recipe
+  commutations carry one-axis-at-a-time content, not substantive simultaneous
+  interaction — terminated negatively, do not reopen).
+* The full (epi, mono) image factorisation, contractible/propositional fibre
+  characterisations, and the strict OFS clauses need truncation / UIP / funext;
+  these are honestly *deferred earn-back gates*, not silent assumptions.
+* Five retracted claims (R-2026-05-18): four were earned back at honest
+  strength via Pillar F gates; the conservativity metatheorem stays retracted.
+
+== Reading the development
+
+* Core definition: `proofs/agda/Echo.agda`.
+* The verified suite (imports everything): `proofs/agda/All.agda`.
+* Headline pins: `proofs/agda/Smoke.agda`.
+* The curated "why Echo deserves a name" tour:
+  `proofs/agda/EchoCanonicalIdentitySuite.agda`.
+* Module map: `docs/echo-types/MAP.adoc`.

@@ -783,6 +783,39 @@ open import EchoDifferential using
   ; bool-perturbed-nat-sensitivity
   )
 
+-- EchoDeniability — residue deniability as a first-class echo property
+-- (2026-06-13). Two production functions at opposite ends of the
+-- deniability spectrum: produce-perfect (constant → fully deniable,
+-- no section) and produce-partial (injective → not deniable for
+-- arbitrary openers, has section). IsConstantOpener is the exact
+-- cut-point at which deniability is restored for the partial case;
+-- it is the type-level analogue of the `affine` mode in
+-- EchoObservationalEquivalence. no-section-produce-perfect / partial-
+-- has-section make the duality a checked theorem pair.
+open import EchoDeniability using
+  ( History
+  ; Residue
+  ; Trace
+  ; Erased
+  ; produce-perfect
+  ; produce-partial
+  ; IsDeniable
+  ; IsConstantOpener
+  ; perfect-deniable
+  ; partial-witness
+  ; partial-distinguishable
+  ; partial-not-deniable
+  ; partial-deniable-restricted
+  ; no-section-produce-perfect
+  ; partial-has-section
+  ; echo-intact-perfect
+  ; echo-lost-perfect
+  ; echo-intact-lost-distinct
+  ; NotProved-side-channel-safe
+  ; NotProved-cryptographic-deniability
+  ; NotProved-adaptive-adversary
+  )
+
 -- EchoCanonicalIdentitySuite — the curated entry point for "why
 -- Echo deserves a name". Re-exports the load-bearing headlines
 -- from every Tier-1 / Tier-2 / Tier-3 module in a single readable
@@ -1300,5 +1333,54 @@ open import Ordinal.Buchholz.WellFormed using
   ; BH-wf
   ; psi-OmegaOmega
   ; psi-OmegaOmega-wf
+  )
+
+-- Foundation contract surface (FOUNDATION_CONTRACT.md). The curated,
+-- stable `Echo.*` public interface: echo index (thin poset), the Echo
+-- modality core (measure-independent), the anti-collapse separation
+-- (Echo IS-NOT a resource instance), and the residue-measure seam.
+-- Pinned so a silent rename of any contract name fails CI fast.
+
+open import Echo.Index.ThinPoset using
+  ( ThinPoset
+  ; grade-thinPoset
+  ; ≤g-refl
+  )
+
+open import Echo.Modality.Interface using
+  ( EchoModality
+  )
+
+open import Echo.Modality.Core using
+  ( Echo
+  ; GEcho
+  ; degrade
+  ; degrade-id
+  ; degrade-compose
+  ; no-section-of-collapsing-map
+  ; grade-echoModality
+  )
+
+open import Echo.Separation.NotResourceInstance using
+  ( echo-degrade-not-generic-sigma
+  ; residue-measure
+  ; measure-agrees
+  ; echo-distinguishes
+  ; equal-measure-does-not-imply-equal-echo
+  ; measure-not-injective
+  ; visible-measure
+  ; visible-measure-informative
+  ; equal-informative-measure-does-not-imply-equal-echo
+  )
+
+open import Echo.Measure.Interface using
+  ( OrderedCarrier
+  ; ResidueMeasure
+  )
+
+open import Echo.Measure.Examples using
+  ( cost-measure
+  ; tropical-cost-measure
+  ; confidence-measure
   )
 

@@ -241,6 +241,43 @@ additive-principal-ω-rank-pow-succ {ω} {α} {β} (kα , sα) (kβ , sβ) =
             step3
 
 ----------------------------------------------------------------------
+-- ψ-below-Ω boundary "room" lemma
+----------------------------------------------------------------------
+
+-- The load-bearing ordinal fact behind placing `Ω_ν` (= `bOmega ν`)
+-- strictly above every admissible `ψ_ν(α)` (= `bpsi ν α`) at the
+-- SAME leading marker ν.  When the ψ-argument is admissibility-bounded
+-- (`β <′ ω-rank-pow ν` — exactly the `WfAdm` bpsi field with
+-- β = rank-pow α), the admissibility-rank `ω-rank-pow ν ⊕ β`
+-- (= `rank-adm (bpsi ν α)`) sits strictly below `ω-rank-pow-succ ν`
+-- (the natural rank for `bOmega ν`).
+--
+-- This is the gap `ψ_ν(α) < Ω_ν` measured at the rank level: both
+-- summands are `< ω-rank-pow-succ ν` (the left by `ω-rank-pow-<-succ`,
+-- the right by admissibility composed with that same jump), and
+-- `ω-rank-pow-succ ν` is additive principal
+-- (`additive-principal-ω-rank-pow-succ`), so the sum stays below.
+--
+-- Honest scope: this is the LOCAL equal-marker boundary fact — the
+-- "room" the equal-Ω joint-bplus discharge needs.  A GLOBAL rank
+-- placing `bOmega ν` at `ω-rank-pow-succ ν` would still have to
+-- reconcile the cross-index `<ᵇ-Ωψ` constructor
+-- (`bOmega μ <ᵇ bpsi (suc μ) bzero`), where `ω-rank-pow-succ μ`
+-- meets `ω-rank-pow (suc μ)` and the strict gap collapses.  So this
+-- is a building block for the equal-ν discharge, not a finished
+-- global rank.
+
+ω-rank-pow-⊕-below-succ : ∀ {ν β}
+  → β <′ ω-rank-pow ν
+  → (ω-rank-pow ν ⊕ β) <′ ω-rank-pow-succ ν
+ω-rank-pow-⊕-below-succ {ν} {β} β<ν =
+  additive-principal-ω-rank-pow-succ {ν} {ω-rank-pow ν} {β}
+    (ω-rank-pow-<-succ ν)
+    (≤′-<′-trans {β} {ω-rank-pow ν} {ω-rank-pow-succ ν}
+      (<′→≤′ {β} {ω-rank-pow ν} β<ν)
+      (ω-rank-pow-<-succ ν))
+
+----------------------------------------------------------------------
 -- bplus right-summand bound
 ----------------------------------------------------------------------
 

@@ -1,0 +1,78 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= echo-types Wiki
+:toc: macro
+:toclevels: 2
+
+[.lead]
+*echo-types* is a constructive Agda formalisation of fiber-based *structured
+loss* — "echo types". The central definition is
+
+[source,agda]
+----
+Echo f y := Σ (x : A) , (f x ≡ y)
+----
+
+the proof-relevant fiber of `f` over `y`: the witnesses that `f` collapses
+onto `y`, kept rather than forgotten. Everything in the repo is verified under
+`--safe --without-K` with zero postulates in the load-bearing tracks.
+
+toc::[]
+
+== Start here
+
+[cols="1,3", options="header"]
+|===
+| Page | What it covers
+
+| <<Overview.adoc#,Overview>>
+| What echo types are, the identity claim, what they add and do *not* add.
+
+| <<Architecture.adoc#,Architecture>>
+| The three workstreams (composition / ordinal / establishment) and how the
+  proof suite is organised.
+
+| <<Working-Rules.adoc#,Working-Rules>>
+| The non-negotiable proof discipline: `--safe --without-K`, no postulates,
+  Smoke pins, All-wiring, kernel cone, naming traps.
+
+| <<Roadmap.adoc#,Roadmap>>
+| The three identity-claim decision gates and the live open work per track.
+
+| <<Deniability.adoc#,Deniability>>
+| Residue deniability as a first-class echo property: the perfect
+  (constant / no-section) case and the partial (injective / has-section)
+  case, with the `IsConstantOpener` boundary and its connection to the
+  affine mode.
+|===
+
+== Canonical sources of truth
+
+This wiki is a *distillation*. The authoritative records are:
+
+* `CLAUDE.md` — current rung-state + the "DO NOT reopen" lists (read first).
+* `roadmap-gates.adoc` — the three identity gates and their failure actions.
+* `docs/echo-types/MAP.adoc` — the module map.
+* `FOUNDATION_CONTRACT.md` — the *downstream-facing contract*: the stable
+  `Echo.*` interface (index / modality / separation / measure seam) that
+  consuming languages build against, and the boundary invariant
+  *Echo IS-NOT a resource instance*. Read this first if you are wiring Echo
+  into another language.
+* `.machine_readable/6a2/STATE.a2ml` — EI-2 record (permanent) + current-state block.
+* `docs/bridges/cross-repo-bridge-status.md` — cross-repo bridge ledger.
+
+== One-line status (as of 2026-06-13)
+
+* *Composition track* — landed (Echo-comp-iso, cancel-iso, pentagon).
+* *Ordinal track* — partial (Buchholz; Slice 3+4 Route A; target Bachmann–Howard ψ₀(Ω_ω)).
+* *Establishment track* — Pillars A–D + Pillar F (F1–F4) closed; Pillar E paper open.
+* *Deniability track* — `EchoDeniability.agda` landed: perfect/partial duality,
+  `IsConstantOpener` boundary, no-section / section duality as a checked theorem pair.
+
+== Ecosystem
+
+echo-types is a foundational node in the hyperpolymath / PanLL constellation.
+Its executable companion is *EchoTypes.jl* (a falsifying Julia shadow);
+*arghda-core* (proof-workspace engine) was extracted from it. Active in-repo
+Agda↔prover bridges reach *absolute-zero* (CNO) and *ephapax* (L3). See
+<<Architecture.adoc#ecosystem,Architecture § Ecosystem>>.

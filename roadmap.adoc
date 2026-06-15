@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: CC-BY-4.0
+// SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = echo-types Roadmap
 :toc: macro
@@ -384,11 +384,43 @@ and Path-4 same-right is refuted by the same lemma.
   cannot close under `--safe --without-K` for the current `_<ᵇ_`,
   with the WfCNF-restricted `_<ᵇ⁻_` accepted as the final form.
 
+*Doubled-ladder Gate 1 closure (2026-06-14, PRs #204–#210).* A
+second, complete route to a sound rank landed: the doubled-index
+ladder `rank2` (ψ_ν ↦ ω^(2ν+1), Ω_ν ↦ ω^(2ν+2)) gives ψ and Ω their
+own interleaved exponent blocks, so the cross-index gap survives the
+equal-Ω boundary `<ᵇ-ψΩ≤` the single ladder could not order. ALL 12
+core constructors close at the per-case level under `rank2`, and the
+umbrella `rank2-mono-<ᵇ²` + `wf-<ᵇ² : WellFounded _<ᵇ²_` land over the
+complete sound carrier `_<ᵇ²_` (`RankDoubledLadderUmbrella`). This is
+a STRICTLY STRONGER sound carrier than the single-ladder union
+`_<ᵇᵘ_` — it closes the equal-Ω boundary AND the bplus-target
+`<ᵇ-+1` (the single-ladder Gate 1 blocker) with one ordinally-sound
+scalar rank. *Honest scope:* `_<ᵇ²_` is a sound carrier (like
+`_<ᵇ⁰_`/`_<ᵇᵘ_`), excluding the ordinally-unsound native witnesses;
+there is no faithful native projection (native `_<ᵇ_` is ordinally
+unsound — see the `<ᵇ-+Ω` counterexample in the obstruction note),
+and native WF is already proved directly in `WellFounded.wf-<ᵇ`. So
+this closes the *carrier* Gate-1 story but does NOT discharge the
+native-`_<ᵇ_` internalisation (rank-embedding-impossible) or the
+K-limited shared-binder cases above.
+
+*Recursive-surface budget eliminated on the sound carrier (2026-06-14,
+PR #212).* Open item 1 ("unbudgeted `_<ᵇʳᶠ_` WF") is discharged in its
+achievable form: `Ordinal.Buchholz.RecursiveSurfaceSound` lands
+`_<ᵇʳᶠ²_` (= the sound carrier `_<ᵇ²_` + the two same-binder
+congruences `ψα`/`+2`) and its UNBUDGETED `wf-<ᵇʳᶠ²` via the `rank2`
+embedding — no ℕ budget. The budget in `RecursiveSurfaceBudget` was an
+artefact of native `_<ᵇ_`'s unsoundness, not of the recursion. The
+GLOBAL form over native `_<ᵇ_` stays walled (all five routes; `rank2`
+does not escape the `<ᵇ-+Ω` counterexample); its realistic close-out
+is the falsifiable verdict, not a positive proof.
+
 *Artefacts.* See `docs/buchholz-plan.adoc`,
 `docs/echo-types/buchholz-rank-obstruction.adoc` (live per-constructor
-verdict), and the `Ordinal/Buchholz/` subtree. Per-session ledger in
-CLAUDE.md §"Session arc 2026-05-20" and §"Session arc 2026-05-27 late
-evening".
+verdict + the doubled-ladder closure section), and the
+`Ordinal/Buchholz/` subtree. Per-session ledger in CLAUDE.md
+§"Session arc 2026-06-14 Ordinal track — doubled-ladder Gate 1
+closure".
 
 *Status.* Continue on parallel branches. Lane 1 does not wait.
 

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: CC-BY-4.0
+// SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = echo-types: Master Map
 :toc: macro
@@ -55,6 +55,74 @@ remainder of information-losing computation: for `f : A → B`,
 * Concept doc: `docs/echo-types/overview.md`,
   `docs/echo-types/types-abstract.adoc`,
   `docs/echo-types/paper.adoc`.
+
+== Foundation contract surface (downstream export) `[REAL]`
+
+*The curated, stable interface a downstream language (e.g. my-lang)
+builds against.* A dotted `Echo.*` namespace under `proofs/agda/Echo/`
+that re-exports and packages the proven flat modules behind stable
+names, so consumers depend on a small documented surface rather than
+the research sprawl. Contract doc: `FOUNDATION_CONTRACT.md` (repo
+root). All build `--safe --without-K`, zero postulates; wired into
+`All.agda`, pinned in `Smoke.agda`.
+
+* `Echo.Index.ThinPoset` — the *echo index*: abstract `ThinPoset`
+  (carrier, order, refl, trans, *thinness*) + canonical
+  `grade-thinPoset` (`keep ≤ residue ≤ forget`).
+* `Echo.Modality.Interface` / `Echo.Modality.Core` — the *Echo
+  modality*: abstract `EchoModality` + concrete `degrade` /
+  `degrade-id` / `degrade-compose` / no-section + the
+  `grade-echoModality` witness. *Measure-independent* (imports no
+  semiring / resource algebra).
+* `Echo.Separation.NotResourceInstance` — the *anti-collapse
+  invariant*, two ways: `echo-degrade-not-generic-sigma` (thinness is
+  load-bearing; re-export of `EchoSeparating.sep-degrade-compose-fails`)
+  and `equal-measure-does-not-imply-equal-echo` /
+  `measure-not-injective` (equal residue measure ⇏ equal Echo).
+* `Echo.Measure.Interface` / `Echo.Measure.Examples` — the *residue
+  measure seam*: `OrderedCarrier` + `ResidueMeasure` (a resource
+  algebra may *observe* residues) with cost / tropical / confidence
+  examples. The seam may depend on order; core must not.
+
+*Boundary invariant.* `Echo IS-NOT a resource instance`. Equal residue
+measure does not imply equal Echo; do not model Echo as a
+`Soundness(S)` resource-algebra instance downstream. Classification:
+`docs/echo-types/echo-kernel-note.adoc` ("Foundation contract surface"
+row).
+
+== Repository layers and companions
+
+This is a narrative split, not a physical repository split. No
+directory move is implied.
+
+* *Formal core.* Agda definitions, characteristic theorem families,
+  canonical identity layer, falsifiability gates, and retraction
+  discipline live here. The formal source of truth remains
+  `proofs/agda/` plus the gate/retraction docs.
+* *Applied / explanatory layer.* `docs/echo-types/`, `docs/adjacency/`,
+  and `tutorial/` carry the taxonomy, semantic-fibre vocabulary,
+  canonical examples, boundary/degradation use cases, and honest-bound
+  explanations. Doc-side interface sketches live in
+  `docs/echo-types/prototypes/`; they explain audience-facing tool
+  surfaces and are not proof artefacts.
+* *Warrant debugger prototype.* `docs/echo-types/prototypes/`
+  contains the React warrant/debugger sketch. It visualises an empty
+  fibre / contradiction and the cost-disclosed repair moves
+  (weakening, widening, soft support). Treat it as explanatory
+  vocabulary for semantic-fibre use, not as a kernel module or a new
+  claim about the formal status.
+* *Executable finite-domain companion.* `EchoTypes.jl`
+  (https://github.com/hyperpolymath/EchoTypes.jl) computes finite
+  shadows of selected Agda constructions. It is useful for examples,
+  counterexample search, and executable intuition; it is not a proof
+  repository and does not replace the Agda obligations.
+* *Separate language embodiment / consumer.* `Ephapax`
+  (https://github.com/hyperpolymath/ephapax) is a distinct language
+  project in which Echo Types are intended to become an embodied
+  language-level design principle. Existing Ephapax docs discuss an
+  L3 echo/residue layer (`STATUS.adoc`, `EXPLAINME.adoc`), but
+  Ephapax is an application/consumer, not the definition of the
+  formalism. `echo-types` does not depend on it.
 
 == Canonical identity layer `[REAL]`
 
@@ -167,6 +235,16 @@ honest-bound matched-negative block.
   `bool-perturbed-nat-sensitivity`. Honest-bound: NOT ε-DP /
   Lipschitz bound / noise calibration / adversary model.
   `proofs/agda/EchoDifferential.agda`.
+* *Deniability* — `IsDeniable` predicate + `IsConstantOpener`
+  restricted class. Two production functions: `produce-perfect`
+  (constant — perfectly deniable, no section via
+  `no-section-of-collapsing-map`) and `produce-partial` (injective
+  — not deniable for arbitrary openers, section exists via
+  `partial-witness`). The no-section/has-section pair is a checked
+  duality theorem. `IsConstantOpener` is the type-level analogue of
+  the `affine` mode in `EchoObservationalEquivalence`. Honest-bound:
+  NOT side-channel-safe / cryptographic deniability / adaptive
+  adversary. `proofs/agda/EchoDeniability.agda`. `[REAL]`
 
 *Curated suite — single-file entry point.* The narrative
 deliverable that pulls the Tier-1 / Tier-2 / Tier-3 named theorems
@@ -467,7 +545,9 @@ are kept for history and **may overclaim** (pre-retraction).
   `roadmap.adoc`)
 
 | Concept / definition
-| `docs/echo-types/overview.md`, `docs/echo-types/paper.adoc`
+| `docs/echo-types/overview.md`, `docs/echo-types/taxonomy.md`,
+  `docs/echo-types/paper.adoc`; doc-side UI sketches:
+  `docs/echo-types/prototypes/`
 | `COMPREHENSIVE_DOCUMENTATION.md`
 
 | Bridges

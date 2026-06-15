@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: CC-BY-4.0 -->
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 <!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 
 <p align="center">
@@ -8,7 +8,7 @@
 # echo-types
 
 [![OpenSSF Best Practices](https://img.shields.io/badge/OpenSSF-Best_Practices-green?logo=opensourcesecurity)](https://www.bestpractices.dev/en/projects/new?repo_url=https://github.com/hyperpolymath/echo-types)
-[![License: PMPL-1.0](https://img.shields.io/badge/License-PMPL--1.0-blue.svg)](https://github.com/hyperpolymath/palimpsest-license)
+[![License: MPL-2.0](https://img.shields.io/badge/License-MPL--2.0-blue.svg)](LICENSE)
 [![Green Web](https://api.thegreenwebfoundation.org/greencheckimage/github.com)](https://www.thegreenwebfoundation.org/green-web-check/?url=github.com)
 
 Constructive Agda development for echo types as a first-class notion of structured loss:
@@ -176,6 +176,75 @@ Echo types target a third case:
 - irreversible, but with a retained proof-relevant constraint on what was lost
 
 This repository treats that third case as the primary object of study.
+
+## Semantic Fibre Vocabulary
+
+Echo Types are a way to talk about structured loss under a declared
+crossing, degradation, observation, compression, translation, or other
+non-injective map. They are not a replacement for ordinary type
+checking, ABI proofs, FFI discipline, typed-wasm, structural-fit
+systems, or any boundary system that can preserve exact guarantees.
+When exact preservation is available, use it.
+
+The additional vocabulary is for cases where the value that crosses the
+boundary is no longer the original guarantee, but is also not
+meaningless:
+
+- A **semantic fibre** is the structured set, approximation, or witness
+  of possible typed origins lying over an observed artefact under the
+  declared map. In the current Agda kernel, this is the preimage fibre
+  `Echo f y := Σ (x : A) , (f x ≡ y)`.
+- **Avec fibre** means the artefact carries, or is accompanied by,
+  enough semantic fibre to support the inferences or uses being made.
+- **Sans fibre** means the artefact is only a valid target-side value:
+  no meaningful possible-origin structure is retained or declared.
+- The **echo** is the surviving transformed signal or constraint after
+  loss. A **warrant** is the licence that echo/fibre gives for an
+  inference or operation; the public surface usually talks about echoes
+  and fibres rather than making warrant the headline term.
+
+This distinguishes semantic fibre from nearby history words.
+Provenance says where something came from; trace or lineage says how it
+got here; residue says what lower-level evidence remains after a
+degradation; semantic fibre says what possible origins still lie over
+the observation. The useful formulation is therefore not "loss became
+total erasure", but "loss left a declared fibre, and that fibre may or
+may not be informative enough for the intended use".
+
+Terminology note: "fibre" aligns productively with the mathematical
+preimage/homotopy-fibre reading. Where ambiguity with CS fibers
+(lightweight threads) or network fibre matters, say **semantic fibre**
+or **preimage fibre**.
+
+Applied sketch: [`docs/echo-types/prototypes/warrant_debugger_prototype.jsx`](docs/echo-types/prototypes/warrant_debugger_prototype.jsx)
+is a React prototype for the warrant/debugging layer of this vocabulary.
+It starts with a contradictory empty fibre and shows repair choices
+that weaken, widen, or soften the active obligations while keeping the
+epistemic cost visible. It belongs to the explanatory layer, not the
+formal kernel: it demonstrates how a tool could present the warrant
+provided by a fibre without turning "warrant" into the project headline.
+
+## Repository Map and Boundaries
+
+The repo is not being physically split by this vocabulary; the existing
+shape already separates the roles well enough:
+
+- **Theoretical/formal core:** Agda definitions, characteristic theorem
+  families, canonical identity layer, and falsifiability gates under
+  `proofs/agda/`, `roadmap-gates.adoc`, and the retraction ledger.
+- **Applied/explanatory layer:** taxonomy, examples, tutorials,
+  boundary/degradation use cases, and audience-facing terminology under
+  `docs/echo-types/` and `tutorial/`. Doc-side UI sketches live under
+  `docs/echo-types/prototypes/`.
+- **Executable companion layer:** [`EchoTypes.jl`](https://github.com/hyperpolymath/EchoTypes.jl)
+  is the finite-domain Julia companion. It computes runnable shadows of
+  selected Agda constructions; it is not the proof source.
+- **Language-embodiment layer:** [`Ephapax`](https://github.com/hyperpolymath/ephapax)
+  is a separate language project in which Echo Types are intended to
+  become an embodied language-level design principle. Its current docs
+  discuss an L3 echo/residue layer (for example, `STATUS.adoc` and
+  `EXPLAINME.adoc`). Ephapax is an application/consumer, not the
+  definition of the formalism, and this repo does not depend on it.
 
 ## Definition (Foundation)
 
@@ -377,6 +446,43 @@ Intended proof-use cases include:
 - classification up to equivalence
 - forensic inference from residues
 - refined taxonomies of information loss
+
+Within the hyperpolymath ecosystem, echo-types serves the *foundation*
+role for proof-relevant lossy computation.
+
+Who is this for? (folded from `EXPLAINME.adoc` at the 2026-06-12 README dedup)
+
+- Authors of formally-verified protocols where role projections /
+  privacy collapses / lossy aggregations need typed witnesses for what
+  was retained.
+- Authors of refinement-typed and graded type systems looking for a
+  foundational vocabulary for loss-with-residue.
+- Anyone designing audit / provenance / hash-chain systems who wants a
+  proof-relevant account of what the audit step preserves.
+
+## Foundation Contract (for downstream languages)
+
+If you are wiring Echo into another language (e.g. my-lang), the stable
+entry point is **`FOUNDATION_CONTRACT.md`** plus the curated `Echo.*`
+namespace under `proofs/agda/Echo/`. It re-exports the proven core behind
+a small, documented surface so you depend on the contract, not the research
+sprawl:
+
+| Concern | Module |
+|---|---|
+| Echo index (thin poset `keep ≤ residue ≤ forget`) | `Echo.Index.ThinPoset` |
+| Echo modality (`degrade`, `degrade-id`, `degrade-compose`, no-section) — **measure-independent** | `Echo.Modality.Core` / `.Interface` |
+| Anti-collapse separation | `Echo.Separation.NotResourceInstance` |
+| Residue-measure observation seam (cost / tropical / confidence) | `Echo.Measure.Interface` / `.Examples` |
+
+**Boundary invariant — `Echo IS-NOT a resource instance`.** Echo is an
+orthogonal indexed/residual modality. A resource algebra may *measure* Echo
+residues, but it does not *define* Echo: **equal residue measure does not
+imply equal Echo** (mechanised: `equal-measure-does-not-imply-equal-echo`,
+`measure-not-injective`). Do **not** model Echo as a `Soundness(S)`
+resource-algebra instance. Vocabulary: *resource grade* (semiring axis) ≠
+*echo index* (modality index) ≠ *residue measure* (a lossy observation);
+avoid "echo-grade".
 
 ## Identity Claim and Falsifiability
 

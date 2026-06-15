@@ -87,6 +87,12 @@ open import EchoSecurity         -- Region-exit audit (generalises RegionExitAud
 open import EchoProbabilisticSupport  -- Support tracking (audience-facing sampling)
 open import EchoDifferential     -- Perturbation tracking (audience-facing sensitivity)
 
+-- Deniability (2026-06-13). Formalises residue deniability as a
+-- first-class property: the collapse/no-section story (perfect case)
+-- and the injective/section-exists story (partial case), with the
+-- IsConstantOpener boundary tying deniability to the affine mode.
+open import EchoDeniability
+
 -- Narrative deliverable: curated index of "why Echo deserves a name".
 open import EchoCanonicalIdentitySuite
 open import EchoStepNDModelF2   -- Gate F2 PASSED (StepND second model)
@@ -146,6 +152,12 @@ open import Ordinal.Buchholz.HeadOmegaInversion
 open import Ordinal.Buchholz.RankPowDomination
 open import Ordinal.Buchholz.RankPowSlice3
 open import Ordinal.Buchholz.RankPowSlice3Headline
+open import Ordinal.Buchholz.RankDoubledLadder
+open import Ordinal.Buchholz.RankDoubledLadderMono
+open import Ordinal.Buchholz.RankDoubledLadderMonoPlus
+open import Ordinal.Buchholz.RankDoubledLadderAddPrincipal
+open import Ordinal.Buchholz.RankDoubledLadderMonoPlus2
+open import Ordinal.Buchholz.RankDoubledLadderUmbrella
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice3
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice4
@@ -154,9 +166,23 @@ open import Ordinal.Buchholz.RankMonoUnion
 open import Ordinal.Buchholz.RankMonoUnionWF
 open import Ordinal.Buchholz.RankMonoUnionWfCNF
 open import Ordinal.Buchholz.RecursiveSurfaceOrder
+open import Ordinal.Buchholz.RecursiveSurfaceSound
+open import Ordinal.Buchholz.OrderExtendedSound
 open import Ordinal.Buchholz.RecursiveSurfaceBudget
 open import Ordinal.Buchholz.SurfaceOrder
 open import Ordinal.Buchholz.VeblenObligations
 open import Ordinal.Buchholz.Smoke
+
+-- Foundation contract surface (FOUNDATION_CONTRACT.md): the curated,
+-- stable `Echo.*` public interface exported to downstream languages.
+-- Index + modality are measure-independent; the measure seam may
+-- observe residues but never defines Echo (Echo IS-NOT a resource
+-- instance). See docs/echo-types/echo-kernel-note.adoc.
+open import Echo.Index.ThinPoset
+open import Echo.Modality.Interface
+open import Echo.Modality.Core
+open import Echo.Separation.NotResourceInstance
+open import Echo.Measure.Interface
+open import Echo.Measure.Examples
 
 open import Smoke
