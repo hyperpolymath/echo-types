@@ -146,6 +146,14 @@ jobs:
       - name: Typecheck examples lane (Gate #3 canonical examples)
         run: agda -i proofs/agda proofs/agda/examples/All.agda
 
+      # Cubical lane: the (epi, mono) truncation discharge. A --cubical
+      # --safe island (zero postulates) that CONSTRUCTS ∥_∥ as a HIT —
+      # it cannot be imported by the --safe --without-K All.agda, so it
+      # is typechecked directly here. Its --without-K-profile shadow is
+      # EchoImageFactorizationPropPostulated (proof-debt (a)/(c)).
+      - name: Typecheck cubical lane (epi/mono truncation discharge)
+        run: agda -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
+
   cold-check:
     # Belt-and-braces: NO interface cache, --ignore-interfaces cold
     # build. A green here cannot be a stale-.agdai artefact (matters
@@ -189,3 +197,4 @@ jobs:
           agda --ignore-interfaces -i proofs/agda proofs/agda/Smoke.agda
           agda --ignore-interfaces -i proofs/agda proofs/agda/characteristic/All.agda
           agda --ignore-interfaces -i proofs/agda proofs/agda/examples/All.agda
+          agda --ignore-interfaces -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda

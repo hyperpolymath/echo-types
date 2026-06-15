@@ -41,6 +41,7 @@ DENY_FLAG='--type-in-type|--cumulativity|--allow-unsolved-metas|--no-positivity-
 # outside the kernel cone and use postulates by design).
 EXPLORATORY_EXEMPT=(
   "EchoImageFactorizationPropPostulated"
+  "EchoImageFactorizationPropCubical"
   "EchoDecorationBridge"
   "Fidelity"
 )
