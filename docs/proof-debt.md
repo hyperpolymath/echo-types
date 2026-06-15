@@ -7,7 +7,17 @@ under one of (a) discharged / (b) budgeted / (c) necessary axiom / (d) debt.
 
 ## (a) Discharged in this repo
 
-- (none — entries are removed here when proofs land)
+- **Propositional truncation `∥_∥` + the (epi, mono) image
+  factorisation** — discharged 2026-06-15 in the `--cubical --safe`
+  lane by `proofs/agda/EchoImageFactorizationPropCubical.agda` (zero
+  postulates). The module CONSTRUCTS `∥_∥` as a higher inductive type
+  and realises the four `TruncInterface` obligations as theorems
+  (`is-prop-∥∥` from the `squash` higher constructor transported to
+  the inductive `_≡_`; `rec-∥∥` via the path recursor, its boundary
+  closing by the cubical endpoint rule), then re-proves
+  `prop-factor-right-injective` (mono) and
+  `prop-factor-left-mere-surjective` (epi). This realises the axiom
+  the `--without-K` demo under (c) only assumes — see (c).
 
 ## (b) Budgeted — tested with refutation budget
 
@@ -33,6 +43,12 @@ under one of (a) discharged / (b) budgeted / (c) necessary axiom / (d) debt.
   - **Guardrail status**: explicitly allow-listed in
     `tools/check-guardrails.sh` and in the inline `hypatia: allow`
     pragma at the head of the module.
+  - **Realised (2026-06-15)**: the same four obligations are
+    CONSTRUCTED (zero postulates) in the `--cubical` lane by
+    `EchoImageFactorizationPropCubical.agda` — see (a). The postulates
+    here are therefore the `--safe --without-K`-profile shadow of a
+    now-constructed object, not an irreducible axiom; they remain only
+    because `∥_∥` cannot be built WITHIN `--safe --without-K` itself.
 
 ## (d) DEBT — actively to be closed
 
