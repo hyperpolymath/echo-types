@@ -2,7 +2,7 @@
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Echo-Additive Experimental — Session State
 :revdate: 2026-06-14
-:status: R2+R3 built (2026-06-15) — both lines discharge on the inert carrier (terminating condition (ii)); the genuine variance obstruction is parked at the content-faithful level (GradedComonad §7). Author-authorised open of R2/R3 2026-06-15; NOT merged to main.
+:status: R2+R3+R4 built (2026-06-15) — VARIANCE QUESTION SETTLED. R2/R3: both lines discharge on the inert carrier (cond. ii). R4 (content-faithful adjunction): the MONAD discharges, the COMONAD/full-adjunction is mechanically OBSTRUCTED (inf-counit-absurd : (∀{A} → Dc inf A → A) → ⊥ typechecks) — echo-types is a graded MONAD of structured loss, not a comonad/adjunction. Author-authorised open R2–R4 2026-06-15; NOT merged to main.
 :session-guard: R-2026-05-18 do-not-reopen preserved
 
 [IMPORTANT]
@@ -390,3 +390,73 @@ on a **content-faithful** carrier, where the variance finding predicts δ's
 error) and crowns φ. Explicitly OUT OF SCOPE for the R2/R3 open; gated on author
 authorisation. The merge-to-main gate's terminating-condition half is now met;
 merge still awaits explicit author authorisation (both required).
+
+== R4 — the adjunction discriminator: VARIANCE QUESTION SETTLED (2026-06-15, author-authorised)
+
+Author authorised the gated next step (terminating condition (ii) -> the
+`F_r ⊣ U_r` adjunction on a CONTENT-FAITHFUL carrier). Built design-panel (2
+lenses) -> 1 adjunction mechanic -> 1 independent adversary. Two new files, both
+`--safe --without-K` exit 0 on the REAL repo and a fresh scratch tree
+(byte-identical, also clean under `-W error`), zero postulates, zero holes.
+NOT merged to main (W6). Verdict: **monad-is-the-home / sound-and-honest**.
+
+=== Files
+
+- `GradedCarrierFaithful.agda` — the CONTENT-FAITHFUL carrier `Dc-fin (suc n) A =
+  Σ A (λ _ → Dc-fin n A) = A^(n+1)` (genuine content per layer; `Dc inf A = ⊤`).
+  Functor laws (id + ∘) discharged. Two decisive contrasts vs the inert carrier,
+  both recorded: (a) NO generic point `⊤ → Dc-fin (suc n) A` (the obstruction
+  substrate); (b) the additive split `Dc-fin (m+n) A ≡ Dc-fin m (Dc-fin n A)`
+  does NOT hold (`A^(m+n+1)` vs `A^((m+1)(n+1))`), so the φ/δ transport machinery
+  does not port — the adjunction had to be built the standard way (unit/counit +
+  functor action), not from a nested-composition iso.
+- `GradedAdjunction.agda` — `F r A = Dc r A` (left adjoint / free r-stack),
+  `U = Id` (forgetful to Set); unit `η` = the DIAGONAL (copy payload into all
+  layers); counit `ε` = HEAD-EXTRACTION (proj₁); `μ = U(ε_{F A})` FORCED.
+
+=== What discharges (the MONAD), all real `--safe` proofs
+
+`F`, `U`, `η`, the finite-grade counit `ε-fin`, the induced graded monad `U∘F`
+multiplication `μ`, the monad LEFT-unit law (= zig-zag T2, refl), and both
+naturalities (`ε`-natural refl, `η`-natural by induction). `μ` only ever
+projects/forgets; `η` only ever duplicates a GIVEN payload — neither INVENTS.
+The graded MONAD is crowned the structural home.
+
+=== What is OBSTRUCTED (the COMONAD / full adjunction) — mechanically PROVEN, not asserted
+
+The counit triangle T1 (`ε_{F A} ∘ F(η) = id`, the comonadic zig-zag / induced
+`F∘U` comultiplication direction) is obstructed, and **sharper than the
+GradedComonad §7 prediction**: §7 expected the invention only at `r = inf`
+(`ε : ⊤ → A`, uninhabited); on the content-faithful carrier T1 fails at EVERY
+finite `suc n` too — with `x = (a, xs)`, `F(η)` builds `((a, η-fin n a), …)`,
+`ε` head-extracts `(a, η-fin n a)`, but the goal is `(a, xs)`, so T1 demands
+`η-fin n a ≡ xs` for ARBITRARY `xs` — false (the head-extraction counit must
+DISCARD the per-layer content the diagonal unit duplicated, and forgetting is
+not invertible). Both obstructions parked as `-- OBLIGATION` comments (NO
+postulate, NO hole).
+
+**The decisive positive proof (adversary, typechecked exit 0):**
+`inf-counit-absurd : (ε : ∀ {A} → Dc inf A → A) → ⊥`, defined `ε {⊥} tt`. The
+mere EXISTENCE of a total natural inf-counit is logically ABSURD (at `A = ⊥` it
+is `⊤ → ⊥`). So the comonadic half is a genuine type-theoretic IMPOSSIBILITY,
+not a failure to find a `refl`. Three independent fill-attempts rejected (T1 at
+`suc n`: `[UnequalTerms] η-fin n a != xs`; counit `inf`: `⊤ !=< A`;
+comultiplication: height mismatch — all exit 42); planted postulate rejected
+`[SafeFlagPostulate]`. The `--safe` escape hatch is confirmed load-bearing.
+
+=== CONCLUSION — the R1 variance question is SETTLED
+
+Over the additive ℕ∪{∞} grade tower, echo-types is a **graded MONAD of
+structured loss** — NOT a graded comonad and NOT a (full) graded adjunction. The
+monad is the natural, total, never-inventing direction (forget/fuse/duplicate);
+the comonad would have to FABRICATE discarded content, which is provably
+impossible K-free (indeed logically absurd at `A = ⊥`). This vindicates the
+R-2026-05-18 retraction at the deepest mechanical level: the graded-comonad
+reading is not merely unclaimed, it is *refuted*. The shipped foundation
+(`Echo.Modality.Core` etc.) remains exactly what it always was — a thin-poset
+reindexing modality; the tropical/additive grade is an Axis-1 measure at the
+one-directional seam, never the modality's defining structure.
+
+Firewall intact (GradedAdjunction imports only Grade + GradedCarrierFaithful +
+stdlib; neither inert R3 line imported). Not wired into All.agda/Smoke.agda; not
+merged to main. Independent adversary re-verified on the real repo + fresh tree.
