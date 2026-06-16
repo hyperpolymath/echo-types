@@ -156,7 +156,8 @@ kernel** — the boundary is real and lives outside this core.
   module. Listed so the DAG audit is complete.
 
 | *Exploratory (not in `All.agda`)*
-| `EchoDecorationBridge`, `EchoImageFactorizationPropPostulated`
+| `EchoDecorationBridge`, `EchoImageFactorizationPropPostulated`,
+  `EchoImageFactorizationPropCubical`
 | Deliberately omitted from `proofs/agda/All.agda` so the verified
   suite is unaffected. `EchoDecorationBridge` re-issues
   `EchoIntegration`'s integration claim through a `DecorationFit`
@@ -168,10 +169,18 @@ kernel** — the boundary is real and lives outside this core.
   `postulate` is forbidden under `--safe`) — demonstrates the
   parametric `TruncInterface` slot is plug-in-usable; the
   postulates assert the standard (-1)-truncation laws without
-  proving them.  Both modules listed here to satisfy the
+  proving them.  `EchoImageFactorizationPropCubical` is the REAL
+  (`--cubical --safe`, zero-postulate) counterpart: it CONSTRUCTS
+  `∥_∥` as a higher inductive type, realises the same four
+  `TruncInterface` obligations as theorems (`is-prop-∥∥` from
+  `squash`; `rec-∥∥` via the path recursor), and re-proves the
+  (epi, mono) factorisation — discharging the truncation axiom the
+  postulated module only assumes.  It is a `--cubical` flag island
+  because Agda forbids a `--cubical` module importing the `--safe
+  --without-K` `Echo` cone, so it restates the minimal interface +
+  `Echo` locally.  All three modules listed here to satisfy the
   classification-drift lint (`scripts/kernel-guard.sh` Check B);
-  neither is kernel, neither load-bearing, both subject to
-  abandonment.
+  none is kernel, none load-bearing, all subject to abandonment.
 
 | *Foundation contract surface* +
 (dotted `Echo.*` namespace; curated public interface)

@@ -212,10 +212,14 @@ Authority is conferred socially, not internally. In cost/payoff order:
   `--safe --without-K` Agda artefact; these venues reward the
   retraction/gate discipline). *Draft started 2026-05-17:*
   `docs/echo-types/paper.adoc` — a *living* full-paper draft,
-  written now while the result is fresh, with sections explicitly
-  marked for expansion as more context (extended examples,
-  comparison depth, the ordinal consumer-evidence) accrues. Not for
-  submission until those land; see its own status banner.
+  written now while the result is fresh. All four `[EXPAND]` tags are
+  cleared as of 2026-06-14. *Pillar E appendix: written at WF
+  milestone; order-type fidelity OPEN* — the ordinal consumer-evidence
+  appendix is written at the well-foundedness milestone only, with
+  the Bachmann–Howard order-type-fidelity proof recorded as a named
+  open problem (decision-log `D-2026-06-14`), NOT claimed. Not for
+  submission until venue/template are chosen and that caveat is judged
+  acceptable; see the paper's status banner.
 . Zenodo DOI + installable library packaging (stable module API so
   others can `import echo-types`).
 . Circulate the strongest adjacency note (HoTT fibres / QTT-modal)
@@ -323,7 +327,7 @@ by `≤g-prop` / `⊑-prop`). → ruled out, see
 | D | `EchoRelModel.agda` (`GradedLossModel`/`GCLaws`, 2 models, `model-agreement`) | Landed
 | D | `docs/echo-types/conservativity.adoc` (metatheorem + 3-clause anchor) | Landed
 | E | `docs/echo-types/types-abstract.adoc` (TYPES extended abstract) | Drafted (content submission-ready)
-| E | `docs/echo-types/paper.adoc` (full CPP/ITP paper) | Living draft (sections tagged [EXPAND])
+| E | `docs/echo-types/paper.adoc` (full CPP/ITP paper) | Living draft; all [EXPAND] tags cleared. Ordinal appendix: written at WF milestone; order-type fidelity OPEN (`D-2026-06-14`)
 | E | Zenodo DOI / installable library packaging / outreach | Not started (offline / author-driven)
 |===
 
@@ -404,3 +408,19 @@ reason.
   `types-abstract.adoc` ("submission-ready" status withdrawn),
   `docs/retractions.adoc` R-2026-05-18. Pillars A–D stand at their
   *narrowed* strength; Pillar E re-review is the open item.
+* *2026-06-14 — trigger: ordinal appendix written at WF milestone.*
+  The last `[EXPAND]` tag (tag 4, ordinal consumer-evidence appendix)
+  is cleared: `paper.adoc` §"Ordinal / Buchholz consumer-evidence" is
+  written at the *well-foundedness* milestone ("notation machinery
+  E1–E7 + WF of the ν ≤ ω fragment exists", the latter now unbudgeted
+  on the sound carrier via `wf-<ᵇ²` / `wf-<ᵇʳᶠ²` / `wf-<ᵇ⁺²`). The
+  appendix does NOT claim order-type fidelity: well-foundedness is
+  necessary, not sufficient; the notation is proven well-founded, NOT
+  proven to be the Bachmann–Howard ordinal order. That order-type
+  proof is recorded as a named open problem in decision-log
+  `D-2026-06-14`
+  (`decisions/ordinal-bh-order-type-fidelity-open.adoc`). *Status:
+  Pillar E appendix written at WF milestone; order-type fidelity
+  OPEN.* The in-repo half of Pillar E is complete at the
+  bounded-claim level; submission logistics remain offline /
+  author-driven.

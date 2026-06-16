@@ -469,6 +469,73 @@ open import Ordinal.Buchholz.RankPowDomination using
 open import Ordinal.Buchholz.RankDoubledLadder using
   ( ψ-block-below-Ω-block
   ; Ω-block-below-next-ψ
+  ; rank2
+  ; rank2-bpsi-below-bOmega
+  ; double-cross-gap
+  ; ω-rank-pow-reflects-<Ω
+  ; rank2-bounded
+  )
+
+-- Doubled-ladder atomic-boundary rank2-mono primitives (own block per
+-- CLAUDE.md Working rules): the four atomic-vs-atomic `_<ᵇ_`
+-- constructors the doubled ladder was built to order.
+open import Ordinal.Buchholz.RankDoubledLadderMono using
+  ( rank2-mono-ΩΩ
+  ; rank2-mono-Ωψ
+  ; rank2-mono-ψΩ
+  ; rank2-mono-ψΩ≤
+  )
+
+-- Doubled-ladder bzero-source + plus-source rank2-mono primitives
+-- (own block per CLAUDE.md Working rules).
+open import Ordinal.Buchholz.RankDoubledLadderMonoPlus using
+  ( rank2-pos-bOmega
+  ; rank2-pos-bpsi
+  ; rank2-mono-0-+
+  ; rank2-mono-Ω+
+  ; rank2-mono-ψ+
+  )
+
+-- Doubled-ladder Ω-block additive principality + the `<ᵇ-+Ω`
+-- primitive (own block per CLAUDE.md Working rules).
+open import Ordinal.Buchholz.RankDoubledLadderAddPrincipal using
+  ( additive-principal-ω-rank-pow-succ
+  ; rank2-mono-+Ω
+  )
+
+-- Doubled-ladder last two bplus-on-left primitives `<ᵇ-+ψ`, `<ᵇ-+1`
+-- (own block per CLAUDE.md Working rules) — completes all 12
+-- core `_<ᵇ_` constructors' rank2-mono primitives.
+open import Ordinal.Buchholz.RankDoubledLadderMonoPlus2 using
+  ( rank2-mono-+ψ
+  ; rank2-mono-+1
+  )
+
+-- Doubled-ladder umbrella + well-foundedness (own block per CLAUDE.md
+-- Working rules) — the Gate 1 capstone: a complete rank2-ready
+-- relation over all 12 core `_<ᵇ_` constructors and its WF proof.
+open import Ordinal.Buchholz.RankDoubledLadderUmbrella using
+  ( _<ᵇ²_
+  ; rank2-mono-<ᵇ²
+  ; rank2-mono-≤ᵇ²
+  ; wf-<ᵇ²
+  )
+
+-- Unbudgeted sound-carrier recursive surface (own block per CLAUDE.md
+-- Working rules): the recursive same-binder closure over `_<ᵇ²_` and
+-- its budget-free well-foundedness.
+open import Ordinal.Buchholz.RecursiveSurfaceSound using
+  ( _<ᵇʳᶠ²_
+  ; rank2-mono-<ᵇʳᶠ²
+  ; wf-<ᵇʳᶠ²
+  )
+
+-- Sound-carrier extended order — the K-limited shared-binder cases,
+-- unbudgeted (own block per CLAUDE.md Working rules).
+open import Ordinal.Buchholz.OrderExtendedSound using
+  ( _<ᵇ⁺²_
+  ; <ᵇ⁺²⇒<ᵇʳᶠ²
+  ; wf-<ᵇ⁺²
   )
 
 -- Slice 3 prerequisites (own block per CLAUDE.md Working rules):
@@ -569,6 +636,29 @@ open import Ordinal.Buchholz.RankLexJointBplus using
   ; rank-lex-jb-bpsi-equal-head-from-tail-eq
   )
 
+-- Direct rank-pow refutation 2026-06-15 (own block per CLAUDE.md
+-- Working rules): the `rank-pow`-level companion to
+-- `StrictLeftMonoRefuted` / `AdditivePrincipalGenericRefuted`.  Where
+-- those refute the two arithmetic ROUTES a closure would consume,
+-- this refutes the rank-monotonicity GOAL itself — a concrete pair of
+-- WfCNF terms `s <ᵇ t` at the `<ᵇ-+1` ψ/Ω cross-head boundary where
+-- `rank-pow` strictly REVERSES the order.  Upgrades the Slice 4
+-- `<ᵇ⁻ⁿ-shortfall-equal-head` ⊤-alias placeholder to a checked
+-- counterexample; pins exactly the case `RankLexJointBplus`'s
+-- `rank-lex-jb` pivot is load-bearing for.
+open import Ordinal.Buchholz.RankPowMonoRefuted using
+  ( s
+  ; t
+  ; wf-s
+  ; wf-t
+  ; s<ᵇt
+  ; rank-pow-strictly-reverses
+  ; RankPowMono
+  ; rank-pow-mono-refuted
+  ; RankPowMonoPlus1
+  ; rank-pow-mono-plus1-refuted
+  )
+
 -- Slice 4 narrowing 2026-05-28 (own block per CLAUDE.md Working
 -- rules): the deliberately-narrowed `_<ᵇ⁻ⁿ_` umbrella covering
 -- ALL CASES THAT CLOSE AT THE RANK-POW LEVEL TODAY — 10 inherited
@@ -656,4 +746,21 @@ open import Ordinal.Buchholz.RankMonoUnionWfCNF using
   ; <ᵇᵘⁿ-from-<ᵇ¹
   ; <ᵇᵘⁿ-from-<ᵇ⁺²
   ; rank-pow-mono-<ᵇᵘⁿ
+  )
+
+-- BH order-type fidelity TARGET 2026-06-15 (own block per CLAUDE.md
+-- Working rules): the real, postulate-free part of the order-type
+-- fidelity target (open problem D-2026-06-14). `BHNotation` is the
+-- abstract well-founded strict order + distinguished element;
+-- `bh-notation-from` builds a genuine instance from the Brouwer order
+-- (Ord / _<′_ / wf-<′), discharging the target order AND its
+-- well-foundedness FOR REAL inside the --safe kernel. The candidate BH
+-- height is the only remaining free input — an explicit parameter to
+-- `Fidelity.AtHeight` (quarantined outside the --safe cone). This
+-- reduces the Fidelity trust boundary from three postulates to two
+-- (denotation, ordinal-upper-bound). See Fidelity-OPEN-postulates.md +
+-- docs/proof-debt.md (d).
+open import Ordinal.Buchholz.BHTarget using
+  ( BHNotation
+  ; bh-notation-from
   )

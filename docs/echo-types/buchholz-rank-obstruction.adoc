@@ -234,6 +234,21 @@ losing well-foundedness. Pinned in `Smoke.agda`; wired into
    into Brouwer or directly. Substantial: the 13-constructor
    matrix + the inversion lemmas all need restating. Likely 2–3
    weeks of disciplined proof work.
++
+*UPDATE 2026-06-14 — this route is now realised on the sound carrier.*
+The doubled-ladder `rank2` (§"Doubled-ladder closure") IS the
+WF-restricted rank: `_<ᵇ²_` is the sound carrier and
+`rank2-mono-<ᵇ²` ranks all 12 core constructors. For the
+*recursive-surface* consumer specifically, this discharges the
+"eliminate the ℕ budget" goal — `Ordinal.Buchholz.RecursiveSurfaceSound`
+lands `_<ᵇʳᶠ²_` (= `_<ᵇ²_` core + the two same-binder congruences) and
+its UNBUDGETED `wf-<ᵇʳᶠ²` via the `rank2` embedding (the two congruence
+cases are the `⊕-mono-<-right` discharges this note already identified;
+the doubled ladder supplies the core). The budget in
+`RecursiveSurfaceBudget._<ᵇʳᶠᵇ_` was an artefact of native
+unsoundness, not of the same-binder recursion. What remains genuinely
+open is only the GLOBAL form over *native* `_<ᵇ_` (route still walled;
+realistic close-out is the falsifiable verdict of move 3, NOT move 2).
 
 2. *Non-additive denotational measure*. Replace the Brouwer-rank
    shape with a function `BT → α` for some target `α` whose order
@@ -387,6 +402,60 @@ rank — the per-case closures all sidestep it via either WfCNF
 restriction (rank-pow + admissibility), lex-pair refinement
 (rank-lex), or head-Ω domination (the next slice).
 
+== Doubled-ladder closure (2026-06-14)
+
+A second, complete route to a sound rank lands this session: the
+*doubled-index ladder* `rank2 : BT → Ord`
+(`Ordinal.Buchholz.RankDoubledLadder`).  Where the single ω-power
+ladder gives ψ and Ω the *same* exponent block (so `rank-pow`
+collapses `ψ_ν` / `Ω_ν` and cannot order the equal-Ω boundary
+`<ᵇ-ψΩ≤`, and `rank-adm` inverts `<ᵇ-Ωψ`), the doubled ladder maps
+level `ν` to *two* interleaved blocks:
+
+----
+ψ_ν(α) ↦ ω^(2ν+1) ⊕ rank2 α      Ω_ν ↦ ω^(2ν+2)
+----
+
+so the atomic order `… < ψ_ν(α) < Ω_ν < ψ_{ν+1}(β) < Ω_{ν+1} < …`
+embeds with *strict room everywhere* — consecutive levels are two
+exponent blocks apart, so the cross-index gap `Ω_μ < ψ_{μ+1}(…)`
+survives even at the boundary `ν = suc μ` that defeated the single
+ladder.  The arithmetic spine (`ψ-block-below-Ω-block`,
+`Ω-block-below-next-ψ`, `double-cross-gap`, `ω-rank-pow-reflects-<Ω`)
+and the WfAdm→rank2 scale-transfer bridge `rank2-bounded`
+(`rank2 t <′ ω-rank-pow (double μ)` from `rank-pow t <′ ω-rank-pow μ`)
+discharge the equal-Ω boundary directly.
+
+*All 12 core constructors close at the per-case level* under `rank2`
+(`Ordinal.Buchholz.RankDoubledLadderMono` / `…MonoPlus` / `…AddPrincipal`
+/ `…MonoPlus2`), including the two the single ladder left to side
+conditions or open: `<ᵇ-ψΩ≤` (equal-Ω, both `ν<μ` and `ν=μ`) and the
+bplus-target `<ᵇ-+1`.  The `<ᵇ-+ψ` leading-power obstruction (the
+source must rank below the ψ-block's *leading* power, not the whole
+ψ-rank) is bridged through `rank2-bounded`.
+
+*The umbrella + well-foundedness land* in
+`Ordinal.Buchholz.RankDoubledLadderUmbrella`: a rank2-soundness-ready
+relation `_<ᵇ²_` over all 12 constructors (WfAdm witnesses + leading-
+power bound + WfCNF tail bounds baked in), the umbrella
+`rank2-mono-<ᵇ² : s <ᵇ² t → rank2 s <′ rank2 t` (structural recursion,
+no `TERMINATING`), and `wf-<ᵇ² : WellFounded _<ᵇ²_` via the standard
+`Subrelation` + `On.wellFounded rank2 wf-<′` transport.
+
+*Scope.*  `_<ᵇ²_` is a *sound carrier* relation, like the existing
+`_<ᵇ⁰_` / `_<ᵇᵘ_`: it bakes in the WfCNF/admissibility soundness
+conditions and so excludes the ordinally-unsound witnesses (the
+`<ᵇ-+Ω` counterexample above is *not* an `_<ᵇ²_` derivation, because
+its tail bound `y ≤ᵇ² x` fails — `rank2 (bOmega (fin 1))` does not sit
+below `rank2 (bOmega (fin 0))`).  This is the expected restriction,
+not a gap: native `_<ᵇ_` is ordinally unsound, so no rank embedding
+maps it faithfully, and its well-foundedness is already proved
+directly in `Ordinal.Buchholz.WellFounded.wf-<ᵇ`.  The doubled
+ladder's contribution is a *strictly stronger sound carrier* than the
+single-ladder union `_<ᵇᵘ_`: it closes the equal-Ω boundary and the
+bplus-target `<ᵇ-+1` that the single-ladder Gate 1 left open, with a
+single ordinally-sound scalar rank.
+
 == See also
 
 * `proofs/agda/Ordinal/Buchholz/HeadOmega.agda` — Slice 1; the
@@ -408,6 +477,15 @@ restriction (rank-pow + admissibility), lex-pair refinement
   13 constructors that pin the syntactic order.
 * `proofs/agda/Ordinal/Buchholz/WellFounded.agda` — the direct
   accessibility proof of `wf-<ᵇ`; structural, no rank.
+* `proofs/agda/Ordinal/Buchholz/RankDoubledLadder.agda` — the
+  doubled-index ladder `rank2` + the arithmetic spine
+  (`double-cross-gap`, `rank2-bpsi-below-bOmega`,
+  `ω-rank-pow-reflects-<Ω`, `rank2-bounded`).
+* `proofs/agda/Ordinal/Buchholz/RankDoubledLadderMono.agda`,
+  `…MonoPlus.agda`, `…AddPrincipal.agda`, `…MonoPlus2.agda` — the 12
+  per-constructor `rank2`-mono primitives.
+* `proofs/agda/Ordinal/Buchholz/RankDoubledLadderUmbrella.agda` — the
+  `_<ᵇ²_` carrier, the umbrella `rank2-mono-<ᵇ²`, and `wf-<ᵇ²`.
 * `proofs/agda/Ordinal/Buchholz/RecursiveSurfaceBudget.agda` —
   budgeted `wf-<ᵇʳᶠᵇ`, the existing model.
 * `proofs/agda/Ordinal/Buchholz/OrderExtendedBudget.agda` — new in
