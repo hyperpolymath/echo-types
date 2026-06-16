@@ -1,3 +1,6 @@
+<!-- SPDX-License-Identifier: MPL-2.0 OR CC-BY-SA-4.0 -->
+<!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
+
 # Proof debt
 
 Per the estate Trusted-Base Reduction Policy
@@ -108,3 +111,40 @@ guardrail's "no postulates" rule for naming convenience (the
 `-Postulated` suffix would be misleading there). The trusted-base
 script does not flag this module because it scans for actual
 `^[[:space:]]*postulate` lines.
+
+## Independent ground-truth audit (2026-06-16)
+
+An out-of-band trust audit (cold rebuild + flag/guardrail probes, not
+doc-trust) was run before an external project (the `ephapax` L1
+re-foundation) built on this repo. **Verdict: trustworthy — build on the
+WIRED layer only.** It is consistent with, and complements, the (a)–(d)
+ledger above.
+
+- **Wired vs orphaned.** Against the transitive closure of the 4 CI roots
+  (`All` / `Smoke` / `characteristic/All` / `examples/All`): ~**164 files /
+  ~32.5k lines WIRED** (`--safe --without-K`, exit 0, zero postulates/holes
+  in the cone) vs ~**15 orphaned files** (~8%). The often-cited
+  "676 files / 52k lines" headline is inflated by `.claude/worktrees/`
+  duplicate snapshots; real source ≈ 190 `.agda` files / ~36k lines.
+- **The quarantined postulates are correctly *outside* the wired cone.**
+  The audit independently confirms the two postulate-bearing files this
+  ledger already lists — `EchoImageFactorizationPropPostulated.agda` (c)
+  and `Ordinal/Buchholz/Fidelity.agda` (d) — are guardrail-exempt,
+  `--without-K`-only, and imported by no `All.agda`, so the `--safe`
+  kernel cone depends on neither. Nothing slipped into the wired layer.
+- **⚠ Variance is NOT a proven result.** The `experimental/echo-additive/`
+  track (`GradedComonad` / `GradedMonad` / `GradedAdjunction` /
+  `VarianceGate.agda`) is present on `main` but **orphaned** (in no
+  `All.agda`, not CI-verified), and `VarianceGate.agda` self-declares
+  "This file contains NO proven theorems … OBLIGATION comments" + variance
+  **RETRACTED R-2026-05-18**. It typechecks `--safe` only because the
+  obligations are comments. **Do not cite the monad / comonad / adjunction
+  variance question as settled** — it remains genuinely open. Build instead
+  on the wired `Echo` / `EchoResidue`, `EchoGradedComonad` (coassoc/counit),
+  the composition isos, and `DyadicEchoBridge`.
+- **Env gotcha (fix before handoff).** A *dangling* libraries config
+  (nix-store name mismatch + a non-existent `…/absolute-zero` path) causes
+  **false "library name not found" failures** under the default config.
+  Correct invocation points `--library-file` at the v2.3 stdlib worktree
+  (`/home/hyperpolymath/developer/worktrees/agda-stdlib-tweak`). A config
+  artefact, NOT a proof defect.
