@@ -5,6 +5,7 @@
 module All where
 
 open import Echo
+open import EchoDisplayed
 open import EchoTotalCompletion
 open import EchoOrthogonalFactorizationSystem
 open import EchoImageFactorization
