@@ -1,0 +1,181 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Echo types — what it is, and what we did not invent
+:toc: macro
+:toclevels: 2
+
+_An upfront, scholarly statement of the object: the established mathematics it
+instantiates, the boundary of our own contribution, and the relations it is
+NOT. Written to be read alongside (and never to contradict) this repo's
+`AFFIRMATION.adoc` ground truth._
+
+toc::[]
+
+== What it is (as we use it)
+
+In this repository, an *echo type* is a *min-plus-graded modality of structured
+information loss*: a way to talk about a value that has crossed a non-injective
+map — a degradation, projection, observation, compression, or translation — and
+survived not as the original guarantee, and not as nothing, but as a *retained,
+proof-relevant constraint on what its origin could have been*.
+
+Operationally, in the actual Agda kernel, the object is exact and small. Given
+`f : A → B`, the echo at `y : B` is the *preimage / homotopy fibre*
+
+----
+Echo f y := Σ (x : A) , (f x ≡ y)
+----
+
+defined in `proofs/agda/Echo.agda` and used throughout the verified closure
+(`proofs/agda/All.agda`). It adds *no new judgment*: `Echo f y` is definitionally
+the fibre, pinned by the bridge `echo↔fib : Echo f y ↔ fiber f y`
+(`EchoFiberBridge.agda`). On top of this single definition the repo builds the
+modal reading used in practice:
+
+* a *graded modality* `D_r` indexed by a *loss grade* `r`, where the grade lives
+  in the *tropical (min-plus) semiring* `(ℕ ∪ {∞}, min, +)` read as *structural
+  irrecoverability* — `0` = nothing lost, `∞` = total irrecoverable loss. The
+  grade carrier and its operations (`_+g_` = additive accumulation, `_⊓g_` =
+  min/join) are mechanised in `proofs/agda/experimental/echo-additive/Grade.agda`;
+* a *section/retraction* discipline whose round-trip is *exact on a homotopy
+  fibre* (the recoverable subobject) rather than over-approximating or
+  storing a complement — this is the canonical *total-completion equivalence*
+  `A ≃ Σ B (Echo f)` (`EchoTotalCompletion.agda`), one leg of an
+  (equivalence, projection) orthogonal factorisation system
+  (`EchoOrthogonalFactorizationSystem.agda`);
+* a *residue-measure observation seam* (`Echo.Measure.Interface`): a resource
+  algebra (cost / tropical / confidence) may *measure* an echo residue, but the
+  measure is a lossy observation of the modality, not the modality itself.
+
+So "echo type" as we use it = *the fibre, read as a tropically-graded loss
+modality with an exact-on-a-fibre recoverable core*. The variance of that
+modality is *monadic*: loss *accumulates* (the composite of two losses is the
+sum of grades), and there is no general way back from total loss.
+
+== The established structure it instantiates (and where it is from)
+
+Echo types are an *assembly of established structures*. None of the underlying
+mathematics is ours.
+
+*Graded (parametric) monads / graded modal types.* The "grade an effect/modality
+by an element of an ordered algebraic structure, with a composition law on
+grades" pattern is the theory of *graded monads* and *graded/coeffectful modal
+types*. Canonical references: Katsumata, _Parametric effect monads and
+semantics of effect systems_ (POPL 2014); Fujii, Katsumata and Melliès,
+_Towards a formal theory of graded monads_ (FoSSaCS 2016); the coeffect /
+quantitative-modality line of Petricek, Orchard and Mycroft (the coeffect
+calculus papers), realised in the Granule language by Orchard, Liepelt and Eades,
+_Quantitative program reasoning with graded modal types_ (ICFP 2019). The dual
+comonadic reading of context-dependent computation is Uustalu and Vene,
+_Comonadic notions of computation_ (ENTCS, 2008). Our grade index instantiates
+this machinery at the *tropical / min-plus dioid* — itself standard idempotent /
+tropical semiring theory.
+
+*The homotopy fibre.* `Echo f y := Σ (x : A), (f x ≡ y)` is exactly the
+*homotopy fibre* of `f` at `y`, and the equivalence `A ≃ Σ_{y} fib f y` with
+the (equivalence, projection) factorisation are standard univalent-foundations
+constructions. Canonical reference: The Univalent Foundations Program,
+_Homotopy Type Theory: Univalent Foundations of Mathematics_ (2013) — the
+HoTT Book — for fibres, the total-space equivalence, and orthogonal
+factorisation systems.
+
+In short: the *grade* is graded-monad / coeffect theory over a tropical dioid;
+the *carrier* is the homotopy fibre. Both are decades-established; we cite them
+as the load-bearing prior art, not as background colour.
+
+== What is ours, and what is not (the contribution boundary)
+
+What is *borrowed* is the mathematics named above: graded monads / graded modal
+types, the tropical (min-plus) dioid, and the homotopy fibre with its
+total-space factorisation. We claim none of it.
+
+What is *ours* is the *modelling and assembly*: the decision to read the fibre
+*as* a tropically-graded loss modality whose grade is *irrecoverability*, whose
+round-trip is *exact on the fibre* (not over-approximating), and whose variance
+is settled *monadically* by mechanised proof rather than asserted; and the
+fitting of that model to concrete domains (database provenance, region-exit /
+capability security, sampling support, sensitivity tracking, BEAM/typed-wasm
+boundaries). The usefulness is reported only where it has already produced
+*checkable artefacts*, grounded in this repo's `AFFIRMATION.adoc`:
+
+* a *green `--safe --without-K` verified closure* — `agda --safe --without-K -i
+  proofs/agda proofs/agda/All.agda` exits 0 over 151 forced modules, with *zero
+  postulates* and a *funext-free kernel certificate* (`scripts/kernel-guard.sh`
+  exits 0);
+* the *deniability / no-section* proofs — `EchoDeniability.agda`,
+  `EchoNoSectionGeneric.no-section-of-collapsing-map` — that make "you cannot
+  reconstruct the source from the residue" a checked theorem, not a slogan;
+* the *anti-collapse separation* theorems `equal-measure-does-not-imply-equal-echo`
+  and `measure-not-injective` (`Echo.Separation.NotResourceInstance`, pinned in
+  `Smoke.agda`), which mechanise the boundary "a residue measure does not define
+  Echo";
+* the executable *`EchoTypes.jl`* falsifier (finite-domain shadow,
+  falsifies-by-counterexample), and the *typed-wasm L-Echo axis* as a consuming
+  application.
+
+**On contribution (the same stance in every sibling repo).** We did not invent the
+mathematics this work rests on. Graded monads, tropical / idempotent dioids,
+multiparty session types and choreographies, and epistemic / justification logic
+are established structures authored by others, cited above. What is ours is the
+*modelling*: we apply these structures as instruments fitted to specific domains —
+verifiable WebAssembly, federated identity, BEAM sandboxing, structured
+information loss — in places the established corpus had not been instantiated this
+way, and we report only where the fit has already produced *checkable artefacts*.
+The contribution is the model and its demonstrated usefulness, not the underlying
+mathematics. This is deliberate, and it is a strength: a claim that concedes its own
+foundations is survivable; one that claims invention dies at the first citation. (Cf. the
+estate discipline — echo-types' own distinctness claim was permitted to terminate
+negatively, EI-2.)
+
+== Is-not, and what is still open
+
+*IS-NOT relations (kept crisp so the boundaries do not erode).*
+
+* *Echo IS-NOT a graded comonad.* The "graded comonad of structured loss"
+  reading was *retracted* (R-2026-05-18) and stands retracted. The variance is
+  *monadic*: the composition `μ : D_r (D_s A) → D_{r+s} A` exists (loss
+  accumulates), but the would-be comonad counit `D_∞ A → A` is *mechanically
+  absurd* — you cannot recover a value from total irrecoverable loss. A graded
+  *comonad* structure survives *only* on restricted *content-faithful* carriers
+  (Gate F1, the iterated-residue line); on the inert ⊤-padded carrier its laws
+  pass only *vacuously* (the discharge is by contractibility, not by content),
+  and that vacuity is itself recorded as the variance finding. This whole
+  variance settlement lives in the *gated experimental tree*
+  (`proofs/agda/experimental/echo-additive/`), *not* in the main verified
+  closure.
+* *Echo IS-NOT a tropical / resource instance.* A resource algebra may *measure*
+  an echo residue (cost, tropical, confidence), but it does not *define* Echo:
+  *equal residue measure does not imply equal Echo* (mechanised, above). Echo is
+  an orthogonal indexed/residual modality; do not model it as a resource-algebra
+  `Soundness(S)` instance. Vocabulary discipline: *resource grade* ≠ *echo index*
+  ≠ *residue measure*; avoid "echo-grade".
+* *Echo IS-NOT a new judgment or a replacement for exact-preservation systems.*
+  It adds no judgment to the type theory (it is definitionally the fibre), and it
+  is not a substitute for ordinary type checking, ABI/FFI proofs, typed-wasm, or
+  any boundary system that *can* preserve exact guarantees. When exact
+  preservation is available, use it; echo types are for the case where the value
+  that crossed is no longer the guarantee but is also not meaningless.
+* *Echo's distinctness claim was NOT assumed.* It was put to a falsifier and
+  *terminated negatively* (EI-2, via PATH B): the cross-axis simultaneous-
+  integration distinctness was not established, and the Gate-1 claim was narrowed
+  accordingly. We keep that negative on the record rather than spin it.
+
+*Honestly open.*
+
+* The *variance settlement* (graded monad in general; graded comonad only on
+  content-faithful carriers) is proved *only in the gated experimental tree* and
+  is *not wired into* the shipped `--safe` closure (`Grade.agda` and the
+  `echo-additive/` modules are absent from `All.agda`). Treat the variance result
+  as a real-but-unwired artefact, exactly as `AFFIRMATION.adoc` records it.
+* *Bachmann–Howard order-type fidelity is POSTULATED*, in
+  `Ordinal/Buchholz/Fidelity.agda`, *outside* the `--safe` kernel cone. The
+  ordinal-notation tower's sound-carrier well-foundedness is proved and in the
+  closure; the bridge from that notation to the Bachmann–Howard ordinal is an
+  explicit, auditable trust boundary, not a closed theorem. "Mechanized
+  Bachmann–Howard" is a milestone-in-progress, read as "a notation system aimed
+  at BH", not "BH proved".
+* The *truncated (epi, mono) image factorisation* needs propositional truncation
+  and lives in a separate, unwired postulated module; the safe core proves only
+  the K-free `injective-fibres-proj-unique` fragment. Several "full" universal-
+  property clauses are honestly *funext-/UIP-qualified* (Gates F4/F5), stated as
+  conditional, not unconditional.
