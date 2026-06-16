@@ -35,6 +35,27 @@ open import Echo using
   ; Echo-comp-pent-Σ-assoc
   )
 
+-- Displayed-type / fibration packaging of the categorical base
+-- (EchoDisplayed.agda) — faithful Agda mirror of typed-wasm's Idris
+-- Displayed / DispHom / idDispHom / fromHomOver. Pins the packaging
+-- (Displayed, DispHom, idDispHom, EchoOf, fromHomOver) and the four
+-- laws (identity displayed morphism acts as identity; fromHomOver
+-- well-defined = map-over by construction; fromHomOver compatible with
+-- map-over-id and map-over-comp). PURELY the fibration packaging — no
+-- variance / graded-comonad / universal-property claim (R-2026-05-18).
+open import EchoDisplayed using
+  ( Displayed
+  ; DispHom
+  ; dispMap
+  ; idDispHom
+  ; EchoOf
+  ; fromHomOver
+  ; idDispHom-acts-id
+  ; fromHomOver-action
+  ; fromHomOver-id
+  ; fromHomOver-comp
+  )
+
 -- AntiEcho thin slice (theory/antiecho — Σ-dual of Echo). Lands the
 -- carrier, per-element disjointness, introduction, source-side
 -- map-over, and per-element partition with decidability of `f x ≡ y`
