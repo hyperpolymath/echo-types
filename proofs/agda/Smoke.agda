@@ -1183,6 +1183,7 @@ open import Ordinal.Brouwer.OrdinalExp using
   ; ω^^-ε₀-≤
   ; ε₀-≤-ω^^-ε₀
   ; ε₀-ε-number
+  ; ω^^-infl
   )
 
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
