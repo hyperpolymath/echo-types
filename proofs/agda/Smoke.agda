@@ -108,20 +108,37 @@ open import EchoNoSectionGeneric using
   ; no-section-when-non-injective-at-y
   )
 
--- EchoAggregation — micro→macro economic aggregation as structured
--- loss (the oikos/betlang "aggregate library" keystone). `aggregate`
--- rolls a two-account ledger up into a Godley column total; its fibre
--- `ConsistentLedgers m = Echo aggregate m` is the set of micro states
--- consistent with the macro observable. `aggregate-non-injective`
--- pins "aggregation is many-to-one"; `no-canonical-disaggregation`
--- pins the non-identifiability theorem (no section of `aggregate`)
--- via `no-section-of-collapsing-map`.
+-- EchoAggregation — the GENERAL aggregation form (issue #175):
+-- aggregation-as-fold over a `Monoid`, with a `GroupAggregator` and
+-- the monoid-homomorphism law `aggregation-as-fold` (aggregating a
+-- concatenation = combining the aggregates). Four concrete instances
+-- (`sumMonoid`/`countMonoid`/`maxMonoid`/`minMonoid`), a worked
+-- `countAggregator`, and generic non-disaggregability
+-- `no-canonical-disaggregation-of` (any collision ⇒ no section, via
+-- `no-section-of-collapsing-map`; also covers #174). The MACRO
+-- economics reading (micro→macro ledger, SMD critique) is the oikos
+-- alib bridge's interpretation of the `Example-PairSum` instance:
+-- `pairSum` IS the `sumMonoid` fold (`pairSum-is-fold`), is
+-- many-to-one (`pairSum-non-injective`), and has no canonical
+-- disaggregation (`no-canonical-disaggregation`).
 open import EchoAggregation using
-  ( aggregate
-  ; ConsistentLedgers
-  ; ledger₁≢ledger₂
-  ; aggregate-collapses
-  ; aggregate-non-injective
+  ( Monoid
+  ; GroupAggregator
+  ; ⊕-fold
+  ; ⊕-fold-++
+  ; aggregate-values
+  ; aggregation-as-fold
+  ; sumMonoid
+  ; countMonoid
+  ; maxMonoid
+  ; minMonoid
+  ; countAggregator
+  ; no-canonical-disaggregation-of
+  )
+open EchoAggregation.Example-PairSum using
+  ( pairSum
+  ; pairSum-is-fold
+  ; pairSum-non-injective
   ; no-canonical-disaggregation
   )
 

@@ -212,7 +212,93 @@ work to `main` and refresh all documentation:
 
 ## Current rung state (2026-06-18)
 
-### Session arc 2026-06-18 — EchoAggregation / oikos alib bridge (read this first)
+### Session arc 2026-06-18 — EchoAggregation general/macro split + long-form prose relicense (read this first)
+
+*Where we started:* three housekeeping loose ends from the EchoAggregation /
+oikos-alib work. (1) stale branch `session/slice-4-narrowing` (a git-ancestor
+of `estate-standardization-20260607`, zero unique commits); (2) an
+owner-authorised prose relicensing (`f6cc023`) that never re-landed — 9
+long-form docs still `MPL-2.0` while the estate prose licence is
+`CC-BY-SA-4.0`; (3) a NAME COLLISION: the merged economics module (#230)
+squatted `EchoAggregation`, the name open issue **#175** wants for the
+*general* monoid/group aggregation (SQL GROUP-BY-as-fold; consumer =
+affinescript db-theory #3).
+
+*User decision (the pivot):* echo-types' `EchoAggregation` becomes the
+GENERAL / fundamental form (serving #175); the MACRO economics reading moves
+to oikos under a distinct name + a context statement. Key fact making this
+loss-free: `pairSum (a,b) = a+b` IS literally the `sumMonoid` fold of a
+two-element list, so the macro result is just an *instance* of the general
+form — nothing is re-proved.
+
+*Where we ended:* two echo-types commits on `claude/ecstatic-wright-OBEvx`
+(draft PR), plus an oikos doc commit (draft PR):
+
+* **Commit A — `docs(licence): long-form prose → CC-BY-SA-4.0 (9 docs)`**
+  (`879ec9b`). Header-line swap only (`SPDX-License-Identifier: MPL-2.0` →
+  `…: CC-BY-SA-4.0`) on `FOUNDATION_CONTRACT.md`, `docs/theorem-index.md`,
+  `docs/CLAIMS_AUDIT.adoc`, `docs/echo-types/{fibration-package,universal-property}.adoc`,
+  `wiki/{Architecture,Overview,Roadmap,Working-Rules}.adoc`. Copyright /
+  `SPDX-FileCopyrightText` lines untouched. (Re-applies orig `f6cc023`.)
+
+* **Commit B — `feat(aggregation): generalize EchoAggregation to monoid/group
+  form (#175)`.** `proofs/agda/EchoAggregation.agda` rewritten:
+  `record Monoid ℓ` (`Elem`/`ε`/`_⊕_`/`assoc`/`identity-l`/`identity-r`);
+  `⊕-fold` + `⊕-fold-++` (fold-is-a-monoid-homomorphism over `_++_`);
+  `record GroupAggregator {ℓ}(K V)(M)` (`agg : V → Elem`); `aggregate-values`
+  + the *proved* `aggregation-as-fold` law (#175's headline, by induction —
+  no `map-++` needed); four instances `sumMonoid`/`countMonoid`/`maxMonoid`
+  (ℕ,0,+ / + / ⊔) + `minMonoid` over `Maybe ℕ` (`nothing` = ∞, `_⊓∞_` with
+  `⊓∞-assoc`/`⊓∞-identity-r`); `countAggregator`; generic
+  `no-canonical-disaggregation-of` (= `no-section-of-collapsing-map`, also
+  covers #174); and `module Example-PairSum` (the OLD macro `ℕ×ℕ→ℕ` ledger,
+  neutrally framed: `pairSum-is-fold`, `pairSum-non-injective`,
+  `no-canonical-disaggregation`) — the mechanised anchor oikos cites.
+  `Smoke.agda` pins rewritten to the general headlines + a separate
+  `open EchoAggregation.Example-PairSum using (…)` block. Docs swept:
+  `echo-kernel-note.adoc` (Check B still PASS — name unchanged), `MAP.adoc`
+  (general bullet, cites #175/#174), `docs/bridges/cross-repo-bridge-status.md`
+  (bridge row + new revision entry: echo-types = general, oikos = macro).
+
+* **oikos — `docs(alib): macro-aggregation reading cites the general
+  EchoAggregation`.** `oikos/docs/alib-aggregate-bridge.adoc` extended with
+  the macro reading + the context statement (it is the EchoAggregation of
+  echo-types read at macro scale; named `MacroAggregation` here because
+  aggregation is a fundamental there) + §8 pointer updated (macro is now an
+  *instance* of the general form). NO Agda in oikos (Rust + AffineScript +
+  Haskell); citation-level, per its own §8.
+
+Build invariant held: `EchoAggregation.agda` + `All.agda` + `Smoke.agda`
+exit 0 under `--safe --without-K`, zero postulates, `kernel-guard.sh` PASS.
+
+*Honest scope.* `aggregation-as-fold` is the fold's monoid-homomorphism law,
+NOT full SQL GROUP-BY operational semantics. `avg` is deliberately absent
+(not a monoid — express as `sum / count`, per #175).
+`no-canonical-disaggregation-of` refutes a *section* (left inverse), NOT the
+existence of *some* representative choice (economists pick representatives;
+the content is that no choice is canonical).
+
+*Flagged (non-executable here):* deleting `session/slice-4-narrowing` (and,
+post-merge, `chore/prose-licence-longform-cc-by-sa`) is a manual GitHub-UI
+step — `git push --delete` returns HTTP 403 and the GitHub MCP has no
+delete-branch endpoint. The genuinely-open `Fidelity.agda` order-type
+fidelity debt (`D-2026-06-14`) is untouched.
+
+*Plan for the next Claude.* (1) After the echo-types PR merges, a frugal
+one-line note on #175 that the general form landed (covers #174 too).
+(2) `EchoTypes.jl` mirror — add an `EchoAggregation` finite-domain shadow
+(the `Monoid`/`sumMonoid` instances + `pairSum` are directly executable).
+(3) oikos alib Route-B build, gated on the owner's Route A vs B decision.
+
+DO NOT reopen: the general/macro split design (the macro IS the
+`Example-PairSum` instance — `pairSum` is the `sumMonoid` fold, so nothing is
+lost by hosting the general form here); the `no-section` refutation target
+(a section is a *left* inverse — exactly what non-disaggregability denies; do
+NOT restate it as a failed surjection, which is false since the maps are
+onto); the citation-level scope of the oikos bridge (oikos is Rust; no
+Agda↔Rust import path).
+
+### Session arc 2026-06-18 — EchoAggregation / oikos alib bridge (the original macro-only landing)
 
 *Where we started:* user asked (cross-repo) to investigate the wasm /
 typed-wasm route, then to scope an oikos/betlang "alib" aggregate library

@@ -130,10 +130,16 @@ kernel** — the boundary is real and lives outside this core.
   MAP.adoc.  `EchoDeniability` formalises residue deniability: the
   perfect (constant / no-section) case and the partial (injective /
   has-section) case, with `IsConstantOpener` as the exact cut-point.
-  `EchoAggregation` formalises micro→macro economic aggregation: the
-  rollup `aggregate` is an `Echo` map and non-disaggregability is
-  `no-section-of-collapsing-map` (the mechanised keystone of the
-  oikos/betlang alib note).  Imports `Echo` + `EchoNoSectionGeneric`.
+  `EchoAggregation` is the general aggregation form (issue #175):
+  aggregation-as-fold over a `Monoid`, a `GroupAggregator`, the
+  monoid-homomorphism law `aggregation-as-fold`, the four concrete
+  instances (`sumMonoid`/`countMonoid`/`maxMonoid`/`minMonoid`), and
+  generic non-disaggregability `no-canonical-disaggregation-of` (any
+  collision ⇒ no section, via `no-section-of-collapsing-map`; also
+  covers #174).  The macro→micro economic reading is the
+  `Example-PairSum` instance the oikos/betlang alib note cites
+  (`pairSum` IS the `sumMonoid` fold).  Imports `Echo` +
+  `EchoNoSectionGeneric`.
 
 | *Earn-back gate modules* +
 (derived / scoped; not kernel)

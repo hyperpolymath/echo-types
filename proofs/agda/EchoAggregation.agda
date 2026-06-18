@@ -2,187 +2,276 @@
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
--- EchoAggregation: micro→macro economic aggregation as structured loss.
+-- EchoAggregation: aggregation-as-fold over a monoid, with the
+-- structured-loss (Echo / no-section) reading.
 --
--- This module mechanises the keystone claim of the oikos/betlang
--- "aggregate library" design note (oikos
--- `docs/alib-aggregate-bridge.adoc` §2): economic *aggregation* —
--- rolling a micro ledger up into a macro observable — is literally an
--- `Echo` map, and the *non-identifiability* of the micro state from
--- the macro observable ("you cannot disaggregate") is literally the
--- repo's `no-section` theorem.
+-- This module is the GENERAL aggregation form requested by issue #175
+-- (a `Monoid` carrier + a `GroupAggregator`, for the SQL group-by /
+-- aggregation-as-monoid-homomorphism consumer in affinescript
+-- db-theory #3).  Aggregation-as-Echo is a *fundamental* of echo-types,
+-- so the clean name `EchoAggregation` names the general construction.
 --
--- The honest minimal instance.  The alib's `MacroState` is a rich
--- record (population, elites, capital stock, …).  Each of its fields
--- is an aggregation of the same shape: a sum (a Godley column) of
--- micro entries.  The load-bearing structural fact is visible already
--- at the smallest faithful case — a two-account ledger collapsing to
--- a total:
+-- The MACRO-economics reading — rolling a micro ledger up into a macro
+-- observable, and the Sonnenschein–Mantel–Debreu / representative-agent
+-- "you cannot disaggregate" critique — is the oikos `alib` bridge's
+-- *interpretation* of this general form.  It lives in
+-- `oikos/docs/alib-aggregate-bridge.adoc` and cites the
+-- `Example-PairSum` instance below.  Because aggregation is a
+-- fundamental here, naming the macro instance `EchoAggregation` over in
+-- oikos would be odd; oikos names it `MacroAggregation` and cites back.
 --
---   * `MicroLedger = ℕ × ℕ`   two sector balances (e.g. household,
---                              firm) — the micro state;
---   * `MacroTotal  = ℕ`        the aggregate money stock — one Godley
---                              column sum, the macro observable;
---   * `aggregate (a , b) = a + b`   the rollup.
+-- ## What lands (all --safe --without-K, zero postulates)
 --
--- The full `MacroState` is then a product of such projections; the
--- structural story (many-to-one ⇒ no canonical disaggregation) is
--- identical field-by-field, so the single-column instance is the
--- right place to pin it.
+--   * `Monoid`            — the aggregation carrier (#175):
+--                           `ε`, `_⊕_`, `assoc`, `identity-l`,
+--                           `identity-r`.
+--   * `GroupAggregator`   — a value→element aggregator over a monoid,
+--                           keyed by `K` (#175).
+--   * `⊕-fold` / `⊕-fold-++`
+--                         — fold a list through the monoid; the fold is a
+--                           monoid homomorphism (it distributes over
+--                           `_++_`).
+--   * `aggregate-values` / `aggregation-as-fold`
+--                         — group-aggregation as a fold, and its
+--                           homomorphism law (the #175 "aggregation-as-
+--                           fold" property — PROVED here, not merely
+--                           signed: aggregating a concatenation equals
+--                           combining the aggregates).
+--   * `sumMonoid` / `countMonoid` / `maxMonoid` / `minMonoid`
+--                         — the four concrete instances #175 asks for
+--                           (`min` over `ℕ ∪ {∞}` via `Maybe ℕ`,
+--                           `nothing` = ∞).
+--   * `countAggregator`   — a worked `GroupAggregator` (every value
+--                           contributes 1 to `sumMonoid`).
+--   * `no-canonical-disaggregation-of`
+--                         — generic non-disaggregability: any aggregation
+--                           with a collision admits NO section (a LEFT
+--                           inverse).  A re-export of
+--                           `EchoNoSectionGeneric.no-section-of-collapsing-map`
+--                           at aggregation-flavoured names; also covers
+--                           issue #174's no-section sibling.
+--   * `module Example-PairSum`
+--                         — the worked instance: a two-field record summed
+--                           to a total (`ℕ × ℕ → ℕ`).  It is non-injective
+--                           and admits no section; and `pairSum` IS the
+--                           `sumMonoid` fold of its two fields
+--                           (`pairSum-is-fold`).  This is the mechanised
+--                           anchor the oikos macro reading cites.
 --
--- What is proved.
+-- ## Honest scope
 --
---   * `ConsistentLedgers m = Echo aggregate m` — the fibre: ALL micro
---     ledgers consistent with the macro total `m`.  This IS the
---     economist's "aggregation is many-to-one", as a type.
---   * `aggregate-non-injective` — two distinct micro ledgers,
---     `(0,1)` and `(1,0)`, are distinct echoes at the SAME macro
---     total `1`.  The fibre is genuinely non-trivial.
---   * `no-canonical-disaggregation` (keystone) — `aggregate` admits
---     NO section: there is no `raise : MacroTotal → MicroLedger`
---     recovering the micro split from the macro total for every
---     input.  This is the aggregation / non-identifiability problem,
---     as a theorem, obtained by instantiating the generic
---     `EchoNoSectionGeneric.no-section-of-collapsing-map`.
---
--- This is the SAME `no-section` machinery that underwrites the
--- affine⊑linear story in the wasm proof layer (`EchoLinear.weaken`,
--- machine-checked equal to AffineScript subtyping in
--- `nextgen-typing`'s `EchoTyping.agda`).  One type language serves
--- micro→macro aggregation, cross-language ABI, and uncertainty.
---
--- Headlines (pinned in Smoke.agda):
---
---   * aggregate                   -- the rollup map
---   * ConsistentLedgers           -- its fibre, as an Echo
---   * aggregate-non-injective     -- the fibre is non-trivial
---   * no-canonical-disaggregation -- the keystone: no section
---
--- Scope guardrail.  `aggregate` here is a concrete finite ℕ-valued
--- map; the theorem is about THIS map's non-injectivity.  It does NOT
--- claim a quantitative bound on the size of fibres, nor anything
--- about the rich `MacroState` record's joint identifiability — those
--- are downstream, and named in the alib note's open questions.  The
--- minimal claim is exactly the load-bearing one: aggregation is an
--- Echo, and the macro observable cannot in general be disaggregated.
+-- `aggregation-as-fold` is the monoid-homomorphism property of the fold
+-- (folding a concatenation = combining the folds).  It is NOT a claim
+-- about SQL GROUP-BY's full operational semantics.  `avg` is
+-- deliberately absent: it is not a monoid (no identity); express it as
+-- `sum / count`, per #175.  `no-canonical-disaggregation-of` refutes a
+-- section (a left inverse), NOT the existence of *some* representative
+-- choice — economists pick representatives all the time; the content is
+-- that no such choice is canonical.
 
 module EchoAggregation where
 
 open import Echo                 using (Echo; echo-intro)
 open import EchoNoSectionGeneric using (no-section-of-collapsing-map)
 
-open import Data.Nat.Base        using (ℕ; _+_)
-open import Data.Product.Base    using (Σ; _×_; _,_; proj₁)
+open import Level                using (Level; 0ℓ; suc)
+open import Data.Nat.Base        using (ℕ; _+_; _⊔_; _⊓_)
+open import Data.Nat.Properties  using ( +-assoc; +-identityˡ; +-identityʳ
+                                       ; ⊔-assoc; ⊔-identityˡ; ⊔-identityʳ
+                                       ; ⊓-assoc )
+open import Data.Maybe.Base      using (Maybe; just; nothing)
+open import Data.List.Base       using (List; []; _∷_; _++_; map; foldr)
+open import Data.Product.Base    using (Σ; _×_; _,_; proj₁; proj₂)
 open import Relation.Binary.PropositionalEquality
-                                 using (_≡_; _≢_; refl; cong)
+                                 using (_≡_; _≢_; refl; sym; trans; cong)
 open import Relation.Nullary     using (¬_)
 
 ----------------------------------------------------------------------
--- The micro / macro types and the aggregation map.
+-- The aggregation carrier: a monoid (issue #175).
 ----------------------------------------------------------------------
 
--- A micro ledger: two sector balances (e.g. household, firm).
-MicroLedger : Set
-MicroLedger = ℕ × ℕ
-
--- The macro observable: one aggregate total (a Godley column sum).
-MacroTotal : Set
-MacroTotal = ℕ
-
--- Aggregation: roll the micro ledger up into the macro total.
-aggregate : MicroLedger → MacroTotal
-aggregate (a , b) = a + b
+record Monoid (ℓ : Level) : Set (suc ℓ) where
+  field
+    Elem       : Set ℓ
+    ε          : Elem
+    _⊕_        : Elem → Elem → Elem
+    assoc      : (a b c : Elem) → (a ⊕ b) ⊕ c ≡ a ⊕ (b ⊕ c)
+    identity-l : (a : Elem) → ε ⊕ a ≡ a
+    identity-r : (a : Elem) → a ⊕ ε ≡ a
 
 ----------------------------------------------------------------------
--- The fibre, as an Echo.
+-- Folding a list through a monoid, and the homomorphism law.
 --
--- `ConsistentLedgers m` is the type of ALL micro ledgers whose rollup
--- is exactly the macro total `m`.  Definitionally it is
--- `Σ MicroLedger (λ l → aggregate l ≡ m)` — the fibre of `aggregate`
--- over `m`.  "Aggregation is many-to-one" becomes "this type can have
--- more than one inhabitant" (witnessed below).
+-- `⊕-fold M` is the monoid fold; `⊕-fold-++` proves it is a monoid
+-- homomorphism on `(List Elem, _++_, [])` → `(Elem, _⊕_, ε)`:
+-- folding a concatenation equals combining the two folds.  Stated
+-- top-level (taking `M` explicitly) so the headlines pin directly.
 ----------------------------------------------------------------------
 
-ConsistentLedgers : MacroTotal → Set
-ConsistentLedgers m = Echo aggregate m
+⊕-fold : ∀ {ℓ} (M : Monoid ℓ) → List (Monoid.Elem M) → Monoid.Elem M
+⊕-fold M = foldr (Monoid._⊕_ M) (Monoid.ε M)
+
+⊕-fold-++ : ∀ {ℓ} (M : Monoid ℓ) (xs ys : List (Monoid.Elem M)) →
+            ⊕-fold M (xs ++ ys) ≡ Monoid._⊕_ M (⊕-fold M xs) (⊕-fold M ys)
+⊕-fold-++ M []       ys = sym (Monoid.identity-l M (⊕-fold M ys))
+⊕-fold-++ M (x ∷ xs) ys =
+  trans (cong (Monoid._⊕_ M x) (⊕-fold-++ M xs ys))
+        (sym (Monoid.assoc M x (⊕-fold M xs) (⊕-fold M ys)))
 
 ----------------------------------------------------------------------
--- The fibre over macro total 1 is non-trivial: two distinct micro
--- ledgers, (0,1) and (1,0), both aggregate to 1.
+-- Group aggregator (issue #175): a value→element map over a monoid,
+-- keyed by `K` (the group-by key; phantom in the carrier, used by the
+-- SQL consumer to partition rows before folding each group).
 ----------------------------------------------------------------------
 
-ledger₁ : MicroLedger
-ledger₁ = 0 , 1
+record GroupAggregator {ℓ} (K V : Set) (M : Monoid ℓ) : Set ℓ where
+  field
+    agg : V → Monoid.Elem M
 
-ledger₂ : MicroLedger
-ledger₂ = 1 , 0
+-- Aggregate a list of values: map the aggregator, then fold.
+aggregate-values : ∀ {ℓ} {K V : Set} {M : Monoid ℓ}
+                 → GroupAggregator K V M → List V → Monoid.Elem M
+aggregate-values {M = M} G vs = ⊕-fold M (map (GroupAggregator.agg G) vs)
 
--- The two micro ledgers are distinct: their household balances differ
--- (0 vs 1).  Refuted at the first projection by constructor clash.
-ledger₁≢ledger₂ : ledger₁ ≢ ledger₂
-ledger₁≢ledger₂ eq with cong proj₁ eq
-... | ()
-
--- … yet they collapse to the same macro total (both 1).
-aggregate-collapses : aggregate ledger₁ ≡ aggregate ledger₂
-aggregate-collapses = refl
-
--- As echoes at the same macro total.
-echo-ledger₁ : ConsistentLedgers 1
-echo-ledger₁ = echo-intro aggregate ledger₁
-
-echo-ledger₂ : ConsistentLedgers 1
-echo-ledger₂ = echo-intro aggregate ledger₂
-
--- The fibre is genuinely non-trivial: two distinct inhabitants at the
--- same macro observable.  This is "aggregation is many-to-one", as a
--- checked theorem.
-aggregate-non-injective : echo-ledger₁ ≢ echo-ledger₂
-aggregate-non-injective eq = ledger₁≢ledger₂ (cong proj₁ eq)
+-- Aggregation-as-fold (the #175 headline law): aggregating a
+-- concatenation equals combining the two aggregates.  Proved by
+-- induction (no `map-++` lemma needed — the cons case reduces
+-- definitionally through `map` and `foldr`).
+aggregation-as-fold : ∀ {ℓ} {K V : Set} {M : Monoid ℓ}
+                      (G : GroupAggregator K V M) (vs ws : List V) →
+                      aggregate-values G (vs ++ ws)
+                        ≡ Monoid._⊕_ M (aggregate-values G vs) (aggregate-values G ws)
+aggregation-as-fold {M = M} G []       ws =
+  sym (Monoid.identity-l M (aggregate-values G ws))
+aggregation-as-fold {M = M} G (v ∷ vs) ws =
+  trans (cong (Monoid._⊕_ M (GroupAggregator.agg G v)) (aggregation-as-fold G vs ws))
+        (sym (Monoid.assoc M (GroupAggregator.agg G v)
+                             (aggregate-values G vs) (aggregate-values G ws)))
 
 ----------------------------------------------------------------------
--- The keystone: no canonical disaggregation.
+-- The four concrete monoid instances (issue #175).
+----------------------------------------------------------------------
+
+-- Sum / count: (ℕ, 0, +).  `count` is "sum of 1s" — the SAME monoid;
+-- the counting happens in the aggregator (`countAggregator`).
+sumMonoid : Monoid 0ℓ
+sumMonoid = record
+  { Elem = ℕ ; ε = 0 ; _⊕_ = _+_
+  ; assoc = +-assoc ; identity-l = +-identityˡ ; identity-r = +-identityʳ }
+
+countMonoid : Monoid 0ℓ
+countMonoid = sumMonoid
+
+-- Max: (ℕ, 0, ⊔).  0 is the max-identity on ℕ (0 ≤ n for all n).
+maxMonoid : Monoid 0ℓ
+maxMonoid = record
+  { Elem = ℕ ; ε = 0 ; _⊕_ = _⊔_
+  ; assoc = ⊔-assoc ; identity-l = ⊔-identityˡ ; identity-r = ⊔-identityʳ }
+
+-- Min: (ℕ ∪ {∞}, ∞, ⊓).  `ℕ` has no top, so adjoin one as `nothing`
+-- (= ∞, the min-identity); `just n` = n.
+_⊓∞_ : Maybe ℕ → Maybe ℕ → Maybe ℕ
+nothing ⊓∞ y       = y
+just a  ⊓∞ nothing = just a
+just a  ⊓∞ just b  = just (a ⊓ b)
+
+⊓∞-identity-r : (x : Maybe ℕ) → x ⊓∞ nothing ≡ x
+⊓∞-identity-r nothing  = refl
+⊓∞-identity-r (just a) = refl
+
+⊓∞-assoc : (x y z : Maybe ℕ) → (x ⊓∞ y) ⊓∞ z ≡ x ⊓∞ (y ⊓∞ z)
+⊓∞-assoc nothing  y        z        = refl
+⊓∞-assoc (just a) nothing  z        = refl
+⊓∞-assoc (just a) (just b) nothing  = refl
+⊓∞-assoc (just a) (just b) (just c) = cong just (⊓-assoc a b c)
+
+minMonoid : Monoid 0ℓ
+minMonoid = record
+  { Elem = Maybe ℕ ; ε = nothing ; _⊕_ = _⊓∞_
+  ; assoc = ⊓∞-assoc ; identity-l = λ _ → refl ; identity-r = ⊓∞-identity-r }
+
+-- A worked aggregator: count.  Every value contributes 1 to the sum
+-- monoid; `aggregate-values countAggregator` is then list length, and
+-- `aggregation-as-fold` specialises to "count of a concatenation =
+-- sum of the counts".
+countAggregator : ∀ {K V : Set} → GroupAggregator K V sumMonoid
+countAggregator = record { agg = λ _ → 1 }
+
+----------------------------------------------------------------------
+-- Generic non-disaggregability.
 --
--- There is no section `raise : MacroTotal → MicroLedger` recovering
--- the micro split from the macro total for every input — i.e. no
--- function with `raise (aggregate l) ≡ l` for all micro ledgers `l`.
--- This is the aggregation / non-identifiability problem of
--- macroeconomics, obtained as a one-instance application of the
--- generic no-section theorem.
+-- Any aggregation map with a collision (two distinct inputs, the same
+-- output) admits NO section: there is no `raise` recovering the input
+-- from the aggregate for every input.  This is exactly
+-- `EchoNoSectionGeneric.no-section-of-collapsing-map` at aggregation-
+-- flavoured names, and it is also issue #174's no-section sibling.
 ----------------------------------------------------------------------
 
-no-canonical-disaggregation :
-  ¬ Σ (MacroTotal → MicroLedger)
-       (λ raise → ∀ l → raise (aggregate l) ≡ l)
-no-canonical-disaggregation =
-  no-section-of-collapsing-map
-    aggregate
-    ledger₁ ledger₂
-    ledger₁≢ledger₂
-    aggregate-collapses
+no-canonical-disaggregation-of :
+  ∀ {a r} {A : Set a} {R : Set r}
+  (agg-map : A → R) (x y : A) → x ≢ y → agg-map x ≡ agg-map y →
+  ¬ Σ (R → A) (λ raise → ∀ z → raise (agg-map z) ≡ z)
+no-canonical-disaggregation-of agg-map x y x≢y collides =
+  no-section-of-collapsing-map agg-map x y x≢y collides
 
 ----------------------------------------------------------------------
--- Companion remark.
+-- Worked instance: a two-field record summed to a total.
 --
--- Why this is the right level of generality:
+-- The smallest faithful aggregation — `ℕ × ℕ → ℕ` by `+`.  This is the
+-- mechanised anchor the oikos macro-economics reading cites (a micro
+-- ledger of two sector balances rolled up into one Godley column
+-- total).  It exhibits, concretely:
 --
---   * The fibre `ConsistentLedgers m` is `Echo aggregate m` ON THE
---     NOSE (definitional), so every downstream `Echo`/`EchoResidue`
---     result applies to aggregation without restatement.  In
---     particular the residue machinery names what the macro layer is
---     entitled to observe after the loss.
---
---   * `no-canonical-disaggregation` refutes a LEFT inverse (a
---     section of `aggregate`).  It does NOT refute the existence of
---     SOME right inverse / choice of representative — economists pick
---     representatives all the time (a "typical household").  The
---     content is precisely that no such choice is CANONICAL: it
---     cannot satisfy `raise ∘ aggregate ≡ id`, so it always discards
---     information about ledgers it did not pick.
---
---   * Promoting this to the rich `MacroState` record is mechanical:
---     each field is an aggregation of this shape, and a section of
---     the product would restrict to a section of each projection,
---     which this theorem already refutes.  No new proof idea is
---     needed; see the alib note §3–§4.
+--   * `pairSum-is-fold`        — `pairSum` IS the `sumMonoid` fold of
+--                                the two fields (it is an instance of
+--                                the general form, not a separate idea);
+--   * `pairSum-non-injective`  — two distinct ledgers, same total,
+--                                distinct echoes ("aggregation is
+--                                many-to-one", as a theorem);
+--   * `no-canonical-disaggregation`
+--                              — no section: the total cannot in general
+--                                be disaggregated (SMD / representative-
+--                                agent critique, type-theoretically).
 ----------------------------------------------------------------------
+
+module Example-PairSum where
+
+  Pair : Set
+  Pair = ℕ × ℕ
+
+  pairSum : Pair → ℕ
+  pairSum (a , b) = a + b
+
+  -- `pairSum` is exactly the `sumMonoid` fold of its two fields, so the
+  -- macro instance is a *special case* of the general aggregation form.
+  pairSum-is-fold : (p : Pair) → pairSum p ≡ ⊕-fold sumMonoid (proj₁ p ∷ proj₂ p ∷ [])
+  pairSum-is-fold (a , b) = cong (a +_) (sym (+-identityʳ b))
+
+  -- The fibre over total 1 is non-trivial: (0,1) and (1,0) both sum to 1.
+  ledger₁ : Pair
+  ledger₁ = 0 , 1
+
+  ledger₂ : Pair
+  ledger₂ = 1 , 0
+
+  ledger₁≢ledger₂ : ledger₁ ≢ ledger₂
+  ledger₁≢ledger₂ eq with cong proj₁ eq
+  ... | ()
+
+  pairSum-collapses : pairSum ledger₁ ≡ pairSum ledger₂
+  pairSum-collapses = refl
+
+  echo-ledger₁ : Echo pairSum 1
+  echo-ledger₁ = echo-intro pairSum ledger₁
+
+  echo-ledger₂ : Echo pairSum 1
+  echo-ledger₂ = echo-intro pairSum ledger₂
+
+  pairSum-non-injective : echo-ledger₁ ≢ echo-ledger₂
+  pairSum-non-injective eq = ledger₁≢ledger₂ (cong proj₁ eq)
+
+  -- The keystone: no canonical disaggregation of the total.
+  no-canonical-disaggregation :
+    ¬ Σ (ℕ → Pair) (λ raise → ∀ p → raise (pairSum p) ≡ p)
+  no-canonical-disaggregation =
+    no-canonical-disaggregation-of pairSum ledger₁ ledger₂ ledger₁≢ledger₂ pairSum-collapses
