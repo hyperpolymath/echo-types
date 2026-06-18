@@ -1,0 +1,89 @@
+// SPDX-License-Identifier: MPL-2.0
+// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= echo-types — Proof Status
+:toc:
+:sectnums:
+
+[abstract]
+Honest status of the echo-types Agda formalisation: what is *proved*, what is
+*open*, and the build/guardrail invariant. echo-types is a constructive Agda
+development (`--safe --without-K`); the main verified suite (`proofs/agda/All.agda`)
+is *postulate-free*. The single isolated exception (the order-type *Fidelity*
+scaffold) is enumerated explicitly below.
+
+== Build invariant (verified)
+
+* `--safe --without-K` throughout `proofs/agda/**`.
+* `agda proofs/agda/All.agda` (≈200 modules) and `agda proofs/agda/Smoke.agda`
+  exit 0. Last verified 2026-06-18.
+* Guardrails are CI-enforced (`tools/check-guardrails.sh`): every file under
+  `proofs/agda/**` must declare `{-# OPTIONS --safe --without-K #-}`, and
+  `believe_me`, `postulate`, `TERMINATING`, `REWRITE`, `NO_POSITIVITY_CHECK`,
+  `primTrustMe`, etc. are rejected. The main suite is postulate-free.
+
+== Proved (load-bearing, verified)
+
+=== Composition track
+* `Echo-comp-iso` — base accumulation isomorphism.
+* `cancel-iso` — per-fibre cancellation (parameterised by `s-left`/`s-right` +
+  both triangle identities).
+* Pentagon coherence — `Echo-comp-pent-Σ-assoc` (full Σ-associativity iso).
+
+=== Establishment track — Pillars A–D COMPLETE
+* *A* `EchoFiberBridge.agda` — `echo↔fib` definitional bridge (Echo ≡ fibre).
+* *B* `EchoGradedComonad.agda` (graded-comonad laws) + `EchoPullback.agda`
+  (funext-free, K-free terminal-cone universal property).
+* *C* `EchoSeparating.agda` — separating model; characteristic law refuted.
+* *D* `EchoRelModel.agda` — model-independence theorem (`GCLaws` once for any
+  model) + `docs/echo-types/conservativity.adoc` metatheorem.
+
+=== Canonical-identity spine (Tier 1/2/3)
+`EchoTotalCompletion` (`A ≃ Σ B (Echo f)`), `EchoOrthogonalFactorizationSystem`,
+`EchoImageFactorization`, `EchoNoSectionGeneric`, `EchoLossTaxonomy`,
+`EchoResidueTaxonomy`, `EchoDecorationStructure`, `EchoObservationalEquivalence`,
+`EchoEntropy`, `EchoLLEncoding`, the funext-qualified full-OFS gate `F5`
+(`EchoOFSUnivF5*`), the audience moves (`EchoProvenance`, `EchoSecurity`,
+`EchoProbabilisticSupport`, `EchoDifferential`), `EchoCanonicalIdentitySuite`,
+`EchoDeniability`, and `EchoAggregation` (micro→macro aggregation as an Echo
+map; `aggregate-non-injective` + `no-canonical-disaggregation`).
+
+=== Ordinal / Buchholz track (sound carrier)
+* Doubled-ladder relation `_<ᵇ²_` over the 12 core constructors + the umbrella
+  `rank2-mono-<ᵇ²` + `wf-<ᵇ²` (Gate 1 closed *for the sound carrier*).
+* `RecursiveSurfaceSound._<ᵇʳᶠ²_` + its *unbudgeted* `wf-<ᵇʳᶠ²`.
+* `Ordinal/Brouwer/OrdinalExp.agda` — `ω^^_` + the first ε-number `ε₀`
+  (Bachmann–Howard climb rung 1).
+* `Ordinal/Buchholz/BHTarget.agda` — a real `BHNotation` order + its
+  well-foundedness (no postulate).
+
+== Open (honest — NOT proved)
+
+* *Bachmann–Howard milestone* `ψ₀(Ω_ω)` order-type fidelity — *OPEN*
+  (`D-2026-06-14`). ε₀ is astronomically below the target
+  (ε₀ ≪ Γ₀ ≪ … ≪ ψ₀(Ω_ω)); the collapsing-function climb is the multi-session
+  frontier. The headline ordinal milestone is *not* reached.
+* *`Ordinal/Buchholz/Fidelity.agda` — 2 isolated postulates* (`denotation`,
+  `ordinal-upper-bound`). These are the ONLY postulates in the development,
+  quarantined under `Ordinal/Buchholz/` and tracked in `docs/.../proof-debt.md`
+  + `Fidelity-OPEN-postulates.md`. Dischargeable once the target collapse
+  heights exist.
+* *(epi, mono) image truncation* — `∥_∥` is *constructed* only in the
+  `--cubical` island `EchoImageFactorizationPropCubical.agda`; under
+  `--safe --without-K` it remains a shadow (it cannot be built within
+  `--safe --without-K` without HITs).
+* *Unbudgeted global `wf-<ᵇʳᶠ` over native `_<ᵇ_`* — walled: native `_<ᵇ_` is
+  ordinally unsound (documented counterexample), so no rank embedding maps it.
+  The achievable form landed on the sound carrier (`wf-<ᵇʳᶠ²`).
+* *Pillar E paper* (`docs/echo-types/paper.adoc`) — LIVING DRAFT with `[EXPAND]`
+  tags (background, related work, evaluation, ordinal consumer-evidence
+  appendix gated on the BH milestone). Not submitted.
+
+== Discipline
+
+* No `postulate` in load-bearing tracks (the 2 Fidelity postulates are the
+  sole, isolated, documented exception).
+* Every headline theorem is pinned in `Smoke.agda`; every module is wired into
+  `All.agda` (orphan modules that compile but are not in `All.agda` are treated
+  as dead code).
+* The EI-2 integration-recipe-distinctness investigation is *terminated
+  negatively* and must not be reopened (see `.machine_readable/6a2/STATE.a2ml`).

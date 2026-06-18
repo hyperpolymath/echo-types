@@ -31,3 +31,15 @@ git commit -s -m "feat: ..."
 ## Reviews
 
 At least one maintainer review (see MAINTAINERS.adoc). Bridge-module changes (the cross-system bridges in `proofs/agda/Echo*Bridge*.agda`) need attention because they fix the load-bearing distinctness story; flag them for explicit review.
+
+## Contribution model — Tri-Perimeter Contribution Framework (TPCF)
+
+echo-types follows the estate-wide **Tri-Perimeter Contribution Framework (TPCF)** — graduated trust without gatekeeping:
+
+* **Perimeter 1 — Core Systems (maintainers only).** The proof kernel: `proofs/agda/Echo.agda`, the identity-claim spine, the bridge modules, the `All.agda` / `Smoke.agda` wiring, and the guardrail tooling. Direct commits by maintainers only.
+* **Perimeter 2 — Expert Extensions (trusted contributors).** New proof modules, decoration instances, and ordinal-track slices. Apply via issue → review → merge under the relevant `proofs/agda/` path with the build invariant green.
+* **Perimeter 3 — Community Sandbox (open to all).** Docs (`.adoc`), tutorial walkthroughs, wiki pages, `.well-known/` content, and spec proposals.
+
+### Fork workflow
+
+External contributors use the standard **fork**-and-pull-request workflow: fork the repository, branch from `main`, run `just validate` locally (full Agda verify + kernel-guard), and open a PR. Maintainers (Perimeter 1) may commit directly to feature branches. Every PR must keep `All.agda` + `Smoke.agda` green under `--safe --without-K` and introduce no banned constructs (see the pre-merge checklist above).
