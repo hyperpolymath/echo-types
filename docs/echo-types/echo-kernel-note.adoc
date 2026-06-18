@@ -121,12 +121,16 @@ kernel** — the boundary is real and lives outside this core.
   residue / decoration / observational classifications.
   *Application/extension modules* (also added via the same sweep):
   `EchoEntropy`, `EchoLLEncoding`, `EchoProvenance`, `EchoSecurity`,
-  `EchoProbabilisticSupport`, `EchoDifferential`, `EchoDeniability`
+  `EchoProbabilisticSupport`, `EchoDifferential`, `EchoDeniability`,
+  `EchoAggregation`
   are derived domain applications mapped under their own headings in
   MAP.adoc.  `EchoDeniability` formalises residue deniability: the
   perfect (constant / no-section) case and the partial (injective /
   has-section) case, with `IsConstantOpener` as the exact cut-point.
-  Imports `Echo` + `EchoNoSectionGeneric`.
+  `EchoAggregation` formalises micro→macro economic aggregation: the
+  rollup `aggregate` is an `Echo` map and non-disaggregability is
+  `no-section-of-collapsing-map` (the mechanised keystone of the
+  oikos/betlang alib note).  Imports `Echo` + `EchoNoSectionGeneric`.
 
 | *Earn-back gate modules* +
 (derived / scoped; not kernel)

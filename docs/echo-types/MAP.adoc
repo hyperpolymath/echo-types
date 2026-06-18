@@ -245,6 +245,17 @@ honest-bound matched-negative block.
   the `affine` mode in `EchoObservationalEquivalence`. Honest-bound:
   NOT side-channel-safe / cryptographic deniability / adaptive
   adversary. `proofs/agda/EchoDeniability.agda`. `[REAL]`
+* *Aggregation* — `aggregate` rolls a two-account ledger up to a
+  Godley column total. The fibre `ConsistentLedgers m = Echo
+  aggregate m` is "aggregation is many-to-one" as a type;
+  `aggregate-non-injective` exhibits two distinct micro ledgers at
+  the same macro total; `no-canonical-disaggregation` is the
+  non-identifiability theorem (no section of `aggregate`, via
+  `no-section-of-collapsing-map`). The mechanised keystone of the
+  oikos/betlang alib note (`oikos:docs/alib-aggregate-bridge.adoc`).
+  Honest-bound: NOT a quantitative fibre-size bound / joint
+  identifiability of the full MacroState record.
+  `proofs/agda/EchoAggregation.agda`. `[REAL]`
 
 *Curated suite — single-file entry point.* The narrative
 deliverable that pulls the Tier-1 / Tier-2 / Tier-3 named theorems
