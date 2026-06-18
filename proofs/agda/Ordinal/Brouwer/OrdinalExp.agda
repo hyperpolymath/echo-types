@@ -26,14 +26,22 @@
 -- value. (ε₀ is itself the collapse ψ₀(Ω₁) — the first nontrivial data
 -- point the eventual `denotation` ⟦·⟧ must reproduce.)
 --
--- This module does NOT prove ε₀ is an ε-number (`ω^^ ε₀ ≡ ε₀`); that
--- fixpoint property and the inflationary `α <′ ω^^ α` are follow-on
--- rungs.
+-- RUNG 2 (2026-06-18): ε₀ IS an ε-number — `ω^^ ε₀ ≃ ε₀` as `_≤′_` in
+-- BOTH directions (`ω^^-ε₀-≤`, `ε₀-≤-ω^^-ε₀`, packaged `ε₀-ε-number`).
+-- bi-`≤′`, not `≡`, because two `olim`s of different ℕ-indexings of the
+-- same supremum are not definitionally equal. No general inflationary
+-- lemma is needed: `ω^^ ε₀` is definitionally the `olim` of the shifted
+-- tower `n ↦ ε-tower (suc n)`, so each direction reduces to one-step
+-- `f-in-lim′` (+ `ω^^-pos` for the base index).
+--
+-- The *strict* inflationary `α <′ ω^^ α` is deliberately NOT pursued: it
+-- is FALSE exactly at the ε-numbers (ε₀ = ω^^ ε₀ is the counterexample);
+-- the non-strict `α ≤′ ω^^ α` holds but is not needed for the fixed point.
 
 module Ordinal.Brouwer.OrdinalExp where
 
 open import Data.Nat.Base using (ℕ; zero; suc)
-open import Data.Product.Base using (Σ; _,_)
+open import Data.Product.Base using (Σ; _,_; _×_)
 open import Data.Unit.Base using (tt)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
@@ -83,3 +91,30 @@ open import Ordinal.Brouwer.OmegaPow using (_·ℕ_; oz<′oz⊕)
 
 ε-tower-below-ε₀ : ∀ n → ε-tower n ≤′ ε₀
 ε-tower-below-ε₀ n = f-in-lim′ ε-tower n
+
+----------------------------------------------------------------------
+-- ε₀ is an ε-number: a fixed point of ω-exponentiation (RUNG 2)
+----------------------------------------------------------------------
+
+-- `ω^^ ε₀ ≃ ε₀`, as `_≤′_` in both directions.  `ω^^ ε₀ = ω^^ (olim
+-- ε-tower)` reduces to `olim (n ↦ ω^^ (ε-tower n))`, and each
+-- `ω^^ (ε-tower n)` is definitionally `ε-tower (suc n)` — i.e. `ω^^ ε₀`
+-- is the supremum of the tower SHIFTED by one.  A shifted supremum has
+-- the same value, so both inequalities are one-step `f-in-lim′`s.
+
+-- Upper: every element of the shifted tower is below ε₀.
+ω^^-ε₀-≤ : ω^^ ε₀ ≤′ ε₀
+ω^^-ε₀-≤ n = f-in-lim′ ε-tower (suc n)
+
+-- Lower: every tower element is below the shifted tower's supremum.
+-- The base index ε-tower 0 = 1 sits below ε-tower 1 = ω^^ 1 by `ω^^-pos`;
+-- every successor element ε-tower (suc m) = ω^^ (ε-tower m) IS the m-th
+-- element of the shifted tower, so it is below by `f-in-lim′`.
+ε₀-≤-ω^^-ε₀ : ε₀ ≤′ ω^^ ε₀
+ε₀-≤-ω^^-ε₀ zero    = 0 , ω^^-pos (osuc oz)
+ε₀-≤-ω^^-ε₀ (suc m) = f-in-lim′ (λ k → ω^^ (ε-tower k)) m
+
+-- ε₀ is a fixed point of ω-exponentiation (the defining property of an
+-- ε-number), packaged as bi-`≤′`.
+ε₀-ε-number : (ω^^ ε₀ ≤′ ε₀) × (ε₀ ≤′ ω^^ ε₀)
+ε₀-ε-number = ω^^-ε₀-≤ , ε₀-≤-ω^^-ε₀
