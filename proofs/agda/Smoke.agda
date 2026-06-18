@@ -1164,6 +1164,24 @@ open import Ordinal.Brouwer.OmegaPow using
   ; additive-principal
   )
 
+-- Ordinal exponentiation + ε₀ (2026-06-15, own block per CLAUDE.md
+-- Working rules): rung 1 of the target-side Brouwer climb toward
+-- ψ₀(Ω_ω) (BH order-type fidelity, D-2026-06-14).  `ω^^_` is ω to an
+-- ORDINAL power (generalising OmegaPow.ω^_ : ℕ → Ord); `ε₀` is the
+-- first ε-number.  Honest scope: ε₀ ≪ ψ₀(Ω_ω) — this lands the
+-- exponentiation primitive every higher rung needs and pins ε₀ as the
+-- first checkable milestone value.
+open import Ordinal.Brouwer.OrdinalExp using
+  ( ω^^_
+  ; ω^^-zero
+  ; ω^^-pos
+  ; ε-tower
+  ; ε-tower-suc
+  ; ε₀
+  ; ε₀-pos
+  ; ε-tower-below-ε₀
+  )
+
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
