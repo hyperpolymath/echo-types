@@ -65,13 +65,16 @@ kernel** — the boundary is real and lives outside this core.
   `EchoFiberBridge`, `EchoFiberCount`, `EchoFiberTriangulation`,
   `EchoIndexed`, `EchoRelational`, `EchoTruncation`,
   `EchoJanusBridge`, `EchoTropical`, `EchoSeparating`,
-  `EchoTotalCompletion`
+  `EchoTotalCompletion`, `EchoDisplayed`
 | One hop off the kernel. `EchoJanusBridge`/`EchoTropical` are
   *Directions* (see MAP). `EchoFiberTriangulation` is the external
   stdlib triangulation hardening item. `EchoSeparating` carries
   retracted prose framing (below). `EchoTotalCompletion` is the
   `A ↔ Σ Echo` encode/decode pair anchoring the F5 canonical-
-  identity cohort (Tier 2 below).
+  identity cohort (Tier 2 below). `EchoDisplayed` is the
+  displayed-type / `DispHom` / `fromHomOver` fibration packaging of
+  the categorical base (faithful mirror of typed-wasm's Idris
+  `Echo.idr`; no variance / graded-comonad claim, per R-2026-05-18).
 
 | *Derived — Tier 2* +
 (depend on Tier-1 `Echo*`)

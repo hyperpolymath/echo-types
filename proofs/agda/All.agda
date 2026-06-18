@@ -5,6 +5,7 @@
 module All where
 
 open import Echo
+open import EchoDisplayed
 open import EchoTotalCompletion
 open import EchoOrthogonalFactorizationSystem
 open import EchoImageFactorization
@@ -160,6 +161,7 @@ open import Ordinal.Buchholz.RankDoubledLadderMonoPlus
 open import Ordinal.Buchholz.RankDoubledLadderAddPrincipal
 open import Ordinal.Buchholz.RankDoubledLadderMonoPlus2
 open import Ordinal.Buchholz.RankDoubledLadderUmbrella
+open import Ordinal.Buchholz.BHTarget
 open import Ordinal.Buchholz.RankMonoUmbrella
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice3
 open import Ordinal.Buchholz.RankMonoUmbrellaSlice4

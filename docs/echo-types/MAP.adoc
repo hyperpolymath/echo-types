@@ -164,6 +164,14 @@ in the Pillar F4 template style.
   INJ ⇒ projection-unique; SURJ ⇒ every fibre inhabited; CONST ⇒
   section from the entire domain. K-free skeletons across all four.
   `proofs/agda/EchoLossTaxonomy.agda`.
+* *Displayed-type packaging* `[REAL]` — `Displayed` / `DispHom` /
+  `idDispHom` / `fromHomOver`: the displayed-type / fibration packaging
+  of the categorical base, a faithful Agda mirror of typed-wasm's Idris
+  `Echo.idr`, with four closed laws (identity displayed morphism acts
+  as identity; `fromHomOver` well-defined = `map-over` by construction;
+  compatibility with `map-over-id` and `map-over-comp`). Purely the
+  fibration packaging — no variance / graded-comonad / universal-property
+  claim (R-2026-05-18). `proofs/agda/EchoDisplayed.agda`.
 * *Residue taxonomy* (residue-side) — `record ResidueForm f R`
   packaging the per-output residue carrier + lowering shared by the
   eight decoration modules. Eight instances (as of 2026-05-28):
