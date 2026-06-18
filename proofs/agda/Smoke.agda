@@ -1186,6 +1186,22 @@ open import Ordinal.Brouwer.OrdinalExp using
   ; ω^^-infl
   )
 
+-- Veblen φ-hierarchy slice 2 (2026-06-18, own block per CLAUDE.md
+-- Working rules): φ₁, the enumeration of ε-numbers (fixed points of
+-- ω^^), built on the rung-3.1 inflationary law.  `next-ε β` = least
+-- ε-number above β; `φ₁` enumerates them (0↦ε₀, suc↦next-ε, limit↦sup);
+-- `φ₁-ε-number` proves every value is an ε-number (bi-≤′).  Rung 3 of the
+-- climb toward Γ₀ / ψ₀(Ω_ω) (order-type fidelity OPEN, D-2026-06-14).
+open import Ordinal.Brouwer.VeblenPhi using
+  ( tower-from
+  ; next-ε
+  ; ω^^-next-ε-≤
+  ; next-ε-≤-ω^^
+  ; β<next-ε
+  ; φ₁
+  ; φ₁-ε-number
+  )
+
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
