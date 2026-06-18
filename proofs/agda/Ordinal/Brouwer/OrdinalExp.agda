@@ -35,8 +35,12 @@
 -- `f-in-lim′` (+ `ω^^-pos` for the base index).
 --
 -- The *strict* inflationary `α <′ ω^^ α` is deliberately NOT pursued: it
--- is FALSE exactly at the ε-numbers (ε₀ = ω^^ ε₀ is the counterexample);
--- the non-strict `α ≤′ ω^^ α` holds but is not needed for the fixed point.
+-- is FALSE exactly at the ε-numbers (ε₀ = ω^^ ε₀ is the counterexample).
+--
+-- RUNG 3 (2026-06-18): the NON-strict inflationary `ω^^-infl : α ≤′ ω^^ α`
+-- IS proved below — the engine for enumerating ε-numbers (φ₁) and the
+-- higher Veblen φ hierarchy toward Γ₀. (`α ≤′ ω^^ α` holds everywhere,
+-- with equality exactly at the ε-numbers.)
 
 module Ordinal.Brouwer.OrdinalExp where
 
@@ -46,8 +50,9 @@ open import Data.Unit.Base using (tt)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 open import Ordinal.Brouwer using (Ord; oz; osuc; olim)
-open import Ordinal.Brouwer.Phase13 using (_≤′_; _<′_; f-in-lim′)
-open import Ordinal.Brouwer.OmegaPow using (_·ℕ_; oz<′oz⊕)
+open import Ordinal.Brouwer.Arithmetic using (_⊕_)
+open import Ordinal.Brouwer.Phase13 using (_≤′_; _<′_; f-in-lim′; ≤′-trans; osuc-mono-≤′; ⊕-mono-≤-right)
+open import Ordinal.Brouwer.OmegaPow using (_·ℕ_; oz<′oz⊕; X≤′oz⊕X)
 
 ----------------------------------------------------------------------
 -- Ordinal exponentiation base ω
@@ -118,3 +123,31 @@ open import Ordinal.Brouwer.OmegaPow using (_·ℕ_; oz<′oz⊕)
 -- ε-number), packaged as bi-`≤′`.
 ε₀-ε-number : (ω^^ ε₀ ≤′ ε₀) × (ε₀ ≤′ ω^^ ε₀)
 ε₀-ε-number = ω^^-ε₀-≤ , ε₀-≤-ω^^-ε₀
+
+----------------------------------------------------------------------
+-- ω-exponentiation is inflationary (RUNG 3 prerequisite)
+----------------------------------------------------------------------
+
+-- `α ≤′ ω^^ α` for every α — the non-strict inflationary law.  This is
+-- the engine the Veblen φ-hierarchy needs: "the next ε-number strictly
+-- above β" is a genuine fixed point only because `osuc β ≤′ ω^^ (osuc β)`.
+-- (The strict `α <′ ω^^ α` is FALSE at ε-numbers — ε₀ = ω^^ ε₀.)
+--
+--   * oz     : `oz ≤′ _` is `⊤`.
+--   * osuc β : witness index 2, since `(ω^^ β) ·ℕ 2 ≡ (oz ⊕ ω^^ β) ⊕ ω^^ β`;
+--     chain `osuc β ≤′ osuc (ω^^ β) ≤′ osuc (oz ⊕ ω^^ β) ≤′ (oz ⊕ ω^^ β) ⊕ ω^^ β`
+--     via `osuc-mono-≤′` (IH, then `X≤′oz⊕X`) and right-monotonicity of `_⊕_`
+--     (`⊕-mono-≤-right`, using `osuc oz ≤′ ω^^ β` = `ω^^-pos β` and the
+--     definitional `Y ⊕ osuc oz ≡ osuc Y`).
+--   * olim f : per branch, IH `f n ≤′ ω^^ (f n)` then `f-in-lim′`.
+ω^^-infl : ∀ α → α ≤′ ω^^ α
+ω^^-infl oz       = tt
+ω^^-infl (osuc β) =
+  2 , ≤′-trans {osuc β} {osuc (ω^^ β)} {(oz ⊕ ω^^ β) ⊕ ω^^ β}
+        (osuc-mono-≤′ {β} {ω^^ β} (ω^^-infl β))
+        (≤′-trans {osuc (ω^^ β)} {osuc (oz ⊕ ω^^ β)} {(oz ⊕ ω^^ β) ⊕ ω^^ β}
+          (osuc-mono-≤′ {ω^^ β} {oz ⊕ ω^^ β} (X≤′oz⊕X {ω^^ β}))
+          (⊕-mono-≤-right {oz ⊕ ω^^ β} {osuc oz} {ω^^ β} (ω^^-pos β)))
+ω^^-infl (olim f) =
+  λ n → ≤′-trans {f n} {ω^^ (f n)} {olim (λ k → ω^^ (f k))}
+          (ω^^-infl (f n)) (f-in-lim′ (λ k → ω^^ (f k)) n)
