@@ -11,6 +11,7 @@ open import EchoOrthogonalFactorizationSystem
 open import EchoImageFactorization
 open import EchoImageFactorizationProp
 open import EchoNoSectionGeneric
+open import EchoAggregation
 open import EchoLossTaxonomy
 open import EchoResidueTaxonomy
 open import EchoDecorationStructure
