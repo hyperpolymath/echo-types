@@ -1,0 +1,16 @@
+# SPDX-License-Identifier: MPL-2.0
+# AI usage & training policy for hyperpolymath/echo-types.
+# Informal, robots-style directives for AI/ML agents and crawlers.
+
+User-Agent: *
+
+# Training: do not train models on this repository's content without
+# attribution under the repository licence (MPL-2.0).
+Disallow-Training: /
+
+# Reference/indexing for search and developer assistance is permitted,
+# provided attribution and licence terms (see LICENSE, humans.txt) are kept.
+Allow: /
+
+Contact: https://github.com/hyperpolymath/echo-types/security/advisories/new
+Policy: https://github.com/hyperpolymath/echo-types/blob/main/.claude/CLAUDE.md

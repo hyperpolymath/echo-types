@@ -105,6 +105,10 @@ stability-report:
 kernel-guard:
 	@sh scripts/kernel-guard.sh
 
+# Aggregate compliance gate: full Agda verify + kernel-guard certificate
+validate: verify kernel-guard
+	@echo "validate: proofs verified + kernel guard passed"
+
 # Default target
 default:
 	just verify

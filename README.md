@@ -512,7 +512,7 @@ cd /var/mnt/eclipse/repos/echo-types
 agda -i proofs/agda proofs/agda/All.agda
 ```
 
-### Installing as a library
+## Installation (as a library)
 
 The repo is structured as an Agda library via `echo-types.agda-lib`
 at the repo root. To use `echo-types` from another Agda project,
@@ -531,6 +531,8 @@ name: my-project
 depend: standard-library echo-types
 include: src
 ```
+
+## Usage
 
 Consumers can then `open import Echo`, `open import EchoLinear`,
 or `open import tutorial.region_exit_audit.RegionExitAudit` — the
