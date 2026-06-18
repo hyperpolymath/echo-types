@@ -298,6 +298,88 @@ NOT restate it as a failed surjection, which is false since the maps are
 onto); the citation-level scope of the oikos bridge (oikos is Rust; no
 Agda↔Rust import path).
 
+### Session arc 2026-06-18 — BH ε-number climb: rungs 2 → 3.1 → φ₁ (ordinal/BH track — read after the bridge arc)
+
+*Where we started:* post rung 1 (`ω^^_` + `ε₀` defined, PR #231) and the
+fidelity-boundary-reduction arc below. `ε₀` was *defined* (the `olim` of the
+ω-exponentiation tower) but NOT yet PROVED a fixed point of `ω^^`; `ω^^` had
+no inflationary law; and the Veblen hierarchy had no transfinite level — φ₀
+(= `ω^^` itself) was all that existed. The target-side climb toward ψ₀(Ω_ω)
+(BH order-type fidelity, open `D-2026-06-14`) had taken its first step (ε₀)
+and stalled there.
+
+*Where we ended:* three ordinal-track rungs LAND on `origin/main`, all
+`--safe --without-K`, zero postulates, structural recursion (no `TERMINATING`),
+all wired into `All.agda` + pinned in `Smoke.agda`:
+
+* **Rung 2 (`6fb48e0`) — ε₀ is an ε-number.** In `OrdinalExp.agda`:
+  `ε₀-ε-number : (ω^^ ε₀ ≤′ ε₀) × (ε₀ ≤′ ω^^ ε₀)` — the bi-`≤′` fixed-point
+  pair (`ω^^-ε₀-≤` / `ε₀-≤-ω^^-ε₀`). `ω^^ ε₀` is definitionally the supremum
+  of the tower shifted by one, so each direction is essentially a one-step
+  `f-in-lim′`; the `≥` base index only needed `ω^^-pos`.
+* **Rung 3.1 (`c5bb2a7`, PR #236) — ω-exponentiation is inflationary.**
+  `ω^^-infl : ∀ α → α ≤′ ω^^ α` (NON-strict; `osuc` case via
+  `osuc-mono-≤′`, `olim` case via `≤′-trans` + `f-in-lim′`). Load-bearing
+  for φ₁: `next-ε`'s base index is `osuc β`, whose `≥`-direction needs
+  `ω^^-infl (osuc β)` (ε₀'s `oz` base did not).
+* **φ₁ — rung 3, slice 2 (`3ee0f08`, PR #238) — the ε-number enumeration.**
+  New module `proofs/agda/Ordinal/Brouwer/VeblenPhi.agda`. The requested
+  centrepiece of this arc:
+  * `tower-from : Ord → ℕ → Ord` — the `ω^^`-tower from an arbitrary base.
+  * `next-ε β = olim (tower-from (osuc β))` — the least ε-number STRICTLY
+    above β. Proved a fixed point of `ω^^` (bi-`≤′`) by `ω^^-next-ε-≤` /
+    `next-ε-≤-ω^^`; `β<next-ε : osuc β ≤′ next-ε β` (tower index 0).
+  * `φ₁ : Ord → Ord` — `φ₁ oz = ε₀`, `φ₁ (osuc α) = next-ε (φ₁ α)`,
+    `φ₁ (olim f) = olim (λ n → φ₁ (f n))`.
+  * `φ₁-ε-number : ∀ α → (ω^^ (φ₁ α) ≤′ φ₁ α) × (φ₁ α ≤′ ω^^ (φ₁ α))` —
+    the headline: EVERY value of φ₁ is an ε-number. `oz` reuses
+    `ε₀-ε-number`; `osuc` is `next-ε`'s pair (no IH); `olim` lifts the
+    per-branch IH through `olim` via `f-in-lim′`.
+
+Also landed adjacent: `ae7f8fb` self-documents the CSA004 `agda_postulate`
+dismissal inside `EchoImageFactorizationPropPostulated.agda` (the `--safe`
+shadow of the cubical-constructed `∥_∥`; see `proof-debt.md` /
+`Fidelity-OPEN-postulates.md`). `b68c14e` is the merge-neutral RSR-Bronze
+landing, unrelated to the climb.
+
+*Reusable design lesson (load-bearing — do not relearn the hard way).* Every
+`≤′-trans` call in φ₁ carries its three implicits explicitly
+(`≤′-trans {α} {β} {γ} …`). `_≤′_` is a *computing/reducing* relation, so
+the unifier cannot infer the middle point from the goal; pinning all three
+made `VeblenPhi.agda` compile first try. Apply this to every future
+`≤′-trans`-heavy module.
+
+*Honest-scope invariant (DO NOT violate).* φ₁ is the FIRST transfinite Veblen
+level. The Feferman–Schütte ordinal Γ₀ needs the full binary φ_α hierarchy +
+its diagonal fixed point; ψ₀(Ω_ω) sits far above even Γ₀ and additionally
+needs the ordinal-collapsing layer. **Order-type fidelity (ψ₀(Ω_ω)) REMAINS
+OPEN (`D-2026-06-14`)** — this arc neither reaches Γ₀ nor plugs
+`Fidelity.AtHeight`. φ₁ values are ASTRONOMICALLY below ψ₀(Ω_ω). Any surface
+that says fidelity is "proved" is wrong. bi-`≤′` (not `≡`) throughout, because
+Brouwer `olim`s of different ℕ-indexings of one supremum are not
+definitionally equal — that is correct, not a gap.
+
+*Plan for the next Claude (the fidelity climb continues, in order):*
+1. **φ₁ as a normal function.** Currently φ₁ values are proved to BE
+   ε-numbers; the enumeration properties (φ₁ strictly monotone + continuous;
+   `next-ε β` is the LEAST ε-number above β, not merely AN ε-number above β)
+   are the natural next rung. Bounded; reuses the `≤′` toolkit.
+2. **Binary Veblen `φ_α(β)` + the diagonal → Γ₀.** The two-argument Veblen
+   function and its fixed-point diagonal — the Feferman–Schütte ordinal.
+3. **Higher collapsing** up to ψ₀(Ω_ω) — the multi-session core; the
+   ordinal-collapsing function with fundamental sequences that eventually
+   produces `bh-height`.
+4. **`denotation` + `ordinal-upper-bound`** — the two remaining `Fidelity.agda`
+   postulates, dischargeable once the target heights exist (denotation needs
+   the collapse; it canNOT be `rank2`, which is height-collapsing).
+
+*DO NOT reopen:* the φ₁ design — `next-ε` via the shifted tower from `osuc β`
+is correct, and `ω^^-infl (osuc β)` is exactly what the `≥`-direction base
+needs (this is WHY rung 3.1 had to precede φ₁); the bi-`≤′` formulation (not a
+gap — see above); the explicit-implicit-pinning on `≤′-trans` (required, `≤′`
+reduces); the honest-scope verdict (φ₁ ≠ Γ₀ ≠ ψ₀(Ω_ω)). The RSR-Bronze
+landing (`b68c14e`) and the CSA004 self-doc (`ae7f8fb`) are settled.
+
 ### Session arc 2026-06-18 — EchoAggregation / oikos alib bridge (the original macro-only landing)
 
 *Where we started:* user asked (cross-repo) to investigate the wasm /
