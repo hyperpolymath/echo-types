@@ -210,9 +210,78 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-06-14)
+## Current rung state (2026-06-18)
 
-### Session arc 2026-06-14 Ordinal track — doubled-ladder Gate 1 closure (read this first)
+### Session arc 2026-06-15→18 — fidelity boundary reduction + BH climb rung 1 (READ THIS FIRST)
+
+*Where we started:* post doubled-ladder Gate 1. Two soundness escape-hatches
+stood out: (1) the (epi,mono) image factorisation's propositional truncation
+`∥_∥`, only POSTULATED in `EchoImageFactorizationPropPostulated` under (c);
+(2) the order-type fidelity scaffold `Ordinal/Buchholz/Fidelity.agda` carrying
+THREE opaque postulates (`bh-notation`, `denotation`, `ordinal-upper-bound`),
+the BH milestone (ψ₀(Ω_ω)) flagged OPEN (`D-2026-06-14`).
+
+*Where we ended:* three PRs merged to `main`, cold-check-verified:
+
+* **#222 (`9edb6e3`) — cubical (epi,mono) truncation discharge.** New
+  `proofs/agda/EchoImageFactorizationPropCubical.agda` (`--cubical --safe`,
+  zero postulates) CONSTRUCTS `∥_∥` as a higher inductive type (`squash`
+  higher constructor → `is-prop-∥∥`; path recursor → `rec-∥∥`) and re-proves
+  `prop-factor-right-injective` (mono) + `prop-factor-left-mere-surjective`
+  (epi). The (c) postulates are now the `--safe --without-K`-profile SHADOW of
+  a constructed object — they remain only because `∥_∥` can't be built WITHIN
+  `--safe --without-K` itself. The module is a self-contained `--cubical`
+  ISLAND: a `--cubical` file CANNOT import the `--safe --without-K` Echo cone
+  (flag-compatibility), hence no reuse of the existing demo. New CI lane in
+  `.github/workflows/agda.yml` (warm + cold `--ignore-interfaces`);
+  guardrail-exempt (EXPLORATORY_EXEMPT).
+* **#225 (`1fa8129`) — Fidelity trust boundary 3 → 2.** New `--safe --without-K`
+  kernel module `Ordinal/Buchholz/BHTarget.agda` (zero postulates): the
+  `BHNotation` interface + a REAL `bh-notation-from : Ord → BHNotation` wiring
+  the existing Brouwer order (`Ord` / `_<′_` / `wf-<′` from `Brouwer.Phase13`).
+  So the target order AND its well-foundedness are now PROVED, not assumed.
+  `Fidelity.agda` refactored: the `bh-notation` postulate is GONE; the
+  candidate BH height is an explicit `module AtHeight (bh-height-ord : Ord)`
+  parameter; Fidelity now has exactly TWO postulates (`denotation`,
+  `ordinal-upper-bound`). `bh-notation-from` fixes only the ORDER, not the
+  embedding, so it does NOT prejudge `denotation` (in particular
+  `bh-height ≠ rank2 BH`). `proof-debt.md` (a)+(d) +
+  `Fidelity-OPEN-postulates.md` updated to match.
+* **#231 (`642760a`) — ordinal exponentiation + ε₀ (BH climb rung 1).** New
+  `--safe --without-K` module `Ordinal/Brouwer/OrdinalExp.agda` (zero
+  postulates): `ω^^_ : Ord → Ord` (ω to an ORDINAL power, generalising
+  `OmegaPow.ω^_ : ℕ → Ord` to limit exponents) + the first ε-number `ε₀ : Ord`
+  (`olim` of the ω-exponentiation tower), with `ω^^-pos` / `ε₀-pos` /
+  `ε-tower-below-ε₀`. Wired into `All.agda` + top-level `Smoke.agda`.
+
+*Honest-scope invariant (DO NOT violate).* Order-type fidelity (ψ₀(Ω_ω) as
+the order type of `_<ᵇ²_` on `WfBT`) is STILL OPEN (`D-2026-06-14`). These
+three PRs SHRINK the trust boundary (truncation realised in cubical; BH
+structure + its WF now real; one fewer Fidelity postulate) and START the
+target-side climb (ε₀) — they do NOT reach the milestone. ε₀ is
+ASTRONOMICALLY below ψ₀(Ω_ω) (ε₀ ≪ Γ₀ ≪ … ≪ ψ₀(Ω_ω)); the `Fidelity.AtHeight`
+height parameter is not plugged. Any surface that says fidelity is "proved" is
+wrong.
+
+*Plan for the next Claude (the fidelity climb, in order):*
+1. **Rung 2 — ε₀ is an ε-number:** `ω^^ ε₀ ≡ ε₀` + the inflationary
+   `α <′ ω^^ α`. Finishes the ε₀ rung. Bounded.
+2. **Veblen φ + Γ₀:** fixed-point hierarchy → Feferman–Schütte ordinal.
+3. **Higher collapsing** up to ψ₀(Ω_ω) — the bulk; the ordinal-collapsing
+   function with fundamental sequences. The hard, multi-session core that
+   eventually produces `bh-height`.
+4. **`denotation` + `ordinal-upper-bound`** — the two remaining Fidelity
+   postulates, dischargeable once the target heights exist (denotation needs
+   the collapse; it canNOT be `rank2`, which is height-collapsing).
+
+*DO NOT reopen:* the cubical-island design (a `--cubical` module cannot import
+the `--safe --without-K` cone — flag rule, not a gap); the `bh-notation-from`
+construction (the candidate height MUST stay a parameter / ≠ `rank2 BH`, else
+`denotation` becomes unsatisfiable); the `OrdinalExp` shapes (the `ω^^` three
+clauses + `ε-tower` are correct). The unbudgeted global `wf-<ᵇʳᶠ` over native
+`_<ᵇ_` remains walled (`RankBrouwer` preamble) — separate from this track.
+
+### Session arc 2026-06-14 Ordinal track — doubled-ladder Gate 1 closure
 
 *Where we started:* Gate 1's residual was the EQUAL-Ω boundary
 `bpsi ν α <ᵇ bOmega ν` (ψ_ν(α) < Ω_ν at the SAME marker). The

@@ -362,6 +362,15 @@ Staged Buchholz-style collapsing in `--safe --without-K`.
   extensions), `RankMonoUnionWF` (2026-05-30 PR #170 — Gate 2
   closure: `WellFounded _<ᵇᵘ_` via `Subrelation.wellFounded` +
   `On.wellFounded` rank-embedding transport from `wf-<′`).
+* Fidelity climb (2026-06-15 → 18): `Ordinal.Buchholz.BHTarget` (the
+  BH order-type target structure + its well-foundedness CONSTRUCTED
+  for real from the Brouwer order `Ord`/`_<′_`/`wf-<′`; zero
+  postulates; reduces the `Fidelity.agda` trust boundary from three
+  postulates to two), and `Ordinal.Brouwer.OrdinalExp` (ordinal
+  exponentiation `ω^^_ : Ord → Ord` + the first ε-number `ε₀`; rung 1
+  of the target-side climb). Order-type fidelity (ψ₀(Ω_ω)) itself
+  remains OPEN (`D-2026-06-14`) — these shrink the trust boundary and
+  start the climb; ε₀ ≪ ψ₀(Ω_ω).
 * Docs: `docs/buchholz-plan.adoc`,
   `docs/echo-types/buchholz-extended-wf.md`,
   `docs/echo-types/buchholz-rank-obstruction.adoc` (per-constructor
