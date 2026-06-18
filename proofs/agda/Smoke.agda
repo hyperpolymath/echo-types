@@ -87,6 +87,23 @@ open import EchoNoSectionGeneric using
   ; no-section-when-non-injective-at-y
   )
 
+-- EchoAggregation — micro→macro economic aggregation as structured
+-- loss (the oikos/betlang "aggregate library" keystone). `aggregate`
+-- rolls a two-account ledger up into a Godley column total; its fibre
+-- `ConsistentLedgers m = Echo aggregate m` is the set of micro states
+-- consistent with the macro observable. `aggregate-non-injective`
+-- pins "aggregation is many-to-one"; `no-canonical-disaggregation`
+-- pins the non-identifiability theorem (no section of `aggregate`)
+-- via `no-section-of-collapsing-map`.
+open import EchoAggregation using
+  ( aggregate
+  ; ConsistentLedgers
+  ; ledger₁≢ledger₂
+  ; aggregate-collapses
+  ; aggregate-non-injective
+  ; no-canonical-disaggregation
+  )
+
 -- EchoImageFactorization — image-factorisation triangle in Echo
 -- language. `Image f := Σ B (Echo f)` IS the total Echo space.
 -- Three classifications (Surjective / Injective / projection-
