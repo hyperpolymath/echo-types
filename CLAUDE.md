@@ -281,7 +281,7 @@ inverse / surjection claim, which would be false since `aggregate` is onto);
 the citation-level scope of the oikos bridge (oikos is Rust, there is no
 import path); the merge-race governance red (benign, not addressable).
 
-### Session arc 2026-06-15→18 — fidelity boundary reduction + BH climb rung 1 (READ THIS FIRST)
+### Session arc 2026-06-15→18 — fidelity boundary reduction + BH climb rung 1 (ordinal/BH track — read after the bridge arc)
 
 *Where we started:* post doubled-ladder Gate 1. Two soundness escape-hatches
 stood out: (1) the (epi,mono) image factorisation's propositional truncation

@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 
--- hypatia: allow code_safety/agda_postulate -- ∥_∥ cannot be constructed in --safe --without-K without HITs / Cubical; the four postulates below are the scoped, documented TruncInterface demonstration. Exploratory per docs/echo-types/echo-kernel-note.adoc; guardrail-exempted in tools/check-guardrails.sh; base EchoImageFactorizationProp remains --safe --without-K with zero postulates.
+-- hypatia: allow code_safety/agda_postulate -- ∥_∥ cannot be constructed in --safe --without-K without HITs / Cubical; the four postulates below are the scoped, documented TruncInterface demonstration. Exploratory per docs/echo-types/echo-kernel-note.adoc; guardrail-exempted in tools/check-guardrails.sh; base EchoImageFactorizationProp remains --safe --without-K with zero postulates. DISCHARGED FOR REAL (zero postulates) in the CI-verified --cubical --safe lane by EchoImageFactorizationPropCubical.agda (run in .github/workflows/agda.yml step "Typecheck cubical lane (epi/mono truncation discharge)"); see docs/proof-debt.md §(a). These four postulates are therefore the --safe --without-K shadow of a now-CONSTRUCTED higher inductive type, not an irreducible axiom.
 
 -- Postulated-truncation consumer for `EchoImageFactorizationProp`.
 --
@@ -62,9 +62,15 @@
 --     the parametric proofs in `ImageProp` need.
 --   * Anything about the postulates' consistency.  The standard
 --     HoTT discipline says the four laws together characterise
---     `Trunc A` up to equivalence (and Cubical Agda or a hand-
---     rolled HIT realises them concretely); we cite that
---     literature rather than mechanise it.
+--     `Trunc A` up to equivalence.  As of 2026-06-15 that
+--     characterisation is no longer merely cited: it is MECHANISED
+--     in-repo by `EchoImageFactorizationPropCubical.agda`, which
+--     CONSTRUCTS `∥_∥` as a genuine higher inductive type under
+--     `--cubical --safe` and re-proves the four obligations as
+--     theorems (zero postulates, CI-verified — see
+--     docs/proof-debt.md §(a)).  The postulates here remain only
+--     because `∥_∥` cannot be built WITHIN `--safe --without-K`
+--     itself, not because the construction is unavailable.
 --
 -- The mechanical contribution: pin that the parameterised
 -- `EchoImageFactorizationProp.ImageProp` module can be CONSUMED
