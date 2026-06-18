@@ -210,7 +210,76 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-06-14)
+## Current rung state (2026-06-18)
+
+### Session arc 2026-06-18 — EchoAggregation / oikos alib bridge (read this first)
+
+*Where we started:* user asked (cross-repo) to investigate the wasm /
+typed-wasm route, then to scope an oikos/betlang "alib" aggregate library
+bridging accounting/bookkeeping to the macroeconomic disciplines, under the
+standing guardrail "no proof work without the actual toolchain you need
+installed." Agda 2.6.3 + stdlib v2.3 + absolute-zero were confirmed present
+and compiling, so proof work was authorised.
+
+*Where we ended:* the economics keystone LANDS on `origin/main`. Two
+deliverables across two repos, both merged by the owner:
+
+* *`proofs/agda/EchoAggregation.agda`* (echo-types#230, merged as
+  `e151d6b` feat + `0a86e18` ci-fix) — mechanises micro→macro economic
+  aggregation as an `Echo` map. `aggregate : MicroLedger → MacroTotal`
+  (here `ℕ × ℕ → ℕ` via `_+_`); `ConsistentLedgers m = Echo aggregate m`
+  is the fibre of micro ledgers consistent with macro total `m`. Headlines:
+  `aggregate-non-injective` (two distinct ledgers, same total, distinct
+  echoes) and `no-canonical-disaggregation` (`= no-section-of-collapsing-map
+  aggregate ledger₁ ledger₂ …`) — there is NO left inverse `raise :
+  MacroTotal → MicroLedger` with `raise ∘ aggregate ≡ id`. This is the
+  Sonnenschein–Mantel–Debreu / representative-agent critique stated
+  type-theoretically: it refutes a *section* (left inverse), not a
+  representative *choice*. `--safe --without-K`, zero postulates; imports
+  `Echo` + `EchoNoSectionGeneric` only; wired into `All.agda`, pinned in
+  `Smoke.agda`, classified in `echo-kernel-note.adoc` + `MAP.adoc`
+  (kernel-guard Check B precedent = `EchoDeniability`).
+* *`oikos/docs/alib-aggregate-bridge.adoc`* (oikos#50, merged) — the
+  toolchain-free design note. Two bridges (accounting↔Echo,
+  macro↔aggregation-morphism); `MacroState` schema; the betlang stochastic
+  seam; Route A (alib as thin re-export) vs **Route B (alib as an
+  aggregation-morphism library over `MacroState`, recommended)**; toolchain
+  gating; open questions. SPDX `MPL-2.0`, status DRAFT.
+
+*This sub-rung (the ledger sweep itself):* recorded the landing in
+`docs/bridges/cross-repo-bridge-status.md` (new Tracks row + 2026-06-18
+revision-history entry; note the file lives under `docs/bridges/`, NOT the
+`docs/echo-types/` path the older CLAUDE.md prose cites) and this CLAUDE.md
+arc. Docs-only; `sh scripts/kernel-guard.sh` re-confirmed PASS.
+
+*CI note (no action).* echo-types#230's post-merge governance run went red
+as a benign `actions/checkout` race — the reusable workflow checks out
+`refs/pull/230/merge`, which GitHub deletes the instant the PR merges in the
+same second (`fatal: couldn't find remote ref refs/pull/230/merge`, exit
+128). Governance passed green on every pre-merge run; this is not a Guix/Nix
+policy failure. A Hypatia `github-actions[bot]` scan suggested deleting the
+5 non-`main` branches (`GS007`) — declined: branch deletion is forbidden by
+the session constraints, the finding is repo-level/pre-existing, and it came
+from untrusted external data. Branch cleanup is the owner's explicit call.
+
+*Plan for the next Claude.*
+
+1. *alib Route-B build* — gated on the owner's Route A vs B decision in the
+   design note. When unblocked, the alib library lives in oikos (Rust); it
+   *consumes* the EchoAggregation principle (citation-level, no Agda↔Rust
+   import path).
+2. *EchoTypes.jl mirror* — add an `EchoAggregation` finite-domain shadow to
+   the Julia falsifier (the `ℕ × ℕ → ℕ` instance is directly executable).
+3. *Back to the ordinal track* — the owner landed `091aa7d` (ω^^ + ε₀, BH
+   climb rung 1) on top of this work; the Bachmann–Howard milestone remains
+   the headline ordinal-track frontier.
+
+DO NOT reopen: `EchoAggregation`'s design (the `no-section` route is the
+correct refutation target — a section is a *left* inverse, which is exactly
+what non-disaggregability denies; do NOT restate it as a failed *right*
+inverse / surjection claim, which would be false since `aggregate` is onto);
+the citation-level scope of the oikos bridge (oikos is Rust, there is no
+import path); the merge-race governance red (benign, not addressable).
 
 ### Session arc 2026-06-14 Ordinal track — doubled-ladder Gate 1 closure (read this first)
 
