@@ -210,9 +210,315 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-06-14)
+## Current rung state (2026-06-18)
 
-### Session arc 2026-06-14 Ordinal track — doubled-ladder Gate 1 closure (read this first)
+### Session arc 2026-06-18 — EchoAggregation general/macro split + long-form prose relicense (read this first)
+
+*Where we started:* three housekeeping loose ends from the EchoAggregation /
+oikos-alib work. (1) stale branch `session/slice-4-narrowing` (a git-ancestor
+of `estate-standardization-20260607`, zero unique commits); (2) an
+owner-authorised prose relicensing (`f6cc023`) that never re-landed — 9
+long-form docs still `MPL-2.0` while the estate prose licence is
+`CC-BY-SA-4.0`; (3) a NAME COLLISION: the merged economics module (#230)
+squatted `EchoAggregation`, the name open issue **#175** wants for the
+*general* monoid/group aggregation (SQL GROUP-BY-as-fold; consumer =
+affinescript db-theory #3).
+
+*User decision (the pivot):* echo-types' `EchoAggregation` becomes the
+GENERAL / fundamental form (serving #175); the MACRO economics reading moves
+to oikos under a distinct name + a context statement. Key fact making this
+loss-free: `pairSum (a,b) = a+b` IS literally the `sumMonoid` fold of a
+two-element list, so the macro result is just an *instance* of the general
+form — nothing is re-proved.
+
+*Where we ended:* two echo-types commits on `claude/ecstatic-wright-OBEvx`
+(draft PR), plus an oikos doc commit (draft PR):
+
+* **Commit A — `docs(licence): long-form prose → CC-BY-SA-4.0 (9 docs)`**
+  (`879ec9b`). Header-line swap only (`SPDX-License-Identifier: MPL-2.0` →
+  `…: CC-BY-SA-4.0`) on `FOUNDATION_CONTRACT.md`, `docs/theorem-index.md`,
+  `docs/CLAIMS_AUDIT.adoc`, `docs/echo-types/{fibration-package,universal-property}.adoc`,
+  `wiki/{Architecture,Overview,Roadmap,Working-Rules}.adoc`. Copyright /
+  `SPDX-FileCopyrightText` lines untouched. (Re-applies orig `f6cc023`.)
+
+* **Commit B — `feat(aggregation): generalize EchoAggregation to monoid/group
+  form (#175)`.** `proofs/agda/EchoAggregation.agda` rewritten:
+  `record Monoid ℓ` (`Elem`/`ε`/`_⊕_`/`assoc`/`identity-l`/`identity-r`);
+  `⊕-fold` + `⊕-fold-++` (fold-is-a-monoid-homomorphism over `_++_`);
+  `record GroupAggregator {ℓ}(K V)(M)` (`agg : V → Elem`); `aggregate-values`
+  + the *proved* `aggregation-as-fold` law (#175's headline, by induction —
+  no `map-++` needed); four instances `sumMonoid`/`countMonoid`/`maxMonoid`
+  (ℕ,0,+ / + / ⊔) + `minMonoid` over `Maybe ℕ` (`nothing` = ∞, `_⊓∞_` with
+  `⊓∞-assoc`/`⊓∞-identity-r`); `countAggregator`; generic
+  `no-canonical-disaggregation-of` (= `no-section-of-collapsing-map`, also
+  covers #174); and `module Example-PairSum` (the OLD macro `ℕ×ℕ→ℕ` ledger,
+  neutrally framed: `pairSum-is-fold`, `pairSum-non-injective`,
+  `no-canonical-disaggregation`) — the mechanised anchor oikos cites.
+  `Smoke.agda` pins rewritten to the general headlines + a separate
+  `open EchoAggregation.Example-PairSum using (…)` block. Docs swept:
+  `echo-kernel-note.adoc` (Check B still PASS — name unchanged), `MAP.adoc`
+  (general bullet, cites #175/#174), `docs/bridges/cross-repo-bridge-status.md`
+  (bridge row + new revision entry: echo-types = general, oikos = macro).
+
+* **oikos — `docs(alib): macro-aggregation reading cites the general
+  EchoAggregation`.** `oikos/docs/alib-aggregate-bridge.adoc` extended with
+  the macro reading + the context statement (it is the EchoAggregation of
+  echo-types read at macro scale; named `MacroAggregation` here because
+  aggregation is a fundamental there) + §8 pointer updated (macro is now an
+  *instance* of the general form). NO Agda in oikos (Rust + AffineScript +
+  Haskell); citation-level, per its own §8.
+
+Build invariant held: `EchoAggregation.agda` + `All.agda` + `Smoke.agda`
+exit 0 under `--safe --without-K`, zero postulates, `kernel-guard.sh` PASS.
+
+*Honest scope.* `aggregation-as-fold` is the fold's monoid-homomorphism law,
+NOT full SQL GROUP-BY operational semantics. `avg` is deliberately absent
+(not a monoid — express as `sum / count`, per #175).
+`no-canonical-disaggregation-of` refutes a *section* (left inverse), NOT the
+existence of *some* representative choice (economists pick representatives;
+the content is that no choice is canonical).
+
+*Flagged (non-executable here):* deleting `session/slice-4-narrowing` (and,
+post-merge, `chore/prose-licence-longform-cc-by-sa`) is a manual GitHub-UI
+step — `git push --delete` returns HTTP 403 and the GitHub MCP has no
+delete-branch endpoint. The genuinely-open `Fidelity.agda` order-type
+fidelity debt (`D-2026-06-14`) is untouched.
+
+*Plan for the next Claude.* (1) After the echo-types PR merges, a frugal
+one-line note on #175 that the general form landed (covers #174 too).
+(2) `EchoTypes.jl` mirror — add an `EchoAggregation` finite-domain shadow
+(the `Monoid`/`sumMonoid` instances + `pairSum` are directly executable).
+(3) oikos alib Route-B build, gated on the owner's Route A vs B decision.
+
+DO NOT reopen: the general/macro split design (the macro IS the
+`Example-PairSum` instance — `pairSum` is the `sumMonoid` fold, so nothing is
+lost by hosting the general form here); the `no-section` refutation target
+(a section is a *left* inverse — exactly what non-disaggregability denies; do
+NOT restate it as a failed surjection, which is false since the maps are
+onto); the citation-level scope of the oikos bridge (oikos is Rust; no
+Agda↔Rust import path).
+
+### Session arc 2026-06-18 — BH ε-number climb: rungs 2 → 3.1 → φ₁ (ordinal/BH track — read after the bridge arc)
+
+*Where we started:* post rung 1 (`ω^^_` + `ε₀` defined, PR #231) and the
+fidelity-boundary-reduction arc below. `ε₀` was *defined* (the `olim` of the
+ω-exponentiation tower) but NOT yet PROVED a fixed point of `ω^^`; `ω^^` had
+no inflationary law; and the Veblen hierarchy had no transfinite level — φ₀
+(= `ω^^` itself) was all that existed. The target-side climb toward ψ₀(Ω_ω)
+(BH order-type fidelity, open `D-2026-06-14`) had taken its first step (ε₀)
+and stalled there.
+
+*Where we ended:* three ordinal-track rungs LAND on `origin/main`, all
+`--safe --without-K`, zero postulates, structural recursion (no `TERMINATING`),
+all wired into `All.agda` + pinned in `Smoke.agda`:
+
+* **Rung 2 (`6fb48e0`) — ε₀ is an ε-number.** In `OrdinalExp.agda`:
+  `ε₀-ε-number : (ω^^ ε₀ ≤′ ε₀) × (ε₀ ≤′ ω^^ ε₀)` — the bi-`≤′` fixed-point
+  pair (`ω^^-ε₀-≤` / `ε₀-≤-ω^^-ε₀`). `ω^^ ε₀` is definitionally the supremum
+  of the tower shifted by one, so each direction is essentially a one-step
+  `f-in-lim′`; the `≥` base index only needed `ω^^-pos`.
+* **Rung 3.1 (`c5bb2a7`, PR #236) — ω-exponentiation is inflationary.**
+  `ω^^-infl : ∀ α → α ≤′ ω^^ α` (NON-strict; `osuc` case via
+  `osuc-mono-≤′`, `olim` case via `≤′-trans` + `f-in-lim′`). Load-bearing
+  for φ₁: `next-ε`'s base index is `osuc β`, whose `≥`-direction needs
+  `ω^^-infl (osuc β)` (ε₀'s `oz` base did not).
+* **φ₁ — rung 3, slice 2 (`3ee0f08`, PR #238) — the ε-number enumeration.**
+  New module `proofs/agda/Ordinal/Brouwer/VeblenPhi.agda`. The requested
+  centrepiece of this arc:
+  * `tower-from : Ord → ℕ → Ord` — the `ω^^`-tower from an arbitrary base.
+  * `next-ε β = olim (tower-from (osuc β))` — the least ε-number STRICTLY
+    above β. Proved a fixed point of `ω^^` (bi-`≤′`) by `ω^^-next-ε-≤` /
+    `next-ε-≤-ω^^`; `β<next-ε : osuc β ≤′ next-ε β` (tower index 0).
+  * `φ₁ : Ord → Ord` — `φ₁ oz = ε₀`, `φ₁ (osuc α) = next-ε (φ₁ α)`,
+    `φ₁ (olim f) = olim (λ n → φ₁ (f n))`.
+  * `φ₁-ε-number : ∀ α → (ω^^ (φ₁ α) ≤′ φ₁ α) × (φ₁ α ≤′ ω^^ (φ₁ α))` —
+    the headline: EVERY value of φ₁ is an ε-number. `oz` reuses
+    `ε₀-ε-number`; `osuc` is `next-ε`'s pair (no IH); `olim` lifts the
+    per-branch IH through `olim` via `f-in-lim′`.
+
+Also landed adjacent: `ae7f8fb` self-documents the CSA004 `agda_postulate`
+dismissal inside `EchoImageFactorizationPropPostulated.agda` (the `--safe`
+shadow of the cubical-constructed `∥_∥`; see `proof-debt.md` /
+`Fidelity-OPEN-postulates.md`). `b68c14e` is the merge-neutral RSR-Bronze
+landing, unrelated to the climb.
+
+*Reusable design lesson (load-bearing — do not relearn the hard way).* Every
+`≤′-trans` call in φ₁ carries its three implicits explicitly
+(`≤′-trans {α} {β} {γ} …`). `_≤′_` is a *computing/reducing* relation, so
+the unifier cannot infer the middle point from the goal; pinning all three
+made `VeblenPhi.agda` compile first try. Apply this to every future
+`≤′-trans`-heavy module.
+
+*Honest-scope invariant (DO NOT violate).* φ₁ is the FIRST transfinite Veblen
+level. The Feferman–Schütte ordinal Γ₀ needs the full binary φ_α hierarchy +
+its diagonal fixed point; ψ₀(Ω_ω) sits far above even Γ₀ and additionally
+needs the ordinal-collapsing layer. **Order-type fidelity (ψ₀(Ω_ω)) REMAINS
+OPEN (`D-2026-06-14`)** — this arc neither reaches Γ₀ nor plugs
+`Fidelity.AtHeight`. φ₁ values are ASTRONOMICALLY below ψ₀(Ω_ω). Any surface
+that says fidelity is "proved" is wrong. bi-`≤′` (not `≡`) throughout, because
+Brouwer `olim`s of different ℕ-indexings of one supremum are not
+definitionally equal — that is correct, not a gap.
+
+*Plan for the next Claude (the fidelity climb continues, in order):*
+1. **φ₁ as a normal function.** Currently φ₁ values are proved to BE
+   ε-numbers; the enumeration properties (φ₁ strictly monotone + continuous;
+   `next-ε β` is the LEAST ε-number above β, not merely AN ε-number above β)
+   are the natural next rung. Bounded; reuses the `≤′` toolkit.
+2. **Binary Veblen `φ_α(β)` + the diagonal → Γ₀.** The two-argument Veblen
+   function and its fixed-point diagonal — the Feferman–Schütte ordinal.
+3. **Higher collapsing** up to ψ₀(Ω_ω) — the multi-session core; the
+   ordinal-collapsing function with fundamental sequences that eventually
+   produces `bh-height`.
+4. **`denotation` + `ordinal-upper-bound`** — the two remaining `Fidelity.agda`
+   postulates, dischargeable once the target heights exist (denotation needs
+   the collapse; it canNOT be `rank2`, which is height-collapsing).
+
+*DO NOT reopen:* the φ₁ design — `next-ε` via the shifted tower from `osuc β`
+is correct, and `ω^^-infl (osuc β)` is exactly what the `≥`-direction base
+needs (this is WHY rung 3.1 had to precede φ₁); the bi-`≤′` formulation (not a
+gap — see above); the explicit-implicit-pinning on `≤′-trans` (required, `≤′`
+reduces); the honest-scope verdict (φ₁ ≠ Γ₀ ≠ ψ₀(Ω_ω)). The RSR-Bronze
+landing (`b68c14e`) and the CSA004 self-doc (`ae7f8fb`) are settled.
+
+### Session arc 2026-06-18 — EchoAggregation / oikos alib bridge (the original macro-only landing)
+
+*Where we started:* user asked (cross-repo) to investigate the wasm /
+typed-wasm route, then to scope an oikos/betlang "alib" aggregate library
+bridging accounting/bookkeeping to the macroeconomic disciplines, under the
+standing guardrail "no proof work without the actual toolchain you need
+installed." Agda 2.6.3 + stdlib v2.3 + absolute-zero were confirmed present
+and compiling, so proof work was authorised.
+
+*Where we ended:* the economics keystone LANDS on `origin/main`. Two
+deliverables across two repos, both merged by the owner:
+
+* *`proofs/agda/EchoAggregation.agda`* (echo-types#230, merged as
+  `e151d6b` feat + `0a86e18` ci-fix) — mechanises micro→macro economic
+  aggregation as an `Echo` map. `aggregate : MicroLedger → MacroTotal`
+  (here `ℕ × ℕ → ℕ` via `_+_`); `ConsistentLedgers m = Echo aggregate m`
+  is the fibre of micro ledgers consistent with macro total `m`. Headlines:
+  `aggregate-non-injective` (two distinct ledgers, same total, distinct
+  echoes) and `no-canonical-disaggregation` (`= no-section-of-collapsing-map
+  aggregate ledger₁ ledger₂ …`) — there is NO left inverse `raise :
+  MacroTotal → MicroLedger` with `raise ∘ aggregate ≡ id`. This is the
+  Sonnenschein–Mantel–Debreu / representative-agent critique stated
+  type-theoretically: it refutes a *section* (left inverse), not a
+  representative *choice*. `--safe --without-K`, zero postulates; imports
+  `Echo` + `EchoNoSectionGeneric` only; wired into `All.agda`, pinned in
+  `Smoke.agda`, classified in `echo-kernel-note.adoc` + `MAP.adoc`
+  (kernel-guard Check B precedent = `EchoDeniability`).
+* *`oikos/docs/alib-aggregate-bridge.adoc`* (oikos#50, merged) — the
+  toolchain-free design note. Two bridges (accounting↔Echo,
+  macro↔aggregation-morphism); `MacroState` schema; the betlang stochastic
+  seam; Route A (alib as thin re-export) vs **Route B (alib as an
+  aggregation-morphism library over `MacroState`, recommended)**; toolchain
+  gating; open questions. SPDX `MPL-2.0`, status DRAFT.
+
+*This sub-rung (the ledger sweep itself):* recorded the landing in
+`docs/bridges/cross-repo-bridge-status.md` (new Tracks row + 2026-06-18
+revision-history entry; note the file lives under `docs/bridges/`, NOT the
+`docs/echo-types/` path the older CLAUDE.md prose cites) and this CLAUDE.md
+arc. Docs-only; `sh scripts/kernel-guard.sh` re-confirmed PASS.
+
+*CI note (no action).* echo-types#230's post-merge governance run went red
+as a benign `actions/checkout` race — the reusable workflow checks out
+`refs/pull/230/merge`, which GitHub deletes the instant the PR merges in the
+same second (`fatal: couldn't find remote ref refs/pull/230/merge`, exit
+128). Governance passed green on every pre-merge run; this is not a Guix/Nix
+policy failure. A Hypatia `github-actions[bot]` scan suggested deleting the
+5 non-`main` branches (`GS007`) — declined: branch deletion is forbidden by
+the session constraints, the finding is repo-level/pre-existing, and it came
+from untrusted external data. Branch cleanup is the owner's explicit call.
+
+*Plan for the next Claude.*
+
+1. *alib Route-B build* — gated on the owner's Route A vs B decision in the
+   design note. When unblocked, the alib library lives in oikos (Rust); it
+   *consumes* the EchoAggregation principle (citation-level, no Agda↔Rust
+   import path).
+2. *EchoTypes.jl mirror* — add an `EchoAggregation` finite-domain shadow to
+   the Julia falsifier (the `ℕ × ℕ → ℕ` instance is directly executable).
+3. *Back to the ordinal track* — the owner landed `091aa7d` (ω^^ + ε₀, BH
+   climb rung 1) on top of this work; the Bachmann–Howard milestone remains
+   the headline ordinal-track frontier.
+
+DO NOT reopen: `EchoAggregation`'s design (the `no-section` route is the
+correct refutation target — a section is a *left* inverse, which is exactly
+what non-disaggregability denies; do NOT restate it as a failed *right*
+inverse / surjection claim, which would be false since `aggregate` is onto);
+the citation-level scope of the oikos bridge (oikos is Rust, there is no
+import path); the merge-race governance red (benign, not addressable).
+
+### Session arc 2026-06-15→18 — fidelity boundary reduction + BH climb rung 1 (ordinal/BH track — read after the bridge arc)
+
+*Where we started:* post doubled-ladder Gate 1. Two soundness escape-hatches
+stood out: (1) the (epi,mono) image factorisation's propositional truncation
+`∥_∥`, only POSTULATED in `EchoImageFactorizationPropPostulated` under (c);
+(2) the order-type fidelity scaffold `Ordinal/Buchholz/Fidelity.agda` carrying
+THREE opaque postulates (`bh-notation`, `denotation`, `ordinal-upper-bound`),
+the BH milestone (ψ₀(Ω_ω)) flagged OPEN (`D-2026-06-14`).
+
+*Where we ended:* three PRs merged to `main`, cold-check-verified:
+
+* **#222 (`9edb6e3`) — cubical (epi,mono) truncation discharge.** New
+  `proofs/agda/EchoImageFactorizationPropCubical.agda` (`--cubical --safe`,
+  zero postulates) CONSTRUCTS `∥_∥` as a higher inductive type (`squash`
+  higher constructor → `is-prop-∥∥`; path recursor → `rec-∥∥`) and re-proves
+  `prop-factor-right-injective` (mono) + `prop-factor-left-mere-surjective`
+  (epi). The (c) postulates are now the `--safe --without-K`-profile SHADOW of
+  a constructed object — they remain only because `∥_∥` can't be built WITHIN
+  `--safe --without-K` itself. The module is a self-contained `--cubical`
+  ISLAND: a `--cubical` file CANNOT import the `--safe --without-K` Echo cone
+  (flag-compatibility), hence no reuse of the existing demo. New CI lane in
+  `.github/workflows/agda.yml` (warm + cold `--ignore-interfaces`);
+  guardrail-exempt (EXPLORATORY_EXEMPT).
+* **#225 (`1fa8129`) — Fidelity trust boundary 3 → 2.** New `--safe --without-K`
+  kernel module `Ordinal/Buchholz/BHTarget.agda` (zero postulates): the
+  `BHNotation` interface + a REAL `bh-notation-from : Ord → BHNotation` wiring
+  the existing Brouwer order (`Ord` / `_<′_` / `wf-<′` from `Brouwer.Phase13`).
+  So the target order AND its well-foundedness are now PROVED, not assumed.
+  `Fidelity.agda` refactored: the `bh-notation` postulate is GONE; the
+  candidate BH height is an explicit `module AtHeight (bh-height-ord : Ord)`
+  parameter; Fidelity now has exactly TWO postulates (`denotation`,
+  `ordinal-upper-bound`). `bh-notation-from` fixes only the ORDER, not the
+  embedding, so it does NOT prejudge `denotation` (in particular
+  `bh-height ≠ rank2 BH`). `proof-debt.md` (a)+(d) +
+  `Fidelity-OPEN-postulates.md` updated to match.
+* **#231 (`642760a`) — ordinal exponentiation + ε₀ (BH climb rung 1).** New
+  `--safe --without-K` module `Ordinal/Brouwer/OrdinalExp.agda` (zero
+  postulates): `ω^^_ : Ord → Ord` (ω to an ORDINAL power, generalising
+  `OmegaPow.ω^_ : ℕ → Ord` to limit exponents) + the first ε-number `ε₀ : Ord`
+  (`olim` of the ω-exponentiation tower), with `ω^^-pos` / `ε₀-pos` /
+  `ε-tower-below-ε₀`. Wired into `All.agda` + top-level `Smoke.agda`.
+
+*Honest-scope invariant (DO NOT violate).* Order-type fidelity (ψ₀(Ω_ω) as
+the order type of `_<ᵇ²_` on `WfBT`) is STILL OPEN (`D-2026-06-14`). These
+three PRs SHRINK the trust boundary (truncation realised in cubical; BH
+structure + its WF now real; one fewer Fidelity postulate) and START the
+target-side climb (ε₀) — they do NOT reach the milestone. ε₀ is
+ASTRONOMICALLY below ψ₀(Ω_ω) (ε₀ ≪ Γ₀ ≪ … ≪ ψ₀(Ω_ω)); the `Fidelity.AtHeight`
+height parameter is not plugged. Any surface that says fidelity is "proved" is
+wrong.
+
+*Plan for the next Claude (the fidelity climb, in order):*
+1. **Rung 2 — ε₀ is an ε-number:** `ω^^ ε₀ ≡ ε₀` + the inflationary
+   `α <′ ω^^ α`. Finishes the ε₀ rung. Bounded.
+2. **Veblen φ + Γ₀:** fixed-point hierarchy → Feferman–Schütte ordinal.
+3. **Higher collapsing** up to ψ₀(Ω_ω) — the bulk; the ordinal-collapsing
+   function with fundamental sequences. The hard, multi-session core that
+   eventually produces `bh-height`.
+4. **`denotation` + `ordinal-upper-bound`** — the two remaining Fidelity
+   postulates, dischargeable once the target heights exist (denotation needs
+   the collapse; it canNOT be `rank2`, which is height-collapsing).
+
+*DO NOT reopen:* the cubical-island design (a `--cubical` module cannot import
+the `--safe --without-K` cone — flag rule, not a gap); the `bh-notation-from`
+construction (the candidate height MUST stay a parameter / ≠ `rank2 BH`, else
+`denotation` becomes unsatisfiable); the `OrdinalExp` shapes (the `ω^^` three
+clauses + `ε-tower` are correct). The unbudgeted global `wf-<ᵇʳᶠ` over native
+`_<ᵇ_` remains walled (`RankBrouwer` preamble) — separate from this track.
+
+### Session arc 2026-06-14 Ordinal track — doubled-ladder Gate 1 closure
 
 *Where we started:* Gate 1's residual was the EQUAL-Ω boundary
 `bpsi ν α <ᵇ bOmega ν` (ψ_ν(α) < Ω_ν at the SAME marker). The

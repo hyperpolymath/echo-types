@@ -415,6 +415,23 @@ GLOBAL form over native `_<ᵇ_` stays walled (all five routes; `rank2`
 does not escape the `<ᵇ-+Ω` counterexample); its realistic close-out
 is the falsifiable verdict, not a positive proof.
 
+*Order-type fidelity — boundary reduction + climb started (2026-06-15
+→ 18, PRs #225/#231).* The fidelity scaffold
+(`Ordinal/Buchholz/Fidelity.agda`, open problem `D-2026-06-14`) had its
+trust boundary reduced from THREE postulates to TWO:
+`Ordinal.Buchholz.BHTarget` constructs the BH order-type TARGET
+STRUCTURE + its well-foundedness for real from the Brouwer order
+(`Ord`/`_<′_`/`wf-<′`; zero postulates, in the `--safe` kernel), so the
+former `bh-notation` postulate is gone (the candidate BH height is now
+an explicit `module AtHeight` parameter). The remaining two postulates
+are `denotation` (the faithful height-preserving embedding) +
+`ordinal-upper-bound`. Separately, the target-side climb toward ψ₀(Ω_ω)
+STARTED: `Ordinal.Brouwer.OrdinalExp` lands ordinal exponentiation
+`ω^^_` + the first ε-number `ε₀` (rung 1). *Honest scope:* order-type
+fidelity itself REMAINS OPEN — these shrink the boundary and start the
+climb; ε₀ ≪ Γ₀ ≪ … ≪ ψ₀(Ω_ω). Next rungs: ε₀ as an ε-number, Veblen
+φ/Γ₀, higher collapsing, then `denotation`/`ordinal-upper-bound`.
+
 *Artefacts.* See `docs/buchholz-plan.adoc`,
 `docs/echo-types/buchholz-rank-obstruction.adoc` (live per-constructor
 verdict + the doubled-ladder closure section), and the

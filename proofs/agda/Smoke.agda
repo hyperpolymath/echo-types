@@ -108,20 +108,37 @@ open import EchoNoSectionGeneric using
   ; no-section-when-non-injective-at-y
   )
 
--- EchoAggregation — micro→macro economic aggregation as structured
--- loss (the oikos/betlang "aggregate library" keystone). `aggregate`
--- rolls a two-account ledger up into a Godley column total; its fibre
--- `ConsistentLedgers m = Echo aggregate m` is the set of micro states
--- consistent with the macro observable. `aggregate-non-injective`
--- pins "aggregation is many-to-one"; `no-canonical-disaggregation`
--- pins the non-identifiability theorem (no section of `aggregate`)
--- via `no-section-of-collapsing-map`.
+-- EchoAggregation — the GENERAL aggregation form (issue #175):
+-- aggregation-as-fold over a `Monoid`, with a `GroupAggregator` and
+-- the monoid-homomorphism law `aggregation-as-fold` (aggregating a
+-- concatenation = combining the aggregates). Four concrete instances
+-- (`sumMonoid`/`countMonoid`/`maxMonoid`/`minMonoid`), a worked
+-- `countAggregator`, and generic non-disaggregability
+-- `no-canonical-disaggregation-of` (any collision ⇒ no section, via
+-- `no-section-of-collapsing-map`; also covers #174). The MACRO
+-- economics reading (micro→macro ledger, SMD critique) is the oikos
+-- alib bridge's interpretation of the `Example-PairSum` instance:
+-- `pairSum` IS the `sumMonoid` fold (`pairSum-is-fold`), is
+-- many-to-one (`pairSum-non-injective`), and has no canonical
+-- disaggregation (`no-canonical-disaggregation`).
 open import EchoAggregation using
-  ( aggregate
-  ; ConsistentLedgers
-  ; ledger₁≢ledger₂
-  ; aggregate-collapses
-  ; aggregate-non-injective
+  ( Monoid
+  ; GroupAggregator
+  ; ⊕-fold
+  ; ⊕-fold-++
+  ; aggregate-values
+  ; aggregation-as-fold
+  ; sumMonoid
+  ; countMonoid
+  ; maxMonoid
+  ; minMonoid
+  ; countAggregator
+  ; no-canonical-disaggregation-of
+  )
+open EchoAggregation.Example-PairSum using
+  ( pairSum
+  ; pairSum-is-fold
+  ; pairSum-non-injective
   ; no-canonical-disaggregation
   )
 
@@ -1162,6 +1179,44 @@ open import Ordinal.Brouwer.OmegaPow using
   ; ω^-strict-mono
   ; ·ℕ-add-≤
   ; additive-principal
+  )
+
+-- Ordinal exponentiation + ε₀ (2026-06-15, own block per CLAUDE.md
+-- Working rules): rung 1 of the target-side Brouwer climb toward
+-- ψ₀(Ω_ω) (BH order-type fidelity, D-2026-06-14).  `ω^^_` is ω to an
+-- ORDINAL power (generalising OmegaPow.ω^_ : ℕ → Ord); `ε₀` is the
+-- first ε-number.  Honest scope: ε₀ ≪ ψ₀(Ω_ω) — this lands the
+-- exponentiation primitive every higher rung needs and pins ε₀ as the
+-- first checkable milestone value.
+open import Ordinal.Brouwer.OrdinalExp using
+  ( ω^^_
+  ; ω^^-zero
+  ; ω^^-pos
+  ; ε-tower
+  ; ε-tower-suc
+  ; ε₀
+  ; ε₀-pos
+  ; ε-tower-below-ε₀
+  ; ω^^-ε₀-≤
+  ; ε₀-≤-ω^^-ε₀
+  ; ε₀-ε-number
+  ; ω^^-infl
+  )
+
+-- Veblen φ-hierarchy slice 2 (2026-06-18, own block per CLAUDE.md
+-- Working rules): φ₁, the enumeration of ε-numbers (fixed points of
+-- ω^^), built on the rung-3.1 inflationary law.  `next-ε β` = least
+-- ε-number above β; `φ₁` enumerates them (0↦ε₀, suc↦next-ε, limit↦sup);
+-- `φ₁-ε-number` proves every value is an ε-number (bi-≤′).  Rung 3 of the
+-- climb toward Γ₀ / ψ₀(Ω_ω) (order-type fidelity OPEN, D-2026-06-14).
+open import Ordinal.Brouwer.VeblenPhi using
+  ( tower-from
+  ; next-ε
+  ; ω^^-next-ε-≤
+  ; next-ε-≤-ω^^
+  ; β<next-ε
+  ; φ₁
+  ; φ₁-ε-number
   )
 
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's

@@ -118,6 +118,8 @@ open import Ordinal.Brouwer
 open import Ordinal.Brouwer.Arithmetic
 open import Ordinal.Brouwer.Phase13
 open import Ordinal.Brouwer.OmegaPow
+open import Ordinal.Brouwer.OrdinalExp
+open import Ordinal.Brouwer.VeblenPhi
 open import Ordinal.Brouwer.StrictLeftMonoRefuted
 open import Ordinal.Brouwer.AdditivePrincipalGenericRefuted
 open import Ordinal.Buchholz.Syntax

@@ -253,17 +253,28 @@ honest-bound matched-negative block.
   the `affine` mode in `EchoObservationalEquivalence`. Honest-bound:
   NOT side-channel-safe / cryptographic deniability / adaptive
   adversary. `proofs/agda/EchoDeniability.agda`. `[REAL]`
-* *Aggregation* — `aggregate` rolls a two-account ledger up to a
-  Godley column total. The fibre `ConsistentLedgers m = Echo
-  aggregate m` is "aggregation is many-to-one" as a type;
-  `aggregate-non-injective` exhibits two distinct micro ledgers at
-  the same macro total; `no-canonical-disaggregation` is the
-  non-identifiability theorem (no section of `aggregate`, via
-  `no-section-of-collapsing-map`). The mechanised keystone of the
-  oikos/betlang alib note (`oikos:docs/alib-aggregate-bridge.adoc`).
-  Honest-bound: NOT a quantitative fibre-size bound / joint
-  identifiability of the full MacroState record.
-  `proofs/agda/EchoAggregation.agda`. `[REAL]`
+* *Aggregation (general, issue #175)* — aggregation-as-fold over a
+  `Monoid`, with a `GroupAggregator` and the monoid-homomorphism law
+  `aggregation-as-fold` (aggregating a concatenation = combining the
+  aggregates; proved, not merely signed). Four concrete instances
+  (`sumMonoid` / `countMonoid` / `maxMonoid` / `minMonoid`, the last
+  over `ℕ ∪ {∞}` via `Maybe ℕ`), a worked `countAggregator`, and
+  generic non-disaggregability `no-canonical-disaggregation-of` (any
+  collision ⇒ no section, via `no-section-of-collapsing-map`; this
+  also discharges issue #174's no-section sibling). The
+  macro→micro *economic* reading lives in `module Example-PairSum`:
+  `pairSum : ℕ × ℕ → ℕ` IS the `sumMonoid` fold (`pairSum-is-fold`),
+  is many-to-one (`pairSum-non-injective`), and has no canonical
+  disaggregation (`no-canonical-disaggregation`) — the
+  Sonnenschein–Mantel–Debreu / representative-agent critique
+  type-theoretically. That instance is the mechanised anchor the
+  oikos/betlang alib note cites (`oikos:docs/alib-aggregate-bridge.adoc`),
+  where it is read at macro scale and named `MacroAggregation`.
+  Consumer of the general form: affinescript db-theory #3 (SQL
+  GROUP-BY as a monoid homomorphism). Honest-bound: `aggregation-as-fold`
+  is the fold's homomorphism law, NOT full SQL GROUP-BY operational
+  semantics; `avg` is deliberately absent (not a monoid — express as
+  `sum / count`). `proofs/agda/EchoAggregation.agda`. `[REAL]`
 
 *Curated suite — single-file entry point.* The narrative
 deliverable that pulls the Tier-1 / Tier-2 / Tier-3 named theorems
@@ -362,6 +373,15 @@ Staged Buchholz-style collapsing in `--safe --without-K`.
   extensions), `RankMonoUnionWF` (2026-05-30 PR #170 — Gate 2
   closure: `WellFounded _<ᵇᵘ_` via `Subrelation.wellFounded` +
   `On.wellFounded` rank-embedding transport from `wf-<′`).
+* Fidelity climb (2026-06-15 → 18): `Ordinal.Buchholz.BHTarget` (the
+  BH order-type target structure + its well-foundedness CONSTRUCTED
+  for real from the Brouwer order `Ord`/`_<′_`/`wf-<′`; zero
+  postulates; reduces the `Fidelity.agda` trust boundary from three
+  postulates to two), and `Ordinal.Brouwer.OrdinalExp` (ordinal
+  exponentiation `ω^^_ : Ord → Ord` + the first ε-number `ε₀`; rung 1
+  of the target-side climb). Order-type fidelity (ψ₀(Ω_ω)) itself
+  remains OPEN (`D-2026-06-14`) — these shrink the trust boundary and
+  start the climb; ε₀ ≪ ψ₀(Ω_ω).
 * Docs: `docs/buchholz-plan.adoc`,
   `docs/echo-types/buchholz-extended-wf.md`,
   `docs/echo-types/buchholz-rank-obstruction.adoc` (per-constructor

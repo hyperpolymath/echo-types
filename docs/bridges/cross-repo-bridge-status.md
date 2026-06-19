@@ -2,7 +2,7 @@
 <!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
 # Cross-Repo Bridge Status
 
-Last updated: 2026-06-12.
+Last updated: 2026-06-18.
 
 This file is the single status ledger for echo-type bridge work that
 touches other repositories.
@@ -22,6 +22,7 @@ touches other repositories.
 | **Verdict-provenance (phronesis)** | `Echo`, `echo-intro` | `phronesis/academic/formal-verification/agda/PhronesisEcho.agda` (imports echo-types directly) | **Content bridge done (2026-06-12).** An ethical verdict's provenance IS `Echo verdict v`: `eval` is non-injective, so the fiber retains *which* expressions justify a verdict the bare `Bool` forgets (`verdict-forgets-provenance`); `proj₁` is the recovering section. Machine-checked vs real echo-types. (Also fixed 4 pre-existing bugs making `Phronesis.agda` compile.) | — (closed; downstream consumer in the agentic-ethics language). |
 | **KitchenSpeak `@` witness (nextgen-languages)** | `Echo` | `nextgen-languages/kitchenspeak/proofs/agda/EchoBridge.agda` | **Status upgraded to MACHINE-CHECKED (2026-06-12).** Previously "hand-verified, not machine-checked"; now typechecks against the real `Echo`. The `@` sensor witness IS `Echo (fired sensor thr) true` (`witness⇒echo` / `echo⇒witness`). PoachedEgg stdlib-v2.3 drift (`toWitness {Q=}`→`{a?=}`) fixed so the suite type-checks. | — (the `--` comments in `kitchenspeak.agda-lib` need Agda ≥ 2.6.4; on the 2.6.3 CI toolchain use the explicit `-i` form, documented in the module). |
 | **Invariant Path application (invariant-path)** | Structured-loss vocabulary (the `Echo` fiber concept) — citation-level | `invariant-path` (Rust): `classify_candidate` + `docs/ECHO-TYPES.md` + `crates/invariant-path-core/{examples,tests}/echo_structured_loss.rs` | **Application example (2026-06-12).** `classify_candidate` is a non-injective classifier; the retained `ClaimCandidate` + `ClassificationOutcome.losses` IS the echo (fiber) over a `Classification`. Invariant Path is "a claim-path debugger, not a truth engine" precisely because it retains echoes. Runnable example + 2 CI-covered tests. | No Agda↔Rust import path; citation-level — the application *uses* the echo principle; no mechanised cross-repo theorem. |
+| **oikos alib aggregation bridge (economics)** | `proofs/agda/EchoAggregation.agda` — the GENERAL aggregation form (`Monoid` + `GroupAggregator` + `aggregation-as-fold` homomorphism + `sumMonoid`/`countMonoid`/`maxMonoid`/`minMonoid` + `no-canonical-disaggregation-of`); the macro economics is the `Example-PairSum` instance (`pairSum` IS the `sumMonoid` fold) | `oikos/docs/alib-aggregate-bridge.adoc` (toolchain-free design note; oikos is the Rust SFC-macro DSL) — names the macro reading `MacroAggregation`, cited back to echo-types | **General/macro split landed (2026-06-18, gen. rung).** echo-types now hosts the *general* monoid-aggregation form requested by issue #175 (SQL GROUP-BY as a monoid homomorphism; consumer = affinescript db-theory #3); the `aggregation-as-fold` law is *proved*, not merely signed, and generic non-disaggregability `no-canonical-disaggregation-of` also discharges #174's no-section sibling. The *macro→micro economics* reading — micro ledger rolled up to a Godley total, the Sonnenschein–Mantel–Debreu / representative-agent critique (refuting a *section* / left inverse, not a representative *choice*) — is the `Example-PairSum` instance, read at macro scale in oikos under the name `MacroAggregation` (naming it `EchoAggregation` there would be odd: aggregation is a *fundamental* of echo-types). `EchoAggregation.agda` is self-contained (imports `Echo` + `EchoNoSectionGeneric` only), `--safe --without-K`, zero postulates, pinned in `Smoke.agda`, classified in the kernel-note + `MAP.adoc`. The oikos design note recommends Route B (alib as an aggregation-morphism library over `MacroState`). | No Agda↔Rust import path; citation-level — echo-types proves the general aggregation principle (and its macro instance), oikos's alib will *consume* it. The alib library itself is not yet built (design-note stage; Route A vs B pending owner decision). |
 
 ## Immediate next actions
 
@@ -71,6 +72,30 @@ precisely to paper over this in the relational model.
 
 ## Revision history
 
+- 2026-06-18: **EchoAggregation general/macro split.** Generalised
+  `EchoAggregation.agda` from the macro-economics-specific module into the
+  general monoid-aggregation form requested by issue #175 (`Monoid` +
+  `GroupAggregator` + the *proved* `aggregation-as-fold` homomorphism law +
+  `sumMonoid`/`countMonoid`/`maxMonoid`/`minMonoid` + generic
+  `no-canonical-disaggregation-of`, which also covers #174). The
+  macro→micro economics reading survives mechanised as the `Example-PairSum`
+  instance (`pairSum` IS the `sumMonoid` fold — nothing re-proved or lost);
+  oikos reads that instance at macro scale under the name `MacroAggregation`
+  (aggregation is a fundamental of echo-types, so re-using the name there
+  would be odd). Updated the bridge row, `MAP.adoc`, and
+  `echo-kernel-note.adoc`; `--safe --without-K`, zero postulates,
+  kernel-guard PASS.
+- 2026-06-18: **oikos alib aggregation bridge.** Added the
+  economics-aggregation row recording `EchoAggregation.agda` (micro→macro
+  rollup is an `Echo`; non-disaggregability is `no-section-of-collapsing-map`
+  — the SMD / representative-agent critique as a type-theoretic refutation
+  of a left inverse) and the oikos toolchain-free design note
+  `oikos/docs/alib-aggregate-bridge.adoc`. Keystone formalisation merged to
+  echo-types `main` (`--safe --without-K`, zero postulates, pinned in
+  `Smoke.agda`, classified in `echo-kernel-note.adoc` + `MAP.adoc`); the
+  oikos note merged to oikos `main`. Citation-level (no Agda↔Rust path);
+  the alib library is at design-note stage (Route A vs B owner decision
+  pending).
 - 2026-06-12: **Typesystem-integration sweep.** Added four downstream
   consumer rows recording that echo-types is now integrated into the
   hyperpolymath type systems, all merged to the consumers' `main`:
