@@ -1270,6 +1270,28 @@ via a genuine non-graph `StepND` model (§6 NOTE,
 `EchoStepNDModelF2.agda`). The graded-comonad, modality-level
 model-independence, and conservativity rows remain fully retracted.
 
+*Variance resolved (follow-up F-2026-06-19, 2026-06-19).* The
+graded-comonad row is now *positively resolved*, not merely retracted.
+The sharpened understanding of an echo-type — a tropically-graded
+modality of structured loss over the min-plus semiring, recoverable
+*exact on a homotopy fibre rather than complement-storing* — left a
+precise live question: the combining direction of loss is monadic
+(accumulation is `μ : D_r (D_s A) → D_{r+s} A`), so is the right word
+graded comonad, graded monad, or graded adjunction? `EchoVariance.agda`
+settles it in `--safe` Agda (`docs/echo-types/variance-resolution.adoc`):
+(i) accumulation is the graded-MONAD multiplication, total and canonical
+(`accumulate = Echo-comp-iso-from`); (ii) recoverability is exact on the
+grade-0 fibre, the section/retraction *adjunction*
+(`recoverable-fibre = A↔ΣEcho`); (iii) the graded-COMONAD direction fails
+for genuine loss — bare-residue recovery is the no-section obstruction
+(`no-bare-recovery`); and (iv) the "graded comonad" reading is the
+LOSSLESS complement-storing writer (`EchoGradedComonadF1`'s `δ` is `coe`
+along a type equality, inverted by `μ-writer`), i.e. the resource
+neighbour, not the loss modality. Net: echo is a graded *monad* of
+accumulation with a fibre-exact section/retraction *adjunction*; it is
+*not* a graded comonad. This sharpens the retracted row from "withdrawn"
+to "decided against", and does not resurrect any retracted prose.
+
 == Post-establishment structural extensions (2026-05-27)
 
 A substantial layer of structural mechanisation landed after the

@@ -1,0 +1,235 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Echo Types — Variance Resolution (monad / comonad / adjunction)
+:date: 2026-06-19
+:toc: macro
+:toclevels: 3
+:sectnums:
+:sectnumlevels: 3
+
+[.lead]
+This note resolves, *in `--safe` Agda rather than by assertion*, the
+precise variance of the loss-graded echo modality: is it a graded
+comonad, a graded monad, or a graded adjunction? The resolution is
+mechanised in `proofs/agda/EchoVariance.agda` and its headlines are
+pinned in `Smoke.agda`. It is written to *inform the redesign* of the
+repository's modality/measure architecture.
+
+toc::[]
+
+== The live question
+
+The current, sharpened understanding of an echo-type:
+
+[quote]
+____
+An echo-type is a tropically-graded modality of structured information
+loss — an instance of graded-(co)monad machinery over the min-plus
+semiring (ℕ ∪ {∞}, min, +), with a section/retraction pair whose
+round-trip is *exact on a homotopy fibre* rather than over-approximating
+or complement-storing — whose monad/comonad/adjunction status is being
+pinned down formally.
+____
+
+The variance was genuinely unsettled, and for a concrete reason. The
+*combining* direction of loss is monadic: accumulation has the shape
+`μ : D_r (D_s A) → D_{r+s} A`. So the right word — "graded comonad",
+"graded monad", or "graded adjunction (with the section as
+unit/counit)" — was a live question to be *resolved in Agda, not
+asserted*.
+
+Two pre-existing facts framed the question:
+
+* *R-2026-05-18* (`docs/retractions.adoc`) already RETRACTED the
+  unqualified "graded comonad" claim on `EchoGradedComonad`, reframing
+  it as a loss-graded *reindexing* modality with **no nested
+  `D_r D_s`**. So the structure the question is actually about — the
+  nested comultiplication/multiplication — had not been built where the
+  retraction left things.
+* *Gate F1* (`EchoGradedComonadF1`) DID build a genuine nested graded
+  comonad with `δ : D (m+n) ⇒ D m (D n)`. But — see §4 — its model
+  stores its residue, which turns out to be the crux.
+
+== How the tropical semiring already splits across two axes
+
+The repository architecture (the `Echo.Modality.*` / `Echo.Measure.*`
+foundation surface) already decomposes the min-plus semiring along
+exactly the two axes the variance question lives on:
+
+[cols="1,3,3a",options="header"]
+|===
+| Tropical op | Role | Where it lives
+
+| `min` (⊕, the order / lattice)
+| The thin echo *index*. `degrade` reindexes along it. This is the
+  proof-relevant modality *core* — deliberately semiring-free
+  (the *measure-independence invariant*).
+| `Echo.Index.ThinPoset`, `Echo.Modality.{Interface,Core}`
+
+| `+` (⊗, accumulation)
+| The residue *measure*: a lossy, monotone *observation*
+  (`measure x ≤ measure (degrade p x)`). The accumulation
+  `μ : D_r D_s → D_{r+s}` the live question names lives on *this* axis.
+| `Echo.Measure.{Interface,Examples}` (incl. `tropical-cost-measure`)
+|===
+
+So "is loss a comonad or a monad?" is really two questions on two axes:
+what is the variance of the `min`-graded reindexing (the modality core),
+and what is the variance of the `+`-graded accumulation (the measure /
+nesting)?
+
+== The verdict
+
+Each clause below is a *pinned theorem* in `EchoVariance.agda`, not a
+slogan. `--safe --without-K`, zero postulates; every artefact reuses an
+existing kernel theorem.
+
+=== (1) Accumulation is monadic
+
+`accumulate : Σ B (λ b → Echo f b × (g b ≡ y)) → Echo (g ∘ f) y`
+(`= Echo-comp-iso-from`) is the combining map: a nested loss (an
+`f`-echo sitting under a `g`-step) collapses to a single
+`(g ∘ f)`-echo. It is *total* and *canonical*: it is definable from the
+layered data alone — the factoring `(f, g)` is exactly its input, so no
+choice is made. This is the graded-MONAD multiplication shape
+`μ : D_r (D_s A) → D_{r+s} A`; the loss magnitudes add.
+
+=== (2) Recoverability is exact on the fibre
+
+For a *fixed factoring*, `accumulate` and `split-with-factoring`
+(`= Echo-comp-iso-to`) are mutually inverse — both round-trips are
+`refl` (`accumulate-split-id`, `split-accumulate-id`). The fibre stores
+the loss *precisely*: no over-approximation, no stored complement.
+
+At grade 0 this is the totality isomorphism
+`recoverable-fibre : A ↔ Σ B (Echo f)` (`= A↔ΣEcho`). Its `encode`
+(unit) and `decode` (counit) ARE the section/retraction pair — the
+unit/counit of the *adjunction* reading. So the "graded adjunction"
+candidate is correct, and it is *exact on a homotopy fibre*, precisely as
+the sharpened understanding requires.
+
+=== (3) The comonad direction fails for genuine loss
+
+A graded *comonad* would supply a *natural* `δ` on the BARE residual
+functor: recover the intermediate/layered data from a residue *without
+being handed a factoring*. For genuine loss that is exactly the
+irreversibility obstruction. The canonical collapse
+`collapse : Bool → ⊤` has *no section*: `no-bare-recovery` (via
+`no-section-of-collapsing-map`) refutes any `raise : ⊤ → Bool` with
+`raise ∘ collapse ≡ id`.
+
+The forgotten bit is retained on the *fibre*
+(`fibre-retains-lost-bit : echo-true ≢ echo-false`, two distinct echoes
+over the same residue `tt`) but is *not* a recoverable complement of the
+residue — which is exactly why `no-bare-recovery` holds while
+`accumulate-split-id` is `refl`.
+
+=== (4) The "graded comonad" reading is the complement-storing neighbour
+
+`EchoGradedComonadF1` is a genuine nested graded comonad — but its model
+`D r A = A × Boolʳ` (`R X = X × Bool`) *retains* its residue layers. Its
+comultiplication is `δ = coe (D-+ m n A)` along the *type equality*
+`D (m+n) A ≡ D m (D n A)`, hence INVERTIBLE. `EchoVariance` exhibits the
+inverse `μ-writer = coe (sym (D-+ m n A))` and proves both round-trips
+(`writer-μ-section`, `writer-δ-section`): the writer is *simultaneously*
+a graded comonad and a graded monad.
+
+That bi-directionality is the signature of a COMPLEMENT-STORING
+(resource / coeffect) modality — the loss is not actually lost, it is
+filed in the `Bool` layer. This is precisely what the sharpened
+understanding says echo-types is *not*: "exact on a homotopy fibre rather
+than ... complement-storing". So the graded-comonad reading does not
+contradict the verdict; it silently *changes the modality* to the
+lossless resource neighbour.
+
+=== One-line resolution
+
+[.lead]
+Echo-types (fibre-based loss) is a *graded monad* of accumulation (the
+`+` axis) together with a section/retraction *adjunction* that is exact on
+the grade-0 fibre; it is *not* a graded comonad. The `min` axis (order /
+`degrade`) carries the reindexing modality; the `+` axis (accumulation)
+carries the monad. The graded-comonad reading is available only on the
+complement-storing writer, which is lossless and hence a different
+(resource-flavoured) modality.
+
+This sits the echo modality exactly where the landscape places it: at the
+intersection of the grading axis (Katsumata; Fujii–Katsumata–Melliès;
+Orchard–Petricek coeffects) and the modal axis, with the modality's
+content being *information loss* rather than resource usage, distinguished
+from its neighbours by the tropical (worst-case, non-probabilistic) grade
+and by carrying recoverability as *fibre-level* rather than
+*complement-level* structure.
+
+== Consequences for the redesign
+
+. *Keep the modality/measure split; it IS the variance answer.* The
+  `min` axis (`Echo.Modality.*`, thin-poset `degrade`) and the `+` axis
+  (`Echo.Measure.*`, accumulation) should remain separate surfaces. The
+  variance question dissolves once they are not conflated: reindexing
+  (order) and accumulation (measure) have different variances.
+
+. *Name the accumulation monad on the measure axis.* The `+`-graded
+  accumulation `μ : D_r D_s → D_{r+s}` is the graded-monad multiplication.
+  A future `Echo.Measure.Accumulation` (or similar) can package
+  `accumulate` + the grade-0 unit as the graded monad of loss, with the
+  tropical `+` (and `∞` as the absorbing "fully unrecoverable" grade) as
+  the grade monoid. `EchoVariance.accumulate` is the kernel-level witness
+  it would build on.
+
+. *Read `EchoGradedComonad` / F1 / F3 as the complement-storing
+  neighbour, on the record.* They are correct Agda and a useful
+  contrast object (the resource sibling), but they are *not* the echo
+  modality of genuine loss. Any downstream prose that calls echo "a
+  graded comonad of loss" without the complement-storing caveat is
+  re-introducing the R-2026-05-18 overclaim. `EchoVariance` is the pin
+  that fails CI if that slide recurs.
+
+. *The adjunction is the honest headline for recoverability.* "Exact on
+  a homotopy fibre" = the grade-0 `A ↔ Σ B (Echo f)` section/retraction.
+  Recoverability should be stated as this adjunction unit/counit, never as
+  an all-grade comonadic `extract`/`duplicate` (which would falsely imply
+  recovery off the fibre).
+
+== Honest scope
+
+The verdict is about the *shape* of the canonical structure maps and the
+*locus* of recoverability — not a universal categorical impossibility
+theorem. Matched-negatives are pinned in `EchoVariance` as `NotProved-*`
+⊤-aliases:
+
+* *Not claimed:* that no graded comonad of any kind touches Echo — F1 is
+  one, on the complement-storing writer. The claim is that *genuine*
+  (fibre-based, non-complement-storing) loss is not a graded comonad.
+* *Not claimed:* a numeric realisation of the full min-plus grade semiring
+  (with `∞`) carrying the entire graded-monad law triangle. The measure
+  seam (`tropical-cost-measure`) supplies the tropical carrier; this work
+  pins only the variance *shape*. Completing the law triangle over
+  `ℕ ∪ {∞}` is the natural next rung (consequence 2 above).
+* *Not claimed:* that `split-with-factoring` is non-canonical. Given the
+  factoring it is the unique inverse (clause 2). The obstruction (clause
+  3) is strictly about recovery from a *bare* residue with no factoring
+  supplied.
+
+== Provenance
+
+* Mechanisation: `proofs/agda/EchoVariance.agda` (`--safe --without-K`,
+  zero postulates); pinned in `proofs/agda/Smoke.agda`; wired into
+  `proofs/agda/All.agda`; classified in
+  `docs/echo-types/echo-kernel-note.adoc` and `docs/echo-types/MAP.adoc`.
+* Reused kernel theorems: `Echo.Echo-comp-iso-{to,from,to-from,from-to}`,
+  `EchoNoSectionGeneric.no-section-of-collapsing-map`,
+  `EchoTotalCompletion.A↔ΣEcho`, and `EchoGradedComonadF1.{δ,D-+,coe}`.
+* Relationship to the ledger: this *resolves* the variance left open by
+  R-2026-05-18; it does not resurrect any retracted prose.
+
+== Revision history
+
+[cols="1,3",options="header"]
+|===
+| Date | Change
+
+| 2026-06-19
+| Initial resolution. `EchoVariance.agda` lands the five-clause verdict;
+  this note records it and the redesign consequences.
+|===
