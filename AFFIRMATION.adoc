@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= AFFIRMATION — echo-types, as of 2026-06-16
+= AFFIRMATION — echo-types, as of 2026-06-19
 :toc: macro
 :toclevels: 2
 
@@ -91,25 +91,25 @@ record, not a won argument.
 [cols="1,3"]
 |===
 | *Repo*        | `hyperpolymath/echo-types` (the constructive Agda formalisation of structured loss)
-| *Branch*      | `docs/proof-trust-audit-2026-06-16`
-| *Commit (HEAD)* | `59375b60379f3f1356161c1a257736d13bd75b2f`
-| *Permalink*   | https://github.com/hyperpolymath/echo-types/tree/59375b60379f3f1356161c1a257736d13bd75b2f
-| *Verified (UTC)* | 2026-06-16T12:16:59Z
-| *Working-tree delta at verification* | Clean (`git status --porcelain` empty) except this untracked `AFFIRMATION.adoc`. The green results below are HEAD itself.
-| *Toolchain*   | Agda 2.8.0 · just 1.50.0 · git 2.43.0
-| *Agda libraries (load-bearing)* | `standard-library` from the worktree `/home/hyperpolymath/developer/worktrees/agda-stdlib-tweak` (lib flag `--warning=noUnsupportedIndexedMatch`) + `absolute-zero` from `/home/hyperpolymath/developer/repos/absolute-zero`. See the environment note below.
+| *Branch*      | `claude/ecstatic-wright-OBEvx`
+| *Commit (HEAD)* | `c97d0c44070af558c8df08264b36929b3e736f00`
+| *Permalink*   | https://github.com/hyperpolymath/echo-types/tree/c97d0c44070af558c8df08264b36929b3e736f00
+| *Verified (UTC)* | 2026-06-19 (this session; the green runs below were taken at ~22:28–22:34Z)
+| *Working-tree delta at verification* | Clean (`git status --porcelain` empty); the green results below are commit `c97d0c4` *itself*. This AFFIRMATION refresh and the new `docs/status/STATUS-2026-06-19.adoc` are added on top of the verified commit.
+| *Toolchain*   | Agda 2.6.3 · agda-stdlib 2.3 · git
+| *Agda libraries (load-bearing)* | `standard-library` (v2.3) at `/opt/agda-stdlib` + `absolute-zero` at `/home/user/absolute-zero`, both *registered and resolving* in `~/.agda/libraries`. See the environment note below.
 |===
 
 [IMPORTANT]
-*Environment note (read before you call anything broken).* The machine's
-`~/.agda/libraries` registers a `standard-library` path
-(`…/developer/repos/agda-stdlib/standard-library.agda-lib`) that *does not
-exist* — it is dangling at this moment. We did NOT typecheck against the
-dangling path. We pointed Agda at the working stdlib worktree above (plus
-`absolute-zero`) and that is the environment in which the green results hold. If
-you run a bare `agda` and it fails only with "library not found", that is an
-*environment artefact, not a proof defect*; wire the worktree stdlib first (see
-<<reproduce>>).
+*Environment note.* On *this* machine, unlike the 2026-06-16 affirmation's
+environment, `~/.agda/libraries` resolves cleanly — both `/opt/agda-stdlib`
+and `/home/user/absolute-zero` exist. The green results below were produced with
+the include flags shown in <<reproduce>> (`-i proofs/agda -i . -i
+/home/user/absolute-zero/proofs/agda`) against that registered stdlib. This also
+*resolves a long-standing doc/toolchain tension*: the green `--safe --without-K`
+closure now verifies under the `CLAUDE.md`-documented *Agda 2.6.3 + stdlib 2.3*,
+in addition to the *Agda 2.8.0* worktree under which the 2026-06-16 affirmation
+checked it. The closure is robust across both.
 
 [IMPORTANT]
 If you are reading this at a _later_ commit, the claims may have drifted.
@@ -122,101 +122,61 @@ drift from what we verified, we say so here rather than quietly leave the reader
 to find out.
 
 * *`README.adoc`* — *absent.* The canonical README for this repo is
-  link:README.md[`README.md`] (the richest of the trio; `readme.adoc` and
-  `EXPLAINME.adoc` are deliberate one-line pointers _to_ it, per the 2026-06-12
-  deduplication). So the estate's nominal `README.adoc` filename is not present,
-  but a canonical README _is_ — `README.md`. Noted, not glossed.
-* *`EXPLAINME.adoc`* — *present*, but as a pointer:
-  link:EXPLAINME.adoc[`EXPLAINME.adoc`] now just redirects to `README.md`
-  §"What Echo Types Are For" / §"Current Status Snapshot". There is no longer a
-  standalone "prove every README claim with code paths" body in it. Honest gap:
-  the dedicated EXPLAINME role is folded into the README rather than separate.
-* *GitHub repo description* — _"Constructive Agda library for Echo Types: a
-  formal model of structured loss (non-total erasure). Mechanized
-  Bachmann-Howard ordinals, Buchholz/Veblen hierarchies, and thermodynamic
-  stability proofs."_ Cross-check against what we verified:
-** "Constructive Agda library … structured loss" — *matches*: the verified
-   closure typechecks `--safe --without-K`, and `Echo f y := Σ (x : A), (f x ≡ y)`
-   is its core.
-** "Mechanized Bachmann–Howard ordinals … Buchholz/Veblen hierarchies" —
-   *partly aspirational*. A large ordinal-notation development is present and in
-   the green closure (Buchholz/Veblen modules, well-foundedness for the _sound
-   carriers_ `_<ᵇ⁰_` / `_<ᵇ²_` / `_<ᵇʳᶠ²_`). But by the repo's own internal
-   record the Bachmann–Howard _target_ is a milestone-in-progress, not a closed
-   end-to-end theorem: the unbudgeted global WF for native `_<ᵇ_` is documented
-   as not closable as stated, and order-type fidelity to BH is an explicit
-   _postulated_ trust boundary (`Ordinal/Buchholz/Fidelity.agda`,
-   `Fidelity-OPEN-postulates.md`) that lives OUTSIDE the `--safe` closure. Read
-   "mechanized BH" as "a mechanized notation system aimed at BH", not "BH proved".
-** "thermodynamic stability proofs" — the thermodynamics modules
-   (`EchoThermodynamics`, `EchoEntropy`, …) are in the green closure and
-   typecheck; their own headers scope the entropy results to the _discrete,
-   finite-domain_ shadow (not real-valued Shannon entropy). The `Justfile`'s
-   "stability 92/100" numerals are *not* a checked output — see the loud-failure
-   note below.
-* *GitHub topics* — `agda`, `category-theory`, `formal-verification`,
-  `type-theory`, `echo-types`, `constructive-mathematics`,
-  `homotopy-type-theory`, `modal-logic`. Cross-check: `agda`,
-  `formal-verification`, `type-theory`, `constructive-mathematics` are _earned_
-  by the green `--safe --without-K` closure. `homotopy-type-theory` is loose —
-  the library is deliberately `--without-K` and several results are honestly
-  flagged as needing UIP / truncation / Cubical that the safe core does NOT
-  assume (e.g. the truncated image factorisation lives only in a postulated /
-  separate-flag module).
+  link:README.md[`README.md`]; `readme.adoc` and `EXPLAINME.adoc` are deliberate
+  one-line pointers _to_ it. So the estate's nominal `README.adoc` filename is
+  not present, but a canonical README _is_ — `README.md`. Noted, not glossed.
+* *`EXPLAINME.adoc`* — *present*, as a pointer redirecting to `README.md`.
+* *`docs/status/STATUS-2026-06-19.adoc`* — *present (new this session)*: the
+  musts/intends/wishes status table (normative MUST = the Oikos accounting DSL),
+  with echo-types positioned as the verified proof companion. This affirmation is
+  the receipt for the echo-types green-closure rows in that table.
+* *`CLAUDE.md` build note* — cites "Agda 2.6.3 + stdlib 2.3 + absolute-zero". We
+  verified green under exactly that this session (see the environment note). No
+  drift.
 
 == The honest state (one breath)
 
 *echo-types is a real, constructive Agda formalisation of fiber-based structured
-loss whose verified closure typechecks green under `--safe --without-K` with
-zero postulates and no escape pragmas — a genuinely machine-checked CORE
-(the Echo Σ-fiber calculus, its totality / orthogonal-factorisation / no-section
-/ graded-loss / decoration spine, and a large sound-carrier ordinal-notation
-development) — alongside an explicitly fenced PERIPHERY of documented postulate
-trust-boundaries, experiments, and unwired modules that are deliberately kept
-out of that closure, plus a still-open Bachmann–Howard milestone and a stale
+loss whose verified closure typechecks green under `--safe --without-K` with a
+funext-free, postulate-free kernel cone and no escape pragmas in the closure — a
+genuinely machine-checked CORE (the Echo Σ-fiber calculus, its totality /
+orthogonal-factorisation / no-section / graded-loss / decoration spine, the
+general monoid/group `EchoAggregation` theorem, and a large sound-carrier
+ordinal-notation development) — alongside an explicitly fenced PERIPHERY of
+documented postulate trust-boundaries, experiments, and unwired modules kept out
+of that closure, plus a still-open Bachmann–Howard milestone and a stale
 `Justfile`.*
 
 === What is solid (and how we checked)
 
-* *The verified module closure typechecks green — this moment.*
-  `agda --safe --without-K -i proofs/agda proofs/agda/All.agda` *exits 0*.
-  `proofs/agda/All.agda` transitively forces *151 top-level `open import`s*
-  (the Echo core, the establishment-track Pillar A–D modules, the F1–F5
-  earn-back gates, the audience-facing modules, the deniability module, and the
-  whole `Ordinal.*` / `Ordinal.Buchholz.*` / `Ordinal.Brouwer.*` notation tower).
-  All under `--safe --without-K`. _How checked:_ ran the command just now against
-  the worktree stdlib + absolute-zero; tail showed every module `Checking …`
-  through `Smoke` with exit code 0.
-* *The characteristic lane typechecks green — this moment.*
-  `agda --safe --without-K -i proofs/agda proofs/agda/characteristic/All.agda`
-  *exits 0* (14 modules: `ChoreoInjective`, `RoleGraded`, `RoleMode`,
-  `RoleRole`, `RoleModeGrade`, `ModeGraded`, `N5Falsifier`, `NonTruncatable`,
-  `RecipeSpec`/`RecipeTheorem`/`RecipeNonTriviality`, `InteractionTest`,
-  `IntegrationAudit`, `VisibleConstraintAudit`). The named theorems we eyeballed
-  are real: `choreo-grade-commute` (`characteristic/RoleGraded.agda:193`) and
-  `client-to-server-injective-on-proj₁` (`characteristic/ChoreoInjective.agda:136`).
-  _Honest note on output:_ the run prints `UnsupportedIndexedMatch` *warnings*
-  that originate in the stdlib worktree's own `Relation/Nullary/Decidable.agda`
-  (the lib sets `--warning=noUnsupportedIndexedMatch`); they are warnings, not
-  errors, and the typecheck exits 0. We grepped the output for `error` / `unsolved`
-  and found none.
-* *Zero postulates / escape pragmas in the green closure.* No module reachable
-  from `proofs/agda/All.agda` carries a `postulate`, `TERMINATING`, `trustMe`,
-  or `primTrustMe`. We confirmed this by grepping the shipped tree: the only
-  `postulate`-bearing files (`EchoImageFactorizationPropPostulated.agda`,
-  `Ordinal/Buchholz/Fidelity.agda`) are NOT imported by `All.agda` (see
-  <<nuance>>); the only `TERMINATING`-bearing files are under the unwired
-  `proofs/agda/experimental/` tree.
+* *The verified module closure typechecks green — this session.*
+  `agda --safe --without-K -i proofs/agda -i . -i /home/user/absolute-zero/proofs/agda proofs/agda/All.agda`
+  *exits 0*. `proofs/agda/All.agda` forces *153 top-level `open import`s* (the Echo
+  core, the establishment-track Pillar A–D modules, the F1–F5 earn-back gates, the
+  audience-facing modules, `EchoAggregation`, the deniability module, and the whole
+  `Ordinal.*` / `Ordinal.Buchholz.*` / `Ordinal.Brouwer.*` notation tower), all
+  under `--safe --without-K`. `proofs/agda/Smoke.agda` *exits 0* too.
+* *The characteristic lane typechecks green — this session.*
+  `agda --safe --without-K … proofs/agda/characteristic/All.agda` *exits 0*; a grep
+  of its output for `error`/`unsolved` finds nothing.
+* *Postulate-free, escape-free GREEN CLOSURE.* No module reachable from
+  `proofs/agda/All.agda` carries a `postulate`, `TERMINATING`, `trustMe`, or
+  `primTrustMe`. We confirmed by grepping the tree: the only `postulate`
+  *declarations* are in `EchoImageFactorizationPropPostulated.agda` (one block) and
+  `Ordinal/Buchholz/Fidelity.agda` (two blocks) — *neither imported by* `All.agda`
+  (see <<nuance>>).
 * *The funext-free kernel certificate holds.* `sh scripts/kernel-guard.sh`
   *exits 0*: "Check A — cone is `{ Echo, EchoKernel }`, no funext / postulate /
   escape" PASS, and "Check B — all `Echo*.agda` modules are classified in the
   kernel note" PASS.
+* *The general aggregation theorem is real (#175).* `EchoAggregation.agda` — the
+  `Monoid` / `GroupAggregator` records, the proved `aggregation-as-fold` law, the
+  `sum`/`count`/`max`/`min` instances, the generic `no-canonical-disaggregation-of`,
+  and the macro `Example-PairSum` anchor — is in the green closure, zero postulates.
 * *The experimental ℕ∪{∞} grade dioid is proved-but-unwired.*
-  `proofs/agda/experimental/echo-additive/Grade.agda` (the R0 min-plus / tropical
-  grade semiring, `Grade = ℕ ∪ {∞}` with `_+g_` and `_⊓g_`) typechecks standalone
-  under `--safe --without-K`, *exit 0*, zero postulates — but it is *absent from
-  `All.agda`*, so it does not count toward the verified-closure claims above. We
-  record it as a real-but-not-wired-in artefact, exactly as found.
+  `proofs/agda/experimental/echo-additive/Grade.agda` typechecks standalone under
+  `--safe --without-K`, *exit 0*, zero postulates — but is *absent from `All.agda`*,
+  so it does not count toward the closure claims above.
 
 [#nuance]
 === The honest nuance you must not lose (proved CORE vs everything else)
@@ -225,126 +185,110 @@ The green `--safe --without-K` typecheck proves that *the Agda in the closure is
 internally consistent and the stated lemmas hold as written*. It does NOT prove:
 
 * *that the ordinal notation faithfully denotes the Bachmann–Howard ordinal.*
-  Order-type fidelity is an _external mathematical claim_ deliberately isolated
-  as TWO named `postulate`s in `Ordinal/Buchholz/Fidelity.agda` (a height-preserving
+  Order-type fidelity is an _external mathematical claim_ deliberately isolated as
+  TWO named `postulate`s in `Ordinal/Buchholz/Fidelity.agda` (a height-preserving
   denotation `⟦·⟧` and an `ordinal-upper-bound`). That module is OUTSIDE the
-  `--safe` kernel cone *by design* — not imported by `All.agda`/`Smoke.agda` — so
-  the green closure depends on none of those postulates, and equally does not
-  _prove_ them. `Fidelity-OPEN-postulates.md` is the standing record. Anyone
-  reading "Bachmann–Howard, mechanized" as "BH is a closed theorem here" is
-  over-reading; the honest claim is "a notation system, with sound-carrier
-  well-foundedness proved, aimed at BH, with the order-type bridge left as an
-  explicit auditable trust boundary."
+  `--safe` kernel cone *by design* — not imported by `All.agda`/`Smoke.agda` — so the
+  green closure depends on none of those postulates, and equally does not _prove_
+  them. `Fidelity-OPEN-postulates.md` is the standing record. Read "Bachmann–Howard,
+  mechanized" as "a notation system, sound-carrier well-foundedness proved, aimed at
+  BH, with the order-type bridge left as an explicit auditable trust boundary."
 * *that the truncated (epi, mono) image factorisation holds in the safe core.*
   It needs propositional truncation; the safe `EchoImageFactorizationProp` is
-  zero-postulate, while the truncated demonstration is confined to the unwired
-  `EchoImageFactorizationPropPostulated.agda` (four scoped, documented postulates).
-* *that any downstream consumer (EchoTypes.jl, ephapax, …) faithfully
-  implements this calculus.* That is a separate, unverified bridge in each
-  consumer repo, not something this typecheck touches.
+  zero-postulate, the truncated demonstration is confined to the unwired
+  `EchoImageFactorizationPropPostulated.agda` (postulated `∥_∥`) — and that `∥_∥` is
+  *constructed for real* in the separate `--cubical` island
+  `EchoImageFactorizationPropCubical.agda` (a different flag profile, by design not
+  importable into the `--safe --without-K` cone).
+* *that any downstream consumer (Oikos, EchoTypes.jl, ephapax, …) faithfully
+  implements this calculus.* The Oikos macro-aggregation bridge cites the
+  `EchoAggregation` principle at the *citation level* (there is no Agda↔Rust import
+  path); it is a separate, unverified bridge, not something this typecheck touches.
 
 "Proved core calculus" + "documented trust boundaries kept out of the core" +
 "aspirational milestone narrative in the README" are three different things, and
-we are naming them as three.
+we name them as three.
 
 === Known-incomplete but honestly fenced (loud, never a silent green)
 
-* *The `Justfile` is stale and partly fictional — do not trust its `@echo`s.*
-  Its `build-echo`/`test-*` recipes call paths that *do not exist at this commit*
-  (e.g. `proofs/agda/Echo/Core.agda`, `proofs/agda/Echo/Bridges/EchoCNOBridge.agda`),
-  and `build-echo` runs bare `agda -i proofs/agda …` with no stdlib wiring, so on
-  this machine (dangling registry path) it would fail to find the library. Worse,
-  the `stability-report` / `test-all` recipes *print* hard-coded numerals
-  ("Stability: 92/100", "Core Echo Types 98/100", "✅ All tests passed") that are
-  *not computed from anything* — they are `@echo` literals, not a checked result.
-  We are NOT citing them. The real, runnable verification is the two `agda …
-  All.agda` commands in <<reproduce>> plus `scripts/kernel-guard.sh`.
+* *The `Justfile` is stale — carried from the 2026-06-16 audit, not re-run today.*
+  Per that audit its `stability-report` / `test-all` recipes *print* hard-coded
+  numerals ("92/100" etc.) that are `@echo` literals, not computed results, and some
+  recipes reference paths that do not exist. We did *not* re-execute the `Justfile`
+  this session and we are NOT citing its numerals. The real, runnable verification is
+  the `agda … All.agda` / `Smoke.agda` / `characteristic/All.agda` commands plus
+  `scripts/kernel-guard.sh` in <<reproduce>>.
 
 === Outstanding / weak / refuted (no spin)
 
 * *Unbudgeted global well-foundedness for native `_<ᵇ_` is OPEN and, as stated,
-  argued-unclosable.* The repo's own record (`RankBrouwer.agda` preamble,
-  `buchholz-rank-obstruction.adoc`) is that the rank-embedding route is walled by
-  the `<ᵇ-+Ω` counterexample; the achievable result is WF for the _sound carriers_
-  (`_<ᵇ⁰_`, `_<ᵇ²_`, `_<ᵇʳᶠ²_`), which ARE in the green closure. The native global
-  WF is not a gap we are claiming closed.
-* *Bachmann–Howard order-type fidelity: postulated (trust boundary), not proved*
-  — see <<nuance>>.
-* *Truncated (epi, mono) image factorisation: postulated* in a separate,
-  unwired module; the safe core proves only the K-free `injective-fibres-proj-unique`
-  fragment.
-* *Several "full" results are honestly funext-/UIP-qualified* (the F4/F5
-  earn-back gates take `funext` as an explicit hypothesis; the constant-fibre
-  `↔ A` packaging needs UIP on `B`). These are stated as qualified, not as
-  unconditional, in their modules — and that qualification is the honest content,
-  not a defect.
+  argued-unclosable* (`RankBrouwer.agda` preamble, `buchholz-rank-obstruction.adoc`);
+  the achievable result is WF for the _sound carriers_ (`_<ᵇ⁰_`, `_<ᵇ²_`, `_<ᵇʳᶠ²_`),
+  which ARE in the green closure.
+* *Bachmann–Howard order-type fidelity: postulated (trust boundary), not proved* —
+  see <<nuance>>. ε₀ has been climbed (`OrdinalExp.agda`), but ε₀ ≪ Γ₀ ≪ … ≪ ψ₀(Ω_ω);
+  the milestone is not reached.
+* *Truncated (epi, mono) image factorisation: postulated* in an unwired module
+  (and constructed in a separate `--cubical` island); the safe core proves only the
+  K-free `injective-fibres-proj-unique` fragment.
+* *Several "full" results are honestly funext-/UIP-qualified* (the F4/F5 earn-back
+  gates take `funext` as an explicit hypothesis). That qualification is the honest
+  content, not a defect.
 * *The retracted "graded comonad" reading stands retracted* (R-2026-05-18):
   echo-types is a loss-graded _reindexing modality_ (thin-poset action); the
-  experimental `echo-additive/` tree's own STATE records the variance question as
-  settled toward "graded MONAD, not comonad/adjunction". None of that experimental
-  work is wired into the shipped closure.
-* *Status docs vs live run.* The `Justfile` numerals are refuted by the live
-  runs (above). The repo's `CLAUDE.md` build note cites "Agda 2.6.3 + stdlib 2.3";
-  we actually verified green under *Agda 2.8.0* with the stdlib *worktree*. Where
-  those differ, the live run wins.
+  experimental `echo-additive/` tree is not wired into the shipped closure.
 
 [#reproduce]
 == Reproduce it yourself
 
-From the repo root, at the commit above. First wire the working stdlib (the
-machine's registered path is dangling at this commit), then typecheck:
+From the repo root, at the commit above, with `~/.agda/libraries` registering the
+stdlib 2.3 + absolute-zero paths (already the case on the verifying machine):
 
 [source,sh]
 ----
-# 1. Point Agda at the WORKING stdlib worktree + absolute-zero (env-local,
-#    does not touch the repo). Adjust paths to your checkout.
-export AGDA_DIR="$(mktemp -d)"
-cat > "$AGDA_DIR/libraries" <<'LIBS'
-/home/hyperpolymath/developer/worktrees/agda-stdlib-tweak/standard-library.agda-lib
-/home/hyperpolymath/developer/repos/absolute-zero/absolute-zero.agda-lib
-LIBS
+# 1. Typecheck the verified closure (expect exit 0; 153 modules ending at Smoke).
+LC_ALL=C.UTF-8 agda --safe --without-K \
+  -i proofs/agda -i . -i /home/user/absolute-zero/proofs/agda \
+  proofs/agda/All.agda
 
-# 2. Typecheck the verified closure (expect exit 0).
-agda --safe --without-K -i proofs/agda proofs/agda/All.agda
+# 2. Smoke pins (expect exit 0).
+LC_ALL=C.UTF-8 agda --safe --without-K \
+  -i proofs/agda -i . -i /home/user/absolute-zero/proofs/agda \
+  proofs/agda/Smoke.agda
 
-# 3. Typecheck the characteristic lane (expect exit 0; stdlib
-#    UnsupportedIndexedMatch WARNINGS print but are not errors).
-agda --safe --without-K -i proofs/agda proofs/agda/characteristic/All.agda
+# 3. Characteristic lane (expect exit 0; no error/unsolved).
+LC_ALL=C.UTF-8 agda --safe --without-K \
+  -i proofs/agda -i . -i /home/user/absolute-zero/proofs/agda \
+  proofs/agda/characteristic/All.agda
 
-# 4. Funext-free kernel certificate + classification lint (expect exit 0).
+# 4. Funext-free kernel certificate + classification lint (expect exit 0 / PASS).
 sh scripts/kernel-guard.sh
 
 # Optional: the experimental, UNWIRED ℕ∪{∞} grade dioid (expect exit 0;
-#           this is NOT part of the verified closure).
-agda --safe --without-K -i proofs/agda proofs/agda/experimental/echo-additive/Grade.agda
+#           NOT part of the verified closure).
+LC_ALL=C.UTF-8 agda --safe --without-K \
+  -i proofs/agda -i . -i /home/user/absolute-zero/proofs/agda \
+  proofs/agda/experimental/echo-additive/Grade.agda
 ----
 
-Expected outputs at this commit:
-
-* Step 2 → `agda … All.agda` exits `0` (151 top-level modules forced through the
-  checker, ending at `Checking Smoke … `).
-* Step 3 → `agda … characteristic/All.agda` exits `0`; `grep -iE 'error|unsolved'`
-  over its output finds nothing (only stdlib `-W…UnsupportedIndexedMatch` warnings).
-* Step 4 → `kernel-guard: PASS — funext-free certificate enforced; classification in sync.`
-* Optional → `Grade.agda` exits `0`.
-
-*Do NOT* rely on `just build-all` / `just test-all` / `just stability-report` to
-reproduce these: those recipes reference non-existent paths and print hard-coded
-"92/100" numerals that are not a computed result (see the loud-failure note above).
+*Do NOT* rely on `just build-all` / `just test-all` / `just stability-report`:
+those recipes print hard-coded numerals that are not a computed result (see the
+loud-failure note above).
 
 == One-line characterisation (quote this)
 
 [quote]
 ____
 "A real constructive Agda library for structured loss (`Echo f y := Σ x, f x ≡ y`)
-whose verified closure typechecks green under `--safe --without-K` with zero
-postulates and a funext-free kernel certificate — a genuinely machine-checked
-CORE plus a large sound-carrier ordinal-notation tower — with Bachmann–Howard
-order-type fidelity left as an explicit, isolated POSTULATE outside that core,
-the experimental additive-grade work proved-but-unwired, and a stale `Justfile`
-whose stability numerals are decorative, not checked. Serious foundational
-artefact; the headline 'BH mechanized' is a milestone-in-progress, not a closed
-theorem. No intentional overclaim."
+whose verified closure typechecks green under `--safe --without-K` with a
+funext-free, postulate-free kernel certificate — a genuinely machine-checked CORE
+(now including the general monoid/group aggregation theorem) plus a large
+sound-carrier ordinal-notation tower — with Bachmann–Howard order-type fidelity
+left as an explicit, isolated POSTULATE outside that core, the experimental
+additive-grade work proved-but-unwired, and a stale `Justfile` whose stability
+numerals are decorative, not checked. Serious foundational artefact; the headline
+'BH mechanized' is a milestone-in-progress, not a closed theorem. No intentional
+overclaim."
 ____
 
 == Joint attestation
@@ -354,15 +298,14 @@ timestamp above, every claim in this file is true and was checked as described*
 — with no intentional overclaim, and with the open gaps stated rather than
 hidden.
 
-* *Engineering party (AI):* Claude Opus 4.8 (`claude-opus-4-8[1m]`) — ran the
-  build/test/proof checks recorded here (the two `agda … All.agda` typechecks,
-  `scripts/kernel-guard.sh`, and the standalone `Grade.agda` check) on
-  2026-06-16T12:16:59Z and stands behind the wording above as a faithful report
-  of those runs.
+* *Engineering party (AI):* Claude Opus 4.8 — ran the build/proof checks recorded
+  here (the `agda … All.agda` / `Smoke.agda` / `characteristic/All.agda`
+  typechecks, `scripts/kernel-guard.sh`, the postulate grep, and the standalone
+  `Grade.agda` check) on 2026-06-19 and stands behind the wording above as a
+  faithful report of those runs.
 * *Owner / maintainer:* Jonathan D.A. Jewell — _signs by committing this file
-  with `-S` (`id_ed25519_signing`); the git commit signature over this content,
-  at the commit SHA recorded above, is the cryptographic form of this
-  affirmation._
+  with `-S`; the git commit signature over this content, at the commit SHA recorded
+  above, is the cryptographic form of this affirmation._
 +
 Signed-off-date: ____________________  (fill on signing)
 
