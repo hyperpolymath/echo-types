@@ -102,6 +102,7 @@ open import EchoGradedComonadF1 -- Gate F1 PASSED (graded comonad on iterated-re
 open import EchoGradedComonadInterface -- Gate F3 abstract record
 open import EchoGradedComonadInstance1 -- Gate F3 instance 1 (F1 at (ℕ, +, 0))
 open import EchoGradedComonadInstance2 -- Gate F3 PASSED — instance 2 at (List Tag, ++, [])
+open import EchoVariance         -- variance verdict: monad (accumulation) + fibre adjunction, NOT comonad
 
 -- Foundation P1: external-fibre triangulation. Echo agrees with the
 -- standard library's OWN independently-authored notions

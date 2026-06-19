@@ -125,7 +125,7 @@ kernel** — the boundary is real and lives outside this core.
   *Application/extension modules* (also added via the same sweep):
   `EchoEntropy`, `EchoLLEncoding`, `EchoProvenance`, `EchoSecurity`,
   `EchoProbabilisticSupport`, `EchoDifferential`, `EchoDeniability`,
-  `EchoAggregation`
+  `EchoAggregation`, `EchoVariance`
   are derived domain applications mapped under their own headings in
   MAP.adoc.  `EchoDeniability` formalises residue deniability: the
   perfect (constant / no-section) case and the partial (injective /
@@ -140,6 +140,17 @@ kernel** — the boundary is real and lives outside this core.
   `Example-PairSum` instance the oikos/betlang alib note cites
   (`pairSum` IS the `sumMonoid` fold).  Imports `Echo` +
   `EchoNoSectionGeneric`.
+  `EchoVariance` resolves, in `--safe` Agda rather than asserting it,
+  the monad / comonad / adjunction status of loss accumulation
+  (`docs/echo-types/variance-resolution.adoc`): accumulation is the
+  graded-MONAD multiplication `accumulate : D_r (D_s A) → D_{r+s} A`
+  (total + canonical, `= Echo-comp-iso-from`); recoverability is exact on
+  the grade-0 fibre (`recoverable-fibre = A↔ΣEcho`, the section/retraction
+  adjunction); the graded-COMONAD direction fails for genuine loss
+  (`no-bare-recovery`, via `no-section-of-collapsing-map`); and the
+  "graded comonad" reading is the LOSSLESS complement-storing writer
+  (`μ-writer` inverts F1's `δ`).  Imports `Echo`, `EchoCharacteristic`,
+  `EchoNoSectionGeneric`, `EchoTotalCompletion`, `EchoGradedComonadF1`.
 
 | *Earn-back gate modules* +
 (derived / scoped; not kernel)

@@ -275,6 +275,24 @@ honest-bound matched-negative block.
   is the fold's homomorphism law, NOT full SQL GROUP-BY operational
   semantics; `avg` is deliberately absent (not a monoid — express as
   `sum / count`). `proofs/agda/EchoAggregation.agda`. `[REAL]`
+* *Variance verdict (monad / comonad / adjunction)* — resolves, in
+  `--safe` Agda rather than asserting it, the precise variance of the
+  loss-graded modality. Accumulation is the graded-MONAD multiplication
+  `accumulate : D_r (D_s A) → D_{r+s} A` (total + canonical, definable
+  from the layered data alone; `= Echo-comp-iso-from`); recoverability is
+  exact on the grade-0 fibre (`recoverable-fibre = A↔ΣEcho`, the
+  section/retraction adjunction); the graded-COMONAD direction fails for
+  genuine loss (`no-bare-recovery`, the canonical collapse has no section
+  via `no-section-of-collapsing-map`); and the "graded comonad" reading is
+  the LOSSLESS complement-storing writer of `EchoGradedComonadF1`, whose
+  `δ` is `coe` along a type equality and is therefore inverted by
+  `μ-writer`. Sharpens R-2026-05-18: echo-types is "exact on a homotopy
+  fibre rather than complement-storing". Honest-bound: the verdict is
+  about the SHAPE of the canonical structure maps and the LOCUS of
+  recoverability, not a universal categorical impossibility theorem
+  (matched `NotProved-*` block). See
+  `docs/echo-types/variance-resolution.adoc`.
+  `proofs/agda/EchoVariance.agda`. `[REAL]`
 
 *Curated suite — single-file entry point.* The narrative
 deliverable that pulls the Tier-1 / Tier-2 / Tier-3 named theorems

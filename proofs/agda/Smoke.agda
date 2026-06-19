@@ -940,6 +940,28 @@ open import EchoGradedComonadInstance2 using
   ; list-instance                   -- the second graded-comonad instance
   )
 
+-- Variance verdict (docs/echo-types/variance-resolution.adoc): the
+-- monad / comonad / adjunction status of loss accumulation, resolved in
+-- --safe Agda rather than asserted. Accumulation is the graded-MONAD
+-- multiplication (total + canonical); recoverability is exact on the
+-- grade-0 fibre (the section/retraction adjunction); the graded-COMONAD
+-- direction fails for genuine loss (no bare-residue recovery); the
+-- "graded comonad" reading (F1) is the LOSSLESS complement-storing writer
+-- (δ invertible). Pinned so a slide back to an unqualified "graded
+-- comonad of loss" claim fails CI fast.
+open import EchoVariance using
+  ( accumulate                       -- μ : D_r (D_s A) → D_{r+s} A — accumulation is monadic
+  ; split-with-factoring             -- δ given the factoring (its inverse)
+  ; accumulate-split-id              -- exact on the fibre (round-trip refl)
+  ; split-accumulate-id              -- exact on the fibre (round-trip refl)
+  ; recoverable-fibre                -- A ↔ Σ B (Echo f): the grade-0 section/retraction adjunction
+  ; no-bare-recovery                 -- the comonad obstruction: collapse has no section
+  ; fibre-retains-lost-bit           -- the lost bit lives on the fibre, not as a complement
+  ; μ-writer                         -- F1 writer's accumulation (inverse of δ)
+  ; writer-μ-section                 -- writer δ is invertible ⇒ LOSSLESS (complement-storing)
+  ; writer-δ-section                 -- … both round-trips
+  )
+
 open import EchoTropical using
   ( Candidate
   ; score
