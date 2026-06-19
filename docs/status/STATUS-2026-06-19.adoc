@@ -1,0 +1,173 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= STATUS — musts / intends / wishes, as of 2026-06-19
+:toc: macro
+:toclevels: 2
+
+_A dated, cross-repo status snapshot grouped into the three commitment tiers,
+with the normative MUST being the **Oikos accounting DSL** (the compiler
+guarantee "a model that violates an accounting identity does not compile").
+This copy lives in `echo-types`; an identical-in-substance copy lives in
+`oikos/docs/status/`. This file is the **detail behind the chat status table**._
+
+[NOTE]
+====
+*Three tiers.* *MUST* = the normative core the whole programme must deliver
+(the Oikos compiler guarantee). *INTENDS* = funded, designed, in-flight work
+we mean to land. *WISHES* = desirable, unscheduled, or externally-gated.
+
+Status labels are honest: *(Landed)* = real + checked this session; *(Partial)* =
+real but scoped/incomplete; *(Open)* / *(Blocked)* = not done, with the blocker
+named. Where a doc and a live toolchain run disagree, **the live run wins** and
+the contradiction is flagged.
+====
+
+toc::[]
+
+== Where echo-types sits in this programme
+
+`echo-types` is the **verified proof companion**. It does not host the Oikos
+compiler (that is Rust, in the `oikos` repo). echo-types supplies the
+machine-checked *principle* the MUST's economics reading rests on: that
+micro→macro aggregation is a structured-loss (`Echo`) map with **no canonical
+disaggregation** — there is no left inverse (section) recovering the micro
+ledger from the macro total. That is the Sonnenschein–Mantel–Debreu /
+representative-agent critique stated type-theoretically, and as of 2026-06-18
+(issue #175) it is the *general* monoid/group aggregation theorem, with the
+macro economics as one instance (`Example-PairSum`).
+
+== MUST — the normative core (the Oikos compiler guarantee)
+
+[cols="3,3,1,4",options="header"]
+|===
+| Item | What it guarantees | Status | Evidence (live this session)
+
+| Godley column-sum balance
+| A model whose Godley matrix columns do not net to zero is *rejected at compile*
+| (Landed)
+| `oikos-check` `godley_check` — `check_model` returns `Err(GodleyImbalance{sector,net})` on imbalance, `Ok` on balance; 10 tests green
+
+| Instrument coverage
+| Every instrument is accounted across sectors
+| (Landed)
+| `oikos-check` `instrument_check` — 11 tests green
+
+| Currency soundness
+| `GBP + USD` and Stock+Flow mixes are type errors
+| (Landed)
+| `oikos-check` `currency_check` — 4 tests green; phantom types in `oikos-syntax`
+
+| Cross-reference / name resolution
+| Dangling references do not resolve
+| (Landed)
+| `oikos-check` `cross_ref` + `resolve` — 4 tests green
+
+| Surface parser (Logos + Chumsky)
+| Source text parses to the typed AST
+| (Partial)
+| `oikos-parser` — 33 tests green (further along than the README's "in progress")
+
+| Desugar → Ephapax IR
+| Lower to Ephapax's linear-typed / region / typestate IR
+| (Blocked)
+| `oikos-desugar` — 0 tests, stub; **blocked on the upstream Ephapax parser milestone**
+
+| Verified economics principle the MUST rests on
+| Micro→macro aggregation is non-disaggregable (no canonical section)
+| (Landed)
+| echo-types `EchoAggregation` general form (#175), `--safe --without-K`, green
+
+| End-to-end source → verdict pipeline
+| parse → check → desugar wired as one path
+| (Partial)
+| check + parse green *separately*; full wiring gated on the desugar block
+|===
+
+== INTENDS — designed / in-flight
+
+[cols="3,4,2",options="header"]
+|===
+| Item | Note | Status
+
+| `alib` aggregate library (Route A vs B)
+| Bridge accounting/bookkeeping ↔ the macroeconomic disciplines, over `MacroState`. Route B (aggregation-morphism library) recommended; **owner decision still open**
+| (Design / owner-gated)
+
+| EchoAggregation macro reading
+| The SMD / representative-agent critique as the `MacroAggregation` instance of the general theorem
+| (Cited) — `oikos/docs/alib-aggregate-bridge.adoc`; echo-types `Example-PairSum`
+
+| betlang stochastic seam
+| Probabilistic wagers over `MacroState` (ternary `bet` DSL, Racket)
+| (Design)
+
+| `EchoTypes.jl` executable mirror
+| Add an `EchoAggregation` finite-domain shadow to the Julia falsifier
+| (Intended — not this session)
+
+| OikosBot AffineScript port
+| Code-analysis GitHub App (the *other* Oikos product; separate from the DSL)
+| (In-flight) — `oikos/bot-integration-affine/`
+|===
+
+== WISHES — desirable, unscheduled, or externally-gated
+
+[cols="3,4,2",options="header"]
+|===
+| Item | Note | Status
+
+| Full SFC model library
+| Runnable Godley–Lavoie models end-to-end through the compiler
+| (Wish) — gated on the desugar block
+
+| Ephapax integration complete
+| Inherit linear types, Tofte–Talpin regions, typestate from Ephapax
+| (Wish) — gated on upstream `hyperpolymath/ephapax`
+
+| Bachmann–Howard milestone (echo-types ordinal track)
+| ψ₀(Ω_ω) order-type fidelity for the Buchholz notation
+| (Open) — `Ordinal/Buchholz/Fidelity.agda` carries the fidelity as a *postulated* trust boundary (`D-2026-06-14`); ε₀ climbed, milestone not reached
+
+| External validation / publication
+| TYPES extended abstract + CPP/ITP paper; formal SFC semantics
+| (Wish) — echo-types `paper.adoc` has open `[EXPAND]` tags
+|===
+
+== echo-types internal state (the proof layer), 2026-06-19
+
+* *Verified closure green this session.* `agda --safe --without-K … proofs/agda/All.agda`
+  *exits 0* (153 top-level modules forced, ending at `Smoke`); `… Smoke.agda` *exits 0*;
+  `characteristic/All.agda` *exits 0* (no `error`/`unsolved`); `sh scripts/kernel-guard.sh`
+  *PASS* (cone `{Echo, EchoKernel}`, no funext / postulate / escape; all `Echo*.agda` classified).
+* *Establishment track Pillars A–D complete* (graded-comonad reading retracted under
+  R-2026-05-18; the shipped framing is a loss-graded reindexing modality).
+* *EchoAggregation generalised to the monoid/group form (#175)* — `Monoid`,
+  `GroupAggregator`, the proved `aggregation-as-fold` law, the
+  `sum/count/max/min` instances, the generic `no-canonical-disaggregation-of`,
+  and the macro `Example-PairSum` anchor. Green, zero postulates in the cone.
+* *Ordinal track:* well-foundedness proved for the **sound carriers**
+  (`_<ᵇ⁰_`, `_<ᵇ²_`, `_<ᵇʳᶠ²_`); native global WF for `_<ᵇ_` is argued-unclosable
+  as stated; BH order-type fidelity is the explicit postulated boundary.
+* *Honest fences (not in the green cone):* exactly two `postulate`-bearing files —
+  `Ordinal/Buchholz/Fidelity.agda` (the two BH-fidelity postulates) and
+  `EchoImageFactorizationPropPostulated.agda` (the truncation, *constructed for real*
+  in the `--cubical` island `EchoImageFactorizationPropCubical.agda`). Neither is
+  imported by `All.agda`/`Smoke.agda`. The F4/F5 "full" results are funext-qualified
+  by design.
+
+== Honest cross-cutting notes
+
+* The normative MUST is **real and tested at the check layer on the AST** (the
+  Godley/instrument/currency/cross-ref tests build hand-constructed models and
+  assert reject-on-violation). It is *not yet* demonstrated end-to-end from
+  surface source through the parser and desugar, because desugar is blocked.
+* echo-types contributes the *principle*, not the *enforcement*: there is no
+  Agda↔Rust import path. The bridge is citation-level by design.
+
+== See also
+
+* `AFFIRMATION.adoc` (this repo) — the dated, signed, falsifiable receipt for the
+  echo-types green closure at the anchored commit.
+* `oikos/AFFIRMATION.adoc` + `oikos/docs/status/STATUS-2026-06-19.adoc` — the
+  Oikos-side receipt and the same tables from the compiler's vantage.
+* `docs/bridges/cross-repo-bridge-status.md` — the standing cross-repo bridge ledger.
