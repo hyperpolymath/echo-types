@@ -1,13 +1,15 @@
 // SPDX-License-Identifier: MPL-2.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= QuandleDB / KRL — Normative Scope (Must / Intend / Wish)
+= echo-types — Normative Scope (Must / Intend / Wish)
 :toc: preamble
 :revdate: 2026-06-19
 
 [abstract]
-Normative scope record for the QuandleDB and KRL halves of the KRL stack,
-grouped Must / Intend / Wish, with the shared (both) requirement highlighted at
-each level. Captured 2026-06-19. `◇` marks proposals not yet canonical.
+Per-repo normative-scope record (Must / Intend / Wish) for echo-types, plus a
+clearly-marked *crossover* block duplicating the QuandleDB / KRL scope designed
+this session. Estate rule (2026-06-19): every repo carries its own scoped table;
+crossover content is duplicated and marked until resolved, then wired into the
+other relevant repos. `◇` marks proposals not yet canonical.
 
 == Levels
 
@@ -15,10 +17,41 @@ each level. Captured 2026-06-19. `◇` marks proposals not yet canonical.
 * *INTEND* — committed direction.
 * *WISH* — aspirational.
 
-The middle column is the shared requirement — what is *commonly required for
-both* components at that level.
+== echo-types (own)
 
-== Table
+[cols="1,5", options="header"]
+|===
+| Level | echo-types
+
+| *MUST*
+| `--safe --without-K` throughout; no postulates unless explicitly isolated and
+  justified; every headline theorem pinned in `Smoke.agda`; every module wired
+  into `All.agda` (orphans treated as dead code); SPDX headers on all files;
+  *no intentional overclaim* — the AFFIRMATION discipline (proved means proved,
+  trust boundaries named).
+
+| *INTEND*
+| Reach Bachmann–Howard (ψ₀(Ω_ω)) on the ordinal track; clear the Pillar E
+  paper `[EXPAND]` tags; hold Echo's establishment standing as a characterised
+  graded comonad of structured loss (Pillars A–D verified).
+
+| *WISH*
+| Stretch to ψ(Ω_Ω) ≈ TFBO; the full (epi, mono) OFS via propositional
+  truncation ◇; installable library packaging + Zenodo DOI ◇.
+|===
+
+== Crossover — QuandleDB / KRL (DUPLICATED; resolve, then wire)
+
+[NOTE]
+====
+*Crossover content — duplicated and marked per the 2026-06-19 estate rule.* The
+table below is *native to quandledb and krl*; it is reproduced here so
+echo-types' identity-fabric framing (see `../../AFFIRMATION.adoc`) is
+self-contained. *Once the open items resolve* — VerisimCore placement in the
+Tangle stack; the KRL language-family split — update the canonical copies in
+quandledb / krl / tangle and re-sync this duplicate. The cross-repo wiring is
+implied by the shared equivalence-integrity spine below.
+====
 
 [cols="1,3,3,3", options="header"]
 |===
@@ -57,9 +90,8 @@ both* components at that level.
 
 == Spine
 
-The ⊕ MUST cell is load-bearing: *equivalence-integrity*. The `a = a` problem
-is the single thing both components are unconditionally bound to, from opposite
-ends — QuandleDB *computes and stores* it; KRL *resolves with* it. This is the
-idem axis of the identity fabric; see `../../AFFIRMATION.adoc` for the
-equivalence / narrative / consonance framing (Conway·Fichte / Bruner /
-Ricoeur).
+The ⊕ MUST cell is load-bearing: *equivalence-integrity*. The `a = a` problem is
+the single thing both crossover components are unconditionally bound to, from
+opposite ends — QuandleDB *computes and stores* it; KRL *resolves with* it. This
+is the idem axis of the identity fabric; see `../../AFFIRMATION.adoc` for the
+equivalence / narrative / consonance framing (Conway·Fichte / Bruner / Ricoeur).
