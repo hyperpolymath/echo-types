@@ -57,10 +57,15 @@
 --
 -- Where next:
 --
---   * Sequential composition `EchoS enum f b n₁ → EchoS enum' g y n₂
---     → EchoS (paired-enum) (g ∘ f) y (n₁ * n₂)` under a pairing
---     enumerator on `ℕ × ℕ`. Honest but needs a bijection
---     `ℕ × ℕ ↔ ℕ`; defer to the slice that wants it.
+--   * (LANDED) Product / sequential composition. The original sketch
+--     `EchoS enum f b n₁ → EchoS enum' g y n₂ → EchoS … (g ∘ f) y (n₁ * n₂)`
+--     is ill-typed (the second search's witness is not tied to the first's
+--     output `b`); the well-typed form is the PRODUCT of two independent
+--     searches, `echo-search-product` below, over `A₁ × A₂` with budget
+--     `n₁ * n₂`. The `n₁ * n₂` budget provably needs a budget-dependent
+--     row-major pairing (a global `ℕ × ℕ ↔ ℕ` cannot keep
+--     `pair (n₁-1) (n₂-1) < n₁ * n₂`), so it divides by `n₂` and requires
+--     `NonZero n₂`. See `productEnum` / `echo-search-product` at the bottom.
 --
 --   * A real abstract-machine refinement: configurations + a step
 --     relation, with `EchoS` recovered as `∃ trace . trace.length < n
@@ -77,15 +82,18 @@
 module EchoSearch where
 
 open import Function.Base                         using (_∘_; id)
-open import Data.Nat.Base                         using (ℕ; zero; suc; _≤_; _<_; z≤n; s≤s)
+open import Data.Nat.Base                         using (ℕ; zero; suc; _≤_; _<_; _+_; _*_; z≤n; s≤s; NonZero)
 open import Data.Nat.Properties
-  using (≤-<-trans; <-≤-trans; <-cmp; <-trans; ≤-trans; ≤-refl; <-irrefl)
+  using (≤-<-trans; <-≤-trans; <-cmp; <-trans; ≤-trans; ≤-refl; <-irrefl; +-monoˡ-<; *-monoˡ-≤)
+open import Data.Nat.DivMod
+  using (_/_; _%_; [m+kn]%n≡m%n; m<n⇒m%n≡m; m<n⇒m/n≡0; m*n/n≡m; +-distrib-/-∣ʳ)
+open import Data.Nat.Divisibility                 using (divides-refl)
 open import Data.Empty                            using (⊥; ⊥-elim)
 open import Data.Product.Base                     using (Σ; _,_; _×_; proj₁; proj₂)
 open import Relation.Nullary                      using (¬_; Dec; yes; no)
 open import Relation.Binary.Definitions           using (Tri; tri<; tri≈; tri>)
 open import Relation.Binary.PropositionalEquality
-  using (_≡_; refl; sym; trans; cong)
+  using (_≡_; refl; sym; trans; cong; cong₂)
 
 open import Echo                                  using (Echo)
 
@@ -194,3 +202,59 @@ bounded-search-is-decidable _≟_ enum f y (suc n) with f (enum n) ≟ y
     ... | tri< k<n _ _ = ¬below (k , k<n , eqk)
     ... | tri≈ _ k≡n _ = ¬eq (trans (sym (cong (λ j → f (enum j)) k≡n)) eqk)
     ... | tri> _ _ n<k = <-irrefl refl (≤-trans n<k k≤n)
+
+----------------------------------------------------------------------
+-- Product (sequential) composition
+----------------------------------------------------------------------
+
+-- The product of two searches. `productMap` runs `f₁` and `f₂` on the two
+-- components; `productEnum n₂` is the row-major product strategy on
+-- `A₁ × A₂`: at index `k` it queries `enum₁ (k / n₂)` and `enum₂ (k % n₂)`,
+-- where `n₂` is the second budget.
+productMap :
+  ∀ {a₁ a₂ b₁ b₂} {A₁ : Set a₁} {A₂ : Set a₂} {B₁ : Set b₁} {B₂ : Set b₂} →
+  (A₁ → B₁) → (A₂ → B₂) → (A₁ × A₂ → B₁ × B₂)
+productMap f₁ f₂ (a₁ , a₂) = f₁ a₁ , f₂ a₂
+
+productEnum :
+  ∀ {a₁ a₂} {A₁ : Set a₁} {A₂ : Set a₂}
+  (n₂ : ℕ) .{{_ : NonZero n₂}} →
+  SearchStrategy A₁ → SearchStrategy A₂ → SearchStrategy (A₁ × A₂)
+productEnum n₂ enum₁ enum₂ k = enum₁ (k / n₂) , enum₂ (k % n₂)
+
+-- Two bounded searches compose into a single bounded search over the
+-- product, with the *product* budget `n₁ * n₂`. The witness pairs the two
+-- step indices row-major as `k₂ + k₁ * n₂`; this stays `< n₁ * n₂` exactly
+-- when `k₁ < n₁` and `k₂ < n₂`, and `/ n₂` / `% n₂` recover `k₁` / `k₂`.
+--
+-- The `n₁ * n₂` budget provably needs this budget-dependent pairing — a
+-- global `ℕ × ℕ ↔ ℕ` cannot keep `pair (n₁-1) (n₂-1) < n₁ * n₂` — which is
+-- why the scheme divides by `n₂` and requires `NonZero n₂` (a zero-width
+-- second dimension admits no witness anyway).
+echo-search-product :
+  ∀ {a₁ a₂ b₁ b₂} {A₁ : Set a₁} {A₂ : Set a₂} {B₁ : Set b₁} {B₂ : Set b₂}
+  {enum₁ : SearchStrategy A₁} {enum₂ : SearchStrategy A₂}
+  {f₁ : A₁ → B₁} {f₂ : A₂ → B₂} {y₁ : B₁} {y₂ : B₂}
+  {n₁ n₂ : ℕ} .{{_ : NonZero n₂}} →
+  EchoS enum₁ f₁ y₁ n₁ →
+  EchoS enum₂ f₂ y₂ n₂ →
+  EchoS (productEnum n₂ enum₁ enum₂) (productMap f₁ f₂) (y₁ , y₂) (n₁ * n₂)
+echo-search-product {enum₁ = enum₁} {enum₂} {f₁} {f₂} {y₁} {y₂} {n₁} {n₂}
+  (k₁ , k₁<n₁ , eq₁) (k₂ , k₂<n₂ , eq₂) =
+    idx , idx<n₁n₂ , prodEq
+  where
+    idx : ℕ
+    idx = k₂ + k₁ * n₂
+    -- k₂ + k₁*n₂ < n₂ + k₁*n₂ = suc k₁ * n₂ ≤ n₁ * n₂
+    idx<n₁n₂ : idx < n₁ * n₂
+    idx<n₁n₂ = <-≤-trans (+-monoˡ-< (k₁ * n₂) k₂<n₂) (*-monoˡ-≤ n₂ k₁<n₁)
+    idx/n₂≡k₁ : idx / n₂ ≡ k₁
+    idx/n₂≡k₁ = trans (+-distrib-/-∣ʳ k₂ (divides-refl k₁))
+                      (cong₂ _+_ (m<n⇒m/n≡0 k₂<n₂) (m*n/n≡m k₁ n₂))
+    idx%n₂≡k₂ : idx % n₂ ≡ k₂
+    idx%n₂≡k₂ = trans ([m+kn]%n≡m%n k₂ k₁ n₂) (m<n⇒m%n≡m k₂<n₂)
+    prodEq :
+      productMap f₁ f₂ (productEnum n₂ enum₁ enum₂ idx) ≡ (y₁ , y₂)
+    prodEq = cong₂ _,_
+               (trans (cong (f₁ ∘ enum₁) idx/n₂≡k₁) eq₁)
+               (trans (cong (f₂ ∘ enum₂) idx%n₂≡k₂) eq₂)
