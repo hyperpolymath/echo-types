@@ -417,6 +417,8 @@ open import EchoApproxInstance using
   ; approx-shadow-iso-from
   ; approx-strict→approx-shadow-A
   ; approx-strict→approx-collapse-shadow-A
+  ; approx-IsLipschitz
+  ; approx-compose-lipschitz
   )
 
 -- Axis 8 third quantitative artifact (taxonomy.md §8, refinement 1):
