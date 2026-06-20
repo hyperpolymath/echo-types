@@ -98,6 +98,14 @@ under one of (a) discharged / (b) budgeted / (c) necessary axiom / (d) debt.
     order-type fidelity OPEN".
   - **Citation**: `D-2026-06-14`; full per-postulate spec (statement /
     what closes it / owner) in `Fidelity-OPEN-postulates.md`.
+  - **PARKED (2026-06-20, `D-2026-06-20`)**: the transfinite ladder these
+    postulates sit atop is now *consumer-less* — the Groove cleave (the
+    only consumer of ψ₀(Ω_ω) order-type fidelity) is resolved as a finite
+    exact-round-trip zipper needing well-foundedness only, and RC-11
+    forbids ε₀+ in cleave ranks. The debt is therefore *parked,
+    resumable*, not actively being closed. No postulate closed;
+    `D-2026-06-14` stands. See
+    `docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc`.
   - **Guardrail status**: allow-listed in `tools/check-guardrails.sh`
     (`EXPLORATORY_EXEMPT`) and the inline `hypatia: allow` pragma at the
     module head. (`BHTarget` is NOT exempt — it is real kernel content
