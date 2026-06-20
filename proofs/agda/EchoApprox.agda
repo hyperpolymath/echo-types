@@ -79,8 +79,11 @@
 -- a layered record on top of `Tolerance`, NOT a mutation of the base
 -- interface — mirrors `Separated`/`PseudoMetric`). §7 obligations 7
 -- (separated zero-collapse) and 8 (axis-1 shadow agreement) are
--- landed below. Rung D (Lipschitz `L_g ≠ 1`) is deferred — it requires
--- multiplication on `Tolerance`, another interface call.
+-- landed below. Rung D (Lipschitz `L_g ≠ 1`) is now LANDED via the
+-- layered `LipschitzScale` record (multiplication on `Tolerance`,
+-- mirroring `BalancedTolerance` — the interface call resolved in favour
+-- of the same opt-in-record pattern); see `echo-approx-compose-lipschitz`
+-- in the `Lipschitz` sub-module at the bottom of `module Approx`.
 --
 -- The full LHS-element round-trip equality `sound (retract-to e) ≡ e`
 -- (with the budget transported via `+-identityˡ`) is NOT discharged
@@ -159,6 +162,28 @@ record BalancedTolerance {ℓ} (T : Tolerance ℓ) : Set ℓ where
   field
     +-identityˡ : ∀ ε → zero + ε ≡ ε
     +-identityʳ : ∀ ε → ε + zero ≡ ε
+
+----------------------------------------------------------------------
+-- Lipschitz scale: a `Tolerance` with a multiplication monotone in its
+-- right argument — the structure under which a Lipschitz (rather than
+-- merely non-expansive) outer leg accumulates tolerance *multiplicatively*
+-- by its constant.
+--
+-- Layered on `Tolerance` exactly as `BalancedTolerance` / `Separated`
+-- are: an extra structure callers opt into, NOT a field of the base
+-- record (which stays minimal so lop-sided carriers remain instances).
+-- The minimal content for the Lipschitz composition headline is `_*_`
+-- and right-monotonicity `a ≤ c ⇒ s * a ≤ s * c`; associativity,
+-- identity, and distributivity are not needed here and are left to
+-- richer carriers.
+----------------------------------------------------------------------
+
+record LipschitzScale {ℓ} (T : Tolerance ℓ) : Set ℓ where
+  open Tolerance T
+  infixl 7 _*_
+  field
+    _*_     : Tol → Tol → Tol
+    *-monoʳ : ∀ {s a c} → a ≤ c → (s * a) ≤ (s * c)
 
 ----------------------------------------------------------------------
 -- Approximate echo
@@ -542,3 +567,35 @@ module Approx
             (echo-strict→approx e))
     ≡ proj₁ e
   echo-strict→approx-collapse-shadow-A sep (x , _) = refl
+
+  ----------------------------------------------------------------------
+  -- Lipschitz composition (Rung D)
+  ----------------------------------------------------------------------
+
+  -- Parameterised by a chosen `LipschitzScale S` (the opt-in multiplication
+  -- on the tolerance). The non-expansive `echo-approx-compose` is the
+  -- corner where `L * ε ≡ ε`.
+  module Lipschitz (S : LipschitzScale T) where
+    open LipschitzScale S
+
+    -- `g` is `L`-Lipschitz: it stretches distances by at most a factor `L`.
+    IsLipschitz : Tol → (B → B) → Set (b ⊔ ℓ)
+    IsLipschitz L g = ∀ b₁ b₂ → dist (g b₁) (g b₂) ≤ (L * dist b₁ b₂)
+
+    -- Lipschitz composition. A Lipschitz outer leg with constant `L`
+    -- scales the inner tolerance by `L`: an `EchoR ε₁` inner echo
+    -- composes to an `EchoR (L * ε₁ + ε₂)` echo. Same triangle +
+    -- accumulate skeleton as `echo-approx-compose`, with the
+    -- non-expansive step `dist (g·)(g·) ≤ dist · ·` replaced by the
+    -- Lipschitz step `≤ L * dist · ·`, and `*-monoʳ` carrying the inner
+    -- bound `dist (f x) b ≤ ε₁` through the constant to `L * ε₁`.
+    echo-approx-compose-lipschitz :
+      {L : Tol} {g : B → B} {f : A → B} {ε₁ ε₂ : Tol} {b y : B} →
+      IsLipschitz L g →
+      EchoR ε₁ f b →
+      dist (g b) y ≤ ε₂ →
+      EchoR ((L * ε₁) + ε₂) (g ∘ f) y
+    echo-approx-compose-lipschitz {L} {g} {f} {ε₁} {ε₂} {b} {y}
+      lip (x , dfx≤ε₁) dgby≤ε₂ =
+      x , ≤-trans (dist-tri (g (f x)) (g b) y)
+                  (+-mono-≤ (≤-trans (lip (f x) b) (*-monoʳ dfx≤ε₁)) dgby≤ε₂)

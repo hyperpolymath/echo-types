@@ -45,7 +45,8 @@ open import Level                                 using (Level)
 open import Data.Unit.Base                        using (⊤; tt)
 open import Relation.Binary.PropositionalEquality using (refl)
 
-open import EchoApprox using (Tolerance; PseudoMetric; BalancedTolerance; module Approx)
+open import EchoApprox
+  using (Tolerance; PseudoMetric; BalancedTolerance; LipschitzScale; module Approx)
 
 ----------------------------------------------------------------------
 -- The trivial tolerance carrier
@@ -90,6 +91,19 @@ trivialBalancedTolerance = record
   }
 
 ----------------------------------------------------------------------
+-- The trivial LipschitzScale instance on `trivialTolerance`
+----------------------------------------------------------------------
+
+-- On `Tol := ⊤`, multiplication is constantly `tt` and right-monotonicity
+-- discharges to `tt`. Pinned so `Smoke.agda` can enumerate the Rung-D
+-- Lipschitz lemmas at a typeable instance, same spirit as the pins below.
+trivialLipschitzScale : LipschitzScale trivialTolerance
+trivialLipschitzScale = record
+  { _*_     = λ _ _ → tt
+  ; *-monoʳ = λ _ → tt
+  }
+
+----------------------------------------------------------------------
 -- Per-lemma proof-of-life pins for `Approx` at the trivial instance.
 --
 -- Top-level identifiers, one per `EchoApprox.Approx` headline, with
@@ -102,6 +116,7 @@ trivialBalancedTolerance = record
 private
   open module ApproxT⊤ =
     Approx {A = ⊤} {B = ⊤} {T = trivialTolerance} trivialPseudoMetric
+  open module ApproxLip⊤ = ApproxT⊤.Lipschitz trivialLipschitzScale
 
 approx-EchoR              = EchoR
 approx-intro              = echo-approx-intro
@@ -123,3 +138,5 @@ approx-shadow-iso-to      = echo-shadow-iso-to
 approx-shadow-iso-from    = echo-shadow-iso-from
 approx-strict→approx-shadow-A = echo-strict→approx-shadow-A
 approx-strict→approx-collapse-shadow-A = echo-strict→approx-collapse-shadow-A
+approx-IsLipschitz        = IsLipschitz
+approx-compose-lipschitz  = echo-approx-compose-lipschitz
