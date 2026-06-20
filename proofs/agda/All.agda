@@ -121,6 +121,7 @@ open import Ordinal.Brouwer.Phase13
 open import Ordinal.Brouwer.OmegaPow
 open import Ordinal.Brouwer.OrdinalExp
 open import Ordinal.Brouwer.VeblenPhi
+open import Ordinal.Brouwer.VeblenPhiNormal -- φ₁ a normal function; next-ε β LEAST ε-number above β
 open import Ordinal.Brouwer.StrictLeftMonoRefuted
 open import Ordinal.Brouwer.AdditivePrincipalGenericRefuted
 open import Ordinal.Buchholz.Syntax

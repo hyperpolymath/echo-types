@@ -1241,6 +1241,26 @@ open import Ordinal.Brouwer.VeblenPhi using
   ; φ₁-ε-number
   )
 
+-- Veblen φ-hierarchy slice 3 (2026-06-19, own block per CLAUDE.md
+-- Working rules): φ₁ is a NORMAL FUNCTION and `next-ε β` is the LEAST
+-- ω^^-closed ordinal above β (slice 2 only proved it was AN ε-number
+-- above β).  `ω^^-mono-≤′` is the missing monotonicity prerequisite;
+-- `next-ε-least` is the headline; `φ₁-strict-mono` + `φ₁-continuous`
+-- make φ₁ mechanically a normal function — the standard precondition for
+-- the next Veblen level / binary φ_α / Γ₀.  Order-type fidelity ψ₀(Ω_ω)
+-- REMAINS OPEN (D-2026-06-14); this neither reaches Γ₀ nor plugs
+-- `Fidelity.AtHeight`.
+open import Ordinal.Brouwer.VeblenPhiNormal using
+  ( ω^^-mono-≤′                     -- ω-exponentiation is monotone (prerequisite)
+  ; next-ε-least                    -- next-ε β is the LEAST ω^^-closed ordinal above β
+  ; next-ε-mono                     -- next-ε is monotone
+  ; ε₀-least                        -- ε₀ = φ₁ oz is the least φ₁ value
+  ; φ₁-mono                         -- φ₁ monotone
+  ; φ₁-lt-succ                      -- φ₁ strictly increasing at successors
+  ; φ₁-strict-mono                  -- φ₁ strictly monotone (normal-function half 1)
+  ; φ₁-continuous                   -- φ₁ continuous at limits (normal-function half 2)
+  )
+
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
