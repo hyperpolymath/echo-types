@@ -210,7 +210,78 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-06-18)
+## Current rung state (2026-06-20)
+
+### Session arc 2026-06-20 — variance resolution + Veblen climb rungs 3–6 + ordinal-fidelity ladder PARKED (read this first)
+
+*Where we started:* user supplied the sharpened understanding of an
+echo-type (a tropically-graded modality of structured loss: graded-(co)monad
+machinery over the min-plus semiring, recoverable *exact on a homotopy
+fibre rather than complement-storing*, variance unsettled). Then asked to
+RESOLVE the monad/comonad/adjunction variance in `--safe` Agda, then to
+continue the ordinal track toward ψ₀(Ω_ω).
+
+*Where we ended:* SEVEN PRs merged to `main`, then the ordinal ladder
+PARKED by owner decision. All `--safe --without-K`, zero postulates, no
+`TERMINATING`, kernel-guard PASS.
+
+1. **Variance resolved (#243).** `EchoVariance.agda` — verdict: echo
+   (fibre-based loss) is a graded **MONAD of accumulation** (the `+` axis,
+   `accumulate = Echo-comp-iso-from`) with a section/retraction
+   **ADJUNCTION exact on the grade-0 fibre** (`recoverable-fibre =
+   A↔ΣEcho`); it is **NOT a graded comonad** — the comonad reading is the
+   LOSSLESS complement-storing writer (`EchoGradedComonadF1`'s `δ` is `coe`
+   along a type equality, inverted by `μ-writer`). `no-bare-recovery`
+   (via `no-section-of-collapsing-map`) is the comonad obstruction. Sharpens
+   R-2026-05-18 from "graded comonad withdrawn" to "decided against". Doc:
+   `docs/echo-types/variance-resolution.adoc`; paper Reframing-note
+   follow-up `F-2026-06-19`. DO NOT reopen: the verdict, or the
+   complement-storing-writer framing.
+
+2. **Veblen climb rungs 3–6 (#244–#247), Brouwer side.**
+   * `#244` `VeblenPhiNormal` — φ₁ a normal function; `next-ε-least`
+     (next-ε β is the LEAST ε-number above β).
+   * `#245` `VeblenBinary` — binary `φ : Ord → Ord → Ord` (the tractability
+     move: recursion on the FIRST arg returning `Ord → Ord`, second-arg
+     recursion inside the generic `deriv`; no `TERMINATING`); generic engine
+     `deriv`/`nextFix`/`commonStep`; `φ-cont`; `nextFix-fixed-{≤,≥}`; the
+     diagonal `Γ₀` defined.
+   * `#246` `VeblenBinaryNormal` — EVERY level a normal function (`φ-mono₂`,
+     `φ-infl`); the Veblen recurrence `φ-level-fixed-{≤,≥}` (φ_{α+1}(β) is a
+     fixed point of φ_α).
+   * `#247` `VeblenBinaryMono` — first-arg monotonicity (`φ-mono₁-step`,
+     `φ-mono₁-into-lim`); `commonStep` correctness; `Γ₀-prefixed`
+     (**Γ₀ ≤′ φ_Γ₀(0)**, one direction of the diagonal fixed point).
+   Reusable lesson: every `≤′-trans`/`≤′-lim`/`*-mono`/`≤′-zero` call pins
+   its implicit source explicitly — `_≤′_` is a reducing relation.
+
+3. **Ordinal-fidelity ladder PARKED (`D-2026-06-20`).** Owner decision: the
+   transfinite ladder is now CONSUMER-LESS — the Groove cleave (sole consumer
+   of ψ₀(Ω_ω) order-type fidelity) is resolved as a finite exact-round-trip
+   zipper needing well-foundedness only, and Groove RC-11 forbids ε₀+ in
+   cleave ranks. This is a PARK (resumable), NOT a kill/retraction —
+   fidelity was always flagged OPEN. **DO NOT open the Veblen mutual
+   fixed-point descent rung** (the gate to Γ₀-least). No postulate closed;
+   `D-2026-06-14` stands. Record:
+   `docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc`.
+   * *Frontier for cold resume:* Γ₀-least OPEN; wall = reverse
+     `φ_Γ₀(0) ≤′ Γ₀` → "Γ₀ closed under every level below it" → general
+     first-arg monotonicity `φ_α x ≤′ φ_β x` → gated on the mutual
+     fixed-point descent (monotonicity + descent mutually recursive).
+     Downstream OPEN: the ψ collapsing function (produces `bh-height`), then
+     the two `Fidelity.agda` postulates `denotation` / `ordinal-upper-bound`
+     (gated on the collapse).
+   * *Disposition:* extraction to its own ordinal-notation repo (Löwe /
+     classical-order-type side, labelled OPEN) — cut FLAGGED, left to owner.
+     Firewall verified clean: `OmegaMarkers` (leaf) ← `Buchholz.Syntax` ←
+     `EchoOrdinal` STAY; everything else under `Ordinal/` MOVES. Supersedes
+     any "re-home into Groove" framing (RC-11 retired it).
+
+*Plan for the next Claude.* The ordinal ladder is PARKED — do not resume it
+unless the consumer returns (then start at the mutual-descent rung per the
+park record). The variance resolution is complete and consumed. Other
+tracks (composition, establishment Pillar E, the EchoTypes.jl mirror) are
+unaffected by the park.
 
 ### Session arc 2026-06-18 — EchoAggregation general/macro split + long-form prose relicense (read this first)
 
