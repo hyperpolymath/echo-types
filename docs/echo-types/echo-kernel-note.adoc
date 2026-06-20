@@ -82,7 +82,7 @@ kernel** — the boundary is real and lives outside this core.
   `EchoEpistemicResidue`, `EchoExamples`, `EchoGraded`,
   `EchoLinear`, `EchoPullback`, `EchoRelModel`, `EchoScope`,
   `EchoStabilityTests`, `EchoThermodynamics`, `EchoCNOBridge`,
-  `EchoEphapaxBridge`,
+  `EchoEphapaxBridge`, `EchoReversibilityBridge`,
   `EchoThermodynamicsFinite`, `EchoIntegration`, `EchoAccess`,
   `EchoCost`, `EchoCostInstance`, `EchoSearch`, `EchoSearchInstance`,
   `EchoExampleAbsInt`, `EchoExampleParser`, `EchoExampleProvenance`,

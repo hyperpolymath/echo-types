@@ -92,6 +92,21 @@ open import EchoTotalCompletion using
   ; encode-is-section-of-proj₁
   )
 
+-- EchoReversibilityBridge — constructive discharge of the 007 language's
+-- Layer-10 reversibility (echo-residue) phase-2 obligations against this
+-- library of record. `ReversibleCompletion` is the interface 007's model
+-- needs (arm / take-for-reverse / replay-recovers); `echo-reversible` shows
+-- `Echo f` satisfies it; `reversibility-via-totality` is the slogan iso
+-- `Σ B (Echo f) ↔ A`; `capability-can-be-dropped` / `no-recovery-once-dropped`
+-- pin the phase-2 "affine capability, linear consumption" discipline.
+open import EchoReversibilityBridge using
+  ( ReversibleCompletion
+  ; echo-reversible
+  ; reversibility-via-totality
+  ; capability-can-be-dropped
+  ; no-recovery-once-dropped
+  )
+
 -- EchoNoSectionGeneric — raises the example-level
 -- `no-section-collapse-to-residue` to a uniform structural theorem.
 -- Generic headline `no-section-of-collapsing-map`: any collapsing

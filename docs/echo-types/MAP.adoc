@@ -466,6 +466,27 @@ discharged by `coqc` on the ephapax side; no Lane 4 CI dependency.
   `formal/PRESERVATION-DESIGN.md` + `docs/echo-types/paper.adoc`
   §"Threats to validity").
 
+=== 007 L10 reversibility — echo-residue bridge `[REAL]`
+Cross-repo navigability marker for the `hyperpolymath/007` language
+project, whose Layer-10 reversibility model (`reversible as`/`reverse`,
+specified in Idris2 `proofs/idris2/EchoResidue.idr` +
+`EchoResidueLinear.idr`) is discharged against echo-types as the library
+of record. The module re-states the interface 007's model needs and shows
+echo-types' own structures satisfy it, under `--safe --without-K`, zero
+postulates.
+
+* Proofs: `proofs/agda/EchoReversibilityBridge.agda` —
+  `ReversibleCompletion` (the arm / take-for-reverse / replay-recovers
+  interface), `echo-reversible` (`Echo f` satisfies it; `takeForReverse`
+  ↔ `reverseLinear`'s witness), `reversibility-via-totality :
+  Σ B (Echo f) ↔ A` (symmetric partner of
+  `EchoTotalCompletion.A↔ΣEcho`), and `capability-can-be-dropped` /
+  `no-recovery-once-dropped` (007 phase-2 "affine capability, linear
+  consumption" via `EchoLinear.weaken` / `no-section-weaken`).
+* Scope: the type-level totality + recovery + linear→affine no-section
+  content. 007's linear `(1 e : Echo f y)` quantity is NOT re-proved in
+  Agda (the full quantity-semantics port is the documented next slice).
+
 === Tropical / Dyadic `[REAL*]`
 Bridge domains enumerated in `docs/EchoBridges.md` (JanusKey / CNO /
 Tropical / Dyadic). Dyadic is mechanised; Tropical is named/early.
