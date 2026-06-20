@@ -1261,6 +1261,33 @@ open import Ordinal.Brouwer.VeblenPhiNormal using
   ; φ₁-continuous                   -- φ₁ continuous at limits (normal-function half 2)
   )
 
+-- Binary Veblen φ_α(β) + the diagonal Γ₀ (2026-06-20, own block per
+-- CLAUDE.md Working rules): the two-argument Veblen function by structural
+-- recursion on the FIRST argument (returning Ord → Ord; second-argument
+-- recursion lives in the generic fixed-point enumerator `deriv`, so no
+-- TERMINATING pragma).  `φ` extends ω^^ = φ₀; `φ-cont` is continuity in
+-- the 2nd argument; `nextFix-fixed-{≤,≥}` is the generic fixed-point
+-- correctness (instantiated at ω^^ as `ω^^-nextFix-fixed-{≤,≥}`); `Γ₀` is
+-- the Feferman–Schütte ordinal (DEFINED + basic properties; "Γ₀ is the
+-- LEAST diagonal fixed point" is the next slice).  ψ₀(Ω_ω) sits far above
+-- Γ₀; order-type fidelity REMAINS OPEN (D-2026-06-14).
+open import Ordinal.Brouwer.VeblenBinary using
+  ( φ                               -- binary Veblen φ_α(β)
+  ; deriv                           -- generic fixed-point enumerator
+  ; nextFix                         -- least fixed point of g strictly above x
+  ; φ-oz                            -- φ₀ = ω^^
+  ; φ-cont                          -- φ continuous in the 2nd argument
+  ; nextFix-above                   -- nextFix g x is strictly above x
+  ; nextFix-fixed-≤                 -- engine correctness: g (nextFix g x) ≤′ nextFix g x
+  ; nextFix-fixed-≥                 -- engine correctness: nextFix g x ≤′ g (nextFix g x)
+  ; ω^^-nextFix-fixed-≤             -- engine subsumes ε-numbers (at ω^^)
+  ; ω^^-nextFix-fixed-≥
+  ; Γ₀                              -- the Feferman–Schütte ordinal (diagonal)
+  ; Γ₀-pos
+  ; Γ-tower-below-Γ₀
+  ; φ-diagonal-step                 -- φ_{Γ-tower n}(0) ≤′ Γ₀
+  )
+
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
