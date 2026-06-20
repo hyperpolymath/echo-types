@@ -124,6 +124,7 @@ open import Ordinal.Brouwer.VeblenPhi
 open import Ordinal.Brouwer.VeblenPhiNormal -- φ₁ a normal function; next-ε β LEAST ε-number above β
 open import Ordinal.Brouwer.VeblenBinary    -- binary Veblen φ_α(β) + the diagonal Γ₀
 open import Ordinal.Brouwer.VeblenBinaryNormal -- every φ_α a normal function; φ_{α+1} enumerates fixed points of φ_α
+open import Ordinal.Brouwer.VeblenBinaryMono -- first-arg monotonicity; Γ₀ ≤′ φ_Γ₀(0) (diagonal pre-fixed point)
 open import Ordinal.Brouwer.StrictLeftMonoRefuted
 open import Ordinal.Brouwer.AdditivePrincipalGenericRefuted
 open import Ordinal.Buchholz.Syntax
