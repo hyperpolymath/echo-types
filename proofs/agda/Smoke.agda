@@ -1309,6 +1309,23 @@ open import Ordinal.Brouwer.VeblenBinaryNormal using
   ; φ-level-fixed-≥
   )
 
+-- Binary Veblen rung 6 (2026-06-20, own block per CLAUDE.md Working
+-- rules): first-argument monotonicity toward Γ₀ as a diagonal fixed
+-- point.  `φ-mono₁-step` (adjacent levels ordered) + `φ-mono₁-into-lim`
+-- (a level below a limit is dominated by the limit level) rest on the
+-- Veblen recurrence + `commonStep` correctness (`commonStep-absorb` /
+-- `commonStep-cont`).  `Γ₀-prefixed` closes ONE direction of the diagonal
+-- fixed point: Γ₀ ≤′ φ_Γ₀(0).  The reverse direction + "Γ₀ is LEAST"
+-- remain the next slice; order-type fidelity ψ₀(Ω_ω) REMAINS OPEN
+-- (D-2026-06-14).
+open import Ordinal.Brouwer.VeblenBinaryMono using
+  ( commonStep-absorb               -- fixed point of commonStep F ⇒ fixed point of each F m
+  ; commonStep-cont                 -- commonStep F continuous when each member is
+  ; φ-mono₁-step                    -- φ_α x ≤′ φ_{α+1} x  (adjacent levels)
+  ; φ-mono₁-into-lim                -- φ_{h m} x ≤′ φ_{olim h} x  (level below a limit)
+  ; Γ₀-prefixed                     -- Γ₀ ≤′ φ_Γ₀(0): Γ₀ is a diagonal pre-fixed point
+  )
+
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
