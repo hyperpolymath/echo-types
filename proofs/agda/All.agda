@@ -36,6 +36,7 @@ open import AntiEchoTropical
 open import AntiEchoTropicalGeneric
 open import EchoIntegration
 open import EchoCNOBridge
+open import EchoReversibilityBridge
 
 open import EchoApprox
 open import EchoApproxInstance
