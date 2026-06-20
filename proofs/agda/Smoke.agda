@@ -107,6 +107,23 @@ open import EchoReversibilityBridge using
   ; no-recovery-once-dropped
   )
 
+-- EchoResidueCell — the Agda mirror of 007's `ResidueCell` (Holding/Spent)
+-- operational once-only reversal discipline. `takeForReverse` replays a
+-- `holding` cell / fails on `spent`; `consume` transitions Holding→Spent;
+-- `once-only` is the headline — after `consume`, a further `takeForReverse`
+-- is always `nothing` (the state-machine form of the Idris `(1 e)` linear
+-- consumption). `holding-reverses` / `spent-does-not-reverse` mirror the
+-- Idris `holdingReverses` / `spentDoesNotReverse`.
+open import EchoResidueCell using
+  ( ResidueCell
+  ; takeForReverse
+  ; consume
+  ; holding-reverses
+  ; spent-does-not-reverse
+  ; consume-spends
+  ; once-only
+  )
+
 -- EchoNoSectionGeneric — raises the example-level
 -- `no-section-collapse-to-residue` to a uniform structural theorem.
 -- Generic headline `no-section-of-collapsing-map`: any collapsing

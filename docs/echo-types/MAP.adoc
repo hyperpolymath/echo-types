@@ -483,9 +483,18 @@ postulates.
   `EchoTotalCompletion.A↔ΣEcho`), and `capability-can-be-dropped` /
   `no-recovery-once-dropped` (007 phase-2 "affine capability, linear
   consumption" via `EchoLinear.weaken` / `no-section-weaken`).
+* Proofs: `proofs/agda/EchoResidueCell.agda` — the Agda mirror of 007's
+  `ResidueCell` (`holding` / `spent`) operational once-only discipline.
+  `takeForReverse : ResidueCell f y → Maybe A` (= the Idris partial form),
+  `consume` (Holding→Spent), `holding-reverses` / `spent-does-not-reverse`
+  (↔ Idris `holdingReverses` / `spentDoesNotReverse`), and the headline
+  `once-only` — after `consume`, a further `takeForReverse` is always
+  `nothing` (the state-machine form of the `(1 e)` linear consumption).
 * Scope: the type-level totality + recovery + linear→affine no-section
-  content. 007's linear `(1 e : Echo f y)` quantity is NOT re-proved in
-  Agda (the full quantity-semantics port is the documented next slice).
+  content, plus the once-PER-CELL replay discipline as a state machine.
+  007's linear NON-DUPLICATION quantity `(1 e : Echo f y)` is NOT re-proved
+  in Agda (nothing stops copying a `holding` cell) — the full
+  quantity-semantics port (`@0`-style erasure) is the documented next slice.
 
 === Tropical / Dyadic `[REAL*]`
 Bridge domains enumerated in `docs/EchoBridges.md` (JanusKey / CNO /
