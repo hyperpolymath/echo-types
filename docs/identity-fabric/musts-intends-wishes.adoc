@@ -47,8 +47,10 @@ other relevant repos. `◇` marks proposals not yet canonical.
 *Crossover content — duplicated and marked per the 2026-06-19 estate rule.* The
 table below is *native to quandledb and krl*; it is reproduced here so
 echo-types' identity-fabric framing (see `../../AFFIRMATION.adoc`) is
-self-contained. *Once the open items resolve* — VerisimCore placement in the
-Tangle stack; the KRL language-family split — update the canonical copies in
+self-contained. *VerisimCore placement is now resolved* (maintainer-confirmed
+2026-06-19: KRL → TangleIR → VerisimCore (categorical abstraction) →
+Skein/QuandleDB; see tangle's `AFFIRMATION.adoc`). Once the remaining open item
+resolves — the KRL language-family split — update the canonical copies in
 quandledb / krl / tangle and re-sync this duplicate. The cross-repo wiring is
 implied by the shared equivalence-integrity spine below.
 ====
