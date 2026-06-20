@@ -1288,6 +1288,27 @@ open import Ordinal.Brouwer.VeblenBinary using
   ; φ-diagonal-step                 -- φ_{Γ-tower n}(0) ≤′ Γ₀
   )
 
+-- Binary Veblen rung 5 (2026-06-20, own block per CLAUDE.md Working
+-- rules): EVERY Veblen level φ_α is a normal function, and φ_{α+1}
+-- enumerates the fixed points of φ_α.  `φ-mono₂` (every level monotone in
+-- its argument) + `φ-infl` (every level inflationary) complete the
+-- normal-function trio with `VeblenBinary.φ-cont`; `φ-level-fixed-{≤,≥}`
+-- is the defining Veblen recurrence φ_α(φ_{α+1}(β)) ≃ φ_{α+1}(β).  Generic
+-- engine lemmas (`deriv-mono`/`deriv-infl`/`deriv-fixed-*`) proved once and
+-- instantiated.  Backbone for "Γ₀ is the LEAST diagonal fixed point" (next
+-- slice); order-type fidelity ψ₀(Ω_ω) REMAINS OPEN (D-2026-06-14).
+open import Ordinal.Brouwer.VeblenBinaryNormal using
+  ( φ-mono₂                         -- every φ_α monotone in its argument
+  ; φ-infl                          -- every φ_α inflationary
+  ; deriv-mono                      -- generic: deriv g monotone (g monotone)
+  ; deriv-infl                      -- generic: deriv g inflationary
+  ; nextFix-mono                    -- generic: nextFix g monotone (g monotone)
+  ; deriv-fixed-≤                   -- generic: deriv g β is a fixed point of g
+  ; deriv-fixed-≥
+  ; φ-level-fixed-≤                 -- φ_α (φ_{α+1} β) ≃ φ_{α+1} β  (the Veblen recurrence)
+  ; φ-level-fixed-≥
+  )
+
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
