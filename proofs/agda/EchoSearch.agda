@@ -67,20 +67,23 @@
 --     ∧ trace.last ≡ x ∧ f x ≡ y`. The current `EchoS` projects from
 --     that by collapsing the trace to its terminal index.
 --
---   * A *bounded-search-is-decidable* lemma in the presence of
---     decidable equality on `B`: search up to `n` either yields an
+--   * (LANDED) A *bounded-search-is-decidable* lemma in the presence
+--     of decidable equality on `B`: search up to `n` either yields an
 --     `EchoS enum f y n` or proves `¬ EchoS enum f y n`. This is the
---     concrete bridge to `EchoDecidable`, kept as a separate slice
---     because it needs a `_≟_` on `B` and a finite-walk recursion.
+--     concrete bridge to `EchoDecidable`; it needs a `_≟_` on `B` and a
+--     finite-walk recursion on the budget. See `bounded-search-is-decidable`
+--     at the bottom of this module.
 
 module EchoSearch where
 
 open import Function.Base                         using (_∘_; id)
 open import Data.Nat.Base                         using (ℕ; zero; suc; _≤_; _<_; z≤n; s≤s)
-open import Data.Nat.Properties                   using (≤-<-trans; <-≤-trans)
+open import Data.Nat.Properties
+  using (≤-<-trans; <-≤-trans; <-cmp; <-trans; ≤-trans; ≤-refl; <-irrefl)
 open import Data.Empty                            using (⊥; ⊥-elim)
 open import Data.Product.Base                     using (Σ; _,_; _×_; proj₁; proj₂)
-open import Relation.Nullary                      using (¬_)
+open import Relation.Nullary                      using (¬_; Dec; yes; no)
+open import Relation.Binary.Definitions           using (Tri; tri<; tri≈; tri>)
 open import Relation.Binary.PropositionalEquality
   using (_≡_; refl; sym; trans; cong)
 
@@ -156,3 +159,38 @@ echo-search-postcompose :
   EchoS enum f y n → EchoS enum (g ∘ f) (g y) n
 echo-search-postcompose enum f g (k , k<n , eq) =
   k , k<n , cong g eq
+
+----------------------------------------------------------------------
+-- Decidability bridge
+----------------------------------------------------------------------
+
+-- Bounded search is decidable under decidable equality on the codomain.
+-- Because `EchoS enum f y n` is exactly the bounded existential
+-- `Σ k. (k < n) × (f (enum k) ≡ y)`, searching up to the budget `n`
+-- either produces a bound-`n` search echo or refutes one. This is the
+-- concrete bridge from EchoSearch to `EchoDecidable` (axis 8(3)): no
+-- machine model is required, only the step budget and a `_≟_` on `B`.
+-- Structural recursion on `n`; the `suc` step tests the new index `n`
+-- and otherwise recurses, using trichotomy to refute every index below
+-- `suc n` in the negative case.
+bounded-search-is-decidable :
+  ∀ {a b} {A : Set a} {B : Set b}
+  (_≟_ : (x y : B) → Dec (x ≡ y))
+  (enum : SearchStrategy A) (f : A → B) (y : B) (n : ℕ) →
+  Dec (EchoS enum f y n)
+bounded-search-is-decidable _≟_ enum f y zero =
+  no (echo-search-bound-zero enum f y)
+bounded-search-is-decidable _≟_ enum f y (suc n) with f (enum n) ≟ y
+... | yes eq = yes (n , ≤-refl , eq)
+... | no ¬eq with bounded-search-is-decidable _≟_ enum f y n
+...   | yes (k , k<n , eqk) = yes (k , <-trans k<n ≤-refl , eqk)
+...   | no ¬below          = no λ { (k , k<1+n , eqk) → contra k k<1+n eqk }
+  where
+    -- No index below `suc n` can witness `y`: indices below `n` are
+    -- refuted by `¬below`, the index `n` itself by `¬eq`, and there is
+    -- no index strictly between `n` and `suc n`.
+    contra : ∀ k → k < suc n → f (enum k) ≡ y → ⊥
+    contra k (s≤s k≤n) eqk with <-cmp k n
+    ... | tri< k<n _ _ = ¬below (k , k<n , eqk)
+    ... | tri≈ _ k≡n _ = ¬eq (trans (sym (cong (λ j → f (enum j)) k≡n)) eqk)
+    ... | tri> _ _ n<k = <-irrefl refl (≤-trans n<k k≤n)

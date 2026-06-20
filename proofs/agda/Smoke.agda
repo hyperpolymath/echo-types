@@ -482,6 +482,7 @@ open import EchoSearch using
   ; echo-search-forget
   ; echo-search-bound-zero
   ; echo-search-postcompose
+  ; bounded-search-is-decidable
   )
 
 -- Per-lemma pins for the parameterised EchoSearch via
