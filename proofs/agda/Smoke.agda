@@ -852,6 +852,30 @@ open import EchoSecurity using
   ; region-exit-audit-instance
   )
 
+-- EchoTransaction — SQL transaction rollback safety (issue #174). The
+-- staged write-set is an affine resource; rollback collapses it to an
+-- information-free receipt, so no pure function recovers the discarded
+-- writes (#DB-2.1). A `Security` instance reducing to no-section.
+open import EchoTransaction using
+  ( WriteSet
+  ; RollbackLog
+  ; rollback
+  ; rollback-discards-writes
+  ; transaction-security
+  ; rollback-no-recovery
+  )
+
+-- EchoSelectiveProjection — relational-algebra σ–π commutativity (issue
+-- #176). Column-safe selection commutes with projection (set-equality of
+-- the result relations); a projected-away-column predicate admits no
+-- column-restricted lift (the non-commuting counterexample).
+open import EchoSelectiveProjection using
+  ( SelectiveProjection
+  ; select-project-commute
+  ; column-safe-example
+  ; no-column-safe-lift
+  )
+
 -- EchoProbabilisticSupport — third audience move per GPT order.
 -- Abstract `Sampling` record (outcome + index + distinguishability
 -- witness) with four parametric headline theorems via `module
@@ -1368,6 +1392,31 @@ open import Ordinal.Brouwer.VeblenBinaryMono using
   ; φ-mono₁-step                    -- φ_α x ≤′ φ_{α+1} x  (adjacent levels)
   ; φ-mono₁-into-lim                -- φ_{h m} x ≤′ φ_{olim h} x  (level below a limit)
   ; Γ₀-prefixed                     -- Γ₀ ≤′ φ_Γ₀(0): Γ₀ is a diagonal pre-fixed point
+  )
+
+-- VeblenBinaryLeast (rung 7) — the generic fixed-point engine is MINIMAL:
+-- nextFix g x is the LEAST pre-fixed point of g strictly above x (not just
+-- *a* fixed point).  Payoff: the open reverse Γ₀ direction φ_Γ₀(0) ≤′ Γ₀
+-- reduces to a single closure obligation (commonStep (n ↦ φ_{Γ-tower n}) Γ₀
+-- ≤′ Γ₀); with Γ₀-prefixed that closure would give the full bi-≤′ fixed
+-- point Γ₀ ≃ φ_Γ₀(0).  Order-type fidelity ψ₀(Ω_ω) REMAINS OPEN
+-- (D-2026-06-14).
+open import Ordinal.Brouwer.VeblenBinaryLeast using
+  ( nextFix-least                    -- nextFix g x is the LEAST pre-fixed point above x
+  ; Γ₀-fixed-from-closure            -- reverse-Γ₀ reduced: closure ⇒ φ_Γ₀(0) ≤′ Γ₀
+  )
+
+-- VeblenBinaryMonoG (rung 8) — the generic fixed-point engine is monotone
+-- in its ITERATED FUNCTION (not just its base): a pointwise-smaller
+-- continuous g has a pointwise-smaller deriv/nextFix enumeration.  This is
+-- the engine-side tool that general first-argument monotonicity of φ and
+-- the Γ₀ diagonal-closure are built from.  The full Γ₀ fixed point remains
+-- OPEN (gated on the general level-fixed-point); order-type fidelity
+-- ψ₀(Ω_ω) REMAINS OPEN (D-2026-06-14).
+open import Ordinal.Brouwer.VeblenBinaryMonoG using
+  ( g-tower-mono-in-g                -- towers ordered when g ≤ h pointwise (h monotone)
+  ; nextFix-mono-in-g               -- nextFix g x ≤′ nextFix h x
+  ; deriv-mono-in-g                 -- deriv g β ≤′ deriv h β
   )
 
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's

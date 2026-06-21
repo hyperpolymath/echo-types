@@ -96,6 +96,8 @@ open import EchoDifferential     -- Perturbation tracking (audience-facing sensi
 -- and the injective/section-exists story (partial case), with the
 -- IsConstantOpener boundary tying deniability to the affine mode.
 open import EchoDeniability
+open import EchoTransaction      -- Transaction rollback safety (issue #174; Security instance)
+open import EchoSelectiveProjection  -- σ–π commutativity (issue #176; relational-algebra carrier)
 
 -- Narrative deliverable: curated index of "why Echo deserves a name".
 open import EchoCanonicalIdentitySuite
@@ -127,6 +129,8 @@ open import Ordinal.Brouwer.VeblenPhiNormal -- φ₁ a normal function; next-ε 
 open import Ordinal.Brouwer.VeblenBinary    -- binary Veblen φ_α(β) + the diagonal Γ₀
 open import Ordinal.Brouwer.VeblenBinaryNormal -- every φ_α a normal function; φ_{α+1} enumerates fixed points of φ_α
 open import Ordinal.Brouwer.VeblenBinaryMono -- first-arg monotonicity; Γ₀ ≤′ φ_Γ₀(0) (diagonal pre-fixed point)
+open import Ordinal.Brouwer.VeblenBinaryLeast -- nextFix is the LEAST pre-fixed point; reverse-Γ₀ reduced to one closure
+open import Ordinal.Brouwer.VeblenBinaryMonoG -- the engine is monotone in its iterated function (deriv/nextFix mono in g)
 open import Ordinal.Brouwer.StrictLeftMonoRefuted
 open import Ordinal.Brouwer.AdditivePrincipalGenericRefuted
 open import Ordinal.Buchholz.Syntax
