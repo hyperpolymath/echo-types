@@ -1,0 +1,118 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Tutorial: Consuming Echo Types
+:toc: macro
+:toclevels: 2
+
+[.lead]
+For *end users* — you want to use echo types' structured-loss vocabulary in
+your own language, tool, or proof, and you are not (yet) extending the Agda.
+This is a from-the-outside-in walkthrough: one idea, one definition, what you
+can and cannot do with it, and four real consumers. For the stable interface
+contract read `FOUNDATION_CONTRACT.md` first; for the honest "what it does and
+does not add" read <<Overview.adoc#,Overview>>.
+
+toc::[]
+
+== 1. The one idea
+
+A function that is *not injective* throws information away: if `f a₁ = f a₂`
+with `a₁ ≠ a₂`, then from the output alone you cannot tell which input you had.
+An *echo* keeps the witness that would otherwise be forgotten — it is the
+*fibre* of `f` over an output, the proof-relevant collection of inputs that
+collapse onto it.
+
+== 2. The one definition
+
+[source,agda]
+----
+Echo f y := Σ (x : A) , (f x ≡ y)
+----
+
+Read it as: an `Echo f y` is a pair of an input `x` together with *evidence*
+that `f` sends `x` to `y`. It is exactly the homotopy fibre `fiber f y`
+(`EchoFiberBridge.agda` pins `echo↔fib`). Everything load-bearing is verified
+under `--safe --without-K` with zero postulates.
+
+== 3. Making and reading an echo
+
+[source,agda]
+----
+echo-intro : (f : A → B) → (x : A) → Echo f (f x)
+----
+
+`echo-intro f x` is the canonical echo at `x`. To read it back, `proj₁`
+recovers the input and `proj₂` is the equation `f x ≡ y`. An echo is therefore
+a *receipt*: it records both the value and the witness the bare output dropped.
+
+== 4. The totality completion (the slogan)
+
+The single most-cited result is that the input space is recoverable from the
+output space *together with its echoes*:
+
+[source,agda]
+----
+A↔ΣEcho : A ↔ Σ B (Echo f)        -- EchoTotalCompletion.agda
+----
+
+In words: *an irreversible computation, paired with its echoes, is a reversible
+representation.* If you keep the fibres, you have lost nothing — `encode` and
+`decode` round-trip. This is the design pattern a consumer adopts: run your
+collapsing map, but carry the echo alongside the result.
+
+== 5. What you cannot do — the honest boundary
+
+Echo *records* loss; it does not *undo* it. If `f` genuinely collapses two
+inputs to one output, there is no left inverse `raise : B → A` with
+`raise ∘ f ≡ id`:
+
+[source,agda]
+----
+no-section-of-collapsing-map      -- EchoNoSectionGeneric.agda
+----
+
+This is the load-bearing negative result. A consumer that wants recovery must
+*store the echo* (Section 4); it cannot reconstruct it from the output. The
+boundary invariant *Echo IS-NOT a resource instance* (see
+`FOUNDATION_CONTRACT.md`) is the same statement read at the interface level.
+
+== 6. Four real consumers
+
+These are in-repo or in-estate bridges, not hypotheticals (ledger:
+`docs/bridges/cross-repo-bridge-status.md`).
+
+* *phronesis (agentic ethics).* An ethical verdict's provenance IS
+  `Echo verdict v`: the evaluator is non-injective, so the fibre retains *which*
+  expressions justify a verdict that the bare `Bool` forgets
+  (`verdict-forgets-provenance`); `proj₁` is the recovering section.
+* *KitchenSpeak (nextgen-languages).* A sensor `@`-witness IS
+  `Echo (fired sensor thr) true` — the firing evidence is the echo
+  (`witness⇒echo` / `echo⇒witness`), machine-checked against the real `Echo`.
+* *Invariant Path (Rust).* `classify_candidate` is a non-injective classifier;
+  the retained candidate plus its `losses` IS the echo over a classification.
+  Invariant Path is "a claim-path debugger, not a truth engine" *precisely
+  because* it keeps the echoes.
+* *EchoAggregation (economics).* Rolling a micro ledger up to a macro total is
+  a collapsing map; `no-canonical-disaggregation` is the
+  Sonnenschein–Mantel–Debreu / representative-agent critique stated
+  type-theoretically — there is no canonical way back down.
+
+== 7. Honest scope
+
+Everything above is `--safe --without-K`, zero postulates. The fuller
+universal-property story (uniqueness up to iso, diagonal lifting) is
+*funext-qualified*; UIP- and truncation-strength refinements (the full (epi,
+mono) image factorisation) are explicit earn-backs, not silently assumed. The
+executable companion *EchoTypes.jl* mirrors the finite-domain shadow and
+*falsifies by counterexample* on concrete data — but the Agda here is the
+source of truth. See <<Overview.adoc#,Overview>> for the full add / does-not-add
+table.
+
+== 8. Where to go next
+
+* `FOUNDATION_CONTRACT.md` — the stable `Echo.*` interface to build against.
+* *EchoTypes.jl* — run the finite-domain shadow on your own data.
+* `docs/bridges/cross-repo-bridge-status.md` — every consumer bridge, with its
+  honest scope and main blocker.
+* <<Deniability.adoc#,Deniability>> — a worked first-class echo property
+  (perfect vs partial; section vs no-section) to see the shape of a result.

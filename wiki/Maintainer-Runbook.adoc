@@ -1,0 +1,117 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Maintainer Runbook
+:toc: macro
+:toclevels: 2
+
+[.lead]
+For *maintainers* — gate-keeping changes, keeping the proof cone green, keeping
+the documentation honest, and cutting releases. Authoritative sources:
+`roadmap-gates.adoc`, `CLAUDE.md` (current-rung-state + per-arc DO-NOT-reopen
+lists), and `.machine_readable/6a2/`.
+
+toc::[]
+
+== 1. The non-negotiable build cone
+
+Every change must hold the invariant:
+
+[source,sh]
+----
+agda -i proofs/agda proofs/agda/All.agda     # exits 0
+agda -i proofs/agda proofs/agda/Smoke.agda   # exits 0
+sh scripts/kernel-guard.sh                   # PASS
+----
+
+under `--safe --without-K`, with *zero postulates* in the load-bearing tracks
+and no escape pragmas (`believe_me`, `assert_total`, `postulate`, `sorry`,
+`Admitted`, `unsafeCoerce`). Every headline theorem is pinned in `Smoke.agda`;
+every new module is wired into `All.agda` (an orphan module that compiles but
+is not in `All.agda` is treated as dead code).
+
+== 2. The identity gates (the falsifiability contract)
+
+The identity claim rests on three gates, each with an explicit *failure action*
+(see <<Roadmap.adoc#,Roadmap>> and `roadmap-gates.adoc`):
+
+. *Distinct phenomenon* — echo types name structured loss as distinct from
+  refinement types / lenses / HoTT fibres / quotients / provenance semirings.
+. *Characteristic theorems* — at least two theorems are naturally echo-shaped,
+  not generic Σ lemmas.
+. *Canonical examples* — at least one fully worked example where echo types are
+  the right explanatory unit.
+
+Gates are *reassessed at every tagged release* — surviving one round grants no
+immunity in the next. A failed gate is recorded in `docs/retractions.adoc` (a
+new dated `R-`/`F-` entry), *never silently revised*. Retractions are the
+mechanism that makes the claim falsifiable; they are not failures of the repo.
+
+== 3. When a proof rung lands — rung-consolidation policy
+
+Per `CLAUDE.md`, each named theorem / iso-shape that lands triggers:
+
+. *Branch housekeeping* — enumerate open remote branches ahead of `main`;
+  decide landing / superseded / abandoned.
+. *Cherry-pick* to a consolidation branch off latest `main`, in dependency
+  order (conflicts are usually additive, in `Smoke.agda` / `All.agda`).
+. *Human docs* — sweep `roadmap.adoc`, `docs/echo-types/composition.md`,
+  `overview.md`, and the wiki for stale `(Open)` tags; use honest labels
+  `(Landed)` / `(Partial)` / `(Open)`.
+. *Machine docs* — update `CLAUDE.md` current-rung-state and the `6a2/` files
+  (see Section 4).
+. *Verify* — the build cone (Section 1).
+. *Fast-forward `main`* and push.
+. *Session ledger* — record the rung, the commits folded in, the remaining
+  open pieces, and the smallest useful next advance.
+
+== 4. Machine-doc currency discipline
+
+When a *track's status changes*, the change must propagate to all of:
+
+* `.machine_readable/6a2/STATE.a2ml` — `[metadata]` phase + the current-workstream
+  framing (historical blocks are preserved, not deleted; mark them HISTORY).
+* `.machine_readable/6a2/META.a2ml` — add an ADR for any architecture-level
+  decision (status / supersedes per `[development-practices.versioning-of-decisions]`).
+* `docs/bridges/cross-repo-bridge-status.md` — the bridge ledger.
+* the wiki (<<Home.adoc#,Home>> one-line status + <<Roadmap.adoc#,Roadmap>>).
+
+Worked example: the 2026-06-21 ordinal-track *retirement* (`D-2026-06-21`) was
+swept through STATE.a2ml (currency note + phase), META.a2ml (adr-012), the
+bridge ledger (Tropical long-game row), and the wiki — keeping human and
+machine documentation consistent. Mirror that pattern.
+
+== 5. Release checklist
+
+Versioning is SemVer 2.0.0 (current target `0.1.1`; recipe-extension target
+`0.2.0+`). To cut a release:
+
+. [ ] Build cone green (Section 1) on `main`.
+. [ ] Identity gates reassessed (Section 2); any failure recorded in
+  `docs/retractions.adoc`.
+. [ ] `CHANGELOG.md` updated; `[Unreleased]` rolled to the version.
+. [ ] Machine docs current (Section 4): `6a2/STATE.a2ml`, `META.a2ml`,
+  bridge ledger, wiki one-line status.
+. [ ] Tag minted; mirrors (gitlab, codeberg) consistent.
+. [ ] *Then*, author-driven and *not* auto-run: Zenodo DOI, installable library
+  packaging, outreach. Flag to the owner; do not start unprompted.
+
+== 6. CI lanes and known parked failures
+
+Substantive lanes that must stay green: Agda (`check` + `cold-check`),
+`governance/*`, the secret scanners (`gitleaks`/`trufflehog`/`*-secrets`),
+CodeQL (`analyze`), and Hypatia. A docs-only change passes the Agda lanes
+trivially (no `.agda` touched).
+
+*Parked, do not chase:* `scorecard.yml` / `mirror.yml` `startup_failure` at 0s
+is the billing-wall *pattern B* (a structural reusable-workflow failure, not a
+Guix/Nix policy failure). Hypatia may post pre-existing repo-level findings
+(e.g. a stale Scorecard `TokenPermissionsID` code-scanning alert that cannot
+auto-clear while Scorecard is billing-walled); confirm the Hypatia *check
+conclusion* (it is usually `success`) before treating a comment as a gate.
+
+== 7. Branch hygiene
+
+Single-`main` policy (Hypatia `GS007`). Remote-branch deletion is *owner /
+GitHub-UI only* — agents get HTTP 403 and the MCP has no delete-branch
+endpoint, so stale-branch cleanup is flagged in an issue and actioned by the
+owner.
