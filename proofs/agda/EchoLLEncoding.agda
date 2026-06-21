@@ -56,15 +56,26 @@
 --   * source-no-section              -- matched-negative: source-side
 --                                      no-section-weaken (cited)
 --   * gap-paired                     -- gap + source matched in one Σ
+--   * ForgetsWitness                 -- the forget-witness invariant
+--                                      (`X linear` a proposition)
+--   * forget-witness-encoding-has-section -- UNIVERSAL form: every
+--                                      forget-witness encoding has a
+--                                      section
+--   * trivial-forgets-witness        -- the trivial shadow is in the class
+--   * trivial-via-universal          -- existence form recovered from the
+--                                      universal one (checked)
 --
--- Scope guardrail. The theorem proved is the *existence* of an LL-
--- shallow encoding with an encoded section. It is NOT a claim that
--- *every* LL encoding loses the no-section property — a sufficiently
--- rich encoding (one that keeps the witness equality in `X linear`)
--- could in principle preserve it. The interesting content is that
--- the *standard* LL collapse — sending `!A` to a forget-resources
--- shadow — already loses it. The companion remark at the end of the
--- file makes this explicit.
+-- Scope guardrail. Two strengths are proved. (1) `ll-encoding-gap` is the
+-- *existence* of an LL-shallow encoding with an encoded section.
+-- (2) `forget-witness-encoding-has-section` is the *universal* form over
+-- the *forget-witness class*: every encoding whose `X linear` is a
+-- proposition (no inhabitant-level witness at the linear mode) has an
+-- encoded section. What remains NOT claimed is universality over *all*
+-- encodings: an encoding that does NOT forget the witness (re-introduces
+-- the second-projection equality into `X linear`, so `X linear` is not a
+-- proposition) could preserve no-section — but it is then no longer the
+-- standard `!A := 1` LL shadow. The companion remark sharpens this
+-- dichotomy.
 
 module EchoLLEncoding where
 
@@ -74,6 +85,7 @@ open import EchoLinear
         ; weaken
         ; no-section-weaken
         )
+open import EchoCharacteristic      using (echo-true)
 
 open import Data.Product.Base       using (Σ; _,_; proj₁; proj₂; _×_)
 open import Data.Unit.Base          using (⊤; tt)
@@ -202,16 +214,68 @@ gap-paired :
 gap-paired = ll-encoding-gap , source-no-section
 
 ----------------------------------------------------------------------
+-- The universal form: the gap holds for the WHOLE forget-witness class.
+--
+-- `ll-encoding-gap` is an existence statement (the trivial shadow). The
+-- strengthening below pins the *universal* content the audit asked for:
+-- EVERY shallow LL encoding that *forgets the witness* admits an encoded
+-- section of `wX`. "Forgets the witness" is made precise as `X linear`
+-- being a *proposition* (a subsingleton) — no inhabitant-level
+-- distinction survives at the linear mode, exactly the data
+-- `no-section-weaken` depends on. The standard `!A := 1` shadow is the
+-- minimal member of this class; so is any `X m := F m` with `F` constant
+-- on inhabitants.
+--
+-- The section is the constant map at a fixed linear inhabitant
+-- `enc echo-true`, correct because forget-witness propositionality makes
+-- every `X linear` element equal to it. No cherry-picked carrier: the
+-- argument is uniform over the class.
+----------------------------------------------------------------------
+
+-- The forget-witness invariant: `X linear` is a proposition.
+ForgetsWitness : LLShallowEncoding → Set
+ForgetsWitness E = let open LLShallowEncoding E in (x y : X linear) → x ≡ y
+
+-- Universal headline: any forget-witness shallow LL encoding has an
+-- encoded section, so the encoded analogue of `no-section-weaken` fails
+-- across the whole class — not merely at the trivial shadow.
+forget-witness-encoding-has-section :
+  (E : LLShallowEncoding) → ForgetsWitness E →
+  let open LLShallowEncoding E
+  in  Σ (X affine → X linear) (λ s → ∀ x → s (wX x) ≡ x)
+forget-witness-encoding-has-section E prop =
+  let open LLShallowEncoding E
+  in  (λ _ → enc {linear} echo-true) , (λ x → prop (enc {linear} echo-true) x)
+
+-- The trivial `⊤`-shadow is a member of the forget-witness class
+-- (`X linear = ⊤` is a proposition)…
+trivial-forgets-witness : ForgetsWitness trivial-encoding
+trivial-forgets-witness tt tt = refl
+
+-- …so the existence form `trivial-encoding-has-section` is recovered as
+-- the universal form instantiated at the trivial encoding — the
+-- generalisation is checked, not merely asserted.
+trivial-via-universal :
+  let open LLShallowEncoding trivial-encoding
+  in  Σ (X affine → X linear) (λ s → ∀ x → s (wX x) ≡ x)
+trivial-via-universal =
+  forget-witness-encoding-has-section trivial-encoding trivial-forgets-witness
+
+----------------------------------------------------------------------
 -- Companion remark on what is NOT claimed.
 --
--- * This is an EXISTENCE statement: there exists a shallow LL
---   encoding under which `no-section-weaken` fails to lift. It is
---   NOT a universal statement that every conceivable LL-style
---   encoding loses the property. A sufficiently rich encoding — one
---   that re-introduces the second-projection equality witness into
---   `X linear` — could preserve no-section, but such an encoding is
---   no longer the standard `!A := 1` LL shadow; it has smuggled the
---   Echo structure back in.
+-- * The result is now SHARP, in two strengths. `ll-encoding-gap` is the
+--   existence statement (the trivial shadow loses no-section).
+--   `forget-witness-encoding-has-section` is universal over the
+--   forget-witness class: EVERY encoding whose `X linear` is a
+--   proposition loses it. The dichotomy is exact — forget the witness
+--   (`X linear` a proposition) ⇒ an encoded section always exists; keep
+--   the witness (re-introduce the second-projection equality into
+--   `X linear`, so it is not a proposition) ⇒ no-section may be
+--   preserved, but the encoding is then no longer the standard
+--   `!A := 1` LL shadow; it has smuggled the Echo structure back in.
+--   So the *only* way for a shallow LL encoding to carry Echo's
+--   no-section discipline is to stop being a witness-forgetting shadow.
 --
 -- * The encoding gap is therefore best read as: "the standard LL
 --   `!A` interpretation is too weak to be a faithful translation of
