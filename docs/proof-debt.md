@@ -140,16 +140,26 @@ ledger above.
   and `Ordinal/Buchholz/Fidelity.agda` (d) — are guardrail-exempt,
   `--without-K`-only, and imported by no `All.agda`, so the `--safe`
   kernel cone depends on neither. Nothing slipped into the wired layer.
-- **⚠ Variance is NOT a proven result.** The `experimental/echo-additive/`
-  track (`GradedComonad` / `GradedMonad` / `GradedAdjunction` /
-  `VarianceGate.agda`) is present on `main` but **orphaned** (in no
-  `All.agda`, not CI-verified), and `VarianceGate.agda` self-declares
-  "This file contains NO proven theorems … OBLIGATION comments" + variance
-  **RETRACTED R-2026-05-18**. It typechecks `--safe` only because the
-  obligations are comments. **Do not cite the monad / comonad / adjunction
-  variance question as settled** — it remains genuinely open. Build instead
-  on the wired `Echo` / `EchoResidue`, `EchoGradedComonad` (coassoc/counit),
-  the composition isos, and `DyadicEchoBridge`.
+- **⚠ Variance was open AT AUDIT TIME; RESOLVED 2026-06-20.** As of this
+  audit (2026-06-16) the only variance material on `main` was the
+  `experimental/echo-additive/` track (`GradedComonad` / `GradedMonad` /
+  `GradedAdjunction` / `VarianceGate.agda`) — **orphaned** (in no
+  `All.agda`, not CI-verified; `VarianceGate.agda` self-declares "This file
+  contains NO proven theorems … OBLIGATION comments", variance **RETRACTED
+  R-2026-05-18**), so the monad / comonad / adjunction question was genuinely
+  open *then*. It was **settled four days later by the WIRED
+  `EchoVariance.agda`** (#243, 2026-06-20 — in `All.agda`, `--safe
+  --without-K`, zero postulates, pinned in `Smoke.agda`): echo is a graded
+  **monad of accumulation** (`accumulate = Echo-comp-iso-from`) with a
+  section/retraction **adjunction exact on the grade-0 fibre**
+  (`recoverable-fibre = A↔ΣEcho`), and is **NOT a graded comonad**
+  (`no-bare-recovery` via `no-section-of-collapsing-map` is the obstruction;
+  sharpens `R-2026-05-18` from "graded comonad withdrawn" to "decided
+  against"). Cite the WIRED `EchoVariance` for the verdict; the orphaned
+  `experimental/echo-additive/` track is the retired earlier attempt. See
+  `docs/echo-types/variance-resolution.adoc`. Build on the wired `Echo` /
+  `EchoResidue`, `EchoVariance`, `EchoGradedComonad` (coassoc/counit), the
+  composition isos, and `DyadicEchoBridge`.
 - **Env gotcha (fix before handoff).** A *dangling* libraries config
   (nix-store name mismatch + a non-existent `…/absolute-zero` path) causes
   **false "library name not found" failures** under the default config.
