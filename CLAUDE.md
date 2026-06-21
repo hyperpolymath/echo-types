@@ -72,7 +72,12 @@ Two active workstreams:
    the equivalence-record packaging `Echo-comp-pent-Σ-assoc :
    ... ↔ ...` (stdlib `Function.Bundles._↔_`) is in place.
 
-2. **Ordinal track (buchholz-plan.adoc).** Target remains Bachmann–
+2. **Ordinal track — RETIRED FROM ECHO-TYPES (D-2026-06-21).** This research
+   ladder *outgrew echo-types* and is no longer echo-types work: do NOT open new
+   rungs here; the disposition is extraction to its own ordinal-notation repo
+   (see `docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc` + the
+   2026-06-21 ledger arc above). The summary below is the **frozen hand-off
+   record**, not an active TODO list. *Former* target was Bachmann–
    Howard (ψ₀(Ω_ω)) as first credible milestone, stretch to ψ(Ω_Ω)
    ≈ TFBO. E1–E7 landed (OT syntax, ℕ-staged closure with
    `C-monotone`, CNF with `cnf-trichotomy`, pedagogical ψ with
@@ -89,7 +94,7 @@ Two active workstreams:
    alongside BT); the unbudgeted global WF theorem for `_<ᵇʳᶠ_`
    remains open.
 
-   Open pieces on this track:
+   Frozen at retirement (for the extracted repo only — NOT echo-types TODOs):
    * Full constructor set beyond the admitted core (K-limited
      shared-binder cases such as `<ᵇ-ψα`, `<ᵇ-+2`).
    * Unbudgeted `_<ᵇʳᶠ_` global WF — eliminate the explicit ℕ
@@ -210,7 +215,32 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-06-20)
+## Current rung state (2026-06-21)
+
+### Session arc 2026-06-21 — Ordinal ascent RETIRED FROM ECHO-TYPES (escalates the 2026-06-20 PARK) (read this first)
+
+*Owner decision (D-2026-06-21).* The transfinite ordinal / Buchholz / Veblen
+ascent is **no longer echo-types work** — it has **outgrown the project**. This
+*escalates* the 2026-06-20 PARK (next arc) from "parked, resumable here" to
+**RETIRED from this repo**: we are **not continuing the climb past its current
+front**, and **no new ordinal rung is to be opened in echo-types**. The landed
+artifact stays and is correct (it compiles `--safe --without-K`, zero
+postulates, in the green closure); the *disposition* — extraction to its own
+ordinal-notation repository — is now the **decided** path, not a flag (the
+physical cross-repo cut remains the owner's). The detailed inventory + frontier
+in `docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc` (now headed
+by a D-2026-06-21 superseding banner) are the **hand-off record for that
+separate repo**, NOT a resume-here plan.
+
+*For subsequent agents and humans — unambiguous:* do **not** open Veblen /
+Buchholz / ordinal-collapse rungs in echo-types; do **not** treat the "open
+pieces" / "next rungs" language elsewhere in this file or in `roadmap.adoc`
+§Lane 3 as echo-types TODOs — they are retired. Order-type fidelity to ψ₀(Ω_ω)
+remains an OPEN external problem (`D-2026-06-14` stands) — retirement neither
+closes nor over-claims it; the work simply lives elsewhere now. Echo Core never
+depended on this lane (the `OmegaMarkers` / `Buchholz.Syntax` / `EchoOrdinal`
+bridge stays; everything else under `Ordinal/` is the consumer-less artifact
+that moves).
 
 ### Session arc 2026-06-20 — variance resolution + Veblen climb rungs 3–6 + ordinal-fidelity ladder PARKED (read this first)
 

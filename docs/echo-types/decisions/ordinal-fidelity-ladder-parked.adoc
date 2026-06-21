@@ -16,6 +16,22 @@ flagged OPEN (`D-2026-06-14` stands, unchanged). The ladder is correct,
 well-built, `--safe --without-K`, zero-postulate — and, as of this date,
 *unconsumed*. It is frozen at a clean rung and is fully resumable.
 
+[IMPORTANT]
+====
+*SUPERSEDED — D-2026-06-21: escalated from PARK to RETIRED (owner decision).*
+The ordinal / Veblen ascent has *outgrown the echo-types project* and is *no
+longer echo-types work*. We are *not continuing the climb past its current
+front*, and *no new ordinal rung is to be opened in echo-types* — so "fully
+resumable" above now means *resumable only as the separate ordinal-notation
+repository*, never here. The §"Disposition / re-home" extraction below is
+therefore the *decided* disposition, not a flag (the physical cut remains the
+owner's cross-repo operation). Nothing is over- or under-claimed: the artifact
+is correct and stays in the green closure; order-type fidelity remains OPEN
+(`D-2026-06-14` stands). Subsequent agents and humans: treat the inventory +
+frontier below as the *hand-off record for the extracted repo*, not a
+resume-here plan.
+====
+
 toc::[]
 
 == Status
