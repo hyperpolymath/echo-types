@@ -55,27 +55,43 @@ The Σ-algebra of echoes under function composition.
 
 Docs: `docs/echo-types/{composition,fibration-package,universal-property}.adoc`.
 
-== Track 2 — Ordinal (partial)
+== Track 2 — Ordinal (RETIRED from echo-types, owner decision D-2026-06-21)
 
 A Buchholz collapsing layer; the consumer-evidence that echo's
 non-injectivity bridges to ordinal-collapsing non-injectivity.
 
-* Target: *Bachmann–Howard* ψ₀(Ω_ω) as the first credible milestone; stretch
-  ψ(Ω_Ω) ≈ TFBO.
+*Status (reconciled 2026-06-21): the landed artifact is valid and kept —
+no further work on this trajectory.* It compiles `--safe --without-K` with
+zero postulates and stays in the green closure; the climb is *not continued*
+and *no new ordinal rung is to be opened here*. The disposition is extraction
+to its own ordinal-notation repository. Echo Core never depended on this track:
+the `OmegaMarkers` ← `Buchholz.Syntax` ← `EchoOrdinal` bridge STAYS; everything
+else under `proofs/agda/Ordinal/` is the consumer-less artifact that MOVES.
+Order-type fidelity to ψ₀(Ω_ω) remains an *open external problem*
+(`D-2026-06-14`) — retirement neither closes nor over-claims it.
+
+The inventory below is the *frozen hand-off record* for the extracted repo,
+**not** an echo-types TODO list:
+
+* Former target: *Bachmann–Howard* ψ₀(Ω_ω) as the first credible milestone;
+  stretch ψ(Ω_Ω) ≈ TFBO.
 * E1–E7 landed: OT syntax, ℕ-staged closure, CNF, pedagogical ψ, Buchholz
   scaffold, well-formedness, echo bridge (`ordinal-collapse-non-injective`).
 * Rank-monotonicity under the *WfCNF* restriction with a limit-shaped ω-power
   rank: `RankPow` / `RankPowDomination` / `HeadOmega` / `HeadOmegaInversion`.
 * Slice 3+4 Route A arc (PRs #165–#170): the `RankMonoUnion` umbrella over
   source-rule extensions, and well-foundedness of `_<ᵇᵘ_` via rank-embedding
-  transport (#170).
+  transport (#170); later the Veblen climb reached rungs 7–8 (the artifact's
+  current front, kept as-is).
 
-*Open:* the unbudgeted `_<ᵇʳᶠ_` global WF (eliminate the ℕ budget without
-leaving `--safe --without-K`); the K-limited shared-binder cases (`<ᵇ-ψα`,
-`<ᵇ-+2`); push the surface-route WF back into `Order.agda`'s main `_<ᵇ_`. This
-track is *solo, not swarmable*.
+*Frozen (for the extracted repo, NOT echo-types work):* the unbudgeted
+`_<ᵇʳᶠ_` global WF (eliminate the ℕ budget without leaving `--safe
+--without-K`); the K-limited shared-binder cases (`<ᵇ-ψα`, `<ᵇ-+2`); pushing
+the surface-route WF back into `Order.agda`'s main `_<ᵇ_`.
 
-Docs: `docs/echo-types/buchholz-plan.adoc`, `buchholz-rank-obstruction.adoc`.
+Docs: `docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc`
+(D-2026-06-21 superseding banner), `docs/echo-types/buchholz-plan.adoc`,
+`buchholz-rank-obstruction.adoc`.
 
 == Track 3 — Establishment (Pillars A–D + F closed; E open)
 

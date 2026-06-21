@@ -257,20 +257,23 @@ island) + the two `Ordinal/Buchholz/Fidelity.agda` postulates (d, `denotation`
 / `ordinal-upper-bound`). See `proof-debt.md` (a)–(d). Echo Core is
 postulate-free and hole-free.
 
-**⚠ OWNER-DECISION FLAG — ordinal: retired-in-ledger but committing-on-main.**
+**✅ OWNER-DECISION RECONCILED (2026-06-21) — ordinal artifact VALID + KEPT; trajectory CLOSED.**
 `main` (this arc's base, `9c56d40`) carries TWO ordinal climb rungs dated
 **2026-06-21**, landed the SAME DAY as the `D-2026-06-21` retirement:
 `f89a3aa` (BH rung 7 — `nextFix` is the LEAST pre-fixed point; reverse-Γ₀
 reduced) and `a096764` (BH rung 8 — Veblen engine monotone in its iterated
 function). This **contradicts** the retirement banner in this file (arc below)
 and in `roadmap.adoc` §Lane 3 ("no new ordinal rung is to be opened here").
-Meanwhile `wiki/Architecture.adoc` ("Track 2 — Ordinal (partial)") and
-`wiki/Roadmap.adoc` ("Ordinal track — partial (the active bottleneck)") still
-frame the climb as ACTIVE — i.e. they are consistent with the *code* but not
-the *decision*. **Do NOT propagate the retirement to the wiki, and do NOT
-delete the ordinal artifact, until the owner reconciles** which is
-authoritative: the retirement decision, or the continued climb. Both readings
-are live; the fix direction depends entirely on that call. (Also landed on
+At flag time `wiki/Architecture.adoc` ("Track 2 — Ordinal (partial)") and
+`wiki/Roadmap.adoc` ("the active bottleneck") still framed the climb as ACTIVE
+— consistent with the *code* but not the *decision*. **RECONCILED by the owner
+(2026-06-21): "treat it as valid itself, but no further work on that trajectory
+is needed."** So the landed artifact (incl. rungs 7–8) is VALID and KEPT —
+*frozen, not deleted*; the retirement stands as to **direction** — no further
+climb, no new ordinal rung in echo-types; disposition = extraction to its own
+ordinal-notation repo. The wiki is now ALIGNED (`wiki/Roadmap.adoc` retired via
+`e09eba5`; `wiki/Architecture.adoc` Track 2 reframed to "RETIRED … valid +
+frozen" this arc). Do NOT reopen this as a live contradiction. (Also landed on
 `main` same day, non-ordinal: `4883ae2` `EchoTransaction` closes #174;
 `bd43ad4` `EchoSelectiveProjection` closes #176; `9c56d40`
 `entropy-blind-parametric`.)
