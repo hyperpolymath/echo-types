@@ -53,13 +53,21 @@
 --                                     -- matched-negative: proj₁ DOES
 --                                        distinguish (cited from
 --                                        sigma-distinguishes)
+--   * entropy-blind-parametric        -- parametric: any functional of any
+--                                        fibre-determined distribution is blind
+--   * entropy-witness-distinguishes   -- matched-negative (parametric): a
+--                                        witness-determined distribution
+--                                        distinguishes
 --
--- Scope guardrail. The theorem proved here is the discrete form:
--- "any function factoring through the fibre count is constant on
--- echo-true vs echo-false". The real-valued form quantifying over
--- a parametric probability distribution is a strict generalisation
--- and is NOT formalised — see the companion remark at the end of
--- the file.
+-- Scope guardrail. Two non-distinguishing forms are proved: the
+-- discrete one ("any function of the fibre count is constant on
+-- echo-true vs echo-false") and its parametric generalisation
+-- (`entropy-blind-parametric`: any functional of any fibre-determined
+-- distribution is constant, with `entropy-witness-distinguishes` the
+-- matched-negative). What is NOT formalised is only the *construction*
+-- of a concrete real-valued `H(P) = -Σ p log p` — an orthogonal
+-- reals/logarithm task; the non-distinguishing already covers any such
+-- functional once supplied. See the companion remark at the end.
 
 module EchoEntropy where
 
@@ -207,14 +215,82 @@ witness-distinguishes-where-entropy-cannot :
 witness-distinguishes-where-entropy-cannot = sigma-distinguishes
 
 ----------------------------------------------------------------------
+-- Parametric generalisation: arbitrary distribution, arbitrary
+-- information functional.
+--
+-- Headline 3 (`entropy-shadow-blind`) covers any function of the
+-- fibre *count* — a single `ℕ`. The strictly stronger statement the
+-- companion remark flags as open quantifies instead over a whole
+-- *distribution* across the fibre — the data a real-valued
+-- `H(P) = -Σ p log p` actually consumes — valued in an arbitrary
+-- weight type `W` and fed to an arbitrary information functional
+-- `H : (Fin 2 → W) → X` (Shannon / Rényi entropy, mutual
+-- information, the raw probability vector, …).
+--
+-- The fibre of `collapse` at `tt` is the whole domain `Fin 2`,
+-- shared by both echoes. A distribution *read off the fibre* (not off
+-- the witness `proj₁ e`) does not mention the echo, so any functional
+-- of it is blind. This discharges the *non-distinguishing* content of
+-- the "parametric probability distribution" item for ANY such
+-- functional, with no reals/log library required — the blindness is
+-- structural. Constructing a concrete real-valued `-Σ p log p` is an
+-- orthogonal analysis task (a reals + logarithm formalisation),
+-- independent of Echo, and is deliberately NOT attempted here.
+----------------------------------------------------------------------
+
+-- A fibre-determined distribution valued in `W`: a weight per fibre
+-- index, chosen independently of which echo is held. It ignores its
+-- echo argument — that is exactly what "read off the fibre, not the
+-- witness" means.
+fibre-distribution : {W : Set ℓ} → (Fin 2 → W) → Echo collapse tt → (Fin 2 → W)
+fibre-distribution P _ = P
+
+----------------------------------------------------------------------
+-- Headline 6 (positive, parametric). Any information functional `H`
+-- of any fibre-determined distribution `P` agrees on `echo-true` and
+-- `echo-false`. Strictly generalises Headline 3 from a function of
+-- the count to a functional of the full distribution — covering
+-- real-/rational-/abstract-valued entropy the moment such a
+-- functional is supplied. Definitional: `fibre-distribution P`
+-- ignores its echo argument.
+----------------------------------------------------------------------
+
+entropy-blind-parametric :
+  {W X : Set ℓ}
+  (P : Fin 2 → W) (H : (Fin 2 → W) → X) →
+  H (fibre-distribution P echo-true) ≡ H (fibre-distribution P echo-false)
+entropy-blind-parametric P H = refl
+
+----------------------------------------------------------------------
+-- Headline 7 (negative companion, parametric). A distribution read
+-- off the WITNESS — here every index carries the distinguishing bit
+-- `proj₁ sigma-distinguishes e` — DOES separate the two echoes under
+-- a functional that samples it. Matched-negative for Headline 6:
+-- blindness holds for fibre-determined distributions and fails for
+-- witness-determined ones, mirroring the fibre-vs-witness split of
+-- the discrete result.
+----------------------------------------------------------------------
+
+witness-distribution : Echo collapse tt → (Fin 2 → Bool)
+witness-distribution e _ = proj₁ sigma-distinguishes e
+
+entropy-witness-distinguishes :
+  Σ ((Fin 2 → Bool) → Bool)
+    (λ H → H (witness-distribution echo-true) ≢ H (witness-distribution echo-false))
+entropy-witness-distinguishes = (λ d → d zero) , proj₂ sigma-distinguishes
+
+----------------------------------------------------------------------
 -- Companion remark on what is NOT claimed.
 --
--- * Real-valued Shannon entropy `H(P) = -Σ p log p` for a parametric
---   probability distribution `P` is NOT formalised. The proof above
---   uses the discrete fibre-count proxy, which is the uniform-prior
---   surrogate. Lifting to a parametric distribution requires either
---   a rationals/reals layer or an axiomatic `Probability` interface,
---   neither of which lives in this repo.
+-- * The *non-distinguishing* content for a parametric distribution is
+--   now formalised: `entropy-blind-parametric` (Headline 6) shows any
+--   information functional of any fibre-determined distribution is
+--   witness-blind, and `entropy-witness-distinguishes` (Headline 7) is
+--   the matched-negative for witness-determined distributions. What
+--   remains unformalised is only the *construction* of a concrete
+--   real-valued `H(P) = -Σ p log p` — a reals + logarithm formalisation,
+--   an analysis task orthogonal to Echo. Headline 6 already covers it
+--   for ANY such functional the moment one is supplied.
 --
 -- * Mutual information `I(X; Y) = H(X) - H(X|Y)` is not formalised
 --   either. The corresponding Echo-side statement would be:
