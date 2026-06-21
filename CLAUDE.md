@@ -72,7 +72,19 @@ Two active workstreams:
    the equivalence-record packaging `Echo-comp-pent-Σ-assoc :
    ... ↔ ...` (stdlib `Function.Bundles._↔_`) is in place.
 
-2. **Ordinal track (buchholz-plan.adoc).** Target remains Bachmann–
+2. **Ordinal track (buchholz-plan.adoc) — ABANDONED (`D-2026-06-21`).**
+   *Do not resume this track.* It was PARKED (`D-2026-06-20`) and is now
+   ABANDONED: ended work, not resumable barring **new grammar or a major
+   redesign** (and a returning consumer — there is none). It ended at
+   Veblen rung 6 — `Γ₀` defined + `Γ₀-prefixed : Γ₀ ≤′ φ Γ₀ oz` (one
+   direction); the Γ₀-least wall (mutual fixed-point descent) was never
+   opened and even closing it reaches only Feferman–Schütte, galaxies
+   below the ψ₀(Ω_ω) milestone. The ladder stays in-tree (correct, `--safe`,
+   zero-postulate, `Fidelity` outside the kernel cone); the `--safe` core
+   depends on none of it. Record:
+   `docs/echo-types/decisions/ordinal-fidelity-ladder-abandoned.adoc`.
+   The historical summary below is retained for reference only.
+   Target *was* Bachmann–
    Howard (ψ₀(Ω_ω)) as first credible milestone, stretch to ψ(Ω_Ω)
    ≈ TFBO. E1–E7 landed (OT syntax, ℕ-staged closure with
    `C-monotone`, CNF with `cnf-trichotomy`, pedagogical ψ with

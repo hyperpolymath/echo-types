@@ -305,20 +305,24 @@ narrowed — no unique-mediator claim. Demand 4 ("parametricity") must
 be *consumer-side at the affine instance*, not full Reynolds. See
 respective §s in the synthesis doc.
 
-=== Lane 3 [PARKED 2026-06-20, NOT LOAD-BEARING] — Ordinal / Buchholz
+=== Lane 3 [ABANDONED 2026-06-21, NOT LOAD-BEARING] — Ordinal / Buchholz
 
-*PARKED (`D-2026-06-20`).* The transfinite ordinal-fidelity ladder is
-*parked, resumable* — the only consumer of ψ₀(Ω_ω) order-type fidelity
-(the Groove cleave) is resolved as a finite exact-round-trip zipper
-needing well-foundedness only (RC-11 forbids ε₀+ in cleave ranks), so the
-ladder is consumer-less. The Veblen climb (rungs 1–6: `ω^^`/ε₀ → φ₁ normal
-→ binary φ + Γ₀ → every level normal → first-arg monotonicity +
-`Γ₀ ≤′ φ_Γ₀(0)`) is frozen at a clean rung; the next rung (Veblen mutual
-fixed-point descent → Γ₀-least) is deliberately NOT opened. No postulate
-closed; order-type fidelity REMAINS OPEN (`D-2026-06-14` stands). The
-disposition is extraction to its own ordinal-notation repo (cut FLAGGED,
-left to the owner). See
-`docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc`.
+*ABANDONED (`D-2026-06-21`, supersedes the `D-2026-06-20` park).* The
+transfinite ordinal-fidelity ladder is *ended work* — not resumable barring
+new grammar or a major redesign (and a returning consumer; there is none).
+The only consumer of ψ₀(Ω_ω) order-type fidelity (the Groove cleave) is
+resolved as a finite exact-round-trip zipper needing well-foundedness only
+(RC-11 forbids ε₀+ in cleave ranks), so the ladder is consumer-less. The
+Veblen climb (rungs 1–6: `ω^^`/ε₀ → φ₁ normal → binary φ + Γ₀ → every level
+normal → first-arg monotonicity + `Γ₀ ≤′ φ_Γ₀(0)`) ended at a clean rung; the
+next rung (Veblen mutual fixed-point descent → Γ₀-least) was never opened, and
+even closing it reaches only Feferman–Schütte (Γ₀), galaxies below the
+milestone. No postulate closed; order-type fidelity REMAINS OPEN
+(`D-2026-06-14` stands). The ladder STAYS in-tree (correct, `--safe`,
+zero-postulate); extraction to its own ordinal-notation repo remains the
+owner's optional cut. See
+`docs/echo-types/decisions/ordinal-fidelity-ladder-abandoned.adoc`
+(and the superseded `…-parked.adoc`).
 
 *Echo Core does NOT depend on this lane.* This is a separate
 proof-theoretic research project that happens to share the

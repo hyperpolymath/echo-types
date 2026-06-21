@@ -7,6 +7,17 @@
 :sectnumlevels: 2
 :icons: font
 
+[IMPORTANT]
+====
+*SUPERSEDED (2026-06-21).* This park was upgraded to an *abandonment* —
+the track is ended work, not resumable, barring new grammar or a major
+redesign. See
+`docs/echo-types/decisions/ordinal-fidelity-ladder-abandoned.adoc`
+(`D-2026-06-21`). The terminal endpoint, artifact inventory, and firewall
+recorded below remain accurate; only the "frozen, fully resumable" framing
+is withdrawn.
+====
+
 [.lead]
 Records, in the same dated idiom as `D-2026-06-14` (its parent) and the
 retraction log's `R-2026-05-18`, the decision to *park* the transfinite

@@ -1,0 +1,109 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= D-2026-06-21 — Ordinal-fidelity ladder ABANDONED (supersedes the D-2026-06-20 park)
+:toc: macro
+:toclevels: 2
+:sectnums:
+:sectnumlevels: 2
+:icons: font
+
+[.lead]
+Upgrades the `D-2026-06-20` *park* of the transfinite ordinal-fidelity ladder
+to an *abandonment*. The park was framed as "frozen at a clean rung, fully
+resumable". This entry records the owner decision (2026-06-21) that the track
+is *ended work*: it is not worth resuming under the current grammar/design.
+The only conditions under which it would be revisited are *new grammar or a
+major redesign* — and even then, only if a consumer for ψ₀(Ω_ω) order-type
+fidelity returns (none exists; see `D-2026-06-20` §Reason).
+
+Nothing about the honest record changes: order-type fidelity was always
+flagged OPEN (`D-2026-06-14` stands), no postulate was closed, and the
+`--safe --without-K` core depends on none of the ladder.
+
+toc::[]
+
+== Status
+
+*Ordinal-fidelity ladder: ABANDONED.* No further rung is to be opened — now or
+on a consumer's return — without first a new grammar or a major redesign. The
+"resumable / cold-resume here" framing of `D-2026-06-20` is *withdrawn*: not
+because the frontier moved, but because the approach itself is judged a dead
+end for the milestone.
+
+== Where it finally got to (the terminal endpoint)
+
+The Brouwer-side Veblen climb ended at *rung 6* (`#247`, commit `b6d0d18`).
+
+Landed, `--safe --without-K`, zero postulates, no `TERMINATING`:
+
+* `ω^^` (ω to an ordinal power) + ε₀ (`ε₀-ε-number`, `ω^^-infl`);
+* φ₁ as the ε-number enumeration and a normal function (`next-ε-least`,
+  `φ₁-mono` / `φ₁-strict-mono` / `φ₁-continuous`);
+* the binary Veblen `φ : Ord → Ord → Ord` with the generic fixed-point engine
+  (`deriv` / `nextFix` / `commonStep`; `nextFix-fixed-{≤,≥}`);
+* *every* level a normal function (`φ-mono₂`, `φ-infl`, the Veblen recurrence
+  `φ-level-fixed-{≤,≥}`);
+* first-argument monotonicity in the *adjacent* and *below-a-limit* cases
+  (`φ-mono₁-step`, `φ-mono₁-into-lim`);
+* the diagonal `Γ₀` (Feferman–Schütte) defined; and
+* *`Γ₀-prefixed : Γ₀ ≤′ φ Γ₀ oz`* — *one* direction of the diagonal fixed point.
+
+The wall, *not opened and not to be opened*: the reverse `φ_Γ₀(0) ≤′ Γ₀`
+(Γ₀-least), gated on the Veblen *mutual fixed-point descent* lemma (first-arg
+monotonicity ⟷ "a fixed point of `φ_β` is a fixed point of `φ_α` for `α ≤′ β`",
+mutually recursive over the level).
+
+Even closing that wall reaches only *Γ₀* — unboundedly below the *ψ₀(Ω_ω)*
+milestone. Downstream, OPEN and now abandoned with the rest: the *ψ collapsing
+function* (with fundamental sequences, producing `bh-height`), and the two
+`Ordinal.Buchholz.Fidelity` postulates `denotation` / `ordinal-upper-bound`
+(gated on the collapse). `Fidelity` is outside the `--safe` kernel cone and is
+imported by neither `All.agda` nor `Smoke.agda`.
+
+*Final position in one line:* a correct, zero-postulate Veblen ladder that
+reaches a *pre-fixed point of Γ₀* and stops one mutual induction short of
+Γ₀-least — itself galaxies short of the milestone.
+
+== Why abandon, not merely park
+
+The `D-2026-06-20` reasons stand and harden:
+
+. *Consumer-less.* The Groove cleave — the only consumer that ever wanted
+  ψ₀(Ω_ω) order-type fidelity — resolved to a finite exact-round-trip zipper
+  needing well-foundedness only; Groove RC-11 forbids ε₀+ in cleave ranks, and
+  the ladder is past ε₀ from rung 2. The target is outside the (former)
+  consumer's permitted range by construction.
+. *The hard lemma does not reach the thing.* Every remaining rung — the
+  mutual-descent lemma included — is structure on the *near side* of the open
+  `denotation` map. A clean Γ₀-least reaches Feferman–Schütte, not the
+  milestone; the intricate mutual induction buys an ordinal galaxies too small.
+. *Dead end under the current design.* Closing the distance to ψ₀(Ω_ω) is not
+  more rungs of the same kind — it needs the ordinal-collapsing layer (ψ with
+  fundamental sequences), a different construction. Absent a consumer, that
+  multi-session core is not worth building. Hence only *new grammar or major
+  redesign* (and a returning consumer) would reopen it.
+
+== Disposition (the artifact stays; extraction remains the owner's optional cut)
+
+The ladder is correct and harmless in-tree: `--safe --without-K`, zero
+postulates, no `TERMINATING`, kernel-guard PASS, and `Fidelity` (the only
+postulate-bearing module) sits outside the kernel cone, imported by neither
+`All.agda` nor `Smoke.agda`.
+
+*Abandoned ≠ deleted.* This entry does not remove or extract anything. The
+`D-2026-06-20` firewall remains the clean cut-line *if* the owner later chooses
+to extract the consumer-less subtree to its own ordinal-notation repository:
+the bridge trio `Ordinal.OmegaMarkers` ← `Ordinal.Buchholz.Syntax` ←
+`EchoOrdinal` *STAYS*; everything else under `proofs/agda/Ordinal/` *MOVES*.
+That cut is a cross-repo operation left, as before, to the owner — now with no
+expectation that the ladder will be resumed in echo-types.
+
+== See also
+
+* `docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc` —
+  `D-2026-06-20`, the park this supersedes (full artifact inventory + the
+  verified firewall).
+* `docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc` —
+  `D-2026-06-14`, the parent open-problem record (stands, unchanged).
+* `Fidelity-OPEN-postulates.md` — the two open `Fidelity.agda` postulates.
+* `roadmap.adoc` §Lane 3 — the ordinal-track items (now abandoned).
