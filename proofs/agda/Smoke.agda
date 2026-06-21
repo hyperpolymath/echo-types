@@ -1406,6 +1406,19 @@ open import Ordinal.Brouwer.VeblenBinaryLeast using
   ; Γ₀-fixed-from-closure            -- reverse-Γ₀ reduced: closure ⇒ φ_Γ₀(0) ≤′ Γ₀
   )
 
+-- VeblenBinaryMonoG (rung 8) — the generic fixed-point engine is monotone
+-- in its ITERATED FUNCTION (not just its base): a pointwise-smaller
+-- continuous g has a pointwise-smaller deriv/nextFix enumeration.  This is
+-- the engine-side tool that general first-argument monotonicity of φ and
+-- the Γ₀ diagonal-closure are built from.  The full Γ₀ fixed point remains
+-- OPEN (gated on the general level-fixed-point); order-type fidelity
+-- ψ₀(Ω_ω) REMAINS OPEN (D-2026-06-14).
+open import Ordinal.Brouwer.VeblenBinaryMonoG using
+  ( g-tower-mono-in-g                -- towers ordered when g ≤ h pointwise (h monotone)
+  ; nextFix-mono-in-g               -- nextFix g x ≤′ nextFix h x
+  ; deriv-mono-in-g                 -- deriv g β ≤′ deriv h β
+  )
+
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
