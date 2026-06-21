@@ -671,6 +671,10 @@ open import EchoLLEncoding using
   ; ll-encoding-gap
   ; source-no-section
   ; gap-paired
+  ; ForgetsWitness
+  ; forget-witness-encoding-has-section
+  ; trivial-forgets-witness
+  ; trivial-via-universal
   )
 
 -- examples.EchoVsSigma — Track C of the Echo-vs-Σ identity claim.
