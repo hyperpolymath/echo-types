@@ -572,6 +572,8 @@ open import EchoEntropy using
   ; entropy-shadow-blind
   ; shannon-shadow-blind
   ; witness-distinguishes-where-entropy-cannot
+  ; entropy-blind-parametric
+  ; entropy-witness-distinguishes
   )
 
 open import EchoThermodynamicsFinite using
