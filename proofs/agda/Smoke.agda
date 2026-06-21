@@ -850,6 +850,19 @@ open import EchoSecurity using
   ; region-exit-audit-instance
   )
 
+-- EchoTransaction — SQL transaction rollback safety (issue #174). The
+-- staged write-set is an affine resource; rollback collapses it to an
+-- information-free receipt, so no pure function recovers the discarded
+-- writes (#DB-2.1). A `Security` instance reducing to no-section.
+open import EchoTransaction using
+  ( WriteSet
+  ; RollbackLog
+  ; rollback
+  ; rollback-discards-writes
+  ; transaction-security
+  ; rollback-no-recovery
+  )
+
 -- EchoProbabilisticSupport — third audience move per GPT order.
 -- Abstract `Sampling` record (outcome + index + distinguishability
 -- witness) with four parametric headline theorems via `module

@@ -96,6 +96,7 @@ open import EchoDifferential     -- Perturbation tracking (audience-facing sensi
 -- and the injective/section-exists story (partial case), with the
 -- IsConstantOpener boundary tying deniability to the affine mode.
 open import EchoDeniability
+open import EchoTransaction      -- Transaction rollback safety (issue #174; Security instance)
 
 -- Narrative deliverable: curated index of "why Echo deserves a name".
 open import EchoCanonicalIdentitySuite

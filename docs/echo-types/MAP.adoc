@@ -253,6 +253,14 @@ honest-bound matched-negative block.
   the `affine` mode in `EchoObservationalEquivalence`. Honest-bound:
   NOT side-channel-safe / cryptographic deniability / adaptive
   adversary. `proofs/agda/EchoDeniability.agda`. `[REAL]`
+* *Transaction (rollback safety, issue #174)* — `WriteSet` (staged
+  mutations) → `RollbackLog` collapsing audit boundary; `rollback`
+  admits no section, so a discarded write-set is unrecoverable from the
+  receipt alone (#DB-2.1). Packaged as a `Security` instance
+  (`transaction-security`), reducing to `no-section-of-collapsing-map`.
+  Honest-bound: NOT durability / isolation / commit-semantics (the
+  dual) / savepoint-locality / runtime-memory-zeroed.
+  `proofs/agda/EchoTransaction.agda`. `[REAL]`
 * *Aggregation (general, issue #175)* — aggregation-as-fold over a
   `Monoid`, with a `GroupAggregator` and the monoid-homomorphism law
   `aggregation-as-fold` (aggregating a concatenation = combining the
