@@ -46,6 +46,48 @@ toc::[]
   affine mode.
 |===
 
+== Who is this for?
+
+echo-types serves three audiences. Find your lane, then follow the reading order.
+
+[cols="1,3", options="header"]
+|===
+| You are… | Start here, in order
+
+| *A developer* +
+  (writing or extending proofs)
+| 1. <<Working-Rules.adoc#,Working-Rules>> — the non-negotiable discipline
+  (`--safe --without-K`, zero postulates, Smoke pins, `All.agda` wiring). +
+  2. `CLAUDE.md` — current rung-state + the per-arc *DO NOT reopen* lists. +
+  3. <<Architecture.adoc#,Architecture>> + `docs/echo-types/MAP.adoc` — the
+  module map and where a new theorem belongs. +
+  4. *Build:* `bash scripts/provision-agda.sh`, then
+  `agda -i proofs/agda proofs/agda/All.agda` (and `Smoke.agda`) must exit 0.
+
+| *A maintainer* +
+  (gates, releases, governance)
+| 1. <<Roadmap.adoc#,Roadmap>> + `roadmap-gates.adoc` — the three identity
+  gates and their *failure actions* (gates are reassessed every tagged
+  release). +
+  2. `docs/retractions.adoc` — how a failed gate is recorded (never silently
+  revised). +
+  3. `scripts/kernel-guard.sh` + `.github/workflows/agda.yml` — the CI cone
+  that must stay green. +
+  4. `.machine_readable/6a2/STATE.a2ml` (EI-2 record + current state) and
+  `docs/bridges/cross-repo-bridge-status.md` (downstream ledger).
+
+| *An end user* +
+  (wiring Echo into another language)
+| 1. `FOUNDATION_CONTRACT.md` — the stable `Echo.*` interface and the boundary
+  invariant *Echo IS-NOT a resource instance*. Read this first. +
+  2. <<Overview.adoc#,Overview>> — what Echo adds and, crucially, what it does
+  *not* add (honest scope). +
+  3. *EchoTypes.jl* — the executable Julia shadow; falsifies-by-counterexample
+  on concrete finite data. +
+  4. <<Deniability.adoc#,Deniability>> — a worked first-class echo property to
+  see the shape of a consumer-facing result.
+|===
+
 == Canonical sources of truth
 
 This wiki is a *distillation*. The authoritative records are:
@@ -61,11 +103,27 @@ This wiki is a *distillation*. The authoritative records are:
 * `.machine_readable/6a2/STATE.a2ml` — EI-2 record (permanent) + current-state block.
 * `docs/bridges/cross-repo-bridge-status.md` — cross-repo bridge ledger.
 
-== One-line status (as of 2026-06-13)
+== One-line status (as of 2026-06-21)
 
-* *Composition track* — landed (Echo-comp-iso, cancel-iso, pentagon).
-* *Ordinal track* — partial (Buchholz; Slice 3+4 Route A; target Bachmann–Howard ψ₀(Ω_ω)).
-* *Establishment track* — Pillars A–D + Pillar F (F1–F4) closed; Pillar E paper open.
+* *Composition track* — landed (Echo-comp-iso, cancel-iso, pentagon). No open
+  headline items.
+* *Establishment track* — Pillars A–D and F (F1–F4) closed; the in-repo half of
+  Pillar E is complete at the bounded-claim level. One named *OPEN external*
+  problem remains: *order-type fidelity* to ψ₀(Ω_ω) (decision-log
+  `D-2026-06-14`).
+* *Variance* — resolved (`EchoVariance.agda`, #243): an echo is a graded
+  *monad of accumulation* with a section/retraction adjunction exact on the
+  grade-0 fibre — *not* a graded comonad (that reading is the lossless
+  complement-storing writer).
+* *Aggregation* — `EchoAggregation.agda` generalised to the monoid/group form
+  (`aggregation-as-fold`; #175), with `no-canonical-disaggregation` (the
+  Sonnenschein–Mantel–Debreu / representative-agent critique, stated
+  type-theoretically).
+* *Ordinal track* — *RETIRED from echo-types* (owner decision `D-2026-06-21`):
+  the transfinite Buchholz/Veblen ladder outgrew the project. The landed
+  artifact is correct and stays; the disposition is *extraction to its own
+  ordinal-notation repo* (the physical cut is the owner's; tracking: #263).
+  See <<Roadmap.adoc#ordinal,Roadmap § Ordinal>>.
 * *Deniability track* — `EchoDeniability.agda` landed: perfect/partial duality,
   `IsConstantOpener` boundary, no-section / section duality as a checked theorem pair.
 
