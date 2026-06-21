@@ -1392,6 +1392,18 @@ open import Ordinal.Brouwer.VeblenBinaryMono using
   ; Γ₀-prefixed                     -- Γ₀ ≤′ φ_Γ₀(0): Γ₀ is a diagonal pre-fixed point
   )
 
+-- VeblenBinaryLeast (rung 7) — the generic fixed-point engine is MINIMAL:
+-- nextFix g x is the LEAST pre-fixed point of g strictly above x (not just
+-- *a* fixed point).  Payoff: the open reverse Γ₀ direction φ_Γ₀(0) ≤′ Γ₀
+-- reduces to a single closure obligation (commonStep (n ↦ φ_{Γ-tower n}) Γ₀
+-- ≤′ Γ₀); with Γ₀-prefixed that closure would give the full bi-≤′ fixed
+-- point Γ₀ ≃ φ_Γ₀(0).  Order-type fidelity ψ₀(Ω_ω) REMAINS OPEN
+-- (D-2026-06-14).
+open import Ordinal.Brouwer.VeblenBinaryLeast using
+  ( nextFix-least                    -- nextFix g x is the LEAST pre-fixed point above x
+  ; Γ₀-fixed-from-closure            -- reverse-Γ₀ reduced: closure ⇒ φ_Γ₀(0) ≤′ Γ₀
+  )
+
 -- Recommended rank function for unbudgeted `wf-<ᵇʳᶠ_` per Echidna's
 -- design search; transport theorem deferred until Phase 1.3 lemmas land.
 open import Ordinal.Buchholz.RankBrouwer using
