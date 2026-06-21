@@ -125,7 +125,8 @@ kernel** — the boundary is real and lives outside this core.
   *Application/extension modules* (also added via the same sweep):
   `EchoEntropy`, `EchoLLEncoding`, `EchoProvenance`, `EchoSecurity`,
   `EchoProbabilisticSupport`, `EchoDifferential`, `EchoDeniability`,
-  `EchoAggregation`, `EchoVariance`
+  `EchoAggregation`, `EchoVariance`, `EchoTransaction`,
+  `EchoSelectiveProjection`
   are derived domain applications mapped under their own headings in
   MAP.adoc.  `EchoDeniability` formalises residue deniability: the
   perfect (constant / no-section) case and the partial (injective /

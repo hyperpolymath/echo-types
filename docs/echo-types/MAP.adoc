@@ -253,6 +253,24 @@ honest-bound matched-negative block.
   the `affine` mode in `EchoObservationalEquivalence`. Honest-bound:
   NOT side-channel-safe / cryptographic deniability / adaptive
   adversary. `proofs/agda/EchoDeniability.agda`. `[REAL]`
+* *Transaction (rollback safety, issue #174)* — `WriteSet` (staged
+  mutations) → `RollbackLog` collapsing audit boundary; `rollback`
+  admits no section, so a discarded write-set is unrecoverable from the
+  receipt alone (#DB-2.1). Packaged as a `Security` instance
+  (`transaction-security`), reducing to `no-section-of-collapsing-map`.
+  Honest-bound: NOT durability / isolation / commit-semantics (the
+  dual) / savepoint-locality / runtime-memory-zeroed.
+  `proofs/agda/EchoTransaction.agda`. `[REAL]`
+* *Selective projection (σ–π commutativity, issue #176)* — the Codd law
+  σ_p(π_S(R)) = π_S(σ_p(R)) for column-safe predicates, as an Echo-fibre
+  set-equality (`_⇔_` of the two result relations per projected value).
+  `SelectiveProjection` carries the column-safe factoring `p b ⇔ q
+  (projection b)`; `select-project-commute` is the commutativity;
+  `no-column-safe-lift` is the counterexample (a projected-away-column
+  predicate has no column-restricted lift, so σ/π do not commute).
+  Honest-bound: `_⇔_` is set-equality (full `_↔_` would need
+  proof-irrelevant predicates); NOT a runtime query planner.
+  `proofs/agda/EchoSelectiveProjection.agda`. `[REAL]`
 * *Aggregation (general, issue #175)* — aggregation-as-fold over a
   `Monoid`, with a `GroupAggregator` and the monoid-homomorphism law
   `aggregation-as-fold` (aggregating a concatenation = combining the
