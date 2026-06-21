@@ -217,6 +217,109 @@ work to `main` and refresh all documentation:
 
 ## Current rung state (2026-06-21)
 
+### Session arc 2026-06-21 (close-out) — gap-closing proofs #249–#258 + cross-repo docs audit + ⚠ ordinal-ledger contradiction flag (read this FIRST)
+
+*This is a session-closing bookkeeping arc.* No new proof rung — it (a) catches
+the ledger up to the proofs that landed without an arc, (b) records a
+cross-repo (echo-types + 007) documentation-completeness audit, and (c) flags
+**one unresolved owner-decision** that a subsequent agent MUST NOT silently
+"fix".
+
+**Gap-closing proofs that landed this session (echo-types `main`), now
+ledgered.** All `--safe --without-K`, zero postulates, wired into `All.agda`,
+pinned in `Smoke.agda`, kernel-guard PASS:
+* `#249` `EchoReversibilityBridge` — `ReversibleCompletion` record +
+  `reversibility-via-totality : Σ B (Echo f) ↔ A`; the proof-side bridge to
+  007's L10 echo-residue reversibility (`reversible as`/`reverse`).
+* `#250` `EchoResidueCell` — Agda mirror of 007's Idris `ResidueCell`
+  (`holding`/`spent`, `takeForReverse`, `consume`, `once-only`); the
+  once-only linear-consumption discipline.
+* `#251` `EchoSearch` — `bounded-search-is-decidable` (the deferred
+  decidability bridge from the 2026-05-20 Wave-3 "where next").
+* `#254` `EchoSearch` product composition — `productEnum`/`echo-search-product`
+  (row-major DivMod pairing; the deferred `ℕ × ℕ ↔ ℕ` slice).
+* `#252` `EchoApprox` — `LipschitzScale` opt-in record +
+  `echo-approx-compose-lipschitz` (the deferred Rung-C composition, via a
+  layered record, never mutating the base `Tolerance`).
+* `#257` `EchoLLEncoding` — `forget-witness-encoding-has-section`: the
+  *universal* LL-encoding gap (every forget-witness encoding has a section),
+  strengthening the existence form per the 2026-05-27 "where next" #2.
+* `#258` `docs/proof-debt.md` — refreshed the stale "variance NOT proven"
+  bullet; resolved by the wired `EchoVariance` (#243).
+Design lesson reused throughout: **layered opt-in records** (`BalancedTolerance`
+/ `LipschitzScale`) extend, never mutate, the base carrier — same discipline as
+`EchoApproxInstance` trivial-on-`⊤` Smoke pins for parameterised modules.
+
+**Trust boundary re-confirmed this session.** Exactly **3 quarantined
+postulates**, all OUTSIDE the wired cone (so `All.agda`/`Smoke.agda` depend on
+none): `EchoImageFactorizationPropPostulated` (c, realised in the `--cubical`
+island) + the two `Ordinal/Buchholz/Fidelity.agda` postulates (d, `denotation`
+/ `ordinal-upper-bound`). See `proof-debt.md` (a)–(d). Echo Core is
+postulate-free and hole-free.
+
+**⚠ OWNER-DECISION FLAG — ordinal: retired-in-ledger but committing-on-main.**
+`main` (this arc's base, `9c56d40`) carries TWO ordinal climb rungs dated
+**2026-06-21**, landed the SAME DAY as the `D-2026-06-21` retirement:
+`f89a3aa` (BH rung 7 — `nextFix` is the LEAST pre-fixed point; reverse-Γ₀
+reduced) and `a096764` (BH rung 8 — Veblen engine monotone in its iterated
+function). This **contradicts** the retirement banner in this file (arc below)
+and in `roadmap.adoc` §Lane 3 ("no new ordinal rung is to be opened here").
+Meanwhile `wiki/Architecture.adoc` ("Track 2 — Ordinal (partial)") and
+`wiki/Roadmap.adoc` ("Ordinal track — partial (the active bottleneck)") still
+frame the climb as ACTIVE — i.e. they are consistent with the *code* but not
+the *decision*. **Do NOT propagate the retirement to the wiki, and do NOT
+delete the ordinal artifact, until the owner reconciles** which is
+authoritative: the retirement decision, or the continued climb. Both readings
+are live; the fix direction depends entirely on that call. (Also landed on
+`main` same day, non-ordinal: `4883ae2` `EchoTransaction` closes #174;
+`bd43ad4` `EchoSelectiveProjection` closes #176; `9c56d40`
+`entropy-blind-parametric`.)
+
+**Cross-repo docs-completeness audit (read-only, 2026-06-21).** Verdicts after
+*verifying* the audit subagents' claims against the actual tree (several were
+over-reported):
+* *echo-types wiki ≈ current.* Technical/proof docs strong; the only genuine
+  staleness is the 2 ordinal wiki files above — GATED on the reconciliation
+  flag, so NOT auto-fixed. Author-driven doc *enhancements* (candidates, file
+  only if you want them tracked — none filed): a proof-architecture reading
+  tour; a comparative-vocabulary page; a dedicated `EchoVariance` wiki page; a
+  Zenodo/packaging guide for Pillar E.
+* *007 docs MORE complete than its audit claimed.* The audit's headline gaps
+  are FALSE on inspection: `spec/TYPE-SYSTEM-SPEC.adoc` already carries a full
+  **§11b Layer 10** (subsections 11b.1–11b.8, incl. `11b.7 Mutable agent state
+  (set)` and `11b.8 Echo-residue cells / runtime replay`), and `set_stmt` is in
+  `spec/grammar.ebnf:157`. 007 has explicit audience-split quickstarts
+  (`QUICKSTART-{USER,DEV,MAINTAINER}.adoc`) and no `wiki/` (uses a `docs/`
+  tree). One genuine minor gap: no `docs/README.md` discovery index — a
+  convention call for the owner, tracked-by-convention in `STATE.a2ml`, NOT
+  filed as an issue (007 runs a deliberate 0-issue policy).
+
+**In-session triage of the three 007 buckets (1/2/3) — NOT doable here,
+correctly deferred.** (1)+(2) typed-wasm codegen: out of local scope and the
+`list_repos`/`add_repo` tooling was unavailable to pull the typed-wasm repo
+in; tracked in `007/.machine_readable/STATE.a2ml` (11-task rollout, `twasm =
+TwasmBackendNotYetImplemented`). (3) Coq `canonical-proof-suite` E1 headline:
+**Coquelicot absent** though Coq 8.18 is installed — blocked. All three are
+already sketched + machine-documented in `STATE.a2ml` / `AI-WORK-007.md`; no
+new in-repo sketch stub needed.
+
+**Cleanup flagged for the owner (cannot self-execute: branch delete = HTTP 403
++ no GitHub-MCP delete endpoint).** Merged/closed echo-types `claude/*`
+branches safe to delete: `echo-approx-lipschitz` (#252), `echo-ll-universal`
+(#257), `echo-residue-cell` (#250), `echo-reversibility-bridge` (#249),
+`echo-search-decidable` (#251), `echo-search-product` (#254),
+`proof-debt-variance-refresh` (#258, all MERGED), and
+`ordinal-fidelity-abandoned` (#256, CLOSED-not-merged — superseded by the
+owner's in-place #255 retirement). `inspiring-meitner-QHuNU` is this session's
+live branch.
+
+**Disposition: both repos are in a clean, verified, push-nothing-else state.**
+The remaining open proof work (real-valued Shannon entropy; the 2 Fidelity
+postulates; an EchoSearch abstract-machine model) is already sketched-in-place
+(module companion-remarks) + machine-documented (`proof-debt.md`,
+`roadmap.adoc`). Nothing is being discarded; nothing else is force-landed from
+this 5-behind session base into an actively-moving `main`.
+
 ### Session arc 2026-06-21 — Ordinal ascent RETIRED FROM ECHO-TYPES (escalates the 2026-06-20 PARK) (read this first)
 
 *Owner decision (D-2026-06-21).* The transfinite ordinal / Buchholz / Veblen
