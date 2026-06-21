@@ -863,6 +863,17 @@ open import EchoTransaction using
   ; rollback-no-recovery
   )
 
+-- EchoSelectiveProjection — relational-algebra σ–π commutativity (issue
+-- #176). Column-safe selection commutes with projection (set-equality of
+-- the result relations); a projected-away-column predicate admits no
+-- column-restricted lift (the non-commuting counterexample).
+open import EchoSelectiveProjection using
+  ( SelectiveProjection
+  ; select-project-commute
+  ; column-safe-example
+  ; no-column-safe-lift
+  )
+
 -- EchoProbabilisticSupport — third audience move per GPT order.
 -- Abstract `Sampling` record (outcome + index + distinguishability
 -- witness) with four parametric headline theorems via `module
