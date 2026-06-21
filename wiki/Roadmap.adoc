@@ -55,21 +55,25 @@ The base accumulation iso, cancellation iso, and pentagon coherence are all
 landed and packaged as `_↔_`. No open headline items; further work is
 consolidation / doc-threading.
 
-=== Ordinal track — partial (the active bottleneck)
+[#ordinal]
+=== Ordinal track — RETIRED from echo-types (owner decision D-2026-06-21)
 
-Target: *Bachmann–Howard* ψ₀(Ω_ω). Open, in priority order:
+The transfinite Buchholz/Veblen ascent *outgrew echo-types* and is *no longer
+echo-types work*. The landed artifact is correct (`--safe --without-K`, zero
+postulates, in the green closure) and *stays compiling*; *no new ordinal rung
+is opened here*. The disposition is *extraction to its own ordinal-notation
+repository* — the physical cross-repo cut is the owner's. Tracking: *#263*.
 
-. *Unbudgeted `_<ᵇʳᶠ_` global WF* — the GLOBAL form over native `_<ᵇ_`
-  is *walled* (all five standard routes; native `_<ᵇ_` is ordinally
-  unsound — see `buchholz-rank-obstruction.adoc`). The SOUND-CARRIER
-  form is *DONE* (2026-06-14, PR #212): `RecursiveSurfaceSound.wf-<ᵇʳᶠ²`
-  is unbudgeted, built over `_<ᵇ²_` + the doubled-ladder `rank2`
-  embedding. Remaining open is only the global-over-native form, whose
-  realistic close-out is a falsifiable "cannot close under
-  `--safe --without-K`" verdict rather than a positive proof.
-. *Full constructor set beyond the admitted core* — the K-limited shared-binder
-  cases `<ᵇ-ψα`, `<ᵇ-+2`.
-. *Push the surface-route WF back* into `Order.agda`'s main `_<ᵇ_` package.
+* *Hand-off record* (frontier + inventory for the extracted repo, NOT a
+  resume-here plan): `docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc`.
+* *Firewall (verified):* `OmegaMarkers` ← `Buchholz.Syntax` ← `EchoOrdinal`
+  STAY (Echo Core's bridge); everything else under `proofs/agda/Ordinal/` MOVES.
+* *Frozen open items* (for the extracted repo only — NOT echo-types TODOs):
+  unbudgeted `_<ᵇʳᶠ_` global WF over native `_<ᵇ_` (the sound-carrier form
+  `RecursiveSurfaceSound.wf-<ᵇʳᶠ²` is already DONE, PR #212); the full
+  K-limited shared-binder constructor set (`<ᵇ-ψα`, `<ᵇ-+2`); and order-type
+  fidelity to ψ₀(Ω_ω) (`D-2026-06-14`, an OPEN *external* problem — retirement
+  neither closes nor over-claims it).
 
 === Establishment track — Pillar E only
 
@@ -92,8 +96,9 @@ Pillar E is complete at the bounded-claim level. Remaining:
 The full debt list, with effort/impact, lives in
 `.machine_readable/agent_instructions/debt.a2ml`. Highlights:
 
-* *Should:* the two ordinal WF items above; image factorisation (epi, mono)
-  earn-back (needs propositional truncation — a substantial design decision).
+* *Should:* image factorisation (epi, mono) earn-back (needs propositional
+  truncation — a substantial design decision). (The ordinal WF items moved out
+  with the ordinal-track retirement — see #263.)
 * *Could:* decoration-zoo wiring (Cost/Search/Indexed/Epistemic as
   ResidueForm/DecorationStructure instances); the Q2.1 truncation
   generalisation; rsr-conformance chores (@sha256 pins, README/roadmap
