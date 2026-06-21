@@ -14,7 +14,7 @@
 
 [metadata]
 project = "echo-types"
-last-updated = "2026-06-12"
+last-updated = "2026-06-21"
 
 # ============================================================
 # Architecture Decision Records
@@ -317,6 +317,38 @@ is separate future work, not unfinished bridge business. Landed across
 PRs #161/#162/#163.
 """
 module = "proofs/agda/EchoEphapaxBridge.agda"
+supersedes = "none"
+
+[[architecture-decisions]]
+id = "adr-012"
+title = "Ordinal/Buchholz track RETIRED from echo-types; disposition = extraction"
+status = "accepted"
+date = "2026-06-21"
+context = """
+The transfinite ordinal / Buchholz / Veblen ascent (target ψ₀(Ω_ω)) outgrew
+echo-types. It was PARKED 2026-06-20 (D-2026-06-20: consumer-less after the
+Groove cleave resolved to a finite, well-foundedness-only zipper), then
+escalated to RETIRED 2026-06-21 (D-2026-06-21). The landed artifact is correct
+(--safe --without-K, zero postulates, in the green closure); Echo Core never
+depended on it beyond the OmegaMarkers <- Buchholz.Syntax <- EchoOrdinal bridge.
+"""
+decision = """
+No new ordinal rung is opened in echo-types. The disposition is extraction to
+its own ordinal-notation repository — the physical cross-repo cut is the
+owner's (tracking issue #263). Firewall: OmegaMarkers <- Buchholz.Syntax <-
+EchoOrdinal STAY; everything else under proofs/agda/Ordinal/ MOVES. Order-type
+fidelity to ψ₀(Ω_ω) (D-2026-06-14) remains an OPEN external problem —
+retirement neither closes nor over-claims it.
+"""
+consequences = """
+The [recent-work] / [current-workstream] blocks in STATE.a2ml are preserved as
+HISTORY of the 2026-06-05 -> 2026-06-12 ordinal-track arc, not live work.
+Hand-off record: docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc.
+Live tracks: composition (landed); establishment (Pillars A–D+F closed, Pillar
+E in-repo complete at the bounded-claim level); variance resolved (#243);
+aggregation generalised (#175).
+"""
+module = "proofs/agda/Ordinal/ (whole subtree except the STAY firewall)"
 supersedes = "none"
 
 # ============================================================

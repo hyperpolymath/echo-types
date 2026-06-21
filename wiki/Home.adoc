@@ -44,6 +44,14 @@ toc::[]
   (constant / no-section) case and the partial (injective / has-section)
   case, with the `IsConstantOpener` boundary and its connection to the
   affine mode.
+
+| <<Tutorial-Consuming-Echo.adoc#,Tutorial: Consuming Echo>>
+| End-user walkthrough: the one definition, making/reading an echo, the
+  totality completion, the no-section boundary, and four real consumers.
+
+| <<Maintainer-Runbook.adoc#,Maintainer Runbook>>
+| Gate-keeping + release runbook: the build cone, the identity gates,
+  rung-consolidation, machine-doc currency, and the release checklist.
 |===
 
 == Who is this for?
@@ -74,7 +82,9 @@ echo-types serves three audiences. Find your lane, then follow the reading order
   3. `scripts/kernel-guard.sh` + `.github/workflows/agda.yml` — the CI cone
   that must stay green. +
   4. `.machine_readable/6a2/STATE.a2ml` (EI-2 record + current state) and
-  `docs/bridges/cross-repo-bridge-status.md` (downstream ledger).
+  `docs/bridges/cross-repo-bridge-status.md` (downstream ledger). +
+  5. <<Maintainer-Runbook.adoc#,Maintainer Runbook>> — the full gate-keeping +
+  release runbook (build cone, gates, rung-consolidation, release checklist).
 
 | *An end user* +
   (wiring Echo into another language)
@@ -85,7 +95,9 @@ echo-types serves three audiences. Find your lane, then follow the reading order
   3. *EchoTypes.jl* — the executable Julia shadow; falsifies-by-counterexample
   on concrete finite data. +
   4. <<Deniability.adoc#,Deniability>> — a worked first-class echo property to
-  see the shape of a consumer-facing result.
+  see the shape of a consumer-facing result. +
+  5. <<Tutorial-Consuming-Echo.adoc#,Tutorial: Consuming Echo>> — the
+  from-the-outside-in walkthrough (definition → totality → no-section → consumers).
 |===
 
 == Canonical sources of truth
