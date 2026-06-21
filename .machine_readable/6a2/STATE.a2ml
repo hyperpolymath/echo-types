@@ -14,11 +14,20 @@
 # S-expr schema reference was:
 #   https://github.com/hyperpolymath/standards/blob/main/state-a2ml/spec/abnf/state.abnf
 #
-# Purpose: machine-readable current project state. The PRIMARY landed
-# workstream is the Buchholz/Ordinal rank-monotonicity + well-foundedness
-# track (Slice 3+4 Route A arc). The EI-2 termination capture (April
-# 2026) is preserved below as history — it prevents EI-2 from being
-# re-investigated, but it is no longer the whole document identity.
+# Purpose: machine-readable current project state.
+#
+# CURRENCY NOTE (2026-06-21): the ordinal / Buchholz track is RETIRED from
+# echo-types (owner decision D-2026-06-21) — it outgrew the project and is
+# being extracted to its own ordinal-notation repo (physical cut = owner;
+# tracking issue #263; hand-off record
+# docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc). The
+# detailed [recent-work] and [current-workstream] blocks below are preserved
+# as accurate HISTORY of the 2026-06-05 → 2026-06-12 arc, NOT live work. The
+# live tracks as of 2026-06-21 are: composition (landed); establishment
+# (Pillars A–D + F closed; Pillar E in-repo complete at the bounded-claim
+# level; order-type fidelity the one OPEN external problem, D-2026-06-14);
+# variance resolved (#243); aggregation generalised (#175). The EI-2
+# termination capture (April 2026) remains preserved below as history.
 
 [metadata]
 project = "echo-types"
@@ -29,9 +38,9 @@ version-target = "0.1.1"             # CHANGELOG still [Unreleased] over
                                      # [0.1.0+integration-pending]; no new
                                      # release tag minted as of 2026-06-12
 license = "MPL-2.0"
-last-updated = "2026-06-12"
+last-updated = "2026-06-21"
 status = "active development"
-phase = "ordinal track (Gate 1 blocked, Gate 3 mechanical-open) + Pillar E write-up + estate governance adopted"
+phase = "ordinal track RETIRED (D-2026-06-21, extraction pending #263); composition landed; establishment Pillars A–D+F closed + Pillar E in-repo complete (order-type fidelity OPEN external, D-2026-06-14); variance resolved (#243); aggregation generalised (#175)"
 
 # ============================================================
 # Recent work (2026-05-30 → 2026-06-12, from git log origin/main)
