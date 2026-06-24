@@ -442,7 +442,7 @@ form — nothing is re-proved.
 (draft PR), plus an oikos doc commit (draft PR):
 
 * **Commit A — `docs(licence): long-form prose → CC-BY-SA-4.0 (9 docs)`**
-  (`879ec9b`). Header-line swap only (`SPDX-License-Identifier: MPL-2.0` →
+  (`879ec9b`). Header-line swap only (`SPDX-License-Identifier: CC-BY-SA-4.0` →
   `…: CC-BY-SA-4.0`) on `FOUNDATION_CONTRACT.md`, `docs/theorem-index.md`,
   `docs/CLAIMS_AUDIT.adoc`, `docs/echo-types/{fibration-package,universal-property}.adoc`,
   `wiki/{Architecture,Overview,Roadmap,Working-Rules}.adoc`. Copyright /
