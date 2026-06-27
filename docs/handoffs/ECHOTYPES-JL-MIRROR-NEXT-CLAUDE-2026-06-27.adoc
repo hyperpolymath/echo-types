@@ -1,0 +1,129 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= ECHOTYPES.JL — next-Claude handoff: the EchoAggregation mirror (2026-06-27)
+:toc: macro
+:toclevels: 2
+
+_A ready-to-paste prompt that orients a fresh Claude session on porting the general
+`EchoAggregation` from this repo (echo-types, Agda) into its executable Julia companion
+`EchoTypes.jl`. Copy the block under <<the-prompt>> verbatim into a new session opened in
+an `EchoTypes.jl` checkout. Everything outside that block is framing for a human reader;
+the block itself is self-contained._
+
+[NOTE]
+====
+This is a *handoff*, not an affirmation or a roadmap. It lives in *echo-types* because
+echo-types is the Agda *source of truth* for the result being mirrored — but the actual
+work happens in the *separate* `EchoTypes.jl` repository, which is **not** part of the
+cloud session that wrote this file. Open a fresh local session in an `EchoTypes.jl` clone
+(e.g. on the desktop app) and paste the prompt there.
+
+The dated, signed receipt of what was true and checked on the Agda side is
+`AFFIRMATION.adoc` (repo root); the musts/intends/wishes detail is
+`docs/status/STATUS-2026-06-19.adoc`. This file just gets the mirror session productive fast.
+====
+
+toc::[]
+
+[#the-prompt]
+== The prompt (paste this verbatim)
+
+[source,markdown]
+----
+You are picking up work in **EchoTypes.jl**, the executable Julia companion to the Agda
+repo **echo-types**. EchoTypes.jl mirrors the finite-domain shadow of echo-types and
+*falsifies-by-counterexample on concrete data* — the Agda always stays the source of truth.
+This is the repo `hyperpolymath/EchoTypes.jl`.
+
+TASK
+Add an `EchoAggregation` module that mirrors the GENERAL monoid/group aggregation that
+landed in echo-types as `proofs/agda/EchoAggregation.agda` (issue #175; also covers the
+no-section sibling #174). The macro-economics reading is just one instance of it.
+
+THE SOURCE OF TRUTH (echo-types, already merged to main)
+`proofs/agda/EchoAggregation.agda` ships, under `--safe --without-K`, zero postulates:
+- `record Monoid ℓ` — `Elem`, `ε`, `_⊕_`, `assoc`, `identity-l`, `identity-r`.
+- `⊕-fold` over a list, and `⊕-fold-++` : the fold is a MONOID HOMOMORPHISM over `_++_`
+  (folding a concatenation = combining the two folds).
+- `record GroupAggregator {ℓ} (K V) (M)` with `agg : V → Elem`, plus `aggregate-values`
+  and the *proved* headline law `aggregation-as-fold` (aggregating a concatenation equals
+  combining the aggregates).
+- Instances: `sumMonoid` / `countMonoid` / `maxMonoid` over ℕ (0/+/⊔) and `minMonoid` over
+  `Maybe ℕ` (`nothing` = ∞), plus a worked `countAggregator`.
+- `no-canonical-disaggregation-of` — generic non-disaggregability: any collision (two
+  distinct values with the same aggregate) ⇒ no section, via `no-section-of-collapsing-map`.
+- `module Example-PairSum` — the macro `ℕ × ℕ → ℕ` ledger: `pairSum (a,b) = a+b` IS literally
+  the `sumMonoid` fold of a two-element list (`pairSum-is-fold`), with `pairSum-non-injective`
+  and `no-canonical-disaggregation` (the Sonnenschein–Mantel–Debreu / representative-agent
+  critique, type-theoretically).
+
+WHAT TO BUILD (Julia, executable, property-tested — keep it a finite-domain falsifier)
+1. A `Monoid` struct (carrier, identity `ε`, op `⊕`) and `⊕fold(m, xs)` over a `Vector`,
+   with a property test that the homomorphism law holds on random finite data:
+   `⊕fold(m, vcat(xs, ys)) == ⊕fold(m, xs) ⊕ ⊕fold(m, ys)`.
+2. Instances: `sumMonoid`, `countMonoid`, `maxMonoid` over `Int` (0 / + / max), and
+   `minMonoid` over `Union{Nothing,Int}` (`nothing` = ∞). Property-test each one's identity
+   and associativity laws on random data.
+3. `aggregate_values(agg, kvs)` plus a test of `aggregation-as-fold`.
+4. `pairsum((a,b)) = a + b`, with tests witnessing: `pairsum_is_fold` (it equals the
+   `sumMonoid` fold of `[a, b]`), non-injectivity (two distinct pairs, same sum), and
+   no-canonical-disaggregation (exhibit that no left inverse / section exists on a concrete
+   collision — a chosen "raise" cannot satisfy `raise ∘ pairsum == id` because two pairs map
+   to the same total).
+
+HONEST SCOPE (preserve — do not overclaim)
+- `aggregation-as-fold` is the fold's monoid-HOMOMORPHISM law, NOT full SQL GROUP-BY
+  operational semantics.
+- `avg` is deliberately ABSENT — it is not a monoid. Express it as `sum / count`.
+- no-canonical-disaggregation refutes a *section* (a LEFT inverse), NOT the existence of
+  *some* representative choice. Do NOT restate it as a failed surjection — the aggregate map
+  is onto; the content is that no disaggregating section exists.
+
+HOUSE RULES (non-negotiable)
+- EchoTypes.jl is a **Julia package** — not Rust, not Agda. Follow the existing `Echo*`
+  module conventions (look at e.g. `EchoTotalCompletion`, `EchoLossTaxonomy`, and how
+  `test/runtests.jl` is structured). Wire the new module into the package and its test suite.
+- Branch: do all work on `claude/ecstatic-wright-OBEvx` (create locally if absent); open a
+  **draft** PR; never push to another branch without explicit permission. Use the GitHub MCP
+  tools for PRs (no `gh` CLI). Note this estate squash-merges and deletes the branch each
+  round, so start from current `main`.
+- Licence: SPDX header on every file. Julia *code* in this estate is `MPL-2.0`; long-form
+  *prose* is `CC-BY-SA-4.0`. Check the headers already in the repo and match them.
+- Commits signed (`git commit -S`) with the session's standard `Co-Authored-By` +
+  `Claude-Session` footers; PR body carries the standard Claude Code footer.
+- Attribution string: write **"Claude Opus 4.8"** in any attestation; never put a bare
+  model-id slug in a committed artefact, commit message, or PR body.
+
+BUILD / TEST
+    julia --project=. -e 'using Pkg; Pkg.instantiate()'
+    julia --project=. -e 'using Pkg; Pkg.test()'
+
+FIRST MOVE
+Read an existing `Echo*` module + `test/runtests.jl` to learn the repo's shape. Add
+`EchoAggregation` + its `@testset`, get `Pkg.test()` green, open a draft PR on
+`claude/ecstatic-wright-OBEvx`, and cross-reference echo-types #175 (and #174).
+
+DO NOT REOPEN (settled on the Agda side)
+- The general/macro split: the macro economics IS the `Example-PairSum` instance of the
+  general `EchoAggregation`; nothing is re-proved.
+- The no-section refutation target (a *left* inverse — exactly what non-disaggregability
+  denies).
+- The citation-level scope of the cross-repo bridge (there is no Agda↔Julia import path; the
+  Julia mirror re-implements the finite shadow and falsifies on data — it does not import the
+  Agda).
+----
+
+== Pointers (for the human handing this over)
+
+* *Where the work happens:* the separate `hyperpolymath/EchoTypes.jl` repo (Julia). This
+  handoff is filed in echo-types only because echo-types holds the spec being mirrored.
+* *The spec to mirror:* `proofs/agda/EchoAggregation.agda` (general monoid/group form, #175);
+  its honest scope is documented in that module's guardrail and in `docs/echo-types/MAP.adoc`.
+* *Issues:* echo-types *#175* (general `EchoAggregation`) and *#174* (the no-section sibling
+  the generic `no-canonical-disaggregation-of` also discharges).
+* *Precedent:* EchoTypes.jl v0.2.0 already mirrors several `Echo*` modules
+  (`EchoTotalCompletion`, `EchoLossTaxonomy`, `EchoEntropy`, …) as finite-domain falsifiers —
+  follow that established pattern for the new `EchoAggregation` shadow.
+* *Cross-repo receipts:* echo-types `AFFIRMATION.adoc` + `docs/status/STATUS-2026-06-19.adoc`
+  are the verified-Agda-side snapshot; the oikos `MacroAggregation` reading
+  (`oikos/docs/alib-aggregate-bridge.adoc`) is the macro instance cited at the design level.
