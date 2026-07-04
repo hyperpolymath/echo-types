@@ -1,5 +1,0 @@
-// SPDX-License-Identifier: CC-BY-SA-4.0
-// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= echo-types
-
-This file is a pointer: the canonical README is link:README.md[README.md]. The former AsciiDoc mirror kept here was deduplicated into README.md on 2026-06-12 (README.md was the richest of the trio README.md / readme.adoc / EXPLAINME.adoc); the full prior content remains available in git history.
