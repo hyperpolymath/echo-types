@@ -1,4 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
+# This workflow is managed by gh actions-lock.
 # (MPL-2.0 is automatic legal fallback until PMPL is formally recognised)
 
 name: Agda
@@ -33,7 +34,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        uses: actions/checkout@v7.0.1
 
       # Fast static gate (no Agda): enforce the EchoKernel funext-free
       # certificate and that every Echo*.agda is classified in
@@ -119,7 +120,7 @@ jobs:
       # source change or absolute-zero bump; restore-keys give a warm
       # partial cache even when it does.
       - name: Cache Agda interface files
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@v6.1.0
         with:
           path: |
             ~/agda-stdlib/**/*.agdai
@@ -165,7 +166,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        uses: actions/checkout@v7.0.1
 
       - name: Install Agda
         run: |
