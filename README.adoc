@@ -1,677 +1,284 @@
-// SPDX-License-Identifier: CC-BY-SA-4.0
-= Echo Types — Glossary
+// SPDX-License-Identifier: MPL-2.0
+= Echo Types — Proof-Relevant Information Residues
 :toc: preamble
 :toc-title: Contents
 :icons: font
 :doctype: article
 
-Cross-reference glossary for link:README.adoc[README.adoc], link:EXPLAINME.adoc[EXPLAINME.adoc], and the `echo-types` wiki. Terms are classified as **standard** (existing mathematical concept used without modification), **rephrased** (standard concept given project-specific vocabulary), or **project-specific** (originating in this project).
+image:https://img.shields.io/badge/OpenSSF-BestPractices-green[link="https://www.bestpractices.dev/projects/XXXX"]
 
-== Core concepts
+Constructive Agda development treating proof-relevant fibers as first-class witnesses for structured information loss — loss that is not total erasure.
 
-[[echo]]
-Echo::
-  Given `f : A → B` and `y : B`, the echo at `y` is the homotopy fiber `Echo f y := Σ (x : A), (f x ≡ y)`.
-  *Classification:* **rephrased**. The mathematical object is the standard preimage/homotopy fiber. "Echo" is project vocabulary emphasising the witness-of-loss reading.
-  *See also:* <<semantic-fibre>>, <<fiber-total>>
+== Overview
 
-[[semantic-fibre]]
-Semantic fibre::
-  The structured set of possible typed origins lying over an observed artefact under a declared non-injective map.
-  *Classification:* **rephrased**. Mathematically identical to the preimage fiber or homotopy fiber. The "semantic" qualifier distinguishes from CS fibers (lightweight threads) and network fibre, and signals the emphasis on retained information structure.
-  *See also:* <<echo>>, <<avec-fibre>>, <<sans-fibre>>
+Most formalisms recognise two cases: reversible maps (no important loss) and irreversible maps (loss occurs and is usually forgotten). Echo types target a third case: **irreversible maps where the fiber over each output retains a proof-relevant constraint on what was lost**.
 
-[[avec-fibre]]
-Avec fibre::
-  An artefact that carries, or is accompanied by, enough semantic fibre to support the inferences or uses being made.
-  *Classification:* **project-specific**.
-  *Antonym:* <<sans-fibre>>
+Given `f : A → B`, the echo at `y : B` is the homotopy fiber:
 
-[[sans-fibre]]
-Sans fibre::
-  An artefact that is only a valid target-side value: no meaningful possible-origin structure is retained or declared.
-  *Classification:* **project-specific**.
-  *Antonym:* <<avec-fibre>>
+    Echo f y := Σ (x : A), (f x ≡ y)
 
-[[echo-type]]
-Echo type::
-  The dependent type `Echo f : B → Type` assigning to each `y : B` the fiber `Σ (x : A), (f x ≡ y)`.
-  *Classification:* **rephrased**. The type family is the standard fiber type family. "Echo type" is project vocabulary.
+This is the standard preimage fiber, not a new construction. What this repo contributes is:
 
-[[warrant]]
-Warrant::
-  The licence or permission that an echo/fibre gives for an inference or operation. A warrant is what the retained fiber structure *enables*; it is not itself a first-class object in the formal kernel.
-  *Classification:* **project-specific**.
-  *Usage note:* The public surface talks about echoes and fibres rather than making warrant the headline term.
+* **Emphasis** — treating fibers as first-class structured-loss witnesses rather than bookkeeping artifacts.
+* **Taxonomy** — a mechanised classification grid of loss kinds × residue shapes.
+* **Separation proofs** — matched-negatives proving Echo is not reducible to Shannon entropy, linear-logic encodings, or resource grades.
+* **Audience surfaces** — provenance, security, probabilistic, and differential views, each with honest bounds.
+* **Honesty infrastructure** — a living retraction ledger recording every retracted claim, its counterexample, and its narrowing.
 
-== Structural objects
+Whether emphasis-plus-taxonomy-plus-separation constitutes a distinct concept with its own identity is the question this repo is designed to falsify, not assert.
 
-[[fiber-total]]
-Fiber total space (Σ B (Echo f))::
-  The dependent sum `Σ (b : B), Echo f b` — the total space of the fiber fibration over `B`.
-  *Classification:* **standard**. Equivalent to the domain `A` by the total-space-of-fibers fact (HoTT Book §4.8).
-  *Previous name in this repo:* `Image f` — a misnomer, since the HoTT image requires propositional truncation of fibers. Renaming to `FiberTotal f` is pending.
+.Executable companion
+hyperpolymath/EchoTypes.jl (v0.2.0, 2026-05-27) runs finite-domain shadows of the Tier-1 + Tier-2 spine on concrete data. It is honestly scoped under R-2026-05-18 — it does NOT replay the retracted surface, nor the funext-qualified F5 clauses (Julia has no funext). The Agda here remains the source of truth.
 
-[[domain-replacement-factorization]]
-Domain-replacement factorization::
-  The factorization `A ≃ Σ B (Echo f) → B` where the left leg is an equivalence and the right leg is a projection. Called "domain replacement" because the middle object is equivalent to `A`.
-  *Classification:* **rephrased**. The factorization is a standard consequence of the total-space equivalence.
+== The factorization
 
-[[echo-total-completion]]
-Echo total completion::
-  The equivalence `A ≃ Σ B (Echo f)` — the Tier-1 headline theorem.
-  *Classification:* **rephrased**. Standard total-space-of-fibers fact (HoTT Book §4.8), restated in Echo vocabulary.
-  *Previous name in this repo:* "slogan-unlock" — rhetorical language that did work the theorem didn't support. Removed.
+Every map `f : A → B` factors through its total fiber space:
 
-[[image-hott]]
-Image (HoTT sense)::
-  `Σ (b : B), ∥ fib f b ∥₀` — the propositional truncation of the fiber, giving the smallest subobject of `B` through which `f` factors as a surjection followed by an embedding.
-  *Classification:* **standard**. Distinct from <<fiber-total>>. The repo does not define or use this construction.
+                  encode f
+        A ────────────────────→ Σ B (Echo f)
+         ╲                            │
+          ╲                           │ proj₁
+         f ╲                          │
+            ╲                         │
+             ╲                        ↓
+               ────────────────────→ B
 
-== Factorization systems
+Left leg (encode f)::
+  EQUIVALENCE — the standard total-space-of-fibers fact (HoTT Book §4.8), restated in Echo vocabulary. Proved in `EchoTotalCompletion.agda`.
 
-[[wfs]]
-Weak factorization system (WFS)::
-  A pair `(L, R)` of classes of maps such that every map factors as `L` followed by `R`, and diagonal lifts exist against `L` from the left and `R` from the right.
-  *Classification:* **standard**.
-  *Current status in this repo:* The (equivalence, projection) factorization forms a WFS. Proved in `EchoOrthogonalFactorizationSystem.agda` (module name overclaims OFS; rename pending).
+Right leg (proj₁)::
+  PROJECTION — forgets the fiber witness.
 
-[[ofs]]
-Orthogonal factorization system (OFS)::
-  A WFS where diagonal fills are *unique* (equivalently: the solution space is contractible).
-  *Classification:* **standard**.
-  *Current status in this repo:* Not yet proved. The gap between WFS and OFS is the most important open technical task for the factorization story.
+Triangle::
+  `f ≡ proj₁ ∘ encode f` — pointwise definitional unconditionally; strict at the function level given funext (F5-1).
 
-[[ofs-witness]]
-ofs-witness::
-  The term witnessing factorization existence + fiber identification in `EchoOrthogonalFactorizationSystem.agda`.
-  *Classification:* **project-specific** (name). The witness is for a *weak* factorization system. Rename to `wfs-witness` is pending.
+This is the **domain-replacement factorization**: the middle object `Σ B (Echo f)` is equivalent to `A`. It is *not* the image factorization in the HoTT sense, which requires propositional truncation of fibers. The distinction matters: an HoTT reader encountering `Σ B (Echo f)` under the name `Image f` will correctly identify it as the domain in disguise. We call it what it is.
 
-== Loss and residue
+== What is standard and what is ours
 
-[[structured-loss]]
-Structured loss::
-  Information loss under a non-injective map where the fiber over each output retains a proof-relevant constraint on what was lost — loss that is not total erasure.
-  *Classification:* **project-specific** (as a defined term). The phenomenon is standard; the emphasis is project-specific.
-
-[[residue]]
-Residue::
-  What lower-level evidence remains after a degradation. In the Echo formalism: a lossy observation of the fiber, coarser than the full echo but still informative.
-  *Classification:* **rephrased**. The word "residue" has prior use in graded modalities and linear logic. Here it specifically means a weakened/observed fiber, not the algebraic or complex-analysis concept.
-
-[[degrade]]
-Degrade::
-  The operation that weakens a full echo to a residue, losing information in a controlled way. Satisfies `degrade-id` (degrading by the identity grade is identity) and `degrade-compose` (degrading by a composite grade is degrading by each in sequence).
-  *Classification:* **project-specific** (as a named operation with these laws). The pattern is standard in graded modality systems.
-
-[[no-section]]
-No-section theorem::
-  A proof that a collapsing (non-injective) map `f` has no section — there is no `s : B → A` with `f ∘ s = id`. This is the formal witness that the loss is irreversible.
-  *Classification:* **standard** (consequence of non-injectivity in dependent type theory).
-
-== Classification
-
-[[loss-taxonomy]]
-Loss taxonomy::
-  The four-axis function-side classification: EQUIV (no loss), INJ (loss only from domain restriction), SURJ (loss only from identification), CONST (total loss).
-  *Classification:* **project-specific** (as a mechanised grid). The classification itself is standard; the mechanisation and Echo-vocabulary framing are project-specific.
-
-[[residue-taxonomy]]
-Residue taxonomy::
-  The four residue forms classifying the shape of information that survives after degradation.
-  *Classification:* **project-specific**.
-
-[[decoration-structure]]
-Decoration structure::
-  A seven-field recipe specifying how a type is decorated with Echo information, including the degrade operation and its laws.
-  *Classification:* **project-specific**.
-
-[[observational-equivalence]]
-Observational equivalence (≡m)::
-  Mode-indexed equality on echoes: two echoes are observationally equivalent at mode `m` if they agree under all observations available at that mode.
-  *Classification:* **project-specific**.
-
-== Separation and identity
-
-[[matched-negative]]
-Matched-negative::
-  A mechanised proof that a candidate construction (Shannon entropy, LL encoding, resource measure) does *not* capture Echo structure — either by showing it fails to distinguish distinct echoes, or that equal observations under the candidate don't imply equal echoes.
-  *Classification:* **project-specific** (methodology). Proving your object isn't its obvious neighbours is how identity claims get earned; most projects don't bother.
-
-[[identity-claim]]
-Identity claim::
-  The claim that echo types are a concept with their own identity, not just a repackaging of standard fiber machinery. Evaluated against three falsifiability criteria: (1) distinct phenomenon, (2) characteristic theorem family, (3) canonical examples.
-  *Classification:* **project-specific**.
-
-[[falsifiability-gate]]
-Falsifiability gate::
-  A specific, mechanisable condition whose failure would refute the identity claim. Recorded in `roadmap-gates.adoc`.
-  *Classification:* **project-specific**.
-
-[[retraction-ledger]]
-Retraction ledger::
-  A living document recording every retracted claim, when it was retracted, the counterexample or obstruction that forced retraction, and the narrowing (what is still true).
-  *Classification:* **project-specific** (as a formalised practice). The concept of recording retractions is not new, but mechanising it as a first-class project artifact with earn-back gates is unusually disciplined.
-
-== Audience surfaces
-
-[[audience-surface]]
-Audience surface::
-  A module packaging Echo vocabulary for a specific domain audience (provenance, security, probabilistic, differential). Each ships: a record type, parametric headline theorems, a worked instance, and matched-negatives (honest-bound disclosure).
-  *Classification:* **project-specific**.
-
-[[provenance-surface]]
-Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
-
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
-
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
-
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
-
-== Foundation contract
-
-[[foundation-contract]]
-Foundation contract::
-  The stable API surface (`Echo.*` namespace + `FOUNDATION_CONTRACT.md`) that downstream languages depend on, isolating them from research sprawl.
-  *Classification:* **project-specific**.
-
-[[anti-collapse-separation]]
-Anti-collapse separation::
-  The mechanised invariant that Echo is not a resource instance: a resource algebra may measure Echo residues, but it does not define Echo. Equal residue measure does not imply equal Echo.
-  *Classification:* **project-specific** (theorem). The content is a specific negative result about Echo's relationship to resource algebras.
-
-== Distinctions from nearby concepts
-
-[cols="1,2", options="header"]
+[cols="1,2,2", options="header"]
 |===
-| Term | Says what?
+| Result | Status | Home in this repo
 
-| Provenance
-| *Where* something came from
+| `A ≃ Σ B (Echo f)`
+| Standard (HoTT Book §4.8)
+| `EchoTotalCompletion.agda`
 
-| Trace / lineage
-| *How* it got here
+| Core fiber laws (echo-intro, map-over, ±id, ±comp, map-square)
+| Standard sigma/fiber lemmas
+| `Echo.agda`
 
-| Residue
-| *What lower-level evidence remains* after degradation
+| No section of a collapsing map
+| Standard consequence of non-injectivity
+| `EchoNoSectionGeneric.agda`
 
-| Semantic fibre
-| *What possible origins still lie over* the observation
+| (equivalence, projection) factorization with diagonal lifts
+| Standard WFS structure
+| `EchoOrthogonalFactorizationSystem.agda`
+
+| Four-axis loss taxonomy + residue forms + decoration structure
+| Echo vocabulary on standard facts
+| Tier 2 modules
+
+| Echo is not distinguished by Shannon entropy
+| **Novel separation proof**
+| `EchoEntropy.agda`
+
+| LL `!A := 1` shallow-encoding gap
+| **Novel separation proof**
+| `EchoLLEncoding.agda`
+
+| Equal measure does not imply equal Echo
+| **Novel separation proof**
+| `EchoSeparation.NotResourceInstance`
+
+| Audience surfaces (provenance, security, probabilistic, differential)
+| **Echo vocabulary applied to domain concerns**
+| `EchoProvenance.agda`, `EchoSecurity.agda`, `EchoProbabilisticSupport.agda`, `EchoDifferential.agda`
 |===
+
+The matched-negatives are where the identity claim does its hardest work: proving your object is not its obvious neighbours is how distinctness gets earned.
+
+== Known technical gaps
+
+[CAUTION]
+====
+**WFS, not yet OFS.** Diagonal lifts exist (F5-2) and factorisation is unique up to iso (F5-3), giving a *weak* factorization system. Unique diagonal fills — the requirement for orthogonality — are not yet proved. The module name `EchoOrthogonalFactorizationSystem` reflects the target, not the current achievement. Renaming to `EchoWeakFactorizationSystem` is pending.
+====
+
+[CAUTION]
+====
+**Module naming debt: `EchoImageFactorization`.** The middle object `Σ B (Echo f)` is equivalent to the domain, not the HoTT image. Renaming to `EchoFiberTotalFactorization` is pending.
+====
+
+[CAUTION]
+====
+**Positive identity is open.** Matched-negatives establish that Echo is *not* its obvious neighbours. The falsifiability criteria also require a *characteristic theorem family* — results that are naturally Echo-shaped, not just generic fiber lemmas. Whether emphasis + vocabulary + separation suffices for identity is the question the repo is designed to answer.
+====
+
+[CAUTION]
+====
+**funext is an explicit module parameter for Tier-3 results.** The unconditional fragment under `--safe --without-K` covers factorization existence and fiber identification only. The strict triangle, diagonal lifting, and factorisation uniqueness require funext supplied by the caller.
+====
+
+== Semantic fibre vocabulary
+
+Echo Types are for cases where the value that crosses a boundary is no longer the original guarantee, but is also not meaningless. They are *not* a replacement for ordinary type checking, ABI proofs, FFI discipline, or any boundary system that can preserve exact guarantees. When exact preservation is available, use it.
+
+[horizontal]
+Semantic fibre:: The structured set of possible typed origins lying over an observed artefact. Mathematically: the preimage fiber `Echo f y`.
+Avec fibre:: The artefact carries enough semantic fibre to support the inferences being made.
+Sans fibre:: The artefact is only a valid target-side value; no possible-origin structure is retained.
+Echo:: The surviving transformed signal or constraint after loss.
+Warrant:: The licence that an echo/fibre gives for an inference or operation.
+
+Distinctions from nearby concepts:
+
+[horizontal]
+Provenance:: says *where* something came from.
+Trace / lineage:: says *how* it got here.
+Residue:: says *what lower-level evidence remains* after degradation.
+Semantic fibre:: says *what possible origins still lie over* the observation.
 
 The useful formulation is not "loss became total erasure" but "loss left a declared fibre, and that fibre may or may not be informative enough for the intended use."
 
-== Pronunciation guide
+== Structural overview
 
 [cols="1,2", options="header"]
 |===
-| Written | Spoken
+| Layer | Contents
 
-| `Echo f y`
-| "echo of f at y" or "f-echo at y"
+| Foundation
+| `Echo f y := Σ (x : A), (f x ≡ y)`
 
-| `Σ B (Echo f)`
-| "sigma B echo f" or "total echo space of f"
+| Tier 1
+| **FiberTotalCompletion**: `A ≃ Σ B (Echo f)` (standard, restated) +
+**WeakFactorizationSystem**: factorization existence + fiber identification (unconditional) +
+**NoSectionGeneric**: no section of a collapsing map
 
-| `≡m`
-| "equivalent at mode m"
+| Tier 2
+| LossTaxonomy · ResidueTaxonomy · DecorationStructure · ≡m
 
-| `avec fibre`
-| "with fibre" (French)
+| Tier 3 (Gate F5, funext-qualified)
+| F5-1 strict triangle · F5-2 diagonal lifting · F5-3 factorisation uniqueness up to iso
 
-| `sans fibre`
-| "without fibre" (French)
-|===  *Classification:* **project-specific**.
+| Audience surfaces
+| Provenance · Security · ProbabilisticSupport · Differential
 
-[[provenance-surface]]
-Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
+| Matched-negatives
+| EchoEntropy · EchoLLEncoding · NotResourceInstance
+|===
 
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
+Single-file entry point: `proofs/agda/EchoCanonicalIdentitySuite.agda`
 
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
+== What Echo Types Are For
 
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
+Echo types are useful when outputs are:
 
-== Foundation contract
+* insufficient to reconstruct their source exactly
+* still sufficient to constrain the source non-trivially
 
-[[foundation-contract]]
-Foundation contract::Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
+Intended proof-use cases: non-injective computation, provenance, structured irreversibility, partial recoverability, classification up to equivalence, forensic inference from residues, refined taxonomies of information loss.
 
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
+=== Who is this for
 
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
+* Authors of formally-verified protocols where role projections, privacy collapses, or lossy aggregations need typed witnesses for what was retained.
+* Authors of refinement-typed and graded type systems looking for a foundational vocabulary for loss-with-residue.
+* Anyone designing audit, provenance, or hash-chain systems who wants a proof-relevant account of what the audit step preserves.
 
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
+== Foundation Contract
 
-== Foundation contract
-
-[[foundation-contract]]
-Foundation contract::Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
-
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
-
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
-
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
-
-== Foundation contract
-
-[[foundation-contract]]
-Foundation contract::Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-[[audience-surface]]
-Audience surface::
-  A module packaging Echo vocabulary for a specific domain audience (provenance, security, probabilistic, differential). Each ships: a record type, parametric headline theorems, a worked instance, and matched-negatives (honest-bound disclosure).
-  *Classification:* **project-specific**.
-
-[[provenance-surface]]
-Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
-
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
-
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
-
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
-
-== Foundation contract
-  *Classification:* **project-specific**.
-
-[[retraction-ledger]]
-Retraction ledger::
-  A living document recording every retracted claim, when it was retracted, the counterexample or obstruction that forced retraction, and the narrowing (what is still true).
-  *Classification:* **project-specific** (as a formalised practice). The concept of recording retractions is not new, but mechanising it as a first-class project artifact with earn-back gates is unusually disciplined.
-
-== Audience surfaces
-[[foundation-contract]]
-Foundation contract::
-  The stable API surface (`Echo.*` namespace + `FOUNDATION_CONTRACT.md`) that downstream languages depend on, isolating them from research sprawl.
-  *Classification:* **project-specific**.
-
-[[anti-collapse-separation]]
-Anti-collapse separation::
-  The mechanised invariant that Echo is not a resource instance: a resource algebra may measure Echo residues, but it does not define Echo. Equal residue measure does not imply equal Echo.
-  *Classification:* **project-specific** (theorem). The content is a specific negative result about Echo's relationship to resource algebras.
-
-== Distinctions from nearby concepts
+If you are wiring Echo into another language, the stable entry point is `FOUNDATION_CONTRACT.md` plus the curated `Echo.*` namespace. It re-exports the proven core behind a small surface so you depend on the contract, not the research sprawl:
 
 [cols="1,2", options="header"]
 |===
-| Term | Says what?
+| Concern | Module
 
-| Provenance
-| *Where* something came from
+| Echo index (thin poset keep ≤ residue ≤ forget)
+| `Echo.Index.ThinPoset`
 
-| Trace / lineage
-| *How* it got here
+| Echo modality (degrade, degrade-id, degrade-compose, no-section)
+| `Echo.Modality.Core` / `.Interface`
 
-| Residue
-| *What lower-level evidence remains* after degradation
+| Anti-collapse separation
+| `Echo.Separation.NotResourceInstance`
 
-| Semantic fibre
-| *What possible origins still lie over* the observation
+| Residue-measure observation seam
+| `Echo.Measure.Interface` / `.Examples`
 |===
 
-The useful formulation is not "loss became total erasure" but "loss left a declared fibre, and that fibre may or may not be informative enough for the intended use."
-
-== Pronunciation guide
-
-[cols="1,2", options="header"]
-|===
-| Written | Spoken
-
-| `Echo f y`
-| "echo of f at y" or "f-echo at y"
-
-| `Σ B (Echo f)`
-| "sigma B echo f" or "total echo space of f"
-
-| `≡m`
-| "equivalent at mode m"
-
-| `avec fibre`
-| "with fibre" (French)
-
-| `sans fibre`
-| "without fibre" (French)
-
-[[provenance-surface]]
-Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
-
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
-
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
-
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
-
-== Foundation contract
-
-[[foundation-contract]]
-Foundation contract::Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-Audience surface::
-  A module packaging Echo vocabulary for a specific domain audience (provenance, security, probabilistic, differential). Each ships: a record type, parametric headline theorems, a worked instance, and matched-negatives (honest-bound disclosure).
-  *Classification:* **project-specific**.
-
-[[provenance-surface]]
-Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
-
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
-
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
-
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
-
-== Foundation contract
-  A mechanised proof that a candidate construction (Shannon entropy, LL encoding, resource measure) does *not* capture Echo structure — either by showing it fails to distinguish distinct echoes, or that equal observations under the candidate don't imply equal echoes.
-  *Classification:* **project-specific** (methodology). Proving your object isn't its obvious neighbours is how identity claims get earned; most projects don't bother.
-
-[[identity-claim]]
-Identity claim::
-  The claim that echo types are a concept with their own identity, not just a repackaging of standard fiber machinery. Evaluated against three falsifiability criteria: (1) distinct phenomenon, (2) characteristic theorem family, (3) canonical examples.
-  *Classification:* **project-specific**.
-
-[[falsifiability-gate]]
-Falsifiability gate::
-  A specific, mechanisable condition whose failure would refute the identity claim. Recorded in `roadmap-gates.adoc`.
-  *Classification:* **project-specific**.
-
-[[retraction-ledger]]
-Retraction ledger::
-  A living document recording every retracted claim, when it was retracted, the counterexample or obstruction that forced retraction, and the narrowing (what is still true).
-  *Classification:* **project-specific** (as a formalised practice). The concept of recording retractions is not new, but mechanising it as a first-class project artifact with earn-back gates is unusually disciplined.
-
-== Audience surfaces
-
-[[audience-surface]]
-
-[[loss-taxonomy]]
-Loss taxonomy::
-  The four-axis function-side classification: EQUIV (no loss), INJ (loss only from domain restriction), SURJ (loss only from identification), CONST (total loss).
-  *Classification:* **project-specific** (as a mechanised grid). The classification itself is standard; the mechanisation and Echo-vocabulary framing are project-specific.
-
-[[residue-taxonomy]]
-Residue taxonomy::
-  The four residue forms classifying the shape of information that survives after degradation.
-  *Classification:* **project-specific**.
-
-[[decoration-structure]]
-Decoration structure::
-  A seven-field recipe specifying how a type is decorated with Echo information, including the degrade operation and its laws.
-  *Classification:* **project-specific**.
-
-[[observational-equivalence]]
-Observational equivalence (≡m)::
-  Mode-indexed equality on echoes: two echoes are observationally equivalent at mode `m` if they agree under all observations available at that mode.
-  *Classification:* **project-specific**.
-
-== Separation and identity
-
-[[matched-negative]]
-Matched-negative::
-
-[[structured-loss]]
-Structured loss::
-  Information loss under a non-injective map where the fiber over each output retains a proof-relevant constraint on what was lost — loss that is not total erasure.
-  *Classification:* **project-specific** (as a defined term). The phenomenon is standard; the emphasis is project-specific.
-
-[[residue]]
-Residue::
-  What lower-level evidence remains after a degradation. In the Echo formalism: a lossy observation of the fiber, coarser than the full echo but still informative.
-  *Classification:* **rephrased**. The word "residue" has prior use in graded modalities and linear logic. Here it specifically means a weakened/observed fiber, not the algebraic or complex-analysis concept.
-
-[[degrade]]
-Degrade::
-  The operation that weakens a full echo to a residue, losing information in a controlled way. Satisfies `degrade-id` (degrading by the identity grade is identity) and `degrade-compose` (degrading by a composite grade is degrading by each in sequence).
-  *Classification:* **project-specific** (as a named operation with these laws). The pattern is standard in graded modality systems.
-
-[[no-section]]
-No-section theorem::
-  A proof that a collapsing (non-injective) map `f` has no section — there is no `s : B → A` with `f ∘ s = id`. This is the formal witness that the loss is irreversible.
-  *Classification:* **standard** (consequence of non-injectivity in dependent type theory).
-
-== Classification
-
-Image (HoTT sense)::
-  `Σ (b : B), ∥ fib f b ∥₀` — the propositional truncation of the fiber, giving the smallest subobject of `B` through which `f` factors as a surjection followed by an embedding.
-  *Classification:* **standard**. Distinct from <<fiber-total>>. The repo does not define or use this construction.
-
-== Factorization systems
-
-[[wfs]]
-Weak factorization system (WFS)::
-  A pair `(L, R)` of classes of maps such that every map factors as `L` followed by `R`, and diagonal lifts exist against `L` from the left and `R` from the right.
-  *Classification:* **standard**.
-  *Current status in this repo:* The (equivalence, projection) factorization forms a WFS. Proved in `EchoOrthogonalFactorizationSystem.agda` (module name overclaims OFS; rename pending).
-
-[[ofs]]
-Orthogonal factorization system (OFS)::
-  A WFS where diagonal fills are *unique* (equivalently: the solution space is contractible).
-  *Classification:* **standard**.
-  *Current status in this repo:* Not yet proved. The gap between WFS and OFS is the most important open technical task for the factorization story.
-
-[[ofs-witness]]
-ofs-witness::
-  The term witnessing factorization existence + fiber identification in `EchoOrthogonalFactorizationSystem.agda`.
-  *Classification:* **project-specific** (name). The witness is for a *weak* factorization system. Rename to `wfs-witness` is pending.
-
-== Loss and residue
-  *Classification:* **rephrased**. Standard total-space-of-fibers fact (HoTT Book §4.8), restated in Echo vocabulary.
-  *Previous name in this repo:* "slogan-unlock" — rhetorical language that did work the theorem didn't support. Removed.
-
-[[image-hott]]| `sans fibre`
-| "without fibre" (French)
-
-[[provenance-surface]]
-Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
-
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
-
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
-
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
-
-== Foundation contract
-
-[[foundation-contract]]
-Foundation contract::Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.| `sans fibre`
-| "without fibre" (French)
-
-[[provenance-surface]]
-Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
-
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
-
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
-
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
-
-== Foundation contract
-
-[[foundation-contract]]
-Foundation contract::Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
-
-[[provenance-surface]]
-Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
-
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
-
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
-
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
-
-== Foundation contract
-| Provenance
-| *Where* something came from
-
-| Trace / lineage
-| *How* it got here
-
-| Residue
-| *What lower-level evidence remains* after degradation
-
-| Semantic fibre
-| *What possible origins still lie over* the observation
-|===
-
-The useful formulation is not "loss became total erasure" but "loss left a declared fibre, and that fibre may or may not be informative enough for the intended use."
-
-== Pronunciation guide
-
-[cols="1,2", options="header"]
-|===
-| Written | Spoken
-
-| `Echo f y`
-| "echo of f at y" or "f-echo at y"
-
-| `Σ B (Echo f)`
-| "sigma B echo f" or "total echo space of f"
-
-| `≡m`
-| "equivalent at mode m"
-
-| `avec fibre`
-| "with fibre" (French)
-
-| `sans fibre`
-| "without fibre" (French)
-
-[[provenance-surface]]
-Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
-  *Classification:* **project-specific**.
-
-[[security-surface]]
-Security surface::
-  The audience surface for region-exit/capability-flow use cases. Generalises `tutorial/region_exit_audit/`. `EchoSecurity.agda`.
-  *Classification:* **project-specific**.
-
-[[probabilistic-surface]]
-Probabilistic-support surface::
-  The audience surface for sampling/draw-id use cases. `EchoProbabilisticSupport.agda`.
-  *Classification:* **project-specific**.
-
-[[differential-surface]]
-Differential surface::
-  The audience surface for sensitivity/perturbation-tracking use cases. `EchoDifferential.agda`.
-  *Classification:* **project-specific**.
-
-== Foundation contract
-
-[[foundation-contract]]
-Foundation contract::Provenance surface::
-  The audience surface for database/lineage use cases. `EchoProvenance.agda`.
+[IMPORTANT]
+====
+Echo is *not* a resource instance. A resource algebra may measure Echo residues, but it does not define Echo: equal residue measure does not imply equal Echo (mechanised: `equal-measure-does-not-imply-equal-echo`, `measure-not-injective`). Do not model Echo as a `Soundness(S)` resource-algebra instance. Resource grade ≠ echo index ≠ residue measure; avoid "echo-grade".
+====
+
+== Identity Claim and Falsifiability
+
+This repo is trying to establish echo types as a concept with its own identity. Since Echo is built from sigma/fiber machinery, identity will not come from syntax. It must come from role and theorems.
+
+The claim is established only if all three are met:
+
+. **Distinct phenomenon** — structured loss under non-injective computation.
+. **Characteristic theorem family** — results that are naturally echo-shaped, not just generic sigma lemmas.
+. **Canonical examples** — cases where echo type is the right explanatory unit.
+
+If these fail, we record that result and stop the identity claim.
+
+Criterion 1 is supported by the matched-negatives (Echo is not entropy, not LL encoding, not a resource grade). Criterion 2 is open: the Tier-1 theorem is standard, and the remaining theorems are standard consequences of non-injectivity restated in Echo vocabulary. Criterion 3 is supported by the audience surfaces and tutorials. The repo is structured to make the gap in criterion 2 visible and falsifiable.
+
+== Build
+
+[source,bash]
+----
+# Core
+agda -i proofs/agda proofs/agda/Echo.agda
+
+# Full suite
+agda -i proofs/agda proofs/agda/All.agda
+----
+
+== Installing as a library
+
+[source,bash]
+----
+git clone https://github.com/hyperpolymath/echo-types.git
+echo "$(pwd)/echo-types/echo-types.agda-lib" >> ~/.agda/libraries
+----
+
+Then in your project's `.agda-lib`:
+
+[source]
+----
+name: my-project
+depend: standard-library echo-types
+include: src
+----
+
+Requires standard-library v2.3 or later registered alongside.
+
+== Documentation
+
+* link:EXPLAINME.adoc[EXPLAINME] — claim-by-claim receipts and known gaps
+* link:docs/echo-types/MAP.adoc[Master Map] — status-tagged content map for all lanes
+* link:docs/echo-types/universal-property.adoc[Universal property narrative] — pullback + F4 + F5 arc
+* link:docs/echo-types/fibration-package.adoc[Fibration package] — map-over + composition + cancellation + pentagon
+* link:docs/echo-types/earn-back-plan.adoc[Earn-back plan] — Pillar F gate ledger (F1–F5, all PASSED)
+* link:docs/retractions.adoc[Retraction ledger] — R-2026-05-18 narrowing + follow-ups
+* link:roadmap.adoc[Roadmap] — single canonical roadmap with lane tracker and gates
+
+== Citation
+
+Cite via the Zenodo DOI in `CITATION.cff`. The Zenodo record is the canonical citation target; GitHub's "Cite this repository" widget resolves directly to it.
+
+== License
+
+SPDX-License-Identifier: MPL-2.0 — see link:LICENSE[LICENSE].
+
+Prose documentation in `docs/`, `README.adoc`, and roadmap files is licensed under CC-BY-4.0; see `LICENSE-docs`.
+The claim is established only if all three are met:
+
+. **Distinct phenomenon** — structured loss under non-injective computation.
+. **Characteristic theorem family** — results that are naturally echo-shaped, not just generic sigma lemmas.
+. **Canonical examples** — cases where echo type is the right explanatory unit.
+
+If these fail, we record that result and stop the identity claim.
