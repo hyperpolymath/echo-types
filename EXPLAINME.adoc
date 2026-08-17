@@ -1,0 +1,271 @@
+// SPDX-License-Identifier: MPL-2.0
+= Echo Types — EXPLAINME
+:toc: preamble
+:toc-title: Contents
+:icons: font
+:doctype: article
+
+This file backs every factual claim in link:README.adoc[README.adoc] with code paths and honest caveats. Read it if you are doing due diligence — checking whether the story matches the code.
+
+== Claim-to-implementation map
+
+=== Core fiber laws are constructive under --safe --without-K with no postulates
+
+[quote, README.adoc]
+____
+Core fiber laws (echo-intro, map-over, map-over-id, map-over-comp, map-square) — constructive, `--safe --without-K`, no postulates.
+____
+
+How this is implemented::
+All five laws are proved in `link:proofs/agda/Echo.agda[]`. The file header confirms `--safe --without-K`. No `postulate` appears in any file under `proofs/agda/`. The laws: `echo-intro` (every `x : A` lives in its own fiber), `map-over` (morphisms act on fibers), `map-over-id` (identity), `map-over-comp` (composition), `map-square` (action along commuting squares).
+
+Caveat::
+These are generic sigma/fiber lemmas that hold for the standard homotopy fiber in any extensional type theory. They are not characteristically Echo-shaped. The identity claim does not rest on them.
+
+=== A ≃ Σ B (Echo f) is the standard total-space-of-fibers equivalence
+
+[quote, README.adoc]
+____
+Left leg (encode f): EQUIVALENCE — the standard total-space-of-fibers fact (HoTT Book §4.8), restated in Echo vocabulary.
+____
+
+How this is implemented::
+`link:proofs/agda/EchoTotalCompletion.agda[]` proves `A ↔ ΣEcho`. The proof is the standard contractibility-of-fibers argument: the dependent sum of all fibers of `f` is equivalent to the domain. `link:proofs/agda/EchoCanonicalIdentitySuite.agda[]` re-exports it as the Tier-1 headline.
+
+Caveat::
+This theorem is not novel. It appears in the HoTT Book (§4.8) and is implicit in the encode-decode method throughout homotopy type theory. The repo's contribution is the *emphasis* — treating this equivalence as the foundation for a structured-loss account rather than a bookkeeping fact. Whether emphasis alone is a contribution is a judgment the reader must make.
+
+=== The middle object is the total fiber space, not the image
+
+[quote, README.adoc]
+____
+This is the domain-replacement factorization: the middle object Σ B (Echo f) is equivalent to A. It is not the image factorization in the HoTT sense, which requires propositional truncation of fibers.
+____
+
+How this is implemented::
+`link:proofs/agda/EchoImageFactorization.agda[]` defines the middle object as `Σ B (Echo f)` and proves the factorization exists. The Tier-1 equivalence in `link:proofs/agda/EchoTotalCompletion.agda[]` confirms the middle object ≃ `A`. The HoTT image would be `Σ (b : B), ∥ fib f b ∥₀`, which is a strictly smaller object when `f` is not surjective. No code in the repo defines or uses the truncated image.
+
+Caveat::
+The module name `EchoImageFactorization` is a misnomer. It suggests the image, but the object is the total fiber space (≃ domain). The README now uses "domain replacement" language. The module should be renamed to `EchoFiberTotalFactorization`. No proof depends on the misnomer — the name is purely a clarity debt.
+
+=== The factorization gives a WFS; OFS is not yet proved
+
+[quote, README.adoc]
+____
+Diagonal lifts exist (F5-2) and factorisation is unique up to iso (F5-3), giving a weak factorization system. Unique diagonal fills — the requirement for orthogonality — are not yet proved.
+____
+
+How this is implemented::
+Three F5 modules:
+
+* `link:proofs/agda/EchoOFSUnivF5.agda[]` — F5-1: strict triangle (`f ≡ proj₁ ∘ encode f` at function level), funext-qualified
+* `link:proofs/agda/EchoOFSUnivF5Diag.agda[]` — F5-2: diagonal *lifting* (existence of fill)
+* `link:proofs/agda/EchoOFSUnivF5Iso.agda[]` — F5-3: factorisation uniqueness up to iso (if `f = p ∘ e = p' ∘ e'` through two (equivalence, projection) factorizations, the middle objects are isomorphic)
+
+Caveat::
+An OFS requires *unique* diagonal fills (contractible solution spaces). F5-3 proves factorisation uniqueness up to iso, which is weaker. For equivalences specifically, any two diagonal fills are homotopic (equivalences have essentially unique inverses), so the gap is likely dischargeable — but the proof has not been written. The module `EchoOrthogonalFactorizationSystem` should be renamed to `EchoWeakFactorizationSystem`, and `ofs-witness` should become `wfs-witness`, until unique fills land.
+
+=== funext is an explicit module parameter for Tier-3 results
+
+[quote, README.adoc]
+____
+The unconditional fragment under --safe --without-K covers factorization existence and fiber identification only. The strict triangle, diagonal lifting, and factorisation uniqueness require funext supplied by the caller.
+____
+
+How this is implemented::
+All F5 modules accept `funext` as an explicit module parameter (visible in the module telescope, never a postulate). Without funext: factorization existence, fiber identification, and pointwise-definitional triangle all hold. With funext: strict function-level triangle (F5-1), diagonal lifting (F5-2), factorisation uniqueness up to iso (F5-3).
+
+Caveat::
+The Julia companion has no funext and therefore shadows only the unconditional fragment. This is honestly scoped under R-2026-05-18. The funext dependency means the most interesting categorical properties have no executable counterpart.
+
+=== Matched-negatives prove Echo is not its obvious neighbours
+
+[quote, README.adoc]
+____
+Novel separation proofs: Echo is not distinguished by Shannon entropy; LL !A := 1 gives a shallow-encoding gap; equal measure does not imply equal Echo.
+____
+
+How this is implemented::
+
+* `link:proofs/agda/EchoEntropy.agda[]` — Shannon entropy cannot distinguish distinct echoes over the same output.
+* `link:proofs/agda/EchoLLEncoding.agda[]` — The linear logic encoding `LL !A := 1` collapses informative distinctions that Echo preserves.
+* `link:proofs/agda/EchoSeparation/NotResourceInstance.agda[]` — `equal-measure-does-not-imply-equal-echo` and `measure-not-injective`: no residue measure determines the echo.
+
+Caveat::
+These establish *negative* identity (Echo ≠ X). The falsifiability criteria also require *positive* identity (characteristic theorems that are naturally Echo-shaped). The positive side is open.
+
+=== No-section family proves structured loss is irreversible
+
+[quote, README.adoc]
+____
+No section of a collapsing map.
+____
+
+How this is implemented::
+`link:proofs/agda/EchoNoSectionGeneric.agda[]` proves `no-section-of-collapsing-map`. Additional witnesses in `link:proofs/agda/EchoCharacteristic.agda[]`: `collapse-non-injective`, `no-section-collapse`, `no-section-visible`, `no-section-collapse-to-residue`, `no-section-weaken`. Distinct-echo witnesses: `echo-true≢echo-false`, `stateA≢stateB`. Retained-constraint witness: `visible-constraint`.
+
+Caveat::
+Genuine and mechanised, but standard consequences of non-injectivity in dependent type theory. Their value is as canonical examples (falsifiability criterion 3), not as novel theorems (criterion 2).
+
+=== Audience surfaces ship with honest bounds
+
+[quote, README.adoc]
+____
+Provenance, security, probabilistic, and differential views, each with honest bounds.
+____
+
+How this is implemented::
+
+* `link:proofs/agda/EchoProvenance.agda[]` — database/lineage audience
+* `link:proofs/agda/EchoSecurity.agda[]` — region-exit/capability-flow audience (generalises `tutorial/region_exit_audit/`)
+* `link:proofs/agda/EchoProbabilisticSupport.agda[]` — sampling/draw-id audience
+* `link:proofs/agda/EchoDifferential.agda[]` — sensitivity/perturbation-tracking audience
+
+Each ships: a record type, parametric headline theorems, a worked instance, and matched-negatives (honest-bound disclosure).
+
+Caveat::
+These are applications of the fiber construction to domain-specific concerns, not theorems establishing Echo as a distinct mathematical object. They support criterion 3 (canonical examples) but not criterion 2 (characteristic theorem family).
+
+=== Retraction ledger is living and complete
+
+[quote, README.adoc]
+____
+A living retraction ledger recording every retracted claim, its counterexample, and its narrowing.
+____
+
+How this is implemented::
+`link:docs/retractions.adoc[]` records R-2026-05-18 and follow-ups F-2026-05-18a, F-2026-05-20a/b, F-2026-05-27a. `link:docs/echo-types/earn-back-plan.adoc[]` records Pillar F gates F1–F5 (all PASSED). Each retraction includes: the original claim, the counterexample or obstruction, the narrowing, and the earn-back status.
+
+Caveat::
+None currently known. This is better practice than is standard in published work.
+
+=== Ordinal / Buchholz track is parallel-independent
+
+[quote, README.adoc]
+____
+Echo Core does NOT depend on the Ordinal / Buchholz track.
+____
+
+How this is implemented::
+All ordinal modules live under `link:proofs/agda/Ordinal/[]`. No `Echo*.agda` file imports from `Ordinal/`. Dependency separation is structural (directory-level).
+
+Caveat::
+The Ordinal track has open problems (unbudgeted `wf-<ᵇʳᶠ` closure, shared-binder internalization). These do not affect Echo Core. See `link:docs/buchholz-plan.adoc[]`.
+
+== Dogfooded Across The Account
+
+[cols="1,2,2", options="header"]
+|===
+| Technology / Pattern | Used here | Also used in
+
+| Echo fiber vocabulary
+| Core definitions + audience surfaces + matched-negatives
+| link:https://github.com/hyperpolymath/tropical-resource-typing[tropical-resource-typing]
+
+| Retraction ledger
+| `docs/retractions.adoc`
+| link:https://github.com/hyperpolymath/maa-framework[maa-framework] (absolute-zero)
+
+| Agda `--safe --without-K`
+| All proofs under `proofs/agda/`
+| link:https://github.com/hyperpolymath/januskey[januskey]
+|===
+
+== Known gaps
+
+[CAUTION]
+====
+**Module naming debt: `EchoImageFactorization`.** Defines `Σ B (Echo f)` and calls it `Image f`, but this object ≃ `A`. The README uses "FiberTotal" / "domain replacement." The module rename to `EchoFiberTotalFactorization` is pending. Proof content is correct; only the name is misleading.
+====
+
+[CAUTION]
+====
+**Module naming debt: `EchoOrthogonalFactorizationSystem`.** Witnesses a *weak* factorization system. Unique diagonal fills (orthogonality) are not proved. Rename to `EchoWeakFactorizationSystem` and `ofs-witness` → `wfs-witness` is pending.
+====
+
+[CAUTION]
+====
+**OFS upgrade is open.** The (equivalence, projection) factorization is a WFS. Upgrading to OFS requires proving unique diagonal fills. For equivalences, any two fills are homotopic, so the gap is likely dischargeable — but the proof has not been written. This is the most important open technical task for the factorization story.
+====
+
+[CAUTION]
+====
+**Positive identity is open.** Matched-negatives give negative identity (Echo ≠ entropy, ≠ LL encoding, ≠ resource grade). Falsifiability criterion 2 requires a characteristic theorem family — results that are naturally Echo-shaped, not generic fiber lemmas. The Tier-1 theorem is standard (HoTT Book §4.8). The best current case for positive identity is emphasis + vocabulary + audience surfaces, which is a viewpoint contribution, not a theorem contribution. Whether this suffices is the question the repo is designed to answer.
+====
+
+[CAUTION]
+====
+**Cross-repo bridge conformance is not machine-checked.** `EchoCNOBridge.agda` imports from `absolute-zero`; `EchoJanusBridge` targets `januskey`. End-to-end conformance is not yet verified. See `link:docs/echo-types/cross-repo-bridge-status.md[]`.
+====
+
+[CAUTION]
+====
+**Buchholz shared-binder internalization is open.** The Ordinal track has well-foundedness for the current constructor core, but historical same-binder shapes are not internalized as constructors of the real order. Does not affect Echo Core. See `link:docs/buchholz-plan.adoc[]`.
+====
+
+== Evidence Index
+
+[cols="2,3", options="header"]
+|===
+| Path | Proves
+
+| `proofs/agda/Echo.agda`
+| Core fiber laws
+
+| `proofs/agda/EchoTotalCompletion.agda`
+| `A ≃ Σ B (Echo f)` — standard total-space equivalence
+
+| `proofs/agda/EchoImageFactorization.agda`
+| Domain-replacement factorization exists (module name is misnomer)
+
+| `proofs/agda/EchoNoSectionGeneric.agda`
+| No section of a collapsing map
+
+| `proofs/agda/EchoOrthogonalFactorizationSystem.agda`
+| WFS witness (module name overclaims OFS)
+
+| `proofs/agda/EchoOFSUnivF5.agda`
+| F5-1: strict triangle (funext-qualified)
+
+| `proofs/agda/EchoOFSUnivF5Diag.agda`
+| F5-2: diagonal lifting (existence)
+
+| `proofs/agda/EchoOFSUnivF5Iso.agda`
+| F5-3: factorisation uniqueness up to iso
+
+| `proofs/agda/EchoEntropy.agda`
+| Shannon entropy does not distinguish echoes
+
+| `proofs/agda/EchoLLEncoding.agda`
+| LL `!A := 1` shallow-encoding gap
+
+| `proofs/agda/EchoLossTaxonomy.agda`
+| Four-axis function-side classification
+
+| `proofs/agda/EchoResidueTaxonomy.agda`
+| ResidueForm record + four instances
+
+| `proofs/agda/EchoDecorationStructure.agda`
+| DecorationStructure recipe + degrade-compose
+
+| `proofs/agda/EchoProvenance.agda`
+| Provenance audience surface
+
+| `proofs/agda/EchoSecurity.agda`
+| Security/capability-flow audience surface
+
+| `proofs/agda/EchoProbabilisticSupport.agda`
+| Probabilistic-support audience surface
+
+| `proofs/agda/EchoDifferential.agda`
+| Differential/sensitivity audience surface
+
+| `proofs/agda/EchoCanonicalIdentitySuite.agda`
+| Curated re-export of all load-bearing results
+
+| `docs/retractions.adoc`
+| Retraction ledger with dates, reasons, narrowings
+
+| `docs/echo-types/earn-back-plan.adoc`
+| Pillar F gate ledger (F1–F5 all PASSED)
+|===
