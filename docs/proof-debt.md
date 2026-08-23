@@ -161,7 +161,7 @@ ledger above.
   `EchoResidue`, `EchoVariance`, `EchoGradedComonad` (coassoc/counit), the
   composition isos, and `DyadicEchoBridge`.
 - **Env gotcha (fix before handoff).** A *dangling* libraries config
-  (nix-store name mismatch + a non-existent `…/absolute-zero` path) causes
+  (guix-store name mismatch + a non-existent `…/absolute-zero` path) causes
   **false "library name not found" failures** under the default config.
   Correct invocation points `--library-file` at the v2.3 stdlib worktree
   (`/home/hyperpolymath/developer/worktrees/agda-stdlib-tweak`). A config

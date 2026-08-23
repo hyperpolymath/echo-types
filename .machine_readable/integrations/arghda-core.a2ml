@@ -16,7 +16,7 @@ note = "The arghda-core/ subtree and its cross-refs were removed from this repo 
 
 [capabilities]
 description = "Language-agnostic proof-workspace manager for Agda: triage folders (inbox -> working -> proven/rejected), linter, DAG view."
-companion-planned = "arghda-panll (Gossamer/ReScript presentation layer)"
+companion-planned = "arghda-panll (Gossamer/AffineScript presentation layer)"
 
 [relationship]
 motivating-pipeline = "docs/buchholz-plan.adoc appendix"

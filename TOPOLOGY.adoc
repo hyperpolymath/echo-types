@@ -33,7 +33,7 @@ echo-types/
 ├── INDEX.adoc                   # legacy file map (parallel to this TOPOLOGY)
 ├── README.md                    # canonical README (readme.adoc + EXPLAINME.adoc are pointers since the 2026-06-12 dedup)
 ├── roadmap.adoc + roadmap-gates.adoc  # legacy lowercase; canonical is ROADMAP.adoc (rename pending)
-├── flake.nix + flake.lock       # (pending)
+├── flake.guix + flake.lock       # (pending)
 ├── guix.scm                     # (pending)
 └── (RSR template files at root)
 ----

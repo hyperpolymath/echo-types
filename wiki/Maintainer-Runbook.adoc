@@ -104,7 +104,7 @@ trivially (no `.agda` touched).
 
 *Parked, do not chase:* `scorecard.yml` / `mirror.yml` `startup_failure` at 0s
 is the billing-wall *pattern B* (a structural reusable-workflow failure, not a
-Guix/Nix policy failure). Hypatia may post pre-existing repo-level findings
+Guix/Guix policy failure). Hypatia may post pre-existing repo-level findings
 (e.g. a stale Scorecard `TokenPermissionsID` code-scanning alert that cannot
 auto-clear while Scorecard is billing-walled); confirm the Hypatia *check
 conclusion* (it is usually `success`) before treating a comment as a gate.

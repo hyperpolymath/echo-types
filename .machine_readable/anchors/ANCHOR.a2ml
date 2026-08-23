@@ -47,7 +47,7 @@ owns = [
 ]
 
 [implementation-policy]
-# echo-types is an Agda proof repo with shell/Nix/Just tooling around it.
+# echo-types is an Agda proof repo with shell/Guix/Just tooling around it.
 allowed = ["Agda", "Scheme", "Nickel", "Shell", "Just", "AsciiDoc", "Markdown"]
 forbidden = ["TypeScript", "Node.js", "npm", "Go", "Python", "Kotlin", "Swift"]
 

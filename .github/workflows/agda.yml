@@ -53,7 +53,7 @@ jobs:
           set -e
           ver="$(agda --version | head -n1)"
           echo "CI Agda: $ver"
-          echo "Local/flake reproducible Agda is pinned via flake.nix;"
+          echo "Local/flake reproducible Agda is pinned via flake.guix;"
           echo "exact-version CI parity (CI-via-flake) is the tracked"
           echo "P1 follow-up — see docs/foundation.adoc / proof-debt"
           echo "ledger item 'CI Agda pin'. This step makes the version"

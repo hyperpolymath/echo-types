@@ -38,7 +38,7 @@ Adjacent projects, in one line each, for session bootstrapping:
   Split as `arghda-core` (language-agnostic engine, separate repo at
   https://github.com/hyperpolymath/arghda-core, extracted from this
   repo 2026-05-30 — see echo-types#159) + `arghda-panll`
-  (Gossamer/ReScript presentation, planned). See docs/buchholz-plan.adoc
+  (Gossamer/AffineScript presentation, planned). See docs/buchholz-plan.adoc
   appendix for the motivating proof pipeline.
 - EchoTypes.jl — executable Julia companion to echo-types, mirroring the
   finite-domain shadow of the Tier-1 + Tier-2 spine + the unconditional
@@ -631,7 +631,7 @@ arc. Docs-only; `sh scripts/kernel-guard.sh` re-confirmed PASS.
 as a benign `actions/checkout` race — the reusable workflow checks out
 `refs/pull/230/merge`, which GitHub deletes the instant the PR merges in the
 same second (`fatal: couldn't find remote ref refs/pull/230/merge`, exit
-128). Governance passed green on every pre-merge run; this is not a Guix/Nix
+128). Governance passed green on every pre-merge run; this is not a Guix/Guix
 policy failure. A Hypatia `github-actions[bot]` scan suggested deleting the
 5 non-`main` branches (`GS007`) — declined: branch deletion is forbidden by
 the session constraints, the finding is repo-level/pre-existing, and it came
