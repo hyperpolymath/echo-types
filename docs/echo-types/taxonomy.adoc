@@ -1,0 +1,454 @@
+== Echo Types — Taxonomy
+
+*Status:* working taxonomy. Axes below are working distinctions, not
+committed definitions. Each axis carries at least one distinguishing
+example that forces the distinction to be real.
+
+____
+*Forward-link (2026-05-27).* The audit’s "`kinds-of-loss ×
+shapes-of-residue`" two-axis grid is now mechanised in
+`+proofs/agda/EchoLossTaxonomy.agda+` (function-side: four-axis
+EQUIV/INJ/SURJ/CONST) and `+proofs/agda/EchoResidueTaxonomy.agda+`
+(residue-side: `+record ResidueForm+` + six instances). The decoration
+recipe is mechanised in `+proofs/agda/EchoDecorationStructure.agda+`
+(`+record DecorationStructure+` + four instances + abstract
+degrade-compose). Together with `+EchoObservationalEquivalence+`
+(mode-indexed `+_≡m_+`), these four modules close the
+classification-grid as Agda artefacts rather than comments. Citers
+should reference the modules; this taxonomy doc remains as the
+longer-form narrative around the axes.
+____
+
+'''''
+
+=== Cross-axis vocabulary — semantic fibre status
+
+The axes below classify shapes of echo. A separate, cross-axis
+distinction is whether a target-side artefact is being used *avec fibre*
+or *sans fibre*.
+
+* *Semantic fibre* is the possible-origin structure over an observed
+artefact under a declared map. In the exact kernel this is `+Echo f y+`;
+in finite-domain tools it may be the computed preimage set; in
+approximate or residue settings it may be a bound, witness, or lower
+carrier with an honest lowering map.
+* *Avec fibre*: the artefact carries, or is accompanied by, enough
+semantic fibre for the advertised inference. The inference must be
+stated at the same strength as the fibre: non-empty, finite, singleton,
+approximate, computationally searchable, proof-relevant, residue-only,
+etc.
+* *Sans fibre*: the artefact is only known as a valid target-side value.
+No source-side origin constraint follows merely from its validity unless
+a map and fibre evidence are supplied.
+
+This status is not a new top-level project name and not a replacement
+for the axes. It is a usage discipline: a local exact echo, a global
+family, an approximate echo, and a residue-lowered echo can each be used
+avec fibre or misused sans fibre.
+
+Related terms split as follows. Provenance identifies origin or source
+history; trace/lineage records the route; residue records evidence left
+after a degradation; semantic fibre records the compatible-origin
+structure over the observation; warrant is the inferential or
+operational licence provided by that structure. Warrant is useful as an
+internal design word, but the public taxonomy should keep "`echo`",
+"`residue`", and "`semantic fibre`" as the primary terms.
+
+Prototype hook:
+`+docs/echo-types/prototypes/warrant_debugger_prototype.jsx+` visualises
+that usage discipline as an empty-fibre contradiction followed by
+cost-disclosed repair moves. It is an explanatory interface sketch, not
+a taxonomy axis and not a proof artefact.
+
+Terminology guardrail: where "`fibre`" could be confused with CS fibers
+or network fibre, prefer *semantic fibre* or *preimage fibre*.
+
+'''''
+
+=== Axis 1 — Extensional vs intensional
+
+_Definition._ The *extensional shadow* of `+Echo(f)+` is the set-valued
+indicator `+Shadow(f) = { y : B | Echo f y is inhabited } = image(f)+`.
+The *intensional core* is the full proof-relevant family
+`+{ Echo f y | y : B }+`, with each fiber inspected up to its witness
+structure `+(x , p : f x ≡ y)+`.
+
+_Distinguishing test._ Two maps with identical extensional shadow may
+have different intensional cores.
+
+_Example forcing the distinction._ - `+f : ℕ → ℕ+`, `+f n = 0+`. -
+`+g : ℕ × ℕ → ℕ+`, `+g (m, n) = 0+`.
+
+Both have `+image = {0}+`, so `+Shadow(f) = Shadow(g)+`. But
+`+Echo f 0 ≃ ℕ+` while `+Echo g 0 ≃ ℕ × ℕ+` — same extensional shadow,
+distinct intensional core.
+
+_Agda anchor._ All modules in this repo that pin proof-relevant
+witnesses live in the intensional layer. `+EchoCharacteristic.collapse+`
+and `+EchoResidue.EchoR+` are examples of "`projecting to the shadow`"
+(forgetting witness structure).
+
+_Stable axis for the rest of the document._
+
+'''''
+
+=== Axis 2 — Exact vs approximate
+
+_Definition._ An echo is *exact* when `+Echo f y+` records the full
+preimage with definitional equality at the witness. It is *approximate*
+when the witness records only up to some coarser relation `+~+` on `+A+`
+(e.g. approximate equality, bounded distance).
+
+_Distinguishing test._ Substitute `+≡+` by some relation
+`+R : A → A → Set+` and ask whether the theory still names the residue
+coherently.
+
+_Example._ - Exact: `+Echo f y = Σ A (λ x → f x ≡ y)+`. - Approximate:
+`+EchoR ε f y = Σ A (λ x → dist (f x) y ≤ ε)+` for a pseudo-metric on
+`+B+`. *Formalised* in `+proofs/agda/EchoApprox.agda+`, parametric over
+a `+Tolerance+` monoid and a `+PseudoMetric+`.
+
+The approximate version appears implicitly in numerical computation,
+sensor-fusion pipelines, and lossy compression.
+
+_Conjecture (now a theorem)._ Approximate echoes compose with an
+additive error under a non-expansive outer leg:
+`+ε₁-echo(f) + ε₂-echo(g) ⊑ (ε₁ + ε₂)-echo(g ∘ f)+`. Realised in
+`+EchoApprox.Approx.echo-approx-compose+`. The non-expansiveness
+hypothesis on the outer leg is the minimal extra assumption — without it
+an amplifying second leg can blow ε₁ up arbitrarily on the way through.
+
+'''''
+
+=== Axis 3 — Local vs global
+
+_Definition._ A *local* echo describes the remainder at one specific
+`+y : B+`. A *global* echo describes a coherent family indexed by every
+`+y+`, with some compatibility between fibers.
+
+_Distinguishing test._ Does the theory care about how `+Echo f y₁+` and
+`+Echo f y₂+` relate when `+y₁+` and `+y₂+` are in the same equivalence
+class or on the same trajectory?
+
+_Example._ - Local: `+Echo f y+` alone, for a specific y. - Global:
+`+Echo f+` as a type-level function `+B → Set+`, with induced structure
+such as `+map-over : MapOver f f' → ∀ y → Echo f y → Echo f' y+`.
+
+_Agda anchor._ `+map-over+` and `+map-over-comp+` in `+Echo.agda+` are
+the glue that promotes local echoes to a global, functorial object.
+
+'''''
+
+=== Axis 4 — Canonical vs presentation-dependent
+
+_Definition._ A *canonical* echo is invariant under re-presentation of
+`+f+` and its codomain. A *presentation-dependent* echo encodes
+information that survives only as long as the current representation
+does.
+
+_Distinguishing test._ Apply an isomorphism on the domain or codomain
+and check whether the echo type is isomorphic.
+
+_Example._ - Canonical: `+Echo f y+` as a dependent sum is canonical
+under isomorphism of `+A+` and `+B+` up to transport. -
+Presentation-dependent: parser-state echoes record the specific token
+sequence that produced a parse tree; a different (but isomorphic)
+tokenisation yields a different echo.
+
+_Open question._ Is there a systematic way to extract the canonical-part
+of a presentation-dependent echo, analogous to quotienting by a symmetry
+group? This could be the "`canonical-form`" operator for echoes.
+
+'''''
+
+=== Axis 5 — Compositional vs non-compositional
+
+_Definition._ *Compositional* echoes satisfy a clean law relating
+`+Echo(g ∘ f)+` to `+Echo(f)+` and `+Echo(g)+` (see `+composition.md+`).
+*Non-compositional* echoes do not — computing `+Echo(g ∘ f)+` requires
+global information beyond the component echoes.
+
+_Distinguishing test._ Factor a map through an intermediate type and ask
+whether the echo factors accordingly.
+
+_Example._ - Compositional (expected): fiber-based echoes, since
+`+Σ A (λ x → (g ∘ f) x ≡ y) ≃ Σ B (λ b → Σ A (λ x → f x ≡ b) × g b ≡ y)+`
+up to a canonical isomorphism. - Non-compositional (conjectural):
+approximate echoes where the tolerance on `+g ∘ f+` is not a function of
+the tolerances on `+f+` and `+g+` alone — e.g. when the two stages
+amplify or cancel.
+
+_Open question._ Is there a class of echo types that is always
+compositional, and another that provably is not? Strongest version: are
+there functors `+EchoC : A → B → Set+` and `+EchoN : A → B → Set+`
+exhibiting exactly the split?
+
+'''''
+
+=== Axis 6 — Static vs dynamic
+
+_Definition._ *Static* echoes are determined at compile time (or proof
+construction) from the shape of `+f+`. *Dynamic* echoes are determined
+only at runtime, from data produced during execution.
+
+_Distinguishing test._ Can `+Echo f y+` be computed from `+f+` and `+y+`
+alone, or does it require observing a specific computation trace?
+
+_Example._ - Static: `+Echo f y+` for a known pure function `+f+` with
+known `+y+`. - Dynamic: the residue of a concurrent scheduler, where the
+same program can produce different echoes depending on interleaving.
+Formalised partially in `+EchoChoreo.agda+` via role-indexed
+observation.
+
+'''''
+
+=== Axis 7 — Proof-relevant vs proof-irrelevant
+
+_Definition._ A *proof-relevant* echo distinguishes different proofs
+that `+f x = y+`, treating them as different inhabitants of the residue.
+A *proof-irrelevant* echo collapses all such proofs to a single witness.
+
+_Distinguishing test._ In an intensional type theory, are there two
+inhabitants of `+Echo f y+` that share the same `+x+` but differ in
+`+p+`?
+
+_Example._ - Proof-relevant (current Agda default under
+`+--without-K+`): different `+p : f x ≡ y+` can in principle be
+distinct. In practice all current examples in this repo use `+refl+`
+exclusively, so the proof-relevant-ness is latent rather than exploited.
+- Proof-irrelevant: truncate `+Echo f y+` by a higher inductive type
+`+∥ Echo f y ∥+`, or work in a setoid where `+p+` is modulo an
+equivalence relation.
+
+_Open question._ Which theorems in the current Agda development actually
+require proof-relevance, and which collapse identically if `+Echo+` is
+propositionally truncated? A spotcheck of
+`+EchoCharacteristic.echo-true≢echo-false+` suggests the distinction is
+load-bearing there.
+
+'''''
+
+=== Axis 8 — Information-theoretic vs computational access
+
+_Definition._ An echo is *information-theoretically accessible* when
+`+Echo f y+` is merely _inhabited_ as a type — i.e. a witness
+`+(x , p : f x ≡ y)+` exists in the metatheory. An echo is
+*computationally accessible* when a concrete procedure produces such a
+witness in bounded resources given `+y+`. Information-theoretic
+accessibility is a property of the type; computational accessibility is
+a property of an accompanying algorithm.
+
+_Distinguishing test._ Does the echo’s usefulness collapse when we
+restrict to witness-extraction algorithms of a fixed complexity class?
+
+_Example forcing the distinction._ - `+H : {0,1}* → {0,1}ⁿ+`, a
+cryptographically strong hash function. `+Echo H y+` is
+information-theoretically inhabited for every `+y ∈   image(H)+`
+(pigeonhole — there exist preimages), but computationally inaccessible
+under the standard security assumption (no polynomial-time algorithm
+produces a witness). See `+examples.md+` §8. - `+square⁻¹ : ℕ → ℕ+`
+under the constructive square-root algorithm. Same information content
+as `+Echo square+`, but the witness is produced in `+O(log n)+`
+operations. Computationally accessible.
+
+_Why it is a separate axis._ Axes 1–7 are properties of the echo type as
+a mathematical object — they do not depend on any notion of cost,
+algorithm, or resource. Axis 8 does. Two echoes can be identical on
+every other axis (same extensional shadow, same intensional core, same
+proof relevance, etc.) and differ only in whether a witness is reachable
+by a feasible algorithm. The security of every modern cryptosystem
+depends on this axis being real.
+
+_Agda anchor._ Two artifacts now live at this axis: -
+`+EchoDecidable.agda+` formalises refinement 3 below
+(decidability-respecting echo) as the first axis-8 artifact under
+`+--safe --without-K+` — the _qualitative_ "`yes / no`" layer. -
+`+EchoFiberCount.agda+` (companion) provides the _quantitative_ layer
+for the finite-domain regime: `+FiberSize-fin f y _≟_ : ℕ+` enumerates
+`+Fin n+` and asks the decidable equality at each index, returning the
+actual preimage count. Headlines: `+FiberSize-fin-id-zero+` (id has
+fiber 1), `+FiberSize-fin-const+` (constant collapse: fiber n), and the
+bidirectional `+FiberSize-fin ≡ 0 ⟺ ¬ Echo+`. This is the count
+`+EchoThermodynamics.fiber-erasure-bound+` runs on, replacing the
+earlier `+FiberSize ≡ 1+` hardcode that rendered all Landauer/Bennett
+claims vacuous.
+
+All four axis-8 refinements now have first artifacts (2026-05-20):
+refinement 1 (`+EchoCost.agda+`, scalar ℕ ledger), refinement 2
+(`+EchoAccess.agda+`, two-point modal lattice), refinement 3
+(`+EchoDecidable.agda+`, decidability layer, earlier), refinement 4
+(`+EchoSearch.agda+`, bounded-enumeration extractor). The four artifacts
+form a small lattice: `+BoundedSearch+` substantiates both the
+`+feasible+` grade of `+EchoA+` and the cost ledger of `+EchoCost+`;
+`+EchoCost+` projects conservatively to `+EchoA+` at `+infeasible+`;
+`+EchoDec+` is the qualitative ceiling. Open operational upgrades:
+replacing `+EchoCost+`’s ℕ field with a resource monad; refining
+`+BoundedSearch+`’s unstructured bound to a step-counter over a specific
+term-language. Asymptotic computational access still cannot be named at
+the type level without further machinery. Adjacent stdlib pieces: -
+`+Data.Nat.Logarithm.⌊log₂⌋+` (now imported by `+EchoThermodynamics+`)
+and arithmetic complexity conventions admit informal-level statements
+like "`this function runs in `+O(n log n)+``", but without a cost monad.
+- `+EchoLinear.agda+` and `+EchoGraded.agda+` restrict what one can _do_
+with witnesses via usage modes and grades. These are proxies for
+resource control, not full computational-access tracking.
+
+_Candidate refinements of `+Echo+` that would capture this axis._
+
+[arabic]
+. *Cost-indexed echo.* Pair `+Echo f y+` with a witness-extraction
+bound: `+CEcho f y cost = Σ (Echo f y) (λ _ → Extractor f y cost)+`.
+Requires a resource monad or a cost-passing semantics. *First artifact
+landed 2026-05-20:* `+proofs/agda/EchoCost.agda+` ships the bookkeeping
+shape — a record `+EchoCost f y+` pairing the witness with a `+ℕ+` cost
+ledger — together with the axis-8 lattice projections
+(`+echo-cost-forget+` to base `+Echo+`, `+echo-cost-to-dec+` to
+refinement 3’s `+EchoDec+`), `+echo-cost-intro-zero+`,
+`+echo-cost-bump+` (loose upper bound), and `+echo-cost-compose+`
+(additive cost along `+g ∘ f+`). The ledger is bookkeeping, not yet
+operationally substantiated; a resource-monad / cost-passing upgrade
+replaces the `+ℕ+` field without changing the lattice shape.
+. *Graded access modality.* `+Echo^c f y+` at grade `+c+` means
+"`witness is reachable with `+≤ c+` steps`". A graded semiring on the
+cost indexes gives composition. `+EchoGraded.agda+` is the natural host;
+the grade would need a complexity-class interpretation (e.g. polynomial
+vs super-polynomial). *First artifact landed 2026-05-20:*
+`+proofs/agda/EchoAccess.agda+` ships the modal layer at a two-point
+lattice `+{feasible, infeasible}+` ordered `+feasible ⊑a infeasible+`.
+Headlines: `+_⊑a_+` order with `+⊑a-prop+` (propositional), `+_⊔a_+`
+join with the categorical left/right/univ lemmas, `+EchoA f y φ+`
+grade-indexed echo,
+`+echo-access-{forget, intro, relax, from-cost, compose}+`. The grade is
+a _label_; the lattice / composition structure carries the modal
+content. Refinement 4 (witness-search abstract machine) would
+operationally substantiate the `+feasible+` grade.
+. *Decidability-respecting echo.* `+EchoDec f y = Dec (Echo f y)+` pairs
+the echo with a _constructive decision procedure_. Weaker than full
+cost-tracking but enough to distinguish "`feasibly decidable`" from
+"`mathematically inhabited`". *Formalised* in
+`+proofs/agda/EchoDecidable.agda+` as the first axis-8 artifact.
+
+_Refinement choice (chosen first formalisation target)._ Refinement 3 is
+the right starting point under `+--safe --without-K+`. It is the only
+one of the four candidates that lives entirely inside the existing type
+theory: no resource monad, no graded semiring with a complexity-class
+interpretation, no abstract machine. `+Dec+` is already in the standard
+library, and the gap between `+Echo f y+` (inhabited) and
+`+Dec (Echo f y)+` (constructively decided) is exactly the gap axis 8
+names. Formalising 3 first lets the heavier refinements (1, 2, 4) be
+added later as orthogonal layers, each projecting to the
+decidability-respecting echo by forgetting cost information. Realised in
+`+EchoDecidable.agda+` with headline lemmas `+echo-dec-intro+`,
+`+echo-dec-pull-yes+`, `+echo-dec-respect-≡+`, `+echo-dec-fin+`,
+`+echo-dec-compose-with-search+`.
+
+[arabic, start=4]
+. *Witness-search abstract machine.* Model the extractor as a term in a
+bounded-step abstract machine and pair it with the echo. Heavier; more
+faithful to actual cryptographic modelling. *First artifact landed
+2026-05-20:* `+proofs/agda/EchoSearch.agda+` ships the lightest
+substantiation — a `+BoundedSearch f y bound+` record packaging an
+explicit candidate function `+Fin bound → A+` plus a hit position
+witnessing that some candidate maps to the target. Headlines:
+`+bounded-search-{to-echo, to-cost, to-dec,    to-access-feasible, introduce-1}+`,
+providing bridges to all three other axis-8 artifacts. The `+bound+`
+measures search-space cardinality, not step count — a richer abstract
+machine with `+Step : Term → Term+` and a step-counter would refine this
+further; the present layer is what lands under `+--safe    --without-K+`
+without committing to a specific term-language.
+
+_Open question._ Is there a single refinement that subsumes all four? My
+guess is no: (1) and (4) track asymptotic cost, (2) and (3) track
+discrete feasibility classes. They probably live on a small lattice of
+access-tracking theories. Concretely, refinement 3 (now formalised)
+gives the bottom of the lattice: every other refinement projects down to
+it by erasing cost data.
+
+_Composition conjecture._ Computational accessibility composes
+*multiplicatively* along `+g ∘ f+` in the canonical case — the cost of
+extracting a `+g ∘ f+` witness is bounded by the product of component
+costs. This is the standard complexity composition and should carry
+over; would need to be stated carefully since the accumulation iso of
+`+composition.md+` §1 introduces an intermediate `+b : B+` whose
+extraction cost is implicit.
+
+_Worked example motivating the axis._ Hash chains in a blockchain. Each
+block’s header is a pre-image echo over the previous block’s hash.
+Information-theoretically, the entire chain’s residue structure is
+determined by any final hash value. Computationally, reconstructing
+earlier blocks from the final hash alone is infeasible — precisely the
+property that makes the chain tamper-evident. The current Echo Types
+framework cannot name this distinction as a type-level fact.
+
+'''''
+
+=== Cross-classification table
+
+A first cut at placing existing modules on the axes. Entries marked
+`+?+` are not yet pinned down. Entries marked `+·+` are not applicable.
+The access column uses `+Info+` for information-theoretic only (typical
+for a theorem-prover module with no resource semantics) and is the
+uniform default at this stage — no module currently models computational
+access as a first-class property.
+
+[width="99%",cols="12%,11%,11%,11%,11%,11%,11%,11%,11%",options="header",]
+|===
+|Module |Ext/Int |Exact/Approx |Local/Global |Canonical |Compositional
+|Static/Dynamic |Proof-rel |Access
+|`+Echo+` |Int |Exact |Global |Canon |Expected |Static |Yes |Info
+
+|`+EchoCharacteristic+` |Both |Exact |Local |Canon |? |Static |Yes |Info
+
+|`+EchoResidue+` |Int→Shadow map |Exact |Global |Canon |? |Static |Yes
+|Info
+
+|`+EchoIndexed+` |Int |Exact |Global |Pres-dep by role |? |Static |Yes
+|Info
+
+|`+EchoChoreo+` |Int |Exact |Local |Pres-dep |? |Dynamic |Yes |Info
+
+|`+EchoEpistemic+` |Int |Exact |Global |Pres-dep by agent |? |? |Yes
+|Info
+
+|`+EchoLinear+` |Int |Exact |Global |Canon |? |Static |Yes |Info (proxy)
+
+|`+EchoGraded+` |Int |Exact |Global |Canon |Expected |Static |Yes |Info
+(proxy)
+
+|`+EchoTropical+` |Int |Approx-ish |Local |Pres-dep |? |Static |Yes
+|Info
+
+|`+EchoOrdinal+` |Int |Exact |Local |Canon |? |Static |Yes |Info
+|===
+
+Multiple `+?+` entries are open research: the compositional behaviour of
+the choreographic, epistemic, and tropical echoes has not been
+systematically checked and may turn out to differ from the clean
+composition law for the base `+Echo+`. The `+Info (proxy)+` marks on
+`+EchoLinear+` and `+EchoGraded+` indicate modules whose usage modes and
+grade semirings _approximate_ cost-tracking at the access axis but do
+not commit to an algorithmic-cost interpretation.
+
+'''''
+
+=== Open: new axes worth considering
+
+Axes listed here have distinguishing examples but have not been
+developed far enough to promote to a numbered axis.
+
+* *Reversibility axis.* Does `+f+` admit a section? Partial section? No
+section? The shape of `+Echo(f)+` changes sharply across these.
+Evidence: `+no-section-collapse+` in `+EchoCharacteristic.agda+`.
+* *Topological axis.* When `+A+` and `+B+` carry topologies, is
+`+Echo(f)+` a sheaf, a cosheaf, neither? Could subsume the local/global
+distinction more sharply.
+* *Category-of-loss axis.* The intended morphisms between echo types may
+themselves form a category with interesting properties (e.g. all
+morphisms factor through a residue). Currently indirect in
+`+EchoCategorical.agda+`; worth an explicit axis once developed.
+
+_History note._ Axis 8 (information-theoretic vs computational access)
+was promoted from this list on the same commit that added it as a
+numbered axis. The cryptographic-hash example in `+examples.md+` §8 was
+the case that forced the promotion: no other axis could distinguish
+"`preimage exists`" from "`preimage is findable`".
