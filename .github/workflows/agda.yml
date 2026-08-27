@@ -1,5 +1,6 @@
 # SPDX-License-Identifier: MPL-2.0
 # This workflow is managed by gh actions-lock.
+# This workflow is managed by gh actions-lock.
 # (MPL-2.0 is automatic legal fallback until PMPL is formally recognised)
 
 name: Agda
