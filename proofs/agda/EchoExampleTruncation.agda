@@ -6,11 +6,10 @@
 -- truncation.
 --
 -- An Agda exhibit demonstrating compiler-analysis-style residue
--- in a numerical setting.  The original example takes `truncate :
--- ℝ → ℤ` with floor; ℝ isn't in stdlib v2.3, so this exhibit
--- adapts to an analogous `halve : ℕ → ℕ` (integer division by 2)
--- which exhibits the same structural shape: each output has
--- exactly two preimages, both equally valid concrete witnesses.
+-- in a numerical setting. This uses `halve : ℕ → ℕ` (integer division
+-- by 2), whose small structural definitions expose both preimages
+-- of each output. It is an analogue of lossy real-valued floor,
+-- which has an interval of preimages rather than just two.
 --
 -- The applications-chapter axis-2 widening discussion
 -- (`applications-compiler-analysis.adoc` § Example 2) uses the
@@ -19,14 +18,17 @@
 -- a follow-on could pair it with `EchoApprox` for the tolerance
 -- accumulation.
 --
--- Headline lemmas (pinned in `Smoke.agda`):
+-- Headline lemmas:
 --
 --   * halve                       -- the truncation function
 --   * halve-non-injective         -- 6 and 7 both halve to 3
 --   * echo-6-halve3               -- 6 is a witness at 3
 --   * echo-7-halve3               -- 7 is a witness at 3
 --   * echo-6≢echo-7              -- the residue is not propositional
---   * echo-halve-classification   -- every echo at n is in {2n, 2n+1}
+--   * echo-halve-even / odd       -- witnesses over every output n
+--   * echo-halve-witnesses-distinct -- their origins remain distinct
+--   * echo-halve-classification-general -- origins at n are {2n, 2n+1}
+--   * echo-halve-classification   -- the original n = 3 specialisation
 
 module EchoExampleTruncation where
 
@@ -50,6 +52,38 @@ halve zero          = zero
 halve (suc zero)    = zero
 halve (suc (suc n)) = suc (halve n)
 
+-- A structural doubling operation keeps the arithmetic specification
+-- aligned with halve's successor-pair recursion.
+double : ℕ → ℕ
+double zero    = zero
+double (suc n) = suc (suc (double n))
+
+halve-double : ∀ n → halve (double n) ≡ n
+halve-double zero    = refl
+halve-double (suc n) = cong suc (halve-double n)
+
+halve-suc-double : ∀ n → halve (suc (double n)) ≡ n
+halve-suc-double zero    = refl
+halve-suc-double (suc n) = cong suc (halve-suc-double n)
+
+-- Both possible origins are inhabited at every output, including zero.
+echo-halve-even : ∀ n → Echo halve n
+echo-halve-even n = double n , halve-double n
+
+echo-halve-odd : ∀ n → Echo halve n
+echo-halve-odd n = suc (double n) , halve-suc-double n
+
+private
+  suc-injective : ∀ {m n} → suc m ≡ suc n → m ≡ n
+  suc-injective refl = refl
+
+  distinct-successor : ∀ n → n ≢ suc n
+  distinct-successor zero ()
+  distinct-successor (suc n) p = distinct-successor n (suc-injective p)
+
+echo-halve-witnesses-distinct : ∀ n → echo-halve-even n ≢ echo-halve-odd n
+echo-halve-witnesses-distinct n p = distinct-successor (double n) (cong proj₁ p)
+
 ----------------------------------------------------------------------
 -- Headline 1 — non-injectivity at every output
 --
@@ -65,10 +99,9 @@ halve-non-injective = 6 , 7 , refl , λ ()
 ----------------------------------------------------------------------
 -- Headline 2 — concrete witnesses at halve = 3
 --
--- `Echo halve 3 = Σ ℕ (λ n → halve n ≡ 3)`.  Both 6 and 7 witness
--- the residue at 3.  These are the two preimages of `truncate(x) =
--- 3` in the original `truncate : ℝ → ℤ` formulation (the integer-
--- pair analogue of the half-unit fractional spread).
+-- `Echo halve 3 = Σ ℕ (λ n → halve n ≡ 3)`. Both 6 and 7 witness
+-- the residue at 3 in this integer-halving model. The corresponding
+-- real-valued floor fibre over 3 is the interval [3, 4).
 ----------------------------------------------------------------------
 
 echo-6-halve3 : Echo halve 3
@@ -95,16 +128,27 @@ echo-6≢echo-7 p with cong proj₁ p
 ----------------------------------------------------------------------
 -- Headline 4 — classification: every preimage of n is 2n or 2n+1
 --
--- The residue at any `n` is exactly the pair `{2n, 2n+1}` (using
--- ℕ-arithmetic that does not name `2n` explicitly).  Proved by
--- structural recursion: `halve m ≡ n` forces `m` to be of one of
--- two shapes by inspection.
+-- Every possible source natural at output n is double n or its
+-- successor. Together with the distinct witnesses above this gives
+-- both directions of the classification of source values. This
+-- statement does not compare the equality-proof components of echoes.
+-- Recursion reduces n and removes a successor pair from the source.
 ----------------------------------------------------------------------
 
+echo-halve-classification-general :
+  ∀ n (e : Echo halve n) →
+  (proj₁ e ≡ double n) ⊎ (proj₁ e ≡ suc (double n))
+echo-halve-classification-general zero (zero , _) = inj₁ refl
+echo-halve-classification-general zero (suc zero , _) = inj₂ refl
+echo-halve-classification-general zero (suc (suc m) , ())
+echo-halve-classification-general (suc n) (zero , ())
+echo-halve-classification-general (suc n) (suc zero , ())
+echo-halve-classification-general (suc n) (suc (suc m) , p)
+  with echo-halve-classification-general n (m , suc-injective p)
+... | inj₁ q = inj₁ (cong (λ k → suc (suc k)) q)
+... | inj₂ q = inj₂ (cong (λ k → suc (suc k)) q)
+
+-- Retain the original public statement for existing callers.
 echo-halve-classification :
   ∀ (e : Echo halve 3) → (proj₁ e ≡ 6) ⊎ (proj₁ e ≡ 7)
-echo-halve-classification (6                , refl) = inj₁ refl
-echo-halve-classification (7                , refl) = inj₂ refl
-echo-halve-classification (zero             , ())
-echo-halve-classification (suc zero         , ())
-echo-halve-classification (suc (suc (suc (suc (suc (suc (suc (suc m))))))) , ())
+echo-halve-classification = echo-halve-classification-general 3
