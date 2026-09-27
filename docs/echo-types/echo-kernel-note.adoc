@@ -96,7 +96,8 @@ kernel** — the boundary is real and lives outside this core.
   `EchoOFSUnivF5`, `EchoOFSUnivF5Diag`, `EchoOFSUnivF5Iso`,
   `EchoCanonicalIdentitySuite`, `EchoDifferential`, `EchoEntropy`,
   `EchoLLEncoding`, `EchoProbabilisticSupport`, `EchoProvenance`,
-  `EchoSecurity`
+  `EchoSecurity`, `EchoHaplotypeCollapsing`,
+  `EchoBitNarrowingNumeric`, `EchoExampleBitNarrowing`
 | Multi-hop. `EchoThermodynamics` reaches the kernel via
   `EchoFiberCount` (no direct `Echo` import);
   `EchoThermodynamicsFinite` is its Bishop-finite transport layer.

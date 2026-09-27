@@ -44,7 +44,7 @@ open import EchoNoSectionGeneric using (no-section-of-collapsing-map)
 open import Data.Bool.Base using (Bool; true; false)
 open import Data.Nat.Base using (ℕ)
 open import Data.Product.Base using (Σ; _,_; _×_; proj₁; proj₂)
-open import Data.List.Base using (List; []; _∷_; _++_; map; length)
+open import Data.List.Base using (List; []; _∷_; _++_)
 open import Data.Unit.Base using (⊤)
 open import Relation.Binary.PropositionalEquality using (_≡_; _≢_; refl; cong)
 open import Relation.Nullary using (¬_)
@@ -174,21 +174,32 @@ data PipelineRole : Set where
 record FiberBundle : Set where
   field
     haplotype      : Haplotype
-    representative : Clone
-    fiber          : List Clone
+    representative : HaploFiber haplotype
+    fiber          : List (HaploFiber haplotype)
 
 example-bundle : FiberBundle
 example-bundle = record
   { haplotype = 0
-  ; representative = clone₁
-  ; fiber = example-clones
+  ; representative = echo-clone₁
+  ; fiber = echo-clone₁ ∷ echo-clone₂ ∷ []
   }
 
 bundle-projection : FiberBundle → Haplotype
 bundle-projection = FiberBundle.haplotype
 
+-- Every element of the sidecar IS an echo at the bundle's haplotype, by
+-- construction: the field type *is* the fiber, so no separate soundness
+-- proof is needed.  This mirrors the Nickel contract in
+-- docs/echo-types/applications/haplotype-collapsing.adoc §"Nickel
+-- contracts enforce" — "every `clones[i].haplotype_id == haplotype_id`".
+--
+-- Previously `fiber : List Clone`, which carried no link to `haplotype`;
+-- the claim below was then unprovable (`refl` is not available for an
+-- arbitrary element).  The invariant belongs in the record, not in a
+-- side-condition at the use site — the same layering lesson as the
+-- `region_shrink` falsity in ephapax.
 bundle-fiber-echoes : (b : FiberBundle) → List (HaploFiber (FiberBundle.haplotype b))
-bundle-fiber-echoes b = map (λ c → c , refl) (FiberBundle.fiber b)
+bundle-fiber-echoes b = FiberBundle.fiber b
 
 ------------------------------------------------------------------------
 -- 7. Separation from O(n²) distance matrix
