@@ -1,0 +1,492 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Application: Haplotype Collapsing as Echo Fiber
+:toc: macro
+:date: 2026-09-27
+
+[.lead]
+Haplotype collapsing (ASV dereplication, clone grouping) is a paradigmatic
+*structured loss*: a non-injective map `collapse : Clone → Haplotype` forgets
+which exact clone produced a haplotype, but the *fiber* over each haplotype
+retains the full lineage of collapsed clones. Echo types model this fiber as
+`Σ B (Echo f)` and give a disciplined way to carry it through Nickel schemas,
+Julia distance matrices, and JEG visualization without polluting the O(n²)
+hot loop.
+
+This doc is the answer to: _"How do we pass the homotopy fiber witness through
+the Nickel schema and Julia exacts matrix so the JEG can display the structural
+lineage of collapsed clones without slowing down the O(n²) distance calculations?"_
+
+toc::[]
+
+== The loss map f : A → B
+
+* `A = Clone` — observed clones / reads. Minimal carrier in Agda:
+  `Clone = ℕ × Bool` = `(sample-id , variant-tag)`. Production carrier:
+  `{ id: String, sequence: String, sample: String, quality: Float, ... }`
+
+* `B = Haplotype` — collapsed representatives (ASVs, dereplicated haplotypes).
+  Minimal: `Haplotype = ℕ`. Production: `{ haplotype_id, representative_sequence, ... }`
+
+* `f = collapse : Clone → Haplotype` — forgetful projection.
+  Example: `collapse = proj₁` (forget variant), or `collapse = proj₂` on
+  `(sample, seqHash)` (forget sample, keep sequence), or in production:
+  `collapse(c) = canonicalize(c.sequence)` where canonicalization is 100% identity
+  or threshold clustering.
+
+This map is *non-injective by design*:
+
+[source,agda]
+----
+clone₁ = (0 , true)   -- same sample, variant A
+clone₂ = (0 , false)  -- same sample, variant B
+collapse clone₁ ≡ collapse clone₂  -- both → 0
+----
+
+The extensional shadow `image(collapse)` is the set of distinct haplotypes
+(size `m`). The intensional core is the per-haplotype preimage structure
+(size `n` total clones, `m ≪ n` typically).
+
+== Echo f y as structural lineage
+
+[source,agda]
+----
+Echo collapse h = Σ (c : Clone) , (collapse c ≡ h)
+HaploFiber h    = Echo collapse h
+----
+
+* Inhabitant `echo-intro collapse c` at `h = collapse c` witnesses that clone `c`
+  collapsed to `h`.
+* Two distinct inhabitants at same `h` are distinct lineage witnesses:
+  `echo-clone₁ ≢ echo-clone₂` (proved via `cong proj₁`).
+* The total space `Σ Haplotype (Echo collapse)` is equivalent to `Clone`
+  (`EchoTotalCompletion.A≃ΣEcho`): no information is lost if you keep the fiber.
+  The projection `proj₁ : Σ B (Echo f) → B` is what the distance matrix uses;
+  it forgets the fiber.
+
+Headline theorems in `EchoHaplotypeCollapsing.agda`:
+
+* `collapse-non-injective` — two distinct clones, same haplotype
+* `echo-clone₁≢echo-clone₂` — Echo distinguishes what `B` alone cannot
+* `no-canonical-clone-recovery` — `¬ Σ (Haplotype → Clone) (∀ c → raise (collapse c) ≡ c)`
+  via `EchoNoSectionGeneric.no-section-of-collapsing-map`. You cannot canonically
+  disaggregate: any choice of representative clone per haplotype is non-canonical.
+  This is the type-theoretic statement of "you must keep the fiber if you care
+  about lineage".
+* `aggregation-as-fold` — counting clones per haplotype is a monoid homomorphism
+  (`sumMonoid` fold over `countAggregator`). `count( vs ++ ws ) = count vs + count ws`.
+  Proved, not merely signed, via `EchoAggregation`.
+
+== Nickel schema: how the fiber witness travels
+
+The key design rule: **the fiber witness never enters the distance matrix**.
+It travels as a *sidecar* validated by Nickel contracts.
+
+=== Anti-pattern (what NOT to do)
+
+[source,json]
+----
+// BAD: fiber embedded in matrix rows → O(n²) becomes O(n²) in clones, not haplotypes
+{
+  "distance_matrix": [
+    { "clone_id": "c1", "distances": [...] },
+    { "clone_id": "c2", "distances": [...] }  // m = n, no win
+  ]
+}
+----
+
+=== Correct pattern (fiber sidecar)
+
+[source,nickel]
+----
+# haplotype-collapsing.k9.ncl (see companion file)
+{
+  collapsed_representatives = [ Haplotype, ... ],  # size m
+  distance_matrix = Array (Array Number),          # m × m, O(m²) compute
+  fibers = {
+    haplotype_id | String => FiberBundle           # Dict: m entries, each O(k) clones
+  },
+  provenance = {
+    total_clones = Number,
+    collapsed_from = Number,
+    collapse_fn = String,  # e.g. "100% identity"
+  }
+}
+
+FiberBundle = {
+  haplotype_id : String,
+  representative : Clone,          # chosen representative (non-canonical)
+  clones : Array CloneWitness,     # full lineage, size = fiber cardinality
+  count : Number,                  # = length clones, redundant but checked
+}
+
+CloneWitness = {
+  clone_id : String,
+  haplotype_id : String,           # must equal parent FiberBundle.haplotype_id
+  sequence : String,
+  sample : String,
+  lineage : { ... },               # e.g. { pcr_replicate, quality, ... }
+  collapsed_at : String,           # timestamp / pipeline version
+}
+----
+
+Nickel contracts enforce:
+
+* `count == length clones`
+* every `clones[i].haplotype_id == haplotype_id`
+* `distance_matrix` is square, size == `length collapsed_representatives`
+* `distance_matrix[i][j]` is symmetric, zero diagonal (optional contract)
+* `fibers` keys == `collapsed_representatives[*].haplotype_id`
+
+The fiber witness is *validated* by Nickel (k9 Yard: Nickel evaluation with contracts)
+but *never* inspected by the distance computation. The JEG consumes `fibers`, not
+`distance_matrix`.
+
+See `haplotype-collapsing.k9.ncl` for the full contract.
+
+=== Passing through metamanifold-webui
+
+In metamanifold-webui, the pipeline is:
+
+  1. Sequencer → raw clones JSON
+  2. Collapser (Julia / Protoctist.jl) → `collapsed_representatives` + `fibers` + `distance_matrix`
+  3. Nickel validation (k9) → typed JSON
+  4. JEG consumes validated JSON, displays collapsed graph + expandable fiber lineage
+
+The Echo witness is the `fibers` field. It is `Σ B (Echo f)` serialized:
+`B` = haplotype_id, `Echo f` = `CloneWitness` + equality witness `haplotype_id == collapse(clone_id)`.
+
+== Julia exacts matrix: keeping O(n²) on B, not A
+
+"Exacts matrix" = pairwise distance matrix (e.g. k2p, Jukes-Cantor, Hamming).
+
+Correct separation:
+
+[source,julia]
+----
+# haplotype-collapsing.jl (see companion file)
+using Distances
+
+struct Clone
+    id::String
+    seq::String
+    sample::String
+end
+
+struct Haplotype
+    id::String
+    rep_seq::String
+end
+
+struct FiberBundle
+    haplotype_id::String
+    representative::Clone
+    clones::Vector{Clone}  # full Echo fiber
+end
+
+struct CollapsedResult
+    representatives::Vector{Haplotype}          # size m
+    fibers::Dict{String, FiberBundle}           # size m, total n clones across values
+    distance_matrix::Matrix{Float64}            # m × m, NOT n × n
+end
+
+function collapse_clones(clones::Vector{Clone}, collapse_fn)::CollapsedResult
+    # 1. Group by collapse_fn: O(n) hash map
+    groups = Dict{String, Vector{Clone}}()
+    for c in clones
+        h_id = collapse_fn(c)  # e.g. c.seq
+        push!(get!(groups, h_id, Clone[]), c)
+    end
+
+    # 2. Representatives: m distinct haplotypes
+    reps = [Haplotype(h_id, first(clones).seq) for (h_id, clones) in groups]
+
+    # 3. Fibers: sidecar, O(n) storage, NOT in hot loop
+    fibers = Dict(
+        h_id => FiberBundle(h_id, first(cs), cs)
+        for (h_id, cs) in groups
+    )
+
+    # 4. Distance matrix: O(m²) distance computations, ONLY on representatives
+    m = length(reps)
+    D = zeros(m, m)
+    for i in 1:m, j in i+1:m
+        d = evaluate(Hamming(), reps[i].rep_seq, reps[j].rep_seq)
+        D[i,j] = D[j,i] = d
+    end
+
+    CollapsedResult(reps, fibers, D)
+end
+----
+
+Cost model:
+
+* `m = |{ collapse c | c ∈ clones }|` distinct haplotypes
+* `n = |clones|` total clones, `m ≪ n` in dereplication
+* Grouping: O(n) hash insertions
+* Fiber sidecar: O(n) storage, O(1) per clone, never iterated in distance loop
+* Distance matrix: O(m²) distance evaluations (the expensive part)
+* Total: O(n + m²) vs naive O(n²) if you computed distances on clones
+
+The Echo fiber witness (`fibers`) adds O(n) space, not O(n²) time.
+This is the same separation as `EchoTotalCompletion`: `A ≃ Σ B (Echo f)` but
+`proj₁ : Σ B (Echo f) → B` forgets the fiber for the O(m²) computation.
+
+If you need clone-level distances later (e.g. for intra-haplotype diversity),
+you can compute them lazily per fiber: for haplotype `h`, distances among
+`fibers[h].clones` is O(k²) where `k = |fiber|`, and sum over fibers is
+`Σ k_i² ≤ n²` but typically much smaller and on-demand.
+
+=== Protoctist.jl extension point
+
+`Protoctist.jl` is the single import point for protist workflows (PR2/SILVA
+rank ladders, taxonomy rollups, annotated Newick, jplace/iTOL export). It
+composes BioJulia libraries rather than duplicating logic.
+
+Proposed extension:
+
+[source,julia]
+----
+module HaplotypeCollapsing
+using Protoctist: PR2Taxonomy, SILVA, AnnotatedNewick
+
+struct CollapsedWithLineage
+    # existing Protoctist types
+    taxonomy::PR2Taxonomy
+    tree::AnnotatedNewick
+    # new Echo fiber
+    fibers::Dict{String, Vector{CloneWitness}}
+    distance_matrix::Matrix{Float64}  # on haplotypes only
+end
+
+function collapse_and_annotate(reads, pr2_db; collapse_fn = seq -> seq)
+    collapsed = collapse_clones(reads, collapse_fn)
+    # existing Protoctist pipeline runs on collapsed.representatives only
+    tax = assign_taxonomy(collapsed.representatives, pr2_db)
+    tree = build_tree(collapsed.distance_matrix)
+    CollapsedWithLineage(tax, tree, collapsed.fibers, collapsed.distance_matrix)
+end
+end
+----
+
+This keeps Protoctist's existing O(m²) tree building unchanged, while adding
+the Echo fiber as a sidecar for JEG display.
+
+=== EchoTypes.jl extension point
+
+`EchoTypes.jl` is the executable finite-domain companion to echo-types Agda.
+It already mirrors `Echo`, `EchoResidue`, `EchoFiberCount`, `EchoTotalCompletion`,
+etc. as falsifiers.
+
+Proposed `EchoHaplotypeCollapsing` module:
+
+[source,julia]
+----
+module EchoHaplotypeCollapsing
+using EchoTypes: Echo, echo_intro, no_section_of_collapsing_map
+
+# Finite-domain shadow of EchoHaplotypeCollapsing.agda
+# Falsifies by counterexample on concrete clone data
+# Mirrors collapse-non-injective, echo-distinguishes, no-canonical-recovery
+
+function test_collapse_non_injective()
+    clone1 = (0, true)
+    clone2 = (0, false)
+    @assert collapse(clone1) == collapse(clone2)
+    @assert clone1 != clone2
+    @assert echo_intro(collapse, clone1) != echo_intro(collapse, clone2)
+end
+
+function test_no_section()
+    # Any raise : Haplotype → Clone fails on at least one clone
+    # Demonstrated by brute force on finite domain
+end
+end
+----
+
+This would be a Tier-1+2 style shadow, honestly scoped (no funext, no real-valued
+entropy).
+
+== JEG / webui: displaying the fiber without slowing the matrix
+
+JEG = Jupyter Event Graph (in metamanifold-webui, the event-graph visualizer
+for collapsed haplotypes). The display requirement:
+
+* Show `m` nodes (haplotypes) with edges weighted by `distance_matrix[i][j]`
+* On expand, show `k_i` clones that collapsed to haplotype `i`, with lineage
+  (sample, PCR replicate, quality, etc.)
+* Never recompute O(n²) distances on expand; expand is O(k_i) rendering
+
+Implementation sketch (React / TypeScript, as in `warrant_debugger_prototype.jsx`):
+
+[source,typescript]
+----
+type CloneWitness = {
+  clone_id: string,
+  haplotype_id: string,
+  sample: string,
+  lineage: { pcr_replicate: number, quality: number }
+}
+
+type FiberBundle = {
+  haplotype_id: string,
+  representative: CloneWitness,
+  clones: CloneWitness[]
+}
+
+type CollapsedResult = {
+  representatives: { haplotype_id: string, seq: string }[],
+  distance_matrix: number[][],  // m × m
+  fibers: Record<string, FiberBundle>  // m entries
+}
+
+function HaplotypeGraph({ data }: { data: CollapsedResult }) {
+  // O(m²) graph: nodes = representatives, edges = distance_matrix
+  const nodes = data.representatives.map(r => ({
+    id: r.haplotype_id,
+    label: `${r.haplotype_id} (${data.fibers[r.haplotype_id].clones.length} clones)`,
+    count: data.fibers[r.haplotype_id].clones.length
+  }))
+
+  // Expand handler: O(k) rendering, no distance recomputation
+  const [expanded, setExpanded] = useState<string | null>(null)
+
+  return (
+    <>
+      <Graph nodes={nodes} edges={data.distance_matrix} onExpand={setExpanded} />
+      {expanded && (
+        <FiberView bundle={data.fibers[expanded]} />
+      )}
+    </>
+  )
+}
+
+function FiberView({ bundle }: { bundle: FiberBundle }) {
+  // Structural lineage of collapsed clones: the Echo fiber displayed
+  return (
+    <div>
+      <h3>Haplotype {bundle.haplotype_id} — {bundle.clones.length} clones</h3>
+      <ul>
+        {bundle.clones.map(c => (
+          <li key={c.clone_id}>
+            {c.clone_id} — sample {c.sample}, replicate {c.lineage.pcr_replicate}
+            — Echo witness: {c.haplotype_id} == collapse({c.clone_id})
+          </li>
+        ))}
+      </ul>
+      <p>No canonical disaggregation: representative {bundle.representative.clone_id} is non-canonical choice.</p>
+    </div>
+  )
+}
+----
+
+The Echo witness is the `fibers` record. It is never used in the `Graph`
+component's O(m²) edge rendering; it is only used in `FiberView` on demand.
+
+This is exactly `EchoResidue`: `collapse-to-residue` forgets the fiber
+(the distance matrix path), while `Echo` retains it (the JEG path). The
+no-section theorem says you cannot recover the fiber from the residue alone,
+so you must carry it as a sidecar.
+
+== Choreographic framing
+
+`EchoChoreo.agda` models `Client ⊑c Server` as a decoration order with
+`client-to-server : RoleEcho Client y → RoleEcho Server y` via `map-square`.
+
+Haplotype collapsing is the same choreography with different roles:
+
+[source]
+----
+Sequencer (Raw Clones) --collapse--> Collapser (Haplotypes + Fibers) --fiber--> Visualizer (JEG)
+----
+
+* `Sequencer` observes `Clone` (full)
+* `Collapser` observes `Haplotype` (collapsed) but *produces* `FiberBundle` (Haplotype + Echo fiber)
+* `Visualizer` observes `FiberBundle` (for lineage display) and `distance_matrix` (for graph)
+
+The decoration order is `keep ≤ residue ≤ forget` from `EchoGraded`:
+
+* `keep` = full `Clone` list (Sequencer)
+* `residue` = `Haplotype + FiberBundle` (Collapser → Visualizer, Echo retained)
+* `forget` = `Haplotype` alone (distance matrix computation, Echo forgotten)
+
+`degrade-compose` says any factoring `keep ≤ residue ≤ forget` agrees with direct
+`keep ≤ forget` on the underlying `Haplotype`. That is, computing distances on
+`Haplotype` after collapsing gives the same result as if you had computed them
+on `Clone` then collapsed — up to the non-canonical choice of representative.
+The join `keep ⊔ residue = keep` (full info) vs `residue ⊔ forget = residue`
+is the lattice that lets you reason about what information survives each step.
+
+In choreographic-types terminology (Hirsch et al.), the collapse is a *role
+projection* `obs Collapser : Global → Haplotype` that forgets `Clone`-local data.
+`RoleEcho Collapser y = Echo (obs Collapser) y` is exactly the set of global
+states (clones) that project to haplotype `y`. The JEG needs that `RoleEcho`
+to display lineage.
+
+This is why the applications section lives under the choreographic-types
+umbrella: haplotype collapsing *is* a choreographic projection, and the fiber
+witness is the choreographic residue that must be carried.
+
+== Agda anchor
+
+`proofs/agda/EchoHaplotypeCollapsing.agda` mechanises:
+
+* `Clone = ℕ × Bool`, `Haplotype = ℕ`, `collapse = proj₁`
+* `HaploFiber h = Echo collapse h`
+* `collapse-non-injective`, `echo-clone₁≢echo-clone₂`
+* `no-canonical-clone-recovery` via `no-section-of-collapsing-map`
+* `aggregation-as-fold` for clone counts (monoid homomorphism)
+* `FiberBundle` record (representative + fiber list) and `bundle-fiber-echoes`
+* `HaploDist = Haplotype → Haplotype → ℕ` — distance domain is `B`, not `Echo f`
+* `NotProved` honest-scope block
+
+All `--safe --without-K`, zero postulates. Wired into `All.agda`, pinned in
+`Smoke.agda`.
+
+== Extensions to Protoctist.jl / EchoTypes.jl
+
+=== Protoctist.jl (optional)
+
+Add `src/HaplotypeCollapsing.jl`:
+
+* `collapse_clones(clones, collapse_fn) -> CollapsedResult` as above
+* Keep existing `PR2Taxonomy`, `SILVATaxonomy`, `AnnotatedNewick` pipelines
+  running on `representatives` only (O(m²))
+* Add `fibers` sidecar to `AnnotatedNewick` export for iTOL/jplace with
+  lineage tooltips
+* Nickel validation via `Protoctist.Nickel.validate(collapsed_result, "haplotype-collapsing.k9.ncl")`
+
+This does NOT duplicate BioJulia logic; it composes it (Protoctist's design
+principle).
+
+=== EchoTypes.jl (optional)
+
+Add `src/EchoHaplotypeCollapsing.jl`:
+
+* Finite-domain shadow of `EchoHaplotypeCollapsing.agda`
+* `test_collapse_non_injective`, `test_echo_distinguishes`, `test_no_section`
+* `test_aggregation_as_fold` (count monoid homomorphism)
+* `test_cost_model` (O(n + m²) vs O(n²) benchmark on synthetic data)
+
+258 existing assertions + new ones. Honestly scoped: no real-valued entropy,
+no runtime JEG rendering, just the discrete fiber-count / no-section / fold laws.
+
+== Status
+
+* Agda: `[REAL]` — `EchoHaplotypeCollapsing.agda` compiles `--safe --without-K`
+* Nickel: `[DRAFT]` — `haplotype-collapsing.k9.ncl` contract, validated via `nickel typecheck`
+* Julia: `[DRAFT]` — `haplotype-collapsing.jl` executable sketch, mirrors Agda finite shadow
+* JEG: `[DRAFT]` — React sketch above, to be integrated into metamanifold-webui
+* Protoctist.jl / EchoTypes.jl: `[OPEN]` — proposed extensions, not yet implemented
+
+== References
+
+* `proofs/agda/EchoHaplotypeCollapsing.agda` — Agda anchor
+* `proofs/agda/EchoAggregation.agda` — general monoid form (`sumMonoid`, `countAggregator`, `aggregation-as-fold`)
+* `proofs/agda/EchoChoreo.agda` — choreographic role order (`_⊑c_`, `applyChoreo`, `applyChoreo-compose`)
+* `proofs/agda/EchoGraded.agda` — `keep ≤ residue ≤ forget` decoration
+* `proofs/agda/EchoNoSectionGeneric.agda` — `no-section-of-collapsing-map`
+* `docs/echo-types/applications/README.adoc` — applications index
+* `docs/echo-types/applications/haplotype-collapsing.k9.ncl` — Nickel schema
+* `docs/echo-types/applications/haplotype-collapsing.jl` — Julia exacts matrix separation
+* `docs/echo-types/applications-compiler-analysis.adoc` — sibling application (compiler analysis)
+* `docs/echo-types/MAP.adoc` — master content map

@@ -1,0 +1,69 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Applications of Echo Types
+:toc: macro
+
+[.lead]
+Echo Types began as a foundation (fiber as structured loss) and grew a taxonomy,
+but the identity claim lives or dies on *applications* where the fiber is the
+right explanatory unit — not just Σ renamed. This directory collects such
+applications, each with:
+
+* an Agda anchor (`proofs/agda/Echo*.agda`) proving the loss shape,
+* a Nickel schema (k9 contract) showing how the fiber witness travels through config,
+* a Julia shadow (EchoTypes.jl / Protoctist.jl style) showing executable intuition,
+* a JEG / webui sketch for how a visualizer consumes the residue.
+
+toc::[]
+
+== Index
+
+* `haplotype-collapsing.adoc` — haplotype / ASV collapsing in protist workflows
+  (metamanifold-webui, Protoctist.jl, JEG). Status: `[REAL]` Agda + `[DRAFT]` Nickel/Julia.
+* `../applications-compiler-analysis.adoc` — compiler analysis as structured loss
+  (parser recovery, abstract interpretation). Status: `[DRAFT]` prose, `[REAL]` Agda refs.
+
+== Why an applications/ directory?
+
+The earlier `applications-compiler-analysis.adoc` lived as a single file because
+compiler analysis was the only worked application. Haplotype collapsing is the
+second, and it is structurally different: it is a *many-to-one* aggregation where
+the fiber is a *lineage* that must survive an O(n²) distance-matrix optimization.
+That pattern recurs (DB GROUP BY, deduplication, clustering), so it deserves a
+directory.
+
+Each application doc follows the template:
+
+[source]
+----
+= Application: <name>
+== The loss map f : A → B
+== Echo f y as structural lineage
+== Nickel schema: how the fiber witness travels
+== Julia exacts matrix: keeping O(n²) on B, not A
+== JEG / webui: displaying the fiber without slowing the matrix
+== Choreographic framing
+== Agda anchor
+== Extensions to Protoctist.jl / EchoTypes.jl
+----
+
+== Choreographic types as application carrier
+
+EchoChoreo (`proofs/agda/EchoChoreo.agda`) models `Client ⊑c Server` as a
+decoration order with a canonical `client-to-server` map-square lift. Every
+application that has a "raw → collapsed → visualized" pipeline is a choreography:
+
+  Sequencer (Raw) --collapse--> Collapser (Collapsed) --fiber--> Visualizer (JEG)
+
+The fiber is the choreographic residue that must be carried across the
+collapse boundary, even though the O(n²) computation lives only on the collapsed
+side. This is the same recipe as `EchoGraded.degrade-compose` / `applyChoreo-compose`:
+different paths through the decoration order agree, and the join is the top.
+
+Applications are thus *instances* of the choreographic decoration structure,
+not a separate theory.
+
+== Status legend (same as MAP.adoc)
+
+* `[REAL]` — mechanised in Agda `--safe --without-K`, on `origin/main`
+* `[DRAFT]` — prose / schema / Julia sketch, not yet mechanised
+* `[OPEN]` — acknowledged gap

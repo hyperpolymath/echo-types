@@ -876,6 +876,29 @@ open import EchoSelectiveProjection using
   ; no-column-safe-lift
   )
 
+-- EchoHaplotypeCollapsing — haplotype / ASV collapsing as Echo fiber
+-- (2026-09-27, applications/haplotype-collapsing). Clone → Haplotype
+-- non-injective collapse, Echo fiber = structural lineage of collapsed
+-- clones, no canonical disaggregation, aggregation-as-fold for counts,
+-- FiberBundle sidecar for Nickel/Julia/JEG pipeline. O(m²) distance
+-- matrix on Haplotypes, O(n) fiber sidecar, not O(n²) on Clones.
+open import EchoHaplotypeCollapsing using
+  ( Clone
+  ; Haplotype
+  ; collapse
+  ; HaploFiber
+  ; echo-clone₁
+  ; echo-clone₂
+  ; echo-clone₁≢echo-clone₂
+  ; collapse-non-injective
+  ; no-canonical-clone-recovery
+  ; FiberBundle
+  ; example-bundle
+  ; HaploDist
+  ; count-clones-per-haplotype
+  ; example-count
+  )
+
 -- EchoProbabilisticSupport — third audience move per GPT order.
 -- Abstract `Sampling` record (outcome + index + distinguishability
 -- witness) with four parametric headline theorems via `module
