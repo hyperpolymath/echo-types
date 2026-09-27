@@ -542,6 +542,55 @@ open. See Canonical identity layer for the cementing artefact.
   `docs/adjacency/information-flow.adoc`,
   `docs/gate-3-canonical.adoc`, `docs/gate-3-transport-handoff.adoc`.
 
+== Applications `[REAL*]`
+
+First-class examples where Echo fiber is the right explanatory unit,
+not just Σ renamed. Each application ships Agda anchor + Nickel schema
+(k9 contract) + Julia shadow + JEG/webui sketch. The directory
+`docs/echo-types/applications/` is the index.
+
+* *Compiler analysis* — `docs/echo-types/applications-compiler-analysis.adoc`
+  (parser error recovery, abstract-interpretation widening). `[DRAFT]` prose,
+  `[REAL]` Agda refs (`EchoApprox`, `EchoDecidable`, `EchoCost`, `EchoSearch`).
+  Sibling to `docs/echo-types/examples.adoc`.
+
+* *Haplotype collapsing* — `docs/echo-types/applications/haplotype-collapsing.adoc`
+  (ASV dereplication / clone grouping in protist workflows, metamanifold-webui,
+  Protoctist.jl, JEG). The loss map `collapse : Clone → Haplotype` is
+  non-injective; `Echo collapse h = Σ Clone (collapse c ≡ h)` is the structural
+  lineage of collapsed clones. Nickel schema carries fiber as sidecar
+  (`fibers: Dict Haplotype => FiberBundle`), Julia exacts matrix stays O(m²) on
+  haplotypes (representatives), not O(n²) on clones, JEG displays lineage by
+  expanding fiber. Choreographic framing: `Sequencer ⊑ Collapser ⊑ Visualizer`
+  is `keep ≤ residue ≤ forget` from `EchoGraded` / `EchoChoreo.applyChoreo`.
+
+  * Agda: `proofs/agda/EchoHaplotypeCollapsing.agda` `[REAL]` — `collapse-non-injective`,
+    `echo-clone₁≢echo-clone₂`, `no-canonical-clone-recovery` via
+    `no-section-of-collapsing-map`, `aggregation-as-fold` via `sumMonoid`,
+    `FiberBundle` sidecar, `HaploDist` separation (domain = B, not Echo f).
+  * Nickel: `docs/echo-types/applications/haplotype-collapsing.k9.ncl` `[DRAFT]` —
+    `CollapsedResult` with `distance_matrix : m×m`, `fibers : Dict`, contracts
+    for count = length clones, keys = representatives, square matrix.
+  * Julia: `docs/echo-types/applications/haplotype-collapsing.jl` `[DRAFT]` —
+    `collapse_clones : Vector Clone → CollapsedResult`, O(n) grouping + O(m²)
+    distances, `fibers` sidecar, `test_no_canonical_recovery`,
+    `test_aggregation_as_fold`, cost-model benchmark.
+  * JEG: React sketch in the adoc — graph on `representatives` + `distance_matrix`,
+    `FiberView` expands `fibers[haplotype_id].clones` O(k) rendering, no recompute.
+  * Extensions: Protoctist.jl `HaplotypeCollapsing` module (proposed, keeps
+    PR2/SILVA + tree building O(m²) unchanged, adds fiber sidecar for iTOL/jplace);
+    EchoTypes.jl `EchoHaplotypeCollapsing` finite-domain shadow (proposed).
+
+  Status: Agda `[REAL]` on `main`, Nickel/Julia/JEG `[DRAFT]`, Protoctist/EchoTypes.jl `[OPEN]`.
+
+* Applications index: `docs/echo-types/applications/README.adoc`.
+
+Choreographic note: every application with a "raw → collapsed → visualized"
+pipeline is an instance of `EchoChoreo._⊑c_` / `EchoGraded._≤g_` decoration
+order. The fiber is the choreographic residue that must travel across the
+collapse boundary, even though O(n²) computation lives only on the collapsed side.
+See `applications/haplotype-collapsing.adoc` §"Choreographic framing".
+
 == Tutorial / pedagogy `[REAL]`
 
 Three worked walkthroughs landing 2026-05-26/27 under `tutorial/`,

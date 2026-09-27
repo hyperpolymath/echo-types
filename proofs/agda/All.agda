@@ -98,6 +98,7 @@ open import EchoDifferential     -- Perturbation tracking (audience-facing sensi
 open import EchoDeniability
 open import EchoTransaction      -- Transaction rollback safety (issue #174; Security instance)
 open import EchoSelectiveProjection  -- σ–π commutativity (issue #176; relational-algebra carrier)
+open import EchoHaplotypeCollapsing  -- Haplotype collapsing as Echo fiber (applications/haplotype-collapsing)
 
 -- Narrative deliverable: curated index of "why Echo deserves a name".
 open import EchoCanonicalIdentitySuite

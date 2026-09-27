@@ -1,0 +1,87 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Choreographic Types as Application Carrier
+:toc: macro
+
+[.lead]
+`EchoChoreo.agda` (`Client ⊑c Server`) is not just an example — it is the
+*carrier* for applications that have a raw → collapsed → visualized pipeline.
+This note explains how to use the choreographic decoration order as the
+scaffolding for any application, with haplotype collapsing as the worked instance.
+
+toc::[]
+
+== The pattern
+
+Every lossy pipeline has three roles:
+
+  1. Producer (Raw) — sees `A` (Clone, TokenStream, Concrete Value)
+  2. Collapser — maps `A → B` (Haplotype, SyntaxTree, AbstractValue) + produces fiber `Echo f`
+  3. Consumer (Visualizer, Debugger, Auditor) — needs `B` for O(n²) work + `Echo f` for lineage
+
+In `EchoChoreo`, this is `Role = Client | Server` with `obs : Role → Global → Bool`.
+In general, it is `PipelineRole = Sequencer | Collapser | Visualizer`.
+
+The decoration order `keep ≤ residue ≤ forget` from `EchoGraded` is the same as
+`Client ⊑c Server` from `EchoChoreo`:
+
+* `keep` = full `A` (Producer)
+* `residue` = `B + Echo f` (Collapser → Consumer, Echo retained)
+* `forget` = `B` alone (distance matrix, type-checker, etc., Echo forgotten)
+
+`degrade-compose` / `applyChoreo-compose` says: any factoring `keep ≤ residue ≤ forget`
+agrees with direct `keep ≤ forget` on `B`. That is, computing on `B` after
+collapsing gives same result as computing on `A` then collapsing — up to
+non-canonical choice of representative (no-section theorem).
+
+== Why this matters for applications
+
+* Compiler analysis (`applications-compiler-analysis.adoc`):
+  `Source ⊑ IR ⊑ Abstract` with `Echo α` as widening residue
+* Haplotype collapsing (`haplotype-collapsing.adoc`):
+  `Sequencer ⊑ Collapser ⊑ Visualizer` with `HaploFiber` as lineage residue
+* DB GROUP BY (`EchoAggregation`):
+  `Row ⊑ Summary` with `Echo groupBy` as provenance residue
+* Region exit (`RegionExitAudit`):
+  `LiveAt r ⊑ ExitedAt r` with `Echo collapse_r` as linear residue
+
+All are instances of the same `DecorationStructure` record from
+`EchoDecorationStructure.agda`:
+
+[source,agda]
+----
+record DecorationStructure G where
+  _≤_ : G → G → Set
+  ≤-refl, ≤-trans, ≤-prop, join, ≤-join-left/right/univ
+----
+
+`graded-decoration-structure`, `linear-decoration-structure`,
+`access-decoration-structure`, `choreo-decoration-structure` are four
+witnesses. Haplotype collapsing proposes a fifth:
+
+[source,agda]
+----
+haplo-decoration-structure : DecorationStructure PipelineRole
+-- keep = Sequencer, residue = Collapser, forget = Visualizer
+-- join = Visualizer (top, has least info)
+----
+
+== How to add a new application
+
+1. Identify `f : A → B` (the loss map)
+2. Prove `f` non-injective → `Echo f y` distinguishes witnesses
+3. Prove `no-section` → disaggregation non-canonical, must keep fiber
+4. Identify `Monoid` for aggregation (if counting / summing)
+5. Define `FiberBundle` sidecar: `B + List A` with Nickel contract
+6. Show O(n²) separation: distance / analysis on `B` only, fiber O(n) sidecar
+7. Choreographic framing: map roles to `keep ≤ residue ≤ forget`
+8. Agda anchor + Nickel schema + Julia shadow + JEG sketch
+
+See `haplotype-collapsing.adoc` for the full template.
+
+== Status
+
+* `EchoChoreo` `[REAL]` — role order + `applyChoreo-compose`
+* `EchoGraded` `[REAL]` — `keep ≤ residue ≤ forget`
+* `EchoDecorationStructure` `[REAL]` — abstract recipe
+* Applications using it: `haplotype-collapsing` `[REAL]` Agda + `[DRAFT]` rest,
+  `compiler-analysis` `[DRAFT]`
