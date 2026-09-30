@@ -150,13 +150,21 @@ clone-count-aggregation G = aggregation-as-fold G
 example-clones : List Clone
 example-clones = clone₁ ∷ clone₂ ∷ []
 
-example-count : aggregate-values countAggregator example-clones ≡ 2
+example-count : aggregate-values {K = Haplotype} countAggregator example-clones ≡ 2
 example-count = refl
 
 -- Count clones per haplotype via monoid fold (the GROUP BY analogue).
 -- In production: groupByKey + fold, not filter + length, to stay O(n).
+--
+-- `K` (the group-by key) is genuinely phantom in `GroupAggregator`/
+-- `countAggregator` (issue #175's `agg` field never mentions it), so
+-- nothing here forces Agda's unifier to solve it from `V`, `M`, or the
+-- result type — it must be supplied. `Haplotype` is the key this
+-- aggregator is used to group by in this module (the GROUP BY
+-- analogue the comment above names), so it is also the semantically
+-- honest choice, not just a syntactically convenient one.
 count-clones-per-haplotype : List Clone → ℕ
-count-clones-per-haplotype cs = aggregate-values countAggregator cs
+count-clones-per-haplotype cs = aggregate-values {K = Haplotype} countAggregator cs
 
 ------------------------------------------------------------------------
 -- 5. Choreographic framing: Raw ⊑ Collapsed
