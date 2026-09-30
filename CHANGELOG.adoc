@@ -7,6 +7,15 @@ Changelog].
 
 === [Unreleased]
 
+==== Removed (2026-09-30)
+
+* _The 27 `+.a2ml+` machine-readable records._ Removed by owner ruling:
+the `+.a2ml+` surface is retired in favour of `+.deed+` records. The last tree holding them is commit `+39a7a99+`;
+`+.github/CONTRIBUTING.md+` now points at that frozen copy for the EI-2
+fence and the naming traps. The three K9 methodology-guard checks that
+targeted the deleted files were removed with them. Conversion to
+`+.deed+` is tracked in rsr-template-repo#209.
+
 ==== Added (2026-06-13)
 
 * _`+EchoDeniability.agda+` — residue deniability as a first-class echo
