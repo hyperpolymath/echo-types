@@ -25,8 +25,8 @@ All commits require Developer Certificate of Origin sign-off:
 
 2.  CHANGELOG.md updated under `[Unreleased]`.
 
-3.  `.machine_readable/6a2/STATE.a2ml` `last-updated` bumped if the
-    change is significant.
+3.  Significant changes are recorded in CHANGELOG.md (item 2). The
+    former `STATE.a2ml` record was retired on 2026-09-30.
 
 4.  **Banned constructs.** No new `believe_me`, `assert_total`,
     `postulate`, `sorry`, `Admitted`, `unsafeCoerce`, or `Obj.magic`
@@ -46,14 +46,15 @@ All commits require Developer Certificate of Origin sign-off:
     outside `proofs/agda/` (no current non-guarded path exists; widening
     the guardrail’s allowlist requires a separate design discussion).
 
-6.  **EI-2 discipline.** Per `.machine_readable/6a2/STATE.a2ml` `§`
-    `ei-2`, the integration-recipe distinctness investigation is
+6.  **EI-2 discipline.** Per the retired state record, frozen at
+    <https://github.com/hyperpolymath/echo-types/blob/39a7a99cbe19a918843e9624010510b5fc3b8366/.machine_readable/6a2/STATE.a2ml>
+    (section `ei-2`), the integration-recipe distinctness investigation is
     *terminated negatively* and is not to be reopened. If a change
-    touches that territory, read `STATE.a2ml` `§` `ei-2` first; the
+    touches that territory, read that record's `ei-2` section first; the
     `forbidden-rebrandings` list is a hard fence.
 
 7.  **Naming traps.** `ModeGraded` (with trailing `d`) is canonical;
-    never `ModeGrade`. See `STATE.a2ml` `§` `naming-traps`.
+    never `ModeGrade`. See the frozen record's `naming-traps` section.
 
 ## Reviews
 

@@ -1,20 +1,13 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-# A2ML 6a2 Directory
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+= `.machine_readable/6a2/` — retired
 
-This directory contains the 6 core A2ML machine-readable metadata files for this repository.
+The `.a2ml` records that lived here were removed on 2026-09-30 by owner
+ruling: the `.a2ml` surface is retired in favour of `.deed` records.
 
-## Files
+The last tree that held them is frozen at
+https://github.com/hyperpolymath/echo-types/tree/39a7a99cbe19a918843e9624010510b5fc3b8366/.machine_readable/6a2[commit 39a7a99].
+Read that copy for history; do not recreate `.a2ml` files here.
 
-- `AGENTIC.a2ml` - AI agent operational gating, safety controls
-- `ECOSYSTEM.a2ml` - Project ecosystem position, relationships, explicit boundaries
-- `META.a2ml` - Architecture decisions (ADRs), development practices, design rationale
-- `NEUROSYM.a2ml` - Symbolic semantics, composition algebra
-- `PLAYBOOK.a2ml` - Executable plans, operational runbooks
-- `STATE.a2ml` - Project state, phase, milestones, session history
-
-## Standards Compliance
-
-These files follow the A2ML Format Family specification from:
-https://github.com/hyperpolymath/standards/tree/main/a2ml
-
+Conversion to `.deed` is tracked estate-wide in
+https://github.com/hyperpolymath/rsr-template-repo/issues/209[rsr-template-repo#209].

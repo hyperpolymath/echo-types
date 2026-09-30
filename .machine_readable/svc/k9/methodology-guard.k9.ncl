@@ -2,9 +2,10 @@
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
 # K9 Validator: Methodology Guard (echo-types)
-# Checks that agent work respects the methodology constraints declared in
-# agent_instructions/methodology.a2ml and the proof discipline in
-# .machine_readable/6a2/META.a2ml § current-practices.
+# Checks that agent work respects the echo-types proof discipline
+# (--safe --without-K, zero postulates, All.agda coverage, kernel cone).
+# The former .a2ml record checks (STATE, ANCHOR, coverage) were removed
+# with the .a2ml records themselves; see the retirement PR.
 #
 # Usage: k9 validate methodology-guard
 
@@ -68,27 +69,6 @@ let methodology_guard = {
       severity = "error",
       check_type = "external-script",
       script = "scripts/kernel-guard.sh",
-    },
-
-    state_not_template = {
-      description = "STATE.a2ml must not contain template placeholders",
-      severity = "warning",
-      file = ".machine_readable/6a2/STATE.a2ml",
-      reject_patterns = ["{{PLACEHOLDER}}", "{{PROJECT}}", "rsr-template-repo"],
-    },
-
-    anchor_clade_not_fabricated = {
-      description = "ANCHOR.a2ml clade/uuid must stay TODO until a gv-clade-index assignment exists",
-      severity = "warning",
-      file = ".machine_readable/anchors/ANCHOR.a2ml",
-      require_pattern = "TODO: assign via gv-clade-index registry",
-    },
-
-    coverage_updated = {
-      description = "coverage.a2ml should be updated within 30 days",
-      severity = "info",
-      file = ".machine_readable/agent_instructions/coverage.a2ml",
-      staleness_days = 30,
     },
   },
 }

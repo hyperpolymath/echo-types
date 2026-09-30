@@ -1,38 +1,13 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
-= Bot directives — echo-types
-:toc:
+= `.machine_readable/bot_directives/` — retired
 
-== Purpose
+The `.a2ml` records that lived here were removed on 2026-09-30 by owner
+ruling: the `.a2ml` surface is retired in favour of `.deed` records.
 
-Per-repo directives for automated agents operating on
-`hyperpolymath/echo-types`. These files tell bots what this repository
-considers safe, what is forbidden, and which findings are already
-adjudicated, so automated runs do not relitigate settled decisions or
-touch protected surfaces.
+The last tree that held them is frozen at
+https://github.com/hyperpolymath/echo-types/tree/39a7a99cbe19a918843e9624010510b5fc3b8366/.machine_readable/bot_directives[commit 39a7a99].
+Read that copy for history; do not recreate `.a2ml` files here.
 
-== Precedence
-
-. Maintainer instruction (see `MAINTAINERS.adoc`) — always wins.
-. These directives.
-. Bot built-in defaults.
-
-== Scope
-
-These directives apply to:
-
-* the *Hypatia* scanner (`hypatia.a2ml` — scanner config pointers and
-  accepted findings with reasons);
-* the *gitbot fleet* (`gitbot-fleet.a2ml` — fleet roster, branch policy,
-  never-touch paths, per-bot constraints);
-* *.git-private-farm propagation* (`git-private-farm.a2ml` — propagation
-  is currently disabled here; the file records the contract for if/when
-  an `instant-sync.yml` workflow is added).
-
-== Repo-specific ground rules (summary)
-
-* This is a proof repository: `proofs/`, `tutorial/`, `All.agda`,
-  `Smoke.agda`, and `.github/workflows/agda.yml` are bot-off-limits.
-* CI green precedes merge; bots never auto-merge and never delete
-  branches.
-* Escalation channel is an issue, not PR-comment spam.
+Conversion to `.deed` is tracked estate-wide in
+https://github.com/hyperpolymath/rsr-template-repo/issues/209[rsr-template-repo#209].
