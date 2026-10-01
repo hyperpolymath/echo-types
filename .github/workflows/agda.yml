@@ -78,11 +78,11 @@ jobs:
       - name: Fetch absolute-zero library (PINNED)
         id: absz
         env:
-          # Pinned 2026-05-18 to the known-good revision the suite is
+          # Pinned 2026-10-01 (was 3ff5cee7, 2026-05-18) to the known-good revision the suite is
           # green against (foundation provenance audit). Bump
           # deliberately, never float: an unpinned dependency is an
           # unpinned trust boundary.
-          ABSZ_REF: 3ff5cee7f3fd002378089cd02f0c90a3747b45f0
+          ABSZ_REF: f486c29903434589117fa0662c6f29b0f17d1d5f
         run: |
           ABSZ_DIR="$HOME/absolute-zero"
           git clone https://github.com/hyperpolymath/absolute-zero.git "$ABSZ_DIR"
@@ -181,7 +181,7 @@ jobs:
       - name: Fetch pinned libraries
         id: libs
         env:
-          ABSZ_REF: 3ff5cee7f3fd002378089cd02f0c90a3747b45f0
+          ABSZ_REF: f486c29903434589117fa0662c6f29b0f17d1d5f
         run: |
           STDLIB_DIR="$HOME/agda-stdlib"
           git clone --depth 1 --branch v2.3 https://github.com/agda/agda-stdlib.git "$STDLIB_DIR"
