@@ -181,7 +181,7 @@ Pinned inputs: `standard-library` `v2.3`; `absolute-zero`
   locally claimed green; flagged as such, gate unchanged. P1 item
   status moved from "tracked follow-up" to "implemented, pending
   first-green CI verification".
-* *2026-10-01 â `absolute-zero` pin moved to the first green `Proofs` revision.*
+* *2026-10-01 — `absolute-zero` pin moved to the first green `Proofs` revision.*
   `ABSZ_REF` in `.github/workflows/agda.yml` moved from `3ff5cee7` (2026-05-18)
   to `f486c29903434589117fa0662c6f29b0f17d1d5f` (PR #334), the `absolute-zero`
   revision whose own `Proofs` workflow is green on Coq, Lean, Agda and Z3
