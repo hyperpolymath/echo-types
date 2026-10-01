@@ -94,7 +94,7 @@ hack: left explicit and failing, never forced green.
 . *CI Agda exact pin* — *reproducible pin IMPLEMENTED 2026-05-18;
   first-green verification delegated to CI.* `flake.guix` now pins, as
   flake inputs: Agda via `nixpkgs nixos-24.11` (2.7.0.1), standard
-  library at tag `v2.3`, and `absolute-zero` at commit `f486c29…`
+  library at tag `v2.3`, and `absolute-zero` at commit `3ff5cee…`
   (previously nixpkgs-bundled stdlib + a local `absolute-zero`
   checkout — neither reproducible). A hermetic `checks.suite`
   (guardrail + four roots + N5 xfail) runs under that pinned
@@ -174,10 +174,17 @@ Pinned inputs: `standard-library` `v2.3`; `absolute-zero`
   a divergent entry on this `main`-based branch would fork it).
 * *2026-05-18 — CI-via-flake reproducible pin implemented.*
   `flake.guix` evolved to pin Agda (nixpkgs nixos-24.11) + stdlib v2.3
-  + absolute-zero @f486c29 as flake inputs, with a hermetic
+  + absolute-zero @3ff5cee as flake inputs, with a hermetic
   `checks.suite`; additive `flake-check` CI job
   (`continue-on-error`) added as the verifier. Authored without local
   `guix` (none in dev env) — designed-correct, CI-verified, not
   locally claimed green; flagged as such, gate unchanged. P1 item
   status moved from "tracked follow-up" to "implemented, pending
   first-green CI verification".
+* *2026-10-01 â `absolute-zero` pin moved to the first green `Proofs` revision.*
+  `ABSZ_REF` in `.github/workflows/agda.yml` moved from `3ff5cee7` (2026-05-18)
+  to `f486c29903434589117fa0662c6f29b0f17d1d5f` (PR #334), the `absolute-zero`
+  revision whose own `Proofs` workflow is green on Coq, Lean, Agda and Z3
+  (run 36864369380). The claims table and "Pinned inputs" above now read
+  `f486c299`; the two 2026-05-18 entries keep `3ff5cee` because they record
+  what was pinned then. Verified by `check` + `cold-check` green on #334.
