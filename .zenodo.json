@@ -4,7 +4,8 @@
   "description": "Constructive Agda formalisation of fibre-based \"structured loss\" types. Defines Echo f y := Σ (x : A) , (f x ≡ y), shows it is definitionally the homotopy fibre (echo↔fib), and develops a loss-graded reindexing modality on top with a pointwise (funext-relative) mediator property, a separating model, and a carrier-parametric abstraction over a fixed grade poset. Under --safe --without-K throughout with zero postulates and a falsifiable retraction discipline.",
   "creators": [
     {
-      "name": "Jewell, Jonathan"
+      "name": "Jewell, Jonathan",
+      "orcid": "0000-0002-3078-6652"
     }
   ],
   "keywords": [
