@@ -39,15 +39,32 @@ SOP.OBJ = {
                hint: 'Speichert Überschuss (2000), deckt Spitzen. Gegen Flackerlicht.' },
   farm:      { label: 'PILZFARM',         watts:  15, icon: '✿', hotkey: '0', cost: { beton: 6, metall: 6 },
                hint: 'Züchtet Rationen aus der Wandfeuchte. +1 RATION pro 30 s Strom.' },
+  airlock:   { label: 'LUFTSCHLEUSE',     watts:   0, icon: '⌂', hotkey: 'q', cost: { metall: 15, beton: 10 },
+               hint: 'Durchbruch zur Oberfläche. Startpunkt für Expeditionen & Neuzugänge. Nur an der Decke.' },
+  radio:     { label: 'FUNKTURM',         watts:  30, icon: '⌁', hotkey: 'f', cost: { metall: 18 },
+               hint: 'Sendet auf allen Bändern. Verdoppelt die Rate der Neuzugänge. 30 W.' },
   sensor:    { label: 'BEWEGUNGSSENSOR',  watts:   5, icon: '◎', hotkey: '8', cost: { metall: 6 },
                hint: 'Meldet Subjekte im Radius 2. Koppelbar an Schott.' },
   gas_vent:  { label: 'GAS-SCHLOT',       watts:   0, icon: '▲', hotkey: '',  cost: {},
                hint: 'Leckt Giftgas. Einmauern oder waschen.' },
 };
 SOP.WALL_COST = { beton: 4 };
-SOP.BUILDABLE = ['dynamo', 'lamp', 'bed', 'dispenser', 'scrubber', 'generator', 'door', 'sensor', 'battery', 'farm'];
+SOP.BUILDABLE = ['dynamo', 'lamp', 'bed', 'dispenser', 'scrubber', 'generator', 'door', 'sensor', 'battery', 'farm', 'airlock', 'radio'];
 SOP.BATTERY_CAP = 2000;
 SOP.FARM_TICKS = 120;          // powered ticks per ration grown
+
+/* Colony growth & surface operations. */
+SOP.MAX_INMATES = 6;
+SOP.EXPEDITION_TICKS = [500, 800];   // duration range while outside
+SOP.EXPEDITION_INJURY_CHANCE = 0.18;
+SOP.ARRIVAL_BASE = [2600, 3800];     // ticks until a newcomer (no radio)
+SOP.ARRIVAL_RADIO = [1300, 1900];    // ... with a powered Funkturm
+SOP.LOOT = [
+  { res: 'oel',      n: [6, 14], label: 'ÖL-FÄSSER',    weight: 30 },
+  { res: 'rationen', n: [5, 10], label: 'KONSERVEN',    weight: 30 },
+  { res: 'metall',   n: [6, 12], label: 'SCHROTT',      weight: 22 },
+  { res: 'beton',    n: [8, 16], label: 'TRÜMMERSTEINE', weight: 18 },
+];
 
 /* Digging outcomes. */
 SOP.DIG_TICKS = 4;

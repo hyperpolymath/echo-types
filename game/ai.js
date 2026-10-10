@@ -239,6 +239,7 @@ SOP.InmateAI = class InmateAI {
       'GAS MEIDEN': 'Es schmeckt nach Kupfer.',
       'IN ECKE VERKRIECHEN': 'Wände beobachten.',
       'UMHERIRREN': 'Schritte zählen hilft.',
+      'EXPEDITION': 'Raus. Nur kurz. Nur mit Maske.',
       'IDLE': '—',
     };
     return T[action] || '—';
@@ -435,6 +436,12 @@ SOP.InmateAI = class InmateAI {
         this.goal = null; // arrived; next evaluation picks something new
         break;
       }
+      case 'expedition': {
+        // reached the airlock — hand control back to the Schichtleitung
+        onEvent({ type: 'board', inmate: this, dev: g.dev });
+        this.goal = null;
+        break;
+      }
     }
   }
 
@@ -444,6 +451,30 @@ SOP.InmateAI = class InmateAI {
     this.sleeping = false;
     // release any device I operate
     for (const d of SOP.World.devices) if (d.operatedBy === this.id) d.operatedBy = null;
+  }
+
+  /* ---------------- SAVE / LOAD ---------------- */
+  serialize() {
+    return {
+      id: this.id, name: this.name, trait: this.trait,
+      tx: this.tx, ty: this.ty, hp: Math.round(this.hp),
+      hungerRate: this.hungerRate,
+      affective: Object.assign({}, this.affective),
+      dead: this.dead, deadCause: this.deadCause,
+      away: this.away ? Object.assign({}, this.away) : null,
+    };
+  }
+
+  static fromData(d) {
+    const i = new SOP.InmateAI(d.name, d.trait, d.tx, d.ty);
+    i.id = d.id || d.name;
+    Object.assign(i.affective, d.affective);
+    i.hp = d.hp;
+    i.hungerRate = d.hungerRate || i.hungerRate;
+    i.dead = !!d.dead;
+    i.deadCause = d.deadCause || '';
+    i.away = d.away || null;
+    return i;
   }
 
   logConativeState(action) {

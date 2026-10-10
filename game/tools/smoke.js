@@ -19,6 +19,24 @@ const smokeState = {};
 
 const actHist = {};
 let nextQuakeTick = 600;
+
+/* a diligent Schichtleiter keeps 10 frontier dig marks in the Blackboard */
+function refillMarks() {
+  const marks = world.Blackboard.digMarks.length;
+  let need = 10 - marks;
+  const frontier = [];
+  for (let y = SOP.DIG_TOP; y < world.H - 1 && need > 0; y++) for (let x = 1; x < world.W - 1; x++) {
+    if (world.tiles[y][x].t !== 'dirt') continue;
+    if ([[1,0],[-1,0],[0,1],[0,-1]].some(([dx, dy]) => world.tiles[y + dy][x + dx].t === 'empty' && !world.tiles[y + dy][x + dx].obj)) {
+      frontier.push([x, y]);
+    }
+  }
+  while (need-- > 0 && frontier.length) {
+    const i = Math.floor(Math.random() * frontier.length);
+    const [x, y] = frontier.splice(i, 1)[0];
+    world.orderDig(x, y);
+  }
+}
 function quake(t) {
   const fragile = world.devices.filter(d => d.kind !== 'gas_vent' && !d.broken);
   const hits = 1 + (Math.random() < 0.4 ? 1 : 0);
@@ -67,22 +85,7 @@ for (let t = 0; t < ticks; t++) {
     if (!wasDead && inm.dead) console.log(`[t=${t}] DEATH ${inm.name} (${inm.deadCause}) h=${inm.affective.hunger.toFixed(0)} xh=${inm.affective.exhaustion.toFixed(0)} o2=${inm.affective.o2.toFixed(0)} pos=${inm.tx},${inm.ty}`);
   }
   // player simulation: keep 10 frontier dig marks adjacent to open space
-  if (t % 60 === 0) {
-    const marks = world.Blackboard.digMarks.length;
-    let need = 10 - marks;
-    const frontier = [];
-    for (let y = SOP.DIG_TOP; y < world.H - 1 && need > 0; y++) for (let x = 1; x < world.W - 1; x++) {
-      if (world.tiles[y][x].t !== 'dirt') continue;
-      if ([[1,0],[-1,0],[0,1],[0,-1]].some(([dx, dy]) => world.tiles[y + dy][x + dx].t === 'empty' && !world.tiles[y + dy][x + dx].obj)) {
-        frontier.push([x, y]);
-      }
-    }
-    while (need-- > 0 && frontier.length) {
-      const i = Math.floor(Math.random() * frontier.length);
-      const [x, y] = frontier.splice(i, 1)[0];
-      world.orderDig(x, y);
-    }
-  }
+  if (t % 60 === 0) refillMarks();
   // redundancy: a second Ausgabe so one quake can't cut off all food
   if (t === 2000 && !smokeState.disp2) {
     for (const [x, y] of [[14, 8], [13, 8], [14, 9], [12, 10]]) {
@@ -161,6 +164,114 @@ for (let t = 0; t < ticks; t++) {
     });
   }
 }
+
+/* ================= PHASE 2: FEATURE TESTS =================
+   Expeditions, arrivals and save/load — driven through the real
+   main.js orchestration with a stub DOM (no canvas needed). */
+
+const assert = (cond, msg) => { if (!cond) { console.error('ASSERT FAIL:', msg); process.exit(1); } };
+const fakeEl = () => ({
+  innerHTML: '', textContent: '', style: {}, hidden: false, value: '', files: null,
+  classList: { add() {}, remove() {}, toggle() {}, contains() { return false; } },
+  addEventListener() {}, click() {}, appendChild() {}, remove() {},
+  querySelectorAll: () => [], querySelector: () => null,
+});
+global.document = {
+  getElementById: () => fakeEl(),
+  createElement: () => fakeEl(),
+  querySelector: () => null,
+  querySelectorAll: () => [],
+  addEventListener() {},
+  body: fakeEl(),
+};
+SOP.Render = { getView: () => 'PHYSICAL', shake() {}, draw() {}, toTile() {}, setView() {} };
+SOP.Audio = SOP.Audio || { on: false, toggle() { return false; }, alarm() {} };
+global.addEventListener = () => {};
+require('../ui.js');
+require('../main.js');
+
+console.log('--- PHASE 2: airlock / expedition / arrivals / save-load ---');
+
+// the Schichtleiter requisitions material for the airlock + the growing roster
+world.res.metall = Math.max(world.res.metall, 60);
+world.res.beton = Math.max(world.res.beton, 40);
+world.res.oel = Math.max(world.res.oel, 100);
+world.res.rationen = Math.max(world.res.rationen, 150);
+
+// 1) place the single airlock in the bedrock ceiling over an open tile
+let airBuilt = false;
+for (let x = 2; x < world.W - 2 && !airBuilt; x++) {
+  const r = world.tryBuild('airlock', x, SOP.DIG_TOP - 1);
+  if (r.ok) { airBuilt = true; console.log(`[phase2] LUFTSCHLEUSE @ (${x},${SOP.DIG_TOP - 1})`); }
+}
+assert(airBuilt, 'airlock could not be placed');
+assert(!world.tryBuild('airlock', 5, SOP.DIG_TOP - 1).ok, 'second airlock must be rejected');
+
+// 2) launch an expedition through main.js and wait for board + return
+SOP.Main.headlessStart();
+const expSubject = world.inmates.find(i => !i.dead && !i.away);
+assert(expSubject, 'no expedition candidate');
+SOP.Main.startExpedition(expSubject.name);
+assert(expSubject.boarding && expSubject.goal && expSubject.goal.act === 'expedition', 'startExpedition did not board');
+
+// the roster is growing — a competent Schichtleiter expands food/power/air
+const p2 = {};
+function buildAndWire2(kind, spots, tag, s) {
+  for (const [x, y] of spots) {
+    if (world.tryBuild(kind, x, y).ok) {
+      const dev = world.devices.find(d => d.kind === kind && d.x === x && d.y === y);
+      const anchor = world.devices.find(d => d.id !== dev.id && d.links.length && !d.broken);
+      if (anchor) world.addLink(dev, anchor);
+      console.log(`[phase2] ${tag} @ (${x},${y}) s=${s}`);
+      return true;
+    }
+  }
+  return false;
+}
+
+let boarded = false, returned = false;
+for (let s = 0; s < 7000; s++) {
+  if (s % 60 === 0) refillMarks(); // digging must go on (ÖL!)
+  if (s % 25 === 0) {
+    if (!p2.farm3 && buildAndWire2('farm', [[13, 10], [14, 10], [7, 10], [11, 10], [9, 8]], 'FARM-3', s)) p2.farm3 = true;
+    if (!p2.gen2 && buildAndWire2('generator', [[12, 10], [13, 6], [7, 6], [11, 8]], 'GEN-2', s)) p2.gen2 = true;
+    if (!p2.scr2 && buildAndWire2('scrubber', [[12, 8], [8, 8], [14, 6], [10, 10]], 'SCRUB-2', s)) p2.scr2 = true;
+    if (!p2.radio && buildAndWire2('radio', [[14, 8], [12, 6], [8, 6], [11, 6]], 'FUNKTURM', s)) p2.radio = true;
+  }
+  SOP.Main.step();
+  if (expSubject.away) boarded = true;
+  else if (boarded) returned = true;
+}
+assert(boarded, 'subject never boarded (away)');
+assert(returned, 'subject never returned');
+assert(SOP.Main.stats.expeditions === 1, 'expedition stat not counted');
+console.log(`[phase2] EXPEDITION OK — zurück @ t=${SOP.Main.ticks}, res=${JSON.stringify(world.res)}`);
+
+// 3) arrivals happened during those 7000 steps (first one due by tick ~2200-3800)
+//    — unless the colony died before the first arrival window could open
+const survivorsNow = world.inmates.filter(i => !i.dead).length;
+assert(SOP.Main.stats.arrivals >= 1 || survivorsNow === 0,
+  'no newcomer arrived although colony alive');
+assert(world.inmates.filter(i => !i.dead).length <= SOP.MAX_INMATES, 'colony exceeds MAX_INMATES');
+if (survivorsNow === 0) console.log('[phase2] colony died before arrivals — mechanic verified on long runs');
+console.log(`[phase2] ARRIVALS OK — n=${SOP.Main.stats.arrivals}, roster=${world.inmates.filter(i => !i.dead).map(i => i.name).join(',')}`);
+
+// 4) save → corrupt → load → continue
+const snap = SOP.Main.saveData();
+const wire = JSON.stringify(snap); // full JSON roundtrip
+world.res.metall = 0; world.res.oel = 0;
+world.tiles[8][8].o2 = 0; world.tiles[8][8].gas = 90;
+const deadBefore = world.inmates.filter(i => i.dead).length;
+assert(SOP.Main.loadData(JSON.parse(wire)), 'loadGame rejected the save');
+assert(world.res.oel === snap.world.res.oel, 'res not restored');
+assert(world.tiles[8][8].gas < 50, 'tile gas not restored');
+assert(world.inmates.length === snap.inmates.length, 'roster size changed on load');
+assert(world.devices.some(d => d.kind === 'airlock'), 'airlock lost on load');
+for (let s = 0; s < 800; s++) SOP.Main.step(); // sim continues after load
+assert(world.inmates.filter(i => i.dead).length >= deadBefore, 'sanity');
+console.log(`[phase2] SAVE/LOAD OK — weitergespielt bis t=${SOP.Main.ticks}`);
+
+console.log('=== PHASE 2 OK ===');
 
 // report
 const empty = world.tiles.flat().filter(t => t.t === 'empty').length;

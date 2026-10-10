@@ -147,6 +147,15 @@ SOP.World = (() => {
   function canBuildAt(kind, x, y) {
     if (!inGrid(x, y)) return 'AUSSERHALB SEKTOR';
     const tl = tiles[y][x];
+    if (kind === 'airlock') {
+      if (y !== SOP.DIG_TOP - 1) return 'SCHLEUSE NUR AN DER DECKE (REIHE ' + (SOP.DIG_TOP - 1) + ')';
+      if (tl.obj) return 'BEREITS BELEGT';
+      if (devices.some(d => d.kind === 'airlock')) return 'NUR EINE SCHLEUSE PRO SEKTOR';
+      const below = inGrid(x, y + 1) ? tiles[y + 1][x] : null;
+      if (!below || below.t !== 'empty') return 'KEIN ZUGANG UNTER DER SCHLEUSE (FELD DARUNTER FREIGRABEN)';
+      if (below.obj) return 'ZUGANG BLOCKIERT';
+      return null;
+    }
     if (tl.t !== 'empty') return 'NUR IN HOHLRÄUMEN';
     if (tl.obj) return 'BEREITS BELEGT';
     if (inmates.some(i => !i.dead && i.tx === x && i.ty === y)) return 'SUBJEKT IM WEG';
@@ -447,6 +456,62 @@ SOP.World = (() => {
     return best;
   }
 
+  /* ---------------- SAVE / LOAD ---------------- */
+  function serialize() {
+    return {
+      res: Object.assign({}, res),
+      nextDevId,
+      tiles: tiles.map(row => row.map(tl => ({
+        t: tl.t, o2: Math.round(tl.o2), gas: Math.round(tl.gas),
+        m: tl.mark ? 1 : 0, p: tl.pocket ? 1 : 0,
+      }))),
+      devices: devices.map(d => ({
+        id: d.id, kind: d.kind, x: d.x, y: d.y,
+        links: d.links.slice(), broken: d.broken, enabled: d.enabled,
+        charge: Math.round(d.charge || 0), growth: d.growth || 0,
+        fuelTimer: d.fuelTimer || 0, fueled: d.fueled !== false,
+        open: !!d.open, operatedBy: d.operatedBy,
+      })),
+      digMarks: Blackboard.digMarks.map(m => ({ x: m.x, y: m.y })),
+    };
+  }
+
+  function loadFrom(data) {
+    tiles = data.tiles.map(row => row.map(o => {
+      const tl = makeTile(o.t);
+      tl.o2 = o.o2; tl.gas = o.gas; tl.mark = !!o.m; tl.pocket = !!o.p;
+      return tl;
+    }));
+    devices = [];
+    Blackboard.digMarks = [];
+    Blackboard.hazards = [];
+    Blackboard.electricalNodes = [];
+    nextDevId = data.nextDevId || 1;
+    for (const o of data.devices) {
+      const dev = {
+        links: [], powered: false, broken: false, enabled: true,
+        compDeficit: 0, hold: 0, operatedBy: null,
+        fuelTimer: 0, fueled: true, charge: 0, growth: 0,
+        open: false, triggered: false, digProgress: 0, repairProgress: 0,
+      };
+      Object.assign(dev, o);
+      devices.push(dev);
+      if (inGrid(dev.x, dev.y)) tiles[dev.y][dev.x].obj = dev;
+      Blackboard.registerNode(dev);
+      if (dev.kind === 'gas_vent') Blackboard.hazards.push({ x: dev.x, y: dev.y, kind: 'gas' });
+    }
+    for (const k in res) delete res[k];
+    Object.assign(res, data.res);
+    for (const m of data.digMarks || []) {
+      if (inGrid(m.x, m.y) && tiles[m.y][m.x].t === 'dirt') {
+        Blackboard.postDigMark(m.x, m.y);
+        tiles[m.y][m.x].mark = true;
+      }
+    }
+    evalPower();
+    updateLighting();
+  }
+
   /* ---------------- helpers / API ---------------- */
   function inGrid(x, y) { return x >= 0 && y >= 0 && x < W && y < H; }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
@@ -462,6 +527,7 @@ SOP.World = (() => {
     generate, placeDevice, removeDevice, addLink, removeLink, linksPairs,
     tryBuild, tryBuildWall, canBuildAt, orderDig, completeDig,
     tick, evalPower, walkable, findPath, nearestLit, inGrid,
+    serialize, loadFrom,
     W, H,
   };
 })();

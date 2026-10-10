@@ -43,6 +43,20 @@
       </div>
 
       <div class="panel-section">
+        <div class="panel-title">Aktenverwaltung</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px">
+          <button class="btn" id="btn-save" style="font-size:10px">Sichern [F5]</button>
+          <button class="btn" id="btn-load" style="font-size:10px">Laden</button>
+          <button class="btn" id="btn-export" style="font-size:10px">Export</button>
+          <button class="btn" id="btn-import" style="font-size:10px">Import</button>
+        </div>
+        <input type="file" id="file-import" accept=".json,application/json" style="display:none">
+        <div style="color: var(--text-faint); font-size:10px; margin-top:4px">
+          Autosicherung alle 5 Minuten. Export = Datei-Download.
+        </div>
+      </div>
+
+      <div class="panel-section">
         <div class="panel-title">Bauhof</div>
         <div id="build-menu"></div>
         <div id="build-hint"></div>
@@ -77,13 +91,18 @@
       <div class="sub">Sektor 4 — Handbuch für Schichtleiter</div>
       <p>Die Oberfläche ist erledigt. Sie überwachen einen Bunker mit drei Subjekten.
          Die Subjekte bewerten ihre Bedürfnisse selbst und handeln danach — Ihre Aufgabe
-         ist das Netz: Strom legen, Luft waschen, Grabungsaufträge erteilen, Schotten schalten.</p>
+         ist das Netz: Strom legen, Luft waschen, Grabungsaufträge erteilen, Schotten schalten.
+         Eine <b>Luftschleuse</b> in der Decke öffnet den Weg nach oben: Expeditionen holen
+         Öl und Konserven, neue Subjekte finden den Sektor. Der Funkturm ruft sie schneller.
+         Ihre Akte wird gesichert — lokal und als Datei.</p>
       <p class="keys">
-        <b>1–8</b> Module bauen &nbsp;·&nbsp; <b>W</b> Wand &nbsp;·&nbsp; <b>X</b> Grabungsauftrag &nbsp;·&nbsp; <b>ESC</b> Abbruch<br>
-        <b>V</b> Physisch ↔ Crosslink &nbsp;·&nbsp; <b>LEER</b> Pause &nbsp;·&nbsp; <b>M</b> Ton<br>
+        <b>1–8, 9, 0</b> Module bauen &nbsp;·&nbsp; <b>W</b> Wand &nbsp;·&nbsp; <b>X</b> Grabungsauftrag &nbsp;·&nbsp; <b>ESC</b> Abbruch<br>
+        <b>V</b> Physisch ↔ Crosslink &nbsp;·&nbsp; <b>LEER</b> Pause &nbsp;·&nbsp; <b>M</b> Ton &nbsp;·&nbsp; <b>F5</b> Sichern<br>
         <b>Crosslink:</b> zwei Knoten anklicken = Leitung (max. 8 Felder).<br>
         Sensor + Schott koppeln: Schott öffnet bei Bewegung.<br>
-        Notstromaggregat verbrennt ÖL — Öl liegt im Erdreich. Graben hält das Netz am Leben.
+        Notstromaggregat verbrennt ÖL — Öl liegt im Erdreich. Graben hält das Netz am Leben.<br>
+        <b>Luftschleuse (Q)</b> an die Decke setzen: Expeditionen zur Oberfläche (Beute!)
+        und Neuzugänge für den Sektor. Der Funkturm beschleunigt die Ankunft neuer Subjekte.
       </p>
       <p style="color: var(--alert)">WARNUNG: Hoher Stress führt bei geeigneten Profilen zu Kurzschlüssen im wahrsten Sinne.</p>
       <div class="foot">

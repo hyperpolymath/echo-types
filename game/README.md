@@ -6,7 +6,13 @@ aesthetic of the **Neue Deutsche Welle** — monochrome CRT amber, hard sans-ser
 propaganda headers, and cold motorik audio.
 
 You do not control the inmates directly. You manage the **grid** — power, air,
-food, and excavation — while three subjects act on their own drives.
+food, and excavation — while your subjects act on their own drives.
+
+**v0.2 adds the surface.** Build a **Luftschleuse** (airlock) into the bunker
+ceiling to send subjects on **expeditions** for Öl, Konserven and Schrott, and
+to receive **Neuzugänge** (new subjects) — a powered **Funkturm** (radio tower)
+doubles their arrival rate. Progress is persisted with **save / load**
+(localStorage) plus a file export / import fallback.
 
 ---
 
@@ -28,6 +34,8 @@ is uppercase German institutional copy. The bottom strip is a looping
 | **Gas / O₂ diffusion** | A Laplacian spread over the grid. Digging can rupture gas pockets. Scrubbers clean. |
 | **Ecology** | Farms grow rations from power. The generator burns **Öl** (dug up). Excavation yields caches of Beton / Metall / Rationen / Öl. |
 | **Disasters** | Erdbeben break devices and spike stress. High-stress Pyromanes sabotage wiring. |
+| **Surface** | The airlock is the only way out. An expedition sends one subject topside for a timer; they return with weighted loot and a chance of injury. New subjects arrive at the gate on their own schedule. |
+| **Persistence** | Autosave every ~5 min, manual save/load, and JSON export/import of the whole Akte. |
 
 ## Traits
 
@@ -40,15 +48,19 @@ is uppercase German institutional copy. The bottom strip is a looping
 
 | Key / input | Action |
 | --- | --- |
-| `1–8`, `0` | Select a module to build |
+| `1–8`, `9`, `0` | Select a module to build |
+| `Q` | Luftschleuse (airlock) — place on the ceiling row |
+| `F` | Funkturm (radio tower) — doubles arrival rate |
 | `W` | Build wall |
 | `X` | Dig order (click dirt to mark) |
 | `V` | Toggle Physical ↔ Crosslink |
 | `E` | Toggle selected device on/off |
+| `F5` | Save |
 | `M` | Toggle audio |
 | `Space` | Pause |
 | `Esc` | Cancel placement |
 | Click module in **Crosslink** twice | Wire / unwire two nodes (≤ 8 tiles) |
+| Click the airlock | Open the expedition panel: pick a subject, send them topside |
 
 ## Device table
 
@@ -64,6 +76,8 @@ is uppercase German institutional copy. The bottom strip is a looping
 | Bewegungssensor | +5 | Can be coupled to a Schott |
 | Akku-Block | 0 | Stores 2000 units of charge |
 | Pilzfarm | +15 | Grows 1 ration / 30 s of power |
+| Luftschleuse | 0 | Surface gate. One per sector, only on the ceiling row. Expedition + arrival point. |
+| Funkturm | +30 | Broadcasts on all bands; halves the interval between new subjects. |
 
 ## Layout
 

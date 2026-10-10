@@ -122,7 +122,18 @@ SOP.UI = (() => {
   function updateInspector(world, selected) {
     if (!selected || selected.dead) {
       el.inspector.innerHTML = `<div class="panel-title">SUBJEKT-INSPEKTOR</div>
-        <div class="empty">Subjekt im Raster anklicken, um affektive und konative Ströme zu überwachen.</div>`;
+        <div class="empty">${selected && selected.dead
+          ? selected.name + ' AUSGEFALLEN (' + selected.deadCause + '). AKTE GESCHLOSSEN.'
+          : 'Subjekt im Raster anklicken, um affektive und konative Ströme zu überwachen.'}</div>`;
+      return;
+    }
+    if (selected.away) {
+      el.inspector.innerHTML = `
+        <div class="panel-title">SUBJEKT-INSPEKTOR</div>
+        <div class="kv"><span class="k">ID</span><span>${selected.name}</span></div>
+        <div class="kv"><span class="k">PROFIL</span><span>${selected.trait}</span></div>
+        <div class="directive-line"><span class="directive blink">AUSSERHAUS — OBERFLÄCHE</span>
+        <div style="color: var(--text-dim); font-size:11px; margin-top:4px">Signal schwach. Kein konativer Strom verfügbar.</div></div>`;
       return;
     }
     const A = selected.affective;
@@ -149,28 +160,76 @@ SOP.UI = (() => {
       </div>`;
   }
 
-  /* ---------------- DEVICE INSPECTOR (crosslink) ---------------- */
-  function updateDevicePanel(world, dev, mode) {
+  /* ---------------- DEVICE INSPECTOR (crosslink / airlock) ---------------- */
+  let devSig = '';
+
+  function updateDevicePanel(world, dev, mode, ticksNow) {
+    const awaySig = world.inmates.filter(i => !i.dead && i.away)
+      .map(i => i.name + ':' + i.away.returnTick).join(',')
+      + '#' + world.inmates.filter(i => !i.dead && !i.away && !i.boarding).map(i => i.name).join(',');
+    const sig = dev
+      ? [dev.id, dev.kind, dev.powered, dev.broken, dev.enabled, dev.links.length,
+         dev.kind === 'battery' ? Math.floor((dev.charge || 0) / 50) : 0,
+         dev.kind === 'generator' ? (dev.fueled === false ? 1 : 0) : 0,
+         mode, awaySig,
+         dev.kind === 'airlock' ? Math.floor((ticksNow || 0) / 40) : 0].join('|')
+      : 'none|' + mode;
+    if (sig === devSig) return;
+    devSig = sig;
+
     if (!dev) {
       el.devInspector.innerHTML = `<div class="panel-title">KNOTEN-INSPEKTOR</div>
-        <div class="empty">${mode === 'CROSSLINK' ? 'Knoten anklicken. Zwei Knoten = Leitung.' : 'Nur im CROSSLINK-Modus.'}</div>`;
+        <div class="empty">${mode === 'CROSSLINK' ? 'Knoten anklicken. Zwei Knoten = Leitung.' : 'Modul anklicken, um Details zu sehen.'}</div>`;
       return;
     }
     const def = SOP.OBJ[dev.kind];
-    el.devInspector.innerHTML = `
-      <div class="panel-title">KNOTEN-INSPEKTOR</div>
+    let html = `
+      <div class="panel-title">${dev.kind === 'airlock' ? 'SCHLEUSEN-STEUERUNG' : 'KNOTEN-INSPEKTOR'}</div>
       <div class="kv"><span class="k">TYP</span><span>${def.label}</span></div>
       <div class="kv"><span class="k">LAST</span><span>${def.watts ? (def.watts < 0 ? '−' + Math.abs(def.watts) + ' W (ERZEUGER)' : '+' + def.watts + ' W') : 'PASSIV'}</span></div>
       <div class="kv"><span class="k">STATUS</span><span style="color:${dev.broken ? 'var(--alert)' : dev.powered ? 'var(--ok)' : 'var(--text-dim)'}">${dev.broken ? 'DEFEKT' : dev.powered ? 'AKTIV' : 'OHNE STROM'}</span></div>
       <div class="kv"><span class="k">SCHALTER</span><span>${dev.enabled === false ? 'AUS' : 'EIN'}</span></div>
       ${dev.kind === 'battery' ? `<div class="kv"><span class="k">LADUNG</span><span>${Math.round(dev.charge)} / ${SOP.BATTERY_CAP}</span></div>` : ''}
       ${dev.kind === 'generator' ? `<div class="kv"><span class="k">TANK</span><span>${dev.fueled === false ? 'LEER' : 'LÄUFT'}</span></div>` : ''}
-      <div class="kv"><span class="k">LEITUNGEN</span><span>${dev.links.length}</span></div>
-      <button class="btn" id="btn-toggle-dev" style="margin-top:8px; width:100%">
+      ${dev.kind !== 'airlock' ? `<div class="kv"><span class="k">LEITUNGEN</span><span>${dev.links.length}</span></div>` : ''}`;
+
+    if (dev.kind === 'airlock') {
+      const away = world.inmates.filter(i => !i.dead && i.away);
+      const candidates = world.inmates.filter(i => !i.dead && !i.away && !i.boarding);
+      html += `<div style="border-top:1px dashed var(--border-color); margin-top:8px; padding-top:8px">
+        <div style="color:var(--text-dim)">// EXPEDITION ZUR OBERFLÄCHE</div>`;
+      if (away.length) {
+        for (const i of away) {
+          const eta = Math.max(0, Math.round((i.away.returnTick - (ticksNow || 0)) * SOP.TICK_MS / 1000));
+          html += `<div class="kv"><span class="k">${i.name}</span><span class="blink">AUSSERHAUS · ~${eta} S</span></div>`;
+        }
+      }
+      if (candidates.length) {
+        html += `<select id="exp-subject" style="width:100%; background:#000; color:var(--text-main);
+          border:1px solid var(--text-main); border-radius:0; font-family:inherit; font-size:11px;
+          padding:4px; margin:6px 0">
+          ${candidates.map(i => `<option value="${i.name}">${i.name} (${i.trait})</option>`).join('')}
+        </select>
+        <button class="btn" id="btn-expedition" style="width:100%">EXPEDITION STARTEN</button>`;
+      } else if (!away.length) {
+        html += `<div class="empty">Keine Subjekte verfügbar.</div>`;
+      }
+      html += `</div>
+        <div style="color: var(--text-dim); margin-top:6px; font-size:11px">BEUTE: ÖL, KONSERVEN, SCHROTT. RISIKO: VERLETZUNG.</div>`;
+    } else {
+      html += `<button class="btn" id="btn-toggle-dev" style="margin-top:8px; width:100%">
         ${dev.enabled === false ? 'EINSCHALTEN [E]' : 'ABSCHALTEN [E]'}</button>
-      <div style="color: var(--text-dim); margin-top:6px; font-size:11px">ZWEITEN KNOTEN ANKLICKEN → LEITUNG LEGEN / TRENNEN (MAX ${SOP.LINK_RANGE} FELDER).</div>`;
+        <div style="color: var(--text-dim); margin-top:6px; font-size:11px">ZWEITEN KNOTEN ANKLICKEN → LEITUNG LEGEN / TRENNEN (MAX ${SOP.LINK_RANGE} FELDER).</div>`;
+    }
+
+    el.devInspector.innerHTML = html;
     const tb = document.getElementById('btn-toggle-dev');
     if (tb) tb.addEventListener('click', () => SOP.UI.toggleDevice(dev));
+    const eb = document.getElementById('btn-expedition');
+    if (eb) eb.addEventListener('click', () => {
+      const sel = document.getElementById('exp-subject');
+      if (sel && sel.value && SOP.Main) SOP.Main.startExpedition(sel.value);
+    });
   }
 
   function toggleDevice(dev) {

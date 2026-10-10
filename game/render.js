@@ -168,7 +168,10 @@ SOP.Render = (() => {
     for (const d of world.devices) drawDevice(d, T);
 
     // inmates
-    for (const inm of world.inmates) drawInmate(inm, T, state.selected === inm);
+    for (const inm of world.inmates) {
+      if (inm.away) continue; // on the surface
+      drawInmate(inm, T, state.selected === inm);
+    }
 
     // ghost placement
     if (state.ghost) drawGhost(state.ghost, T, state.world);
@@ -177,6 +180,26 @@ SOP.Render = (() => {
   function drawDevice(d, T) {
     const px = d.x * T, py = d.y * T;
     const def = SOP.OBJ[d.kind];
+    if (d.kind === 'airlock') {
+      // surface gate: amber hatch cut into the bedrock ceiling
+      ctx.fillStyle = '#101010';
+      ctx.fillRect(px + 2, py + 2, T - 4, T - 4);
+      ctx.strokeStyle = C.amber;
+      ctx.lineWidth = 1.5;
+      ctx.strokeRect(px + 2.5, py + 2.5, T - 5, T - 5);
+      ctx.setLineDash([3, 2]);
+      ctx.strokeStyle = C.amberDim;
+      ctx.strokeRect(px + 5.5, py + 5.5, T - 11, T - 11);
+      ctx.setLineDash([]);
+      ctx.fillStyle = C.amber;
+      ctx.font = `${T * 0.42}px "Courier New", monospace`;
+      ctx.fillText(def.icon, px + T / 2 - T * 0.2, py + T / 2 + T * 0.15);
+      ctx.font = '8px "Courier New", monospace';
+      ctx.fillStyle = Math.floor(performance.now() / 700) % 2 === 0 ? C.amberDim : C.amberFaint;
+      ctx.fillText('▲ OBERFLÄCHE', px - T * 0.55, py - 4);
+      ctx.lineWidth = 1;
+      return;
+    }
     if (d.kind === 'gas_vent') {
       ctx.fillStyle = '#1a2408';
       ctx.fillRect(px + 4, py + 4, T - 8, T - 8);
@@ -300,7 +323,7 @@ SOP.Render = (() => {
 
     // inmates as faint dots
     for (const inm of world.inmates) {
-      if (inm.dead) continue;
+      if (inm.dead || inm.away) continue;
       ctx.fillStyle = 'rgba(0,204,255,0.35)';
       ctx.beginPath();
       ctx.arc(inm.tx * T + T / 2, inm.ty * T + T / 2, 4, 0, 7);
