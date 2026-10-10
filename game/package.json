@@ -1,0 +1,14 @@
+{
+  "name": "standard-operating-psychopathy",
+  "version": "0.1.0",
+  "description": "Post-apocalyptic bunker management sim — Sheltered x ONI x BoomTown, NDW terminal aesthetic.",
+  "private": true,
+  "scripts": {
+    "test": "node tools/smoke.js 9600 && node tools/dom_test.js",
+    "serve": "python3 -m http.server 8000 --bind 0.0.0.0"
+  },
+  "devDependencies": {
+    "jsdom": "^24.0.0"
+  },
+  "license": "UNLICENSED"
+}

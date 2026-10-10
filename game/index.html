@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Standard Operating Psychopathy — Sektor 4</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="header">
+    <div class="brand">
+      <div class="brand-title">Standard Operating Psychopathy</div>
+      <div class="brand-sub">Sektor 4 &nbsp;//&nbsp; Bunker-Überwachung &nbsp;//&nbsp; Monitor 07-B</div>
+    </div>
+    <div id="header-stats">
+      <div class="stat">Tag <b id="sys-day">—</b></div>
+      <div class="stat">Netz <b id="sys-power">—</b></div>
+      <div class="stat">Luft <b id="sys-o2">—</b></div>
+      <div class="stat">Vorrat <b id="sys-res">—</b></div>
+      <div class="stat">Subjekte <b id="sys-inmates">0</b></div>
+    </div>
+    <div class="view-buttons">
+      <span class="lbl">Ansicht:</span>
+      <button class="btn active" id="btn-physical">Physisch</button>
+      <button class="btn wire" id="btn-crosslink">Crosslink</button>
+      <button class="btn" id="btn-pause">❚❚ Pause</button>
+      <button class="btn" id="btn-audio">Ton an</button>
+    </div>
+  </div>
+
+  <div id="main-view">
+    <div id="canvas-container">
+      <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <div id="inspector">
+      <div class="panel-section">
+        <div class="panel-title">Systemstatus</div>
+        <div class="kv"><span class="k">Stromnetz</span><span id="sys-power-detail"></span></div>
+        <div style="color: var(--text-faint); font-size:10px; margin-top:4px">
+          Detailwerte im Kopfbalken. Defizit = Verbraucher dunkel.
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-title">Bauhof</div>
+        <div id="build-menu"></div>
+        <div id="build-hint"></div>
+      </div>
+
+      <div class="panel-section" id="ai-inspector">
+        <div class="panel-title">Subjekt-Inspektor</div>
+        <div class="empty">Subjekt im Raster anklicken, um affektive und konative Ströme zu überwachen.</div>
+      </div>
+
+      <div class="panel-section" id="device-inspector">
+        <div class="panel-title">Knoten-Inspektor</div>
+        <div class="empty">Nur im CROSSLINK-Modus.</div>
+      </div>
+
+      <div class="panel-section">
+        <div class="panel-title">Ereignisprotokoll</div>
+        <div id="event-log"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="broadcast">
+    <div class="tag">◤ DURCHSAGE ◢</div>
+    <div id="ticker"></div>
+  </div>
+
+  <!-- INTRO / BRIEFING -->
+  <div class="overlay show" id="overlay-intro">
+    <div class="dialog">
+      <h1>Standard Operating<br>Psychopathy</h1>
+      <div class="sub">Sektor 4 — Handbuch für Schichtleiter</div>
+      <p>Die Oberfläche ist erledigt. Sie überwachen einen Bunker mit drei Subjekten.
+         Die Subjekte bewerten ihre Bedürfnisse selbst und handeln danach — Ihre Aufgabe
+         ist das Netz: Strom legen, Luft waschen, Grabungsaufträge erteilen, Schotten schalten.</p>
+      <p class="keys">
+        <b>1–8</b> Module bauen &nbsp;·&nbsp; <b>W</b> Wand &nbsp;·&nbsp; <b>X</b> Grabungsauftrag &nbsp;·&nbsp; <b>ESC</b> Abbruch<br>
+        <b>V</b> Physisch ↔ Crosslink &nbsp;·&nbsp; <b>LEER</b> Pause &nbsp;·&nbsp; <b>M</b> Ton<br>
+        <b>Crosslink:</b> zwei Knoten anklicken = Leitung (max. 8 Felder).<br>
+        Sensor + Schott koppeln: Schott öffnet bei Bewegung.<br>
+        Notstromaggregat verbrennt ÖL — Öl liegt im Erdreich. Graben hält das Netz am Leben.
+      </p>
+      <p style="color: var(--alert)">WARNUNG: Hoher Stress führt bei geeigneten Profilen zu Kurzschlüssen im wahrsten Sinne.</p>
+      <div class="foot">
+        <span style="color: var(--text-dim); font-size: 11px">JEDER ATEMZUG WIRD REGISTRIERT</span>
+        <button class="btn" id="btn-start">Schicht beginnen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME OVER -->
+  <div class="overlay" id="overlay-over">
+    <div class="dialog gameover">
+      <h1>Akte geschlossen</h1>
+      <div class="sub">Alle Subjekte ausgefallen — Sektor 4 stillgelegt</div>
+      <div id="over-stats" style="margin: 14px 0"></div>
+      <div class="foot">
+        <span style="color: var(--text-dim); font-size: 11px">DIE OBERFLÄCHE IST KEIN ORT MEHR</span>
+        <button class="btn danger" id="btn-restart">Neue Schicht</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="audio.js"></script>
+  <script src="world.js"></script>
+  <script src="ai.js"></script>
+  <script src="render.js"></script>
+  <script src="ui.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
