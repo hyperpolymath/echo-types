@@ -1,0 +1,79 @@
+// SPDX-License-Identifier: MPL-2.0
+= Fibre accounting for autoformalisation: design note
+:toc: preamble
+
+== The object
+
+For one translation step, let `SA` be the source atoms (hypotheses, constants,
+bounds, quantifier structure, conclusion) and `TA` the target atoms of the
+formal statement. A translation is a total map
+
+[source]
+----
+account : SA -> Verdict TA
+Verdict TA = mapped t | dropped reason
+----
+
+The fibre of a target atom `t` is the set of source atoms whose verdict is
+`mapped t`. This is the echo-type reading: `Fibre t = Σ s. account s ≡ mapped t`.
+
+== What the types buy
+
+* *No silent loss.* `account` is total, so every source atom has a verdict.
+  An atom that vanishes from the translation is a type error, not an
+  oversight.
+* *Fabrication is a fibre question.* A target atom with an empty fibre has no
+  source in this step. It may be a helpful lemma or an invented one. The
+  record makes that visible; it does not decide which.
+* *Checker blindness is explicit.* Two translations with the same target atoms
+  look identical to a checker, whatever their fibres say. The auditor needs the
+  fibre to tell them apart.
+
+== Direction, not just equality
+
+Equality of atoms is too coarse. The video's case is a numeric parameter: the
+paper needs four, the formal version needs five. Both are "a bound", but the
+formal one is a weaker claim. `EchoFidelity.agda` encodes this as a direction
+check: `cmp 4 5 ≡ weaker`.
+
+The same idea extends to hypotheses (a target with an extra hypothesis is
+weaker) and to conclusions (a target with a stronger conclusion is stronger
+and needs proof, not just a check).
+
+== What is not claimed
+
+* The fibre does not show that matched atoms have the same meaning. A `Nat`
+  standing in for `ℝ` maps cleanly and is still wrong.
+* The fibre cannot see what the source left implicit. Unstated assumptions
+  need a reader.
+* A trace produced by the translating process can be wrong in the same way as
+  the translation. Its independence is what gives it value.
+* Round-trip back-translation is a useful heuristic, not a proof of equivalence.
+
+== Layers of assurance
+
+[cols="1,2,2"]
+|===
+|Layer |What it checks |Decidable?
+
+|1. Accounting |Every source atom has a verdict; drops carry reasons |Yes
+|2. Structural diff |Hypothesis set, quantifier order, numeric parameters,
+ direction of each change |Yes, for the syntactic fragment
+|3. Back-translation |Target re-read as informal text, compared with source |No;
+ needs review
+|4. Axiom audit |No postulates or assumptions added on the target side |Yes
+|5. Human reading |Implicit assumptions and meaning |No
+|===
+
+Layers 1, 2, and 4 are cheap and should run on every step. Layers 3 and 5 are
+where judgement is needed. The design aim is that judgement is spent on the
+few atoms the structural layers flag, not on the whole statement.
+
+== Open questions
+
+* Which fragment of statements admits a complete structural diff? Derivative
+  counts and bounds are plausible; full first-order equivalence is not.
+* How should a fibre be persisted alongside a proof receipt so the link from
+  source to check is durable? Candidate: content IDs from `echidna/src/rust/ids.rs`.
+* Who writes the trace? Options: the translator (cheap, weak), a separate
+  model (medium), code that diffs both sides (strong for structure only).
