@@ -1,0 +1,65 @@
+// SPDX-License-Identifier: MPL-2.0
+= Echos: fidelity exploration for autoformalisation
+:toc: preamble
+
+== Scope
+
+This directory is the exploration space for using echo types (fibres with
+witnesses) to reason about fidelity of translation steps, in particular
+autoformalisation: informal or source statement → formal statement → checked
+proof.
+
+It is exploratory. Nothing here is a claimed result. The question is:
+
+____
+If the fibre of each target atom is traceable back to its source atoms, does
+that help assure that the translation preserved what matters?
+____
+
+== Status
+
+[cols="2,1,3"]
+|===
+|Item |Status |Where
+
+|Fibre accounting model (Agda) |DRAFT, unverified |`proofs/agda/EchoFidelity.agda`
+|Design note (what fibres do and do not give) |Draft |`FIDELITY-FIBRE-DESIGN.adoc`
+|Investigation brief for a repo-tied bot |Ready to use |`BOT-PROMPT.adoc`
+|Wired into `All.agda` / `Smoke.agda` |No |Deliberately not wired until checked
+|===
+
+== Ground truth from the surrounding tools
+
+Checked on 2026-10-11 against the sibling repositories (read-only):
+
+* `echidna`: proof identity and goal identity hash the submitted goal text
+  (`src/rust/proof_encoding.rs`). Nothing in the trust path records a
+  source-to-target mapping. Axiom detection is pattern-based
+  (`src/rust/corpus/agda.rs`).
+* `echidna`: `src/rust/ids.rs` provides a stable content-ID scheme (UUIDv8 over
+  canonical JSON) that could hold atom identifiers.
+* `proof-burrower`: goal matching is Jaccard over signature tokens, described
+  in the code as crude (`crates/burrower-core/src/ranking.rs`).
+
+So the fibre trace described here does not exist in those tools yet.
+
+== Principles
+
+1. *Accounting is decidable; fidelity is not.* Every source atom must end up
+   mapped or explicitly dropped with a reason. That is a structural check. It
+   is not evidence that the meanings agree.
+2. *The checker sees only the target.* A proof checker cannot observe
+   fidelity. Fidelity needs an observer that sees both sides.
+3. *Traces need an independent author.* A trace written by the same process
+   that translated can share its errors. Prefer a structural diff run by code.
+4. *Record, don't assume.* A dropped or strengthened atom is information, not
+   an error to hide.
+
+== Files
+
+* `proofs/agda/EchoFidelity.agda`: fibre accounting, checker vs auditor
+  observation, and a direction check for a numeric parameter (the 4-vs-5 case).
+* `FIDELITY-FIBRE-DESIGN.adoc`: the design note, with what is and is not
+  claimed.
+* `BOT-PROMPT.adoc`: a prompt for a bot tied to this repository to carry out
+  the investigation.

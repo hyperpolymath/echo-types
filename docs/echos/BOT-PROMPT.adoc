@@ -1,0 +1,80 @@
+// SPDX-License-Identifier: MPL-2.0
+= Investigation brief: echo-based fidelity for autoformalisation
+
+Paste the section below into a bot tied to the `echo-types` repository on
+branch `arena/93ae4ce1-echo-types`. Work only on that branch.
+
+== Prompt
+
+____
+You are investigating whether echo types (fibres with witnesses) can help
+assure fidelity of autoformalisation: the step where an informal or source
+statement is translated into a formal statement that a proof checker accepts.
+
+Context you must read first:
+
+* `docs/echos/README.adoc` (scope, status, ground truth)
+* `docs/echos/FIDELITY-FIBRE-DESIGN.adoc` (design and what is not claimed)
+* `proofs/agda/EchoFidelity.agda` (draft model, NOT yet type-checked)
+* `proofs/agda/EchoEpistemic.agda` (existing knowledge/observation model)
+* `docs/CLAIMS_AUDIT.adoc` (how this repo audits its own claims)
+
+Core question: if the fibre of each target atom is traceable to its source
+atoms, does that help assure that the translation preserved what matters?
+
+Tasks, in order:
+
+1. *Type-check the draft.* Attempt to type-check `EchoFidelity.agda` with the
+   same Agda version and standard library the repo uses (see
+   `echo-types.agda-lib` and the version noted in `EXPLAINME.adoc`). Fix only
+   errors that are syntactic or type-level. Do not change claims. Report the
+   exact errors and fixes. If Agda is unavailable, say so and stop this task.
+
+2. *Test the claims in the design note.* For each claim in
+   `FIDELITY-FIBRE-DESIGN.adoc` section "What the types buy", state whether
+   it is (a) enforced by the type, (b) a definitional consequence, or
+   (c) only a convention. Give evidence for each.
+
+3. *Check the direction example.* Confirm that `cmp 4 5 ≡ weaker` reflects the
+   stated convention (smaller parameter = stronger claim). Then construct one
+   more example of your own from a different domain (for example, a hypothesis
+   that is added, or a bound that is tightened) and encode it. Say whether the
+   convention generalises or needs more structure.
+
+4. *Stress-test the checker/auditor split.* Write down a concrete pair of
+   translations with identical target atoms and different fibres. Show that a
+   checker's observation is identical, and that the auditor can tell them
+   apart. Then describe one case where the auditor's view is still not enough.
+
+5. *Survey the surrounding tools (read-only).* In the sibling repositories
+   `echidna`, `echidnabot`, and `proof-burrower`, identify any place where a
+   source-to-target mapping could be recorded. Use the existing content-ID
+   scheme (`echidna/src/rust/ids.rs`) as a candidate. Do not modify those
+   repositories. Report file paths and line references.
+
+6. *Propose, do not implement, a persistence format.* Sketch the minimal record
+   needed to store a fibre alongside a proof receipt. Keep it to fields and
+   invariants. Put it in `docs/echos/FIBRE-RECORD-PROPOSAL.adoc`.
+
+Rules:
+
+* Label every statement as VERIFIED (you ran it), READ (you read the code), or
+  INFERRED (reasoning only). Do not present inferred results as verified.
+* Do not claim fidelity is established. The output is about structure and
+  assurance layers, not about whether any particular theorem is correct.
+* Do not wire `EchoFidelity.agda` into `All.agda` or `Smoke.agda` unless every
+  check passes and the user asks for it.
+* Keep changes to `docs/echos/` and `proofs/agda/EchoFidelity.agda` unless a
+  task requires otherwise. Explain any other file you touch.
+* Commit to `arena/93ae4ce1-echo-types` only.
+
+Deliverable: a short report at `docs/echos/INVESTIGATION-REPORT.adoc` with one
+section per task, the labels above, and a list of open questions.
+____
+
+== Notes for the person running the bot
+
+* The bot's output is a structured exploration, not a verdict on any
+  autoformalisation result.
+* If the bot reports that Agda cannot be run, treat task 1 as open, and do not
+  let later tasks rely on the draft compiling.
