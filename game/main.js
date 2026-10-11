@@ -194,10 +194,11 @@ SOP.Main = (() => {
   }
 
   function returnFromExpedition(inm) {
-    stats.expeditions++;
     const air = world.devices.find(d => d.kind === 'airlock');
     const spot = air ? adjacentStand(air) : null;
-    if (spot) { inm.tx = spot.x; inm.ty = spot.y; inm.px = spot.x; inm.py = spot.y; }
+    if (!spot) { inm.away.returnTick = ticks + 40; return; } // gate blocked — wait outside
+    stats.expeditions++;
+    inm.tx = spot.x; inm.ty = spot.y; inm.px = spot.x; inm.py = spot.y;
     inm.away = null;
     const gains = rollLoot();
     for (const g of gains) world.res[g.res] = (world.res[g.res] || 0) + g.n;
