@@ -25,9 +25,11 @@ SOP.Main = (() => {
   let nextArrivalTick = 2200;
   let stats = { caches: 0, meals: 0, repairs: 0, sabotages: 0, quakes: 0, expeditions: 0, arrivals: 0 };
 
+  /** Return the in-game calendar day derived from elapsed simulation ticks. */
   function day() { return SOP.START_DAY + Math.floor(ticks / SOP.DAY_TICKS); }
 
   /* ---------------- SETUP ---------------- */
+  /** Generate the starting colony, bind controls, and start rendering the intro. */
   function setup() {
     world.generate();
 
@@ -53,6 +55,7 @@ SOP.Main = (() => {
     requestAnimationFrame(frame);
   }
 
+  /** Start the shift and toggle audio; opts.interval=false suppresses the tick timer. */
   function beginShift(opts) {
     started = true;
     if (SOP.Audio && SOP.Audio.toggle) SOP.Audio.toggle(); // motorik loop (user gesture)
@@ -62,6 +65,7 @@ SOP.Main = (() => {
   }
 
   /* ---------------- SIMULATION TICK ---------------- */
+  /** Advance an active, unpaused shift by one tick, processing events and autosave. */
   function simTick() {
     if (!started || paused || gameOver) return;
     ticks++;
@@ -110,11 +114,13 @@ SOP.Main = (() => {
     if (world.inmates.every(i => i.dead)) endGame();
   }
 
+  /** Log generator fuel consumption and farm harvest events from the world. */
   function handleWorldEvent(ev) {
     if (ev.type === 'burn') UI.log('NOTSTROMAGGREGAT VERFEUERT 1 ÖL.', 'dim');
     if (ev.type === 'harvest') UI.log('PILZFARM: 1 RATION GEERNTET.', 'dim');
   }
 
+  /** Apply inmate events to statistics, alerts, stress, and expedition boarding. */
   function handleInmateEvent(ev) {
     switch (ev.type) {
       case 'meal':
@@ -155,6 +161,7 @@ SOP.Main = (() => {
   }
 
   /* ---------------- EXPEDITIONS ---------------- */
+  /** Return a walkable tile beside dev, or null; optionally ignore inmate occupancy. */
   function adjacentStand(dev, ignoreInmates) {
     for (const [dx, dy] of [[0, 1], [1, 0], [-1, 0], [0, -1]]) {
       const x = dev.x + dx, y = dev.y + dy;
@@ -165,6 +172,7 @@ SOP.Main = (() => {
     return null;
   }
 
+  /** Assign the named eligible inmate to board the airlock during an active shift. */
   function startExpedition(name) {
     if (gameOver || !started) return;
     const air = world.devices.find(d => d.kind === 'airlock');
@@ -181,6 +189,7 @@ SOP.Main = (() => {
     UI.log(`${inm.name}: GANG ZUR OBERFLÄCHE. MASKE SITZT.`, 'wire');
   }
 
+  /** Return two or three weighted loot rolls with inclusive random resource quantities. */
   function rollLoot() {
     const totalW = SOP.LOOT.reduce((a, c) => a + c.weight, 0);
     const n = 2 + (Math.random() < 0.4 ? 1 : 0);
@@ -193,6 +202,7 @@ SOP.Main = (() => {
     return out;
   }
 
+  /** Bring an inmate home with loot and possible injury, or defer if the gate is blocked. */
   function returnFromExpedition(inm) {
     const air = world.devices.find(d => d.kind === 'airlock');
     const spot = air ? adjacentStand(air) : null;
@@ -215,6 +225,7 @@ SOP.Main = (() => {
   }
 
   /* ---------------- COLONY GROWTH ---------------- */
+  /** Add a newcomer when the airlock and colony capacity permit; return success. */
   function tryArrival() {
     if (gameOver) return false;
     const air = world.devices.find(d => d.kind === 'airlock');
@@ -240,6 +251,7 @@ SOP.Main = (() => {
     return true;
   }
 
+  /** Choose the next arrival tick using the shorter range when a radio is powered. */
   function scheduleNextArrival() {
     const radio = world.devices.find(d =>
       d.kind === 'radio' && d.powered && !d.broken && d.enabled !== false);
@@ -248,8 +260,10 @@ SOP.Main = (() => {
   }
 
   /* ---------------- SAVE / LOAD ---------------- */
+  /** Return localStorage, or null if browser access throws. */
   function storage() { try { return window.localStorage; } catch (e) { return null; } }
 
+  /** Return a versioned snapshot of the world, inmates, timers, and statistics. */
   function buildSaveData() {
     return {
       v: 1,
@@ -261,6 +275,7 @@ SOP.Main = (() => {
     };
   }
 
+  /** Save the current snapshot to localStorage and return success; silent suppresses logs. */
   function saveGame(silent) {
     const st = storage();
     if (!st) { if (!silent) UI.log('STORAGE BLOCKIERT. NUTZE EXPORT.', 'alert'); return false; }
@@ -274,6 +289,7 @@ SOP.Main = (() => {
     }
   }
 
+  /** Restore a version-1 snapshot and resume play; return false on format or load errors. */
   function loadGame(data) {
     try {
       if (!data || data.v !== 1) { UI.log('AKTE UNLESBAR (FALSCHES FORMAT).', 'alert'); return false; }
@@ -310,6 +326,7 @@ SOP.Main = (() => {
     }
   }
 
+  /** Download the current snapshot as JSON and log export success or failure. */
   function exportSave() {
     try {
       const blob = new Blob([JSON.stringify(buildSaveData())], { type: 'application/json' });
@@ -326,6 +343,7 @@ SOP.Main = (() => {
     }
   }
 
+  /** Read a File as text, parse its JSON, and attempt to restore the saved game. */
   function importSave(file) {
     const r = new FileReader();
     r.onload = () => {
@@ -336,6 +354,7 @@ SOP.Main = (() => {
   }
 
   /* ---------------- EVENTS ---------------- */
+  /** Break up to two devices and apply earthquake stress, alerts, and screen shake. */
   function quake() {
     const name = SOP.QUAKE_NAMES[Math.floor(Math.random() * SOP.QUAKE_NAMES.length)];
     stats.quakes++;
@@ -360,6 +379,7 @@ SOP.Main = (() => {
     if (SOP.Audio && SOP.Audio.on) SOP.Audio.alarm();
   }
 
+  /** Stop simulation advancement and show the final statistics with a restart action. */
   function endGame() {
     gameOver = true;
     const daysWorked = Math.floor(ticks / SOP.DAY_TICKS);
@@ -378,6 +398,7 @@ SOP.Main = (() => {
 
   /* ---------------- RENDER LOOP ---------------- */
   let uiFrame = 0;
+  /** Draw the current view, periodically refresh the HUD, and request the next frame. */
   function frame() {
     R.draw({
       world,
@@ -396,6 +417,7 @@ SOP.Main = (() => {
   }
 
   /* ---------------- INPUT ---------------- */
+  /** Bind canvas, toolbar, save/load, and keyboard controls to game actions. */
   function bindInput() {
     const canvas = document.getElementById('gameCanvas');
 
@@ -456,6 +478,7 @@ SOP.Main = (() => {
       else { state.selected = null; state.selDevice = null; }
     });
 
+    /** Select a device at tile (x, y), or toggle its wire to the previously selected node. */
     function crosslinkClick(x, y) {
       const tl = world.tiles[y][x];
       const dev = tl.obj;
@@ -546,11 +569,13 @@ SOP.Main = (() => {
     });
   }
 
+  /** Activate the build-menu button for kind when it exists. */
   function clickMenuItem(kind) {
     const btn = document.querySelector(`.build-item[data-kind="${kind}"]`);
     if (btn) btn.click();
   }
 
+  /** Switch the renderer view, clear pending wiring, and highlight the supplied button. */
   function setView(v, btnEl) {
     R.setView(v);
     state.linkFrom = null;

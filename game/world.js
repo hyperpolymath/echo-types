@@ -27,10 +27,12 @@ SOP.World = (() => {
   };
 
   /* ---------------- WORLD GENERATION ---------------- */
+  /** Return a tile of terrain type t with initial atmosphere and no device. */
   function makeTile(t) {
     return { t, obj: null, o2: t === 'empty' ? 96 : 0, gas: 0, mark: false, lit: false, pocket: false };
   }
 
+  /** Rebuild the terrain, starter devices, wiring, hazards, and excavation orders. */
   function generate() {
     tiles = [];
     for (let y = 0; y < H; y++) {
@@ -84,6 +86,7 @@ SOP.World = (() => {
     [[14, 13], [15, 13], [16, 13], [22, 14], [23, 14]].forEach(([x, y]) => orderDig(x, y));
   }
 
+  /** Replace tiles in the inclusive rectangle (x1, y1)..(x2, y2) with empty tiles. */
   function carve(x1, y1, x2, y2) {
     for (let y = y1; y <= y2; y++)
       for (let x = x1; x <= x2; x++)
@@ -91,6 +94,7 @@ SOP.World = (() => {
   }
 
   /* ---------------- DEVICES ---------------- */
+  /** Create and register a device at (x, y) without placement or resource checks. */
   function placeDevice(kind, x, y) {
     const dev = {
       id: nextDevId++, kind, x, y,
@@ -110,6 +114,7 @@ SOP.World = (() => {
     return dev;
   }
 
+  /** Remove a device from the device list and tile, and remove links pointing to it. */
   function removeDevice(dev) {
     const i = devices.indexOf(dev);
     if (i >= 0) devices.splice(i, 1);
@@ -117,6 +122,7 @@ SOP.World = (() => {
     if (tiles[dev.y][dev.x].obj === dev) tiles[dev.y][dev.x].obj = null;
   }
 
+  /** Connect two distinct devices within Manhattan link range; return whether accepted. */
   function addLink(a, b) {
     if (!a || !b || a === b) return false;
     const dist = Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
@@ -126,11 +132,13 @@ SOP.World = (() => {
     return true;
   }
 
+  /** Remove the bidirectional wire between devices a and b. */
   function removeLink(a, b) {
     a.links = a.links.filter(id => id !== b.id);
     b.links = b.links.filter(id => id !== a.id);
   }
 
+  /** Return each wire once as a pair of devices, omitting missing endpoints. */
   function linksPairs() {
     const seen = new Set(), pairs = [];
     for (const d of devices) for (const id of d.links) {
@@ -143,7 +151,7 @@ SOP.World = (() => {
     return pairs;
   }
 
-  /* Build / order actions used by the UI. Returns error string or null. */
+  /** Return a placement error string for kind at (x, y), or null if the site is valid. */
   function canBuildAt(kind, x, y) {
     if (!inGrid(x, y)) return 'AUSSERHALB SEKTOR';
     const tl = tiles[y][x];
@@ -162,6 +170,7 @@ SOP.World = (() => {
     return null;
   }
 
+  /** Validate placement and resources, spend the cost, and return {ok, err?}. */
   function tryBuild(kind, x, y) {
     const err = canBuildAt(kind, x, y);
     if (err) return { ok: false, err };
@@ -172,6 +181,7 @@ SOP.World = (() => {
     return { ok: true };
   }
 
+  /** Spend concrete to wall off an empty, unoccupied tile; return {ok, err?}. */
   function tryBuildWall(x, y) {
     if (!inGrid(x, y)) return { ok: false, err: 'AUSSERHALB SEKTOR' };
     const tl = tiles[y][x];
@@ -184,6 +194,7 @@ SOP.World = (() => {
     return { ok: true };
   }
 
+  /** Mark an in-grid dirt tile for excavation; return whether the order was accepted. */
   function orderDig(x, y) {
     if (!inGrid(x, y) || tiles[y][x].t !== 'dirt') return false;
     Blackboard.postDigMark(x, y);
@@ -191,7 +202,7 @@ SOP.World = (() => {
     return true;
   }
 
-  /* Complete one tile of excavation (called by AI). */
+  /** Excavate a marked tile and return a gas/cache event or null; digger is unused. */
   function completeDig(x, y, digger) {
     const tl = tiles[y][x];
     tl.t = 'empty'; tl.mark = false; tl.o2 = 60;
@@ -217,6 +228,7 @@ SOP.World = (() => {
   /* ---------------- POWER EVALUATION ---------------- */
   let powerState = { gen: 0, draw: 0, stored: 0, components: 0, deficit: 0 };
 
+  /** Recompute wired components, advance battery/relay state, and return power totals. */
   function evalPower() {
     // union-find over links
     const parent = new Map();
@@ -294,6 +306,7 @@ SOP.World = (() => {
   }
 
   /* ---------------- GAS / O2 DIFFUSION ---------------- */
+  /** Blend oxygen and gas between adjacent empty tiles, clamping levels to 0..100. */
   function diffuse() {
     const k = 0.20;
     const nO2 = [], nGas = [];
@@ -324,6 +337,7 @@ SOP.World = (() => {
   }
 
   /* ---------------- TICK ---------------- */
+  /** Advance devices, power, breathing, diffusion, and lighting; report device events to onEvent. */
   function tick(onEvent) {
     // devices act
     for (const d of devices) {
@@ -389,6 +403,7 @@ SOP.World = (() => {
     updateLighting();
   }
 
+  /** Reset tile lighting and illuminate empty tiles near active lamps. */
   function updateLighting() {
     for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) tiles[y][x].lit = false;
     for (const d of devices) {
@@ -401,6 +416,7 @@ SOP.World = (() => {
   }
 
   /* ---------------- PATHFINDING ---------------- */
+  /** Return whether a tile is empty and unoccupied, except for lamps and sensors. */
   function walkable(x, y) {
     if (!inGrid(x, y)) return false;
     const tl = tiles[y][x];
@@ -410,6 +426,10 @@ SOP.World = (() => {
     return true;
   }
 
+  /**
+   * Return a BFS path excluding the start, [] if already there, or null if unreachable.
+   * The target may be occupied; intermediate tiles must be walkable.
+   */
   function findPath(sx, sy, tx, ty) {
     if (!inGrid(tx, ty)) return null;
     if (sx === tx && sy === ty) return [];
@@ -444,7 +464,7 @@ SOP.World = (() => {
     return null;
   }
 
-  /* Nearest lit tile to (x,y). */
+  /** Return the nearest lit empty tile by Manhattan distance, or null if none exists. */
   function nearestLit(x, y) {
     let best = null, bd = Infinity;
     for (let yy = 0; yy < H; yy++) for (let xx = 0; xx < W; xx++) {
@@ -457,6 +477,7 @@ SOP.World = (() => {
   }
 
   /* ---------------- SAVE / LOAD ---------------- */
+  /** Return world save data with copied resources and links, omitting derived runtime state. */
   function serialize() {
     return {
       res: Object.assign({}, res),
@@ -476,6 +497,7 @@ SOP.World = (() => {
     };
   }
 
+  /** Restore world save data, rebuild device references and the Blackboard, then evaluate power. */
   function loadFrom(data) {
     tiles = data.tiles.map(row => row.map(o => {
       const tl = makeTile(o.t);
@@ -513,7 +535,9 @@ SOP.World = (() => {
   }
 
   /* ---------------- helpers / API ---------------- */
+  /** Return whether (x, y) lies within the grid bounds. */
   function inGrid(x, y) { return x >= 0 && y >= 0 && x < W && y < H; }
+  /** Limit v to the inclusive interval from a to b. */
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
   return {

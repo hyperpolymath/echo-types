@@ -12,6 +12,7 @@ SOP.Audio = (() => {
   const BASS = [55, 55, 82.4, 55, 65.4, 55, 49, 55, 55, 55, 82.4, 55, 65.4, 98, 82.4, 55];
   const HAT_PATTERN = [0,0,1,0, 0,0,1,0, 0,0,1,0, 0,0,1,1];
 
+  /** Create the audio context and master gain once, if Web Audio is available. */
   function init() {
     if (ctx) return;
     const AC = window.AudioContext || window.webkitAudioContext;
@@ -22,6 +23,7 @@ SOP.Audio = (() => {
     master.connect(ctx.destination);
   }
 
+  /** Schedule a short sine-wave kick at audio-context time t (seconds). */
   function kick(t) {
     const o = ctx.createOscillator(), g = ctx.createGain();
     o.type = 'sine';
@@ -33,6 +35,7 @@ SOP.Audio = (() => {
     o.start(t); o.stop(t + 0.13);
   }
 
+  /** Schedule a high-pass noise hi-hat at audio-context time t (seconds). */
   function hat(t) {
     const len = 0.03;
     const buf = ctx.createBuffer(1, ctx.sampleRate * len, ctx.sampleRate);
@@ -45,6 +48,7 @@ SOP.Audio = (() => {
     s.start(t);
   }
 
+  /** Schedule a sawtooth bass note at time t (seconds) and frequency freq (Hz). */
   function bass(t, freq) {
     const o = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
     o.type = 'sawtooth'; o.frequency.value = freq;
@@ -56,6 +60,7 @@ SOP.Audio = (() => {
     o.start(t); o.stop(t + 0.18);
   }
 
+  /** Queue sixteenth-note steps through the audio lookahead window. */
   function schedule() {
     while (nextNote < ctx.currentTime + LOOKAHEAD) {
       const s16 = step % 16;
@@ -67,6 +72,7 @@ SOP.Audio = (() => {
     }
   }
 
+  /** Start or stop the sequencer; return whether playback is running. */
   function toggle() {
     init();
     if (!ctx) return false;
@@ -81,7 +87,7 @@ SOP.Audio = (() => {
     return running;
   }
 
-  /* One-shot alerts */
+  /** Play a one-shot alert tone only while the sequencer is running. */
   function alarm() {
     if (!ctx || !running) return;
     const t = ctx.currentTime;

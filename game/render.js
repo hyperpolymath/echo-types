@@ -26,10 +26,14 @@ SOP.Render = (() => {
   let shakeUntil = 0;
   let now = 0;
 
+  /** Set the active view mode to PHYSICAL or CROSSLINK. */
   function setView(v) { viewMode = v; }
+  /** Return the active view mode. */
   function getView() { return viewMode; }
+  /** Set screen shake to end dur milliseconds from now. */
   function shake(dur) { shakeUntil = performance.now() + dur; }
 
+  /** Fit the canvas to its container and recalculate the grid scale and centering offsets. */
   function resize() {
     const box = document.getElementById('canvas-container');
     canvas.width = box.clientWidth;
@@ -40,19 +44,21 @@ SOP.Render = (() => {
     offY = (canvas.height - SOP.GRID_H * SOP.TILE * scale) / 2;
   }
 
+  /** Convert canvas-relative pixel coordinates to tile coordinates without clamping. */
   function toTile(mx, my) {
     const x = Math.floor((mx - offX) / (SOP.TILE * scale));
     const y = Math.floor((my - offY) / (SOP.TILE * scale));
     return { x, y };
   }
 
-  /* deterministic pseudo-random per tile for texture */
+  /** Return a deterministic value in [0, 1] from tile coordinates for terrain texture. */
   function hash(x, y) {
     let h = (x * 374761393 + y * 668265263) | 0;
     h = (h ^ (h >> 13)) * 1274126177 | 0;
     return ((h ^ (h >> 16)) >>> 0) / 4294967295;
   }
 
+  /** Render state in the active view with screen shake and monitor labels. */
   function draw(state) {
     now = performance.now();
     resizeIfNeeded();
@@ -86,12 +92,14 @@ SOP.Render = (() => {
     ctx.fillText('SEKTOR 4 // ÜBERWACHUNGSMONITOR 07-B', 14, 38);
   }
 
+  /** Recalculate canvas dimensions and grid layout if the container size changed. */
   function resizeIfNeeded() {
     const box = document.getElementById('canvas-container');
     if (canvas.width !== box.clientWidth || canvas.height !== box.clientHeight) resize();
   }
 
   /* ---------------- PHYSICAL LAYER ---------------- */
+  /** Draw terrain, lighting, gas, devices, inmates, and placement previews from state. */
   function drawPhysical(state) {
     const T = SOP.TILE, world = state.world;
 
@@ -177,6 +185,7 @@ SOP.Render = (() => {
     if (state.ghost) drawGhost(state.ghost, T, state.world);
   }
 
+  /** Draw a device and its status using T pixels per tile before canvas scaling. */
   function drawDevice(d, T) {
     const px = d.x * T, py = d.y * T;
     const def = SOP.OBJ[d.kind];
@@ -245,6 +254,7 @@ SOP.Render = (() => {
     }
   }
 
+  /** Draw an inmate at T pixels per tile, including posture and optional selection marks. */
   function drawInmate(inm, T, selected) {
     const px = inm.tx * T + T / 2, py = inm.ty * T + T / 2;
     if (inm.dead) {
@@ -279,6 +289,7 @@ SOP.Render = (() => {
     }
   }
 
+  /** Draw a placement preview and lamp/sensor range using tile size T and world checks. */
   function drawGhost(ghost, T, world) {
     const { x, y, kind } = ghost;
     if (!world.inGrid(x, y)) return;
@@ -310,6 +321,7 @@ SOP.Render = (() => {
   }
 
   /* ---------------- CROSSLINK LAYER ---------------- */
+  /** Draw the wiring view from state, including power flow, node status, and selection. */
   function drawCrosslink(state) {
     const T = SOP.TILE, world = state.world;
 
