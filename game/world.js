@@ -499,11 +499,17 @@ SOP.World = (() => {
 
   /** Restore world save data, rebuild device references and the Blackboard, then evaluate power. */
   function loadFrom(data) {
-    tiles = data.tiles.map(row => row.map(o => {
+    if (!data || !Array.isArray(data.tiles) || data.tiles.length !== H ||
+        data.tiles.some(r => !Array.isArray(r) || r.length !== W) ||
+        !Array.isArray(data.devices) || !data.res || typeof data.res !== 'object') {
+      throw new Error('invalid world save');
+    }
+    const newTiles = data.tiles.map(row => row.map(o => {
       const tl = makeTile(o.t);
-      tl.o2 = o.o2; tl.gas = o.gas; tl.mark = !!o.m; tl.pocket = !!o.p;
+      tl.o2 = Number(o.o2) || 0; tl.gas = Number(o.gas) || 0; tl.mark = !!o.m; tl.pocket = !!o.p;
       return tl;
     }));
+    tiles = newTiles;
     devices = [];
     Blackboard.digMarks = [];
     Blackboard.hazards = [];
