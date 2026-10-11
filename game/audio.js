@@ -72,7 +72,11 @@ SOP.Audio = (() => {
     }
   }
 
-  /** Start or stop the sequencer; return whether playback is running. */
+  /**
+   * Start or stop scheduling notes; return whether the sequencer is running.
+   * Return false if Web Audio is unavailable; audio initialisation errors propagate.
+   * Stopping leaves already scheduled notes to finish.
+   */
   function toggle() {
     init();
     if (!ctx) return false;

@@ -275,7 +275,10 @@ SOP.Main = (() => {
     };
   }
 
-  /** Save the current snapshot to localStorage and return success; silent suppresses logs. */
+  /**
+   * Save the current snapshot to localStorage and return success; silent suppresses logs.
+   * Return false when storage is unavailable or serialisation or writing fails.
+   */
   function saveGame(silent) {
     const st = storage();
     if (!st) { if (!silent) UI.log('STORAGE BLOCKIERT. NUTZE EXPORT.', 'alert'); return false; }
@@ -289,7 +292,10 @@ SOP.Main = (() => {
     }
   }
 
-  /** Restore a version-1 snapshot and resume play; return false on format or load errors. */
+  /**
+   * Restore a version-1 snapshot and resume play; return true on success or false on format
+   * or load errors. Failed loads do not roll back changes already applied to the game.
+   */
   function loadGame(data) {
     try {
       if (!data || data.v !== 1) { UI.log('AKTE UNLESBAR (FALSCHES FORMAT).', 'alert'); return false; }
@@ -343,7 +349,11 @@ SOP.Main = (() => {
     }
   }
 
-  /** Read a File as text, parse its JSON, and attempt to restore the saved game. */
+  /**
+   * Read a File as text asynchronously and attempt to restore its JSON snapshot.
+   * JSON parse errors are caught and load errors become loadGame's false result.
+   * Synchronous FileReader errors propagate; asynchronous read errors have no handler.
+   */
   function importSave(file) {
     const r = new FileReader();
     r.onload = () => {
