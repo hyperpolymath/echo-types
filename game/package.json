@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "test": "node tools/smoke.js 9600 && node tools/dom_test.js",
-    "serve": "python3 -m http.server 8000 --bind 0.0.0.0"
+    "serve": "python3 -m http.server 8000 --bind 127.0.0.1"
   },
   "devDependencies": {
     "jsdom": "^24.0.0"
