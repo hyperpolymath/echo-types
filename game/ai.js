@@ -6,6 +6,7 @@
 window.SOP = window.SOP || {};
 
 SOP.InmateAI = class InmateAI {
+  /** Create an idle inmate at tile coordinates (x, y) with randomised initial needs. */
   constructor(name, trait, x, y) {
     this.name = name;
     this.trait = trait;
@@ -36,6 +37,10 @@ SOP.InmateAI = class InmateAI {
   }
 
   /* ---------------- UTILITY EVALUATOR ---------------- */
+  /**
+   * Choose the highest-scoring drive for a living inmate. Reset progress and movement
+   * when the action changes or has no goal; otherwise retain the current goal.
+   */
   evaluateDrives(world) {
     if (this.dead) return;
     const A = this.affective;
@@ -153,7 +158,7 @@ SOP.InmateAI = class InmateAI {
     this.logConativeState(best);
   }
 
-  /* Is this device on the same wired component as any dispenser? */
+  /** Return whether dev is connected to any dispenser, including the dispenser itself. */
   onDispenserGrid(world, dev) {
     const starts = world.devices.filter(d => d.kind === 'dispenser');
     if (!starts.length) return false;
@@ -171,6 +176,7 @@ SOP.InmateAI = class InmateAI {
     return seen.has(dev.id);
   }
 
+  /** Return a random sabotage goal for a wired device other than a gas vent, or null. */
   pickSabotageTarget(world) {
     const linked = world.devices.filter(d => d.links.length > 0 && d.kind !== 'gas_vent');
     if (!linked.length) return null;
@@ -178,6 +184,7 @@ SOP.InmateAI = class InmateAI {
     return { kind: 'device', dev: d, act: 'sabotage' };
   }
 
+  /** Return a walkable wander goal, or null if none is found in 20 random attempts. */
   randomWanderGoal(world) {
     for (let tries = 0; tries < 20; tries++) {
       const x = Math.floor(Math.random() * world.W);
@@ -187,6 +194,10 @@ SOP.InmateAI = class InmateAI {
     return null;
   }
 
+  /**
+   * Return the nearest device matching pred by Manhattan distance, or null.
+   * Reachability is not checked; errors thrown by pred propagate to the caller.
+   */
   nearestDevice(world, pred) {
     let best = null, bd = Infinity;
     for (const d of world.devices) {
@@ -197,6 +208,10 @@ SOP.InmateAI = class InmateAI {
     return best;
   }
 
+  /**
+   * Return the nearest dirt dig mark with a walkable neighbour, preferring unclaimed
+   * marks, or null if none qualifies. Distance is Manhattan; no path is checked.
+   */
   nearestDigMark(world) {
     const taken = new Set();
     for (const o of world.inmates) {
@@ -216,6 +231,10 @@ SOP.InmateAI = class InmateAI {
     return best || bestTaken;
   }
 
+  /**
+   * Return the nearest empty tile with gas at most 10 and oxygen at least 30
+   * on their 0–100 scales, or null. Use Manhattan distance without checking a path.
+   */
   nearestClearAir(world) {
     let best = null, bd = Infinity;
     for (let y = 0; y < world.H; y++) for (let x = 0; x < world.W; x++) {
@@ -227,6 +246,7 @@ SOP.InmateAI = class InmateAI {
     return best;
   }
 
+  /** Return the display thought for an action name, falling back to an em dash. */
   thoughtFor(action) {
     const T = {
       'ESSEN FASSEN': 'Ausgabe. Jetzt.',
@@ -245,11 +265,16 @@ SOP.InmateAI = class InmateAI {
     return T[action] || '—';
   }
 
+  /** Release all devices in world operated by this inmate. */
   releaseCrank(world) {
     for (const d of world.devices) if (d.operatedBy === this.id) d.operatedBy = null;
   }
 
   /* ---------------- PER-TICK EXECUTION ---------------- */
+  /**
+   * Advance needs, health, movement and actions by one simulation tick; ignore dead inmates.
+   * Deliver action events synchronously to onEvent; callback errors propagate.
+   */
   tick(world, onEvent) {
     if (this.dead) return;
     // dynamo ownership sanity: a cranker who switched goals frees the cranks
@@ -309,6 +334,10 @@ SOP.InmateAI = class InmateAI {
     if (this.sayCooldown > 0) this.sayCooldown--;
   }
 
+  /**
+   * Return whether tile (x, y) is close enough to execute the current goal.
+   * Flee and hide tile goals require an exact match; other goals allow one orthogonal step.
+   */
   isGoalTile(x, y) {
     const g = this.goal;
     if (!g) return false;
@@ -319,6 +348,10 @@ SOP.InmateAI = class InmateAI {
     return false;
   }
 
+  /**
+   * Replace the route to the current goal or an adjacent standing tile.
+   * Abandon the goal if no standing tile or path is available.
+   */
   repath(world) {
     const g = this.goal;
     if (!g) { this.path = []; return; }
@@ -339,6 +372,10 @@ SOP.InmateAI = class InmateAI {
     if (!p) this.goal = null; // unreachable — re-evaluate next round
   }
 
+  /**
+   * Return the first walkable neighbour in east, west, south, north order, or null.
+   * Inmate occupancy and reachability from the current position are not checked.
+   */
   adjacentStand(world, x, y) {
     for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
       if (world.walkable(x + dx, y + dy)) return { x: x + dx, y: y + dy };
@@ -346,6 +383,11 @@ SOP.InmateAI = class InmateAI {
     return null;
   }
 
+  /**
+   * Advance the current action when within reach, otherwise request a route if needed.
+   * May change needs, resources, terrain or devices and clear the goal.
+   * Deliver action events synchronously to onEvent; callback errors propagate.
+   */
   execute(world, onEvent) {
     const g = this.goal;
     if (!g) return;
@@ -445,6 +487,10 @@ SOP.InmateAI = class InmateAI {
     }
   }
 
+  /**
+   * Mark this inmate dead with the display cause, end sleep and release operated devices
+   * in SOP.World.
+   */
   die(cause) {
     this.dead = true;
     this.deadCause = cause;
@@ -454,6 +500,10 @@ SOP.InmateAI = class InmateAI {
   }
 
   /* ---------------- SAVE / LOAD ---------------- */
+  /**
+   * Return save data with rounded health and copied needs and expedition state.
+   * Omit the current goal, route, sleep state and action progress.
+   */
   serialize() {
     return {
       id: this.id, name: this.name, trait: this.trait,
@@ -465,6 +515,7 @@ SOP.InmateAI = class InmateAI {
     };
   }
 
+  /** Restore an inmate from save data with idle action state; reuse d.away when present. */
   static fromData(d) {
     const i = new SOP.InmateAI(d.name, d.trait, d.tx, d.ty);
     i.id = d.id || d.name;
@@ -477,6 +528,7 @@ SOP.InmateAI = class InmateAI {
     return i;
   }
 
+  /** Retain the scored action by reference as lastScored. */
   logConativeState(action) {
     this.lastScored = action;
   }

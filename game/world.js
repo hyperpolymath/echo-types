@@ -17,10 +17,13 @@ SOP.World = (() => {
     digMarks: [],          // {x, y} tiles ordered for excavation
     hazards: [],           // {x, y, kind:'gas'}
     electricalNodes: [],   // mirrors devices
+    /** Append the device reference to the electrical-node list. */
     registerNode(dev) { this.electricalNodes.push(dev); },
+    /** Add an excavation order unless these tile coordinates are already listed. */
     postDigMark(x, y) {
       if (!this.digMarks.some(m => m.x === x && m.y === y)) this.digMarks.push({ x, y });
     },
+    /** Remove excavation orders at these tile coordinates. */
     removeDigMark(x, y) {
       this.digMarks = this.digMarks.filter(m => !(m.x === x && m.y === y));
     },
@@ -170,7 +173,10 @@ SOP.World = (() => {
     return null;
   }
 
-  /** Validate placement and resources, spend the cost, and return {ok, err?}. */
+  /**
+   * Validate placement and resources, spend the cost, and return {ok, err?}.
+   * kind must name an SOP.OBJ entry; a missing definition throws a TypeError if placement is valid.
+   */
   function tryBuild(kind, x, y) {
     const err = canBuildAt(kind, x, y);
     if (err) return { ok: false, err };
@@ -337,7 +343,10 @@ SOP.World = (() => {
   }
 
   /* ---------------- TICK ---------------- */
-  /** Advance devices, power, breathing, diffusion, and lighting; report device events to onEvent. */
+  /**
+   * Advance devices, power, breathing, diffusion, and lighting by one simulation tick.
+   * Report burn and harvest events synchronously to onEvent; callback errors propagate.
+   */
   function tick(onEvent) {
     // devices act
     for (const d of devices) {
@@ -416,7 +425,10 @@ SOP.World = (() => {
   }
 
   /* ---------------- PATHFINDING ---------------- */
-  /** Return whether a tile is empty and unoccupied, except for lamps and sensors. */
+  /**
+   * Return whether an in-grid tile is empty terrain with no device except a lamp or sensor.
+   * Inmates do not block movement; doors block it even when open.
+   */
   function walkable(x, y) {
     if (!inGrid(x, y)) return false;
     const tl = tiles[y][x];
@@ -427,8 +439,9 @@ SOP.World = (() => {
   }
 
   /**
-   * Return a BFS path excluding the start, [] if already there, or null if unreachable.
-   * The target may be occupied; intermediate tiles must be walkable.
+   * Return a shortest orthogonal path as [x, y] tile pairs, excluding the start.
+   * Return [] if already at an in-grid target, or null if it is outside the grid or unreachable.
+   * The target need not be walkable, regardless of terrain or devices; intermediate tiles must be.
    */
   function findPath(sx, sy, tx, ty) {
     if (!inGrid(tx, ty)) return null;
@@ -497,7 +510,13 @@ SOP.World = (() => {
     };
   }
 
-  /** Restore world save data, rebuild device references and the Blackboard, then evaluate power. */
+  /**
+   * Restore world save data, rebuild device references and the Blackboard, then evaluate power
+   * and lighting. Power evaluation advances battery and relay state; inmates are unchanged.
+   * Throw Error('invalid world save') if grid dimensions, the devices array or resources object
+   * fail validation.
+   * Errors from malformed entries or power evaluation propagate; failures may leave partial changes.
+   */
   function loadFrom(data) {
     if (!data || !Array.isArray(data.tiles) || data.tiles.length !== H ||
         data.tiles.some(r => !Array.isArray(r) || r.length !== W) ||

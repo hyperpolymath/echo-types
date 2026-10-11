@@ -26,6 +26,10 @@ SOP.UI = (() => {
   let logLines = [];
 
   /* ---------------- EVENT LOG ---------------- */
+  /**
+   * Prepend a day-stamped message to the display, retaining at most 70 entries.
+   * msg is inserted as HTML; cls selects the l-* CSS class and defaults to ok.
+   */
   function log(msg, cls) {
     const day = SOP.Main ? SOP.Main.day() : 0;
     logLines.push({ msg, cls: cls || 'ok', day });
@@ -35,14 +39,20 @@ SOP.UI = (() => {
     ).reverse().join('');
   }
 
+  /** Display an alert message and sound the alarm when audio is on. */
   function alert(msg) {
     log(msg, 'alert');
     if (SOP.Audio.on) SOP.Audio.alarm();
   }
 
+  /** Display a message with the wiring event style. */
   function wire(msg) { log(msg, 'wire'); }
 
   /* ---------------- TICKER ---------------- */
+  /**
+   * Replace ticker text with the standard lines, optionally prefixed by extra.
+   * An extra announcement highlights the ticker and schedules a reset after six seconds.
+   */
   function setTicker(extra) {
     const lines = extra ? [extra, ...SOP.TICKER_LINES] : SOP.TICKER_LINES;
     el.ticker.textContent = lines.join('  ///  ') + '  ///  ';
@@ -53,6 +63,7 @@ SOP.UI = (() => {
   }
 
   /* ---------------- BUILD MENU ---------------- */
+  /** Populate build controls and hints; call onSelect(kind) when an item is clicked. */
   function initBuildMenu(onSelect) {
     let html = '';
     for (const kind of SOP.BUILDABLE) {
@@ -80,17 +91,23 @@ SOP.UI = (() => {
     el.buildHint.textContent = 'MODUL WÄHLEN, DANN IM HOHLRAUM PLATZIEREN. ESC BRICHT AB.';
   }
 
+  /** Return a German cost label from resource quantities, or GRATIS for an empty cost. */
   function costText(cost) {
     const parts = [];
     for (const k in cost) parts.push(cost[k] + ' ' + k.toUpperCase());
     return parts.length ? 'KOSTET ' + parts.join(', ') : 'GRATIS';
   }
 
+  /** Remove selection styling from build buttons. */
   function clearBuildSelection() {
     el.buildMenu.querySelectorAll('.build-item').forEach(x => x.classList.remove('selected'));
   }
 
   /* ---------------- SYSTEM PANEL ---------------- */
+  /**
+   * Refresh the HUD with the day, power, resources, living inmate count and atmosphere
+   * averaged over empty tiles.
+   */
   function updateSystem(world, day) {
     el.sysDay.textContent = day;
     const p = world.power;
@@ -119,6 +136,10 @@ SOP.UI = (() => {
   /* ---------------- SUBJECT INSPECTOR ---------------- */
   const NEED_LABEL = { stress: 'STRESS', hunger: 'HUNGER', exhaustion: 'ERSCHÖPFUNG', paranoia: 'ARGWOHN', o2: 'O₂-MANGEL' };
 
+  /**
+   * Show the selected inmate’s needs and action, or an empty, dead or away state.
+   * world is unused.
+   */
   function updateInspector(world, selected) {
     if (!selected || selected.dead) {
       el.inspector.innerHTML = `<div class="panel-title">SUBJEKT-INSPEKTOR</div>
@@ -163,6 +184,11 @@ SOP.UI = (() => {
   /* ---------------- DEVICE INSPECTOR (crosslink / airlock) ---------------- */
   let devSig = '';
 
+  /**
+   * Refresh device details and controls when tracked display state changes.
+   * mode selects the empty-panel hint; ticksNow is elapsed simulation ticks
+   * used for expedition estimates and defaults to zero when omitted.
+   */
   function updateDevicePanel(world, dev, mode, ticksNow) {
     const awaySig = world.inmates.filter(i => !i.dead && i.away)
       .map(i => i.name + ':' + i.away.returnTick).join(',')
@@ -232,6 +258,7 @@ SOP.UI = (() => {
     });
   }
 
+  /** Toggle a device’s enabled state, releasing its operator when disabling a dynamo. */
   function toggleDevice(dev) {
     dev.enabled = dev.enabled === false ? true : false;
     if (dev.kind === 'dynamo' && dev.enabled === false) dev.operatedBy = null;
@@ -239,6 +266,7 @@ SOP.UI = (() => {
   }
 
   /* ---------------- OVERLAYS ---------------- */
+  /** Show the intro and bind its start button to hide it and call onStart. */
   function showIntro(onStart) {
     el.overlayIntro.classList.add('show');
     $('btn-start').addEventListener('click', () => {
@@ -249,6 +277,7 @@ SOP.UI = (() => {
     });
   }
 
+  /** Show stats as HTML in the game-over overlay; bind restart to hide it and call onRestart. */
   function showGameOver(stats, onRestart) {
     el.overStats.innerHTML = stats;
     el.overlayOver.classList.add('show');
