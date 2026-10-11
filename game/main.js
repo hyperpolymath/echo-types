@@ -287,7 +287,10 @@ SOP.Main = (() => {
       ticks = data.ticks;
       nextQuakeTick = data.nextQuakeTick;
       nextArrivalTick = data.nextArrivalTick;
-      Object.assign(stats, data.stats);
+      const s = data.stats || {};
+      for (const k of Object.keys(stats)) {
+        stats[k] = Number.isFinite(s[k]) ? s[k] : 0;
+      }
       state.selected = null; state.selDevice = null;
       state.buildKind = null; state.linkFrom = null; state.ghost = null;
       UI.clearBuildSelection();
