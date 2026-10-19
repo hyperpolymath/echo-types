@@ -65,7 +65,7 @@ kernel** — the boundary is real and lives outside this core.
   `EchoFiberBridge`, `EchoFiberCount`, `EchoFiberTriangulation`,
   `EchoIndexed`, `EchoRelational`, `EchoTruncation`,
   `EchoJanusBridge`, `EchoTropical`, `EchoSeparating`,
-  `EchoTotalCompletion`, `EchoDisplayed`
+  `EchoTotalCompletion`, `EchoDisplayed`, `EchoFidelity`
 | One hop off the kernel. `EchoJanusBridge`/`EchoTropical` are
   *Directions* (see MAP). `EchoFiberTriangulation` is the external
   stdlib triangulation hardening item. `EchoSeparating` carries
@@ -75,6 +75,10 @@ kernel** — the boundary is real and lives outside this core.
   displayed-type / `DispHom` / `fromHomOver` fibration packaging of
   the categorical base (faithful mirror of typed-wasm's Idris
   `Echo.idr`; no variance / graded-comonad claim, per R-2026-05-18).
+  `EchoFidelity` models an autoformalisation step as a fibre record whose
+  `Fibre` is literally `Echo (account T) (mapped t)`; it is `[DRAFT]` and
+  deliberately unwired from `All.agda` / `Smoke.agda` until the maintainer
+  asks (see `docs/echos/`).
 
 | *Derived — Tier 2* +
 (depend on Tier-1 `Echo*`)
