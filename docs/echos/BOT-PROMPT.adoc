@@ -15,7 +15,7 @@ Context you must read first:
 
 * `docs/echos/README.adoc` (scope, status, ground truth)
 * `docs/echos/FIDELITY-FIBRE-DESIGN.adoc` (design and what is not claimed)
-* `proofs/agda/EchoFidelity.agda` (draft model, NOT yet type-checked)
+* `proofs/agda/EchoFidelity.agda` (draft model; type-checked under Agda 2.6.3 / stdlib 2.3 on 2026-10-19)
 * `proofs/agda/EchoEpistemic.agda` (existing knowledge/observation model)
 * `docs/CLAIMS_AUDIT.adoc` (how this repo audits its own claims)
 

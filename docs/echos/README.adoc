@@ -22,7 +22,7 @@ ____
 |===
 |Item |Status |Where
 
-|Fibre accounting model (Agda) |DRAFT, unverified |`proofs/agda/EchoFidelity.agda`
+|Fibre accounting model (Agda) |Type-checked (Agda 2.6.3, stdlib 2.3); `Fibre` is `Echo`; still a draft |`proofs/agda/EchoFidelity.agda`
 |Design note (what fibres do and do not give) |Draft |`FIDELITY-FIBRE-DESIGN.adoc`
 |Investigation brief for a repo-tied bot |Ready to use |`BOT-PROMPT.adoc`
 |Wired into `All.agda` / `Smoke.agda` |No |Deliberately not wired until checked

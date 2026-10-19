@@ -15,7 +15,8 @@ Verdict TA = mapped t | dropped reason
 ----
 
 The fibre of a target atom `t` is the set of source atoms whose verdict is
-`mapped t`. This is the echo-type reading: `Fibre t = Σ s. account s ≡ mapped t`.
+`mapped t`. This is the echo-type reading: `Fibre t = Σ s. account s ≡ mapped t`, which
+`EchoFidelity.agda` now states as `Echo (account T) (mapped t)` itself.
 
 == What the types buy
 
