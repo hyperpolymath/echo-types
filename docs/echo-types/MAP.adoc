@@ -116,6 +116,11 @@ directory move is implied.
   shadows of selected Agda constructions. It is useful for examples,
   counterexample search, and executable intuition; it is not a proof
   repository and does not replace the Agda obligations.
+* *Autoformalisation fidelity (draft).* `docs/echos/` and
+  `proofs/agda/EchoFidelity.agda` sketch a fibre-accounting model of a
+  source-to-target translation step (what the checker sees versus what
+  an auditor sees). `[DRAFT]` — standalone, stdlib-only, unwired from
+  `All.agda` / `Smoke.agda`; no claim that fidelity is established.
 * *Separate language embodiment / consumer.* `Ephapax`
   (https://github.com/hyperpolymath/ephapax) is a distinct language
   project in which Echo Types are intended to become an embodied

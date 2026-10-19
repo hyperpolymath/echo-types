@@ -225,6 +225,18 @@ kernel** — the boundary is real and lives outside this core.
   `proofs/agda/Echo/` (dotted submodules), so they are outside the
   flat `Echo*.agda` glob that Check B lints; recorded here for
   discoverability. Not kernel (the kernel remains exactly `Echo`).
+
+| *Standalone draft* +
+(stdlib only; outside the kernel cone)
+| `EchoFidelity`
+| Imports no in-repo module, not even `Echo`: its `Fibre` is a
+  hand-written Σ-type, so it is neither Tier 1 nor Tier 2. A small model
+  of an autoformalisation step as a fibre record (see
+  `docs/echos/`). `--safe --without-K`, no postulates, type-checks under
+  Agda 2.6.3 / stdlib 2.3, and is deliberately *not* wired into
+  `All.agda` / `Smoke.agda` until the maintainer asks. Listed here so the
+  classification-drift lint (kernel-guard check B) stays honest; it
+  carries no claim about the kernel.
 |===
 
 `EchoOrdinal` is Tier-1 off `Echo` but additionally pulls the
