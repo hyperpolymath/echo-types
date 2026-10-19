@@ -1,24 +1,31 @@
 {-# OPTIONS --safe --without-K #-}
 -- SPDX-License-Identifier: MPL-2.0
 --
--- STATUS: DRAFT. Type-checks under Agda 2.6.3 / agda-stdlib 2.3 (`--safe
--- --without-K`, no postulates; checked 2026-10-19). Deliberately NOT imported
--- from All.agda or Smoke.agda: it stays unwired until the maintainer asks.
+-- STATUS: type-checks under Agda 2.6.3 / agda-stdlib 2.3 (`--safe
+-- --without-K`, no postulates). Deliberately NOT imported from All.agda or
+-- Smoke.agda: it stays unwired until the maintainer asks for that.
 --
 -- Purpose: a small model of an autoformalisation step as a fibre record.
 -- Every source atom (hypothesis, constant, bound, conclusion) receives a
 -- verdict: mapped to a target atom, or dropped with a recorded reason.
 -- The types enforce that nothing is silently lost. They do NOT establish
 -- semantic fidelity; see docs/echos/FIDELITY-FIBRE-DESIGN.adoc.
+--
+-- The fibre of a target atom IS an `Echo` of the accounting map: `Fibre`
+-- below is `Echo (account T) (mapped t)` by definition, so the structure
+-- theory of Echo (EchoKernel contract, `map-over`, ...) applies to it
+-- unchanged. This makes the module a Tier-1 derived module (only `Echo` +
+-- stdlib).
 
 module EchoFidelity where
 
 open import Agda.Builtin.String using (String)
 open import Data.Empty using (⊥)
+open import Echo using (Echo; echo-intro)
 open import Data.List.Base using (List)
 open import Data.Nat.Base using (ℕ; zero; suc)
 open import Data.Product.Base using (Σ; _,_)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; trans)
 
 ------------------------------------------------------------------------
 -- Verdicts for a single source atom.
@@ -44,12 +51,45 @@ open Translation public
 
 ------------------------------------------------------------------------
 -- Fibres: the source atoms that a given target atom traces back to.
--- A fibre is a Σ-type of source atoms together with a proof that the
--- source atom is mapped to that target atom.
+-- A fibre is the Echo of the accounting map at the verdict `mapped t`:
+-- a source atom together with a proof that it is mapped to that target.
 ------------------------------------------------------------------------
 
 Fibre : {SA TA : Set} → Translation SA TA → TA → Set
-Fibre T t = Σ _ (λ s → account T s ≡ mapped t)
+Fibre T t = Echo (account T) (mapped t)
+
+-- The identification with Echo is definitional, so the structure theory of
+-- Echo applies to fibres with no transport.
+fibre-is-echo :
+  {SA TA : Set} (T : Translation SA TA) (t : TA) →
+  Fibre T t ≡ Echo (account T) (mapped t)
+fibre-is-echo T t = refl
+
+-- A source atom that the account maps to t lies in the fibre of t.
+mapped-in-fibre :
+  {SA TA : Set} (T : Translation SA TA) (s : SA) (t : TA) →
+  account T s ≡ mapped t → Fibre T t
+mapped-in-fibre T s t p = s , p
+
+-- Every source atom lies in the fibre of the verdict it received, when that
+-- verdict is a mapping (`echo-intro` at the accounting map).
+fibre-of-image :
+  {SA TA : Set} (T : Translation SA TA) (s : SA) (t : TA) →
+  account T s ≡ mapped t → Echo (account T) (account T s)
+fibre-of-image T s t _ = echo-intro (account T) s
+
+-- A dropped atom is in no fibre: the two verdicts are different
+-- constructors. This is the "dropped means recorded, not hidden" half of
+-- the accounting: an atom with a drop reason cannot also be claimed as the
+-- source of a target atom.
+dropped-not-mapped :
+  {TA : Set} {r : String} {t : TA} → dropped r ≡ mapped t → ⊥
+dropped-not-mapped ()
+
+dropped-not-in-fibre :
+  {SA TA : Set} (T : Translation SA TA) (s : SA) (r : String) →
+  account T s ≡ dropped r → (t : TA) → account T s ≡ mapped t → ⊥
+dropped-not-in-fibre T s r d t p = dropped-not-mapped (trans (sym d) p)
 
 -- A target atom with an empty fibre has no source: it is fabricated
 -- relative to this step. Stated here as the definition of "fabricated";

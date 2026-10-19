@@ -119,8 +119,9 @@ directory move is implied.
 * *Autoformalisation fidelity (draft).* `docs/echos/` and
   `proofs/agda/EchoFidelity.agda` sketch a fibre-accounting model of a
   source-to-target translation step (what the checker sees versus what
-  an auditor sees). `[DRAFT]` — standalone, stdlib-only, unwired from
-  `All.agda` / `Smoke.agda`; no claim that fidelity is established.
+  an auditor sees); its `Fibre` is `Echo (account T) (mapped t)`.
+  `[DRAFT]` — Tier-1 derived, type-checked, unwired from `All.agda` /
+  `Smoke.agda`; no claim that fidelity is established.
 * *Separate language embodiment / consumer.* `Ephapax`
   (https://github.com/hyperpolymath/ephapax) is a distinct language
   project in which Echo Types are intended to become an embodied
