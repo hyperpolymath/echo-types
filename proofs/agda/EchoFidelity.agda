@@ -1,11 +1,9 @@
 {-# OPTIONS --safe --without-K #-}
 -- SPDX-License-Identifier: MPL-2.0
 --
--- STATUS: DRAFT, NOT YET TYPE-CHECKED. Agda was not available in the
--- authoring environment. Before relying on this module, run
---   agda proofs/agda/EchoFidelity.agda
--- and fix any errors. It is deliberately NOT imported from All.agda or
--- Smoke.agda until it has been checked.
+-- STATUS: DRAFT. Type-checks under Agda 2.6.3 / agda-stdlib 2.3 (`--safe
+-- --without-K`, no postulates; checked 2026-10-19). Deliberately NOT imported
+-- from All.agda or Smoke.agda: it stays unwired until the maintainer asks.
 --
 -- Purpose: a small model of an autoformalisation step as a fibre record.
 -- Every source atom (hypothesis, constant, bound, conclusion) receives a
