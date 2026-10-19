@@ -157,19 +157,15 @@ jobs:
       - name: Typecheck cubical lane (epi/mono truncation discharge)
         run: agda -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
 
-      # Experimental lane: the echo-additive grade tree. Each module is
-      # typechecked STANDALONE (--safe --without-K from its own pragma);
+      # Experimental lane: the echo-additive grade tree, typechecked through
+      # its own aggregate root (--safe --without-K from the pragmas);
       # nothing here is imported by All.agda or Smoke.agda, so it adds
       # no claim to the shipped closure (D-2026-06-14-R1 firewall, and
       # R-2026-05-18 stands). What it does buy: downstream consumers
       # that vendor Grade.agda (choreographic-types) learn here, not
       # in their own CI, when an edit breaks it.
       - name: Typecheck experimental echo-additive lane (standalone, not in the closure)
-        run: |
-          for f in proofs/agda/experimental/echo-additive/*.agda; do
-            echo "== $f"
-            agda -i proofs/agda "$f"
-          done
+        run: agda -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
 
   cold-check:
     # Belt-and-braces: NO interface cache, --ignore-interfaces cold
@@ -215,7 +211,4 @@ jobs:
           agda --ignore-interfaces -i proofs/agda proofs/agda/characteristic/All.agda
           agda --ignore-interfaces -i proofs/agda proofs/agda/examples/All.agda
           agda --ignore-interfaces -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
-          for f in proofs/agda/experimental/echo-additive/*.agda; do
-            echo "== $f"
-            agda --ignore-interfaces -i proofs/agda "$f"
-          done
+          agda --ignore-interfaces -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
