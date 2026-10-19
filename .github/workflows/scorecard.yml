@@ -19,9 +19,12 @@ jobs:
     # (its header documents: the caller MUST grant security-events:write
     # + id-token:write; contents:read lets it read the repo). Closes the
     # Hypatia `scorecard_wrapper_missing_job_permissions` finding.
+    # actions: read is repeated here: this job-level block replaces the
+    # workflow-level one, and the callee's job requests actions: read.
+    # The callee declares no secrets, so no `secrets:` line.
     permissions:
+      actions: read
       contents: read
       security-events: write
       id-token: write
     uses: hyperpolymath/standards/.github/workflows/scorecard-reusable.yml@75bd5994470661a099df562d6d5ad2fe744dbd66
-    secrets: inherit
