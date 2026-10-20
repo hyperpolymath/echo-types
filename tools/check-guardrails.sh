@@ -43,7 +43,6 @@ EXPLORATORY_EXEMPT=(
   "EchoImageFactorizationPropPostulated"
   "EchoImageFactorizationPropCubical"
   "EchoDecorationBridge"
-  "Fidelity"
 )
 
 strip_comments() {
