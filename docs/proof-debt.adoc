@@ -19,7 +19,11 @@ closing by the cubical endpoint rule), then re-proves
 `+prop-factor-left-mere-surjective+` (epi). This realises the axiom the
 `+--without-K+` demo under (c) only assumes — see (c).
 * *Bachmann–Howard target structure (`+BHNotation+` + its
-well-foundedness)* — discharged 2026-06-15 in the `+--safe --without-K+`
+well-foundedness)* — *moved out of this repository* (2026-10-20,
+echo-types#349) to
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation],
+where it is still discharged. The record below is historical; the paths
+it names no longer exist here. Originally discharged 2026-06-15 in the `+--safe --without-K+`
 kernel by `+proofs/agda/Ordinal/Buchholz/BHTarget.agda+` (zero
 postulates; wired into `+All.agda+`, pinned in
 `+Ordinal/Buchholz/Smoke.agda+`). The abstract `+BHNotation+` interface
@@ -65,46 +69,17 @@ because `+∥_∥+` cannot be built WITHIN `+--safe --without-K+` itself.
 
 === (d) DEBT — actively to be closed
 
-* `+proofs/agda/Ordinal/Buchholz/Fidelity.agda+` — *two* top-level
-`+postulate+`s (reduced from three on 2026-06-15; see (a)) forming the
-trust boundary of the *order-type fidelity scaffold* (open problem
-`+D-2026-06-14+`,
-`+docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc+`):
-** `+denotation+` — assumed faithful, height-preserving order-embedding
-`+⟦·⟧ : BT → 𝒪+` into the (now-real) Brouwer target (the missing object;
-*not* `+rank2+`, which deliberately collapses heights and is a
-termination measure only).
-** `+ordinal-upper-bound+` — the `+⟦·⟧+`-level upper half of the
-sandwich (downstream of `+denotation+`).
-** *Discharged (2026-06-15)*: the former `+bh-notation+` postulate (an
-opaque whole BH structure) is gone — the `+BHNotation+` interface and a
-real `+bh-notation-from+` instance now live in the `+--safe+` kernel
-module `+Ordinal.Buchholz.BHTarget+`, so the target order and its
-well-foundedness (Brouwer `+_<′_+` / `+wf-<′+`) are proved, not assumed.
-The candidate BH height is an explicit parameter to
-`+Fidelity.AtHeight+`, not a postulate. See (a).
-** *Classification*: DEBT, to be discharged when order-type fidelity is
-proved — these are _not_ permanently-accepted axioms. Each is annotated
-inline with an `+AXIOM:+` leading comment.
-** *Justification / scope*: the module is quarantined — `+--without-K+`
-only, NOT imported by `+All.agda+` / `+Smoke.agda+` — so the `+--safe+`
-kernel cone depends on neither postulate. Nothing in the module asserts
-that order type ψ₀(Ω_ω) is _proven_; the status surfaces (appendix,
-decision log, roadmap) read "`written at WF milestone; order-type
-fidelity OPEN`".
-** *Citation*: `+D-2026-06-14+`; full per-postulate spec (statement /
-what closes it / owner) in `+Fidelity-OPEN-postulates.md+`.
-** *PARKED (2026-06-20, `+D-2026-06-20+`)*: the transfinite ladder these
-postulates sit atop is now _consumer-less_ — the Groove cleave (the only
-consumer of ψ₀(Ω_ω) order-type fidelity) is resolved as a finite
-exact-round-trip zipper needing well-foundedness only, and RC-11 forbids
-ε₀+ in cleave ranks. The debt is therefore _parked, resumable_, not
-actively being closed. No postulate closed; `+D-2026-06-14+` stands. See
-`+docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc+`.
-** *Guardrail status*: allow-listed in `+tools/check-guardrails.sh+`
-(`+EXPLORATORY_EXEMPT+`) and the inline `+hypatia: allow+` pragma at the
-module head. (`+BHTarget+` is NOT exempt — it is real kernel content and
-passes the guardrail.)
+* (none in this repository)
+
+*Moved (2026-10-20, echo-types#349).* The order-type fidelity scaffold
+`+Ordinal/Buchholz/Fidelity.agda+` and its two postulates
+(`+denotation+`, `+ordinal-upper-bound+`) left echo-types with the rest of
+the ordinal lane (`+D-2026-06-21+`). They now live in
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation],
+quarantined in its proof MANIFEST and tracked in its
+`+Fidelity-OPEN-postulates.adoc+`. Order-type fidelity to ψ₀(Ω_ω)
+remains OPEN there (`+D-2026-06-14+` stands). echo-types now carries
+exactly *one* quarantined postulate block, under (c).
 
 === Notes
 
@@ -131,6 +106,8 @@ often-cited "`676 files / 52k lines`" headline is inflated by
 `+.claude/worktrees/+` duplicate snapshots; real source ≈ 190 `+.agda+`
 files / ~36k lines.
 * *The quarantined postulates are correctly _outside_ the wired cone.*
+(Audit-time state. Since 2026-10-20 the `+Fidelity.agda+` file is no
+longer in this repository; see (d).)
 The audit independently confirms the two postulate-bearing files this
 ledger already lists — `+EchoImageFactorizationPropPostulated.agda+` (c)
 and `+Ordinal/Buchholz/Fidelity.agda+` (d) — are guardrail-exempt,

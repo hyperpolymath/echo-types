@@ -3,6 +3,16 @@
 :date: 2026-05-20
 :toc:
 
+[IMPORTANT]
+====
+*Moved.* This document moved to
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation]
+with the ordinal lane on 2026-10-20 (echo-types#349). The copy maintained there
+is the live one. This copy is frozen as of echo-types `703dd77`, and the
+`proofs/agda/Ordinal/…` paths it names, other than `OmegaMarkers` and
+`Buchholz/Syntax`, no longer exist in this repository.
+====
+
 This note records why the natural rank-embedding route to unbudgeted
 `WellFounded _<ᵇʳᶠ_` (and to `WellFounded _<ᵇ⁺_`) is *structurally
 impossible* for the `Ordinal.Buchholz.Order._<ᵇ_` relation as

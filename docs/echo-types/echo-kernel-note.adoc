@@ -231,9 +231,11 @@ kernel** — the boundary is real and lives outside this core.
   discoverability. Not kernel (the kernel remains exactly `Echo`).
 |===
 
-`EchoOrdinal` is Tier-1 off `Echo` but additionally pulls the
-`Ordinal/` subtree; it belongs to the Buchholz/Veblen Direction in
-the MAP, not the foundation kernel.
+`EchoOrdinal` is Tier-1 off `Echo` but additionally pulls two
+`Ordinal/` leaves (`Ordinal.OmegaMarkers`, `Ordinal.Buchholz.Syntax`);
+it is the echo-to-ordinal bridge, not the foundation kernel. The rest
+of the ordinal lane moved to `hyperpolymath/ordinal-notation` on
+2026-10-20.
 
 == Maintenance
 

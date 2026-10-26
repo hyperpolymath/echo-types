@@ -15,6 +15,17 @@ unjustified; the rows pair each surface sentence with a proposed
 `(module, theorem)` mapping or the literal token `NONE-PROPOSED` when
 no in-repo artefact corresponds.
 
+[NOTE]
+====
+*Since 2026-10-20 the ordinal lane is no longer in this repository.* It
+moved to
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation]
+(echo-types#349). Rows below that map to `Ordinal.*`, `Ordinal/Buchholz/*`
+or `Ordinal/Buchholz/Smoke.agda` (S-002, S-015, S-063 and others) describe
+the tree as audited, not the current one. Only `EchoOrdinal`,
+`Ordinal.OmegaMarkers` and `Ordinal.Buchholz.Syntax` remain here.
+====
+
 toc::[]
 
 == Scope and absent surfaces

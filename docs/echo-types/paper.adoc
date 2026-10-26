@@ -1395,6 +1395,11 @@ instance. External validation is the remaining step.
 [#ordinal-appendix]
 == Ordinal / Buchholz consumer-evidence
 
+NOTE: Since 2026-10-20 the modules this appendix cites live in
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation], not in echo-types (echo-types#349). Only the `EchoOrdinal` bridge stays
+here. The appendix text is unchanged; module names are the same in both
+repositories.
+
 *Status: written at the well-foundedness milestone; order-type
 fidelity OPEN (decision-log `D-2026-06-14`,
 `docs/echo-types/decisions/ordinal-bh-order-type-fidelity-open.adoc`).*
