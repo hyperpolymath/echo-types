@@ -158,8 +158,9 @@ DOI mint, library packaging, outreach — which is author-driven
   notation primer) cleared 2026-05-20 via PR #73; tag 3 (evaluation —
   proof-size / cost table, common-upper-bound idiom) cleared in
   PR #84 (§"Evaluation and discussion"). Tag 4 (ordinal
-  consumer-evidence appendix) is gated on the Lane 3 Buchholz
-  milestone and is not load-bearing for Lane 1 — see paper status
+  consumer-evidence appendix) is gated on the Buchholz milestone,
+  which now belongs to hyperpolymath/ordinal-notation, and is not
+  load-bearing for Lane 1 — see paper status
   banner.
 . *LANDED 2026-05-26.* `proofs/agda/EchoAbstractionBarrier.agda`
   ships the consumer-side free theorem at the affine instance
@@ -305,7 +306,16 @@ narrowed — no unique-mediator claim. Demand 4 ("parametricity") must
 be *consumer-side at the affine instance*, not full Reynolds. See
 respective §s in the synthesis doc.
 
-=== Lane 3 [RETIRED FROM ECHO-TYPES 2026-06-21 — outgrew the project] — Ordinal / Buchholz
+=== Lane 3 [MOVED 2026-10-20 to hyperpolymath/ordinal-notation] — Ordinal / Buchholz
+
+*MOVED (2026-10-20, echo-types#349).* The extraction decided in
+`D-2026-06-21` is done. The ordinal lane, its design documents and its two
+open `Fidelity.agda` postulates now live in
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation].
+echo-types keeps only the `EchoOrdinal` bridge and its two imports
+(`Ordinal.OmegaMarkers`, `Ordinal.Buchholz.Syntax`). The rest of this
+section is the record as of the retirement; module paths it names are no
+longer in this repository.
 
 *RETIRED FROM ECHO-TYPES (`D-2026-06-21`, escalating the `D-2026-06-20`
 PARK).* The transfinite ordinal-fidelity ladder has *outgrown the

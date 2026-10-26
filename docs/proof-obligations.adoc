@@ -26,5 +26,5 @@ natively constructible. See `+docs/retracted/retractions.adoc+`)
 * *CNO Bridge (Absolute Zero):* PARTIAL
 * *JanusKey Integration:* PARTIAL
 * *Tropical Semantics (Argmin residues):* PARTIAL
-* *Buchholz/Veblen Ordinal Representation:* BLOCKED (Well-foundedness of
-shared-binder cases blocked on self-lift)
+* *Buchholz/Veblen Ordinal Representation:* MOVED (2026-10-20) to
+`hyperpolymath/ordinal-notation`; its obligations are tracked there

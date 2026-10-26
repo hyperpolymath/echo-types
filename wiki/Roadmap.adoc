@@ -56,7 +56,10 @@ landed and packaged as `_↔_`. No open headline items; further work is
 consolidation / doc-threading.
 
 [#ordinal]
-=== Ordinal track — RETIRED from echo-types (owner decision D-2026-06-21)
+=== Ordinal track — MOVED to ordinal-notation (2026-10-20)
+
+*Moved.* The extraction decided in `D-2026-06-21` is done: the lane now lives
+in https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation] (echo-types#349). What follows is the record at the retirement.
 
 The transfinite Buchholz/Veblen ascent *outgrew echo-types* and is *no longer
 echo-types work*. The landed artifact is correct (`--safe --without-K`, zero

@@ -7,8 +7,8 @@ Adjacent projects, in one line each, for session bootstrapping:
 
 - echo-types — constructive Agda formalization of fiber-based structured
   loss ("echo types"); `Echo f y := Σ (x : A) , (f x ≡ y)`. Gated
-  identity-claim development; `--safe --without-K` throughout. Current
-  workstream: E (ordinal-notation / Buchholz collapsing layer).
+  identity-claim development; `--safe --without-K` throughout. The
+  ordinal-notation / Buchholz lane moved out on 2026-10-20 (see below).
   https://github.com/hyperpolymath/echo-types
 - PanLL — three-pane cognitive-relief HTI; Ambient/Symbolic/Neural/World panes.
   https://github.com/hyperpolymath/panll
@@ -40,6 +40,11 @@ Adjacent projects, in one line each, for session bootstrapping:
   repo 2026-05-30 — see echo-types#159) + `arghda-panll`
   (Gossamer/AffineScript presentation, planned). See docs/buchholz-plan.adoc
   appendix for the motivating proof pipeline.
+- ordinal-notation — the Brouwer / Veblen / Buchholz ordinal lane extracted
+  from echo-types on 2026-10-20 (#349; decision D-2026-06-21). Frozen
+  hand-off record; order-type fidelity to ψ₀(Ω_ω) OPEN, with its two
+  quarantined `Fidelity.agda` postulates.
+  https://github.com/hyperpolymath/ordinal-notation
 - EchoTypes.jl — executable Julia companion to echo-types, mirroring the
   finite-domain shadow of the Tier-1 + Tier-2 spine + the unconditional
   F5 OFS fragment. v0.2.0 (2026-05-27) extends v0.1.0's `Echo` /
@@ -72,7 +77,11 @@ Two active workstreams:
    the equivalence-record packaging `Echo-comp-pent-Σ-assoc :
    ... ↔ ...` (stdlib `Function.Bundles._↔_`) is in place.
 
-2. **Ordinal track — RETIRED FROM ECHO-TYPES (D-2026-06-21).** This research
+2. **Ordinal track — MOVED to hyperpolymath/ordinal-notation (2026-10-20,
+   #349).** Only `EchoOrdinal` + `Ordinal.OmegaMarkers` +
+   `Ordinal.Buchholz.Syntax` remain here; every other path named below is
+   gone from this repo. Ordinal TODOs belong in that repo. RETIRED FROM
+   ECHO-TYPES (D-2026-06-21). This research
    ladder *outgrew echo-types* and is no longer echo-types work: do NOT open new
    rungs here; the disposition is extraction to its own ordinal-notation repo
    (see `docs/echo-types/decisions/ordinal-fidelity-ladder-parked.adoc` + the
@@ -215,7 +224,31 @@ work to `main` and refresh all documentation:
    name, the commits folded in, the remaining open pieces of the
    milestone, and the proposed smallest useful next advance.
 
-## Current rung state (2026-06-21)
+## Current rung state (2026-10-26)
+
+### Session arc 2026-10-20→26 — ordinal lane physically extracted (read this FIRST)
+
+The `D-2026-06-21` disposition is carried out. echo-types#349 (`b1dcc29`)
+removed `proofs/agda/Ordinal/**` except the two bridge leaves
+(`Ordinal/OmegaMarkers.agda`, `Ordinal/Buchholz/Syntax.agda`), unwired them
+from `All.agda` / `Smoke.agda`, and dropped `Fidelity` from the guardrail's
+`EXPLORATORY_EXEMPT`. The lane now lives in
+https://github.com/hyperpolymath/ordinal-notation (imported from `703dd77`,
+history kept in a filter-repo bundle; Agda under
+`verification/proofs/agda/`, gated by that repo's proof MANIFEST).
+
+* *Trust boundary here: 3 → 1 quarantined postulate block* —
+  only `EchoImageFactorizationPropPostulated` (c) remains. The two Fidelity
+  postulates left with the lane.
+* *Docs:* the living status docs point at the new repo. The moved design
+  documents (`docs/bridges/buchholz-*.adoc`,
+  `docs/echo-types/buchholz-rank-obstruction.adoc`, the two ordinal
+  decision records, `Fidelity-OPEN-postulates.adoc`) are kept here as
+  frozen copies with a "moved" banner. Dated records (AFFIRMATION,
+  CHANGELOG history, proof logs, dated STATUS files) are left as written.
+* *Ordinal sections in this file below are history.* Do not act on any
+  ordinal "next rung" / "open piece" here.
+
 
 ### Session arc 2026-06-21 (close-out) — gap-closing proofs #249–#258 + cross-repo docs audit + ⚠ ordinal-ledger contradiction flag (read this FIRST)
 

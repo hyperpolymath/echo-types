@@ -55,7 +55,11 @@ The Σ-algebra of echoes under function composition.
 
 Docs: `docs/echo-types/{composition,fibration-package,universal-property}.adoc`.
 
-== Track 2 — Ordinal (RETIRED from echo-types, owner decision D-2026-06-21)
+== Track 2 — Ordinal (MOVED to ordinal-notation, 2026-10-20)
+
+*Moved.* Since 2026-10-20 (echo-types#349) the lane lives in https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation]. What
+follows is the record at the retirement; only the `EchoOrdinal` bridge and its
+two imports remain under `proofs/agda/`.
 
 A Buchholz collapsing layer; the consumer-evidence that echo's
 non-injectivity bridges to ordinal-collapsing non-injectivity.
