@@ -502,6 +502,21 @@ open import EchoSearchInstance using
   ; search-postcompose-⊤
   )
 
+-- Worked axis-8 lattice exhibit: a concrete bounded search for
+-- `double` at target 6 (identity enumerator, budget 4), the landed
+-- decision procedure computing to `yes` on it, and its projections to
+-- `Echo`, `EchoC` (ℕ step-cost algebra), `EchoDec`, and
+-- `CEcho … feasible`.
+open import EchoSearchExample using
+  ( double
+  ; search-double-6
+  ; search-double-6-decided
+  ; search-as-echo
+  ; search-as-cost
+  ; search-as-dec
+  ; search-as-feasible
+  )
+
 -- Axis 8 second formal artifact (taxonomy.md §8): graded access
 -- modality. Order layer (enum, Hasse-enumerated order, transitivity,
 -- propositionality) + Σ-shape carrier + `_≤a_`-indexed degrade
