@@ -19,17 +19,24 @@
 --
 -- Setting: `double : ℕ → ℕ`, `double n = n + n` (by recursion).  At
 -- the target `6` the witness is `3`.  The enumerator is the identity
--- on ℕ (step `k` proposes candidate `k`), so a budget of `4` steps
--- tries `0, 1, 2, 3` and hits at step `3`.  The landed
+-- on ℕ (step `k` proposes candidate `k`), so a budget of `4` admits
+-- the candidates `0, 1, 2, 3` and the hit is at index `3`.  The landed
 -- `bounded-search-is-decidable` procedure, run on this instance,
 -- computes to `yes` on exactly that witness (`search-double-6-decided`).
+-- Note that procedure tests indices from the top of the budget
+-- downwards (`suc n` tests `enum n` first), so here it hits index `3`
+-- on its *first* comparison; it does not walk `0, 1, 2, 3`.
 --
 -- Honesty notes:
 --
 --   * The cost bridge is specialised to the identity enumerator: the
---     cost of a candidate is the number of enumerator steps needed to
---     reach it, `search-steps x = suc x`, which is a function of `x`
---     only because the enumerator is `id`.  With that choice the
+--     cost of a candidate is its enumeration position (inclusive),
+--     `search-steps x = suc x` — the number of steps an *ascending*
+--     scan of `countUp` takes to reach `x`.  It is a function of `x`
+--     only because the enumerator is `id`.  It is a property of the
+--     enumerator, NOT the executed comparison count of
+--     `bounded-search-is-decidable` (which scans downwards and here
+--     makes one comparison).  With that choice the
 --     search bound `k < n` *is* the budget receipt `suc k ≤ n` on the
 --     nose (stdlib's `_<_` unfolds to `suc k ≤ n`), so no arithmetic
 --     glue is needed.  A general-enumerator cost bridge would need the
@@ -79,8 +86,8 @@ open import EchoSearch                            using
 ----------------------------------------------------------------------
 
 -- A tiny map with a nontrivial search: `Echo double 6` has the unique
--- witness `3`, but the *search procedure* that finds it is a 4-step
--- enumeration that explicitly tries `0, 1, 2, 3`.
+-- witness `3`, which sits at position `3` of the `countUp` enumeration,
+-- inside a budget of `4`.
 
 double : ℕ → ℕ
 double zero    = zero
@@ -100,8 +107,9 @@ search-double-6 = 3 , s≤s (s≤s (s≤s (s≤s z≤n))) , refl
 
 -- The landed decision procedure, run on this instance, *finds* the
 -- same search echo: the bounded decision computes to `yes` by `refl`.
--- This is the operational content — the witness is not merely
--- asserted, the bounded walk produces it.
+-- The witness is not merely asserted, the decider produces it.  (The
+-- decider scans from index `3` downwards, so this is a one-comparison
+-- hit; it is not evidence of an ascending four-step walk.)
 search-double-6-decided :
   bounded-search-is-decidable _≟_ countUp double 6 4 ≡ yes search-double-6
 search-double-6-decided = refl
@@ -124,8 +132,9 @@ stepCostAlgebra = record
 
 open Cost stepCostAlgebra using (EchoC)
 
--- Steps the identity enumerator takes to reach candidate `x`
--- (inclusive): `0` is reached in one step, `x` in `suc x`.
+-- Enumeration position of candidate `x` under `countUp` (inclusive):
+-- an ascending scan reaches `0` in one step, `x` in `suc x`.  This is
+-- the cost the bound `k < n` certifies, not the decider's work.
 search-steps : ℕ → ℕ
 search-steps = suc
 
