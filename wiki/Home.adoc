@@ -115,14 +115,14 @@ This wiki is a *distillation*. The authoritative records are:
 * `.machine_readable/6a2/STATE.a2ml` — EI-2 record (permanent) + current-state block.
 * `docs/bridges/cross-repo-bridge-status.md` — cross-repo bridge ledger.
 
-== One-line status (as of 2026-06-21)
+== One-line status (as of 2026-10-26)
 
 * *Composition track* — landed (Echo-comp-iso, cancel-iso, pentagon). No open
   headline items.
 * *Establishment track* — Pillars A–D and F (F1–F4) closed; the in-repo half of
-  Pillar E is complete at the bounded-claim level. One named *OPEN external*
-  problem remains: *order-type fidelity* to ψ₀(Ω_ω) (decision-log
-  `D-2026-06-14`).
+  Pillar E is complete at the bounded-claim level. The one named *OPEN
+  external* problem, *order-type fidelity* to ψ₀(Ω_ω) (decision-log
+  `D-2026-06-14`), moved with the ordinal lane to ordinal-notation (below).
 * *Variance* — resolved (`EchoVariance.agda`, #243): an echo is a graded
   *monad of accumulation* with a section/retraction adjunction exact on the
   grade-0 fibre — *not* a graded comonad (that reading is the lossless
