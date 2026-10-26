@@ -114,7 +114,8 @@ paren-nested≢paren-pair p =
   where
     second-token : List Token → Token
     second-token (_ ∷ t ∷ _) = t
-    second-token _           = LP   -- default; never reached for these inputs
+    second-token []          = LP   -- default; never reached for these inputs
+    second-token (_ ∷ [])    = LP
 
 paren-empty≢paren-nested : paren-empty ≢ paren-nested
 paren-empty≢paren-nested p =
