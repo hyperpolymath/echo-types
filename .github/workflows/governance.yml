@@ -3,7 +3,7 @@
 # This workflow is managed by gh actions-lock.
 # This workflow is managed by gh actions-lock.
 # governance.yml — single wrapper calling the shared estate governance bundle
-# in hyperpolymath/standards instead of carrying per-repo copies.
+# in metadatastician/standards instead of carrying per-repo copies.
 #
 # Replaces the per-repo governance scaffolding removed in the same commit:
 #   quality.yml, guix-guix-policy.yml, npm-bun-blocker.yml, ts-blocker.yml,
@@ -38,4 +38,4 @@ jobs:
     # matches the sibling repos' pin (e.g. ochrance-framework). Bump
     # deliberately, never float: an unpinned reusable workflow is an
     # unpinned trust boundary. mirror.yml / scorecard.yml already pin.
-    uses: hyperpolymath/standards/.github/workflows/governance-reusable.yml@75bd5994470661a099df562d6d5ad2fe744dbd66
+    uses: metadatastician/standards/.github/workflows/governance-reusable.yml@75bd5994470661a099df562d6d5ad2fe744dbd66
