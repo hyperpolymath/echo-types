@@ -7,6 +7,25 @@ Changelog].
 
 === [Unreleased]
 
+==== Removed (2026-10-20)
+
+* _The ordinal lane._ echo-types#349 removed `+proofs/agda/Ordinal/**+`
+except `+Ordinal/OmegaMarkers.agda+` and `+Ordinal/Buchholz/Syntax.agda+`,
+which the `+EchoOrdinal+` bridge imports. The lane now lives in
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation],
+carrying out decision `+D-2026-06-21+`. echo-types' quarantined postulates
+go from three to one: the two `+Fidelity.agda+` postulates left with the
+lane.
+
+==== Changed (2026-10-26)
+
+* _Docs point at ordinal-notation._ The living status documents (CLAUDE.md,
+EXPLAINME, PROOF-STATUS, TOPOLOGY, roadmap, MAP, proof-debt, bridge
+status, proof obligations, kernel note and the wiki) now say the ordinal
+lane has moved. The design documents that moved with it are kept here as
+frozen copies with a "moved" banner. Dated records (AFFIRMATION, proof
+logs, dated status files) are unchanged.
+
 ==== Removed (2026-09-30)
 
 * _The 27 `+.a2ml+` machine-readable records._ Removed by owner ruling:

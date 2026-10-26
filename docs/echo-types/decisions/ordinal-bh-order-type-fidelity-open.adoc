@@ -7,6 +7,16 @@
 :sectnumlevels: 2
 :icons: font
 
+[IMPORTANT]
+====
+*Moved.* This document moved to
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation]
+with the ordinal lane on 2026-10-20 (echo-types#349). The copy maintained there
+is the live one. This copy is frozen as of echo-types `703dd77`, and the
+`proofs/agda/Ordinal/…` paths it names, other than `OmegaMarkers` and
+`Buchholz/Syntax`, no longer exist in this repository.
+====
+
 [.lead]
 Records the remaining ordinal-track frontier in the same dated idiom
 as the retraction log's `R-2026-05-18`, so it is findable in the

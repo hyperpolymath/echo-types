@@ -147,10 +147,18 @@ Echo Core does NOT depend on the Ordinal / Buchholz track.
 ____
 
 How this is implemented::
-All ordinal modules live under `link:proofs/agda/Ordinal/[]`. No `Echo*.agda` file imports from `Ordinal/`. Dependency separation is structural (directory-level).
+The ordinal lane no longer lives here. It moved to
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation]
+on 2026-10-20 (echo-types#349, decision `D-2026-06-21`). What stays in echo-types
+is the echo-to-ordinal bridge `link:proofs/agda/EchoOrdinal.agda[]` and the two
+small modules it imports, `Ordinal.OmegaMarkers` and `Ordinal.Buchholz.Syntax`.
+No other `Echo*.agda` file imports from `Ordinal/`.
 
 Caveat::
-The Ordinal track has open problems (unbudgeted `wf-<ᵇʳᶠ` closure, shared-binder internalization). These do not affect Echo Core. See `link:docs/buchholz-plan.adoc[]`.
+The ordinal lane's open problems (order-type fidelity to ψ₀(Ω_ω), the unbudgeted
+`wf-<ᵇʳᶠ` closure over the native order) are tracked in ordinal-notation. They do
+not affect Echo Core. The two bridge modules exist in both repositories and can
+drift; ordinal-notation's copies are the maintained ones.
 
 == Dogfooded Across The Account
 
@@ -200,7 +208,7 @@ The Ordinal track has open problems (unbudgeted `wf-<ᵇʳᶠ` closure, shared-b
 
 [CAUTION]
 ====
-**Buchholz shared-binder internalization is open.** The Ordinal track has well-foundedness for the current constructor core, but historical same-binder shapes are not internalized as constructors of the real order. Does not affect Echo Core. See `link:docs/buchholz-plan.adoc[]`.
+**The ordinal lane has moved.** The Buchholz / Veblen development, including its open problems, now lives in https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation]. Only the `EchoOrdinal` bridge stays here. Does not affect Echo Core.
 ====
 
 == Evidence Index

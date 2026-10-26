@@ -13,7 +13,7 @@ echo-types/
 │       ├── EchoCharacteristic.agda
 │       ├── EchoExamples.agda
 │       ├── Echo*Bridge.agda     # cross-system bridges (linear/graded/tropical/etc.)
-│       ├── Ordinal/             # Buchholz / Veblen track
+│       ├── Ordinal/             # bridge leaves only (OmegaMarkers, Buchholz/Syntax); the ordinal lane moved to hyperpolymath/ordinal-notation
 │       ├── examples/            # concrete usage demos
 │       └── characteristic/      # characteristic-style results (RoleGraded, etc.)
 ├── docs/                        # supplementary documentation
@@ -55,7 +55,7 @@ This is a foundation library; consumers are downstream Agda formalisations and d
 | Core echo theorems | constructive Agda, no postulates | `echo-intro`, `map-over`, `map-over-id`, `map-over-comp`, `map-square`
 | Characteristic family | constructive | `collapse-non-injective`, `no-section-*`, `echo-true≢echo-false`, `visible-constraint`
 | Bridge modules | constructive (per bridge) | linear / graded / tropical / choreo / epistemic / CNO / Janus / Dyadic / Ordinal
-| Ordinal Buchholz track | mostly admitted, some closed | `WellFounded`, extended-order tower; closure pending
+| Ordinal Buchholz track | moved (2026-10-20) | Now in https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation]; only the `EchoOrdinal` bridge and its two imports stay here
 | EI-2 (integration recipe) | TERMINATED NEGATIVELY (PATH B) | Per-axis halves proved; full 2D iff theorem parked as not formalisable in safe Agda without postulates
 |===
 

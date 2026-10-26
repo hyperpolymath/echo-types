@@ -381,59 +381,21 @@ the standing B- freeze lifted because O-THERMO-∞ is now discharged
   `docs/adjacency/hott-fibers.adoc`.
 * Build: `just test-thermo`.
 
-=== Buchholz / Veblen ordinals — higher-order number systems `[REAL]`
-Staged Buchholz-style collapsing in `--safe --without-K`.
+=== Buchholz / Veblen ordinals — moved to ordinal-notation
+The ordinal lane left echo-types on 2026-10-20 (echo-types#349, decision
+`D-2026-06-21`). Its proofs, design documents and open problems, including
+order-type fidelity to ψ₀(Ω_ω) and the two `Fidelity.agda` postulates, now
+live in
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation].
 
-* Proofs: `proofs/agda/Ordinal/` (`Buchholz/`, `Brouwer`, `CNF`,
-  `Closure`, `Psi…`, `ExtendedOrder`, `RankPow`, `RankAdm`,
-  `RankLex`, `HeadOmega`, `HeadOmegaInversion`, `RankPowDomination`,
-  `RankPowSlice3` (2026-05-28 — `NonBzero` + strict-jump bridge +
-  head-Ω lower bound), `RankPowSlice3Headline` (2026-05-28 — Slice 3
-  headline `rank-mono-<ᵇ-+1-via-head-Ω` closed under a strict-head
-  premise; umbrella case-split bumps `bpsi=bpsi at equal markers`
-  to rank-adm / rank-lex)), `RankLexJointBplus` (2026-05-28 PR #147
-  — parallel rank with `leftmost-α` discriminator for the bpsi-source-
-  at-equality joint-bplus sub-case; second-component strict-mono at
-  equal first components scaffolded; (a)+(b)+(c) assembly
-  completed 2026-05-30 via PRs #165 (b lex-first primitive) + #166
-  (c `BplusFirstTri` trichotomy + `first-eq-from-bpsi-source-at-
-  equal-head` consumer-side derivation)), `RankMonoUmbrellaSlice4`
-  (2026-05-28 PR #149 — narrowed `_<ᵇ⁻ⁿ_` umbrella record bundling
-  WfCNF endpoints + `_<ᵇ¹_` derivation; covers all 10 inherited
-  `_<ᵇ⁰_` cases + the strict-head joint-bplus; two shortfalls
-  (`<ᵇ-ψΩ≤` boundary; `<ᵇ-+1` at equal-head) pinned as `⊤`-aliases
-  with explicit lex-rank / rank-lex-jb pointers),
-  `RankMonoSameLeft` (2026-05-30 PR #167 — Path-3 prototype
-  source-rule enrichment via `<ᵇ⁺²-same-left`; one-line closure via
-  `rank-pow-bplus-right-mono`), `RankMonoUnion` (2026-05-30 PR #168
-  — architectural realisation: union umbrella
-  `_<ᵇᵘ_ = _<ᵇ¹_ ⊎ _<ᵇ⁺²_` via Sum + `[_,_]` mediator; per-extension
-  proof work + structural composition; extension recipe in preamble),
-  `RankMonoUnionWfCNF` (2026-05-30 PR #169 — WfCNF wrap `_<ᵇᵘⁿ_`
-  bundling canonical-form invariant alongside the union; mirrors
-  Slice 4's pattern, propagates automatically through new
-  extensions), `RankMonoUnionWF` (2026-05-30 PR #170 — Gate 2
-  closure: `WellFounded _<ᵇᵘ_` via `Subrelation.wellFounded` +
-  `On.wellFounded` rank-embedding transport from `wf-<′`).
-* Fidelity climb (2026-06-15 → 18): `Ordinal.Buchholz.BHTarget` (the
-  BH order-type target structure + its well-foundedness CONSTRUCTED
-  for real from the Brouwer order `Ord`/`_<′_`/`wf-<′`; zero
-  postulates; reduces the `Fidelity.agda` trust boundary from three
-  postulates to two), and `Ordinal.Brouwer.OrdinalExp` (ordinal
-  exponentiation `ω^^_ : Ord → Ord` + the first ε-number `ε₀`; rung 1
-  of the target-side climb). Order-type fidelity (ψ₀(Ω_ω)) itself
-  remains OPEN (`D-2026-06-14`) — these shrink the trust boundary and
-  start the climb; ε₀ ≪ ψ₀(Ω_ω).
-* Docs: `docs/buchholz-plan.adoc`,
-  `docs/echo-types/buchholz-extended-wf.md`,
-  `docs/echo-types/buchholz-rank-obstruction.adoc` (per-constructor
-  verdict table — see ledger for live count).
-* Direct-constructor `_<ᵇ_` same-binder cases (Buchholz item B):
-  status tracked solely in the earn-back ledger
-  (`docs/echo-types/earn-back-plan.adoc`, row B) and
-  `docs/retractions.adoc` (F-2026-05-18b) — off the paper critical
-  path. (Reference-only by design: no status is snapshotted here, so
-  this line never drifts as the ledger moves.)
+* Still here: `proofs/agda/EchoOrdinal.agda` (the echo-to-ordinal bridge,
+  `ordinal-collapse-non-injective`) and the two modules it imports,
+  `proofs/agda/Ordinal/OmegaMarkers.agda` and
+  `proofs/agda/Ordinal/Buchholz/Syntax.agda`.
+* The design documents (`docs/bridges/buchholz-*.adoc`,
+  `docs/echo-types/buchholz-rank-obstruction.adoc` and the two ordinal
+  decision records) are kept here as frozen copies, each marked as moved.
+  The maintained copies are in ordinal-notation.
 
 === Characteristic / EI — epistemic, choreographic, roles `[REAL]`
 The echo-invariant line: epistemic structure, choreographies, roles.

@@ -168,7 +168,9 @@ negatively, EI-2.)
   `echo-additive/` modules are absent from `All.agda`). Treat the variance result
   as a real-but-unwired artefact, exactly as `AFFIRMATION.adoc` records it.
 * *Bachmann–Howard order-type fidelity is POSTULATED*, in
-  `Ordinal/Buchholz/Fidelity.agda`, *outside* the `--safe` kernel cone. The
+  `Ordinal/Buchholz/Fidelity.agda`, *outside* the `--safe` kernel cone. (Since
+  2026-10-20 that file and the whole ordinal tower live in
+  https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation], not here.) The
   ordinal-notation tower's sound-carrier well-foundedness is proved and in the
   closure; the bridge from that notation to the Bachmann–Howard ordinal is an
   explicit, auditable trust boundary, not a closed theorem. "Mechanized

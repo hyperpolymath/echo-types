@@ -32,16 +32,12 @@ but broader ecosystem mapping remains incomplete.
 
 === 4. Buchholz / Veblen Ordinals
 
-* *Status:* PARTIAL (11/13 constructors closed under WfCNF; 1 in flight)
+* *Status:* MOVED (2026-10-20) to
+https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation]
+(echo-types#349). Status, blockers and open problems are tracked there.
 * *Dependencies:* Standard Agda
-* *Blockers:* `+<ᵇ-+1+` joint-bplus is the single remaining open
-constructor. The head-Ω domination route (option A) has its abstraction
-+ per-marker dominances at both branches + the option-(b) head-Ω
-inversion lemmas all landed across 2026-05-27 (PRs #124 / #130 / #131);
-only the WfCNF-carrier structural recursion (Slice 2-bplus) remains. The
-earlier shared-binder-self-lift blocker is resolved (`+RankAdm+` +
-`+RankLex+` slices, 2026-05-26/27). Live tracker:
-`+docs/echo-types/buchholz-rank-obstruction.adoc+`.
+* *Still here:* the `+EchoOrdinal+` bridge and its two imports
+(`+Ordinal.OmegaMarkers+`, `+Ordinal.Buchholz.Syntax+`).
 * *Core Affect:* NO
 
 === 5. JanusKey / Categorical
