@@ -7,7 +7,7 @@
 module EchoBitNarrowingNumeric where
 
 open import Data.Nat.Base using (ℕ; zero; suc; _+_; _*_; _^_; _<_; _≤_; z≤n; s≤s)
-open import Data.Nat.Properties using (+-suc; +-identityʳ; *-assoc; ≤-step)
+open import Data.Nat.Properties using (+-suc; +-identityʳ; *-assoc; m≤n⇒m≤1+n)
 open import Data.Vec.Base using (Vec; []; _∷_)
 open import Relation.Binary.PropositionalEquality
   using (_≡_; refl; cong; sym; trans; subst; module ≡-Reasoning)
@@ -48,7 +48,7 @@ private
   double-mono (s≤s p) = s≤s (s≤s (double-mono p))
 
   join-bound : ∀ {m n} → m < n → ∀ b → joinBit m b < double n
-  join-bound (s≤s p) O = s≤s (≤-step (double-mono p))
+  join-bound (s≤s p) O = s≤s (m≤n⇒m≤1+n (double-mono p))
   join-bound (s≤s p) I = s≤s (s≤s (double-mono p))
 
 -- The bit-vector reconstruction has the exact arithmetic shape of the API.
