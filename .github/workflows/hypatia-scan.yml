@@ -30,8 +30,9 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      vulnerability-alerts: read # Dependabot alerts, for Hypatia's DA rules
     env:
-      HYPATIA_SHA: 'd73f76b5cb7a35e1aa1024c916aee7cb4f9b141e'
+      HYPATIA_SHA: '7c10e5d712af7178f8c175e10a21c5216216c198'
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -53,7 +54,7 @@ jobs:
             ~/hypatia
             ~/.hex
             ~/.mix
-          key: hypatia-sarif-${{ runner.os }}-otp28-elx1194-d73f76b5cb7a35e1aa1024c916aee7cb4f9b141e
+          key: hypatia-sarif-${{ runner.os }}-otp28-elx1194-${{ env.HYPATIA_SHA }}
 
       - name: Build pinned Hypatia scanner
         run: |
@@ -76,6 +77,13 @@ jobs:
 
       - name: Run Hypatia JSON and SARIF analysis
         id: scan
+        env:
+          # The API-backed rules (code-scanning, Dependabot, secret-scanning,
+          # branch-protection, baseline-health) return no findings without a
+          # token. Scoped to this step. The job token reaches code-scanning
+          # (security-events) and Dependabot (vulnerability-alerts) alerts;
+          # it cannot read secret-scanning alerts, which need an App or PAT.
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           HYPATIA_FORMAT=json "$HOME/hypatia/hypatia-cli.sh" scan . --exit-zero > hypatia-findings.json
@@ -95,7 +103,7 @@ jobs:
 
       - name: Upload Hypatia SARIF to GitHub Code Scanning
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-        uses: github/codeql-action/upload-sarif@b96794f015dfd88f77b49b1c93e0fa7110f94c63 # v4.38.0
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         with:
           sarif_file: hypatia.sarif
           category: hypatia
