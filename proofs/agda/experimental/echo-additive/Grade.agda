@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
 -- EXPERIMENTAL — R0 deliverable.
 -- ℕ ∪ {∞} grade semiring for the echo-types additive tower.

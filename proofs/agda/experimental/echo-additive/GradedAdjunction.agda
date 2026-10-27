@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
 -- EXPERIMENTAL — R4 deliverable: the F_r ⊣ U_r ADJUNCTION ATTEMPT on the
 -- CONTENT-FAITHFUL carrier (terminating-condition (ii) discriminator).

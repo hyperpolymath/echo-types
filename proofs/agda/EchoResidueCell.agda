@@ -26,7 +26,7 @@
 -- `holding` cell before consuming) — that needs the `(1 e)` quantity / an
 -- `@0`-style erasure encoding and remains the documented next slice.
 
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
 module EchoResidueCell where
 

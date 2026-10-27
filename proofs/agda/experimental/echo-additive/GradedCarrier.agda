@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
 -- EXPERIMENTAL — R2 deliverable (SHARED CARRIER).
 -- Carrier D : Grade → Set → Set for the echo-additive composition lines,
