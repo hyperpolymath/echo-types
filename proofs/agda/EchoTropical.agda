@@ -24,7 +24,7 @@ infixl 6 _⊕_
 
 _⊕_ : ℕ → ℕ → ℕ
 zero ⊕ n = n
-m ⊕ zero = m
+suc m ⊕ zero = suc m
 suc m ⊕ suc n = suc (m ⊕ n)
 
 -- Basic tropical properties (simplified for bridge purposes)

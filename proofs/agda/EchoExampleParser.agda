@@ -78,11 +78,14 @@ paren-pair = LP ∷ RP ∷ LP ∷ RP ∷ []
 -- The auxiliary's signature `ℕ → List Token → Bool` mirrors a state
 -- machine. We pattern-match on the token first (Agda-friendly recursion
 -- shape) and on the depth only in the RP case (the abort condition).
+-- The LP clause comes first so the case tree splits on the token
+-- before the depth: every clause then holds definitionally, which
+-- `--exact-split` requires.
 
 parses-aux : ℕ → List Token → Bool
+parses-aux d       (LP ∷ ts)  = parses-aux (suc d) ts
 parses-aux zero    []         = true
 parses-aux (suc _) []         = false
-parses-aux d       (LP ∷ ts)  = parses-aux (suc d) ts
 parses-aux zero    (RP ∷ _)   = false
 parses-aux (suc d) (RP ∷ ts)  = parses-aux d ts
 
@@ -111,7 +114,8 @@ paren-nested≢paren-pair p =
   where
     second-token : List Token → Token
     second-token (_ ∷ t ∷ _) = t
-    second-token _           = LP   -- default; never reached for these inputs
+    second-token []          = LP   -- default; never reached for these inputs
+    second-token (_ ∷ [])    = LP
 
 paren-empty≢paren-nested : paren-empty ≢ paren-nested
 paren-empty≢paren-nested p =
