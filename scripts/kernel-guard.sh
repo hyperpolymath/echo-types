@@ -75,8 +75,9 @@ for src in "$ECHO_SRC" "$KERNEL_SRC"; do
   head -1 "$src" | grep -q -- '--without-K' \
     || fail "$src: missing --without-K in the OPTIONS pragma"
 
-  # No safety-relaxing flag, anywhere.
-  if grep -nE -- '--(type-in-type|cubical|rewriting|sized-types|guardedness|injective-type-constructors|no-positivity-check|no-termination-check|allow-unsolved-metas)' "$src" >/dev/null; then
+  # No safety-relaxing flag, anywhere.  Whole flags only: `--cubical-compatible`
+  # (which strengthens, not relaxes) must not match `--cubical`.
+  if grep -nE -- '--(type-in-type|cubical|erased-cubical|rewriting|sized-types|guardedness|injective-type-constructors|no-positivity-check|no-termination-check|allow-unsolved-metas)([[:space:]]|#|$)' "$src" >/dev/null; then
     fail "$src: a safety-relaxing OPTIONS flag is present"
   fi
 

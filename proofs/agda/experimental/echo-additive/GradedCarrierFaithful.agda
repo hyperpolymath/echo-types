@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
 -- EXPERIMENTAL — R4 deliverable (CONTENT-FAITHFUL CARRIER).
 -- The variant carrier named in GradedComonad §7: a finite layer carries a

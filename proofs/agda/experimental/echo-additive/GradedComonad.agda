@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
 -- EXPERIMENTAL — R3 SECONDARY LINE (comonadic δ).
 -- Colaxator δ_{r,s} : D (r +g s) A → D r (D s A), the SPLITTING direction,

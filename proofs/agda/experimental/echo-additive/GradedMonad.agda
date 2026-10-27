@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
 -- EXPERIMENTAL — R3 PRIMARY LINE: the graded monad multiplication φ.
 -- AUTHOR-GATED comparative variance protocol (R2/R3). NOT merged to main (W6).

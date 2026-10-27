@@ -25,7 +25,7 @@
 -- under `--safe --without-K` with zero postulates. The Agda here is the
 -- source of truth; 007's Rust checker and Idris2 spec mirror this model.
 
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
 module EchoReversibilityBridge where
 
