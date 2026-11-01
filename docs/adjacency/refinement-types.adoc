@@ -126,7 +126,11 @@ In propositional-predicate refinement, there's no 2-cell to argue
 about — the propositional predicate is opaque to the refinement-
 type system's term language.
 
-== Recipe-level distinctness
+== Recipe comparison (not the terminated EI-2 claim)
+
+The discussion below is a comparison of specified refinement interfaces.
+EI-2 closed the simultaneous cross-axis integration distinctness route
+negatively; this comparison cannot by itself restore it.
 
 The recipe (custom propositional decoration order + echo-indexed
 family + transport action — see `gate-2-handoff.adoc` Observation
@@ -188,17 +192,17 @@ formalisation of "refinement-type-with-propositional-predicate
 ≡ propositional truncation of echo" would make the narrow
 distinctness claim sharper.
 
-This is forwarded to Q2.1 (the general `echo-not-prop`
-generalisation) — closing Q2.1 also discharges this open
-obligation.
+Q2.1 supplies a general `echo-not-prop` result; that does not by
+itself formalise an equivalence for any particular refinement system.
+That system-specific comparison remains open.
 
 == Status
 
 * Truncation argument: *formalised* on three domains via
-  `echo-not-prop`. Specific refinement-type formalisation
-  awaits Q2.1.
-* Recipe-level distinctness: *argued* in prose; not
-  formalised.
+  `echo-not-prop`; Q2.1 provides a general form. A specific
+  refinement-system correspondence remains unformalised.
+* Recipe encodability for specified refinement systems: *argued*
+  in prose, not formalised; not a distinctness result after EI-2.
 * Honest tied case (Σ-relevant refinement): *acknowledged
   explicitly*, not glossed.
 

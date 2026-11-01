@@ -130,8 +130,10 @@ later by the WIRED `+EchoVariance.agda+`* (#243, 2026-06-20 — in
 (`+no-bare-recovery+` via `+no-section-of-collapsing-map+` is the
 obstruction; sharpens `+R-2026-05-18+` from "`graded comonad withdrawn`"
 to "`decided against`"). Cite the WIRED `+EchoVariance+` for the
-verdict; the orphaned `+experimental/echo-additive/+` track is the
-retired earlier attempt. See
+verdict; the `+experimental/echo-additive/+` track is the earlier
+attempt, still outside the shipped closure. The current workflow invokes
+its own aggregate in both Agda jobs; it is not a separately named job.
+See `+PROOF-STATUS.adoc+` for the current coverage and verification limits. See
 `+docs/echo-types/variance-resolution.adoc+`. Build on the wired
 `+Echo+` / `+EchoResidue+`, `+EchoVariance+`, `+EchoGradedComonad+`
 (coassoc/counit), the composition isos, and `+DyadicEchoBridge+`.

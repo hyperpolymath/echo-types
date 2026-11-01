@@ -24,6 +24,13 @@ toc::[]
 
 == Gate 1: distinct phenomenon
 
+*Scope after EI-2:* the recipe's purported simultaneous cross-axis
+integration distinctness is CLOSED negatively via PATH B. Q1.1/Q1.2
+and the modal/IFC comparisons below may still ask whether specified
+neighbours can encode particular constructions; those comparisons do
+not reopen EI-2, and a failed encoding attempt is not a no-go theorem.
+See `PROOF-STATUS.adoc` § Identity and adjacency.
+
 === Q1.1 — Galois reduction
 
 Does there exist a Galois-theoretic construction that expresses the
@@ -43,14 +50,15 @@ quotient case via the diagonal correspondence
 formalised.
 
 Attack path::
-Either (a) instantiate `T1-obligation` in `EchoVsGalois.agda` with
-`choreo-grade-commute`'s actual signature and complete a Galois-
-only proof — gate #1 falsified — or (b) extract the precise stuck
-goal as a distinctness witness.
+Instantiate `T1-obligation` with `choreo-grade-commute`'s
+signature and investigate a Galois-only encoding, recording its
+assumptions or the precise unresolved goal. This compares a specified
+construction; a stuck goal alone is not a distinctness theorem.
 
-Retraction::
-If (a) succeeds without importing primitives outside abstract
-interpretation, gate #1 is falsified by T1.
+Interpretation::
+A successful encoding informs the Galois comparison. EI-2 has already
+removed this recipe from Gate 1's distinctness load, so this test alone
+neither falsifies the remaining arguments nor restores the rejected one.
 
 === Q1.2 — Quotient reduction
 
@@ -69,14 +77,14 @@ structural barriers to safe-Agda formalisation. See Q1.6 for the
 sub-case state.
 
 Attack path::
-Same as Q1.1: instantiate `T2-obligation` with
-`choreo-grade-commute`'s signature and either complete a
-quotient-only proof or extract the stuck goal.
+As in Q1.1, instantiate `T2-obligation` with
+`choreo-grade-commute`'s signature and investigate a quotient-only
+encoding, recording its assumptions or unresolved goal.
 
-Retraction::
-If a quotient encoding without echo machinery succeeds on the
-characteristic-family commutation theorem, gate #1 is falsified
-by T2.
+Interpretation::
+An encoding refines the quotient comparison; a failed attempt is not
+proof of non-encodability. Neither outcome by itself decides the
+narrowed Gate 1 arguments or reopens EI-2.
 
 === Q1.3 — Informativeness collapse
 
@@ -96,16 +104,12 @@ Attack path::
 . Construct the candidate forgetful functor `EchoLinear → EchoEpistemic`.
 . Attempt to derive `knowledge-preservation` along it.
 
-Retraction::
-If the derivation goes through, the "five axes" claim weakens to
-four or fewer, and the integration argument weakens
-correspondingly.
-
-Refined target (after gate-3's RoleGraded landing)::
-A sharper version: with `RoleGraded` in place, ask whether the
-role-or-grade axis is derivable from the other plus a forgetful
-functor. If yes, the cross-decoration integration construction
-is also weakened.
+Interpretation::
+A derivation would clarify the relationship between the specified
+interfaces. The five-axis simultaneous-integration distinctness route
+has already been removed from Gate 1 by EI-2; this test does not
+reopen it. The analogous role/grade comparison is likewise a separate
+interface question, not a new Gate 1 verdict.
 
 === Q1.4 — Additional axes
 
@@ -679,9 +683,11 @@ Documentation cascade (applied as of integration commit)::
 * `README.md` — integration-bridge bullet updated.
 
 Why PATH B (partial formalisation accepted as sufficient)::
-The full 2D iff theorem is not formalisable in safe Agda without
-postulates (decidable equality on decoration types, F-collapses
-axioms, extensionality on cell actions). `RecipeTheorem.agda`
+The full generic 2D iff theorem was not formalised. The attempted
+route would require additional assumptions (decidable equality on
+decoration types, F-collapses axioms, extensionality on cell actions);
+this is not a proof that every safe formulation is impossible.
+`RecipeTheorem.agda`
 proves the per-axis halves; `RecipeNonTriviality.agda` proves
 the concrete construction-by-construction halves. Together with
 the seven data points and the structural argument from

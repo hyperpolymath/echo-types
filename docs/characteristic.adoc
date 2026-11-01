@@ -353,17 +353,13 @@ because the role-reachability constructors are reflexive (5 cases).
 The 2D family is asymmetric — the role parameter is only live at
 keep grade.
 
-This is a *protocol-correct* closure of EI-1. It is *substantively
-narrow*. The follow-up question — is the recipe robust across
-other 2D combinations (Role × Mode, Mode × Grade, etc.), or did
-`RoleGraded` benefit from a fortunate axis pair? — is tracked as
-EI-2 in `docs/next-questions.adoc`. EI-2 is a sharpening question,
-not a survival question; its negative resolution would weaken
-EI-1's closure to "closed-but-narrow" but would not invalidate it.
-
-Do not relabel EI-1 as open. The protocol pass is the protocol
-pass. EI-2 records what's still substantively open without moving
-the goalposts.
+This is a *protocol-correct* closure of EI-1, substantively narrow.
+The follow-up EI-2 was subsequently *closed negatively via PATH B*:
+the investigated pairings do not establish substantive simultaneous
+cross-axis interaction. EI-1's shape tests remain passed, but the
+integration recipe does not carry Gate 1's distinctness load. See
+`docs/EI2_REPORT.adoc`; narrower neighbour encodability questions are
+separate and do not reopen EI-2.
 
 === Status as a candidate Gate 2 nominee
 

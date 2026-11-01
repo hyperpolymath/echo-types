@@ -5,13 +5,13 @@
 # Build all echo type modules
 build-echo:
 	@echo "Building echo type modules..."
-	agda -i proofs/agda proofs/agda/All.agda
+	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
 	@echo "✅ All echo modules built successfully"
 
 # Build stability tests
 build-tests:
 	@echo "Building stability tests..."
-	agda -i proofs/agda proofs/agda/Echo/Bridges/EchoStabilityTests.agda
+	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/EchoStabilityTests.agda
 	@echo "✅ Stability tests built successfully"
 
 # Run comprehensive build
@@ -25,31 +25,31 @@ build-all:
 
 test-core:
 	@echo "Testing core echo type properties..."
-	agda -i proofs/agda proofs/agda/Echo/Core.agda
+	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Echo.agda
 	@echo "✅ Core tests passed"
 
 # Test CNO bridge
 test-cno:
 	@echo "Testing CNO bridge..."
-	agda -i proofs/agda proofs/agda/Echo/Bridges/EchoCNOBridge.agda
+	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/EchoCNOBridge.agda
 	@echo "✅ CNO bridge tests passed"
 
 # Test thermodynamic bridge
 test-thermo:
 	@echo "Testing thermodynamic bridge..."
-	agda -i proofs/agda proofs/agda/Echo/Bridges/EchoThermodynamics.agda
+	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/EchoThermodynamics.agda
 	@echo "✅ Thermodynamic tests passed"
 
 # Test categorical bridge
 test-cat:
 	@echo "Testing categorical bridge..."
-	agda -i proofs/agda proofs/agda/Echo/Bridges/EchoCategorical.agda
+	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/EchoCategorical.agda
 	@echo "✅ Categorical tests passed"
 
 # Test stability suite
 test-stability:
 	@echo "Testing stability suite..."
-	agda -i proofs/agda proofs/agda/Echo/Bridges/EchoStabilityTests.agda
+	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/EchoStabilityTests.agda
 	@echo "✅ Stability tests passed"
 
 # Run all tests

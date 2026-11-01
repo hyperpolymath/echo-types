@@ -237,6 +237,9 @@ we name them as three.
 * *The retracted "graded comonad" reading stands retracted* (R-2026-05-18):
   echo-types is a loss-graded _reindexing modality_ (thin-poset action); the
   experimental `echo-additive/` tree is not wired into the shipped closure.
+  The current Agda workflow invokes its separate aggregate as a step in
+  both jobs, not as an independently named job; see `PROOF-STATUS.adoc`
+  for the coverage and verification limits.
 
 [#reproduce]
 == Reproduce it yourself

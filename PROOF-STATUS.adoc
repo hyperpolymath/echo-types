@@ -14,6 +14,102 @@ below. The ordinal lane, including its order-type *Fidelity* scaffold, moved to
 https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation]
 on 2026-10-20.
 
+== CI coverage audit (2026-11-01)
+
+* `experimental/echo-additive/` has a separate aggregate entrypoint, but
+  it is currently a step in both existing Agda jobs, *not* a separately
+  named job. `Grade`, `VarianceGate`, `GradedCarrier`,
+  `GradedCarrierFaithful`, `GradedMonad`, `GradedComonad`, and
+  `GradedAdjunction` are imported by that entrypoint. They remain outside
+  the shipped `All.agda` closure; the retracted comonad claim is not
+  reinstated. A static CI check now rejects direct files missing from the
+  aggregate; it is only a wiring check, not a proof check.
+* `NarrowingSmoke`, `EchoExampleTruncation`, `EchoExampleBitNarrowing`,
+  and `EchoBitNarrowingNumeric` are retained for the bit-narrowing exhibit.
+  The working-tree workflow invokes `NarrowingSmoke` (which imports the
+  other three) in warm and cold jobs under the standard profile. A local
+  cold check now succeeds as detailed below; the changed workflow has not
+  yet had a successful CI run. The exhibit remains outside the shipped
+  `All.agda` closure and is not a clean-commit Grade 3 receipt.
+* On 2026-11-01 the local cold checks and static guards passed with Agda
+  `2.7.0.1-cf6e2d9` and stdlib v2.3. The compiler is not the latest
+  upstream stable; CI's compiler remains unpinned (#322). Full provenance,
+  warnings, and the dirty-working-tree limitation are recorded below.
+  The workflow verifies stdlib commit
+  `8326c7475af1fa456ca04a0203c168d5d7ff842b` but does not pin Agda.
+* GitHub Actions
+  https://github.com/hyperpolymath/echo-types/actions/runs/41240570315[run 41240570315]
+  at source commit `b0982c44f36133acd2d0e1d4e03cf031fff7a470` reports
+  success for both `check` and `cold-check`, including the experimental
+  aggregate step and cold typecheck. This is a prior CI receipt, not a
+  run of the current working-tree changes; GitHub job logs were inaccessible
+  here, so the compiler version, warning counts and per-module output
+  were not independently inspected. The narrowing exhibit was not invoked.
+
+`bash scripts/check-grade3.sh` runs
+all six non-cubical entrypoints with `--ignore-interfaces --safe
+--without-K --cubical-compatible`, the separate full-cubical island with
+`--ignore-interfaces --safe --cubical`, and the static guards. This follows
+the default invocation in the estate
+https://github.com/hyperpolymath/standards/blob/main/3-practice/PROOF-POLICY.adoc[proof policy],
+§2.1. The local run below checked these invocations.
+The full-cubical island needs the policy's separately reviewed profile;
+its historical success is not review or a receipt for the default profile.
+The current working-tree entrypoint uses the source's existing separate
+`--safe --cubical` options because it constructs propositional truncation
+as a higher inductive type; profile review remains *OPEN*, and this island
+is not part of the `--without-K` aggregate. The postulated shadow remains
+quarantined as documented in `docs/proof-debt.adoc`.
+
+=== Local cold-check record (2026-11-01)
+
+`bash scripts/check-grade3.sh` exited 0 with `--ignore-interfaces` on
+`All`, `Smoke`, `characteristic/All`, `examples/All`,
+`experimental/echo-additive/All`, and `NarrowingSmoke`, using the combined
+`--safe --without-K --cubical-compatible` profile. The separately checked
+`EchoImageFactorizationPropCubical` also exited 0 with `--safe --cubical`;
+that is not approval of its separate profile. The invocation lint, kernel,
+foundation, and aggregate-wiring guards passed. An independent test module
+with an unsolved hole was rejected (exit 42); it is not a theorem check.
+
+* Agda: PyPI `agda==2.7.0.1`, native Python 3.11 x86-64 wheel SHA-256
+  `361ba14d06cac8cdcd5a703acd8dc52104f8e2dddc9d55f58c6cb5915d076a4d`;
+  reported `2.7.0.1-cf6e2d9`. Its missing data directory was supplied from
+  upstream Agda v2.7.0.1 source commit
+  `a6fc20c27ae953149b53a8997ba4a1c8b17d628a`. This is not the latest
+  upstream release (v2.8.0.2) and is not a CI toolchain pin.
+* Stdlib v2.3: `8326c7475af1fa456ca04a0203c168d5d7ff842b`;
+  absolute-zero: `f486c29903434589117fa0662c6f29b0f17d1d5f`.
+  Both checkouts and the Agda data source had clean tracked files.
+* Source base `b0982c44f36133acd2d0e1d4e03cf031fff7a470`, with a dirty
+  working tree for documentation, workflow, and scripts; no `proofs/agda`
+  files were changed relative to that base. The complete proof-source hash
+  manifest is `docs/receipts/agda-local-2026-11-01-sources.sha256`.
+  This is a working-tree result, not a clean-commit CI receipt or a blanket
+  grade for every theorem/file.
+* Output had 957 `UnsupportedIndexedMatch` warning occurrences: 353 for
+  `All`, 351 for `Smoke`, 100 for characteristic, 106 for examples,
+  43 for experimental, 4 for narrowing, and 0 for the cubical island.
+  Repeated checks include the same warnings: 81 distinct source locations
+  in 24 proof files. The warning says affected functions do not compute
+  when applied to transports in Cubical Agda. Exit 0 is not warning-free
+  Cubical computational compatibility. Triage remains open.
+* Complete combined stdout/stderr is preserved in
+  `docs/receipts/agda-local-2026-11-01.log.gz` (uncompressed SHA-256
+  `617263834bee297a9f8e092c32e7cd9934af940f1e9fa7f9e19663b44cde99ad`).
+  No new clean-commit Grade 3 promotion is asserted on this basis.
+
+In separate copied proof trees, replacing `fin-injective refl = refl` in
+experimental `Grade` with a hole caused its aggregate to exit 42, while
+the main aggregate on that same mutated tree exited 0. Replacing the
+`halve-double zero` proof in `EchoExampleTruncation` with a hole caused
+`NarrowingSmoke` to exit 42. These local tests used `--no-libraries` with
+explicit library paths and the standard safety flags; their logs are
+`docs/receipts/agda-mutant-{grade,grade-main,narrow}-2026-11-01.log.gz`.
+They establish local sensitivity and experimental isolation, not a green
+CI run or the separate named CI check requested in #321.
+
+
 == Build invariant (verified)
 
 * `--safe --without-K` throughout `proofs/agda/**`.
@@ -58,6 +154,65 @@ with its results and open problems. What stays here is the echo-to-ordinal
 bridge `EchoOrdinal` (`ordinal-collapse-non-injective`) and the two modules it
 imports, `Ordinal.OmegaMarkers` and `Ordinal.Buchholz.Syntax`.
 
+== Identity and adjacency: EI-2 disposition
+
+* *Closed negatively — EI-2, PATH B.* The claim that the existing
+  decoration-order / echo-indexed-family / transport recipe supplies
+  substantive *simultaneous cross-axis interaction* as a Gate 1
+  distinctness argument did not survive the investigated cases. The
+  seven recorded data points and the `RoleRole` structural argument
+  support that verdict; they are not a universally quantified no-go
+  theorem. The generic 2D iff remains unproved. See `docs/EI2_REPORT.adoc`.
+* *Narrowed, not retracted wholesale.* Gate 1's remaining arguments
+  concern proof-relevant witnesses versus specified propositional or
+  single-witness accounts, and the cited quotient/Galois 2-cell
+  constructions. These are neighbour- and model-specific, not proof that
+  the fibre is a novel construction. `Echo f y` is definitionally a
+  fibre; bare Echo coincides with HoTT fibres and Σ-relevant refinements.
+* *Open and separate.* The adequacy of a characteristic theorem family
+  for an overall positive identity remains contested: README criterion 2
+  remains unmet, while the historical Gate 2 audit records a narrower
+  protocol pass (`docs/characteristic.adoc`). They are not the same
+  standard. Specific encodability/comparison questions against QTT and
+  modal calculi, type-theoretic IFC, and the Galois/quotient settings
+  remain, as do any coupled-state or multiple-live-position extensions;
+  none reopens EI-2 or earns back the rejected distinctness claim merely
+  by encoding or failing to encode `RoleGraded`.
+
+== Epistemic-types actual-source comparison
+
+At epistemic-types commit
+`5422cd5bf1418c44321bf0f77e894737a451d8f5`,
+`tests/integration/CanonicalEcho.agda` imports Echo source pinned by its
+workflow to `46cd1a32d4dcf1020f01dd1aab41f816742da10e`. It proves
+`fromTo` and `toFrom` for its local certified-residue record and
+`EchoResidue.EchoR`, plus `lowerAgreesWithCanonical` for lowering an
+introduced source witness. The local interface supplies `observe`,
+`retain`, `Cert`, and `sound`; it is not a representation of all Echo
+structure and supplies no unconditional recovery, provenance or loss
+bound. Resource bounds are separate from Echo's identity.
+
+The sibling's GitHub Actions
+https://github.com/hyperpolymath/epistemic-types/actions/runs/40445723481[run 40445723481]
+reports the correspondence job and its proof step successful at that
+sibling commit. This is a CI receipt for its *pinned* Echo revision, not
+a proof of identity distinctness.
+
+On 2026-11-01 the same sibling integration module was also checked locally
+against both its pinned Echo revision and this checkout's unmodified proof
+sources (base `b0982c44f36133acd2d0e1d4e03cf031fff7a470`). Both exited 0
+with Agda `2.7.0.1-cf6e2d9`, stdlib v2.3, `--no-libraries --safe
+--without-K --cubical-compatible --double-check --ignore-interfaces` and
+explicit sibling, Echo and stdlib include paths. Each emitted 37
+`UnsupportedIndexedMatch` warnings. This is a different compiler and
+stdlib from the sibling CI and did not use its `-W error` configuration;
+it is a local check of that test, not a re-run of the sibling's workflow.
+Logs are `docs/receipts/epistemic-{pinned,current}-local-2026-11-01.log.gz`
+(uncompressed SHA-256 respectively
+`bd2241d145490034f869c3e412659abe366c0e2d286d880ab8bf58e32b4630bb` and
+`2728522400edb96b9e96af91840d8cec015b11797999737af29e79f7099b7640`).
+This does not broaden what the test proves.
+
 == Open (honest — NOT proved)
 
 * *Bachmann–Howard order-type fidelity* — *OPEN*, now tracked in
@@ -80,8 +235,11 @@ imports, `Ordinal.OmegaMarkers` and `Ordinal.Buchholz.Syntax`.
 * No `postulate` in load-bearing tracks (the one truncation-shadow block in
   `EchoImageFactorizationPropPostulated.agda` is the sole, isolated, documented
   exception).
-* Every headline theorem is pinned in `Smoke.agda`; every module is wired into
-  `All.agda` (orphan modules that compile but are not in `All.agda` are treated
-  as dead code).
+* `Smoke.agda` pins selected headline theorems; it is not a coverage
+  guarantee for every module. The main `All.agda` closure is distinct
+  from the separately invoked cubical and experimental roots. The
+  working-tree narrowing root is pending its first CI check; see the CI
+  coverage audit above. Unwired modules must not be treated as checked.
 * The EI-2 integration-recipe-distinctness investigation is *terminated
-  negatively* and must not be reopened (see `.machine_readable/6a2/STATE.a2ml`).
+  negatively* and must not be reopened (see `docs/EI2_REPORT.adoc`);
+  the narrower adjacency questions above are separate.
