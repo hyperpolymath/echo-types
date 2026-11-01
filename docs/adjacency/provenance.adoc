@@ -131,7 +131,11 @@ This variant is uncommon (most provenance systems prefer
 single-witness over propositional), but worth noting for
 completeness.
 
-== Recipe-level distinctness
+== Recipe comparison (not the terminated EI-2 claim)
+
+The discussion below compares specified annotation interfaces; it is
+not a proof of universal non-encodability. EI-2 closed the simultaneous
+cross-axis integration distinctness route negatively.
 
 Provenance semirings (Green-Karvounarakis-Tannen) formalise
 *how-provenance* as semiring-valued annotations. The recipe
@@ -203,7 +207,8 @@ characteristic theorem).
   truncation distinction made explicit in this note).
 * 2-cell argument (transitive provenance): *argued* via
   reduction to S-2; not separately formalised.
-* Recipe-level distinctness: *argued* in prose; not formalised.
+* Recipe comparison with provenance annotations: *argued* in prose;
+  not formalised or a distinctness result after EI-2.
 
 == References
 

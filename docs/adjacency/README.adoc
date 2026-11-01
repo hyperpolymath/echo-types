@@ -132,7 +132,7 @@ multiplicity-vs-truncation distinction noted explicitly.
 | Modal type theories (QTT, etc.)
 | Wins against propositional-mode accounts
 | N/A (modal type theories make 2-cells syntactic primitives)
-| Co-extensive with QTT-class systems on bare echo; integration recipe is open
+| Co-extensive with QTT-class systems on bare echo; specific recipe encodings remain untested, not an open EI-2 distinctness claim
 
 | HoTT fibers
 | N/A (HoTT fibers are echo by another name)
@@ -332,9 +332,9 @@ via `EchoVsGalois.Sophisticated`).
 The remaining neighbours (IFC, provenance, modal type theories,
 HoTT fibers) have prose adjacency notes here but no dedicated
 Agda formalisation. Each note states what would be required for
-formalisation and forwards the obligation to either Q2.x (for
-recipe-level distinctness from a given neighbour) or to Q3.x
-(for a canonical example exercising the distinctness).
+formalisation and forwards specified neighbour-comparison obligations
+to Q2.x or example work to Q3.x. These are not a reopening of EI-2's
+terminated integration-distinctness claim.
 
 The honest summary: gate #1 has a strong consolidated argument
 plus formalised obstructions against the two strongest neighbours

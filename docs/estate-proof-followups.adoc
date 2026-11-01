@@ -1,0 +1,63 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Estate follow-up prompts
+
+These are requests to the owners, not assertions that the other projects
+have already implemented the proposed work. Source references and current
+local evidence are in `PROOF-STATUS.adoc` and `docs/proof-witness-audit.adoc`.
+
+== hyperpolymath/epistemic-types
+
+At commit `5422cd5bf1418c44321bf0f77e894737a451d8f5`, review the
+`CanonicalEcho.agda` correspondence and its workflow pin to Echo
+`46cd1a32d4dcf1020f01dd1aab41f816742da10e`. Independently recheck the
+same integration test against a proposed newer Echo revision using your
+pinned CI compiler and library, without weakening safety or the warning
+policy. If it passes, decide whether to advance the pin and preserve both
+revision IDs and CI output. Keep the claim limited to the two representation
+round trips and agreement of lowering; do not infer recovery, loss bounds,
+or equivalence of the whole theories. Echo's local Agda 2.7.0.1 test
+against base `b0982c44f36133acd2d0e1d4e03cf031fff7a470` is supporting
+evidence, not your project's CI receipt.
+
+== hyperpolymath/standards
+
+Review the separately identified `--safe --cubical` profile for Echo's
+higher-inductive propositional truncation against `3-practice/PROOF-POLICY.adoc`
+§2.1. State explicitly whether this profile is accepted, with its trust and
+compatibility limits and required receipt metadata. Separately clarify how
+`UnsupportedIndexedMatch` warnings under `--cubical-compatible` affect
+claims about computational behavior under transport; do not treat flag
+acceptance as a warning-free result. Echo's local report lists 81 distinct
+warning locations across 24 files and retains the raw log.
+
+== hyperpolymath/the-metadatastician
+
+At `afac64d8b670716d23ad0bcf9c0fd0e8b45f7a0e`, inspect the README's
+claim-grounding and release-evidence descriptions against
+`scripts/validate-docs.sh`, `scripts/invariant-path.sh`, and
+`.github/workflows/ci.yml`. The observed CI runs the documentation baseline;
+the invariant-path wrapper expects a sibling checkout and invokes Cargo.
+Determine which evidence checks actually run for a standalone clone and in
+CI, document the boundary, and add reproducible pinned checks or explicitly
+mark unavailable checks as manual. Exercise both missing-tool and failed-check
+cases; do not claim grounded documentation merely because the baseline passes.
+Also reconcile the README layout's `MAINTAINERS.md` with the validator's
+`MAINTAINERS.adoc` after inspecting the repository's actual files.
+
+== hyperpolymath/ephapax
+
+For `formal/Echo.v` at `800030f3c92536cce57acb5e82da6cf27b942826`, run
+the actual Rocq/Coq build and `Print Assumptions` for
+`no_section_collapse_to_residue`, and compare its exact statement,
+assumptions, and source revisions with Echo's
+`EchoResidue.no-section-collapse-to-residue`. Preserve the checker output
+and do not count a skipped build or a merely similar theorem as a verified
+cross-language witness. See `docs/proof-witness-audit.adoc`.
+
+== Repository locations needed
+
+GitHub API requests for `hyperpolymath/stuff-of-awesome` and
+`hyperpolymath/catachresis-colloquium` returned 404, and repository search
+under that owner found no matching names. Supply their exact URLs or access
+before tailoring prompts: their content and relation to Echo have not been
+inspected and should not be inferred from their names.

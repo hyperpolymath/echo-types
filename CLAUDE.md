@@ -1,5 +1,14 @@
 <!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 <!-- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk> -->
+# Proof policy
+
+The normative estate policy is
+https://github.com/hyperpolymath/standards/blob/main/3-practice/PROOF-POLICY.adoc.
+Its default Agda theory profile is `--safe --without-K --cubical-compatible`;
+full Cubical proofs require a separate reviewed profile. Record toolchain,
+assumptions, results and exact source revisions; historical checks do not
+prove the new profile. Mathesis grades are theorem- and receipt-specific.
+
 # Ecosystem context
 
 This repo (echo-types) is one node in the hyperpolymath / PanLL ecosystem.
@@ -7,8 +16,10 @@ Adjacent projects, in one line each, for session bootstrapping:
 
 - echo-types — constructive Agda formalization of fiber-based structured
   loss ("echo types"); `Echo f y := Σ (x : A) , (f x ≡ y)`. Gated
-  identity-claim development; `--safe --without-K` throughout. The
-  ordinal-notation / Buchholz lane moved out on 2026-10-20 (see below).
+  identity-claim development; ordinary proof roots use `--safe --without-K
+  --cubical-compatible`. The full-cubical island is a separate profile;
+  the postulated shadow remains quarantined. The ordinal-notation /
+  Buchholz lane moved out on 2026-10-20 (see below).
   https://github.com/hyperpolymath/echo-types
 - PanLL — three-pane cognitive-relief HTI; Ambient/Symbolic/Neural/World panes.
   https://github.com/hyperpolymath/panll

@@ -9,7 +9,7 @@ echo "1. Checking no unsafe constructs..."
 sh scripts/check-no-unsafe.sh
 
 echo "2. Building All.agda..."
-agda -i proofs/agda proofs/agda/All.agda
+agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
 
 echo "3. Running just verify..."
 just verify
