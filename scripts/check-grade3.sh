@@ -22,6 +22,8 @@ python3 scripts/check-agda-invocations.py
 bash scripts/check-experimental-aggregate.sh
 bash tools/check-guardrails.sh proofs/agda
 
+# Typecheck the given Agda entrypoint without cached interfaces using the
+# standard profile. A failed check stops the script.
 check() {
   printf '\nChecking %s\n' "$1"
   agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda "$1"
