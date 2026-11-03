@@ -57,8 +57,9 @@ Two neighbours not in the original five-neighbour list are now
 also covered:
 
 * *Modal type theories* (QTT, Reed-Pfenning, etc.) — co-extensive
-  with echo on bare echo in QTT-class systems; recipe-level
-  distinctness is an open question. See
+  with echo on bare echo in QTT-class systems; recipe encodability
+  in particular systems remains a separate open comparison, not an
+  open EI-2 distinctness claim. See
   `docs/adjacency/modal-type-theories.adoc`.
 * *HoTT homotopy fibers* — echo IS the homotopy fiber; the win
   is over the propositional truncation modality, not over fibers
@@ -85,39 +86,17 @@ domains (tropical, epistemic, linear). The remaining neighbours
 have framed but only-partially-formalised distinctness claims;
 see each file for what's done and what's open.
 
-== Where distinctness can live
+== Integration evidence after EI-2
 
-Not in the object. In the *integration of structured-loss across
-orthogonal axes*.
-
-The bridge modules in `proofs/agda/` already span:
-
-* choreographic — role projection (`EchoChoreo`)
-* epistemic — indistinguishability and knowledge (`EchoEpistemic`)
-* affine/linear — strict weakening to residues (`EchoLinear`)
-* graded — compositional degradation (`EchoGraded`)
-* tropical — argmin-style witnesses (`EchoTropical`)
-
-None of the five neighbour traditions span this breadth natively.
-Galois lives in lattices. IFC lives in security policies. Quotients
-are usually fixed (no native graded-chain construction). Refinements
-have no native grading or choreography. Provenance has no tropical
-version.
-
-The integration theorem now in the repository is
-`characteristic.RoleGraded.choreo-grade-commute`: a single theorem
-on a 2D family `RoleGEcho : Role → Grade → Set` carrying both a
-choreographic role decoration and a graded loss decoration, with
-two independent actions (`applyRole`, `applyGrade`) that commute.
-Both decoration witnesses appear on both sides of the equation,
-satisfying the same-data test that the previous nominee
-(`EchoIntegration.knowledge-and-controlled-degradation`, which gate-2's
-audit exhibited as a literal product of disjoint facts —
-see `proofs/agda/characteristic/IntegrationAudit.agda`) failed.
-
-This combination is not native to any one neighbour tradition. Each
-neighbour would have to import machinery from at least two others to
-express it.
+The five bridge domains (choreographic, epistemic, linear, graded,
+tropical) and `characteristic.RoleGraded.choreo-grade-commute` remain
+examples of the recipe's organisation. They do not establish a novel
+construction or substantive simultaneous cross-axis interaction.
+EI-2 terminated that distinctness route negatively via PATH B; the
+non-trivial observed cell carries one-axis-at-a-time content. The
+remaining Gate 1 arguments are the scoped truncation and 2-cell
+comparisons below. Specific neighbour encodings remain research
+questions, not a basis for reopening EI-2.
 
 [#claim]
 === The Gate #1 claim
@@ -168,9 +147,13 @@ This is the claim that has to survive falsification.
 [#falsification]
 == Falsification tests
 
-Three concrete tests. Each carries an explicit retraction condition.
-If any one test succeeds against echo types, Gate #1 is retracted or
-substantially weakened.
+T1–T3 were originally framed as attacks on the integration-based
+claim. After EI-2 they remain neighbour-comparison questions, not
+independent pass/fail tests for the narrowed Gate 1: the recipe no
+longer carries that gate's distinctness load. Successful encodings
+refine the comparison; an unsuccessful attempt alone does not prove
+non-encodability. The truncation and 2-cell arguments must be assessed
+against their own explicit assumptions.
 
 === T1 — Galois reduction
 
@@ -179,14 +162,9 @@ abstract-interpretation terms — Galois connection between concrete
 and abstract domains, with grading expressed as a chain of
 approximations.
 
-PASSES (gate falsified) if::
-The rewrite preserves all proof-relevant content with no machinery
-imported from outside abstract interpretation.
-
-FAILS (gate supported) if::
-The rewrite cannot express the cross-axis composition without
-importing graded or choreographic primitives that AI does not
-natively contain.
+A Galois-only encoding would establish a scoped correspondence for
+the selected statement. Record any required assumptions; an unclosed
+attempt is not a proof that no encoding exists.
 
 Attempt scaffolded in `proofs/agda/EchoVsGalois.agda`.
 
@@ -196,13 +174,9 @@ Same theorem, restated as a statement about the quotient
 `B = A / ker f` plus a quotient-of-quotients construction for the
 graded chain.
 
-PASSES (gate falsified) if::
-The restatement goes through cleanly using only quotient operations.
-
-FAILS (gate supported) if::
-The graded composition or choreographic action does not commute with
-the quotient stacking, leaving a residue that quotient theory cannot
-express.
+A quotient-only restatement would establish a scoped correspondence
+for the selected statement. A failure to construct one is not by itself
+a universal quotient no-go theorem.
 
 Attempt scaffolded in `proofs/agda/EchoVsQuotient.agda`.
 
@@ -212,13 +186,9 @@ Show that `EchoEpistemic`'s indistinguishability-and-knowledge
 results are derivable from `EchoLinear` plus a forgetful functor —
 i.e., that the epistemic axis is not pulling its weight.
 
-PASSES (gate weakened) if::
-Derivation goes through. The "five axes" claim shrinks to four or
-fewer; the integration argument weakens correspondingly.
-
-FAILS (gate supported) if::
-Derivation fails at a specific point where epistemic structure
-carries content not present in linear structure.
+A derivation would clarify the relation between these specified axes;
+a failed attempt alone is not a proof of independence. EI-2 already
+removed the five-axis integration argument from the distinctness load.
 
 This test is currently unstubbed; see <<open-questions>>.
 

@@ -83,8 +83,14 @@ narrowing history and `roadmap-gates.adoc` for the test discipline.
 | Positive examples landed (`EchoExample*.agda`); matched-negative companions planned (Track C, Lane 2).
 |===
 
-No gate is currently FAILED. No gate is currently STABLE-ESTABLISHED;
-re-assessment cadence is per tagged release.
+EI-2's proposed simultaneous cross-axis integration route was
+*closed negatively*, and Gate 1 narrowed; it is not an open route or
+an unqualified Gate 1 pass. The Gate 2 row reports the historical
+nominee-protocol pass, whereas README criterion 2 asks the stronger
+question whether the family suffices for positive identity beyond
+standard fibre lemmas and remains unestablished. No overall positive
+identity is claimed; re-assessment cadence is per tagged release.
+See `PROOF-STATUS.adoc` § Identity and adjacency.
 
 [NOTE]
 .Canonical identity layer (2026-05-27 advance)

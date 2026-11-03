@@ -1,0 +1,64 @@
+// SPDX-License-Identifier: MPL-2.0
+= Proof-witness audit: Echo Types and Mathesis
+
+Audit date: 2026-11-01. Echo Types source base:
+`b0982c44f36133acd2d0e1d4e03cf031fff7a470` (working tree also has
+uncommitted CI/documentation edits). This is a source and receipt inspection,
+not a new theorem-checking receipt. No proof was translated or rewritten.
+
+== Policy and scope
+
+Mathesis `estate-mathematical-architecture` distinguishes a locally
+checked Agda result (Grade 3), a witness in one alternative foundational
+system (Grade 2i), translations in two distinct foundational families
+(Grade 2ii), and checking translated witnesses through the specified
+headless checker APIs (Grade 1). Agda, Lean and Rocq all belong to the DTT
+family; Lean plus Rocq alone is not foundational diversity for Grade 2ii.
+Grades attach to specific results and evidence, not entire repositories.
+The original repositories own their proofs. Missing evidence remains missing.
+
+== Findings
+
+* This checkout contains no `.lean` or `.v` files. A filesystem search
+  does not rule out witnesses in other repositories.
+* Candidate Rocq/Coq witness: ephapax
+  https://github.com/hyperpolymath/ephapax/blob/800030f3c92536cce57acb5e82da6cf27b942826/formal/Echo.v[`formal/Echo.v`]
+  declares `no_section_collapse_to_residue` and describes it as a mirror
+  of `proofs/agda/EchoResidue.agda`'s `no-section-collapse-to-residue`.
+  Both source statements concern nonexistence of a section after the
+  concrete Boolean collapse. The source also contains `weaken`,
+  `weaken_collapses_distinction`, `affine_canonical`, `mode_le_prop`, and
+  `degrade_mode_comp`. This is a candidate *single-system translation*,
+  not independent corroboration or a checked cross-language equivalence.
+  The source claims zero axioms and K-freedom; this audit did not run
+  `Print Assumptions` for these specific theorems and cannot certify that
+  claim from source inspection alone.
+* Ephapax's `_CoqProject` at that revision includes `Echo.v`, but its
+  https://github.com/hyperpolymath/ephapax/actions/runs/40435929887[successful
+  workflow run] at the same revision skipped the actual Coq build job.
+  Its green aggregate is therefore not a compilation receipt. The
+  workflow's `Print Assumptions` step names four other preservation
+  theorems, not the Echo witness above. No coq-lsp REST API receipt
+  for this witness was located in this inspection.
+* Eclexia
+  https://github.com/hyperpolymath/eclexia/blob/742cc99cca37f1bda84d8d9188cb4f61fff4341e/formal/coq/src/EchoThermo.v[`EchoThermo.v`]
+  contains a discrete thermodynamic model and explicitly claims to mirror
+  `EchoThermodynamics`; its scope excludes the real-valued energy scaling.
+  Treat this as an adjacent candidate correspondence, not automatically
+  the same theorem or a verified translation. No theorem-specific build,
+  assumptions, or checker-API receipt was examined for it.
+* `docs/bridges/tropical-correspondence.adoc` describes Lean and Isabelle
+  neighbours, but explicitly notes different carriers, no shared definition
+  module and no cross-prover checker. Similar names or informal analogy
+  alone do not establish witness identity or a grade.
+
+== Disposition
+
+No Grade 1, Grade 2ii, or verified Grade 2i receipt is established by this
+inspection. The ephapax source is a concrete Grade 2i *candidate*; its
+translation correspondence, exact source commits, theorem assumptions and
+successful checker receipt need review before recording a grade. Agda was unavailable when this witness audit was performed. A subsequent
+local cold check is recorded in `PROOF-STATUS.adoc`; it does not by itself
+prove a cross-language correspondence or provide a clean-commit receipt. In particular, these candidates do not cover the experimental
+or bit-narrowing modules merely by existing elsewhere. Do not infer any
+regression solely from an absent receipt.

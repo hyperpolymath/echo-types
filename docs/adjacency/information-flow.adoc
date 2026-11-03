@@ -83,7 +83,7 @@ the primitive object; there are no parallel transports between
 classes to compare. Type-theoretic IFC variants might admit a
 2-cell argument; this is part of the open question.
 
-== Recipe-level distinctness (open question)
+== Recipe encodability (open comparison, not EI-2)
 
 The substantive question this neighbour raises:
 
@@ -92,10 +92,10 @@ Does any type-theoretic IFC variant carry the recipe (custom
 propositional decoration order + echo-indexed family + transport
 action) natively?
 
-If yes, gate-1 weakens against that variant — type-theoretic IFC
-becomes a co-extensive neighbour, like Σ-relevant refinement and
-QTT-class modal type theories. If no, the recipe is genuinely
-echo-specific against this neighbour.
+An encoding would document a correspondence for the chosen variant;
+a failed attempt would not by itself prove non-encodability. EI-2
+already closed the simultaneous cross-axis integration distinctness
+argument negatively, independently of this neighbour comparison.
 
 I do not know the answer. Type-theoretic IFC includes a wide
 family: dependent-type-system non-interference (e.g., Coq
@@ -111,8 +111,9 @@ A worked formalisation would:
 . If yes, write the recipe in that variant's syntax and check
   whether the resulting "characteristic" theorem family (in
   the gate-2 sense) is non-trivial.
-. If non-trivial, weaken the gate-1 distinctness claim against
-  that variant; if trivial or impossible, retain.
+. Record exactly the resulting statement, assumptions and any
+  non-triviality evidence. Do not infer an impossibility theorem from
+  a stuck attempt or restore the rejected integration argument.
 
 == What echo adds (over relational IFC)
 
@@ -134,11 +135,10 @@ policy enforcement.
 
 == What echo may not add (over type-theoretic IFC)
 
-This is the open question. If a type-theoretic IFC variant
-carries the recipe natively, the win against that variant
-weakens. The honest framing would then mirror the modal-type-
-theory case: "co-extensive with type-theoretic IFC variant X;
-distinct from relational variants."
+The open question is which specified type-theoretic IFC variants
+can express the relevant witness structures and recipe. Any
+correspondence needs a precise statement; neither an encoding nor
+its absence alone establishes a general Gate 1 verdict.
 
 == Retraction conditions
 
@@ -175,8 +175,9 @@ Forwarding to:
 
 * Truncation argument (relational IFC): *formalised* via
   `EpistemicUpdate.echo-not-prop`.
-* Recipe-level argument (type-theoretic IFC): *open*. Genuinely
-  open work, not boilerplate.
+* Encodability in specified type-theoretic IFC variants: *open
+  comparison*. EI-2's simultaneous-interaction distinctness argument
+  is *closed negatively*.
 * No dedicated `proofs/agda/adjacency/IFC.agda` formalisation.
 
 == References

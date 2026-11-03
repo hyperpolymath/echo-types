@@ -9,8 +9,9 @@ _Axes engaged: 5 (Comp), 7 (PR/PI); axis 8 (IT/Comp) open — QTT-style quantita
 *Verdict: co-extensive with QTT-class systems on bare echo.* Not
 distinct from native modal type theories on the type level; the
 win is over propositional / classical accounts of modes.
-Integration recipe is an open question against modal type
-theories with sufficient ambient structure.
+Whether specific modal theories can express the recipe is an open
+*comparison*, not an open claim of simultaneous cross-axis distinctness:
+EI-2 terminated that claim negatively via PATH B.
 
 This neighbour was identified during gate-3's `LinearErasure`
 analysis. It was not on the original five-neighbour list in the
@@ -53,8 +54,10 @@ win for Echo; no loss either."
 Echo coincides with native modal type theories on the type level
 in QTT-class systems. The win is over *propositional* / *classical*
 accounts of mode erasure, not over modal type theories themselves.
-Integration recipe distinctness against modal type theories with
-sufficient ambient mode structure is an *open question*.
+Whether a specified modal type theory expresses the recipe or
+`RoleGraded.choreo-grade-commute` natively is an *open comparison*.
+EI-2's negative finding removes that recipe from the Gate 1
+distinctness argument, regardless of the comparison's outcome.
 
 == Truncation argument (against propositional accounts)
 
@@ -82,7 +85,7 @@ type theories have rules that one accepts or rejects.
 
 The right comparison here is *recipe-level*, not 2-cell.
 
-== Recipe-level distinctness (open question)
+== Recipe encodability (open comparison, not EI-2)
 
 The substantive question:
 
@@ -110,11 +113,9 @@ A worked formalisation would:
 . Attempt to prove `RoleGraded.choreo-grade-commute` (or its
   modal-type-theory analog) using only the modal type theory's
   primitives.
-. Either succeed (gate-1 weakens against that variant — modal
-  type theories become co-extensive on the integration recipe,
-  not just on bare echo) or extract a stuck point (gate-1
-  holds, with the modal-type-theory specific stuck point as a
-  distinctness witness).
+. Record the result for that specified variant and its assumptions.
+  Success identifies an encoding; a stuck proof attempt does not prove
+  non-encodability or restore the terminated EI-2 distinctness claim.
 
 == What echo adds (over propositional mode accounts)
 
@@ -153,9 +154,9 @@ as such.
   *Genuinely open.* Likely outcome unknown.
 . A demonstration that the modal type theory's mode-indexed
   Σ-types are *strictly* the same as echo even at the
-  integration-recipe level. Would weaken gate-1 against modal
-  type theories from "co-extensive on bare echo" to "co-extensive
-  on the integration recipe", a substantial reframing.
+  integration-recipe level. This would refine the comparison with
+  that specified theory, not retract or re-establish the already
+  terminated EI-2 argument.
 
 == Open obligation
 
@@ -179,16 +180,17 @@ Forwarding to:
 * Q1.8 — adding modal type theories to the canonical neighbour
   list (this note is the addition).
 
-This is the most leveraged open work in the adjacency
-directory: closing the recipe-level QTT question would
-substantially sharpen the gate-1 distinctness claim either way
-(by retraction or by formalisation).
+The QTT comparison can sharpen the scope of the neighbour analysis,
+but neither outcome reverses EI-2's negative result. A proposed
+coupled-state or multiple-live-position extension is a separate,
+currently parked research question.
 
 == Status
 
 * Truncation argument: *formalised* via `LinearErasure.echo-not-prop`.
-* Recipe-level argument: *open*. Most under-formalised case in
-  this directory.
+* Recipe encodability in specified modal systems: *open comparison*;
+  the EI-2 simultaneous-interaction distinctness argument is *closed
+  negatively* and cannot be earned back by this comparison alone.
 * No dedicated Agda formalisation.
 
 == References

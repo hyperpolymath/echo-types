@@ -36,13 +36,15 @@ falsifiable, not a failure of the repository.
 [#gate-1]
 === Gate 1 — Distinct phenomenon
 
-Echo is not a renaming of an existing construction (quotient, Galois
-connection, lens/optic, refinement type, modal/comonadic type,
-provenance semiring). *Pass:* a distinctness witness that survives
-reduction attempts to each neighbour. *Retract:* a neighbour
-construction expresses the characteristic family without importing
-echo-specific primitives. Living instances: `docs/next-questions.adoc`
-Gate 1; `docs/adjacency/*`.
+Bare Echo is definitionally the fibre, so novelty of the construction
+is not claimed. The narrowed comparison concerns what specified
+propositional or single-witness neighbours retain, and the quotient /
+Galois 2-cell constructions. EI-2 terminated the proposed simultaneous
+cross-axis integration distinctness argument negatively via PATH B; an
+encoding of that recipe is a separate neighbour comparison, not a
+standalone pass/fail test for these remaining arguments. Living scope:
+`PROOF-STATUS.adoc` § Identity and adjacency,
+`docs/next-questions.adoc` Gate 1, and `docs/adjacency/*`.
 
 [#gate-2]
 === Gate 2 — Characteristic theorems

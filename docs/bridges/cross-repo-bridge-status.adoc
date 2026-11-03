@@ -10,6 +10,25 @@ touches other repositories.
 [width="100%",cols="20%,20%,20%,20%,20%",options="header",]
 |===
 |Track |echo-types side |Adjacent side |Current status |Main blocker
+
+|Epistemic certified-residue correspondence
+|`+proofs/agda/Echo.agda+` and `+EchoResidue.agda+`, at sibling's pin
+`+46cd1a32d4dcf1020f01dd1aab41f816742da10e+`
+|`+epistemic-types@5422cd5bf1418c44321bf0f77e894737a451d8f5+`,
+`+tests/integration/CanonicalEcho.agda+`
+|The sibling test constructs both representation round trips between
+its local certified-residue `+Echo+` and `+EchoResidue.EchoR+` and
+proves agreement of lowering an introduced source witness. Its
+https://github.com/hyperpolymath/epistemic-types/actions/runs/40445723481[run 40445723481]
+reports the correspondence job and proof step successful. This is not
+an Echo identity/distinctness theorem or an Echo resource instance.
+|The sibling CI receipt applies to that pinned Echo revision. Subsequent
+local checks of the same test passed against both that pin and this checkout,
+with a different toolchain and warnings; see `+PROOF-STATUS.adoc+` for the
+exact commands and logs. Recovery, provenance, loss bounds and combined runtime
+behaviour require their own assumptions or evidence; the local
+builtins-only interface is intentionally smaller than the full Echo
+interface.
 |CNO bridge (Agda) |`+proofs/agda/EchoCNOBridge.agda+`
 |`+absolute-zero/proofs/agda/CNO.agda+` (direct import) |*Content-bridge
 done.* Bridge imports `+IsCNO+`, `+empty-is-cno+`, `+halt-is-cno+`,

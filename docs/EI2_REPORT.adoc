@@ -4,9 +4,9 @@
 :toc: macro
 :source-highlighter: rouge
 
-This document is the working record for EI-2. It will be updated as
-data points accumulate. EI-2 is *not terminated* until expressly
-declared terminated in this document or in `next-questions.adoc`.
+This document preserves the working record for EI-2. The authoritative
+final status below is *terminated negatively via PATH B*; earlier
+investigation stages and superseded criteria are retained as history.
 
 toc::[]
 
@@ -59,9 +59,10 @@ to reflect this across five doc locations (see "Documentation
 cascade" below).
 
 *Why PATH B (partial formalisation accepted as sufficient).* The
-full 2D iff theorem is not formalisable in safe Agda without
-postulates (decidable equality on decoration types, F-collapses
-axioms, extensionality on cell actions). `RecipeTheorem.agda`
+full generic 2D iff theorem was not formalised: the attempted route
+would require additional assumptions (decidable equality on decoration
+types, F-collapses axioms, extensionality on cell actions). This is
+not a proof that every safe formulation is impossible. `RecipeTheorem.agda`
 proves the per-axis halves; `RecipeNonTriviality.agda` proves the
 concrete construction-by-construction halves; `RoleRole.agda`
 provides the structural argument that even two non-loss-only
@@ -407,10 +408,10 @@ formalising the conjectured 2D iff (technical work, structural
 obstructions known and documented) or declaring partial closure
 acceptable.
 
-== Termination criteria for EI-2
+== Earlier termination criteria for EI-2 (superseded)
 
-EI-2 will be declared *terminated* if and only if one of the
-following holds, with explicit formalised evidence:
+Before PATH B, the investigation proposed termination if one of the
+following held with explicit formalised evidence:
 
 * *Strict-reading falsifier sustained:* multiple data points show
   that the recipe is uniformly trivial across loss-only axis
@@ -430,9 +431,8 @@ following holds, with explicit formalised evidence:
   (e.g., a different choice of family `F : D₁ → D₂ → Set`), and
   ModeGrade's 0-non-trivial result is shown to be artefactual.
 
-Until one of these is satisfied, *EI-2 is open*. This document is
-updated when new data points are added; the status line at the top
-is the authoritative current state.
+That earlier rule no longer governs the status: PATH B accepted the
+partial formalisation and recorded the negative verdict above.
 
 [NOTE]
 ====

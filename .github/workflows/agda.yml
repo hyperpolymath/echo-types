@@ -45,6 +45,12 @@ jobs:
       - name: Kernel funext-free certificate + classification guard
         run: sh scripts/kernel-guard.sh
 
+      - name: Check experimental aggregate covers its direct modules
+        run: bash scripts/check-experimental-aggregate.sh
+
+      - name: Check Agda invocation profiles (static)
+        run: python3 scripts/check-agda-invocations.py
+
       - name: Install Agda and standard library
         run: |
           sudo apt-get update
@@ -73,6 +79,7 @@ jobs:
         run: |
           STDLIB_DIR="$HOME/agda-stdlib"
           git clone --depth 1 --branch v2.3 https://github.com/agda/agda-stdlib.git "$STDLIB_DIR"
+          test "$(git -C "$STDLIB_DIR" rev-parse HEAD)" = 8326c7475af1fa456ca04a0203c168d5d7ff842b
           echo "stdlib_dir=$STDLIB_DIR" >> "$GITHUB_OUTPUT"
 
       - name: Fetch absolute-zero library (PINNED)
@@ -138,16 +145,16 @@ jobs:
             agdai-${{ runner.os }}-stdlib2.3-
 
       - name: Typecheck full suite
-        run: agda -i proofs/agda proofs/agda/All.agda
+        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
 
       - name: Smoke-check headline theorems
-        run: agda -i proofs/agda proofs/agda/Smoke.agda
+        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Smoke.agda
 
       - name: Typecheck characteristic lane (Gate #2 audit modules)
-        run: agda -i proofs/agda proofs/agda/characteristic/All.agda
+        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/characteristic/All.agda
 
       - name: Typecheck examples lane (Gate #3 canonical examples)
-        run: agda -i proofs/agda proofs/agda/examples/All.agda
+        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/examples/All.agda
 
       # Cubical lane: the (epi, mono) truncation discharge. A --cubical
       # --safe island (zero postulates) that CONSTRUCTS ∥_∥ as a HIT —
@@ -155,7 +162,7 @@ jobs:
       # is typechecked directly here. Its --without-K-profile shadow is
       # EchoImageFactorizationPropPostulated (proof-debt (a)/(c)).
       - name: Typecheck cubical lane (epi/mono truncation discharge)
-        run: agda -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
+        run: agda --safe --cubical -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
 
       # Experimental lane: the echo-additive grade tree, typechecked through
       # its own aggregate root (--safe --without-K from the pragmas);
@@ -165,7 +172,11 @@ jobs:
       # that vendor Grade.agda (choreographic-types) learn here, not
       # in their own CI, when an edit breaks it.
       - name: Typecheck experimental echo-additive lane (standalone, not in the closure)
-        run: agda -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
+        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
+
+      # A separate entrypoint, not evidence about the shipped closure.
+      - name: Typecheck bit-narrowing exhibit
+        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/NarrowingSmoke.agda
 
   cold-check:
     # Belt-and-braces: NO interface cache, --ignore-interfaces cold
@@ -195,9 +206,11 @@ jobs:
         run: |
           STDLIB_DIR="$HOME/agda-stdlib"
           git clone --depth 1 --branch v2.3 https://github.com/agda/agda-stdlib.git "$STDLIB_DIR"
+          test "$(git -C "$STDLIB_DIR" rev-parse HEAD)" = 8326c7475af1fa456ca04a0203c168d5d7ff842b
           ABSZ_DIR="$HOME/absolute-zero"
           git clone https://github.com/hyperpolymath/absolute-zero.git "$ABSZ_DIR"
           git -C "$ABSZ_DIR" checkout --quiet "$ABSZ_REF"
+          test "$(git -C "$ABSZ_DIR" rev-parse HEAD)" = "$ABSZ_REF"
           mkdir -p "$HOME/.agda"
           printf 'name: standard-library\ninclude: %s/src\n' "$STDLIB_DIR" > "$RUNNER_TEMP/sl.agda-lib"
           printf 'name: absolute-zero\ninclude: %s/proofs/agda\n' "$ABSZ_DIR" > "$RUNNER_TEMP/az.agda-lib"
@@ -206,9 +219,10 @@ jobs:
 
       - name: Cold typecheck (--ignore-interfaces, no cache)
         run: |
-          agda --ignore-interfaces -i proofs/agda proofs/agda/All.agda
-          agda --ignore-interfaces -i proofs/agda proofs/agda/Smoke.agda
-          agda --ignore-interfaces -i proofs/agda proofs/agda/characteristic/All.agda
-          agda --ignore-interfaces -i proofs/agda proofs/agda/examples/All.agda
-          agda --ignore-interfaces -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
-          agda --ignore-interfaces -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
+          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
+          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Smoke.agda
+          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/characteristic/All.agda
+          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/examples/All.agda
+          agda --ignore-interfaces --safe --cubical -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
+          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
+          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/NarrowingSmoke.agda

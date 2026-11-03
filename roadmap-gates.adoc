@@ -48,9 +48,10 @@ toc::[]
 
 .Claim
 ****
-Echo types name structured loss under non-injective computation as a
-phenomenon distinct from existing treatments — refinement types,
-lens/optic theory, HoTT fibers, setoid quotients, provenance semirings.
+Echo names a proof-relevant fibre reading of structured loss under
+non-injective computation. The fibre is not novel and coincides with
+HoTT fibres and Σ-relevant refinement; comparisons with other treatments
+are specific to the models and witness information they retain.
 
 Distinctness rests on two structural arguments: the *truncation
 argument* (echo types are non-truncatable for non-injective

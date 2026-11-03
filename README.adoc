@@ -113,7 +113,7 @@ The matched-negatives are where the identity claim does its hardest work: provin
 
 [CAUTION]
 ====
-**Positive identity is open.** Matched-negatives establish that Echo is *not* its obvious neighbours. The falsifiability criteria also require a *characteristic theorem family* — results that are naturally Echo-shaped, not just generic fiber lemmas. Whether emphasis + vocabulary + separation suffices for identity is the question the repo is designed to answer.
+**Positive identity is not established.** EI-2 terminated negatively via PATH B: the investigated integration recipe does not supply substantive simultaneous cross-axis interaction as a distinctness argument. The narrower truncation and 2-cell arguments remain for the specified neighbour models; Echo itself is the fibre, not a novel construction. Whether the remaining evidence satisfies a positive identity claim is separate from the closed EI-2 question, and the characteristic-family criterion remains contested.
 ====
 
 [CAUTION]
@@ -224,17 +224,19 @@ The claim is established only if all three are met:
 
 If these fail, we record that result and stop the identity claim.
 
-Criterion 1 is supported by the matched-negatives (Echo is not entropy, not LL encoding, not a resource grade). Criterion 2 is open: the Tier-1 theorem is standard, and the remaining theorems are standard consequences of non-injectivity restated in Echo vocabulary. Criterion 3 is supported by the audience surfaces and tutorials. The repo is structured to make the gap in criterion 2 visible and falsifiable.
+Criterion 1 has scoped matched-negative evidence, not a universal separation from all neighbouring formalisms. EI-2's attempted simultaneous cross-axis integration argument is *closed negatively*, not an open identity obligation; Gate 1 was narrowed to the truncation and 2-cell arguments (`docs/EI2_REPORT.adoc`). Per-neighbour encodability comparisons against modal type theories and type-theoretic IFC remain open, but do not restore the rejected argument.
+
+Criterion 2 is not established under this README's demand for results beyond generic fibre lemmas: the Tier-1 theorem is standard, and the remaining results must be judged against that demand. `docs/characteristic.adoc` records a historical, narrower protocol pass for its nominees; that pass does not by itself settle the stronger identity claim. Criterion 3 has supporting examples and tutorials. See `PROOF-STATUS.adoc` for these distinctions and the narrowly scoped epistemic-types actual-source correspondence.
 
 == Build
 
 [source,bash]
 ----
 # Core
-agda -i proofs/agda proofs/agda/Echo.agda
+agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Echo.agda
 
-# Full suite
-agda -i proofs/agda proofs/agda/All.agda
+# Main aggregate (does not include the separate experimental, narrowing or cubical roots)
+agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
 ----
 
 == Installing as a library
