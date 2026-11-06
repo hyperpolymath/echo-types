@@ -288,7 +288,12 @@ Use per-file SPDX notices as described in link:CONTRIBUTING.md[the contribution 
 Existing file-specific notices, including this README's MPL-2.0 header,
 and third-party attribution remain recorded. The earlier CC-BY-4.0 text in
 link:LICENSE-docs[LICENSE-docs] is retained for the historical grants;
-it is not the default for new documentation. See the
+it is not the default for new documentation. The earlier blanket declaration
+for existing prose in `docs/` and roadmap files is retained where no conflicting
+file-specific notice or recorded owner decision applies. In particular,
+link:docs/build.adoc[docs/build.adoc] has no file-specific notice and retains
+the recorded CC-BY-4.0 scope; this prospective policy does not relicense it.
+See the
 link:docs/audit/2026-11-06-license-inventory.adoc[licence inventory and owner decision]
 for the prior declarations and the scope of this prospective policy.
 
