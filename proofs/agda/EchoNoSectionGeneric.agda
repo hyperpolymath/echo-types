@@ -93,6 +93,9 @@ private variable
 ----------------------------------------------------------------------
 
 no-section-of-collapsing-map :
+  -- Historical "no-section" names in this module negate a LEFT inverse
+  -- of lower (exact recovery). They do not negate a right inverse of
+  -- lower; EchoCharacteristic exhibits both directions explicitly.
   (lower : A → R)
   (e₁ e₂ : A)
   (e₁≢e₂ : e₁ ≢ e₂)

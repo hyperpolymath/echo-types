@@ -1,0 +1,392 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Repository readiness and issue log — 2026-11-06
+:toc:
+
+== Scope and release rule
+
+The owner authorized local implementation, then explicitly authorized pushes,
+pull requests and appropriate merges on 2026-11-06. This supersedes the audit's
+initial read-only and subsequent local-only phases. Ordinal mathematics remains
+excluded; the three residual ordinal source files are unchanged.
+
+This ledger distinguishes source corrections, executed checks, external service
+results and unresolved decisions. A configured scanner is not a passing scan;
+an unsupported language is not clean coverage. No certification or numerical
+stability score is asserted. The six bounded mathematical follow-up packets in
+link:2026-11-06-foundation-decisions.adoc[the foundation decisions] remain research
+work; repository setup does not discharge them.
+
+Baseline main: `cd85288dcce55191ad477c0fa7d1d2421514a0d3`.
+Work branch: `audit/foundations-and-repository-standards-20261106`.
+No failing or absent mandatory check is to be bypassed for merge.
+
+== Owning sources consulted
+
+[cols="2,4",options="header"]
+|===
+|Source |Revision
+|`metadatastician/standards` |`ba640e9a57f22608710ffecdca282074eac55a0b`
+|`hyperpolymath/rsr-template-repo` |`acdc0ebd1d69f3f70995f4eec078e342078dd885`
+|`hyperpolymath/k9-ecosystem` |`20f6be5b5a14a48680b236955b5c4ad9033d00d4`
+|`hyperpolymath/deed-ecosystem` |`5b1d7f50f11054d85376972af90785c83d5665c0`
+|`hyperpolymath/contractiles` |`213fe715ffc11e8dac729c7cd835cfb54d11f999`
+|`hyperpolymath/gv-clade-index` |`2cfabd15d6cb966ed369ee13aa7174b960f45abd`
+|`hyperpolymath/panic-attack` |`6d3d52a632626109ceef1102a8141b2cfa27fe70`
+|`hyperpolymath/pons-asinorum` |`b9ab55c6973514a731c7659a2fbee21b5037b1ef`
+|===
+
+The standards repository has moved owners. Its proof policy, language policy,
+DEED/K9 validators, template, repository-settings payload, Actions allowlist and
+ruleset derivation policy are the authorities used here. The template is a
+reference, not an unrelated nested repository copied into Echo Types.
+
+== Findings and disposition
+
+[cols="1,3,5",options="header"]
+|===
+|Issue/finding |Evidence |Disposition / acceptance
+|#330; workflow startup failures
+|Governance run `41687676542` explicitly rejects the transferred
+`metadatastician/standards` reusable workflow; Secret Scanner `41687680268` also
+has zero jobs. Both were triggered by the owner, so these failures are distinct
+from the historical arena actor incident.
+|Apply the current canonical allowlist and require fresh jobs/check results.
+Old startup-failed runs cannot be retried; use a new branch/PR run.
+|#324 allowlist drift
+|Live list had 93 entries; current canon has 95. Tailscale was already present.
+|Applied the exact case-sensitive union without pruning. Added the transferred
+standards-workflow pattern and `step-security/harden-runner@*`; required SHA
+pinning remains enabled.
+|Repository permissions
+|Default workflow token was write and workflows could approve PR reviews.
+|Applied canonical read-only default and disabled workflow PR approvals.
+Repository merge settings are squash-only; security updates, vulnerability
+alerts, secret scanning and push protection remain enabled.
+|#322 compiler provenance
+|Old CI used unpinned distribution packages.
+|`scripts/setup-agda.sh` pins official Agda 2.7.0.1 archive SHA256
+`975b515a14877ab6bce5bfc641e16c4a3ee52ca5d7f846577dee80aa2145db8a`,
+stdlib `8326c7475af1fa456ca04a0203c168d5d7ff842b`, and absolute-zero
+`f486c29903434589117fa0662c6f29b0f17d1d5f`. Positive setup and wrong-checksum/
+nonexistent-version rejection checks pass locally.
+|#321 / #320 distinct proof lanes
+|Experimental and narrowing roots existed as steps, without distinct job signals.
+|Separate experimental, narrowing and Cubical jobs, preserving core and cold
+checks. Require real pass results and negative mutation checks before closure.
+|#269 / #268 scan coverage and token scopes
+|CodeQL actions scan works; several Scorecard findings refer to old action refs
+and token scopes.
+|Pin direct actions, grant writes only to jobs needing them, and scan the actual
+JavaScript tooling. Neither CodeQL nor Scorecard proves Agda theorems.
+|Hypatia alert #329
+|Tracked Python invocation checker violates the current language policy.
+|Replaced with `scripts/check-agda-invocations.sh`. New inventory uses
+`bun tools/audit-inventory.mjs`; its Agda closure counts and outside-closure list
+match the prior inventory exactly. No blanket suppression added.
+|Hypatia alerts #328, #244, #240
+|Missing chora deed, npx configuration and workflow hardening findings.
+|Populate canonical metadata; update runtime configuration and workflow
+hardening; fresh Hypatia result is required.
+|#323 / #189 / #190 / #188 metadata and template drift
+|Retired A2ML, uninstantiated template fields, stale contractiles and missing
+root CONTRIBUTING were still active.
+|Migrate to the current one-deed model and scoped K9 declarations; preserve
+provenance through Git. Use native pinned validators, including Nickel semantics.
+No fabricated signatures, certifications or execution receipts.
+|#197 clade
+|The current owning registry already assigns `fv-echo-types`.
+|Use that assignment and its registered identifiers. Its stale ordinal-inclusive
+description is not copied as Echo Types scope.
+|#282 code licence
+|Baseline LICENSE already has a correct MPL-2.0 SPDX header.
+|Latest standards licence check passes. No licence text alteration is needed.
+The independent prose-licence decision is recorded below.
+|#191 / #192 / #193 documentation hygiene
+|Placeholder badge, wrong roadmap/README paths, root working-audit dump.
+|Remove misleading badge; correct paths; archive the working audit with original
+blob and SHA256 provenance.
+|#335 foundation history
+|Removed toolchain source was still described as current.
+|Correct current authority while preserving dated history; historical revisions
+are not rewritten as if they used the new toolchain.
+|Invented stability metrics
+|Justfile printed fixed percentages without a defined measurement.
+|Replace with actual build/check recipes and explicit absence of such a metric.
+|Toolchain scaffold
+|mise enabled unrelated runtimes, package managers and tasks.
+|Keep only Bun and just; provision pinned Agda through the checked setup helper.
+|PANIC Windows checkout
+|Upstream tracked report filenames contain colons, invalid on Windows.
+|Record this upstream portability limitation. The checked-out scanner source can
+be built; omitted historical reports are not represented as a complete checkout.
+|===
+
+== Check evidence
+
+The earlier local proof receipt is in
+link:2026-11-06-evidence.adoc[the foundation evidence ledger]. It covers 15 direct
+audit roots plus all seven existing aggregate roots and a cold AuditSmoke check.
+Its known `UnsupportedIndexedMatch` warnings remain recorded, not suppressed.
+
+`bun tools/audit-inventory.mjs` reproduces 155 Agda files, 152 in scope, 135 in
+the union of seven existing root closures and 17 outside. It is a static import
+inventory, not evidence that all 155 files typecheck. The source manifest and
+raw logs are local ignored artifacts under `build/audit-2026-11-06/`; this tracked
+ledger and linked CI runs provide the distributable summary.
+
+Baseline GitHub inventory: 28 open code-scanning alerts from Hypatia/Scorecard;
+zero open Dependabot alerts and zero open GitHub secret-scanning alerts. This
+snapshot is not a claim about future alerts or scanner completeness. The raw
+alert values/secrets were not copied into this document.
+
+Local scanner and semantic metadata results are recorded below. Final PR checks
+and alert reconciliation remain separate release gates.
+
+== Local integration receipt and first publication
+
+Commit `448613f5743696d60b001c1607279490c91ff1f8` was pushed and draft PR #360
+opened against the recorded baseline. The draft is not a merged release.
+
+* DEED grammar and registered identity validation pass. All eight active K9
+  components pass strict native validation with Nickel 1.18.0, with zero
+  warnings and zero skipped layers; all six paired schemas typecheck. The checker
+  inventories all tracked/unignored active K9 files, including documentation
+  paths. The haplotype specimen is marked inert `.k9.ncl.in`, with its incomplete
+  semantics explicitly documented rather than called a validated contract.
+* Metadata rejection controls pass: missing standards, missing Nickel, a
+  grammar-valid wrong UUID preimage, and an unreviewed active K9 file under
+  `docs/` all fail. The verifier dependencies are checked byte-for-byte against
+  their pinned Git blobs.
+* Experimental and narrowing proof mutants fail specifically on unsolved metas
+  in their respective lanes, while `All.agda` passes. Each mutation was restored
+  in an isolated test copy; workspace proofs were not mutated for these tests.
+  Receipts: `build/audit-2026-11-06/lane-mutants/`.
+* Static invocation checks reject missing without-K, unsafe meta flags and an
+  unsafe `@agda` recipe. Aggregate coverage rejects block-commented, nested-
+  commented and line-commented imports. These close the two static-check gaps
+  reported on PR #359; neither check claims to parse arbitrary shell or prove Agda.
+* A comment-only update points `EchoHaplotypeCollapsing.agda` to the inert
+  specimen. That module was rechecked successfully with the pinned compiler and
+  libraries; its SHA256 is
+  `a1eca6beae258a6367298a28ca35501f5eeaa32d87a85aa4c405cca46d9e7ade`.
+  The other 144 files in the earlier 145-file proof manifest matched byte-for-byte.
+* PANIC 2.5.5 at the recorded source revision scanned 213 candidate files with
+  213 completed stated adapters. Initial findings exposed two unpinned container
+  bases and explicit root execution. The repaired container has no high/critical
+  findings in the follow-up scan. Two medium findings remain classified: the
+  deliberately quarantined postulated module is a real documented assumption;
+  the SVG `http://www.w3.org/2000/svg` namespace is not a network operation.
+  No dynamic stress/attack command was executed. PANIC's obsolete optional A2ML
+  manifest-reader warning is recorded; legacy metadata was not reintroduced.
+* PONS 0.1.0 at the recorded revision scanned two JavaScript files. One new
+  inventory allocation pattern was repaired. Eight remaining heuristic warnings
+  concern constant-size banner loops (four corners, eight stages, at most six
+  edges and seven marks), not unbounded input. The run reported 21 skipped inputs;
+  Agda is outside its native source-analysis coverage. Its JSX parser skipped the
+  prototype, but Bun 1.4.4 parsed/bundled that file successfully with dependencies
+  externalized. This is evidence of a PONS coverage gap, not a browser test.
+* The rootless Podman build completed, typechecking `All.agda` with the same
+  checksum-pinned compiler and revision-pinned libraries. Base image:
+  `cgr.dev/chainguard/wolfi-base@sha256:0efdcacdc6ab6d4f00507f1c0aa35e6bcbd50f838a45fe560e0e3b12056e3181`.
+  Package provisioning occurs in the build administrator context; downloads,
+  proof checking and the runtime carrier use UID 65532. The initial build exposed
+  BusyBox/GNU checksum-option incompatibility, repaired by explicitly installing
+  coreutils. The carrier's shell exists; the old static-image shell entrypoint
+  was not executable. Container checking covers All, not every independent root.
+* `stapeln.toml` now records preferences for that single Containerfile instead of
+  a competing unpinned pipeline and unissued signing/verification claims. Its
+  TOML shape matches the owning example at `metadatastician/stapeln`
+  `33d7e5ee28d8de2170fe8671323c41c8bae221d7`. No executable consumer of these TOML
+  preferences was established; Podman flags are the actual enforcement evidence.
+* Gitbot enrollment names three applicable report adapters and explains six
+  declines. The pinned producer and Hypatia consumer share the same source SHA.
+  Consumer negative controls preserve missing/not-run reports as orange advisory
+  rows. A green aggregate color is not proof that every enrolled reporter ran;
+  the actual adapter results must be inspected.
+
+The new Base ruleset requires pull requests, resolved review threads, signed
+commits and linear history. GitHub rejected the canonical organization's
+integration bypass actors for this user-owned repository (HTTP 422). The
+accepted ruleset has *no bypass actors*, preserving stricter protection.
+Existing secret-scanner protection was retained. Required check names are added
+from actual emitted job results, not invented contexts.
+
+After the allowlist repair, fresh baseline Governance run `42221254568` started
+21 jobs instead of failing at startup. Its historical Python source violation and
+Allowlist Preflight findings are distinct from the new PR's results and must not
+be represented as fixed merely because the workflow now starts.
+
+== First PR run and bounded repairs
+
+The first run at `448613f5743696d60b001c1607279490c91ff1f8` provided new
+evidence rather than an all-green release. Agda run `42222241232` passed its
+cold ordinary, experimental and narrowing lanes. The ordinary cached lane
+failed the separate kernel classification guard: seven new modules needed
+explicit documentation classification. Those entries are now supplied without
+weakening the guard. The full-Cubical lane exposed Agda 2.7.0.1's first-use
+primitive-interface compiler panic (exit 154, `Signature.hs:872`). The setup
+helper now bootstraps the compiler's own primitive interface in the safe,
+without-K, cubical-compatible profile. A fresh full-Cubical check then passed;
+the theorem's full-Cubical flags are unchanged. All lanes explicitly disable
+ambient libraries and supply the pinned library paths.
+
+Metadata run `42222241673` exposed the native validator's requirement for an
+executable Nickel path. The wrapper now resolves PATH names to absolute paths;
+the workflow also supplies its installed paths explicitly. PATH-only positive
+validation and missing-tool rejection pass. EI2's historical negative finding
+is preserved by a restored guard, together with the current report's narrower
+interpretation; six rejection controls cover accidental removal or reopening.
+
+Governance run `42222242037` exposed an older callee's stale allowlist and the
+root-file ratchet. The reusable workflow is advanced to the reviewed standards
+revision recorded above. Four root entries register actual architecture files;
+a ledger-scoped ratchet exception records those additions. No proof guard
+exemption is added. A second scoped exception records Hypatia alert #331's
+reviewed false positive: the inventory uses only fixed read-only Git argument
+arrays with `execFileSync` and `shell: false`. The precise file/rule suppression
+must be reconsidered if those calls change. SMTP containment is separately
+repaired with blocking egress and explicit release-download and configured
+SMTP endpoints; credentialed delivery is not tested because notification is
+not enabled.
+
+The secret scanner and both CodeQL language jobs passed on the first head.
+Gitbot's three actual report envelopes contained rhodibot 13 errors/1 info,
+finishingbot 8 errors/257 warnings/6 info, and glambot 1 warning/133 info.
+These are advisory findings, not security clearance. Many expect retired
+A2ML/SCM metadata or miss Agda proof checks; 129 of 209 reference warnings
+resolve by existing relative/root paths or Agda module basenames. Historical
+and explicitly absent research references are not silently rewritten. The
+envelope `ref` identifies fleet tool revision `34908580...`, not the scanned
+source revision. The producer and consumer source checkouts identify the target.
+
+CodeRabbit comment `6685429337` skipped review because 138 selected files exceed
+its 100-file limit; account usage availability was also reported. No independent
+review or paid usage is inferred. Other installed app registrations without
+completed check runs do not establish app health. GitHub installation inventory
+was unavailable to this credential (HTTP 403).
+
+== Repair-head verification and remaining compatibility limits
+
+Repair head `f413ea14012a6d2ea428a3746070e4b92678df1f` passed all five Agda
+jobs in run `42226213296`, metadata `42226213288`, governance `42226214197`,
+secret scanning `42226214020`, CodeQL, GitGuardian and Semgrep. Hypatia run
+`42226214059` and its separate native SARIF check both passed: the graded source
+findings were zero at every severity. Its 20 observations of prior main-branch
+code-scanning alerts are separate from new source findings and require a fresh
+main scan. Fleet advisory findings remain visible rather than being relabelled
+as security findings or suppressed.
+
+Ruleset `26696686` (Verified Gates) requires 30 actually emitted contexts, with
+strict up-to-date checking and no bypass actors. It includes governance gates,
+secret scans, fleet production, Hypatia workflow plus native SARIF check, all
+five proof lanes and metadata. Canonical advisory contexts and CodeQL remain
+non-required, as prescribed by the owning gates table. Existing default-branch
+governance context names were checked; the new proof/metadata lanes were added
+from observed PR results before first merge, closing the otherwise ungated
+first-release interval. Native Hypatia uses app integration 57789; Actions jobs
+use 15368. No nonexistent status name was invented.
+
+The release review added explicit named Smoke pins for the new headline results.
+That ordinary-profile check passed with the pinned compiler and libraries;
+the exact updated Smoke SHA256 is
+`b0d38fb6b82a41964584351b7886aa0f163bd2646c6a766a776852e2416b5d80`.
+Current source and checked snapshot manifests matched. This extends API smoke
+coverage without changing any theorem statement or assumption.
+
+The single deed now includes a populated manifest, descriptive directory map
+and RSR capability profile. The native grammar, registry identity, scoped
+profile checks and all eight strict K9 components pass. The independent native
+`check-rsr-profile.sh` remains nonzero because its pinned gate table still asks
+for `verification/proofs/`, a separate container directory and retired
+manifest/descriptiles paths. Actual proofs live in `proofs/agda`, the root
+Containerfile is executed, and descriptive records live in the one chora deed.
+Real audit/maintainer and GitHub policy navigation pointers were added; empty
+compatibility scaffolding was not. This is recorded in issue #361 and is not
+represented as complete native RSR conformance.
+
+Fleet reference triage accounts for all 209 initial warnings. Verified active
+renamed links were repaired. The last Gate 2 alias was resolved by commit
+`8670ae9`: the delivered file was `docs/characteristic.adoc`; its original
+parallel-instance naming note is retained with a dated correction. Existing
+non-clickable shorthand, theorem identifiers, absent historical artifacts and
+explicit research proposals remain distinguishable. Issues #361 and #362 track
+owning-reader incompatibilities and external review/tool coverage respectively.
+
+== Final setup checks
+
+The Guix development manifest no longer declares a fictitious GNU package or
+unrelated language runtimes. The root `manifest.scm` loads the single primary
+`build/guix.scm`. Both evaluate; a pure shell provisions its 11 prerequisites,
+resolves the tested tools within that profile, supplies CA certificates and
+performs an HTTPS request. The committed pinned Agda setup and an Echo check
+also pass inside that shell. Tested Guix channel:
+`230aa373f315f247852ee07dff34146e9b480aec`. The channel is not pinned in-tree;
+this is not a measured reproducibility claim.
+
+The Pages workflow previously fed a Markdown-only generator a fallback page
+because this repository has an AsciiDoc README. It now builds a substantive
+navigation page linking seven existing canonical documents at the deployed
+source SHA. The exact pinned Ddraig source compiled and rendered that page
+offline in the pinned container; the title and all seven HTML links passed
+checks. Only the default branch can deploy, including manual runs. Public
+availability still requires the actual GitHub Pages deployment result.
+
+The documented `scripts/verify.sh` now invokes the same four canonical guards
+and proof runner as `just verify`, without requiring just. Its legacy unsafe
+checker delegates to the existing comment-aware, explicitly scoped guardrails;
+the three established profile/quarantine exemptions are unchanged. It no
+longer rejects the documented quarantined module via an indiscriminate grep.
+An end-to-end run at `ddb08ee4278924bdf91ebedb2539a1407d4e5723` passed all
+four guards and 22 proof roots. The direct-command linter is explicitly scoped
+to direct commands; the runner's constructed argument arrays are checked by
+execution. An unsafe direct-invocation control still fails. The exact 156-file
+source manifest matched workspace and checked snapshot, SHA256
+`e48db7890e240693a89d9ac71a12cb31ae970722be9e942f326eb252f939bde8`.
+
+The final local PANIC run covers 214 candidates with the same two classified
+medium findings and no high/critical findings. PONS still has two supported
+JavaScript files and eight bounded banner warnings, with 22 skipped inputs after
+the Pages helper was added. The final proof carrier builds and runs read-only
+as UID 65532; image ID
+`8483033394f4cb91209902222fa9fc46e221a32f2d1fdba3b720777c3e3e26a8`.
+Generated Pages HTML has not been analyzed by the fleet accessibility adapter;
+its explicit enrollment decline now records that coverage boundary.
+
+Metadata controls additionally reject a missing capability profile, duplicated
+capability, incorrect capability and duplicate capability field. Each failed
+before a healthy verdict; the native positive grammar/K9 run passed. These
+controls do not reinterpret the separately recorded native RSR path failures.
+
+Scorecard now allows a default-branch-only manual refresh and uses the reviewed
+standards callee. Its minimal caller permissions are preserved. The old callee
+already had native action-lock reconciliation; refreshing main, rather than
+claiming a new reconciler, is what updates the stale alerts.
+
+== Decisions and obligations that setup does not settle
+
+* Prose licensing: historical owner decisions use both CC-BY-4.0 and
+  CC-BY-SA-4.0. See link:2026-11-06-license-inventory.adoc[the evidence inventory].
+  Repository-wide relicensing is not inferred from a generic compliance request.
+* OpenSSF Best Practices registration, independent human code review and
+  published research/DOI validation are not fabricated to clear a score.
+* Entropy infrastructure, cross-repository language mirrors, external bridge
+  research and ordinal work are not silently closed by this release.
+
+== Reproduction commands
+
+[source,shell]
+----
+git rev-parse HEAD
+bun tools/audit-inventory.mjs
+sh scripts/check-agda-invocations.sh
+sh scripts/kernel-guard.sh
+bash tools/check-guardrails.sh proofs/agda
+bash scripts/check-experimental-aggregate.sh
+bash scripts/setup-agda.sh
+# Source the env.sh path reported by setup before local proof checks.
+bash tools/check-audit.sh
+ECHO_STANDARDS_DIR=/path/to/pinned/standards bash tools/check-metadata.sh
+panic-attack assail . --output build/audit-2026-11-06/panic.json
+pons scan . --format json --no-speculative --fail-on error
+git diff --check
+----

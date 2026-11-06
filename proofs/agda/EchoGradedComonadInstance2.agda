@@ -46,6 +46,11 @@ open import Relation.Binary.PropositionalEquality
   using (_≡_; refl; sym; cong; subst; module ≡-Reasoning)
 
 open import EchoGradedComonadInterface using (GradedComonadStructure)
+open import EchoGradedComonadNaturality using (NaturalGradedComonad)
+open import Relation.Binary.Definitions using (DecidableEquality)
+open import Relation.Nullary.Decidable using (yes; no)
+import Data.List.Properties as ListP
+import Axiom.UniquenessOfIdentityProofs as UIP
 
 ----------------------------------------------------------------------
 -- Two-element grade index.
@@ -83,6 +88,12 @@ mapD (big  ∷ xs) f (d , n) = mapD xs f d , n
 
 ----------------------------------------------------------------------
 -- Functor laws.
+
+mapD-cong : ∀ xs {A B} {f h : A → B} →
+  (∀ a → f a ≡ h a) → ∀ (x : D xs A) → mapD xs f x ≡ mapD xs h x
+mapD-cong [] eq x = eq x
+mapD-cong (smol ∷ xs) eq (d , b) = cong (_, b) (mapD-cong xs eq d)
+mapD-cong (big ∷ xs) eq (d , n) = cong (_, n) (mapD-cong xs eq d)
 
 mapD-id : ∀ xs {A} (x : D xs A) → mapD xs id x ≡ x
 mapD-id []          x       = refl
@@ -148,6 +159,36 @@ coe-cong-R-big refl d n = refl
   ∀ xs ys {A} (d : D (xs ++ ys) A) (n : ℕ) →
   δ (big ∷ xs) ys {A} (d , n) ≡ (δ xs ys d , n)
 δ-cons-big xs ys {A} d n = coe-cong-R-big (D-++ xs ys A) d n
+
+-- Naturality follows by induction on the outer grade, preserving the
+-- residue at each constructor; no free theorem is assumed.
+ε-natural : ∀ {A B} (f : A → B) (x : D [] A) →
+  ε (mapD [] f x) ≡ f (ε x)
+ε-natural f x = refl
+
+δ-natural : ∀ xs ys {A B} (f : A → B) (x : D (xs ++ ys) A) →
+  δ xs ys (mapD (xs ++ ys) f x) ≡ mapD xs (mapD ys f) (δ xs ys x)
+δ-natural [] ys f x = refl
+δ-natural (smol ∷ xs) ys f (d , b) = begin
+  δ (smol ∷ xs) ys (mapD ((smol ∷ xs) ++ ys) f (d , b))
+    ≡⟨ δ-cons-smol xs ys (mapD (xs ++ ys) f d) b ⟩
+  (δ xs ys (mapD (xs ++ ys) f d) , b)
+    ≡⟨ cong (_, b) (δ-natural xs ys f d) ⟩
+  (mapD xs (mapD ys f) (δ xs ys d) , b)
+    ≡⟨ sym (cong (mapD (smol ∷ xs) (mapD ys f)) (δ-cons-smol xs ys d b)) ⟩
+  mapD (smol ∷ xs) (mapD ys f) (δ (smol ∷ xs) ys (d , b))
+    ∎
+  where open ≡-Reasoning
+δ-natural (big ∷ xs) ys f (d , n) = begin
+  δ (big ∷ xs) ys (mapD ((big ∷ xs) ++ ys) f (d , n))
+    ≡⟨ δ-cons-big xs ys (mapD (xs ++ ys) f d) n ⟩
+  (δ xs ys (mapD (xs ++ ys) f d) , n)
+    ≡⟨ cong (_, n) (δ-natural xs ys f d) ⟩
+  (mapD xs (mapD ys f) (δ xs ys d) , n)
+    ≡⟨ sym (cong (mapD (big ∷ xs) (mapD ys f)) (δ-cons-big xs ys d n)) ⟩
+  mapD (big ∷ xs) (mapD ys f) (δ (big ∷ xs) ys (d , n))
+    ∎
+  where open ≡-Reasoning
 
 subst-D-cons-smol :
   ∀ {A} {js ks : List Tag} (p : js ≡ ks) (d : D js A) (b : Bool) →
@@ -292,4 +333,38 @@ list-instance = record
   ; gc-counit-r  = gc-counit-r
   ; gc-counit-l  = gc-counit-l
   ; gc-coassoc   = gc-coassoc
+  }
+
+-- These witnesses refer directly to the packaged record's projections.
+list-ε-natural : ∀ {A B} (f : A → B)
+  (x : GradedComonadStructure.D list-instance [] A) →
+  GradedComonadStructure.ε list-instance
+    (GradedComonadStructure.mapD list-instance [] f x)
+  ≡ f (GradedComonadStructure.ε list-instance x)
+list-ε-natural = ε-natural
+
+list-δ-natural : ∀ xs ys {A B} (f : A → B)
+  (x : GradedComonadStructure.D list-instance (xs ++ ys) A) →
+  GradedComonadStructure.δ list-instance xs ys
+    (GradedComonadStructure.mapD list-instance (xs ++ ys) f x)
+  ≡ GradedComonadStructure.mapD list-instance xs
+      (GradedComonadStructure.mapD list-instance ys f)
+      (GradedComonadStructure.δ list-instance xs ys x)
+list-δ-natural = δ-natural
+
+tag-equality : DecidableEquality Tag
+tag-equality smol smol = yes refl
+tag-equality smol big = no (λ ())
+tag-equality big smol = no (λ ())
+tag-equality big big = yes refl
+
+list-grade-isSet : ∀ {xs ys : List Tag} (p q : xs ≡ ys) → p ≡ q
+list-grade-isSet = UIP.Decidable⇒UIP.≡-irrelevant (ListP.≡-dec tag-equality)
+
+list-natural-instance : NaturalGradedComonad list-instance
+list-natural-instance = record
+  { mapD-cong = mapD-cong
+  ; ε-natural = ε-natural
+  ; δ-natural = δ-natural
+  ; grade-isSet = list-grade-isSet
   }

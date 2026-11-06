@@ -1,0 +1,12 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Archived Claude audit variant — provenance
+
+On 2026-11-06, the tracked root file `CLAUDE.md.audit` was moved without changing its bytes to link:CLAUDE.md.audit[the archived audit variant], addressing issue #193. It is historical audit material, not the active agent instruction file. The active file remains `CLAUDE.md` at the repository root.
+
+* Original path: `CLAUDE.md.audit`.
+* Source revision: `cd85288dcce55191ad477c0fa7d1d2421514a0d3`.
+* Original Git blob: `17a15843fbd7eb831cbb09d9dcc92e63a87e3079`.
+* SHA256 before and after relocation: `44c0b15c14b3b4b66649a4eeb130222983bd1bebbedc451b572881345a67a374`.
+
+The original location mentioned in `docs/CLAIMS_AUDIT.adoc` is retained as a historical record. Its current archival location is the link above; statements inside the old variant must be interpreted at their original date.

@@ -8,6 +8,54 @@
 
 module Smoke where
 
+-- Pin the audit's named public results as well as compiling their modules.
+import EchoSourcePreserving as SourcePreserving using
+  ( source-preserving-implies-identity
+  ; identity-fibre-iso; identity-fibre-iso-preserves-source
+  ; negation-iso-not-source-preserving
+  )
+import EchoCNOSemantics as CNOSemantics using
+  ( CertifiedProgramEcho; certified-echo-native-null; native-null-to-cno
+  ; native-null-source-map; source-map-native-null; nop-not-certified
+  )
+import EchoDependentPushforward as DependentPushforward using
+  ( transpose-untranspose; untranspose-transpose
+  ; unit-natural; counit-natural; triangle-push; triangle-reindex
+  ; echo-roundtrip; terminal-push-roundtrip
+  ; push-composite-from-to; push-composite-to-from; push-composite-natural
+  )
+import EchoErasingGradedComonad as Erasing using
+  ( erasing-natural; bool-input-collision; positive-erasure-no-left-inverse
+  ; grade-change-natural; grade-change-id; grade-change-compose
+  ; grade-change-proof-independent; grade-change-ε; grade-change-δ
+  ; erase-is-grade-change
+  )
+import EchoNaturalityIndependence as NaturalityIndependence using
+  ( ε-naturality-fails; δ-naturality-fails )
+
+open import EchoGradedComonadNaturality using (NaturalGradedComonad)
+open import EchoThinPreorderExample using (indiscrete; no-antisymmetry)
+open import EchoGradedComonadInstance1 using (nat-natural-instance)
+open import EchoGradedComonadInstance2 using (list-natural-instance)
+
+-- Bounded foundational audit: lawful parallel-arrow action, explicit
+-- naturality for the concrete instances, and right-inverse examples.
+open import EchoSeparating using
+  ( sep-id; sep-compose; sep-compose-idˡ; sep-compose-idʳ
+  ; sep-compose-assoc; sep-deg-id; sep-deg-comp
+  ; sep-parallel-actions-distinct
+  )
+open import EchoGradedComonadF1 using (ε-natural; δ-natural)
+open import EchoGradedComonadInstance1 using (nat-ε-natural; nat-δ-natural)
+open import EchoGradedComonadInstance2 using (list-ε-natural; list-δ-natural)
+open import EchoCharacteristic using
+  ( collapse-raise-true; collapse-raise-false
+  ; collapse-right-inverse-true; collapse-right-inverse-false
+  ; collapse-right-inverses-distinct
+  )
+open import EchoResidue using
+  (collapse-residue-raise; collapse-residue-right-inverse)
+
 open import Echo using
   ( Echo
   ; echo-intro

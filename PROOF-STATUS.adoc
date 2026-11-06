@@ -4,6 +4,12 @@
 :toc:
 :sectnums:
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [abstract]
 Honest status of the echo-types Agda formalisation: what is *proved*, what is
 *open*, and the build/guardrail invariant. echo-types is a constructive Agda
@@ -238,8 +244,43 @@ This does not broaden what the test proves.
 * `Smoke.agda` pins selected headline theorems; it is not a coverage
   guarantee for every module. The main `All.agda` closure is distinct
   from the separately invoked cubical and experimental roots. The
-  working-tree narrowing root is pending its first CI check; see the CI
-  coverage audit above. Unwired modules must not be treated as checked.
+  narrowing root now has its own `Bit-narrowing exhibit` job, which passed
+  at repair head `f413ea14012a6d2ea428a3746070e4b92678df1f` in Agda run
+  `42226213296`; see the dated November 6 update and readiness ledger below.
+  Unwired modules must not be treated as checked.
 * The EI-2 integration-recipe-distinctness investigation is *terminated
   negatively* and must not be reopened (see `docs/EI2_REPORT.adoc`);
   the narrower adjacency questions above are separate.
+
+== 2026-11-06 toolchain and warning receipt
+
+This dated update supersedes the earlier current-status wording about unpinned
+CI and undispatched narrowing. PR #360 introduces the checksum-pinned official
+Agda 2.7.0.1 binary and separate core, cold, experimental, narrowing and Cubical
+jobs. Local setup verifies stdlib commit
+`8326c7475af1fa456ca04a0203c168d5d7ff842b` (v2.3) and absolute-zero commit
+`f486c29903434589117fa0662c6f29b0f17d1d5f`. The main-branch release status must
+be read from link:docs/audit/2026-11-06-repository-readiness.adoc[the readiness ledger];
+a draft PR and local checks do not mean every remote job has passed.
+
+Fresh warning counts under these exact dependencies are measured below.
+A count is the number of emitted `warning: -W[no]UnsupportedIndexedMatch`
+diagnostics, with the immediately preceding `.agda` location used to identify
+stdlib origins. Warnings may be replayed through imports; these are log-message
+counts, not distinct defects or a comparable score across different root/cache
+profiles. No warning-suppression flag was used.
+
+[cols="3,1,1,3",options="header"]
+|===
+|Receipt |All emitted |Stdlib emitted |Scope
+|`AuditSmoke-cold.log` |1264 |1167 |Fresh `--ignore-interfaces` AuditSmoke closure
+|`All-final.log` |888 |771 |Final local All check with existing interfaces
+|`container-build.log` |1935 |1522 |Fresh container All closure, ordinary safe profile
+|===
+
+The exact reproduction commands, source identities, ordinary/Cubical boundary,
+new ordered-erasure warning limitations and independent proof-lane negative
+controls are recorded in link:docs/audit/2026-11-06-evidence.adoc[the proof ledger]
+and the readiness ledger. Raw local receipts and `warning-counts.json` remain
+under ignored `build/audit-2026-11-06/`. The older November 1 measurements retain
+their original date and candidate toolchain; they are not silently relabeled.

@@ -4,6 +4,12 @@
 :toc: macro
 :source-highlighter: rouge
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:../audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
 Which Agda modules are the *kernel* (the dependency-light, funext-free
 core everything imports) and which are *derived*. Companion to
@@ -141,22 +147,12 @@ kernel** — the boundary is real and lives outside this core.
   monoid-homomorphism law `aggregation-as-fold`, the four concrete
   instances (`sumMonoid`/`countMonoid`/`maxMonoid`/`minMonoid`), and
   generic non-disaggregability `no-canonical-disaggregation-of` (any
-  collision ⇒ no section, via `no-section-of-collapsing-map`; also
+  collision ⇒ no left inverse, via `no-section-of-collapsing-map`; also
   covers #174).  The macro→micro economic reading is the
   `Example-PairSum` instance the oikos/betlang alib note cites
   (`pairSum` IS the `sumMonoid` fold).  Imports `Echo` +
   `EchoNoSectionGeneric`.
-  `EchoVariance` resolves, in `--safe` Agda rather than asserting it,
-  the monad / comonad / adjunction status of loss accumulation
-  (`docs/echo-types/variance-resolution.adoc`): accumulation is the
-  graded-MONAD multiplication `accumulate : D_r (D_s A) → D_{r+s} A`
-  (total + canonical, `= Echo-comp-iso-from`); recoverability is exact on
-  the grade-0 fibre (`recoverable-fibre = A↔ΣEcho`, the section/retraction
-  adjunction); the graded-COMONAD direction fails for genuine loss
-  (`no-bare-recovery`, via `no-section-of-collapsing-map`); and the
-  "graded comonad" reading is the LOSSLESS complement-storing writer
-  (`μ-writer` inverts F1's `δ`).  Imports `Echo`, `EchoCharacteristic`,
-  `EchoNoSectionGeneric`, `EchoTotalCompletion`, `EchoGradedComonadF1`.
+  `EchoVariance` proves supplied-factorisation fibre-composition inverses and a Boolean no-left-inverse obstruction. It does not establish a tropical graded monad or a categorical adjunction. `A↔ΣEcho` retains the source and has no grade parameter. The writer maps preserve content; erasing-carrier counit obstructions do not ban all loss-related graded comonads. The strengthened naturality companion requires separate verification. Imports `Echo`, `EchoCharacteristic`, `EchoNoSectionGeneric`, `EchoTotalCompletion`, and `EchoGradedComonadF1`.
 
 | *Earn-back gate modules* +
 (derived / scoped; not kernel)
@@ -229,6 +225,44 @@ kernel** — the boundary is real and lives outside this core.
   `proofs/agda/Echo/` (dotted submodules), so they are outside the
   flat `Echo*.agda` glob that Check B lints; recorded here for
   discoverability. Not kernel (the kernel remains exactly `Echo`).
+
+| *Derived — Tier 1 additions (2026-11-06)*
+| `EchoSourcePreserving`, `EchoDependentPushforward`
+| Each imports only `Echo` and stdlib. The former proves the source-preserving
+  identity-fibre criterion and Boolean-negation counterexample. The latter
+  develops dependent pushforward/reindexing with pointwise hom equality,
+  unit/counit triangles, and a composition natural isomorphism; it does not
+  establish full base-indexed coherence. Neither adds global funext or UIP.
+
+| *Derived — external semantic bridge (2026-11-06)*
+| `EchoCNOSemantics`
+| Imports `Echo`, `EchoCNOBridge`, stdlib, and the pinned external `CNO` module.
+  Same-program certification and the source-preserving relation-fibre map
+  criterion use native `state-eq`, not propositional equality of function-valued
+  states. The identity/IsCNO characterization is scoped to that total,
+  zero-energy model; it is not a physical theorem or a FibreIso inverse-law claim.
+
+| *Derived — graded interface and model (2026-11-06)*
+| `EchoGradedComonadNaturality`, `EchoErasingGradedComonad`
+| The companion imports `EchoGradedComonadInterface` and adds pointwise map
+  congruence, counit/comultiplication naturality, and an explicit `grade-isSet`
+  field. It does not derive those obligations for every old instance.
+  The erasing model imports both interfaces, preserves values at grade zero,
+  and erases at positive natural grades. Its grade equality is proof irrelevant
+  by decidable Nat equality; no UIP for arbitrary value types is assumed.
+  Its ordered grade-change laws are separate from Echo's proposed tropical model.
+  The accepted `grade-change-compose` and `grade-change-δ` proofs retain the
+  recorded Cubical transport computation warnings.
+
+| *Derived — independent countermodels (2026-11-06)*
+| `EchoNaturalityIndependence`, `EchoThinPreorderExample`
+| The former is stdlib-only: a one-object category of Boolean endomorphisms
+  with pointwise equality shows naturality is an independent categorical
+  obligation; it is not a polymorphic `GradedComonadStructure` instance.
+  The latter imports `Echo.Index.ThinPoset` and stdlib and exhibits mutual
+  reachability of distinct Boolean objects. It refutes antisymmetry of the
+  legacy interface, not its reflexivity, transitivity, or thin homs.
+
 |===
 
 `EchoOrdinal` is Tier-1 off `Echo` but additionally pulls two

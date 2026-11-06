@@ -59,6 +59,11 @@ mapD : ∀ r {A B} → (A → B) → D r A → D r B
 mapD zero    f x       = f x
 mapD (suc r) f (d , b) = mapD r f d , b
 
+mapD-cong : ∀ r {A B} {f h : A → B} →
+  (∀ a → f a ≡ h a) → ∀ (x : D r A) → mapD r f x ≡ mapD r h x
+mapD-cong zero eq x = eq x
+mapD-cong (suc r) eq (d , b) = cong (_, b) (mapD-cong r eq d)
+
 mapD-id : ∀ r {A} (x : D r A) → mapD r id x ≡ x
 mapD-id zero    x       = refl
 mapD-id (suc r) (d , b) = cong (_, b) (mapD-id r d)
@@ -123,6 +128,26 @@ coe-D-irr p .p x e refl = refl
 δ-suc : ∀ m n {A} (x : D (m + n) A) (b : Bool) →
         δ (suc m) n {A} (x , b) ≡ (δ m n x , b)
 δ-suc m n {A} x b = coe-cong-R (D-+ m n A) x b
+
+-- Naturality with respect to the explicitly defined functorial action.
+-- These are structural proofs, not an appeal to polymorphism.
+ε-natural : ∀ {A B} (f : A → B) (x : D 0 A) →
+  ε (mapD 0 f x) ≡ f (ε x)
+ε-natural f x = refl
+
+δ-natural : ∀ m n {A B} (f : A → B) (x : D (m + n) A) →
+  δ m n (mapD (m + n) f x) ≡ mapD m (mapD n f) (δ m n x)
+δ-natural zero n f x = refl
+δ-natural (suc m) n f (d , b) = begin
+  δ (suc m) n (mapD (suc m + n) f (d , b))
+    ≡⟨ δ-suc m n (mapD (m + n) f d) b ⟩
+  (δ m n (mapD (m + n) f d) , b)
+    ≡⟨ cong (_, b) (δ-natural m n f d) ⟩
+  (mapD m (mapD n f) (δ m n d) , b)
+    ≡⟨ sym (cong (mapD (suc m) (mapD n f)) (δ-suc m n d b)) ⟩
+  mapD (suc m) (mapD n f) (δ (suc m) n (d , b))
+    ∎
+  where open ≡-Reasoning
 
 ----------------------------------------------------------------------
 -- LAW 1 — counit-right.  e · r = 0 + r = r definitionally, so

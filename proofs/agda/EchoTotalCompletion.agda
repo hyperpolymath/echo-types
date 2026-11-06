@@ -149,6 +149,8 @@ f-factors-via-projection _ _ = refl
 --   proj₁ ∘ encode f ≡ f
 -- pointwise, definitionally. Pinned separately because downstream
 -- (OFS) wants this direction explicitly.
+-- Legacy name: this is a commuting/factorization equation, not in general
+-- a section of proj₁. Its right-hand side is f x, not the identity at x.
 encode-is-section-of-proj₁ :
   (f : A → B) (x : A) → proj₁ (encode f x) ≡ f x
 encode-is-section-of-proj₁ _ _ = refl

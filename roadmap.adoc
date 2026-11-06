@@ -7,6 +7,12 @@
 :sectnumlevels: 3
 :icons: font
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
 Single canonical roadmap for the echo-types project. As of 2026-05-26
 this file replaces the previously fragmented set of overlapping
@@ -28,8 +34,7 @@ type-theoretic standing. CLAUDE.md is the session-level rung ledger.
 *Retraction discipline.* The single most credible thing about this
 project is `docs/retractions.adoc` R-2026-05-18: under adversarial
 review, four headline claims were narrowed (full universal property →
-funext-relative pointwise mediator; graded comonad → thin-poset
-reindexing modality; model-independence → carrier-parametricity over a
+funext-relative pointwise mediator; graded comonad → preorder-indexed diagram; model-independence → carrier-parametricity over a
 fixed grade poset; conservativity metatheorem → postulate-free build
 that is evidence-for, not proof-of, conservativity). Narrowing is a
 feature, not a defect. Every lane below carries an explicit
@@ -76,7 +81,7 @@ narrowing history and `roadmap-gates.adoc` for the test discipline.
 
 | Gate 2: Characteristic theorem family
 | PASSED (narrowed)
-| `docs/characteristic.adoc` — 4 nominees, 3 survive threshold. Aggregate degrade-law family pinned in `docs/theorem-index.md`.
+| `docs/characteristic.adoc` — 4 nominees, 3 survive threshold. Aggregate degrade-law family pinned in `docs/theorem-index.adoc`.
 
 | Gate 3: Canonical examples
 | PROVISIONAL
@@ -105,7 +110,7 @@ for the full status-tagged listing:
 * *Tier 1* — `EchoTotalCompletion` (`A ≃ Σ B (Echo f)`),
   `EchoOrthogonalFactorizationSystem` (`ofs-witness`),
   `EchoImageFactorization` (`Image`),
-  `EchoNoSectionGeneric` (structural no-section).
+  `EchoNoSectionGeneric` (structural no-left-inverse theorem; historical identifier retained).
 * *Tier 2* — `EchoLossTaxonomy` / `EchoResidueTaxonomy` /
   `EchoDecorationStructure` / `EchoObservationalEquivalence`
   (the four-axis classification grid as named records, not
@@ -199,18 +204,15 @@ submission-ready abstract respectively.
 *Retraction-watch.* Pillar B's pullback is *pointwise, funext-relative*
 — never describe it as a categorical universal property. Pillar D is
 *carrier-parametricity over a fixed grade poset* — never
-"model-independence". The graded structure is a *thin-poset reindexing
-modality* — never "graded comonad". These three narrowings are the
+"model-independence". The graded structure is a *preorder-indexed diagram*. This interface alone is neither a reflective modality nor a graded-comonad interface. These three narrowings are the
 load-bearing R-2026-05-18 commitments.
 
 *Owner / cadence.* Claude session work + author-driven write-up.
 Re-checked at every rung consolidation.
 
-=== Lane 2 [ACTIVE] — Echo-vs-Σ identity claim
+=== Lane 2 [ACTIVE] — Fibre presentation and scoped encoding comparisons
 
-*Load-bearing question.* Can a sceptic, walking the repo cold,
-convince themselves that Echo is not just renamed Σ within one
-sitting?
+*Research question.* Which concrete encodings or observations discard fibre information, and does presenting these standard Σ-types together provide a useful contribution? Echo is definitionally a Σ-type; no general separation is possible. Novelty and priority remain unresolved.
 
 *Bottleneck.* Today's session opened this lane; Track A (synthesis
 doc + reviewer-facing AsciiDoc companion + theorem-index aggregates +
@@ -224,12 +226,11 @@ gate cross-links) landed in-session. Tracks B + C remain.
 . *LANDED 2026-05-26.* Track C (per-example raw-Σ counter-programs)
   shipped as `proofs/agda/examples/EchoVsSigma.agda`, pairing each
   headline example (parser, provenance, abs-int) with the small
-  Σ-misuse it blocks. Builds clean under `--safe --without-K`;
+  misuse of a chosen insufficiently constrained representation. General Σ-types can express the same invariants. The historical safe-build claim applies to its dated revision;
   pinned in `Smoke.agda` under own `using` block.
 
 *Cementing follow-ons (LANDED 2026-05-27).* Two additional artefacts
-strengthen the same "Echo's distinguishing power lives in the witness"
-line by knocking out the two most credible alternative readings:
+illustrate information lost by two selected observations; they do not eliminate arbitrary alternative encodings:
 
 * `proofs/agda/EchoEntropy.agda` — Shannon-entropy non-distinguishing
   theorem in discrete form. The entropic shadow (`FiberSize-fin` over
@@ -238,25 +239,18 @@ line by knocking out the two most credible alternative readings:
   factoring through it gives the same value on `echo-true` and
   `echo-false`. The witness side
   (`EchoAbstractionBarrier.sigma-distinguishes`) is the matched-
-  negative companion. Closes the Shannon-entropy item that was flagged
-  as deferred in `EchoThermodynamics.agda` and `EchoStabilityTests.agda`.
+  negative companion. This establishes a finite count-surrogate comparison, not a full Shannon-entropy theory or a separation from every probabilistic encoding.
 * `proofs/agda/EchoLLEncoding.agda` — linear-logic shallow-encoding
   gap theorem. An `LLShallowEncoding` record captures the data a
-  standard LL `!A`-style encoding must provide; the canonical
+  selected shallow LL-style encoding provides; the canonical
   `X m := ⊤` shadow (LL `!A := 1`) admits a section of the encoded
   weakening, while the source-side `EchoLinear.no-section-weaken`
-  refutes any source section. The gap-pair `gap-paired` is the
-  checked, paired artefact: encoded section exists, source-side
-  section does not. Closes the "minimal encoding gap vs standard
-  linear logic" item flagged in `core/skepticisms/what-is-actually-
-  new.md`.
+  refutes a source left inverse. The gap-pair `gap-paired` compares this chosen lossy encoding with exact source recovery. Historical “section” negatives here concern left inverses. No universal gap against standard linear logic follows.
 
 Both modules build under `--safe --without-K` with zero postulates and
 no funext use; pinned in `Smoke.agda` under their own `using` blocks,
-wired into `All.agda`. Real-valued Shannon entropy and the full
-universal LL-encoding gap (over arbitrary shallow encodings, not just
-the trivial witness) remain open and are documented in the modules'
-own companion-remark blocks.
+wired into `All.agda`. Real-valued Shannon entropy and
+comparisons against specified richer LL encodings remain research tasks. A universal separation from every faithful dependent encoding is not a viable goal; each comparison needs an explicit target and preservation criterion.
 
 *Architectural keystone (LANDED 2026-05-27).* Two further artefacts
 land the synthesis spine:
@@ -264,9 +258,7 @@ land the synthesis spine:
 * `proofs/agda/EchoTotalCompletion.agda` — `A ≃ Σ B (Echo f)`, the
   slogan-unlock theorem. `encode`/`decode` + round-trips +
   factorisation triangle (definitional). The single most-cited but
-  never-pinned theorem in the project's narrative ("irreversible
-  computation + echo = reversible representation") now has an Agda
-  artefact behind it.
+  never-pinned theorem in the project's narrative. The representation is reversible because it retains the original source; there is no bare-output recovery, minimal-storage result, or grade-zero parameter.
 * `proofs/agda/EchoOrthogonalFactorizationSystem.agda` — the
   (equivalence, projection) factorisation system witness. Every
   `f : A → B` factors canonically as `A ≃ Σ B (Echo f) → B`, with

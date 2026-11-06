@@ -1,4 +1,36 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
+= Additive Echo experiments — current scope and historical journal
+:toc: macro
+:status: 2026-11-06 local Agda 2.7.0.1 checks passed; fresh cold AuditSmoke passed
+
+== Current interpretation
+
+The shipped ordinary Echo definition is the standard dependent fibre. The public `EchoModality` contract is a preorder-indexed diagram. Its legacy comonad-named single-index operations do not provide a nested graded comonad, and their equations do not establish a reflective modality.
+
+`EchoVariance` supplies inverse maps for fibres of a chosen composite. These maps do not assemble a tropical graded monad: one must specify endofunctors, naturality, grading coherence, and all laws. `A↔ΣEcho` retains the original source and has no grade parameter. Neither source recovery from a bare output nor minimum storage follows.
+
+The experimental additive carrier, faithful stack carrier, and writer carrier are different constructions. Their assumptions and maps must not be combined into one blanket variance verdict. A carrier `A × ⊤` retains `A` and is not contractible for arbitrary `A`; the contractibility of a tower at `A = ⊤` does not make its action at arbitrary `A` vacuous.
+
+A map `Dc inf A → A` for every `A`, when `Dc inf A = ⊤`, would imply `⊤ → ⊥` at `A = ⊥`. This obstructs that all-grade recovery map. The usual graded-comonad counit is at the monoidal unit grade; it does not require a counit at every grade. The obstruction therefore does not rule out all graded comonads involving loss. A specific proposed splitting map or triangle can fail under its own assumptions without implying that no other carrier or categorical structure can work.
+
+The baseline `GradedComonadStructure` packages selected functor and comonad equations but omits naturality. The local companion `EchoGradedComonadNaturality.NaturalGradedComonad` adds the explicit pointwise congruence and naturality obligations. Existing identifiers remain compatible. Natural/list grade UIP used for grade transports is not a global UIP or funext principle. The companion and its F1/natural/list witnesses pass local Agda 2.7.0.1 checks, as recorded in the evidence ledger.
+
+The dependent pushforward/reindexing extension `EchoDependentPushforward` uses pointwise hom-setoid equality, specifies its action laws and hom correspondence, and supplies unit/counit triangles. It is separate from a tropical grading programme. Its local Agda 2.7.0.1 check passes; the composition natural isomorphism is not a complete base-indexed coherence package. The successful baseline remote workflow is separate evidence.
+
+== Evidence and research boundary
+
+The experimental aggregate is invoked directly by the current Agda workflow and remains separate from the shipped `All.agda` closure. See link:../../docs/foundation.adoc[the root/profile inventory] and link:../../docs/audit/2026-11-06-evidence.adoc[the evidence ledger]. Exact current compiler outcomes, dependency commits, and source coverage are required for a checked claim.
+
+No new ordered tropical algebra or linear runtime implementation is authorized by these repairs. Such work needs a concrete target and specification. A physical thermodynamic interpretation, runtime refinement, and novelty/priority assessment are independent obligations.
+
+The locally checked `EchoErasingGradedComonad` is a concrete natural graded comonad with `D 0 A = A` and `D (suc n) A = ⊤`, so positive grades erase content. Its natural-order degradation equations are accepted as well. `grade-change-compose` and `grade-change-δ` produce `UnsupportedIndexedMatch` warnings about Cubical transport computation; this is a limitation of the recorded acceptance, not a rejected proof. Standard-library warnings are also retained in the local receipts. The separate fresh `--ignore-interfaces` AuditSmoke check also passes with exit 0 on unchanged proof sources.
+
+== Historical experimental journal (retained verbatim)
+
+The following is the baseline journal of the 2026-06 experiments, including its then-current conjectures, authorization notes, and claimed checks. It is quoted historical material. In particular its “VARIANCE QUESTION SETTLED”, “inert carrier”, and blanket “not a comonad/adjunction” conclusions are superseded by the specific carrier and interface distinctions above. It is not a fresh verification receipt.
+
+........
+// SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Echo-Additive Experimental — Session State
 :revdate: 2026-06-14
@@ -460,3 +492,5 @@ one-directional seam, never the modality's defining structure.
 Firewall intact (GradedAdjunction imports only Grade + GradedCarrierFaithful +
 stdlib; neither inert R3 line imported). Not wired into All.agda/Smoke.agda; not
 merged to main. Independent adversary re-verified on the real repo + fresh tree.
+
+........

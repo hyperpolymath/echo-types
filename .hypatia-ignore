@@ -33,3 +33,11 @@ code_safety/agda_postulate:proofs/agda/Smoke.agda
 # never dereferenced over the network. It MUST remain http:// (changing it
 # to https would be semantically wrong and break SVG handling). Not CWE-319.
 code_safety/js_http_url_in_code:tools/banner/build-banner.mjs
+
+# code_safety/js_exec_sync — alert 331 points at the child_process import.
+# audit-inventory uses execFileSync("git", argv, {shell: false}) exclusively.
+# All call sites are fixed read-only ls-files/rev-parse argument arrays; the
+# repository path is one argv value. No shell parses paths or command text.
+# This is a reviewed CWE-78 false positive, not permission to add exec/execSync
+# or a shell-enabled call. Re-evaluate this exact file/rule if its calls change.
+code_safety/js_exec_sync:tools/audit-inventory.mjs

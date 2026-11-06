@@ -5,13 +5,18 @@
 :icons: font
 :doctype: article
 
-image:https://img.shields.io/badge/OpenSSF-BestPractices-green[link="https://www.bestpractices.dev/projects/XXXX"]
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 
 Constructive Agda development treating proof-relevant fibers as first-class witnesses for structured information loss — loss that is not total erasure.
 
 == Overview
 
-Most formalisms recognise two cases: reversible maps (no important loss) and irreversible maps (loss occurs and is usually forgotten). Echo types target a third case: **irreversible maps where the fiber over each output retains a proof-relevant constraint on what was lost**.
+This library presents standard dependent fibres as proof-relevant witnesses for structured loss. A fibre inhabitant contains an actual source and a proof of its output; it is not automatically a compact description of all possible origins.
 
 Given `f : A → B`, the echo at `y : B` is the homotopy fiber:
 
@@ -21,7 +26,7 @@ This is the standard preimage fiber, not a new construction. What this repo cont
 
 * **Emphasis** — treating fibers as first-class structured-loss witnesses rather than bookkeeping artifacts.
 * **Taxonomy** — a mechanised classification grid of loss kinds × residue shapes.
-* **Separation proofs** — matched-negatives proving Echo is not reducible to Shannon entropy, linear-logic encodings, or resource grades.
+* **Scoped counterexamples** — selected entropy summaries, shallow linear-logic encodings, and resource measures discard fibre information; this is not a separation from Σ-types or every encoding.
 * **Audience surfaces** — provenance, security, probabilistic, and differential views, each with honest bounds.
 * **Honesty infrastructure** — a living retraction ledger recording every retracted claim, its counterexample, and its narrowing.
 
@@ -68,7 +73,7 @@ This is the **domain-replacement factorization**: the middle object `Σ B (Echo 
 | Standard sigma/fiber lemmas
 | `Echo.agda`
 
-| No section of a collapsing map
+| No left inverse of a collapsing map
 | Standard consequence of non-injectivity
 | `EchoNoSectionGeneric.agda`
 
@@ -81,15 +86,15 @@ This is the **domain-replacement factorization**: the middle object `Σ B (Echo 
 | Tier 2 modules
 
 | Echo is not distinguished by Shannon entropy
-| **Novel separation proof**
+| Scoped counterexample; novelty and priority unresolved
 | `EchoEntropy.agda`
 
 | LL `!A := 1` shallow-encoding gap
-| **Novel separation proof**
+| Scoped counterexample; novelty and priority unresolved
 | `EchoLLEncoding.agda`
 
 | Equal measure does not imply equal Echo
-| **Novel separation proof**
+| Scoped counterexample; novelty and priority unresolved
 | `EchoSeparation.NotResourceInstance`
 
 | Audience surfaces (provenance, security, probabilistic, differential)
@@ -97,7 +102,7 @@ This is the **domain-replacement factorization**: the middle object `Σ B (Echo 
 | `EchoProvenance.agda`, `EchoSecurity.agda`, `EchoProbabilisticSupport.agda`, `EchoDifferential.agda`
 |===
 
-The matched-negatives are where the identity claim does its hardest work: proving your object is not its obvious neighbours is how distinctness gets earned.
+The matched-negatives concern the stated encodings and observations. They establish neither a general separation from dependent pairs nor a priority claim.
 
 == Known technical gaps
 
@@ -154,7 +159,7 @@ The useful formulation is not "loss became total erasure" but "loss left a decla
 | Tier 1
 | **FiberTotalCompletion**: `A ≃ Σ B (Echo f)` (standard, restated) +
 **WeakFactorizationSystem**: factorization existence + fiber identification (unconditional) +
-**NoSectionGeneric**: no section of a collapsing map
+**NoSectionGeneric**: no left inverse of a collapsing map (historical theorem names retained)
 
 | Tier 2
 | LossTaxonomy · ResidueTaxonomy · DecorationStructure · ≡m
@@ -270,7 +275,7 @@ Requires standard-library v2.3 or later registered alongside.
 
 == Citation
 
-Cite via the Zenodo DOI in `CITATION.cff`. The Zenodo record is the canonical citation target; GitHub's "Cite this repository" widget resolves directly to it.
+Use the author and repository metadata in link:CITATION.cff[CITATION.cff]. No verified DOI is currently recorded; the configured Zenodo release webhook does not by itself establish a published archive record.
 
 == License
 

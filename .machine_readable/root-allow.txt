@@ -1,3 +1,10 @@
 .hypatia-ignore
 CLAUDE.md
 build/                     # build orchestration: guix.scm relocated here (canon 1.2.1 guix-primary template_ref = "build/")
+
+echo-types_chora.deed
+
+coordination.k9.ncl
+
+.gitbot-fleet/              # explicit report-back enrollment; no bot mutation authority
+.containerignore           # local-only build outputs excluded from the carrier context

@@ -4,6 +4,29 @@
 :toc: macro
 :toclevels: 2
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
+[NOTE]
+====
+*Wiring update, 2026-11-06.* The June 19 snapshot below is retained, including
+its historical “proved-but-unwired” and two-job descriptions. The current
+workflow has an independently named `Experimental echo-additive` job checking
+`proofs/agda/experimental/echo-additive/All.agda`, separate from the shipped
+`All.agda` closure. At repair head `f413ea14012a6d2ea428a3746070e4b92678df1f`,
+https://github.com/hyperpolymath/echo-types/actions/runs/42226213296[Agda run 42226213296]
+passed that job and the separate core, cold, narrowing and Cubical jobs.
+The isolated experimental and narrowing mutants fail on unsolved metas while
+`All.agda` passes; the restored-source controls and local-only receipt paths
+are summarized in link:docs/audit/2026-11-06-repository-readiness.adoc[the readiness ledger].
+This supersedes the snapshot's wiring status, not its dated verdicts or the
+mathematical qualifications above. It is a repair-head receipt, not a claim
+that every later head or main deployment has passed.
+====
+
 _the No-Bullshit file: what we affirm was true and checkable at this moment_
 
 [NOTE]
@@ -122,7 +145,7 @@ drift from what we verified, we say so here rather than quietly leave the reader
 to find out.
 
 * *`README.adoc`* — *absent.* The canonical README for this repo is
-  link:README.md[`README.md`]; `readme.adoc` and `EXPLAINME.adoc` are deliberate
+  link:README.adoc[`README.md`]; `readme.adoc` and `EXPLAINME.adoc` are deliberate
   one-line pointers _to_ it. So the estate's nominal `README.adoc` filename is
   not present, but a canonical README _is_ — `README.md`. Noted, not glossed.
 * *`EXPLAINME.adoc`* — *present*, as a pointer redirecting to `README.md`.
@@ -140,7 +163,7 @@ to find out.
 loss whose verified closure typechecks green under `--safe --without-K` with a
 funext-free, postulate-free kernel cone and no escape pragmas in the closure — a
 genuinely machine-checked CORE (the Echo Σ-fiber calculus, its totality /
-orthogonal-factorisation / no-section / graded-loss / decoration spine, the
+factorisation / no-left-inverse / indexed-loss / decoration spine, the
 general monoid/group `EchoAggregation` theorem, and a large sound-carrier
 ordinal-notation development) — alongside an explicitly fenced PERIPHERY of
 documented postulate trust-boundaries, experiments, and unwired modules kept out
@@ -235,7 +258,7 @@ we name them as three.
   gates take `funext` as an explicit hypothesis). That qualification is the honest
   content, not a defect.
 * *The retracted "graded comonad" reading stands retracted* (R-2026-05-18):
-  echo-types is a loss-graded _reindexing modality_ (thin-poset action); the
+  the core interface is a preorder-indexed diagram, without reflective modality structure; the
   experimental `echo-additive/` tree is not wired into the shipped closure.
   The current Agda workflow invokes its separate aggregate as a step in
   both jobs, not as an independently named job; see `PROOF-STATUS.adoc`

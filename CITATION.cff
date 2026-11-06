@@ -1,8 +1,8 @@
 # SPDX-License-Identifier: MPL-2.0
 # SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 cff-version: 1.2.0
-title: "echo-types: a definitionally-grounded, loss-graded reindexing modality (Agda)"
-message: "If you cite this software, please cite the Zenodo DOI."
+title: "echo-types: dependent fibres and indexed structured-loss models (Agda)"
+message: "Please cite this software using the author and repository information below; no verified DOI is recorded."
 type: software
 authors:
   - given-names: Jonathan
@@ -15,31 +15,27 @@ abstract: >
   Constructive Agda formalisation of fibre-based "structured loss"
   types. Defines Echo f y := Σ (x : A) , (f x ≡ y), shows it is
   definitionally the homotopy fibre (echo↔fib), and develops a
-  loss-graded reindexing modality on top with a pointwise
-  (funext-relative) mediator property, a separating model, and a
-  carrier-parametric abstraction over a fixed grade poset. Under
-  --safe --without-K throughout with zero postulates and a
-  falsifiable retraction discipline. See paper.adoc and
-  types-abstract.adoc for the mechanised metatheory write-up.
+  preorder-indexed diagram with a pointwise mediator property,
+  conditional function-level results, and scoped counterexamples
+  for selected lossy encodings. The ordinary checked roots use
+  --safe --without-K; separate Cubical and postulated presentations
+  have distinct trust boundaries. Novelty and priority are unresolved.
+  See docs/foundation.adoc for dated coverage and verification limits.
 keywords:
   - agda
-  - graded modality
+  - indexed family
   - homotopy fibre
   - structured loss
-  - reindexing modality
+  - reindexing
   - formal methods
   - mechanised metatheory
 license: MPL-2.0
-# === PLACEHOLDER: paste concept DOI here after first Zenodo mint ===
-doi: 10.5281/zenodo.0000000
-# === END PLACEHOLDER ===
 preferred-citation:
   type: software
-  title: "echo-types: a definitionally-grounded, loss-graded reindexing modality (Agda)"
+  title: "echo-types: dependent fibres and indexed structured-loss models (Agda)"
   authors:
     - given-names: Jonathan
       orcid: "https://orcid.org/0000-0002-3078-6652"
       family-names: Jewell
   url: "https://github.com/hyperpolymath/echo-types"
-  doi: 10.5281/zenodo.0000000
   year: 2026

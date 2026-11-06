@@ -7,6 +7,12 @@
 :sectnumlevels: 3
 :icons: font
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:../audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
 After retraction R-2026-05-18 the development is *honest but thin*.
 This plan defines the falsifiable program to convert the retracted
@@ -68,6 +74,9 @@ its grade-unit object — not redefining Echo.
 
 [#gate-F1]
 === Gate F1 — Genuine graded comonad (MAKE-OR-BREAK)
+
+The current completion criterion includes naturality and congruence with pointwise equality. The baseline `GradedComonadStructure` lacks those fields, so its historical F1/F3 record inhabitants alone establish only the equations declared there. The local `EchoGradedComonadNaturality.NaturalGradedComonad` companion preserves that record and adds the missing obligations; it and the F1/natural/list witnesses now pass local Agda 2.7.0.1 checks. The evidence ledger records the compiler and profile boundaries. Neither this repair nor the writer carrier establishes a full tropical loss monad or a universal impossibility of loss-related comonads.
+
 
 *F1 is make-or-break for the graded-comonad claim*, and *F3* is gated
 on it (F3 is not attempted until F1 passes). *F2* and *F4* are
@@ -364,7 +373,7 @@ single index; it moves no claim.
 . *F3* (A3) — *DONE 2026-05-20*: passed via the
   `GradedComonadStructure` interface plus two non-isomorphic-
   grade-monoid instances. Closes the second-models claim *for the
-  graded comonad witness* — see follow-up F-2026-05-20b for scope.
+  record witness for its declared fields* — naturality is an additional current obligation; see follow-up F-2026-05-20b for historical scope.
 . *Doc-integrity* (D) — reconcile alongside step 1; removes a drift
   vector at near-zero cost.
 . *Buchholz* (B) — separate long-tail; keep the `ExtendedOrder`
@@ -443,7 +452,7 @@ now unblocked.
   `EchoGradedComonadInterface.GradedComonadStructure` is an abstract
   record packaging the F1 graded-comonad signature (grade monoid +
   graded functor + counit + nested comultiplication + monoid laws +
-  functor laws + the three comonad laws) without a `⊑-prop`-equivalent
+  functor laws + the three comonad laws, but omitting naturality) without a `⊑-prop`-equivalent
   field. Two non-isomorphic-grade-monoid instances inhabit it:
 +
 [loweralpha]

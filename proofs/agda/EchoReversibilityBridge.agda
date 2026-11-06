@@ -1,9 +1,9 @@
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 --
--- EchoReversibilityBridge: the constructive discharge of the 007 language's
--- Layer-10 reversibility (echo-residue) "phase-2" proof obligations against
--- this library of record.
+-- EchoReversibilityBridge: retained-witness recovery and a concrete
+-- weakening obstruction in Agda. These statements do not establish
+-- refinement of the 007 Rust/Idris implementations or enforced linear use.
 --
 -- 007 (https://github.com/hyperpolymath/007) models reversibility with an
 -- echo residue: `reversible as <name>` arms a residue cell holding an
@@ -23,7 +23,8 @@
 -- This module re-states the *interface* those obligations describe and shows
 -- echo-types' own `Echo` / `EchoTotalCompletion` / `EchoLinear` satisfy it,
 -- under `--safe --without-K` with zero postulates. The Agda here is the
--- source of truth; 007's Rust checker and Idris2 spec mirror this model.
+-- checked model here; implementation correspondence requires a separate
+-- simulation/refinement argument and an explicit consumption discipline.
 
 {-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
@@ -50,7 +51,7 @@ private variable
 
 -- The minimal data 007's reversibility model needs from a residue carrier:
 -- arm a residue from an input (`hold`), take-it-for-reverse to recover an
--- input (`takeForReverse`), and the once-only correctness that replaying a
+-- input (`takeForReverse`), and the recovery correctness that replaying a
 -- freshly-armed residue returns the original input (`reverse-recovers`).
 --
 -- `takeForReverse` here is the *total* `Just`-branch of 007's
@@ -88,7 +89,7 @@ reversibility-via-totality f =
   mk↔ₛ′ (decode f) (encode f) (decode-encode f) (encode-decode f)
 
 ------------------------------------------------------------------------
--- Obligation 3: the phase-2 linear discipline.
+-- A concrete weakening map; linear usage is not enforced by these types.
 ------------------------------------------------------------------------
 
 -- "Affine capability": a live (linear) undo residue may always be weakened
@@ -96,11 +97,9 @@ reversibility-via-totality f =
 capability-can-be-dropped : LEcho linear → LEcho affine
 capability-can-be-dropped = weaken
 
--- "Linear consumption / Spent-does-not-reverse": there is NO section of
--- `weaken` — once the residue is degraded (the undo dropped, the cell
--- `Spent`) the linear residue cannot be recovered. This is echo-types'
--- `no-section-weaken`, the library-of-record discharge of the irreversibility
--- of dropping the capability.
+-- There is no input-reconstructing LEFT inverse of this weakening map.
+-- This excludes uniform recovery from its output alone. It does not
+-- prevent retaining or duplicating the original Agda input value.
 no-recovery-once-dropped :
   ¬ (Σ (LEcho affine → LEcho linear)
        (λ raise → ∀ e → raise (weaken e) ≡ e))

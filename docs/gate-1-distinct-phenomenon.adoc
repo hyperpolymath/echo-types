@@ -12,9 +12,7 @@ ____
 Distinct phenomenon: structured loss under non-injective computation.
 ____
 
-The gate is treated as established only if the argument here survives
-the falsification tests in <<falsification>>. It is retracted in
-writing if any test succeeds.
+The comparisons in <<falsification>> are scoped to the named encodings and statements. A successful T1–T3 correspondence changes the relevant neighbour comparison; it does not automatically pass, fail, retract, or weaken the narrowed Gate 1 claim. No overall positive identity or priority claim follows from these tests.
 
 toc::[]
 
@@ -79,12 +77,7 @@ The per-neighbour files:
 | `docs/adjacency/hott-fibers.adoc`          | HoTT homotopy fibers
 |===
 
-The honest summary: gate #1 has a strong consolidated argument
-plus formalised obstructions against the two strongest neighbours
-(quotients, Galois) plus formalised truncation wins on three
-domains (tropical, epistemic, linear). The remaining neighbours
-have framed but only-partially-formalised distinctness claims;
-see each file for what's done and what's open.
+The scoped evidence concerns the information retained by selected neighbours and the shape of selected comparison constructions. It does not establish a general separation from dependent fibres or all encodings. Read the historical attempt descriptions below separately from the current checked sources and the foundation evidence ledger.
 
 == Integration evidence after EI-2
 
@@ -192,7 +185,9 @@ removed the five-axis integration argument from the distinctness load.
 
 This test is currently unstubbed; see <<open-questions>>.
 
-== Status of attempts
+== Status of attempts (historical references)
+
+The attempt descriptions below name `proofs/agda/EchoVsGalois.agda` and `proofs/agda/EchoVsQuotient.agda`, which are absent from the current tracked checkout. Those named results are not current checked evidence in this audit. The current `characteristic.RoleGraded.choreo-grade-commute` is a scoped commutation lemma; `characteristic/IntegrationAudit.agda` and the EI-2 record do not license a universal encoding obstruction. Any revived T1/T2 attempt needs an actual source revision and its own check receipt.
 
 T1 (Galois)::
 Scaffolded in `proofs/agda/EchoVsGalois.agda`. The basic reduction
@@ -212,8 +207,7 @@ coincide.
 +
 The combined T1+T2 conclusion: the obstruction is AXIS-PAIR-
 SPECIFIC, not an artifact of any one neighbour theory's framework.
-A reviewer who wants to falsify gate #1 must find a 2-cell
-construction that lives outside both lattice traditions.
+A further construction would refine these selected neighbour comparisons. Its success would not independently falsify Gate 1 or reopen EI-2.
 
 T2 (Quotient)::
 Scaffolded in `proofs/agda/EchoVsQuotient.agda`. Foundation reduces
@@ -254,17 +248,15 @@ should appear there.
 Q1.1::
 Does there exist a Galois-theoretic construction that expresses
 `RoleGraded.choreo-grade-commute` without importing graded or
-choreographic primitives? If yes, Gate #1 is falsified by T1.
+choreographic primitives? If yes, record the scoped T1 correspondence, its assumptions, and the specific Galois comparison it changes; this does not independently falsify Gate 1.
 
 Q1.2::
 Does quotient stacking commute with role projection in enough cases
-to express the choreographic-graded composition? If yes, Gate #1 is
-falsified by T2.
+to express the choreographic-graded composition? If yes, record the scoped T2 correspondence and revise only the affected quotient comparison; this does not independently falsify Gate 1.
 
 Q1.3::
 Is `EchoEpistemic.knowledge-preservation` derivable from
-`EchoLinear.weakening` plus a forgetful functor? If yes, Gate #1 is
-weakened by T3.
+`EchoLinear.weakening` plus a forgetful functor? If yes, identify the exact signatures and assumptions and record the scoped T3 derivation; this does not independently weaken Gate 1. The named `knowledge-preservation`/`weakening` signatures here are historical proposal names, not declarations established by this audit.
 
 Q1.4::
 Are there axes beyond the current five (choreo, epistemic, linear,
@@ -290,8 +282,7 @@ requires survey*.
 (C3) Every sophisticated quotient construction either fails on
 the characteristic-family commutation theorem (currently `RoleGraded.choreo-grade-commute`), or imports machinery equivalent to
 echo types (Σ over preimages with cross-axis transport) — *open*.
-This is the real claim of gate #1; (C1) is necessary but not
-sufficient evidence. Partial closure: the 2-categorical encoding
+This is a proposed scope for the historical T2 comparison, not the current Gate 1 claim. A concrete failure in (C1) does not establish the universal assertion in (C3). Historical partial closure: the 2-categorical encoding
 case is attacked in `Sophisticated`, with the structural argument
 running through the equalizer characterisation. Remaining sub-cases
 listed in Q1.6.
@@ -333,14 +324,11 @@ least concerning:
   cells natively, but at the cost of importing the entire HoTT
   framework. By the conservative reading of "pure quotient
   theory", this counts as importing machinery far in excess of
-  echo types. Gate #1 supported by reductio: any sufficiently
-  expressive sophisticated encoding either uses Σ-over-preimages
-  directly or imports HoTT, which subsumes Σ-over-preimages.
+  echo types. This describes one framework comparison, not a reductio establishing Gate 1. Echo itself is a standard Σ-over-preimages construction; its expressibility in a richer framework does not independently establish or refute identity.
 
 If any of (S-1)–(S-4) admits a faithful encoding of
 the characteristic-family commutation theorem (currently `RoleGraded.choreo-grade-commute`) without importing echo machinery,
-gate #1 is falsified by that sub-case. Each requires its own
-focused attempt.
+record the correspondence and revise the affected T2 sub-case. No automatic Gate 1 verdict follows. Each requires its own focused attempt and concrete source evidence.
 --
 
 Q1.7 [partial answer]::
@@ -369,11 +357,12 @@ families case (S-2). Both omitted to avoid duplication; arguments
 sketched in `EchoVsGalois.Sophisticated`'s status block.
 --
 
-== Distinctness commitment
+== Scoped comparison commitment
 
-If T1, T2, or T3 succeeds, the README's identity claim is retracted
-or weakened correspondingly, and this document is updated to record
-the result. The commitment is not "we will explain why the test
-doesn't really apply"; it is "we will retract".
+If T1, T2, T3, or a listed sub-case succeeds, record the exact construction, assumptions, source revision, and completed checks. Revise the specific neighbour claim that the result supports or contradicts. A failed attempt alone does not establish non-encodability; a successful correspondence alone does not retract or weaken the narrowed Gate 1 claim. The EI-2 integration route remains closed negatively.
 
-The repo's identity is gated. That is the point of having gates.
+This outcome rule applies consistently to the test definitions, Q1.1–Q1.3, C1–C3 and S1–S4, and this summary. Novelty and priority remain independent research obligations, as recorded in link:audit/2026-11-06-foundation-decisions.adoc[the foundation decisions].
+
+== Review correction record — 2026-11-06
+
+CodeRabbit PR #359 comment https://github.com/hyperpolymath/echo-types/pull/359#discussion_r4436689541[4436689541] identified the conflicting T1–T3 outcome rules. The local correction reconciles the opening rule, downstream questions, sub-case outcomes, and closing commitment with the scoped test definitions. The historical attempt paths were checked against the tracked tree and are explicitly distinguished from current proof evidence. The GitHub thread has not been resolved by this local edit.

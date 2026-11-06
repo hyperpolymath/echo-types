@@ -31,6 +31,9 @@ open import Data.Nat.Base using (ℕ; zero; suc; _+_)
 open import Data.Nat.Properties using (+-identityˡ; +-identityʳ; +-assoc)
 
 open import EchoGradedComonadInterface using (GradedComonadStructure)
+import EchoGradedComonadF1 as F1
+open import EchoGradedComonadNaturality using (NaturalGradedComonad)
+open import Relation.Binary.PropositionalEquality using (_≡_)
 open import EchoGradedComonadF1 using
   ( D
   ; mapD ; mapD-id ; mapD-∘
@@ -64,4 +67,30 @@ nat-instance = record
   ; gc-counit-r  = gc-counit-r
   ; gc-counit-l  = gc-counit-l
   ; gc-coassoc   = gc-coassoc
+  }
+
+-- Explicit naturality witnesses for the packaged instance. The public
+-- interface's choice of naturality fields is a separate design decision.
+nat-ε-natural : ∀ {A B} (f : A → B)
+  (x : GradedComonadStructure.D nat-instance 0 A) →
+  GradedComonadStructure.ε nat-instance
+    (GradedComonadStructure.mapD nat-instance 0 f x)
+  ≡ f (GradedComonadStructure.ε nat-instance x)
+nat-ε-natural = F1.ε-natural
+
+nat-δ-natural : ∀ m n {A B} (f : A → B)
+  (x : GradedComonadStructure.D nat-instance (m + n) A) →
+  GradedComonadStructure.δ nat-instance m n
+    (GradedComonadStructure.mapD nat-instance (m + n) f x)
+  ≡ GradedComonadStructure.mapD nat-instance m
+      (GradedComonadStructure.mapD nat-instance n f)
+      (GradedComonadStructure.δ nat-instance m n x)
+nat-δ-natural = F1.δ-natural
+
+nat-natural-instance : NaturalGradedComonad nat-instance
+nat-natural-instance = record
+  { mapD-cong = F1.mapD-cong
+  ; ε-natural = F1.ε-natural
+  ; δ-natural = F1.δ-natural
+  ; grade-isSet = F1.ℕ-uip
   }

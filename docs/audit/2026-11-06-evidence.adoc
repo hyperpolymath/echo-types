@@ -1,0 +1,113 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Foundation audit evidence — 2026-11-06
+
+== Scope and baseline
+
+The initial foundation-audit stage authorized bounded local changes only; commits, pushes, and pull requests were outside that initial authorization. Later on 2026-11-06, the user authorized implementing the agreed local corrections and then pushing/merging under the applicable repository gates. Release actions therefore follow that later authorization and its verification requirements. Ordinal mathematics remains excluded; residual imports are build evidence only. The link:2026-11-06-repository-readiness.adoc[release issue log] records the final publication scope and gate outcomes.
+
+The baseline is main `cd85288dcce55191ad477c0fa7d1d2421514a0d3`, tree `74db6f3b4f4907ca02fb45903a161e1546b9ff6e`. Remote Agda workflow run `41687674126` was reported successful for that baseline. That is historical remote evidence, not a fresh local result. Baseline inventory: 382 tracked files, 147 Agda files, 144 in scope after excluding three ordinal files; 127 files in the union of seven CI-root closures and 17 outside it. These numbers must not be carried forward to the edited tree without recounting.
+
+== Baseline source inspection
+
+* `Echo.agda`, `EchoTotalCompletion.agda`: standard dependent fibre and source-retaining total completion; no general distinction from Σ and no grade parameter.
+* `EchoNoSectionGeneric.agda`: historical no-section identifiers negate a left inverse. Boolean collapse has two constant right inverses.
+* `Echo/Index/ThinPoset.agda`, `Echo/Modality/Interface.agda`: thin preorder fields and a diagram action; no antisymmetry or reflective-modality interface.
+* `EchoSeparating.agda`: the counterexample concerns arbitrary parallel arrows. Chosen-composite functoriality is a separate law.
+* `EchoVariance.agda`: supplied-factorisation fibre inverses do not supply a full tropical graded monad.
+* The baseline experimental `GradedComonadStructure` omits naturality; any new companion must provide its additional obligations explicitly. A universal ban on graded comonads involving loss does not follow from an erasing-carrier obstruction.
+* Baseline `EchoCNOBridge.agda`: constant `Program → ⊤`, ignored program index and ignored certificate. Unrestricted identity-fibre equivalence does not characterize identity: Boolean negation is the counterexample.
+* `EchoResidueCell.agda`: read-after-consume equation, with duplicable original inputs. No runtime refinement follows.
+* `EchoThermodynamicsArbitrary.agda`: model cost equations with a finite-count compatibility result; no physical theorem follows solely from those definitions.
+* `.github/workflows/agda.yml`, `tools/check-guardrails.sh`: seven roots, three guard exemptions, current N5 inclusion, exact dependency commits, apt Agda 2.x, and no flake-check job. The formerly named flake facility is absent.
+
+== Fresh local verification
+
+Agda `2.7.0.1` completed all 15 direct/audit entrypoints and all seven existing CI roots successfully on the edited proof snapshot. The latter include `All`, `Smoke`, `characteristic/All`, `examples/All`, `experimental/echo-additive/All`, `NarrowingSmoke`, and the separate Cubical root. Ordinary checks use the safe, without-K profile; the Cubical root retains its separate safe Cubical profile. These are local results, distinct from remote baseline run `41687674126`.
+
+Raw receipts are local-only, ignored artifacts under `build/audit-2026-11-06/`; they are not committed and will not be available through these links in a remote checkout. The links are usable in this working checkout or after reproducing the commands. Tracked summaries in this ledger and link:2026-11-06-repository-readiness.adoc[the release issue log] provide the reviewable results and reproduction requirements. The local artifacts are: link:../../build/audit-2026-11-06/results.tsv[entrypoint results], link:../../build/audit-2026-11-06/compiler.txt[compiler version], link:../../build/audit-2026-11-06/base-commit.txt[base revision], link:../../build/audit-2026-11-06/proof-sources.sha256[proof-source SHA256 manifest], and individual logs. Comparing the checked snapshot's manifest with the workspace covered 145 proof files with zero mismatches. This establishes the identity of that proof snapshot, not coverage of every file outside the checked imports.
+
+The foundation guardrail passes with the same three baseline exemptions and no added exemption. The fresh `--ignore-interfaces` AuditSmoke check also passes with exit 0; its proof sources remain unchanged. This cold check covers the audit closure, not an assertion that every tracked proof was independently cold-checked. The coordinating audit appends the exact commands and cold receipt below.
+
+The local inventory after these edits is 155 Agda files, 152 in scope after excluding the same three ordinal files, and 135 in the union of the seven existing CI-root closures. The 17 outside that union are unchanged. These are current local counts; the historical baseline counts above remain dated to their own revision.
+
+The checks emit `UnsupportedIndexedMatch` warnings, including standard-library warnings and warnings on the new ordered-erasure proofs `grade-change-compose` and `grade-change-δ`. Agda accepts these proofs in the recorded profile, but reports a limitation on Cubical transport computation for those indexed matches. A successful check is not a claim that those transports compute in Cubical mode. Consult the individual logs for the exact diagnostics.
+
+== Checked local declarations and their scope
+
+`EchoSourcePreserving` proves that a source-preserving fibre isomorphism with identity fibres yields pointwise identity, and constructs the converse with its pointwise inverse laws. Boolean negation supplies the counterexample to unrestricted fibre equivalence as an identity criterion.
+
+`EchoCNOSemantics` ties a stored provenance witness and certificate to the same program. It relates native nullness using `CNO.state-eq` to `IsCNO` within the pinned dependency's total, zero-energy model, and supplies a Nop negative control. Its `SourcePreservingStateMap` criterion characterizes native nullness using a source-preserving *map of relation-valued fibres*. That record does not assert the two inverse laws of `EchoSourcePreserving.FibreIso`; the two interfaces must not be conflated.
+
+`EchoDependentPushforward` proves family hom-setoid category laws, pushforward/reindexing action laws, a natural hom correspondence, unit/counit triangles, a terminal-family fibre comparison, and a natural isomorphism for composition. The equality on homs is pointwise, without a global funext or UIP axiom. The composition comparison is not a full proof of coherence for an arbitrary base-indexed pseudofunctor or fibration package.
+
+`EchoGradedComonadNaturality.NaturalGradedComonad` supplies the missing pointwise congruence and naturality obligations as a companion preserving the existing record. The F1, natural-grade, and list-grade witnesses pass their local checks. Grade-local UIP for natural/list transports is not a global source-type UIP principle. `EchoNaturalityIndependence` provides the bounded countermodel motivating the extra interface fields.
+
+`EchoErasingGradedComonad` checks a natural graded comonad whose grade-zero carrier is `A` and positive-grade carriers are unit, including a non-injective erasure witness. Its ordinary natural-order degradation maps and compatibility equations are also accepted, subject to the Cubical transport warnings above. This refutes a blanket impossibility of graded comonads involving information loss. It does not identify the construction with an intended tropical Echo model or recover erased sources. `EchoThinPreorderExample` confirms that the abstract thin-preorder record need not satisfy antisymmetry.
+
+The choices and bounded research packets are recorded in `2026-11-06-foundation-decisions.adoc`. No new linear runtime or ordered tropical programme is implied by these repairs.
+
+== Open research obligations
+
+Novelty and priority require a literature comparison. Scoped lossy-encoding counterexamples do not separate Echo from Σ-types, all resource algebras, or arbitrary linear encodings. The source-sensitive CNO characterization is now proved at the explicit scopes above. Reflective modality structure, a full tropical graded monad, full base-indexed categorical coherence, runtime refinement, minimal residue storage, and physical interpretations remain separate specification and evidence obligations. Ordinal proof work is outside this audit.
+
+== Exact toolchain and reproduction
+
+* Compiler: Agda 2.7.0.1, Linux executable SHA-256 `6de41437c14c05c9fe576d724cc67386444c0fa9fee662a08250fefb91bee8b6`.
+* Standard library: `8326c7475af1fa456ca04a0203c168d5d7ff842b`.
+* absolute-zero: `f486c29903434589117fa0662c6f29b0f17d1d5f`.
+* Dependency Agda sources have no tracked differences from those revisions. Non-Agda working-tree files are not evidence about proof dependencies.
+* Local implementation: `C:/Users/sudoodle/OneDrive/Documents/ChatGPT/TYPE THEORY/echo-types-proof-work`.
+
+To avoid Windows/OneDrive interface-loading overhead, the final checks used a Linux snapshot at `/tmp/echo-audit-20261106.xrmuUy/repo`, with adjacent `agda`, `stdlib` and `cno` directories. SHA-256 comparison verified all 145 proof-source files against the working tree. The two final edits after the cold audit were comment corrections in `All` and `EchoVariance`; the final `All` check passed, and the final source manifest was compared again with the checked snapshot. The cold `AuditSmoke` dependency sources were unchanged.
+
+The reproducible ordinary/Cubical suite is `tools/check-audit.sh`; from the snapshot root the environment was:
+
+[source,bash]
+----
+export Agda_datadir=/tmp/echo-audit-20261106.xrmuUy/agda/data
+export AGDA=/tmp/echo-audit-20261106.xrmuUy/agda/bin/agda
+export AGDA_STDLIB=/tmp/echo-audit-20261106.xrmuUy/stdlib/src
+export ABSOLUTE_ZERO_AGDA=/tmp/echo-audit-20261106.xrmuUy/cno
+bash tools/check-audit.sh
+----
+
+It passed 15 direct/audit targets and the seven existing CI roots. The separate cold check also exited zero:
+
+[source,bash]
+----
+"$AGDA" --ignore-interfaces --no-libraries --safe --without-K --cubical-compatible \
+  -i proofs/agda -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" \
+  proofs/agda/AuditSmoke.agda
+----
+
+`tools/check-guardrails.sh proofs/agda` passed with its three existing exemptions. A line-ending-normalized temporary copy of the unchanged guard script was used under WSL. `git diff --check` also passed. The original inventory receipt used `python3 tools/audit-inventory.py` (historical command at that audit step). The current replacement is `bun tools/audit-inventory.mjs`; its completed equivalence check reproduces the closure counts and outside-closure list exactly (see the repository-readiness ledger). Static coverage is explicitly separate from compiler evidence.
+
+Local receipts are retained in ignored `build/audit-2026-11-06/`: `results.tsv`, `compiler.txt`, `provenance.txt`, `inventory.json`, `proof-sources.sha256`, `proof-sources-initial.sha256`, `manifest-verification.log`, and individual compiler logs (including `AuditSmoke-cold.log` and `All-final.log`). The original manifest preserves the initial suite/cold-check snapshot; the final manifest includes the two comment corrections. These are local checks, not a new remote CI run.
+
+At the end of that initial local-only stage, no commit, push, branch publication, or pull request had been made. Subsequent authorized publication is recorded in the repository-readiness ledger. Existing ordinal source files were not edited; their inherited aggregate imports were treated only as build boundaries.
+
+== Governance documentation remediation (2026-11-06)
+
+The documentation pass read the current `main` snapshots of `hyperpolymath/rsr-template-repo` at `acdc0ebd1d69f3f70995f4eec078e342078dd885` and `hyperpolymath/standards` at `ba640e9a57f22608710ffecdca282074eac55a0b`. The relevant sources were the template's `CONTRIBUTING.adoc`, root-cleanup proposal and standards audit, plus standards' `3-practice/LICENCE-POLICY.adoc`, `docs/SIGNING-POLICY.adoc`, and `scripts/check-licence-consistency.sh`. Template placeholders and proposals were interpreted as such, not as certifications or an instruction to copy nonexistent paths.
+
+Root `CONTRIBUTING.md` now names the actual roadmap, changelog, trust boundaries, and verification script; `.github/CONTRIBUTING.md` points to it (#323). `TOPOLOGY.adoc` names the existing lowercase roadmap and AsciiDoc README (#192). The placeholder OpenSSF green badge was removed without asserting a replacement certification (#191).
+
+The root `CLAUDE.md.audit` file was relocated without changing its bytes to `docs/archive/provenance/CLAUDE.md.audit` (#193); its adjacent provenance record stores the original path, revision, blob, and SHA256. The current root instruction file is still `CLAUDE.md`. Every baseline dated entry in `docs/foundation.adoc` was checked against Git and retained unchanged; #335's current correction was appended. The obsolete flake filename now occurs in documentation only inside dated foundation history.
+
+For #282, `LICENSE` already has a matching MPL-2.0 SPDX header and body; it has no diff. No licence text or existing licence identifier was changed. The latest standards licence-consistency script was run read-only against this workspace through WSL and exited 0: header/body agreement and the retired-identifier scan passed. Shell startup emitted mise warnings for its unresolved Agda registry entry, missing Rust/just versions, and untrusted local configuration; those were not silently treated as proof-toolchain checks. An initial Git Bash invocation failed to fork and was stopped; only the completed WSL invocation is the licence-gate receipt.
+
+Contribution links resolve, the archive matches its pre-move SHA256, and `git diff --check` passes. These local checks do not certify OpenSSF status or modify remote repository settings. The older CC-BY-4.0 documentation declaration in README and `LICENSE-docs` differs from many per-file CC-BY-SA-4.0 headers and the estate default; reconciling that existing licence history remains an owner decision, outside this no-relicensing correction.
+
+The current static invocation-profile check is `sh scripts/check-agda-invocations.sh`. Earlier Python invocations in dated receipts describe the previous implementation; they are not current setup instructions. The Bun inventory conversion and shell guard conversion passed their separate equivalence and rejection checks; see the repository-readiness ledger. These checks remain distinct from the completed Agda source checks above.
+
+=== Prose licence scope — owner decision packet
+
+`LICENSE-docs` was introduced by Jonathan D.A. Jewell in commit `d30dc732d81dc50b361b1c586d45f8a581812c56` (2026-04-23) and contains CC Attribution 4.0 text. Current README combines an MPL-2.0 header with a blanket CC-BY-4.0 prose declaration; owner-authored commit `a3853b744f745ba126a93b47638f59c1a0d49fce` (2026-08-17, “Change license and revise Echo Types glossary”) reinstated that combination. In contrast, `docs/foundation.adoc` has a CC-BY-SA-4.0 header, and CLAUDE's 2026-06-18 record describes owner-authorized ShareAlike relicensing of nine named files. The current `FOUNDATION_CONTRACT.adoc` and `docs/theorem-index.adoc` counterparts have no leading SPDX header. That record does not identify `LICENSE-docs` as changed. Commit authorship and file notices provide provenance, not a complete determination of rights over every historical contribution.
+
+The bounded decision is the intended licence scope per path: either document the existing split and resolve README's conflicting notices explicitly, or authorize a broader prose-policy reconciliation after checking its scope and provenance. The estate's current ShareAlike default alone does not establish which project-specific historical notices should be rewritten. Preserve the existing licence texts and prior notices until that owner decision. The successful code-LICENSE consistency gate does not resolve this prose question.
+
+The bounded link:2026-11-06-license-inventory.adoc[licence inventory] records the actual current notices, nine-path ruling, later owner commits, missing declarations, and the pending per-file versus prospective-ShareAlike choice. It is evidence rather than legal assurance.
+
+=== Authorization and receipt-delivery update (2026-11-06)
+
+The opening scope paragraph now distinguishes the initial local-only audit from the user's later authorization to implement, push, and merge under gates. This records the change in authorization rather than treating the original stage as permanent. The raw `build/audit-*/` receipt files are ignored local outputs, not remotely available evidence attachments. Reproducible commands, exact source/toolchain identifiers, successful results, and material warnings must remain in tracked summaries and link:2026-11-06-repository-readiness.adoc[the release issue log]; a link to an ignored local log alone is insufficient for remote review.

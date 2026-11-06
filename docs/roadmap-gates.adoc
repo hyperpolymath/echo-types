@@ -7,6 +7,12 @@
 :sectnumlevels: 2
 :icons: font
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
 The canonical gates protocol. Created 2026-05-18 to resolve a
 long-standing dangling reference: ~15 documents (including
@@ -22,14 +28,7 @@ toc::[]
 
 == The identity claim, made falsifiable
 
-The repository asserts that "echo" (loss-with-residue,
-`Echo f y := Σ (x:A),(f x ≡ y)`) is a *distinct, characterisable
-type-theoretic phenomenon*. That assertion is held **falsifiable**:
-each gate below has an explicit pass condition *and an explicit
-retraction condition*. A gate whose retraction condition is met
-*retracts* the corresponding claim — it does not weaken into a hedge.
-Retraction is the mechanism by which the identity claim is made
-falsifiable, not a failure of the repository.
+The repository studies standard dependent fibres as structured-loss witnesses. It does not assert a new type former or a general separation from Sigma. The gates below are research and evaluation criteria for the presentation and selected encodings; novelty and priority remain unresolved. Historical identity claims and their retractions remain in the dated logs.
 
 == The three gates
 
@@ -49,12 +48,11 @@ standalone pass/fail test for these remaining arguments. Living scope:
 [#gate-2]
 === Gate 2 — Characteristic theorems
 
-There exist theorems true of echo that *measure* its content rather
-than restate generic Σ-functoriality. *Pass:* a nominee that survives
+The selected examples may make source information and loss clearer than the specified competing representation. This does not require, or establish, a theorem inexpressible using Sigma types. *Pass:* a nominee that survives
 a sharpened falsifier of the shape that struck down earlier nominees
 (collapsing a pseudo-theorem to `proj₂` / a product of independent
 restatements). *Retract:* the nominee is shown to be such a product,
-or to reduce to thinness of the loss order alone (cf.
+or if its claimed comparison exceeds the actual chosen-arrow/action assumptions (cf.
 `EchoSeparating`, `docs/characteristic.adoc` §"Honest
 qualifications").
 
@@ -76,9 +74,7 @@ qualifications").
 | N5
 | `characteristic.RoleGraded.choreo-grade-commute`
 | *NOT adopted.* The falsifier attempt
-  `characteristic/N5Falsifier.agda` is **known-broken** (unsolved
-  metas; disclosed in `docs/foundation.adoc`). The "survives" verdict
-  is *not mechanised*; N5 must not be cited as established.
+  `characteristic/N5Falsifier.agda` is now imported by `characteristic/All.agda` and checked in the baseline workflow. Its “survives” commentary concerns the specified falsifier, not an independent proof of novelty or general characteristic distinctness. There is no current expected-failure gate.
 |===
 
 [#gate-3]

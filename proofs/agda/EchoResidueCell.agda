@@ -9,11 +9,11 @@
 -- `ResidueCell f y` that is either `Holding` a residue or `Spent`.
 -- `takeForReverse` replays a Holding cell (recovering the input) and returns
 -- `nothing` on a Spent cell; consuming a cell transitions it Holding → Spent,
--- so a residue reverses AT MOST ONCE.
+-- so reading the RETURNED consumed state yields nothing.
 --
 -- The Idris version enforces once-only via the LINEAR quantity `(1 e : Echo f
--- y)`. Agda has no such quantity under `--safe`, so this module enforces it
--- via the STATE MACHINE instead: `consume` makes the cell `Spent`, and
+-- y)`. This ordinary Agda datatype does not enforce linear usage:
+-- `consume` returns a `Spent` value, and
 -- `once-only` proves that a second `takeForReverse` after `consume` is always
 -- `nothing`. This is the operational half that `EchoReversibilityBridge`
 -- deferred as "runtime Holding/Spent bookkeeping": the bridge's
@@ -21,10 +21,10 @@
 -- it is the partial `ResidueCell f y → Maybe A` with the cell carrying the
 -- Holding/Spent state.
 --
--- Honest scope: this captures the once-PER-CELL discipline operationally. It
+-- Scope: this captures read-after-consume for the returned state. It
 -- does NOT model linear NON-DUPLICATION (nothing stops a caller copying a
--- `holding` cell before consuming) — that needs the `(1 e)` quantity / an
--- `@0`-style erasure encoding and remains the documented next slice.
+-- `holding` cell before consuming). Enforced single use needs an explicit
+-- usage discipline and a separate refinement argument.
 
 {-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 
@@ -79,10 +79,8 @@ consume-spends : {f : A → B} {y : B} (e : Echo f y) →
 consume-spends _ = refl
 
 -- THE once-only theorem: after consuming ANY cell, a further `takeForReverse`
--- is always `nothing` — a residue reverses at most once. This is the
--- state-machine form of the Idris `(1 e)` linear-consumption guarantee, and
--- the operational content of 007's cross-handler "once-only" property that
--- the rung-3b *static* check could only approximate by presence.
+-- on the returned state is always `nothing`. The original holding value
+-- can still be retained and read again; this law does not enforce one use.
 once-only : {f : A → B} {y : B} (c : ResidueCell f y) →
             takeForReverse (consume c) ≡ nothing
 once-only (holding _) = refl

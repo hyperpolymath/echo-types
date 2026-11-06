@@ -1,0 +1,174 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Foundation decisions and bounded follow-up work — 2026-11-06
+
+== Authority, scope, and baseline
+
+The coordinating review may implement and check local changes. No commits,
+pushes, or pull requests are authorized. Ordinal mathematics is excluded.
+The work starts at main `cd85288dcce55191ad477c0fa7d1d2421514a0d3`.
+The existing proof workspace contained eight authorized edited files from
+the earlier proof chat; those changes were retained and completed here.
+
+link:2026-11-06-evidence.adoc[The evidence ledger] separates baseline remote
+CI from fresh local checks and records toolchain, source hashes and warnings.
+
+== Decisions made
+
+[cols="1,4,4",options="header"]
+|===
+|Decision |Chosen contract |Reason and boundary
+|M1: categorical foundation
+|Families at an explicit common universe, with fibrewise functions and
+pointwise hom equality. Keep the intensional fibre kernel unchanged.
+|`EchoDependentPushforward` gives hom-setoid category laws, functor laws,
+natural transposition, unit/counit and triangle equations. No global
+function extensionality, global UIP, resizing, or assumption that every
+Agda `Set` is a homotopy set is introduced.
+|M2: CNO meaning
+|Keep the legacy API compatible; add `CertifiedProgramEcho p`, binding
+the stored program to `p` and retaining `IsCNO p`. Use native `state-eq`.
+|`EchoCNOSemantics` connects certification to execution under the pinned
+total evaluator and zero-energy model. It does not silently strengthen
+pointwise memory equality to propositional equality of states.
+|M3: graded interface
+|Add `NaturalGradedComonad S` as a companion to the existing record.
+|The companion requires map action to respect pointwise equality,
+counit/comultiplication naturality, and equality uniqueness for grades.
+Natural/list grade uniqueness is proved from decidable equality; this
+does not assert global UIP for residues or source types.
+|M4: scope and research direction
+|Use dependent pushforward as the established account of core composition.
+Treat the ordered loss diagram and concrete graded comonads as separately
+specified structures. Withdraw universal separation/novelty assertions.
+|A monotone erasing graded comonad refutes a blanket obstruction even with
+ordinary natural-number degradation. It does not settle the intended
+extended tropical model. Linear runtime enforcement, minimal complements,
+reflective modalities and priority claims need independent targets.
+|===
+
+== Completed implementation obligations
+
+[cols="1,2,5",options="header"]
+|Original action |Implementation |Acceptance meaning
+|D1/D2
+|Corrected active source comments, README, contracts, canonical docs and
+roadmaps; dated historical records retain their context.
+|Left-inverse wording, thin-preorder scope, parallel-arrow independence,
+retained-witness recovery, CNO and thermodynamic limits, CI coverage,
+truncation profiles and compiler pinning are distinguished.
+|P1
+|`EchoSeparating`, `EchoThinPreorderExample`
+|The parallel-arrow category and its Boolean action are functorial;
+arbitrary-arrow independence still fails. Thinness does not imply antisymmetry.
+|P2
+|`EchoCharacteristic`, `EchoResidue`, `EchoNoSectionGeneric`
+|Two right inverses of Boolean collapse coexist with no input-reconstructing
+left inverse. Compatibility theorem names are retained.
+|P3 + M3
+|`EchoGradedComonadF1`, both instances, companion record
+|Concrete naturality, map congruence and grade equality witnesses are
+packaged for the existing natural-number and list constructions.
+|P4
+|`EchoSourcePreserving`, `EchoErasingGradedComonad`
+|Boolean negation satisfies unrestricted fibre equivalence but is not
+identity. The erasing graded comonad satisfies the structural and naturality
+laws while positive-grade Boolean recovery fails; monotone grade-change
+naturality, composition and comultiplication compatibility are also proved.
+|P5
+|`EchoSourcePreserving`, `EchoCNOSemantics`
+|Source-preserving fibre isomorphisms characterize pointwise identity.
+For native CNO relation-valued fibres, a source-preserving MAP criterion
+characterizes native nullity. Inverse equations for relation witnesses are
+not asserted. Empty/Halt certificates and a Nop negative control are supplied.
+|P6
+|`EchoDependentPushforward`
+|Dependent pushforward is left adjoint to reindexing at the pointwise
+hom-setoid level; Echo is pushforward of the terminal family. Composition
+is a natural isomorphism for fixed base maps. Full base-indexed identity
+and triple-composition coherence are not included in this claim.
+|Additional bounded result
+|`EchoNaturalityIndependence`
+|A one-object category with Boolean endomaps satisfies the objectwise
+comonad equations with negation as counit/comultiplication, but fails
+naturality against a constant map. This is a categorical countermodel,
+not an inhabitant of the existing polymorphic `Set → Set` record.
+|D3
+|Evidence ledger, this decision record, `AuditSmoke`, `tools/check-audit.sh`
+|Claims refer to explicit declarations, assumptions, compiler receipts and
+remaining obligations. New mathematical claims require successful checks.
+|===
+
+== Bounded follow-up packets
+
+These are specified follow-ups, not claims of completed implementation.
+Each must preserve the current safety profile, add no postulates or global
+extensionality axiom, and pass direct checking plus the affected aggregate.
+No task may silently expand into ordinal work or a runtime implementation.
+
+[cols="1,1,4,4",options="header"]
+|Packet |Model |Exact task |Acceptance and escalation boundary
+|F1: arbitrary source-preserving comparison
+|Medium
+|Generalize `EchoSourcePreserving` from `f` versus identity to `f,g : A → B`.
+Define source-preserving fibre maps in both directions from a pointwise
+equation; obtain the equation from one source-preserving forward map.
+|Recover `f x ≡ g x` by applying the map to the canonical witness over
+`f x`. Prove inverse equations when packaging the induced fibre isomorphism.
+No claim about arbitrary equivalences without source preservation.
+|F2: native CNO packaging
+|Medium
+|Package the existing implications among `NativeNull p`, `IsCNO p`,
+`CertifiedProgramEcho p` and `SourcePreservingStateMap p` as logical
+equivalences; prove composition via the native certificate API.
+|Logical implications only: do not equate proof records or assert a
+propositional isomorphism of relation-witness spaces. Preserve same-program
+indices and the pinned dependency's model assumptions.
+|F3: base-composition coherence
+|High
+|Add the identity-base pushforward isomorphism and triple-composition
+coherence; identify the terminal-family instance with `Echo-comp-iso`.
+|State diagrams pointwise, use equality elimination, and check all legs
+have matching indices. Do not use funext to collapse diagram equations.
+The root reviews the diagram orientations before any pseudofunctor claim.
+|F4: epistemic dependent products
+|High
+|Define the right dependent product along `obs`, give the natural hom
+correspondence `Reindex obs ⊣ Product obs`, and identify the existing
+universal-over-observation-fibres predicate as its proposition-valued case.
+|Prove both round trips, naturality and triangles pointwise. Keep this
+adjunction separate from the loss diagram and from probabilistic knowledge.
+|F5: iterated-product graded monad
+|High
+|Invert the already natural F1/list splitting isomorphisms, define the
+unit and multiplication, and prove the graded-monad coherence equations.
+|Use the same explicit grade monoids and pointwise hom equality. A map
+with multiplication's shape is insufficient. Do not transfer the result
+to the general fibre kernel or tropical loss interpretation.
+|F6: reproducible evidence refresh
+|Medium
+|Run `tools/check-audit.sh` with the recorded compiler/dependency revisions;
+refresh source manifests, import-closure counts, and the dated status table.
+|Do not change theorem meanings, compiler flags, or dependency revisions to
+obtain a pass. Report exact failure and return it to the coordinator.
+|===
+
+== Research questions that are not routine proof repair
+
+* A minimal-residue theorem must specify the representation class, its
+cost measure, and whether domains are finite/decidable. A retained source
+witness is sufficient for recovery; it is not automatically minimal.
+* Enforced consumption requires an operational or typing contract, such
+as opaque handles and a heap transition system. The present pure Agda
+cell permits retaining an earlier holding value. A Rust/Idris refinement
+needs an identified implementation revision and a simulation relation.
+* A tropical claim must give the complete index category, tensor/unit,
+infinity behavior, grade-change direction and coherence laws. The new
+natural-number counterexample rules out using loss alone as an obstruction.
+* Priority cannot be inferred from successful typechecking or internal
+gate labels. The kernel is a standard dependent fibre; a proposed new
+contribution needs a precise additional theorem or an evaluated application
+advantage and a primary-literature comparison.
+
+The coordinator retains responsibility for theorem meanings and these
+research decisions; the bounded packets delegate implementation, not
+permission to strengthen claims.

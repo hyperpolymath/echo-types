@@ -7,6 +7,12 @@
 :sectnumlevels: 2
 :icons: font
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:../audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
 Single-page comparison of Echo Types (narrowed per R-2026-05-18)
 against the four nearest neighbouring type systems: Granule (graded
@@ -24,8 +30,7 @@ information-loss axis, that its narrowed claims are concrete and
 checkable, and that the per-comparator differences are mostly
 *structural* (different judgmental level, different categorical
 anchor) rather than competitive. The R-2026-05-18 narrowings apply
-throughout: Echo is a thin-poset reindexing modality (not a graded
-comonad), with a funext-relative pointwise mediator (not a full
+throughout: the core Echo interface is a preorder-indexed diagram (not a reflective modality or graded-comonad interface), with a funext-relative pointwise mediator (not a full
 universal property) and carrier-parametricity over a fixed grade
 poset (not model-independence).
 ====
@@ -176,24 +181,20 @@ type level*: the affine carrier has exactly one inhabitant up to
 definitional equality, so even at the value level no consumer can
 distinguish two preimages.
 
-*Key difference, scope.* Linear Haskell does not ship a no-section
-family. Echo's `no-section-weaken` (which is `no-section-collapse-to-residue`)
-proves that *no* function `LEcho affine → LEcho linear` is a section
-of `weaken` — the up-step is provably not just unavailable but
-non-existent.
+*Selected comparison.* Echo's `no-section-weaken` (which is `no-section-collapse-to-residue`)
+rules out a left inverse of `weaken`. It does not show that every up-map is nonexistent or that ordinary Agda values cannot be duplicated.
 
 *Honest verdict.* Linear Haskell is the more useful programming tool;
-Echo's affine layer is the more rigorous proof-theoretic object. They
-sit in different problem spaces.
+Echo models a chosen affine residue carrier; it does not implement Linear Haskell's quantity discipline. They address different specifications.
 
 == What Echo does NOT do
 
 The most credibility-relevant section. Reviewers should not expect
 any of the following from Echo:
 
-* *No graded comonad.* `degrade-via-join` and `degrade-compose` are
+* *Core diagram is not a graded-comonad interface.* `degrade-via-join` and `degrade-compose` are
   thin-poset reindexing laws under a propositional order. No nested
-  `D_r D_s` is ever formed; no comonad multiplication exists. The
+  `D_r D_s` is formed in that interface. Separate experimental and writer carriers must be checked against their own naturality and law obligations. The
   retracted "graded comonad" framing is documented at
   `docs/retractions.adoc` R-2026-05-18.
 
@@ -205,7 +206,7 @@ any of the following from Echo:
 
 * *No model-independence.* Pillar D's `EchoRelModel.GradedLossModel`
   provides *carrier-parametricity over a fixed grade poset* — the
-  comonad laws (in the narrowed-to-reindexing sense) are proved once
+  indexed action laws are proved once
   for any model. This is one structure parametric in the carrier, not
   multiple independent models agreeing semantically.
 
@@ -238,13 +239,13 @@ For balance — the affirmative side of the same discipline:
   round-trips `refl`. Owning the deflationary admission is a
   credibility asset.
 
-* *No-section family across 5 decoration layers.* See the aggregate
-  row in `docs/theorem-index.md`. Each decoration *separately*
-  refuses the section that a raw Σ would admit.
+* *No-left-inverse examples across decoration layers.* See the aggregate
+  row in `docs/theorem-index.adoc`. Each decoration *separately*
+  gives a non-injectivity consequence equally expressible using raw Σ.
 
 * *Per-decoration composition law lands by the same recipe in
   6 layers.* graded, linear/affine, choreographic, access, cost,
-  search. See `degrade-laws` aggregate row in `theorem-index.md`.
+  search. See `degrade-laws` aggregate row in `docs/theorem-index.adoc`.
 
 * *Consumer-side abstraction barrier at the affine instance.* The
   Echo interface at affine mode does not export `proj₁`, and that

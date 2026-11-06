@@ -31,6 +31,22 @@ no-section-collapse :
   ¬ (Σ (⊤ → Bool) (λ g → ∀ b → g (collapse b) ≡ b))
 no-section-collapse (g , sec) = true≢false (trans (sym (sec true)) (sec false))
 
+-- The theorem above rules out a LEFT inverse of collapse. A section
+-- of collapse in the usual categorical sense is a RIGHT inverse;
+-- both Boolean choices below provide one.
+collapse-raise-true collapse-raise-false : ⊤ → Bool
+collapse-raise-true _ = true
+collapse-raise-false _ = false
+
+collapse-right-inverse-true : ∀ u → collapse (collapse-raise-true u) ≡ u
+collapse-right-inverse-true tt = refl
+
+collapse-right-inverse-false : ∀ u → collapse (collapse-raise-false u) ≡ u
+collapse-right-inverse-false tt = refl
+
+collapse-right-inverses-distinct : collapse-raise-true ≢ collapse-raise-false
+collapse-right-inverses-distinct p = true≢false (cong (λ s → s tt) p)
+
 -- Yet echoes retain proof-relevant distinctions for the same visible output.
 echo-true : Echo collapse tt
 echo-true = echo-intro collapse true

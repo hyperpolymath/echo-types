@@ -18,7 +18,7 @@ toc::[]
   pragma. Never weaken either to land a proof.
 * *No postulates* unless explicitly isolated and justified. Load-bearing tracks
   carry *zero*. Exploratory truncation postulates, where they exist, are
-  enumerated in `docs/proof-debt.md` and stay out of `All.agda`'s trusted closure.
+  enumerated in `docs/proof-debt.adoc` and stay out of `All.agda`'s trusted closure.
 * *No escape hatches:* no `believe_me`, `primTrustMe`, `primEraseEquality`,
   `sorry`, `Admitted`, `unsafeCoerce`, `Obj.magic`.
 * *No escape pragmas:* no `{-# TERMINATING #-}`, `{-# NON_TERMINATING #-}`, or

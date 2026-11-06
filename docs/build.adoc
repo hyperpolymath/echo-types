@@ -1,21 +1,79 @@
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 == Build Instructions
 
 This repository contains mechanically verified proofs written in Agda.
 
 === Prerequisites
 
-* Agda (with the standard library)
-* `+just+` (command runner)
+The pinned compiler setup supports Linux x86-64. It needs Bash, Git, curl,
+tar, xz, a CA certificate bundle, and the usual GNU shell utilities. Agda
+2.7.0.1 and both library revisions are selected by
+`scripts/setup-agda.sh`; a distribution's Agda package does not select this
+toolchain.
+
+From the repository root:
+
+[source,bash]
+----
+export AGDA_TOOLS_DIR="$PWD/../.echo-proof-tools"
+bash scripts/setup-agda.sh
+source "$AGDA_TOOLS_DIR/env.sh"
+----
+
+The generated environment selects `AGDA`, `Agda_datadir`, `AGDA_DIR`,
+`AGDA_STDLIB`, `ABSOLUTE_ZERO_AGDA`, and the compiler's `PATH` entry.
+The setup downloads a checksum-verified Linux compiler and fetches exact
+library commits. It does not install Guix or change the system's Agda
+configuration. `just` is optional for the recipes below; its version and
+the Bun version used by the inventory tool are declared in `mise.toml`.
+
+=== Guix development shell
+
+The manifest supplies the shell, download, archive, certificate, and static
+check prerequisites above:
+
+[source,bash]
+----
+guix shell -m build/guix.scm -- bash
+export AGDA_TOOLS_DIR="$PWD/../.echo-proof-tools"
+bash scripts/setup-agda.sh
+source "$AGDA_TOOLS_DIR/env.sh"
+----
+
+The root `manifest.scm` loads this same manifest for callers using
+`guix shell -m manifest.scm -- bash`.
+This is a development manifest, not an Echo Types package build. It does
+not provide Agda, Bun, Nickel, `just`, the security scanners, or a
+documentation renderer. It follows the caller's Guix channel; there is
+no checked-in channel pin or claim of a reproducible Guix environment.
+Network access is needed for provisioning. Proof results still require
+the explicit checks below. See the GNU Guix manual's
+https://guix.gnu.org/manual/en/html_node/Writing-Manifests.html[Writing Manifests]
+and https://guix.gnu.org/manual/en/html_node/Invoking-guix-shell.html[Invoking guix shell]
+sections for the `-m` interface.
 
 === Verifying the Proofs
 
-To run the complete verification suite, including safety checks and
-build steps:
+After sourcing the generated environment, run the canonical static guards
+and the audit typechecking entrypoint:
 
 [source,bash]
 ----
 sh scripts/verify.sh
 ----
+
+The wrapper runs kernel classification, foundation guardrails, experimental
+aggregate coverage, and invocation-profile lint before
+`tools/check-audit.sh`. The audit checker typechecks the ordinary,
+experimental, narrowing, and isolated full-Cubical roots and writes dated
+logs. Static lint success and typechecking results are separate evidence.
+This entrypoint does not require `just` or run the metadata and security
+scanners.
 
 To build the Agda proofs via `+just+`:
 
@@ -30,3 +88,13 @@ To run the full suite via `+just+`:
 ----
 just test-all
 ----
+
+=== Documentation site
+
+The Pages workflow compiles the pinned Ddraig generator in its pinned
+Idris 2 container. `scripts/prepare-pages.sh` creates a Markdown landing
+page with links to the canonical AsciiDoc documents at the deployed source
+revision. Ddraig renders that landing page; GitHub renders the linked
+AsciiDoc sources. Site publication is limited to the repository's default
+branch, including manual workflow runs. Site generation supplies navigation;
+proof checking uses the entrypoints above.

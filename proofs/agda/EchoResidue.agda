@@ -50,6 +50,15 @@ collapse-residue-same :
   collapse-to-residue echo-true ≡ collapse-to-residue echo-false
 collapse-residue-same = refl
 
+-- Choosing a representative gives a right inverse of lowering, even
+-- though exact recovery of every original Echo has no left inverse.
+collapse-residue-raise : EchoR ⊤ TrivialCert tt → Echo collapse tt
+collapse-residue-raise _ = echo-true
+
+collapse-residue-right-inverse : ∀ r →
+  collapse-to-residue (collapse-residue-raise r) ≡ r
+collapse-residue-right-inverse (tt , tt) = refl
+
 -- No section exists that recovers the original full echo after lowering.
 no-section-collapse-to-residue :
   ¬ (Σ (EchoR ⊤ TrivialCert tt → Echo collapse tt)
