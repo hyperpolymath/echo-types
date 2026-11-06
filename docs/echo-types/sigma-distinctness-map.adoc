@@ -1,18 +1,22 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= Echo vs. Sigma: distinctness evidence map
+= Echo and Sigma: scoped evidence map
 :toc: macro
 :toclevels: 2
 :sectnums:
 :sectnumlevels: 2
 :icons: font
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:../audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
 This file is the reviewer-facing companion to
 `core/skepticisms/is-this-just-sigma-types.md`. Its job is one thing:
-collect, in one place, the in-repo evidence that `Echo f y` is not
-"renamed `Σ A (λ x → f x ≡ y)`" and to organise that evidence under the
-five demands a sceptic typically makes.
+collect the in-repo constructions around `Echo f y`, which is definitionally `Σ A (λ x → f x ≡ y)`. None of the rows separates Echo from general dependent pairs. Selected lossy representations can forget information; that is a statement about those representations.
 
 [IMPORTANT]
 ====
@@ -36,7 +40,7 @@ sceptic might want.
 
 [cols="1,3", options="header"]
 |===
-| Claim | Echo proves that no section of the loss-map exists, across multiple decoration layers. Raw `Σ` gives `proj₁` trivially.
+| Claim | Non-injectivity rules out a left inverse for the specified loss map. This is standard mathematics expressible with raw `Σ`; the historical no-section theorem identifiers retain their names.
 
 | Agda |
 `EchoCharacteristic.no-section-collapse`,
@@ -51,7 +55,7 @@ sceptic might want.
 `docs/proof-obligations.md` §"No-section" entries,
 `README.md` §"Characteristic family".
 
-| Narrowing | None. The family lemmas are clean negative results under
+| Narrowing | These are no-left-inverse results, not a general absence of categorical sections or a separation from dependent pairs. The family lemmas are negative results under
 `--safe --without-K`.
 |===
 
@@ -59,8 +63,7 @@ sceptic might want.
 
 [cols="1,3", options="header"]
 |===
-| Claim | The fibre carries a loss-grade lattice with a monotone
-reindexing modality. Down-step is admissible; up-step is provably not.
+| Claim | The chosen family has an indexed action over the concrete loss order. Selected non-injective down-steps have no left inverse; no statement about every possible up-map is made.
 
 | Down-step (Agda) |
 `EchoGraded.degrade-compose` and `EchoGraded.degrade-via-join` are the
@@ -73,14 +76,11 @@ per-decoration composition laws. The same recipe lands at
 `EchoResidue.no-section-collapse-to-residue`).
 
 | Separating model | `EchoSeparating.sep-degrade-compose-fails` —
-removing `≤g-prop` (the only load-bearing hypothesis) breaks
-`degrade-compose` at a checked `true ≢ false`. This locates the
-reduction.
+the distinct parallel actions refute equality with an arbitrary direct arrow. Chosen-composite action laws remain valid. Thinness is sufficient for identifying parallel arrows, not necessary for every functorial action.
 
 | Prose | `docs/characteristic.adoc` (Gate 2 audit), N1–N4 nominees.
 
-| Narrowing | Per R-2026-05-18, this is a *thin-poset reindexing
-modality*, not a graded comonad. No nested `D_r D_s` is formed.
+| Narrowing | This interface is a preorder-indexed diagram, not a reflective modality or a graded-comonad interface. Separate writer-carrier constructions have their own laws and naturality obligations.
 |===
 
 === Demand 3 — Categorical identity and bridges
@@ -108,17 +108,14 @@ Landauer / Bennett).
 
 | Narrowing | The bridges are independent witnesses, not a single
 "every loss-tracker maps uniquely into Echo" theorem. Such a uniqueness
-result would require either funext or an axiom and is therefore *not*
-in scope under the no-postulate invariant.
+result needs a specified category and equality on homs. Pointwise hom-setoid equality avoids a global funext axiom; no universal property follows merely from the word “bridge”.
 |===
 
 === Demand 4 — Abstraction barrier (consumer-side)
 
 [cols="1,3", options="header"]
 |===
-| Claim | The Echo interface at the affine mode forbids the consumer
-from distinguishing two preimages of the same output. Raw `Σ` does
-not, via `proj₁`.
+| Claim | Consumers of the selected contractible affine residue cannot distinguish its erased sources. Retaining the source in a raw Σ would permit `proj₁`; a Σ encoding of the same erased interface has the same restriction. This is a comparison of chosen carriers.
 
 | In-tree precursor (Agda) | `EchoLinear.affine-canonical`,
 `EchoLinear.affine-all-equal` — the affine residue carrier is
@@ -157,8 +154,7 @@ just decorative wrapping.
 
 | Planned matched-negative (Agda) |
 `proofs/agda/examples/EchoVsSigma.agda` — Track C in the work plan.
-Pairs each headline example with the small raw-`Σ` counter-program
-that would let the corresponding bug through.
+Contrasts the chosen API with a deliberately lossy or insufficiently constrained representation. Raw `Σ` can express the same invariants as Echo; a universal raw-`Σ` leakage claim is false.
 
 | Prose | `docs/echo-types/examples.md`,
 `roadmap-gates.adoc` Gate 3.

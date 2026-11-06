@@ -98,7 +98,7 @@ It travels as a *sidecar* validated by Nickel contracts.
 
 [source,nickel]
 ----
-# haplotype-collapsing.k9.ncl (see companion file)
+# haplotype-collapsing.k9.ncl.in (see companion file)
 {
   collapsed_representatives = [ Haplotype, ... ],  # size m
   distance_matrix = Array (Array Number),          # m × m, O(m²) compute
@@ -137,11 +137,13 @@ Nickel contracts enforce:
 * `distance_matrix[i][j]` is symmetric, zero diagonal (optional contract)
 * `fibers` keys == `collapsed_representatives[*].haplotype_id`
 
-The fiber witness is *validated* by Nickel (k9 Yard: Nickel evaluation with contracts)
-but *never* inspected by the distance computation. The JEG consumes `fibers`, not
-`distance_matrix`.
+The design calls for Nickel validation before the distance computation. The
+companion `.in` file is an inert, unvalidated documentation specimen; it does
+not encode or establish every intended invariant listed above. It makes no
+active K9 Yard claim. The proposed JEG consumes `fibers`, not `distance_matrix`.
 
-See `haplotype-collapsing.k9.ncl` for the full contract.
+See `haplotype-collapsing.k9.ncl.in` for the documentation-only schema specimen.
+Instantiate and validate a real Nickel input before adopting this design.
 
 === Passing through metamanifold-webui
 
@@ -453,7 +455,8 @@ Add `src/HaplotypeCollapsing.jl`:
   running on `representatives` only (O(m²))
 * Add `fibers` sidecar to `AnnotatedNewick` export for iTOL/jplace with
   lineage tooltips
-* Nickel validation via `Protoctist.Nickel.validate(collapsed_result, "haplotype-collapsing.k9.ncl")`
+* Proposed Nickel validation after instantiating and checking a real `.ncl`
+  input; the inert `.in` specimen is not an input to live validation.
 
 This does NOT duplicate BioJulia logic; it composes it (Protoctist's design
 principle).
@@ -473,7 +476,8 @@ no runtime JEG rendering, just the discrete fiber-count / no-section / fold laws
 == Status
 
 * Agda: `[REAL]` — `EchoHaplotypeCollapsing.agda` compiles `--safe --without-K`
-* Nickel: `[DRAFT]` — `haplotype-collapsing.k9.ncl` contract, validated via `nickel typecheck`
+* Nickel: `[DRAFT]` — `haplotype-collapsing.k9.ncl.in` is an inert, unvalidated
+  schema specimen; no active K9 component or validation receipt is asserted.
 * Julia: `[DRAFT]` — `haplotype-collapsing.jl` executable sketch, mirrors Agda finite shadow
 * JEG: `[DRAFT]` — React sketch above, to be integrated into metamanifold-webui
 * Protoctist.jl / EchoTypes.jl: `[OPEN]` — proposed extensions, not yet implemented
@@ -486,7 +490,7 @@ no runtime JEG rendering, just the discrete fiber-count / no-section / fold laws
 * `proofs/agda/EchoGraded.agda` — `keep ≤ residue ≤ forget` decoration
 * `proofs/agda/EchoNoSectionGeneric.agda` — `no-section-of-collapsing-map`
 * `docs/echo-types/applications/README.adoc` — applications index
-* `docs/echo-types/applications/haplotype-collapsing.k9.ncl` — Nickel schema
+* `docs/echo-types/applications/haplotype-collapsing.k9.ncl.in` — documentation-only Nickel specimen
 * `docs/echo-types/applications/haplotype-collapsing.jl` — Julia exacts matrix separation
 * `docs/echo-types/applications-compiler-analysis.adoc` — sibling application (compiler analysis)
 * `docs/echo-types/MAP.adoc` — master content map

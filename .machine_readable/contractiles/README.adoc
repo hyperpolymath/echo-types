@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= echo-types contractile declarations
+
+Each of `must`, `trust`, `adjust`, `dust`, `bust`, and `intend` has a
+`<verb>.k9.ncl` declaration and a paired `<verb>.ncl` schema/run-policy record.
+The schemas and shared `_base.ncl` derive from `rsr-template-repo`
+`acdc0ebd1d69f3f70995f4eec078e342078dd885`, adapted to pure evaluation.
+The declarations describe this repository's actual proof roots, guard scripts,
+metadata checks, retirement history, and next validation work.
+
+All six components are Yard-level declarations with no subprocess, filesystem
+write, or network grant. They have no signature claim. Probe strings name host
+commands; evaluating Nickel does not execute them. The historically proposed
+contractile CLI is not assumed to exist. The root Justfile owns `build`, `test`,
+`guard`, and `validate`; this directory's Justfile only delegates to it.
+
+Declaration statuses are `declared` until a distinct receipt supports a later
+status. `removed` on the two Dust entries describes file retirement, not a
+proof assurance score. No measured recovery time is asserted. No fabricated stability scores or inherited template
+sign-off dates remain in these declarations.
+
+Validate grammar and K9 semantics with `bash tools/check-metadata.sh` from the
+repository root. Run the named root recipes separately to discharge obligations.

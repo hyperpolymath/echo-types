@@ -199,3 +199,8 @@ structural-decrease checker).
 * *Verify build with `+find -name '*.agdai' -delete+` before each task
 switch.* Cached `+.agdai+` files masked a broken `+WellFounded.agda+`
 for several tool-invocations until I forced a clean rebuild.
+
+[NOTE]
+====
+2026-11-06 context: entries above retain their historical dates. For current fibre, inverse-direction, categorical-interface and verification boundaries, consult link:../audit/2026-11-06-evidence.adoc[the foundation evidence ledger]. Historical “no-section” negatives concern left inverses; a scoped erasure obstruction does not prohibit every graded comonad.
+====

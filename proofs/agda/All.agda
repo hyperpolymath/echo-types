@@ -108,7 +108,7 @@ open import EchoGradedComonadF1 -- Gate F1 PASSED (graded comonad on iterated-re
 open import EchoGradedComonadInterface -- Gate F3 abstract record
 open import EchoGradedComonadInstance1 -- Gate F3 instance 1 (F1 at (ℕ, +, 0))
 open import EchoGradedComonadInstance2 -- Gate F3 PASSED — instance 2 at (List Tag, ++, [])
-open import EchoVariance         -- variance verdict: monad (accumulation) + fibre adjunction, NOT comonad
+open import EchoVariance         -- fibre composition/recovery; no universal categorical verdict
 
 -- Foundation P1: external-fibre triangulation. Echo agrees with the
 -- standard library's OWN independently-authored notions
@@ -122,8 +122,9 @@ open import Ordinal.Buchholz.Syntax
 -- Foundation contract surface (FOUNDATION_CONTRACT.md): the curated,
 -- stable `Echo.*` public interface exported to downstream languages.
 -- Index + modality are measure-independent; the measure seam may
--- observe residues but never defines Echo (Echo IS-NOT a resource
--- instance). See docs/echo-types/echo-kernel-note.adoc.
+-- observe residues without defining the fibre carrier. This is an API
+-- separation, not universal non-encodability in resource semantics.
+-- See docs/echo-types/echo-kernel-note.adoc.
 open import Echo.Index.ThinPoset
 open import Echo.Modality.Interface
 open import Echo.Modality.Core
@@ -132,3 +133,6 @@ open import Echo.Measure.Interface
 open import Echo.Measure.Examples
 
 open import Smoke
+
+-- Foundational corrections and their explicit counterexamples.
+import AuditSmoke

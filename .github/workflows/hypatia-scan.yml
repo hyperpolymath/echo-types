@@ -23,11 +23,24 @@ permissions:
   contents: read
 
 jobs:
+  fleet:
+    permissions:
+      contents: read
+    uses: hyperpolymath/gitbot-fleet/.github/workflows/fleet-report-back-reusable.yml@34908580b98cd354caa3bfc5a000bc7935957fce
+    with:
+      enrolment: .gitbot-fleet/enrolment.json
+      artifact-name: fleet-report-backs
+
   hypatia:
     name: Hypatia Neurosymbolic Analysis
+    needs: fleet
+    # The security scan still runs if the producer fails. Missing report-backs
+    # remain visible as unavailable evidence in the rendered fleet rows.
+    if: ${{ always() && !cancelled() }}
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     permissions:
+      actions: read # Download this run's fleet report-back artifact.
       contents: read
       security-events: write
       vulnerability-alerts: read # Dependabot alerts, for Hypatia's DA rules
@@ -39,6 +52,8 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+          # Match the source-ref in the fleet envelopes.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Setup Elixir 1.19.4 / OTP 28.3 for Hypatia scanner
         uses: erlef/setup-beam@54075bcc5e249e4758d363f27d099f55d843f124 # v1.24.1
@@ -108,6 +123,69 @@ jobs:
           sarif_file: hypatia.sarif
           category: hypatia
 
+      - name: Preserve scanner evidence
+        if: always() && steps.scan.outcome == 'success'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: hypatia-findings
+          path: |
+            hypatia-findings.json
+            hypatia.sarif
+          retention-days: 14
+
+      - name: Fetch the pinned verdict-grid renderer
+        if: always()
+        env:
+          STANDARDS_SHA: ba640e9a57f22608710ffecdca282074eac55a0b
+        run: |
+          set -euo pipefail
+          standards="$RUNNER_TEMP/standards-grid"
+          git init --quiet "$standards"
+          git -C "$standards" remote add origin https://github.com/metadatastician/standards.git
+          git -C "$standards" sparse-checkout init --no-cone
+          git -C "$standards" sparse-checkout set scripts/verdict-grid.sh scripts/lib/verdict-grid.jq
+          git -C "$standards" fetch --quiet --depth=1 origin "$STANDARDS_SHA"
+          git -C "$standards" checkout --quiet --detach FETCH_HEAD
+          test "$(git -C "$standards" rev-parse HEAD)" = "$STANDARDS_SHA"
+
+      - name: Download this run's fleet report-backs
+        if: always()
+        # Canonical consumer behavior: a missing producer artifact leaves
+        # enrolled rows orange. It never supplies checked-out JSON as evidence.
+        continue-on-error: true
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: fleet-report-backs
+          path: ${{ runner.temp }}/fleet-report-backs
+
+      - name: Render Hypatia and fleet evidence together
+        if: always()
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          PR_NUMBER: ${{ github.event.pull_request.number || 'local' }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/fleet-report-backs"
+          bash "$RUNNER_TEMP/standards-grid/scripts/verdict-grid.sh" render \
+            --out "$RUNNER_TEMP/verdict-grid" \
+            --hypatia hypatia-findings.json --hypatia-sarif hypatia.sarif \
+            --report-backs "$RUNNER_TEMP/fleet-report-backs" \
+            --enrolment .gitbot-fleet/enrolment.json \
+            --hypatia-ref "$HYPATIA_SHA" \
+            --sha "$HEAD_SHA" --run "$GITHUB_RUN_ID" \
+            --url "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+            --pr "$PR_NUMBER" --repo "$GITHUB_REPOSITORY"
+          cat "$RUNNER_TEMP/verdict-grid/report.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Preserve the rendered evidence grid
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: hypatia-verdict-grid
+          path: ${{ runner.temp }}/verdict-grid
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Enforce zero critical Hypatia findings
         env:
           CRITICAL_COUNT: ${{ steps.scan.outputs.critical }}
@@ -123,6 +201,7 @@ jobs:
             echo "- Total findings: ${TOTAL_COUNT}"
           } >> "$GITHUB_STEP_SUMMARY"
           if [ "$CRITICAL_COUNT" != "0" ]; then
+            jq -c '.[] | select(.severity == "critical")' hypatia-findings.json
             echo "::error::Hypatia reported ${CRITICAL_COUNT} critical finding(s)"
             exit 1
           fi

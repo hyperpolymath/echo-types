@@ -144,3 +144,8 @@ config. Correct invocation points `+--library-file+` at the v2.3 stdlib
 worktree
 (`+/home/hyperpolymath/developer/worktrees/agda-stdlib-tweak+`). A
 config artefact, NOT a proof defect.
+
+[NOTE]
+====
+2026-11-06 context: entries above retain their historical dates. For current fibre, inverse-direction, categorical-interface and verification boundaries, consult link:audit/2026-11-06-evidence.adoc[the foundation evidence ledger]. Historical “no-section” negatives concern left inverses; a scoped erasure obstruction does not prohibit every graded comonad.
+====

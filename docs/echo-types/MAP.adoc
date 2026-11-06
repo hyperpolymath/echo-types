@@ -5,6 +5,12 @@
 :toclevels: 3
 :source-highlighter: rouge
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:../audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
 *The single source of truth for "what is in echo-types and where."*
 If you cannot find something, it is indexed here or it does not exist.
@@ -159,9 +165,9 @@ in the Pillar F4 template style.
   the previously-pending (epi, mono) form now lands without
   committing the kernel to a specific truncation primitive.
   `proofs/agda/EchoImageFactorizationProp.agda`.
-* *Generic no-section* — `no-section-of-collapsing-map`: for ANY
+* *Generic no-left-inverse theorem* — `no-section-of-collapsing-map`: for ANY
   collapsing map with two distinct elements landing on the same
-  image, no section exists. Lifts the previous single-instance
+  image, no left inverse exists. Lifts the previous single-instance
   result to a structural fact about non-injectivity-at-a-point;
   recovers the original as a one-line corollary.
   `proofs/agda/EchoNoSectionGeneric.agda`.
@@ -261,7 +267,7 @@ honest-bound matched-negative block.
   adversary. `proofs/agda/EchoDeniability.agda`. `[REAL]`
 * *Transaction (rollback safety, issue #174)* — `WriteSet` (staged
   mutations) → `RollbackLog` collapsing audit boundary; `rollback`
-  admits no section, so a discarded write-set is unrecoverable from the
+  admits no left inverse, so a discarded write-set is unrecoverable from the
   receipt alone (#DB-2.1). Packaged as a `Security` instance
   (`transaction-security`), reducing to `no-section-of-collapsing-map`.
   Honest-bound: NOT durability / isolation / commit-semantics (the
@@ -284,7 +290,7 @@ honest-bound matched-negative block.
   (`sumMonoid` / `countMonoid` / `maxMonoid` / `minMonoid`, the last
   over `ℕ ∪ {∞}` via `Maybe ℕ`), a worked `countAggregator`, and
   generic non-disaggregability `no-canonical-disaggregation-of` (any
-  collision ⇒ no section, via `no-section-of-collapsing-map`; this
+  collision ⇒ no left inverse, via `no-section-of-collapsing-map`; this
   also discharges issue #174's no-section sibling). The
   macro→micro *economic* reading lives in `module Example-PairSum`:
   `pairSum : ℕ × ℕ → ℕ` IS the `sumMonoid` fold (`pairSum-is-fold`),
@@ -299,24 +305,7 @@ honest-bound matched-negative block.
   is the fold's homomorphism law, NOT full SQL GROUP-BY operational
   semantics; `avg` is deliberately absent (not a monoid — express as
   `sum / count`). `proofs/agda/EchoAggregation.agda`. `[REAL]`
-* *Variance verdict (monad / comonad / adjunction)* — resolves, in
-  `--safe` Agda rather than asserting it, the precise variance of the
-  loss-graded modality. Accumulation is the graded-MONAD multiplication
-  `accumulate : D_r (D_s A) → D_{r+s} A` (total + canonical, definable
-  from the layered data alone; `= Echo-comp-iso-from`); recoverability is
-  exact on the grade-0 fibre (`recoverable-fibre = A↔ΣEcho`, the
-  section/retraction adjunction); the graded-COMONAD direction fails for
-  genuine loss (`no-bare-recovery`, the canonical collapse has no section
-  via `no-section-of-collapsing-map`); and the "graded comonad" reading is
-  the LOSSLESS complement-storing writer of `EchoGradedComonadF1`, whose
-  `δ` is `coe` along a type equality and is therefore inverted by
-  `μ-writer`. Sharpens R-2026-05-18: echo-types is "exact on a homotopy
-  fibre rather than complement-storing". Honest-bound: the verdict is
-  about the SHAPE of the canonical structure maps and the LOCUS of
-  recoverability, not a universal categorical impossibility theorem
-  (matched `NotProved-*` block). See
-  `docs/echo-types/variance-resolution.adoc`.
-  `proofs/agda/EchoVariance.agda`. `[REAL]`
+* *Variance maps and bounds* — `EchoVariance` gives inverse fibre-composition maps for a supplied factorisation, not a full tropical graded monad. `recoverable-fibre = A↔ΣEcho` retains the source and has no grade parameter. `no-bare-recovery` rules out a left inverse for Boolean collapse, whose two right inverses still exist. The writer-carrier maps retain content, and no blanket graded-comonad prohibition follows. The baseline graded-comonad record omits naturality; assess the strengthened companion separately. See `docs/echo-types/variance-resolution.adoc`.
 
 *Curated suite — single-file entry point.* The narrative
 deliverable that pulls the Tier-1 / Tier-2 / Tier-3 named theorems
@@ -470,14 +459,14 @@ postulates.
   `no-recovery-once-dropped` (007 phase-2 "affine capability, linear
   consumption" via `EchoLinear.weaken` / `no-section-weaken`).
 * Proofs: `proofs/agda/EchoResidueCell.agda` — the Agda mirror of 007's
-  `ResidueCell` (`holding` / `spent`) operational once-only discipline.
+  `ResidueCell` (`holding` / `spent`) read-after-consume equations.
   `takeForReverse : ResidueCell f y → Maybe A` (= the Idris partial form),
   `consume` (Holding→Spent), `holding-reverses` / `spent-does-not-reverse`
   (↔ Idris `holdingReverses` / `spentDoesNotReverse`), and the headline
   `once-only` — after `consume`, a further `takeForReverse` is always
-  `nothing` (the state-machine form of the `(1 e)` linear consumption).
+  `nothing` on the returned consumed value. The original holding value can be reused or duplicated; this is not the `(1 e)` linear guarantee.
 * Scope: the type-level totality + recovery + linear→affine no-section
-  content, plus the once-PER-CELL replay discipline as a state machine.
+  content, plus a pure Holding/Spent state transformation. There is no enforced once-per-original-cell use or Rust/Idris refinement theorem.
   007's linear NON-DUPLICATION quantity `(1 e : Echo f y)` is NOT re-proved
   in Agda (nothing stops copying a `holding` cell) — the full
   quantity-semantics port (`@0`-style erasure) is the documented next slice.
@@ -536,9 +525,10 @@ not just Σ renamed. Each application ships Agda anchor + Nickel schema
     `echo-clone₁≢echo-clone₂`, `no-canonical-clone-recovery` via
     `no-section-of-collapsing-map`, `aggregation-as-fold` via `sumMonoid`,
     `FiberBundle` sidecar, `HaploDist` separation (domain = B, not Echo f).
-  * Nickel: `docs/echo-types/applications/haplotype-collapsing.k9.ncl` `[DRAFT]` —
-    `CollapsedResult` with `distance_matrix : m×m`, `fibers : Dict`, contracts
-    for count = length clones, keys = representatives, square matrix.
+  * Nickel: `docs/echo-types/applications/haplotype-collapsing.k9.ncl.in` `[DRAFT]` —
+    inert, unvalidated documentation specimen for `CollapsedResult`,
+    `distance_matrix` and `fibers`. The intended cross-field invariants are not
+    all encoded or established; this is not an active K9 component.
   * Julia: `docs/echo-types/applications/haplotype-collapsing.jl` `[DRAFT]` —
     `collapse_clones : Vector Clone → CollapsedResult`, O(n) grouping + O(m²)
     distances, `fibers` sidecar, `test_no_canonical_recovery`,

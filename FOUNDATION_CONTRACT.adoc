@@ -1,6 +1,6 @@
 == Echo Types Foundation Contract
 
-Echo Types exports the *residual-modality axis*. This document is the
+Echo Types exports the *indexed-residue axis*. This document is the
 stable contract that downstream languages (e.g. my-lang) build against.
 It fixes the vocabulary, the exported interface, and — above all — the
 boundary invariant that keeps Echo from being collapsed into a
@@ -12,7 +12,7 @@ modules are:
 [width="100%",cols="34%,33%,33%",options="header",]
 |===
 |Concern |Module |File
-|Echo index (thin poset) |`+Echo.Index.ThinPoset+`
+|Echo index (thin preorder) |`+Echo.Index.ThinPoset+`
 |`+proofs/agda/Echo/Index/ThinPoset.agda+`
 
 |Echo modality (core) |`+Echo.Modality.Core+` (+
@@ -29,8 +29,7 @@ All build under `+--safe --without-K+`, with zero postulates.
 
 === Echo index
 
-The modality is indexed by a *thin poset/order of degradation or
-retention*. The canonical instance is the three-point loss order
+The family is indexed by a *thin preorder of degradation or retention*. The compatibility record name `ThinPoset` does not add an antisymmetry field. The canonical instance is the three-point loss order
 
 ....
 keep ≤ residue ≤ forget
@@ -46,17 +45,16 @@ _Anti-collapse_ below).
 
 === Echo core
 
-Echo core proves degradation, composition, no-section/irreversibility,
+Echo core proves degradation, composition, failure of exact left-inverse recovery,
 and residue/fibre behaviour:
 
 * the fibre functor `+Echo f y := Σ (x : A) , (f x ≡ y)+` — the
 structured remainder of an information-losing `+f+`;
 * the index-graded modality with `+degrade+`, the unit law
 `+degrade-id+`, and the path-independence law `+degrade-compose+`;
-* the generic no-section theorem `+no-section-of-collapsing-map+`
+* the generic no-left-inverse theorem (historical identifier retained) `+no-section-of-collapsing-map+`
 (Echo’s irreversibility is a property of non-injectivity);
-* an abstract `+EchoModality+` record that downstream instantiates at
-its own fibration, with the canonical `+grade-echoModality+` witness.
+* an abstract `+EchoModality+` diagram-action record with the canonical `+grade-echoModality+` witness. It does not specify reflective modality structure.
 
 *Echo core is measure-independent.* The modules `+Echo.Modality.Core+`,
 `+Echo.Modality.Interface+`, and `+Echo.Index.ThinPoset+` import *no*
@@ -117,9 +115,7 @@ determined by a semiring-valued grade/measure):
 `+EchoSeparating.sep-degrade-compose-fails+`). The characteristic law
 `+degrade-compose+` is carried _precisely_ by thinness of the echo
 index. The separating model keeps the generic Σ-functoriality laws but
-drops thinness, and composition then breaks at a checked
-`+true ≢ false+`. The graded Echo structure is genuine structure on an
-axis no semiring grade supplies.
+drops thinness, and independence from an arbitrary parallel direct arrow fails at `+true ≢ false+`. Composition with the chosen composite remains functorial. This is no general separation from semiring encodings or Σ-types.
 . *Measure* — `+equal-measure-does-not-imply-equal-echo+` and
 `+measure-not-injective+`. A residue measure (the trivial-residue
 projection) sends two genuinely-distinct Echo residues (`+echo-true+`,
@@ -130,8 +126,7 @@ point against a measure that is _not_ a strawman: `+visible-measure+`
 genuinely reads the residue and lands in a two-point carrier
 (`+visible-measure-informative+` shows it discriminates elsewhere), yet
 still cannot separate two residues that agree on the visible bit. Equal
-residue measure therefore does not imply equal Echo: any such measure is
-a lossy observation, never the identity criterion of Echo.
+residue measure therefore does not imply equal Echo for these particular measures. The examples do not show that every possible measure is lossy.
 
 === Vocabulary
 
@@ -139,7 +134,7 @@ Use these terms precisely; they name three orthogonal things.
 
 * *resource grade* — a binder/resource quantity, belonging to the
 resource algebra / semiring axis.
-* *echo index* — the thin-poset index of the Echo modality, e.g.
+* *echo index* — the thin-preorder index of the Echo modality, e.g.
 `+keep ≤ residue ≤ forget+`. Inhabitants of `+Ix+`.
 * *residue measure* — a semiring/resource-algebra-valued _observation_
 of an Echo residue (a `+ResidueMeasure+`).

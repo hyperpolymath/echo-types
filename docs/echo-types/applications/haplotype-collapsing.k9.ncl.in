@@ -1,14 +1,16 @@
 # SPDX-License-Identifier: CC-BY-SA-4.0
-# haplotype-collapsing.k9.ncl — Nickel schema for haplotype collapsing with Echo fiber witness
+# haplotype-collapsing.k9.ncl.in — Nickel schema for haplotype collapsing with Echo fiber witness
 #
-# This is the k9 contract that validates the pipeline output:
+# Documentation-only, unvalidated Nickel specimen; not an active K9 component.
+# It has no K9 envelope, pedigree, execution authority or validation receipt.
+# Intended pipeline output:
 #   collapsed_representatives (size m) + distance_matrix (m×m) + fibers (Echo sidecar)
 #
 # Design: fiber witness travels as sidecar, never in O(n²) hot loop.
 # Echo f y = Σ (c : Clone) (f c ≡ y) serialized as FiberBundle.
 #
-# Validate: nickel typecheck docs/echo-types/applications/haplotype-collapsing.k9.ncl
-# Export:   nickel export docs/echo-types/applications/haplotype-collapsing.k9.ncl > result.json
+# To instantiate: copy to a new .ncl file, review the encoded constraints,
+# and obtain actual Nickel typecheck/evaluation receipts before use.
 
 let CloneWitness = {
   clone_id | String,
@@ -62,7 +64,7 @@ let CollapsedResult = {
     pipeline_version | optional | String,
   },
 
-  # Invariants checked by Nickel contracts
+  # Intended invariants; this specimen does not encode or establish all of them
   # 1. distance_matrix is square and size = m
   # 2. fibers keys = collapsed_representatives[*].haplotype_id
   # 3. each fiber's count = length clones

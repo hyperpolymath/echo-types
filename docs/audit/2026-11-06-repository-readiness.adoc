@@ -1,0 +1,173 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Repository readiness and issue log — 2026-11-06
+:toc:
+
+== Scope and release rule
+
+The owner authorized local implementation, then explicitly authorized pushes,
+pull requests and appropriate merges on 2026-11-06. This supersedes the audit's
+initial read-only and subsequent local-only phases. Ordinal mathematics remains
+excluded; the three residual ordinal source files are unchanged.
+
+This ledger distinguishes source corrections, executed checks, external service
+results and unresolved decisions. A configured scanner is not a passing scan;
+an unsupported language is not clean coverage. No certification or numerical
+stability score is asserted. The six bounded mathematical follow-up packets in
+link:2026-11-06-foundation-decisions.adoc[the foundation decisions] remain research
+work; repository setup does not discharge them.
+
+Baseline main: `cd85288dcce55191ad477c0fa7d1d2421514a0d3`.
+Work branch: `audit/foundations-and-repository-standards-20261106`.
+No failing or absent mandatory check is to be bypassed for merge.
+
+== Owning sources consulted
+
+[cols="2,4",options="header"]
+|===
+|Source |Revision
+|`metadatastician/standards` |`ba640e9a57f22608710ffecdca282074eac55a0b`
+|`hyperpolymath/rsr-template-repo` |`acdc0ebd1d69f3f70995f4eec078e342078dd885`
+|`hyperpolymath/k9-ecosystem` |`20f6be5b5a14a48680b236955b5c4ad9033d00d4`
+|`hyperpolymath/deed-ecosystem` |`5b1d7f50f11054d85376972af90785c83d5665c0`
+|`hyperpolymath/contractiles` |`213fe715ffc11e8dac729c7cd835cfb54d11f999`
+|`hyperpolymath/gv-clade-index` |`2cfabd15d6cb966ed369ee13aa7174b960f45abd`
+|`hyperpolymath/panic-attack` |`6d3d52a632626109ceef1102a8141b2cfa27fe70`
+|`hyperpolymath/pons-asinorum` |`b9ab55c6973514a731c7659a2fbee21b5037b1ef`
+|===
+
+The standards repository has moved owners. Its proof policy, language policy,
+DEED/K9 validators, template, repository-settings payload, Actions allowlist and
+ruleset derivation policy are the authorities used here. The template is a
+reference, not an unrelated nested repository copied into Echo Types.
+
+== Findings and disposition
+
+[cols="1,3,5",options="header"]
+|===
+|Issue/finding |Evidence |Disposition / acceptance
+|#330; workflow startup failures
+|Governance run `41687676542` explicitly rejects the transferred
+`metadatastician/standards` reusable workflow; Secret Scanner `41687680268` also
+has zero jobs. Both were triggered by the owner, so these failures are distinct
+from the historical arena actor incident.
+|Apply the current canonical allowlist and require fresh jobs/check results.
+Old startup-failed runs cannot be retried; use a new branch/PR run.
+|#324 allowlist drift
+|Live list had 93 entries; current canon has 95. Tailscale was already present.
+|Applied the exact case-sensitive union without pruning. Added the transferred
+standards-workflow pattern and `step-security/harden-runner@*`; required SHA
+pinning remains enabled.
+|Repository permissions
+|Default workflow token was write and workflows could approve PR reviews.
+|Applied canonical read-only default and disabled workflow PR approvals.
+Repository merge settings are squash-only; security updates, vulnerability
+alerts, secret scanning and push protection remain enabled.
+|#322 compiler provenance
+|Old CI used unpinned distribution packages.
+|`scripts/setup-agda.sh` pins official Agda 2.7.0.1 archive SHA256
+`975b515a14877ab6bce5bfc641e16c4a3ee52ca5d7f846577dee80aa2145db8a`,
+stdlib `8326c7475af1fa456ca04a0203c168d5d7ff842b`, and absolute-zero
+`f486c29903434589117fa0662c6f29b0f17d1d5f`. Positive setup and wrong-checksum/
+nonexistent-version rejection checks pass locally.
+|#321 / #320 distinct proof lanes
+|Experimental and narrowing roots existed as steps, without distinct job signals.
+|Separate experimental, narrowing and Cubical jobs, preserving core and cold
+checks. Require real pass results and negative mutation checks before closure.
+|#269 / #268 scan coverage and token scopes
+|CodeQL actions scan works; several Scorecard findings refer to old action refs
+and token scopes.
+|Pin direct actions, grant writes only to jobs needing them, and scan the actual
+JavaScript tooling. Neither CodeQL nor Scorecard proves Agda theorems.
+|Hypatia alert #329
+|Tracked Python invocation checker violates the current language policy.
+|Replaced with `scripts/check-agda-invocations.sh`. New inventory uses
+`bun tools/audit-inventory.mjs`; its Agda closure counts and outside-closure list
+match the prior inventory exactly. No blanket suppression added.
+|Hypatia alerts #328, #244, #240
+|Missing chora deed, npx configuration and workflow hardening findings.
+|Populate canonical metadata; update runtime configuration and workflow
+hardening; fresh Hypatia result is required.
+|#323 / #189 / #190 / #188 metadata and template drift
+|Retired A2ML, uninstantiated template fields, stale contractiles and missing
+root CONTRIBUTING were still active.
+|Migrate to the current one-deed model and scoped K9 declarations; preserve
+provenance through Git. Use native pinned validators, including Nickel semantics.
+No fabricated signatures, certifications or execution receipts.
+|#197 clade
+|The current owning registry already assigns `fv-echo-types`.
+|Use that assignment and its registered identifiers. Its stale ordinal-inclusive
+description is not copied as Echo Types scope.
+|#282 code licence
+|Baseline LICENSE already has a correct MPL-2.0 SPDX header.
+|Latest standards licence check passes. No licence text alteration is needed.
+The independent prose-licence decision is recorded below.
+|#191 / #192 / #193 documentation hygiene
+|Placeholder badge, wrong roadmap/README paths, root working-audit dump.
+|Remove misleading badge; correct paths; archive the working audit with original
+blob and SHA256 provenance.
+|#335 foundation history
+|Removed toolchain source was still described as current.
+|Correct current authority while preserving dated history; historical revisions
+are not rewritten as if they used the new toolchain.
+|Invented stability metrics
+|Justfile printed fixed percentages without a defined measurement.
+|Replace with actual build/check recipes and explicit absence of such a metric.
+|Toolchain scaffold
+|mise enabled unrelated runtimes, package managers and tasks.
+|Keep only Bun and just; provision pinned Agda through the checked setup helper.
+|PANIC Windows checkout
+|Upstream tracked report filenames contain colons, invalid on Windows.
+|Record this upstream portability limitation. The checked-out scanner source can
+be built; omitted historical reports are not represented as a complete checkout.
+|===
+
+== Check evidence
+
+The earlier local proof receipt is in
+link:2026-11-06-evidence.adoc[the foundation evidence ledger]. It covers 15 direct
+audit roots plus all seven existing aggregate roots and a cold AuditSmoke check.
+Its known `UnsupportedIndexedMatch` warnings remain recorded, not suppressed.
+
+`bun tools/audit-inventory.mjs` reproduces 155 Agda files, 152 in scope, 135 in
+the union of seven existing root closures and 17 outside. It is a static import
+inventory, not evidence that all 155 files typecheck. The source manifest and
+raw logs are local ignored artifacts under `build/audit-2026-11-06/`; this tracked
+ledger and linked CI runs provide the distributable summary.
+
+Baseline GitHub inventory: 28 open code-scanning alerts from Hypatia/Scorecard;
+zero open Dependabot alerts and zero open GitHub secret-scanning alerts. This
+snapshot is not a claim about future alerts or scanner completeness. The raw
+alert values/secrets were not copied into this document.
+
+PANIC/PONS scans, semantic DEED/K9 validation, final PR checks and final alert
+reconciliation are pending in this working ledger and must be appended before
+readiness is declared.
+
+== Decisions and obligations that setup does not settle
+
+* Prose licensing: historical owner decisions use both CC-BY-4.0 and
+  CC-BY-SA-4.0. See link:2026-11-06-license-inventory.adoc[the evidence inventory].
+  Repository-wide relicensing is not inferred from a generic compliance request.
+* OpenSSF Best Practices registration, independent human code review and
+  published research/DOI validation are not fabricated to clear a score.
+* Entropy infrastructure, cross-repository language mirrors, external bridge
+  research and ordinal work are not silently closed by this release.
+
+== Reproduction commands
+
+[source,shell]
+----
+git rev-parse HEAD
+bun tools/audit-inventory.mjs
+sh scripts/check-agda-invocations.sh
+sh scripts/kernel-guard.sh
+bash tools/check-guardrails.sh proofs/agda
+sh scripts/check-experimental-aggregate.sh
+bash scripts/setup-agda.sh
+# Source the env.sh path reported by setup before local proof checks.
+bash tools/check-audit.sh
+ECHO_STANDARDS_DIR=/path/to/pinned/standards bash tools/check-metadata.sh
+panic-attack assail . --output build/audit-2026-11-06/panic.json
+pons scan . --format json --no-speculative --fail-on error
+git diff --check
+----

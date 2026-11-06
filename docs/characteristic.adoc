@@ -7,11 +7,14 @@
 :sectnumlevels: 3
 :icons: font
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
-This file is the artefact the README and `roadmap-gates.adoc` require for
-Gate 2 of the identity claim. It audits the nominees against the gate's
-falsifier — "naturally echo-shaped, not reducible to generic sigma/fiber
-lemmas" — and reports the threshold outcome.
+This file retains the dated Gate-2 nominee audit. Its historical criterion “not reducible to generic sigma/fiber lemmas” is not a current general separation claim: Echo is definitionally a Sigma type. The nominees demonstrate selected constructions and encoding comparisons. Their novelty, priority, and application value remain research obligations. A nominee's survival of a specified falsifier does not establish otherwise.
 
 This is *Revision 5* (2026-05-26). It is the close-out re-audit
 required by `roadmap.adoc` §Lane 2: it re-checks that the
@@ -33,7 +36,7 @@ parallel-instance lane discipline used to produce it. Rename or symlink
 at integration time.
 ====
 
-== Inherited spec
+== Historical inherited spec (2026-05 audit)
 
 For the sceptic-facing evidence map ("is this just renamed Σ?",
 organised under five demands and cross-linked to every in-tree
@@ -66,7 +69,7 @@ of `roadmap-gates.adoc` lists four nominees; the threshold scales
 proportionally — a comfortable pass requires at least 3 of 4 to
 survive, an honest minimum requires at least 2 of 4.)
 
-== The nominee list (current)
+== The nominee list (historical audit revision)
 
 Per the amended `roadmap-gates.adoc` Gate 2 table:
 

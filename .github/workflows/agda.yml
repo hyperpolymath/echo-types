@@ -1,228 +1,117 @@
-# This workflow is managed by gh actions-lock.
 # SPDX-License-Identifier: MPL-2.0
-# This workflow is managed by gh actions-lock.
-# This workflow is managed by gh actions-lock.
-# (MPL-2.0 is automatic legal fallback until PMPL is formally recognised)
-
 name: Agda
 
 on:
-  # Direct pushes only on the integration branches. Feature-branch
-  # validation is fully covered by the pull_request trigger below —
-  # gating WIP pushes to no-PR branches with a full multi-minute Agda
-  # build was the dominant self-inflicted load on the shared estate
-  # Actions concurrency pool, and also double-fired (push + PR) on PR
-  # branches. No proof coverage is lost: PRs and post-merge main still
-  # run the full suite.
   push:
     branches: [main, master]
   pull_request:
+  workflow_dispatch:
 
-# Estate guardrail: cancel superseded runs so re-pushes / rebased PR
-# updates don't pile up queued full-suite builds. Safe here — this
-# workflow only typechecks (read-only, no publish or mutation).
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-permissions: read-all
+permissions:
+  contents: read
 
 jobs:
   check:
-    runs-on: ubuntu-latest
-    # Bound the job so a hung typecheck/clone cannot occupy a runner for
-    # the 6-hour default. Generous upper bound — the warm suite is a few
-    # minutes; a cold stdlib+suite build is well under this.
+    runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.1
-
-      # Fast static gate (no Agda): enforce the EchoKernel funext-free
-      # certificate and that every Echo*.agda is classified in
-      # docs/echo-types/echo-kernel-note.adoc. Fails the run before the
-      # multi-minute typecheck if the kernel cone or the note drifts.
-      - name: Kernel funext-free certificate + classification guard
-        run: sh scripts/kernel-guard.sh
-
-      - name: Check experimental aggregate covers its direct modules
-        run: bash scripts/check-experimental-aggregate.sh
-
-      - name: Check Agda invocation profiles (static)
-        run: python3 scripts/check-agda-invocations.py
-
-      - name: Install Agda and standard library
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y agda git
-
-      - name: Record & sanity-check toolchain
-        run: |
-          set -e
-          ver="$(agda --version | head -n1)"
-          echo "CI Agda: $ver"
-          echo "Local/flake reproducible Agda is pinned via flake.guix;"
-          echo "exact-version CI parity (CI-via-flake) is the tracked"
-          echo "P1 follow-up — see docs/foundation.adoc / proof-debt"
-          echo "ledger item 'CI Agda pin'. This step makes the version"
-          echo "VISIBLE and minimally-asserted, not silently floating."
-          case "$ver" in
-            *"version 2."*) : ;;
-            *) echo "::error::unexpected Agda: $ver"; exit 1 ;;
-          esac
-
-      - name: Foundation guardrail (--safe/--without-K, no pragmas/postulates)
-        run: bash tools/check-guardrails.sh proofs/agda
-
-      - name: Fetch Agda standard library (v2.3)
-        id: stdlib
-        run: |
-          STDLIB_DIR="$HOME/agda-stdlib"
-          git clone --depth 1 --branch v2.3 https://github.com/agda/agda-stdlib.git "$STDLIB_DIR"
-          test "$(git -C "$STDLIB_DIR" rev-parse HEAD)" = 8326c7475af1fa456ca04a0203c168d5d7ff842b
-          echo "stdlib_dir=$STDLIB_DIR" >> "$GITHUB_OUTPUT"
-
-      - name: Fetch absolute-zero library (PINNED)
-        id: absz
-        env:
-          # Pinned 2026-10-01 (was 3ff5cee7, 2026-05-18) to the known-good revision the suite is
-          # green against (foundation provenance audit). Bump
-          # deliberately, never float: an unpinned dependency is an
-          # unpinned trust boundary.
-          ABSZ_REF: f486c29903434589117fa0662c6f29b0f17d1d5f
-        run: |
-          ABSZ_DIR="$HOME/absolute-zero"
-          git clone https://github.com/hyperpolymath/absolute-zero.git "$ABSZ_DIR"
-          git -C "$ABSZ_DIR" checkout --quiet "$ABSZ_REF"
-          ACTUAL="$(git -C "$ABSZ_DIR" rev-parse HEAD)"
-          if [ "$ACTUAL" != "$ABSZ_REF" ]; then
-            echo "::error::absolute-zero pin mismatch: want $ABSZ_REF got $ACTUAL"
-            exit 1
-          fi
-          echo "absz_commit=$ACTUAL" >> "$GITHUB_OUTPUT"
-          echo "absz_dir=$ABSZ_DIR" >> "$GITHUB_OUTPUT"
-
-      - name: Register libraries for Agda
-        run: |
-          mkdir -p "$HOME/.agda"
-
-          STDLIB_LIB="$RUNNER_TEMP/standard-library.agda-lib"
-          cat > "$STDLIB_LIB" <<EOF
-          name: standard-library
-          include: ${{ steps.stdlib.outputs.stdlib_dir }}/src
-          EOF
-
-          ABSZ_LIB="$RUNNER_TEMP/absolute-zero.agda-lib"
-          cat > "$ABSZ_LIB" <<EOF
-          name: absolute-zero
-          include: ${{ steps.absz.outputs.absz_dir }}/proofs/agda
-          EOF
-
-          printf '%s\n%s\n' "$STDLIB_LIB" "$ABSZ_LIB" > "$HOME/.agda/libraries"
-          printf '%s\n' "standard-library" > "$HOME/.agda/defaults"
-
-      # Cache Agda interface (.agdai) files. A fresh runner otherwise
-      # recompiles the entire stdlib subset + the whole proof development
-      # from scratch every run (the multi-minute cold pass). Agda validates
-      # each .agdai against its source, so a stale cache is always safe —
-      # it just means more modules recompile. The key rotates on any proof
-      # source change or absolute-zero bump; restore-keys give a warm
-      # partial cache even when it does.
-      - name: Cache Agda interface files
-        uses: actions/cache@v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          path: |
-            ~/agda-stdlib/**/*.agdai
-            ~/absolute-zero/**/*.agdai
-            proofs/agda/**/*.agdai
-          # Key reflects reality: stdlib v2.3 + the PINNED absz commit
-          # + source hash. (Previously hard-coded a stale "agda2.6.3";
-          # corrected 2026-05-18. The cold-check job below never uses
-          # this cache, so a cache anomaly cannot mask a real break.)
-          key: agdai-${{ runner.os }}-stdlib2.3-absz${{ steps.absz.outputs.absz_commit }}-${{ hashFiles('proofs/agda/**/*.agda') }}
-          restore-keys: |
-            agdai-${{ runner.os }}-stdlib2.3-absz${{ steps.absz.outputs.absz_commit }}-
-            agdai-${{ runner.os }}-stdlib2.3-
-
-      - name: Typecheck full suite
-        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
-
-      - name: Smoke-check headline theorems
-        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Smoke.agda
-
-      - name: Typecheck characteristic lane (Gate #2 audit modules)
-        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/characteristic/All.agda
-
-      - name: Typecheck examples lane (Gate #3 canonical examples)
-        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/examples/All.agda
-
-      # Cubical lane: the (epi, mono) truncation discharge. A --cubical
-      # --safe island (zero postulates) that CONSTRUCTS ∥_∥ as a HIT —
-      # it cannot be imported by the --safe --without-K All.agda, so it
-      # is typechecked directly here. Its --without-K-profile shadow is
-      # EchoImageFactorizationPropPostulated (proof-debt (a)/(c)).
-      - name: Typecheck cubical lane (epi/mono truncation discharge)
-        run: agda --safe --cubical -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
-
-      # Experimental lane: the echo-additive grade tree, typechecked through
-      # its own aggregate root (--safe --without-K from the pragmas);
-      # nothing here is imported by All.agda or Smoke.agda, so it adds
-      # no claim to the shipped closure (D-2026-06-14-R1 firewall, and
-      # R-2026-05-18 stands). What it does buy: downstream consumers
-      # that vendor Grade.agda (choreographic-types) learn here, not
-      # in their own CI, when an edit breaks it.
-      - name: Typecheck experimental echo-additive lane (standalone, not in the closure)
-        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
-
-      # A separate entrypoint, not evidence about the shipped closure.
-      - name: Typecheck bit-narrowing exhibit
-        run: agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/NarrowingSmoke.agda
-
-  cold-check:
-    # Belt-and-braces: NO interface cache, --ignore-interfaces cold
-    # build. A green here cannot be a stale-.agdai artefact (matters
-    # given the documented WSL git-object-corruption risk). Runs in
-    # parallel with `check`; both must pass.
-    runs-on: ubuntu-latest
-    # Cold (--ignore-interfaces) build is the slowest path; still well
-    # under this bound. Caps a runaway/hung job below the 6-hour default.
-    timeout-minutes: 30
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v7.0.1
-
-      - name: Install Agda
+          persist-credentials: false
+      - name: Kernel certificate and module classification
+        run: sh scripts/kernel-guard.sh
+      - name: Experimental aggregate coverage
         run: |
-          sudo apt-get update
-          sudo apt-get install -y agda git
-
+          bash scripts/check-experimental-aggregate.sh
+          bash scripts/test-experimental-aggregate.sh
+      - name: Agda invocation profiles
+        run: sh scripts/check-agda-invocations.sh
       - name: Foundation guardrail
         run: bash tools/check-guardrails.sh proofs/agda
-
-      - name: Fetch pinned libraries
-        id: libs
-        env:
-          ABSZ_REF: f486c29903434589117fa0662c6f29b0f17d1d5f
+      - name: Install checksum-pinned Agda 2.7.0.1 and pinned libraries
+        run: bash scripts/setup-agda.sh
+      - name: Cache interface files for this compiler and dependency set
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ${{ runner.temp }}/echo-agda/**/*.agdai
+            proofs/agda/**/*.agdai
+          key: agdai-${{ runner.os }}-2.7.0.1-stdlib8326c747-abszf486c299-${{ hashFiles('proofs/agda/**/*.agda') }}
+          restore-keys: |
+            agdai-${{ runner.os }}-2.7.0.1-stdlib8326c747-abszf486c299-
+      - name: Typecheck shipped closure and headlines
         run: |
-          STDLIB_DIR="$HOME/agda-stdlib"
-          git clone --depth 1 --branch v2.3 https://github.com/agda/agda-stdlib.git "$STDLIB_DIR"
-          test "$(git -C "$STDLIB_DIR" rev-parse HEAD)" = 8326c7475af1fa456ca04a0203c168d5d7ff842b
-          ABSZ_DIR="$HOME/absolute-zero"
-          git clone https://github.com/hyperpolymath/absolute-zero.git "$ABSZ_DIR"
-          git -C "$ABSZ_DIR" checkout --quiet "$ABSZ_REF"
-          test "$(git -C "$ABSZ_DIR" rev-parse HEAD)" = "$ABSZ_REF"
-          mkdir -p "$HOME/.agda"
-          printf 'name: standard-library\ninclude: %s/src\n' "$STDLIB_DIR" > "$RUNNER_TEMP/sl.agda-lib"
-          printf 'name: absolute-zero\ninclude: %s/proofs/agda\n' "$ABSZ_DIR" > "$RUNNER_TEMP/az.agda-lib"
-          printf '%s\n%s\n' "$RUNNER_TEMP/sl.agda-lib" "$RUNNER_TEMP/az.agda-lib" > "$HOME/.agda/libraries"
-          printf 'standard-library\n' > "$HOME/.agda/defaults"
+          agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
+          agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Smoke.agda
+          agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/AuditSmoke.agda
+          agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/characteristic/All.agda
+          agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/examples/All.agda
 
-      - name: Cold typecheck (--ignore-interfaces, no cache)
+  cold-check:
+    # A separate runner and no restored interfaces: cached success never
+    # substitutes for checking the shipped source with the pinned compiler.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install checksum-pinned Agda 2.7.0.1 and pinned libraries
+        run: bash scripts/setup-agda.sh
+      - name: Cold typecheck shipped closure and headlines
         run: |
           agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
           agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Smoke.agda
+          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/AuditSmoke.agda
           agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/characteristic/All.agda
           agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/examples/All.agda
-          agda --ignore-interfaces --safe --cubical -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
-          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
-          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/NarrowingSmoke.agda
+
+  experimental:
+    name: Experimental echo-additive
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install checksum-pinned Agda 2.7.0.1 and pinned libraries
+        run: bash scripts/setup-agda.sh
+      - name: Check experimental aggregate coverage
+        run: bash scripts/check-experimental-aggregate.sh
+      - name: Typecheck experimental closure on its own signal
+        run: agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
+
+  narrowing:
+    name: Bit-narrowing exhibit
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install checksum-pinned Agda 2.7.0.1 and pinned libraries
+        run: bash scripts/setup-agda.sh
+      - name: Typecheck narrowing closure on its own signal
+        run: agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/NarrowingSmoke.agda
+
+  cubical:
+    name: Cubical epi/mono profile
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install checksum-pinned Agda 2.7.0.1 and pinned libraries
+        run: bash scripts/setup-agda.sh
+      - name: Typecheck isolated full-Cubical profile
+        run: agda --ignore-interfaces --safe --cubical -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda

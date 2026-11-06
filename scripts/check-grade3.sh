@@ -18,7 +18,7 @@ for f in "${AGDA_DIR:-$HOME/.agda}/libraries" "${AGDA_DIR:-$HOME/.agda}/defaults
 done
 
 sh scripts/kernel-guard.sh
-python3 scripts/check-agda-invocations.py
+sh scripts/check-agda-invocations.sh
 bash scripts/check-experimental-aggregate.sh
 bash tools/check-guardrails.sh proofs/agda
 

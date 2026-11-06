@@ -7,6 +7,12 @@
 :sectnumlevels: 2
 :icons: font
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
 The identity claim for echo types (see <<readme#,README>>) rests on three
 conditions. Each is treated as a decision gate with an explicit failure
@@ -33,7 +39,7 @@ toc::[]
 | Drop identity claim; retain as Agda exposition.
 
 | <<gate-2,2. Characteristic theorems>>
-| At least two theorems are naturally echo-shaped and not reducible to generic sigma lemmas.
+| Evaluate usefulness of the selected theorem presentations; no general separation from Sigma is asserted.
 | `docs/characteristic.adoc`
 | Drop claim of a distinct theorem family; modules remain.
 
@@ -53,11 +59,8 @@ non-injective computation. The fibre is not novel and coincides with
 HoTT fibres and Σ-relevant refinement; comparisons with other treatments
 are specific to the models and witness information they retain.
 
-Distinctness rests on two structural arguments: the *truncation
-argument* (echo types are non-truncatable for non-injective
-functions with multiple preimages, formally certified by the
-`echo-not-prop` family in `proofs/agda/examples/`) and the *2-cell
-argument* (neighbour-framework natural 2-cells are
+The current scoped evidence consists of the *truncation comparison* (the chosen fibres have distinct source projections, so propositional truncation cannot retain that same source-sensitive information, formally certified by the
+`echo-not-prop` family in `proofs/agda/examples/`) and the selected *2-cell constructions* (neighbour-framework natural 2-cells are
 Σ-over-preimages-shaped, formally certified by
 `Sophisticated.equalizer→echo-pair` in `EchoVsQuotient.agda` and
 `Sophisticated.meet→echo-intersection` in `EchoVsGalois.agda`).
@@ -102,8 +105,7 @@ elsewhere under another name.
 
 .Claim
 ****
-There exist theorems whose statements are naturally echo-shaped and are
-not reducible to generic sigma/fiber lemmas.
+The library contains useful fibre presentations and examples. Their novelty, priority, and application value require independent assessment; expressing them as general Sigma/fibre lemmas does not invalidate the constructions and is not a separation result.
 ****
 
 [NOTE]

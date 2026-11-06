@@ -1,158 +1,55 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= Echo Types — Foundation & Trusted Base
+= Echo Types — Foundation and Trusted Base
 :toc: macro
-:toclevels: 2
-:sectnums:
-:sectnumlevels: 2
-:icons: font
 
-[.lead]
-What the foundation actually is, exactly what is trusted, and how
-each part is mechanically enforced. Created 2026-05-18 after a
-foundation provenance audit. This document makes no proof claims; it
-states the trust surface so there is no doubt about its boundary.
+== Foundation
 
-toc::[]
+`Echo f y := Σ (x : A) , (f x ≡ y)` is the standard dependent fibre. The ordinary kernel uses Agda dependent pairs and propositional equality. `EchoFiberTriangulation.agda` compares this definition with standard-library surjection witnesses; it is calibration and orientation coherence, not an independent soundness metatheorem.
 
-== The foundational object (deliberately trivial)
+== Audited baseline: 2026-11-06
 
-`Echo f y := Σ (x : A) , (f x ≡ y)` is *definitionally* the homotopy
-fibre. There is no new type former, no axiom, no postulate. The
-soundness of the foundation is the soundness of Agda's `Σ` and `≡`
-under `--safe --without-K` — nothing more is claimed, and that
-triviality is the point, not a weakness. The self-referential
-`echo↔fib` bridge (`fiber` is a same-module restatement) was the one
-mathematical place worth hardening — that is now **done**:
-`proofs/agda/EchoFiberTriangulation.agda` triangulates `Echo` against
-the standard library's *own* independently-authored notions
-(`Function.Definitions.StrictlySurjective`, `Function.Bundles._↔_` /
-`mk↠ₛ`), so the bridge is no longer self↔self. See R-2026-05-18 and
-the *Known limitations* item below for the exact (modest) strength
-claimed.
+The baseline is main commit `cd85288dcce55191ad477c0fa7d1d2421514a0d3`, tree `74db6f3b4f4907ca02fb45903a161e1546b9ff6e`. Its recorded successful remote Agda run is `41687674126`. This is evidence for that revision and workflow, not certification of subsequent local edits.
 
-== Trust surface and its enforcement
+The baseline inventory is 382 tracked files and 147 Agda files. Excluding three residual ordinal files leaves 144 in scope. The union of the seven workflow-root import closures contains 127 in-scope files, leaving 17 outside: ten tutorial files plus `EchoDecorationBridge`, `EchoExampleSignAnalysis`, `EchoFidelity`, `EchoImageFactorizationPropPostulated`, `MinimalCNO`, `SimpleTest`, and `WorkingCNO`. These are dated baseline counts; adding local modules changes them.
 
-[cols="2,3,2", options="header"]
-|===
-| Trusted claim | How it is enforced (post-2026-05-18) | Residual
+== Baseline workflow and profiles
 
-| Every module is `--safe --without-K`
-| `tools/check-guardrails.sh` scans *every* `proofs/agda/**/*.agda`
-  (comment-stripped) and asserts the OPTIONS line carries both flags;
-  wired as a fail-fast CI step in both jobs. Independent of any
-  `All.agda` closure.
-| none
+At the audited baseline, the owning source was `.github/workflows/agda.yml`. Its seven roots were:
 
-| Zero postulates / zero escape pragmas
-| Same script: complete deny-list of escape pragmas + soundness flags
-  + `postulate`/`primTrustMe` in code. `--safe` in the typecheck
-  lanes is the primary guarantee; the script covers files outside
-  every closure.
-| nested `{- -}` not modelled (codebase uses `--` banners); lanes are
-  the backstop
+* `All.agda`
+* `Smoke.agda`
+* `characteristic/All.agda`
+* `examples/All.agda`
+* `EchoImageFactorizationPropCubical.agda`
+* `experimental/echo-additive/All.agda`
+* `NarrowingSmoke.agda`
 
-| The whole development typechecks
-| Four CI roots — `All.agda`, `Smoke.agda`, `characteristic/All.agda`,
-  `examples/All.agda` — now cover *all* registered modules (the two
-  2026-05-18 closure holes, `examples.Transport` and the
-  N5 exclusion, are resolved/disclosed below).
-| `N5Falsifier` is *known-broken*, see below
+The ordinary roots use `--safe --without-K --cubical-compatible`. The Cubical root is checked separately with `--safe --cubical`. The cold lane adds `--ignore-interfaces`; the warm lane uses interfaces. A green collection of roots is not a typecheck of every tracked Agda file.
 
-| A green build is not a stale-cache artefact
-| `cold-check` CI job: no interface cache, `agda --ignore-interfaces`
-  on all four roots. Runs in parallel with the cached `check` job;
-  both must pass.
-| none
+`characteristic/N5Falsifier.agda` is imported by `characteristic/All.agda`; there is no current expected-failure gate. Earlier reports of a deliberately broken excluded N5 describe an earlier state.
 
-| Dependencies are pinned
-| `standard-library` pinned to branch `v2.3`; `absolute-zero` pinned
-  to commit `f486c299…` (was floating `--depth 1`). Asserted in CI.
-| Agda version itself — see *Known limitations*
-|===
+`tools/check-guardrails.sh` scans beyond the root closures, but explicitly exempts `EchoImageFactorizationPropPostulated`, `EchoImageFactorizationPropCubical`, and `EchoDecorationBridge`. Thus “every module is safe and postulate-free” is false as a repository-wide claim. The exemptions do not all have the same reason: the Cubical file is safe in its own profile; the postulated and exploratory files carry different trust obligations.
 
-== Known-broken, disclosed (not hidden)
+The Cubical file constructs truncation in a separate, self-contained restatement. It does not import the ordinary Echo interface literally. Relating those presentations is a separate boundary obligation.
 
-`proofs/agda/characteristic/N5Falsifier.agda` does **not** typecheck
-(`UnsolvedConstraints` / `UnsolvedMetaVariables`, lines ~150–200). It
-was historically excluded from `characteristic/All.agda` with no
-disclosure — a silent hole found by the 2026-05-18 audit. It is now:
+== Baseline toolchain
 
-* banner-marked in-file as known-broken, with the "VERDICT … SURVIVES"
-  line explicitly flagged *not mechanised*;
-* explicitly noted as a deliberate exclusion in
-  `characteristic/All.agda`;
-* monitored by an *expected-failure* CI gate — if it ever typechecks,
-  CI fails loudly and instructs to register it and drop the gate.
+The audited baseline CI installs Agda from apt on `ubuntu-latest` and only asserts a 2.x version. Agda and the runner were therefore not exactly pinned in that revision. The standard library checkout at tag `v2.3` is verified against commit `8326c7475af1fa456ca04a0203c168d5d7ff842b`; absolute-zero is checked out and verified at `f486c29903434589117fa0662c6f29b0f17d1d5f`.
 
-It must not be cited as an established Gate-2 nominee until it is
-green `--safe --without-K`, zero unsolved metas. Triage, not a partial
-hack: left explicit and failing, never forced green.
+The audited baseline contains no reproducible flake-style toolchain pin after the Nix-to-Guix removal (#275), and its workflow contains no corresponding check job. Its echo messages refer to absent facilities. Those were stale workflow prose, not evidence of a reproducible toolchain. Baseline library pins live in `.github/workflows/agda.yml`; its Agda executable is apt-selected. Earlier revision-history entries below record historical claims and do not establish the current files or checks.
 
-== Known limitations (tracked, not silent)
+== Current local workflow changes (2026-11-06 source inspection)
 
-. *CI Agda exact pin* — *reproducible pin IMPLEMENTED 2026-05-18;
-  first-green verification delegated to CI.* `flake.guix` now pins, as
-  flake inputs: Agda via `nixpkgs nixos-24.11` (2.7.0.1), standard
-  library at tag `v2.3`, and `absolute-zero` at commit `3ff5cee…`
-  (previously nixpkgs-bundled stdlib + a local `absolute-zero`
-  checkout — neither reproducible). A hermetic `checks.suite`
-  (guardrail + four roots + N5 xfail) runs under that pinned
-  toolchain; an *additive* `flake-check` CI job (`guix flake check`)
-  exercises it. This is honest about its boundary: the dev
-  environment has no `guix`, so the flake was authored designed-correct
-  but its build is *first verified by CI*, not claimed green here. It
-  is `continue-on-error` until first green so a version delta
-  (2.7.0.1 vs the verified-green 2.8.0 / apt) is *surfaced*, not a
-  regression; the apt `check` + `cold-check` jobs remain the gate.
-  Open sub-item: on first green, flip `continue-on-error` to `false`
-  and retire the apt job; if red, the logged delta says which
-  nixpkgs/Agda to bump. (Cross-stack: a devShell-only `flake.guix`
-  also exists on the reframe stack PR #47; this one strictly
-  supersedes it.)
-. *External-fibre triangulation* — *DONE 2026-05-18*,
-  `proofs/agda/EchoFiberTriangulation.agda` (wired into `All.agda`,
-  pinned in `Smoke.agda`, `--safe --without-K`, zero postulates).
-  Three results, each at its true strength, no overclaim:
-+
---
-* *T1 (calibration coincidence — not a deep theorem):*
-  `echo-is-stdlib-witness` — the per-point witness of stdlib's
-  `StrictlySurjective _≡_ f` is *definitionally* `Echo f y`. Value:
-  `Echo` is the community's fibre, not a bespoke construction.
-* *T2 (genuine content):* `echo↔coecho` — `Echo f y ↔ ∃ x. y ≡ f x`
-  via stdlib's independent `_↔_` bundle; the round-trips carry
-  `sym`/`sym-sym` transport and are *not* `refl`. This is the
-  substantive cross-definition coherence.
-* *T3 (surjection tie):* `all-echo→stdlib-surjection` — all
-  echo-fibres inhabited yields a bona fide stdlib `A ↠ B` (`mk↠ₛ`).
---
-+
-The same-module self-reference R-2026-05-18 flagged is removed: the
-anchors are authored in the standard library, not here. The honest
-strength is "agreement with the community construction + one genuine
-orientation coherence", *not* a grounding metatheorem.
-. *Cross-assistant kernel check* (P2): confirm the 3-line core in an
-  independent type-checker (e.g. Cubical Agda's native `fiber`). Now
-  the single remaining foundational hardening item.
+The local replacement workflow uses `ubuntu-24.04` and calls `scripts/setup-agda.sh`. That script declares Agda `2.7.0.1`, verifies its Linux x86-64 release archive against SHA256 `975b515a14877ab6bce5bfc641e16c4a3ee52ca5d7f846577dee80aa2145db8a`, and verifies standard-library commit `8326c7475af1fa456ca04a0203c168d5d7ff842b` and absolute-zero commit `f486c29903434589117fa0662c6f29b0f17d1d5f`. The executable and library pins now live in that setup script; workflow calls and profiles remain in `.github/workflows/agda.yml`. This is source inspection of the local configuration, not a new successful remote workflow receipt.
 
-== Reproducing the trusted build
+The draft workflow adds `AuditSmoke.agda` to the ordinary checks and separates experimental/narrowing/Cubical work into their own jobs. The baseline seven-root counts above and the completed local compiler receipts remain evidence about their stated checks, not evidence that the changed GitHub configuration has executed successfully.
 
-[source,sh]
-----
-# Guardrail (no Agda needed):
-bash tools/check-guardrails.sh proofs/agda
+Current static entrypoints include `sh scripts/check-agda-invocations.sh` and `bun tools/audit-inventory.mjs`. The latter replaces the historical Python inventory command; conversion equivalence is checked separately from proof typechecking. `mise.toml` lists Bun and just; Agda setup is handled by the dedicated script.
 
-# Cold, cache-free typecheck of every root:
-agda --ignore-interfaces -i proofs/agda proofs/agda/All.agda
-agda --ignore-interfaces -i proofs/agda proofs/agda/Smoke.agda
-agda --ignore-interfaces -i proofs/agda proofs/agda/characteristic/All.agda
-agda --ignore-interfaces -i proofs/agda proofs/agda/examples/All.agda
-----
+== Reproducing and interpreting evidence
 
-Pinned inputs: `standard-library` `v2.3`; `absolute-zero`
-`f486c29903434589117fa0662c6f29b0f17d1d5f`. Agda: see `flake.guix`
-(reproducible) — CI parity is the P1 item above.
+Register the pinned standard-library and absolute-zero libraries, then run the seven commands in the workflow using their respective profiles. Run `scripts/kernel-guard.sh`, `tools/check-guardrails.sh`, `scripts/check-experimental-aggregate.sh`, and `scripts/check-agda-invocations.sh` for the separate static checks. A source scan is not a typecheck; a successful remote baseline run is not a fresh local run. The local audit now passes all 15 direct/audit entrypoints and all seven existing roots under Agda 2.7.0.1, plus a fresh `--ignore-interfaces` AuditSmoke check with exit 0. Consult link:audit/2026-11-06-evidence.adoc[the evidence ledger] for receipts, warnings, source identity, current inventory, and the limits of these checks. Ordinal mathematics is excluded from the audit; residual imports may still affect builds.
 
 == Revision history
 
@@ -188,3 +85,9 @@ Pinned inputs: `standard-library` `v2.3`; `absolute-zero`
   (run 36864369380). The claims table and "Pinned inputs" above now read
   `f486c299`; the two 2026-05-18 entries keep `3ff5cee` because they record
   what was pinned then. Verified by `check` + `cold-check` green on #334.
+
+* *2026-11-06 — baseline re-audit.* Corrected root coverage, N5 status, guard exemptions, exact dependency commits, and absent flake facilities. Historical entries above are retained as records of earlier assertions.
+
+* *2026-11-06 — #335 historical-entry acceptance.* The original 2026-05-18 history entries above remain unchanged, including their then-written `flake.guix` claim. Since #275 there is no reproducible flake-style pin in this checkout. The live `absolute-zero` and standard-library commit assertions are in `.github/workflows/agda.yml`, while Agda is installed through apt. The correction is appended rather than rewriting those historical entries.
+
+* *2026-11-06 — current draft toolchain correction.* The #335 acceptance entry immediately above records the audited baseline. The current local workflow instead calls `scripts/setup-agda.sh`, which owns the compiler checksum and library commit declarations. The baseline dated entries remain unchanged; the new draft has no remote success receipt in this document.

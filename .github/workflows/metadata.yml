@@ -1,0 +1,70 @@
+# SPDX-License-Identifier: MPL-2.0
+name: Metadata contracts
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  metadata:
+    name: Deed and K9 contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install checksum-pinned Bun 1.4.4
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/metadata-bin"
+          curl --fail --location --retry 3 --proto '=https' \
+            --output "$RUNNER_TEMP/bun-linux-x64.zip" \
+            https://github.com/oven-sh/bun/releases/download/bun-v1.4.4/bun-linux-x64.zip
+          printf '%s  %s\n' \
+            bf8ccbfb2b0b80159e0f9a6d15c55317add8077534dbc6130a3edb52fccb395c \
+            "$RUNNER_TEMP/bun-linux-x64.zip" | sha256sum --check --strict -
+          unzip -q "$RUNNER_TEMP/bun-linux-x64.zip" -d "$RUNNER_TEMP/bun"
+          install -m 755 "$RUNNER_TEMP/bun/bun-linux-x64/bun" "$RUNNER_TEMP/metadata-bin/bun"
+          test "$("$RUNNER_TEMP/metadata-bin/bun" --version)" = 1.4.4
+          printf '%s\n' "$RUNNER_TEMP/metadata-bin" >> "$GITHUB_PATH"
+      - name: Install checksum-pinned Nickel 1.18.0
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/metadata-bin"
+          curl --fail --location --retry 3 --proto '=https' \
+            --output "$RUNNER_TEMP/metadata-bin/nickel" \
+            https://github.com/nickel-lang/nickel/releases/download/1.18.0/nickel-x86_64-linux
+          printf '%s  %s\n' \
+            9cba4dd65ae9915ec61f73033aafcff307a377665a83fd8f530df086763318cb \
+            "$RUNNER_TEMP/metadata-bin/nickel" | sha256sum --check --strict -
+          chmod +x "$RUNNER_TEMP/metadata-bin/nickel"
+          "$RUNNER_TEMP/metadata-bin/nickel" --version
+          test "$(bun --version)" = 1.4.4
+          printf '%s\n' "$RUNNER_TEMP/metadata-bin" >> "$GITHUB_PATH"
+      - name: Fetch owning standards at the reviewed revision
+        env:
+          STANDARDS_SHA: ba640e9a57f22608710ffecdca282074eac55a0b
+        run: |
+          set -euo pipefail
+          standards="$RUNNER_TEMP/echo-standards"
+          git init --quiet "$standards"
+          git -C "$standards" remote add origin https://github.com/metadatastician/standards.git
+          git -C "$standards" fetch --quiet --depth=1 origin "$STANDARDS_SHA"
+          git -C "$standards" checkout --quiet --detach FETCH_HEAD
+          test "$(git -C "$standards" rev-parse HEAD)" = "$STANDARDS_SHA"
+          printf 'ECHO_STANDARDS_DIR=%s\n' "$standards" >> "$GITHUB_ENV"
+      - name: Validate deed and active K9 contracts
+        # The metadata checker validates declarations. It does not execute
+        # declared probes, install Agda, or rely on an Agda job's status.
+        run: bash tools/check-metadata.sh

@@ -1,0 +1,42 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= echo-types machine-readable metadata
+
+The single descriptive record is link:../echo-types_chora.deed[echo-types_chora.deed].
+It records the source-backed `fv` identity, proof boundaries, ecosystem, and
+realignment anchor. `0-AI-MANIFEST.deed` and standalone state/anchor records
+are not parallel authorities. The retired A2ML history is linked in
+link:6a2/README.adoc[the retirement notice]; do not recreate it.
+
+The normative grammar and K9 contract live in the pinned standards source:
+`metadatastician/standards`, revision
+`ba640e9a57f22608710ffecdca282074eac55a0b`.
+The current template reference is `hyperpolymath/rsr-template-repo`, revision
+`acdc0ebd1d69f3f70995f4eec078e342078dd885`.
+The registry identity is from `hyperpolymath/gv-clade-index`, revision
+`2cfabd15d6cb966ed369ee13aa7174b960f45abd`, `worker/data/repos.json`.
+The registry records no assignment date; none is invented here. Its old
+ordinal-inclusive description is not adopted as the current project scope.
+
+== Operational declarations
+
+`contractiles/<verb>/<verb>.k9.ncl` holds each verb declaration; its adjacent
+`<verb>.ncl` supplies the canonical schema and run-policy data. Root Just
+recipes execute checks. These Nickel records do not implement a contractile
+CLI, execute their probe strings, or grant external publication authority.
+
+`self-validating/` holds one active Kennel metadata example and inert `.in`
+templates. The old `svc/k9` mirror was retired rather than maintained twice.
+The root `coordination.k9.ncl` is a pure pointer to canonical session protocols.
+
+== Validation
+
+[source,bash]
+----
+ECHO_STANDARDS_DIR=/path/to/pinned/standards bash tools/check-metadata.sh
+----
+
+Bun, Nickel and Bash are required. The script checks the standards revision,
+runs the current native DEED grammar validator and K9 `--strict` validation,
+and rejects retired metadata and identity drift. Missing semantic tooling is
+a failure. The frozen Python DEED validator is not used. This validation does
+not run declared probes and does not award certification or an assurance grade.

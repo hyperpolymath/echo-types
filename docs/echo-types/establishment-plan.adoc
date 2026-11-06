@@ -7,6 +7,12 @@
 :sectnumlevels: 3
 :icons: font
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:../audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
 This document sets out the path by which "echo types" can acquire
 *recognised type-theoretic standing*. It is deliberately separate from
@@ -87,8 +93,8 @@ strategy and is owned, not hedged:
 .The establishment thesis (narrowed 2026-05-18)
 ****
 Echo is the homotopy fibre, equipped with a loss-grade lattice,
-carrying a *definitionally-grounded loss-graded reindexing modality*
-(a thin-poset action — *not* a graded comonad). Its standing comes
+carrying a *definitionally-grounded loss-indexed diagram*
+(a preorder-indexed diagram; no reflective or nested graded-comonad structure is specified by this interface). Its standing comes
 not from being a new object but from being *exactly characterised and
 honestly bounded*: a definitional Σ-identity; a funext-relative
 pointwise mediator property; coherence equations that provably reduce
@@ -143,7 +149,7 @@ the composition iso, cancel-iso, pentagon — but no _characterisation_.
   reindex), and the three coherence equations
   (`gcomonad-counit-{l,r}`, `gcomonad-coassoc`). [RETRACTED READING:
   "the three graded-comonad laws" / "is a graded comonad" — these are
-  thin-poset reindexing-coherence equations; no comonad is exhibited.
+  indexed-diagram coherence equations; no comonad is exhibited.
   See <<h2-verdict>> and R-2026-05-18.]
 * Authority effect (narrowed): "has a definitional identity + a
   funext-relative pointwise mediator property + a reindexing modality
@@ -269,10 +275,8 @@ below is real and the Agda is unchanged — but its significance is the
 `degrade-compose` + `≤g-prop` because *there is no comonadic
 coherence to discharge*: a thin poset with a functorial monotone
 action satisfies them definitionally. This is the calibration that
-shows the modality's entire content over generic Σ is thinness of the
-grade order — confirmed by the separating model and by the repo's own
-Gate-2 audit. Read "graded-comonad laws" below as
-"thin-poset reindexing-coherence equations", and disregard the
+locates the arbitrary-parallel-arrow independence requirement. Ordinary chosen-composite action laws remain valid in the separating model; no separation from general Σ follows. Read "graded-comonad laws" below as
+"indexed-diagram coherence equations", and disregard the
 "*Thesis impact (positive)*" paragraph (struck through in substance,
 retained for the record).
 ====
@@ -399,7 +403,7 @@ reason.
   own Gate-2 audit contradicted two. The mechanised content is
   unchanged and the entries above remain accurate as a record of
   *what landed*; only their *significance claims* are corrected, to:
-  a loss-graded reindexing modality (not a comonad); a funext-relative
+  a loss-indexed diagram (not a comonad); a funext-relative
   pointwise mediator property (not a universal property);
   carrier-parametricity over a fixed grade poset (not
   model-independence); a postulate-free build that is evidence for,

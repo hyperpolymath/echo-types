@@ -2,31 +2,16 @@
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
--- Echo↔CNO Content Bridge.
+-- Legacy program-provenance bridge into the constant Program-to-unit fibre.
+-- ProgramEcho ignores its parameter, and cno-program-echo ignores the
+-- supplied certificate. Thus this API stores program syntax but does not
+-- enforce that the stored witness is the indexed program or prove a state
+-- identity correspondence. Names are retained for compatibility.
 --
--- Resolves issue #21. The previous EchoCNOBridge.agda was a
--- *name-bridge*: it defined a local 4-constructor `CNOOp` enum
--- (`Read`/`Write`/`Execute`/`NullOp`) entirely independent of
--- absolute-zero's CNO formalisation, so its names happened to use
--- "CNO" without sharing a single type-level fact with the sister
--- repository. This module replaces that with a *content-bridge*:
--- it imports `Program`, `IsCNO`, `empty-is-cno`, `halt-is-cno`,
--- `cno-composition`, `absolute-zero`, and `absolute-zero-is-cno`
--- directly from absolute-zero's `CNO.agda`, and exhibits a
--- constructive Echo witness for every `IsCNO p` Program.
---
--- Pre-requisites (cross-repo plumbing):
---   * `absolute-zero/absolute-zero.agda-lib` registered in
---     `~/.agda/libraries`.
---   * `depend: absolute-zero` listed in `echo-types.agda-lib`.
---   * absolute-zero's `proofs/agda/CNO.agda` typechecks under
---     `--safe --without-K` (was blocked at HEAD by two parse
---     errors at lines 316 and 323 in `ternary-add` / `crazy-op`'s
---     `using (_Data.Nat.%_)` clauses, plus two unfilled holes in
---     `cno-composition`'s `cno-identity` / `cno-pure` fields).
---     A patch addressing both is filed alongside this commit at
---     `docs/echo-types/issue-21-absolute-zero.patch`.
-
+-- EchoCNOSemantics adds CertifiedProgramEcho (same-program equality plus
+-- IsCNO certificate) and a semantic bridge using CNO.state-eq. The pinned
+-- external evaluator is total and its energy function is constant zero;
+-- these model definitions are not independent physical guarantees.
 module EchoCNOBridge where
 
 open import Echo
@@ -62,18 +47,7 @@ ProgramEcho : Program → Set
 ProgramEcho _ = Echo program-to-unit tt
 
 ----------------------------------------------------------------------
--- Headline bridge theorem: every certified-null program has a
--- constructive Echo witness.
---
--- The IsCNO certificate is consumed but not destructed: any program
--- has an echo at `tt` via `echo-intro`, and the bridge's content is
--- that this echo is naturally indexed by the program itself.
--- Read against absolute-zero's CNO.agda, this depends on the
--- *existence* of an `IsCNO`, not on its contents — which is the
--- right level for a content-bridge: we are exhibiting that any
--- `IsCNO`-classified program inhabits the echo type, not
--- retrofitting a separate proof of CNO-ness.
-----------------------------------------------------------------------
+-- Any program admits this provenance witness. The certificate is unused.
 
 cno-program-echo : (p : Program) → IsCNO p → ProgramEcho p
 cno-program-echo p _ = echo-intro program-to-unit p
@@ -97,11 +71,8 @@ absolute-zero-echo =
   cno-program-echo absolute-zero absolute-zero-is-cno
 
 ----------------------------------------------------------------------
--- Composition: chained CNO certificates extend the bridge to the
--- sequenced program. This is the single fact that distinguishes a
--- content-bridge from a name-bridge: composition here uses
--- `CNO.cno-composition` from absolute-zero, not a local substitute.
-----------------------------------------------------------------------
+-- This legacy construction accepts external composition evidence, then
+-- discards it when constructing the provenance witness.
 
 cno-compose-echo :
   ∀ {p₁ p₂} → IsCNO p₁ → IsCNO p₂ →

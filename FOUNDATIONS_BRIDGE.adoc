@@ -1,3 +1,9 @@
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 == Foundations bridge — consuming `+echo-types+` and `+tropical-resource-typing+`
 
 This is a downstream integration brief for `+my-lang+` or any other
@@ -50,19 +56,19 @@ soundness _parametrically_ over the interface via
 `+resource_laws_sufficient_for_consumers+`), then instantiate at any
 algebra above with no algebraic re-proof.
 
-==== Axis 3 — Echo modality (`+echo-types+`)
+==== Axis 3 — Echo indexed diagram (`+echo-types+`)
 
 * *What it is:* structured *residue / loss / forgetting / projection* —
 the remainder of an information-losing map,
 `+Echo f y := Σ (x : A), (f x ≡ y)+`.
-* *Indexed by a thin poset:* `+Echo.Index.ThinPoset+`; the canonical
-index is the three-point loss order `+keep ≤ residue ≤ forget+`
+* *Indexed by a thin preorder:* `+Echo.Index.ThinPoset+`; the canonical
+abstract `ThinPoset` record has no antisymmetry field. The canonical index is the three-point loss order `+keep ≤ residue ≤ forget+`
 (`+grade-thinPoset+`). Thinness (order proofs are propositional) is
 load-bearing, not cosmetic.
-* *Proves residual metatheory:* `+Echo.Modality.Core+` /
+* *Specifies an indexed action:* `+Echo.Modality.Core+` /
 `+Echo.Modality.Interface+` give `+degrade+`, the unit law
 `+degrade-id+`, the path-independence law `+degrade-compose+`, and the
-no-section theorem `+no-section-of-collapsing-map+`; the
+no-left-inverse theorem `+no-section-of-collapsing-map+` (historical name retained); the
 downstream-instantiable record is `+EchoModality+` (canonical witness
 `+grade-echoModality+`).
 * *Independent of the resource algebra at the core:*

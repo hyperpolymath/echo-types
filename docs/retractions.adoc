@@ -189,3 +189,8 @@ Append-only. New retractions get the next `R-YYYY-MM-DD` id. An entry
 is never edited after creation except to add a dated "follow-up"
 sub-section. Reframing of artefacts pursuant to an entry is logged in
 that entry's "Action taken".
+
+[NOTE]
+====
+2026-11-06 context: entries above retain their historical dates. For current fibre, inverse-direction, categorical-interface and verification boundaries, consult link:audit/2026-11-06-evidence.adoc[the foundation evidence ledger]. Historical “no-section” negatives concern left inverses; a scoped erasure obstruction does not prohibit every graded comonad.
+====

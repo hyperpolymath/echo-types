@@ -1,13 +1,8 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
-= `.machine_readable/integrations/` — retired
+= Integration pointers
 
-The `.a2ml` records that lived here were removed on 2026-09-30 by owner
-ruling: the `.a2ml` surface is retired in favour of `.deed` records.
-
-The last tree that held them is frozen at
-https://github.com/hyperpolymath/echo-types/tree/39a7a99cbe19a918843e9624010510b5fc3b8366/.machine_readable/integrations[commit 39a7a99].
-Read that copy for history; do not recreate `.a2ml` files here.
-
-Conversion to `.deed` is tracked estate-wide in
-https://github.com/hyperpolymath/rsr-template-repo/issues/209[rsr-template-repo#209].
+Root `echo-types_chora.deed` records the source-backed ecosystem relationships.
+`absolute-zero` supplies CNO definitions; `EchoTypes.jl` is an executable
+finite-domain companion. The ordinal lane is maintained separately in
+`ordinal-notation`; no ordinal work is authorized by these metadata records.
+No connector, credential, deployed service, or external write access is implied.

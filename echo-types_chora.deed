@@ -1,0 +1,42 @@
+;; SPDX-License-Identifier: CC-BY-SA-4.0
+;; SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+;; Identity source: gv-clade-index 2cfabd15d6cb966ed369ee13aa7174b960f45abd,
+;; worker/data/repos.json. Assignment date is not recorded; none is invented.
+(repo-deed
+  :schema-version "1.0.0"
+  :canonical-name "echo-types"
+  :repo-uuid #u8"gv-clade-index:github.com/hyperpolymath/echo-types"
+  :beholding-chora #u5"estate/chora"
+  (identity :primary-forge github :owner "hyperpolymath" :prefixed-name "fv-echo-types")
+  (clade :primary fv :primary-name "Formal Verification & Proofs" :secondary ())
+  (forges :github "hyperpolymath/echo-types")
+  (lineage :type standalone :parent "")
+  (status :phase active :present #t)
+  (ecosystem
+    :project "echo-types"
+    :ecosystem "hyperpolymath"
+    :position-type "constructive-agda-library"
+    :purpose "Fiber-based structured loss, with explicitly scoped proof profiles and checked counterexamples."
+    :not ("a new judgmental type theory" "the extracted ordinal-notation project")
+    (related :name "absolute-zero" :relationship proof-dependency :notes "CNO definitions used by the CNO boundary proofs.")
+    (related :name "EchoTypes.jl" :relationship executable-companion :notes "Finite-domain executable examples; Agda remains the proof source."))
+  (meta :languages (Agda) :license MPL-2.0 :documentation-license "Per-file notices; see docs/audit/2026-11-06-license-inventory.adoc"
+    :author "Jonathan D.A. Jewell" :build-tool just
+    :proof-policy "https://github.com/metadatastician/standards/blob/ba640e9a57f22608710ffecdca282074eac55a0b/3-practice/PROOF-POLICY.adoc")
+  (agentic
+    :scope "Local repository changes authorized by the current task."
+    :proof-profile "--safe --without-K --cubical-compatible for ordinary roots; separate full-Cubical and quarantined postulated roots."
+    :external-mutations "Require explicit user authorization; declarations grant no publication authority."
+    :ordinal-work "Excluded: the ordinal-notation lane is maintained in its own repository.")
+  (anchor :date "2026-11-06"
+    :event "Local standards reconciliation against current owning sources."
+    :supersedes "Retired 6a2 records; historical tree 39a7a99cbe19a918843e9624010510b5fc3b8366."
+    :preserves "Proof-profile boundaries, source provenance, and the distinction between declarations and verification receipts."
+    :evidence "Local working tree; not a published release or certification.")
+  (standards-sources
+    (source :name "standards" :revision "ba640e9a57f22608710ffecdca282074eac55a0b")
+    (source :name "rsr-template-repo" :revision "acdc0ebd1d69f3f70995f4eec078e342078dd885")
+    (source :name "gv-clade-index" :revision "2cfabd15d6cb966ed369ee13aa7174b960f45abd"))
+  (validation :metadata-command "bash tools/check-metadata.sh" :proof-command "just test"
+    :guard-command "just guard" :status declared
+    :note "No assurance grade, signature or certification is asserted."))

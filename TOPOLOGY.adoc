@@ -31,12 +31,14 @@ echo-types/
 ├── Containerfile                # podman-build fallback
 ├── Justfile                     # primary command runner
 ├── INDEX.adoc                   # legacy file map (parallel to this TOPOLOGY)
-├── README.md                    # canonical README (readme.adoc + EXPLAINME.adoc are pointers since the 2026-06-12 dedup)
-├── roadmap.adoc + roadmap-gates.adoc  # legacy lowercase; canonical is ROADMAP.adoc (rename pending)
-├── flake.guix + flake.lock       # (pending)
-├── guix.scm                     # (pending)
+├── CONTRIBUTING.md              # contribution guide and actual verification entrypoints
+├── README.adoc                  # project overview; EXPLAINME.adoc is the longer explanation
+├── roadmap.adoc                 # canonical roadmap (lowercase filename)
+├── roadmap-gates.adoc           # scoped research and evaluation gates
 └── (RSR template files at root)
 ----
+
+For planned work use link:roadmap.adoc[roadmap.adoc]; no uppercase `ROADMAP.adoc` exists in this checkout.
 
 == Cross-repo dependencies
 

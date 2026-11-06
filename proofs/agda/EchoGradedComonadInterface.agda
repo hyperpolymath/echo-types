@@ -13,20 +13,12 @@
 -- `gc-coassoc`) stated against the monoid's propositional identities
 -- via `subst` along `·G-identityʳ` / `·G-identityˡ` / `·G-assoc`.
 --
--- F3 guardrail (earn-back-plan.adoc §F3): the record carries no
--- field equivalent to the retracted `⊑-prop` from `EchoGraded`. The
--- abstraction is structural and equational only — no order, no
--- propositionality-of-the-grade-relation hypothesis, nothing that
--- bakes in a single load-bearing thinness assumption. Inspection:
--- the field list below is exactly the structure, the monoid laws,
--- and the comonad laws — anything more would be over-claiming.
---
--- This module on its own does NOT pass F3; F3 passes when at least
--- two non-isomorphic-grade-monoid instances satisfy this record.
--- Instance 1 = `EchoGradedComonadInstance1.agda` (the F1
--- iterated-residue construction at `(ℕ, +, 0)`). Instance 2 (at e.g.
--- the free monoid `(List X, ++, [])` over a non-trivial `X`) is
--- phase 2, separate follow-up.
+-- Compatible algebraic interface for a monoid-indexed carrier and pointwise
+-- functor and comonad equations. Naturality and congruence for pointwise
+-- function equality are supplied separately by NaturalGradedComonad in
+-- EchoGradedComonadNaturality; this record alone does not assert them.
+-- Neither record assumes a grade order or thinness of a grade relation.
+-- The nat and list instances package both records explicitly.
 
 module EchoGradedComonadInterface where
 
@@ -35,11 +27,9 @@ open import Relation.Binary.PropositionalEquality
   using (_≡_; refl; subst)
 
 ----------------------------------------------------------------------
--- The interface record.
---
--- Universe-polymorphic over the grade type `G`. The carrier `D` is
--- `Set`-valued (matching F1) to keep the record proof-irrelevant
--- about universe choices for the wrapped types.
+-- The grade carrier G and D's arguments/results live in Set; the record
+-- itself lives in Set₁. This interface is not universe polymorphic.
+----------------------------------------------------------------------
 
 record GradedComonadStructure : Set₁ where
   field
@@ -75,7 +65,7 @@ record GradedComonadStructure : Set₁ where
     --
     -- Stated against the monoid's PROPOSITIONAL identities via
     -- `subst` along the corresponding equation. For the ℕ instance
-    -- this reduces (the equations are refl) and the substs vanish;
+    -- left-unit reduces definitionally; right-unit and associativity do not.
     -- for an arbitrary monoid (e.g. List concatenation), the
     -- propositional form is what is provable in general.
     --------------------------------------------------------------

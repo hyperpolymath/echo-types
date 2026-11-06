@@ -35,24 +35,27 @@ jobs:
       matrix:
         include:
           # CodeQL `actions` language scans the GitHub Actions workflow
-          # files (present in every repo). The repo has no JS/TS source,
-          # so the prior JS/TS matrix entry recorded zero results /
-          # failed "no source files"; closes the Hypatia
-          # `codeql_missing_actions_language` finding.
+          # files. Agda itself is not a supported CodeQL language; its
+          # proof safety is checked in the Agda workflow.
           - language: actions
+            build-mode: none
+          # The audit inventory now contains actual JavaScript runtime code.
+          - language: javascript-typescript
             build-mode: none
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4.39.1
+        uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4.39.1
+        uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
         with:
           category: "/language:${{ matrix.language }}"

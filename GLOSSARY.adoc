@@ -5,6 +5,12 @@
 :icons: font
 :doctype: article
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 Cross-reference glossary for link:README.adoc[README.adoc], link:EXPLAINME.adoc[EXPLAINME.adoc], and the `echo-types` wiki. Terms are classified as **standard** (existing mathematical concept used without modification), **rephrased** (standard concept given project-specific vocabulary), or **project-specific** (originating in this project).
 
 == Core concepts
@@ -106,7 +112,7 @@ Degrade::
 
 [[no-section]]
 No-section theorem::
-  A proof that a collapsing (non-injective) map `f` has no section — there is no `s : B → A` with `f ∘ s = id`. This is the formal witness that the loss is irreversible.
+  Compatibility term for a no-left-inverse theorem: if `f : A → B` collapses distinct sources, no `s : B → A` satisfies `s ∘ f = id`. It does not rule out a categorical section with `f ∘ s = id`; Boolean collapse to unit has two such right inverses.
   *Classification:* **standard** (consequence of non-injectivity in dependent type theory).
 
 == Classification
@@ -321,7 +327,7 @@ Degrade::
 
 [[no-section]]
 No-section theorem::
-  A proof that a collapsing (non-injective) map `f` has no section — there is no `s : B → A` with `f ∘ s = id`. This is the formal witness that the loss is irreversible.
+  Compatibility term for a no-left-inverse theorem: if `f : A → B` collapses distinct sources, no `s : B → A` satisfies `s ∘ f = id`. It does not rule out a categorical section with `f ∘ s = id`; Boolean collapse to unit has two such right inverses.
   *Classification:* **standard** (consequence of non-injectivity in dependent type theory).
 
 == Classification| Written | Spoken
@@ -424,7 +430,7 @@ Degrade::
 
 [[no-section]]
 No-section theorem::
-  A proof that a collapsing (non-injective) map `f` has no section — there is no `s : B → A` with `f ∘ s = id`. This is the formal witness that the loss is irreversible.
+  Compatibility term for a no-left-inverse theorem: if `f : A → B` collapses distinct sources, no `s : B → A` satisfies `s ∘ f = id`. It does not rule out a categorical section with `f ∘ s = id`; Boolean collapse to unit has two such right inverses.
   *Classification:* **standard** (consequence of non-injectivity in dependent type theory).
 
 == Classification| Written | Spoken
@@ -610,7 +616,7 @@ Degrade::
 
 [[no-section]]
 No-section theorem::
-  A proof that a collapsing (non-injective) map `f` has no section — there is no `s : B → A` with `f ∘ s = id`. This is the formal witness that the loss is irreversible.
+  Compatibility term for a no-left-inverse theorem: if `f : A → B` collapses distinct sources, no `s : B → A` satisfies `s ∘ f = id`. It does not rule out a categorical section with `f ∘ s = id`; Boolean collapse to unit has two such right inverses.
   *Classification:* **standard** (consequence of non-injectivity in dependent type theory).
 
 == Classification
@@ -724,7 +730,7 @@ Degrade::
 
 [[no-section]]
 No-section theorem::
-  A proof that a collapsing (non-injective) map `f` has no section — there is no `s : B → A` with `f ∘ s = id`. This is the formal witness that the loss is irreversible.
+  Compatibility term for a no-left-inverse theorem: if `f : A → B` collapses distinct sources, no `s : B → A` satisfies `s ∘ f = id`. It does not rule out a categorical section with `f ∘ s = id`; Boolean collapse to unit has two such right inverses.
   *Classification:* **standard** (consequence of non-injectivity in dependent type theory).
 
 == Classification
@@ -981,7 +987,7 @@ Degrade::
 
 [[no-section]]
 No-section theorem::
-  A proof that a collapsing (non-injective) map `f` has no section — there is no `s : B → A` with `f ∘ s = id`. This is the formal witness that the loss is irreversible.
+  Compatibility term for a no-left-inverse theorem: if `f : A → B` collapses distinct sources, no `s : B → A` satisfies `s ∘ f = id`. It does not rule out a categorical section with `f ∘ s = id`; Boolean collapse to unit has two such right inverses.
   *Classification:* **standard** (consequence of non-injectivity in dependent type theory).
 
 == Classification
@@ -1143,7 +1149,7 @@ Degrade::
 
 [[no-section]]
 No-section theorem::
-  A proof that a collapsing (non-injective) map `f` has no section — there is no `s : B → A` with `f ∘ s = id`. This is the formal witness that the loss is irreversible.
+  Compatibility term for a no-left-inverse theorem: if `f : A → B` collapses distinct sources, no `s : B → A` satisfies `s ∘ f = id`. It does not rule out a categorical section with `f ∘ s = id`; Boolean collapse to unit has two such right inverses.
   *Classification:* **standard** (consequence of non-injectivity in dependent type theory).
 
 == Classification

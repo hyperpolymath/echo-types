@@ -26,7 +26,7 @@
 --
 -- For the Nickel / Julia / JEG pipeline, see the companion docs:
 --   docs/echo-types/applications/haplotype-collapsing.adoc
---   docs/echo-types/applications/haplotype-collapsing.k9.ncl
+--   docs/echo-types/applications/haplotype-collapsing.k9.ncl.in (inert documentation specimen)
 --   docs/echo-types/applications/haplotype-collapsing.jl
 --
 -- Related: EchoAggregation (general monoid form), EchoChoreo (role order),

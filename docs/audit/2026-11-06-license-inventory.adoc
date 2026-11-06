@@ -1,0 +1,109 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Prose licence inventory and bounded decision — 2026-11-06
+:toc: macro
+
+== Scope
+
+This is an evidence inventory of the current local notices relevant to the README/prose conflict and CLAUDE's nine-file ruling. It is not a repository-wide rights audit or legal assurance. The source baseline is `cd85288dcce55191ad477c0fa7d1d2421514a0d3`, with the current uncommitted documentation corrections. No existing licence text or licence identifier is changed by this inventory.
+
+== Current notices and supporting texts
+
+[cols="2,3,3",options="header"]
+|===
+| Source | Observed declaration | Scope limitation
+
+| link:../../README.adoc[README.adoc]
+| Leading SPDX identifier `MPL-2.0`; License section repeats it, while the next paragraph declares `docs/`, README, and roadmap prose `CC-BY-4.0` and points to `LICENSE-docs`.
+| The header and blanket prose sentence do not give one consistent declaration for README itself. The blanket sentence also overlaps files with explicit ShareAlike headers.
+
+| link:../../LICENSE[LICENSE]
+| `SPDX-License-Identifier: MPL-2.0` and matching MPL 2.0 body; copyright notice names Jonathan D.A. Jewell, 2024–2026.
+| This file has no diff. The latest standards code-licence consistency check passes; that check does not settle prose scope.
+
+| link:../../LICENSE-docs[LICENSE-docs]
+| CC Attribution 4.0 International body; no leading SPDX identifier.
+| This is the text named by the blanket README declaration. Its presence alone does not resolve conflicting file-specific notices.
+
+| link:../../LICENSES/CC-BY-SA-4.0.txt[LICENSES/CC-BY-SA-4.0.txt]
+| Attribution-ShareAlike 4.0 International text.
+| A supporting licence text, not by itself a per-path scope declaration.
+
+| link:../foundation.adoc[docs/foundation.adoc]
+| `CC-BY-SA-4.0` SPDX header; copyright names Jonathan D.A. Jewell, 2025–2026.
+| A concrete file-specific notice overlapping README's blanket CC-BY-4.0 sentence.
+
+| link:../../CONTRIBUTING.md[CONTRIBUTING.md] and link:../../.github/CONTRIBUTING.md[.github/CONTRIBUTING.md]
+| The newly written guide and pointer carry `CC-BY-SA-4.0` and a 2026 copyright notice naming Jonathan D.A. Jewell.
+| New text follows the current estate prose default. This does not relicense older files.
+
+| link:../archive/provenance/CLAUDE.md.audit[archived CLAUDE.md.audit]
+| Original `MPL-2.0` notice retained unchanged; original copyright names Jonathan D.A. Jewell.
+| Archived provenance is preserved byte-for-byte; it is not a current instruction or a precedent for relicensing other prose.
+|===
+
+== Nine-file ruling recorded in CLAUDE
+
+The 2026-06-18 session entry in link:../../CLAUDE.md[CLAUDE.md] reports an owner-authorized move of nine long-form documents to `CC-BY-SA-4.0`, identifying abbreviated commits `879ec9b` and `f6cc023`. The entry's illustrative “before → after” strings both read ShareAlike, so that line alone does not prove each predecessor's actual identifier. The table distinguishes the historical path names from their current filename counterparts; it does not infer that a missing current header has been restored or that every intervening migration preserved it.
+
+[cols="2,2,2",options="header"]
+|===
+| Historical path named in ruling | Current counterpart | Current leading SPDX notice
+| `FOUNDATION_CONTRACT.md`
+| link:../../FOUNDATION_CONTRACT.adoc[`FOUNDATION_CONTRACT.adoc`]
+| No leading SPDX identifier found
+| `docs/theorem-index.md`
+| link:../../docs/theorem-index.adoc[`docs/theorem-index.adoc`]
+| No leading SPDX identifier found
+| `docs/CLAIMS_AUDIT.adoc`
+| link:../../docs/CLAIMS_AUDIT.adoc[`docs/CLAIMS_AUDIT.adoc`]
+| `CC-BY-SA-4.0` (line 1)
+| `docs/echo-types/fibration-package.adoc`
+| link:../../docs/echo-types/fibration-package.adoc[`docs/echo-types/fibration-package.adoc`]
+| `CC-BY-SA-4.0` (line 1)
+| `docs/echo-types/universal-property.adoc`
+| link:../../docs/echo-types/universal-property.adoc[`docs/echo-types/universal-property.adoc`]
+| `CC-BY-SA-4.0` (line 1)
+| `wiki/Architecture.adoc`
+| link:../../wiki/Architecture.adoc[`wiki/Architecture.adoc`]
+| `CC-BY-SA-4.0` (line 1)
+| `wiki/Overview.adoc`
+| link:../../wiki/Overview.adoc[`wiki/Overview.adoc`]
+| `CC-BY-SA-4.0` (line 1)
+| `wiki/Roadmap.adoc`
+| link:../../wiki/Roadmap.adoc[`wiki/Roadmap.adoc`]
+| `CC-BY-SA-4.0` (line 1)
+| `wiki/Working-Rules.adoc`
+| link:../../wiki/Working-Rules.adoc[`wiki/Working-Rules.adoc`]
+| `CC-BY-SA-4.0` (line 1)
+|===
+
+Seven mapped files have explicit ShareAlike headers; `FOUNDATION_CONTRACT.adoc` and `docs/theorem-index.adoc` have no leading SPDX identifier. Those two missing declarations are evidence gaps, not permission to assign a licence automatically. The ruling does not name `LICENSE-docs` or README as one of those nine files.
+
+== Provenance that prevents an automatic sweep
+
+* Owner commit `d30dc732d81dc50b361b1c586d45f8a581812c56` (2026-04-23, “meta: add explicit top-level licenses”) introduced `LICENSE-docs` with the Attribution 4.0 body.
+* Owner commit `ac99259f6294cacd95d05ff19c9f4d0d359b732f` (2026-06-13, “docs(licence): align prose SPDX headers to CC-BY-SA-4.0 (ShareAlike)”) changed `docs/foundation.adoc` from `CC-BY-4.0` to `CC-BY-SA-4.0`.
+* Owner-authored commit `a3853b744f745ba126a93b47638f59c1a0d49fce` (2026-08-17, “Change license and revise Echo Types glossary”) replaced README's ShareAlike header with MPL-2.0 and reinstated the blanket CC-BY-4.0 prose sentence. This later explicit project history cannot be dismissed solely because the estate default says ShareAlike.
+* Current standards snapshot `ba640e9a57f22608710ffecdca282074eac55a0b`, `3-practice/LICENCE-POLICY.adoc` Rule 1, defaults original prose to `CC-BY-SA-4.0`; `docs/AUDIT.adoc` makes licence/SPDX drift manual-only. Template snapshot `acdc0ebd1d69f3f70995f4eec078e342078dd885` supplies the current contribution/signing examples. Neither source supplies a project-specific decision resolving README's contradictory notices.
+
+Commit authorship and copyright labels establish observable provenance; they do not establish complete ownership of every historical contribution or resolve the effect of earlier notices. No inference of relicensing authority is made here.
+
+== What the pending choice changes
+
+[cols="2,3,3",options="header"]
+|===
+| Choice | Bounded follow-up | Material still requiring an owner decision
+
+| Preserve a per-file split
+| Describe the intended path-specific policy instead of a blanket prose sentence; retain supporting texts for the licences actually declared.
+| Resolve README's competing MPL/BY declarations and the two missing current headers using their provenance. Confirm whether the nine-file ruling still defines their intended scope.
+
+| ShareAlike for future prose, preserving historical grants
+| State a prospective policy and its effective scope; record the existing notices and history instead of rewriting archived material.
+| Specify how existing files and future edits are treated, and which notices are to be reconciled. This choice alone does not authorize a blanket rewrite of existing licences.
+|===
+
+While the choice is pending, keep current legal texts and existing identifiers unchanged, preserve archive bytes and historical records, and report the ambiguity explicitly. Any later metadata or notice correction should cite the chosen scope and the specific files it affects.
+
+The coordinating link:2026-11-06-repository-readiness.adoc[repository-readiness log] records the pending owner decision and any subsequently authorized notice changes.

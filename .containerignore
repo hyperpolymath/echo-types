@@ -1,0 +1,6 @@
+# SPDX-License-Identifier: MPL-2.0
+# Exclude local receipts, VCS internals and generated interfaces from build context.
+.git
+build/audit-*
+**/*.agdai
+**/_build

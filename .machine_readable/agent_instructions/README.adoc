@@ -1,13 +1,8 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
-= `.machine_readable/agent_instructions/` — retired
+= Agent instruction pointers
 
-The `.a2ml` records that lived here were removed on 2026-09-30 by owner
-ruling: the `.a2ml` surface is retired in favour of `.deed` records.
-
-The last tree that held them is frozen at
-https://github.com/hyperpolymath/echo-types/tree/39a7a99cbe19a918843e9624010510b5fc3b8366/.machine_readable/agent_instructions[commit 39a7a99].
-Read that copy for history; do not recreate `.a2ml` files here.
-
-Conversion to `.deed` is tracked estate-wide in
-https://github.com/hyperpolymath/rsr-template-repo/issues/209[rsr-template-repo#209].
+Read root `CLAUDE.md` for local working rules and `echo-types_chora.deed` for
+repository identity and proof-profile boundaries. Session protocol bindings
+live in root `coordination.k9.ncl`; their definitions remain in the pinned
+standards source. These pointers grant no publication or external mutation
+authority. Task-specific user instructions take precedence over template text.

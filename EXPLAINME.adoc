@@ -5,6 +5,12 @@
 :icons: font
 :doctype: article
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 This file backs every factual claim in link:README.adoc[README.adoc] with code paths and honest caveats. Read it if you are doing due diligence — checking whether the story matches the code.
 
 == Claim-to-implementation map
@@ -82,23 +88,23 @@ The Julia companion has no funext and therefore shadows only the unconditional f
 
 [quote, README.adoc]
 ____
-Novel separation proofs: Echo is not distinguished by Shannon entropy; LL !A := 1 gives a shallow-encoding gap; equal measure does not imply equal Echo.
+Scoped counterexamples: the selected finite entropy surrogate, LL !A := 1 encoding, and resource measures forget fibre information. These do not separate Echo from general Σ-types or arbitrary encodings. Novelty and priority are unresolved.
 ____
 
 How this is implemented::
 
 * `link:proofs/agda/EchoEntropy.agda[]` — Shannon entropy cannot distinguish distinct echoes over the same output.
 * `link:proofs/agda/EchoLLEncoding.agda[]` — The linear logic encoding `LL !A := 1` collapses informative distinctions that Echo preserves.
-* `link:proofs/agda/EchoSeparation/NotResourceInstance.agda[]` — `equal-measure-does-not-imply-equal-echo` and `measure-not-injective`: no residue measure determines the echo.
+* `link:proofs/agda/Echo/Separation/NotResourceInstance.agda[]` — `equal-measure-does-not-imply-equal-echo` and `measure-not-injective`: no residue measure determines the echo.
 
 Caveat::
 These establish *negative* identity (Echo ≠ X). The falsifiability criteria also require *positive* identity (characteristic theorems that are naturally Echo-shaped). The positive side is open.
 
-=== No-section family proves structured loss is irreversible
+=== Historical no-section family rules out exact left-inverse recovery
 
 [quote, README.adoc]
 ____
-No section of a collapsing map.
+No left inverse of a collapsing map; right inverses can exist.
 ____
 
 How this is implemented::
@@ -203,7 +209,7 @@ drift; ordinal-notation's copies are the maintained ones.
 
 [CAUTION]
 ====
-**Cross-repo bridge conformance is not machine-checked.** `EchoCNOBridge.agda` imports from `absolute-zero`; `EchoJanusBridge` targets `januskey`. End-to-end conformance is not yet verified. See `link:docs/echo-types/cross-repo-bridge-status.md[]`.
+**Cross-repo bridge conformance is not machine-checked.** `EchoCNOBridge.agda` imports from `absolute-zero`; `EchoJanusBridge` targets `januskey`. End-to-end conformance is not yet verified. See `link:docs/bridges/cross-repo-bridge-status.adoc[]`.
 ====
 
 [CAUTION]
@@ -227,7 +233,7 @@ drift; ordinal-notation's copies are the maintained ones.
 | Domain-replacement factorization exists (module name is misnomer)
 
 | `proofs/agda/EchoNoSectionGeneric.agda`
-| No section of a collapsing map
+| No left inverse of a collapsing map
 
 | `proofs/agda/EchoOrthogonalFactorizationSystem.agda`
 | WFS witness (module name overclaims OFS)

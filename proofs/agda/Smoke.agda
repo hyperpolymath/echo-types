@@ -8,6 +8,29 @@
 
 module Smoke where
 
+open import EchoGradedComonadNaturality using (NaturalGradedComonad)
+open import EchoThinPreorderExample using (indiscrete; no-antisymmetry)
+open import EchoGradedComonadInstance1 using (nat-natural-instance)
+open import EchoGradedComonadInstance2 using (list-natural-instance)
+
+-- Bounded foundational audit: lawful parallel-arrow action, explicit
+-- naturality for the concrete instances, and right-inverse examples.
+open import EchoSeparating using
+  ( sep-id; sep-compose; sep-compose-idˡ; sep-compose-idʳ
+  ; sep-compose-assoc; sep-deg-id; sep-deg-comp
+  ; sep-parallel-actions-distinct
+  )
+open import EchoGradedComonadF1 using (ε-natural; δ-natural)
+open import EchoGradedComonadInstance1 using (nat-ε-natural; nat-δ-natural)
+open import EchoGradedComonadInstance2 using (list-ε-natural; list-δ-natural)
+open import EchoCharacteristic using
+  ( collapse-raise-true; collapse-raise-false
+  ; collapse-right-inverse-true; collapse-right-inverse-false
+  ; collapse-right-inverses-distinct
+  )
+open import EchoResidue using
+  (collapse-residue-raise; collapse-residue-right-inverse)
+
 open import Echo using
   ( Echo
   ; echo-intro

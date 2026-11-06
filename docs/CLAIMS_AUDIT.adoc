@@ -920,3 +920,13 @@ and `NONE-PROPOSED` / `LOCATE-FAILED` placeholders. The four
 WEAKER-THAN-CLAIM rows are the load-bearing follow-ups for the next
 Gate G1 session; the remainder of the inventory is either backed at
 strength or honestly framed as a non-claim.
+
+[NOTE]
+====
+2026-11-06 context: entries above retain their historical dates. For current fibre, inverse-direction, categorical-interface and verification boundaries, consult link:audit/2026-11-06-evidence.adoc[the foundation evidence ledger]. Historical “no-section” negatives concern left inverses; a scoped erasure obstruction does not prohibit every graded comonad.
+====
+
+[NOTE]
+====
+2026-11-06 archival update (#193): the historical root `CLAUDE.md.audit` variant is now link:archive/provenance/CLAUDE.md.audit[archived under docs/archive/provenance]. Its bytes and original licence notice are unchanged. The adjacent link:archive/provenance/CLAUDE-audit-provenance.adoc[provenance record] identifies the original source revision, blob, and SHA256. The root `CLAUDE.md` remains the active instruction file.
+====

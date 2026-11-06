@@ -2,35 +2,14 @@
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
--- Pillar C of docs/echo-types/establishment-plan.adoc.
---
--- REAL MODULE (separating model landed 2026-05-17).
---
--- Goal: a SEPARATING MODEL. The only objection every referee raises
--- is "isn't this all Σ-lemmas with renamed components?" The
--- gold-standard answer is a model in which the *generic* Σ/Echo
--- functoriality laws (`Echo.map-over-id` / `map-over-comp`) still
--- hold, yet the *characteristic* loss-grade composition law
--- `EchoGraded.degrade-compose` (equivalently `degrade-via-join`)
--- FAILS — at a concrete, decidable witness. That proves the graded
--- family is genuine structure, not bookkeeping.
---
--- The precise pin. `EchoGraded.degrade-compose` holds for exactly
--- one reason: `≤g-prop` — the loss order `_≤g_` is propositional, so
--- the chosen factoring `p12 ∙ p23` and the direct `p13` are forced
--- equal, and `degrade-comp` then closes it. This model is `EchoGraded`
--- with that single hypothesis removed: a "loss order" `_⊑_` with TWO
--- distinct arrows `s₀ , s₁ : lo ⊑ hi` (so `sep-order-not-prop`), a
--- reindexing `deg` that distinguishes them (`s₀ ↦ id`, `s₁ ↦ not`).
--- Nothing else changes; in particular the Σ/`map-over` layer is the
--- *same generic layer* and its laws still hold here (`sep-map-over-*`).
--- The path-independence law breaks (`sep-degrade-compose-fails`).
---
--- This continues the negative-exhibit discipline of
--- `characteristic/VisibleConstraintAudit.agda` /
--- `characteristic/IntegrationAudit.agda` (collapsing pseudo-theorems
--- to `proj₂`), but in the positive direction: an explicit
--- countermodel object, with the failure a checked `true ≢ false`.
+-- Walking parallel-arrow category with a lawful pointwise action.
+-- Its two distinct lo → hi arrows act by identity and Boolean negation.
+-- sep-compose and sep-deg-comp prove composition is functorial.
+-- SepDegradeCompose instead compares a composite with an arbitrary direct
+-- arrow: sep-degrade-compose-fails refutes that arrow-independence claim.
+-- The ordinary Sigma/Echo map-over laws continue to hold. This separates
+-- thinness-dependent path independence from ordinary functoriality; it
+-- does not refute functoriality or category composition without thinness.
 
 module EchoSeparating where
 
@@ -69,6 +48,64 @@ deg rfl-lo b = b
 deg rfl-hi b = b
 deg s₀     b = b
 deg s₁     b = not b
+
+-- Ordinary composition retains the choice of parallel arrow. It does
+-- not identify an arbitrary direct arrow with the chosen composite.
+sep-id : (g : G) → g ⊑ g
+sep-id lo = rfl-lo
+sep-id hi = rfl-hi
+
+sep-compose : ∀ {g₁ g₂ g₃} → g₁ ⊑ g₂ → g₂ ⊑ g₃ → g₁ ⊑ g₃
+sep-compose rfl-lo rfl-lo = rfl-lo
+sep-compose rfl-lo s₀ = s₀
+sep-compose rfl-lo s₁ = s₁
+sep-compose s₀ rfl-hi = s₀
+sep-compose s₁ rfl-hi = s₁
+sep-compose rfl-hi rfl-hi = rfl-hi
+
+sep-compose-idˡ : ∀ {g₁ g₂} (p : g₁ ⊑ g₂) →
+  sep-compose (sep-id g₁) p ≡ p
+sep-compose-idˡ rfl-lo = refl
+sep-compose-idˡ rfl-hi = refl
+sep-compose-idˡ s₀ = refl
+sep-compose-idˡ s₁ = refl
+
+sep-compose-idʳ : ∀ {g₁ g₂} (p : g₁ ⊑ g₂) →
+  sep-compose p (sep-id g₂) ≡ p
+sep-compose-idʳ rfl-lo = refl
+sep-compose-idʳ rfl-hi = refl
+sep-compose-idʳ s₀ = refl
+sep-compose-idʳ s₁ = refl
+
+sep-compose-assoc : ∀ {g₁ g₂ g₃ g₄}
+  (p : g₁ ⊑ g₂) (q : g₂ ⊑ g₃) (r : g₃ ⊑ g₄) →
+  sep-compose (sep-compose p q) r ≡ sep-compose p (sep-compose q r)
+sep-compose-assoc rfl-lo rfl-lo rfl-lo = refl
+sep-compose-assoc rfl-lo rfl-lo s₀ = refl
+sep-compose-assoc rfl-lo rfl-lo s₁ = refl
+sep-compose-assoc rfl-lo s₀ rfl-hi = refl
+sep-compose-assoc rfl-lo s₁ rfl-hi = refl
+sep-compose-assoc s₀ rfl-hi rfl-hi = refl
+sep-compose-assoc s₁ rfl-hi rfl-hi = refl
+sep-compose-assoc rfl-hi rfl-hi rfl-hi = refl
+
+-- Pointwise action laws need no equality principle for functions.
+sep-deg-id : ∀ g (e : Obj g) → deg (sep-id g) e ≡ e
+sep-deg-id lo e = refl
+sep-deg-id hi e = refl
+
+sep-deg-comp : ∀ {g₁ g₂ g₃}
+  (p : g₁ ⊑ g₂) (q : g₂ ⊑ g₃) (e : Obj g₁) →
+  deg q (deg p e) ≡ deg (sep-compose p q) e
+sep-deg-comp rfl-lo rfl-lo e = refl
+sep-deg-comp rfl-lo s₀ e = refl
+sep-deg-comp rfl-lo s₁ e = refl
+sep-deg-comp s₀ rfl-hi e = refl
+sep-deg-comp s₁ rfl-hi e = refl
+sep-deg-comp rfl-hi rfl-hi e = refl
+
+sep-parallel-actions-distinct : ¬ (deg s₀ true ≡ deg s₁ true)
+sep-parallel-actions-distinct ()
 
 ----------------------------------------------------------------------
 -- The loss order here is NOT propositional. This is the *single*
@@ -112,7 +149,7 @@ sep-map-over-comp :
 sep-map-over-comp e = map-over-comp not (λ _ → refl) not (λ _ → refl) e
 
 ----------------------------------------------------------------------
--- The characteristic law FAILS.
+-- Independence from an arbitrary direct arrow FAILS.
 --
 -- `SepDegradeCompose` is `EchoGraded.degrade-compose` transcribed
 -- with `_⊑_` / `deg` for `_≤g_` / `degrade`. It is refuted at the

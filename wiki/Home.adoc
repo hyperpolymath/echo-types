@@ -4,6 +4,12 @@
 :toc: macro
 :toclevels: 2
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:../docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:../docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 [.lead]
 *echo-types* is a constructive Agda formalisation of fiber-based *structured
 loss* — "echo types". The central definition is
@@ -123,10 +129,7 @@ This wiki is a *distillation*. The authoritative records are:
   Pillar E is complete at the bounded-claim level. The one named *OPEN
   external* problem, *order-type fidelity* to ψ₀(Ω_ω) (decision-log
   `D-2026-06-14`), moved with the ordinal lane to ordinal-notation (below).
-* *Variance* — resolved (`EchoVariance.agda`, #243): an echo is a graded
-  *monad of accumulation* with a section/retraction adjunction exact on the
-  grade-0 fibre — *not* a graded comonad (that reading is the lossless
-  complement-storing writer).
+* *Variance* — `EchoVariance` gives inverse fibre-composition maps for a supplied factorisation and a Boolean no-left-inverse result. It does not establish a tropical graded monad. The total completion retains the source, has no grade parameter, and is not a minimal-residue or bare-output recovery theorem. Writer carriers and specific erasing carriers have different counit obligations.
 * *Aggregation* — `EchoAggregation.agda` generalised to the monoid/group form
   (`aggregation-as-fold`; #175), with `no-canonical-disaggregation` (the
   Sonnenschein–Mantel–Debreu / representative-agent critique, stated

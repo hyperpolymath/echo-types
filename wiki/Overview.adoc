@@ -4,6 +4,12 @@
 :toc: macro
 :toclevels: 2
 
+
+[IMPORTANT]
+====
+*Foundation scope correction, 2026-11-06.* The current contract is link:../docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:../docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
+====
+
 toc::[]
 
 == What is an echo type?
@@ -37,7 +43,7 @@ and `roadmap-gates.adoc`):
   distinct from refinement types, lens/optic theory, HoTT fibers, setoid
   quotients, and provenance semirings.
 . *Characteristic theorems* — at least two theorems are naturally echo-shaped
-  and not reducible to generic Σ lemmas.
+  with usefulness and priority assessed against specified encodings; no general separation from Σ is asserted.
 . *Canonical examples* — at least one worked example where echo types are the
   right explanatory unit.
 

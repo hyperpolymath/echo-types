@@ -1,114 +1,54 @@
 # SPDX-License-Identifier: MPL-2.0
 # SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-# Echo Types Build and Test System
+# Agda 2.7.0.1. See scripts/setup-agda.sh and docs/build.adoc for pinned libraries.
+set shell := ["bash", "-eu", "-o", "pipefail", "-c"]
 
-# Build all echo type modules
-build-echo:
-	@echo "Building echo type modules..."
-	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
-	@echo "✅ All echo modules built successfully"
-
-# Build stability tests
-build-tests:
-	@echo "Building stability tests..."
-	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/EchoStabilityTests.agda
-	@echo "✅ Stability tests built successfully"
-
-# Run comprehensive build
-build-all:
-	@echo "🔨 Building all echo type modules and tests..."
-	@echo "=========================================="
-	just build-echo
-	just build-tests
-	@echo "=========================================="
-	@echo "✅ Build complete! All modules type-check successfully"
-
-test-core:
-	@echo "Testing core echo type properties..."
-	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Echo.agda
-	@echo "✅ Core tests passed"
-
-# Test CNO bridge
-test-cno:
-	@echo "Testing CNO bridge..."
-	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/EchoCNOBridge.agda
-	@echo "✅ CNO bridge tests passed"
-
-# Test thermodynamic bridge
-test-thermo:
-	@echo "Testing thermodynamic bridge..."
-	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/EchoThermodynamics.agda
-	@echo "✅ Thermodynamic tests passed"
-
-# Test categorical bridge
-test-cat:
-	@echo "Testing categorical bridge..."
-	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/EchoCategorical.agda
-	@echo "✅ Categorical tests passed"
-
-# Test stability suite
-test-stability:
-	@echo "Testing stability suite..."
-	agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/EchoStabilityTests.agda
-	@echo "✅ Stability tests passed"
-
-# Run all tests
-test-all:
-	@echo "🧪 Running comprehensive test suite..."
-	@echo "=========================================="
-	just test-core
-	just test-cno
-	just test-thermo
-	just test-cat
-	just test-stability
-	@echo "=========================================="
-	@echo "✅ All tests passed! Stability: 92/100"
-
-# Clean build artifacts
-clean:
-	@echo "Cleaning build artifacts..."
-	rm -f proofs/agda/*.agdai
-	@echo "✅ Clean complete"
-
-# Full build and test cycle
-verify:
-	@echo "🔬 Full verification cycle..."
-	@echo "=========================================="
-	just clean
-	just build-all
-	just test-all
-	@echo "=========================================="
-	@echo "✅ Verification complete! System stability: 92/100"
-
-# Stability report
-stability-report:
-	@echo "📊 Stability Report"
-	@echo "=========================================="
-	@echo "Core Echo Types:        98/100 ✅"
-	@echo "CNO Bridge:             95/100 ✅"
-	@echo "Thermodynamic Bridge:   90/100 ✅"
-	@echo "Categorical Bridge:     88/100 ✅"
-	@echo "Integration:            92/100 ✅"
-	@echo "=========================================="
-	@echo "Overall Stability:      92/100 ✅"
-	@echo "Target Stability:        97/100 🎯"
-	@echo "=========================================="
-	@echo "📈 Stability Improvement Plan:"
-	@echo "  1. Increase test coverage to 100%"
-	@echo "  2. Add property-based testing"
-	@echo "  3. Formal verification of key theorems"
-	@echo "  4. Cross-system verification (Coq/Lean)"
-	@echo "=========================================="
-
-# Enforce the EchoKernel funext-free certificate + classification note
-# (static; no Agda needed). CI calls this same recipe.
-kernel-guard:
-	@sh scripts/kernel-guard.sh
-
-# Aggregate compliance gate: full Agda verify + kernel-guard certificate
-validate: verify kernel-guard
-	@echo "validate: proofs verified + kernel guard passed"
-
-# Default target
 default:
-	just verify
+    @just --list
+
+# Ordinary profile; AGDA_STDLIB and ABSOLUTE_ZERO_AGDA are required paths.
+build:
+    agda --safe --without-K --cubical-compatible --no-libraries -i proofs/agda -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" proofs/agda/All.agda
+
+build-echo: build
+build-all: build
+
+# Changed proof modules and all seven aggregate roots; logs are receipts.
+test:
+    bash tools/check-audit.sh
+
+test-all: test
+verify: guard test
+
+# Static checks are distinct from typechecking.
+guard:
+    sh scripts/kernel-guard.sh
+    bash tools/check-guardrails.sh proofs/agda
+    sh scripts/check-experimental-aggregate.sh
+    sh scripts/check-agda-invocations.sh
+
+kernel-guard:
+    sh scripts/kernel-guard.sh
+
+metadata:
+    bash tools/check-metadata.sh
+
+validate: guard metadata test
+
+audit-inventory:
+    bun tools/audit-inventory.mjs
+
+# Actual tool coverage is recorded; neither scanner certifies Agda proofs.
+panic:
+    mkdir -p build/audit-2026-11-06
+    panic-attack assail . --output build/audit-2026-11-06/panic.json
+
+pons:
+    mkdir -p build/audit-2026-11-06
+    pons scan . --format json > build/audit-2026-11-06/pons.json
+
+stability-report:
+    @echo 'No numerical stability metric is defined. See PROOF-STATUS.adoc and docs/audit/ for scoped evidence.'
+
+clean:
+    find proofs/agda -type f -name '*.agdai' -delete

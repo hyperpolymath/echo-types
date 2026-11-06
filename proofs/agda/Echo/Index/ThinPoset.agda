@@ -2,37 +2,14 @@
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
--- Echo.Index.ThinPoset — the stable exported interface for the *echo
--- index*: the thin poset/order of retention-vs-degradation that the
--- Echo modality is indexed by.
---
--- This is one of the four curated public-surface modules of the Echo
--- foundation (see `FOUNDATION_CONTRACT.md`). It names, under a stable
--- API, the *index axis* of the residual modality — and ONLY the index
--- axis. It carries:
---
---   * the abstract `ThinPoset` record (carrier `Ix`, order `_≤_`,
---     reflexivity, transitivity, and *thinness* — propositionality of
---     order proofs) that downstream languages (e.g. my-lang)
---     instantiate;
---
---   * the canonical concrete instance `grade-thinPoset` over the
---     three-point loss order `keep ≤ residue ≤ forget`, re-exported
---     verbatim from the proven `EchoGraded` module so there is a
---     SINGLE source of truth for the order — the same order that
---     `Echo.Modality.Core.degrade` acts over.
---
--- VOCABULARY (see `FOUNDATION_CONTRACT.md`). The inhabitants of `Ix`
--- are *echo indices*, NOT *resource grades*. An echo index lives on
--- the thin-poset retention axis of the Echo modality; a resource
--- grade lives on the semiring/resource-algebra axis. They are
--- orthogonal. This module touches only the echo-index axis.
---
--- MEASURE-INDEPENDENCE INVARIANT. This module imports NO semiring /
--- resource-algebra machinery (it imports `EchoGraded`, whose own cone
--- is stdlib-only). The echo index is defined without reference to any
--- residue *measure*; measures are a downstream observation seam
--- (`Echo.Measure.Interface`), never part of the index.
+-- Public echo-index interface. The legacy name ThinPoset is retained for
+-- compatibility; its fields express a thin preorder, without antisymmetry.
+-- EchoThinPreorderExample exhibits distinct mutually reachable indices.
+-- Thinness proves independence from the choice of arrows. Ordinary action
+-- composition only requires chosen composition and its functor law.
+-- Echo indices describe retention/degradation, independently of resource
+-- measures and semiring grades. The concrete grade-thinPoset is exported
+-- below; Echo.Modality.Core supplies the modality action.
 
 module Echo.Index.ThinPoset where
 
@@ -40,18 +17,8 @@ open import Level using (Level; suc; _⊔_; 0ℓ)
 open import Relation.Binary.PropositionalEquality using (_≡_; refl)
 
 ----------------------------------------------------------------------
--- The abstract echo-index interface.
---
--- A `ThinPoset` is a poset whose order is *thin* (a.k.a.
--- propositional / a preorder that is moreover a poset-of-truth-
--- values on each hom): any two proofs of `i ≤ j` are equal. Thinness
--- is the load-bearing hypothesis behind `degrade-compose`
--- (path-independence of degradation); the separating model in
--- `Echo.Separation.NotResourceInstance` shows that dropping thinness
--- breaks composition, so the field is not cosmetic.
---
--- Downstream consumers instantiate this record at their own index
--- type. The canonical inhabitant `grade-thinPoset` is provided below.
+-- Legacy interface for a thin preorder: reflexive, transitive, and with
+-- proposition-valued homs. No antisymmetry or object equality is asserted.
 ----------------------------------------------------------------------
 
 record ThinPoset (ℓi ℓr : Level) : Set (suc (ℓi ⊔ ℓr)) where
