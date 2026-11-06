@@ -225,6 +225,13 @@ The pinned metadata validator passed native DEED grammar/registry checks and
 all eight K9 files at layer `all`. Embedded probes were not executed.
 These metadata results do not settle the upstream reader issues in #361.
 
+The current upstream structural reader also requires a governance discovery
+path under `docs/`, `0-canon/` or `.github/`; its row does not include the
+existing root `GOVERNANCE.adoc`. `.github/GOVERNANCE.md` now points to that
+existing policy, avoiding a case collision with historical `docs/governance.adoc`.
+This follows the existing maintainer-discovery pattern and
+corrects a missing discovery entry, not an absence of project governance.
+
 The inventory now contains 160 Agda files, 157 after excluding the same three
 ordinal files. The union of the seven established CI root closures covers
 140 in-scope files; the same 17 remain outside that union. All five new
