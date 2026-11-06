@@ -37,6 +37,21 @@
     (source :name "standards" :revision "ba640e9a57f22608710ffecdca282074eac55a0b")
     (source :name "rsr-template-repo" :revision "acdc0ebd1d69f3f70995f4eec078e342078dd885")
     (source :name "gv-clade-index" :revision "2cfabd15d6cb966ed369ee13aa7174b960f45abd"))
+  (ei-2
+    :record-version 1
+    :status closed-negatively
+    :route path-b
+    :closed "2026-04-29"
+    :data-points 7
+    :authoritative-report "docs/EI2_REPORT.adoc"
+    :superseded-readings "docs/EI2_READINGS_COMPARISON.adoc"
+    :historical-record-source "39a7a99cbe19a918843e9624010510b5fc3b8366:.machine_readable/6a2/STATE.a2ml"
+    :historical-trust-source "3ce822e91c56b9096f351d6582442ded22614bfd:contractiles/Trustfile.a2ml#ei-2-record-intact"
+    :historical-closing-rationale "The retired STATE record said the full 2D iff theorem was not formalisable in safe Agda without postulates."
+    :current-qualification "The report does not prove that every safe formulation is impossible; the generic iff remains unproved."
+    :audit-contradiction "The report cites a 2-cell distinctness argument, but the current claims audit records that the cited Sophisticated modules do not exist and that half is unmechanised."
+    :audit-source "docs/CLAIMS_AUDIT.adoc"
+    :do-not-reopen #t)
   (validation :metadata-command "bash tools/check-metadata.sh" :proof-command "just test"
     :guard-command "just guard" :status declared
     :note "No assurance grade, signature or certification is asserted."))

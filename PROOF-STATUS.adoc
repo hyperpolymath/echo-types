@@ -249,3 +249,36 @@ This does not broaden what the test proves.
 * The EI-2 integration-recipe-distinctness investigation is *terminated
   negatively* and must not be reopened (see `docs/EI2_REPORT.adoc`);
   the narrower adjacency questions above are separate.
+
+== 2026-11-06 toolchain and warning receipt
+
+This dated update supersedes the earlier current-status wording about unpinned
+CI and undispatched narrowing. PR #360 introduces the checksum-pinned official
+Agda 2.7.0.1 binary and separate core, cold, experimental, narrowing and Cubical
+jobs. Local setup verifies stdlib commit
+`8326c7475af1fa456ca04a0203c168d5d7ff842b` (v2.3) and absolute-zero commit
+`f486c29903434589117fa0662c6f29b0f17d1d5f`. The main-branch release status must
+be read from link:docs/audit/2026-11-06-repository-readiness.adoc[the readiness ledger];
+a draft PR and local checks do not mean every remote job has passed.
+
+Fresh warning counts under these exact dependencies are measured below.
+A count is the number of emitted `warning: -W[no]UnsupportedIndexedMatch`
+diagnostics, with the immediately preceding `.agda` location used to identify
+stdlib origins. Warnings may be replayed through imports; these are log-message
+counts, not distinct defects or a comparable score across different root/cache
+profiles. No warning-suppression flag was used.
+
+[cols="3,1,1,3",options="header"]
+|===
+|Receipt |All emitted |Stdlib emitted |Scope
+|`AuditSmoke-cold.log` |1264 |1167 |Fresh `--ignore-interfaces` AuditSmoke closure
+|`All-final.log` |888 |771 |Final local All check with existing interfaces
+|`container-build.log` |1935 |1522 |Fresh container All closure, ordinary safe profile
+|===
+
+The exact reproduction commands, source identities, ordinary/Cubical boundary,
+new ordered-erasure warning limitations and independent proof-lane negative
+controls are recorded in link:docs/audit/2026-11-06-evidence.adoc[the proof ledger]
+and the readiness ledger. Raw local receipts and `warning-counts.json` remain
+under ignored `build/audit-2026-11-06/`. The older November 1 measurements retain
+their original date and candidate toolchain; they are not silently relabeled.

@@ -29,6 +29,19 @@ if [ "$actual_version" != "Agda version $AGDA_VERSION" ]; then
   exit 1
 fi
 
+# Agda 2.7.0.1 can panic in Signature.hs when its first primitive-interface
+# build is in full-Cubical mode. Bootstrap the compiler's own Primitive
+# interface in the standard safe profile first. Only this generated cache
+# file is discarded; the release sources and proof profiles are unchanged.
+rm -f "$Agda_datadir/lib/prim/_build/$AGDA_VERSION/agda/Agda/Primitive.agdai"
+cat > "$tool_dir/AgdaToolchainBootstrap.agda" <<'AGDA'
+{-# OPTIONS --safe --without-K --cubical-compatible #-}
+module AgdaToolchainBootstrap where
+open import Agda.Primitive using (Level)
+AGDA
+"$agda_root/bin/agda" --no-libraries --safe --without-K --cubical-compatible \
+  -i "$tool_dir" "$tool_dir/AgdaToolchainBootstrap.agda"
+
 fetch_pinned() {
   local url="$2" revision="$3" destination="$tool_dir/$1" actual
   if [ ! -d "$destination/.git" ]; then

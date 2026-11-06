@@ -34,6 +34,13 @@ K9!
   declaration = {
     verifications = [
       {
+        id = "ei-2-record-intact",
+        description = "Preserve the EI-2 negative PATH-B record, its superseded readings, and the documented historical/audit qualifications.",
+        probe = "bash tools/check-metadata.sh",
+        status = 'declared,
+        notes = "Migrates the repository-specific pre-estate Trustfile check without restoring A2ML or promoting its stronger historical claims into current proof results."
+      },
+      {
         id = "assumption-boundary",
         description = "Full-Cubical and postulated roots stay separate from the ordinary aggregate.",
         probe = "just guard",

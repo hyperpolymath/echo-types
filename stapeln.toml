@@ -1,8 +1,9 @@
 # SPDX-License-Identifier: MPL-2.0
 # SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 # The Containerfile is the single build definition; no parallel unpinned layers.
-# Podman builds are verified separately. This file declares launcher preferences,
-# not evidence of a stapeln/vordr/svalinn run or of a signed published image.
+# This records declarative build/security preferences matching the upstream
+# example. Podman + Containerfile is the executed build path; these declarations
+# are not evidence of a stapeln/vordr/svalinn run or a signed published image.
 [metadata]
 name = "echo-types"
 version = "0.1.0-alpha"

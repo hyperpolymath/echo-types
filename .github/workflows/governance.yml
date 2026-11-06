@@ -38,4 +38,4 @@ jobs:
     # matches the sibling repos' pin (e.g. ochrance-framework). Bump
     # deliberately, never float: an unpinned reusable workflow is an
     # unpinned trust boundary. mirror.yml / scorecard.yml already pin.
-    uses: metadatastician/standards/.github/workflows/governance-reusable.yml@75bd5994470661a099df562d6d5ad2fe744dbd66
+    uses: metadatastician/standards/.github/workflows/governance-reusable.yml@ba640e9a57f22608710ffecdca282074eac55a0b

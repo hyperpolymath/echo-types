@@ -67,4 +67,7 @@ jobs:
       - name: Validate deed and active K9 contracts
         # The metadata checker validates declarations. It does not execute
         # declared probes, install Agda, or rely on an Agda job's status.
+        env:
+          BUN: ${{ runner.temp }}/metadata-bin/bun
+          K9_NICKEL: ${{ runner.temp }}/metadata-bin/nickel
         run: bash tools/check-metadata.sh

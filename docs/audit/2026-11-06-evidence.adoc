@@ -80,11 +80,11 @@ It passed 15 direct/audit targets and the seven existing CI roots. The separate 
   proofs/agda/AuditSmoke.agda
 ----
 
-`tools/check-guardrails.sh proofs/agda` passed with its three existing exemptions. A line-ending-normalized temporary copy of the unchanged guard script was used under WSL. `git diff --check` also passed. The original inventory receipt used `python3 tools/audit-inventory.py` (historical command at that audit step). The current replacement is `bun tools/audit-inventory.mjs`; its equivalence check is being verified separately. Static coverage is explicitly separate from compiler evidence.
+`tools/check-guardrails.sh proofs/agda` passed with its three existing exemptions. A line-ending-normalized temporary copy of the unchanged guard script was used under WSL. `git diff --check` also passed. The original inventory receipt used `python3 tools/audit-inventory.py` (historical command at that audit step). The current replacement is `bun tools/audit-inventory.mjs`; its completed equivalence check reproduces the closure counts and outside-closure list exactly (see the repository-readiness ledger). Static coverage is explicitly separate from compiler evidence.
 
 Local receipts are retained in ignored `build/audit-2026-11-06/`: `results.tsv`, `compiler.txt`, `provenance.txt`, `inventory.json`, `proof-sources.sha256`, `proof-sources-initial.sha256`, `manifest-verification.log`, and individual compiler logs (including `AuditSmoke-cold.log` and `All-final.log`). The original manifest preserves the initial suite/cold-check snapshot; the final manifest includes the two comment corrections. These are local checks, not a new remote CI run.
 
-No commit, push, branch publication, or pull request was made. Existing ordinal source files were not edited; their inherited aggregate imports were treated only as build boundaries.
+At the end of that initial local-only stage, no commit, push, branch publication, or pull request had been made. Subsequent authorized publication is recorded in the repository-readiness ledger. Existing ordinal source files were not edited; their inherited aggregate imports were treated only as build boundaries.
 
 == Governance documentation remediation (2026-11-06)
 
@@ -98,7 +98,7 @@ For #282, `LICENSE` already has a matching MPL-2.0 SPDX header and body; it has 
 
 Contribution links resolve, the archive matches its pre-move SHA256, and `git diff --check` passes. These local checks do not certify OpenSSF status or modify remote repository settings. The older CC-BY-4.0 documentation declaration in README and `LICENSE-docs` differs from many per-file CC-BY-SA-4.0 headers and the estate default; reconciling that existing licence history remains an owner decision, outside this no-relicensing correction.
 
-The current static invocation-profile check is `sh scripts/check-agda-invocations.sh`. Earlier Python invocations in dated receipts describe the previous implementation; they are not current setup instructions. The Bun inventory conversion and shell guard conversion require their own equivalence checks, distinct from the completed Agda source checks above.
+The current static invocation-profile check is `sh scripts/check-agda-invocations.sh`. Earlier Python invocations in dated receipts describe the previous implementation; they are not current setup instructions. The Bun inventory conversion and shell guard conversion passed their separate equivalence and rejection checks; see the repository-readiness ledger. These checks remain distinct from the completed Agda source checks above.
 
 === Prose licence scope — owner decision packet
 

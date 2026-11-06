@@ -21,3 +21,12 @@ sign-off dates remain in these declarations.
 
 Validate grammar and K9 semantics with `bash tools/check-metadata.sh` from the
 repository root. Run the named root recipes separately to discharge obligations.
+
+`ei-2-record-intact` restores the repository-specific pre-estate Trust check.
+Its source is `3ce822e91c56b9096f351d6582442ded22614bfd:contractiles/Trustfile.a2ml`;
+the retired STATE record remains available at revision `39a7a99`.
+The successor `(ei-2)` chora clause preserves the negative PATH-B verdict,
+the older stronger impossibility wording as history, the report's current
+qualification, and the claims audit's missing-module warning. The metadata
+validator requires those records; it does not reopen EI-2 or claim the missing
+generic theorem or cited 2-cell modules have been mechanised.

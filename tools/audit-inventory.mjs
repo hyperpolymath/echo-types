@@ -14,7 +14,7 @@ const excluded = new Set([
 ]);
 const entrypoints = ['All', 'Smoke', 'characteristic/All', 'examples/All',
   'EchoImageFactorizationPropCubical', 'experimental/echo-additive/All', 'NarrowingSmoke'];
-const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8' });
+const git = (...args) => execFileSync('git', ['-C', root, ...args], { encoding: 'utf8', shell: false });
 const paths = text => text.split('\0').filter(Boolean);
 const tracked = new Set(paths(git('ls-files', '-z')));
 const local = new Set([...tracked, ...paths(git('ls-files', '--others', '--exclude-standard', '-z'))]);

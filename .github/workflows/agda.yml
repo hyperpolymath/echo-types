@@ -46,11 +46,11 @@ jobs:
             agdai-${{ runner.os }}-2.7.0.1-stdlib8326c747-abszf486c299-
       - name: Typecheck shipped closure and headlines
         run: |
-          agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
-          agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Smoke.agda
-          agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/AuditSmoke.agda
-          agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/characteristic/All.agda
-          agda --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/examples/All.agda
+          agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
+          agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Smoke.agda
+          agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/AuditSmoke.agda
+          agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/characteristic/All.agda
+          agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/examples/All.agda
 
   cold-check:
     # A separate runner and no restored interfaces: cached success never
@@ -66,11 +66,11 @@ jobs:
         run: bash scripts/setup-agda.sh
       - name: Cold typecheck shipped closure and headlines
         run: |
-          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
-          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Smoke.agda
-          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/AuditSmoke.agda
-          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/characteristic/All.agda
-          agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/examples/All.agda
+          agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda
+          agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/Smoke.agda
+          agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/AuditSmoke.agda
+          agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/characteristic/All.agda
+          agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/examples/All.agda
 
   experimental:
     name: Experimental echo-additive
@@ -86,7 +86,7 @@ jobs:
       - name: Check experimental aggregate coverage
         run: bash scripts/check-experimental-aggregate.sh
       - name: Typecheck experimental closure on its own signal
-        run: agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
+        run: agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/experimental/echo-additive/All.agda
 
   narrowing:
     name: Bit-narrowing exhibit
@@ -100,7 +100,7 @@ jobs:
       - name: Install checksum-pinned Agda 2.7.0.1 and pinned libraries
         run: bash scripts/setup-agda.sh
       - name: Typecheck narrowing closure on its own signal
-        run: agda --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/NarrowingSmoke.agda
+        run: agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/NarrowingSmoke.agda
 
   cubical:
     name: Cubical epi/mono profile
@@ -114,4 +114,4 @@ jobs:
       - name: Install checksum-pinned Agda 2.7.0.1 and pinned libraries
         run: bash scripts/setup-agda.sh
       - name: Typecheck isolated full-Cubical profile
-        run: agda --ignore-interfaces --safe --cubical -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
+        run: agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --ignore-interfaces --safe --cubical -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda

@@ -139,9 +139,131 @@ zero open Dependabot alerts and zero open GitHub secret-scanning alerts. This
 snapshot is not a claim about future alerts or scanner completeness. The raw
 alert values/secrets were not copied into this document.
 
-PANIC/PONS scans, semantic DEED/K9 validation, final PR checks and final alert
-reconciliation are pending in this working ledger and must be appended before
-readiness is declared.
+Local scanner and semantic metadata results are recorded below. Final PR checks
+and alert reconciliation remain separate release gates.
+
+== Local integration receipt and first publication
+
+Commit `448613f5743696d60b001c1607279490c91ff1f8` was pushed and draft PR #360
+opened against the recorded baseline. The draft is not a merged release.
+
+* DEED grammar and registered identity validation pass. All eight active K9
+  components pass strict native validation with Nickel 1.18.0, with zero
+  warnings and zero skipped layers; all six paired schemas typecheck. The checker
+  inventories all tracked/unignored active K9 files, including documentation
+  paths. The haplotype specimen is marked inert `.k9.ncl.in`, with its incomplete
+  semantics explicitly documented rather than called a validated contract.
+* Metadata rejection controls pass: missing standards, missing Nickel, a
+  grammar-valid wrong UUID preimage, and an unreviewed active K9 file under
+  `docs/` all fail. The verifier dependencies are checked byte-for-byte against
+  their pinned Git blobs.
+* Experimental and narrowing proof mutants fail specifically on unsolved metas
+  in their respective lanes, while `All.agda` passes. Each mutation was restored
+  in an isolated test copy; workspace proofs were not mutated for these tests.
+  Receipts: `build/audit-2026-11-06/lane-mutants/`.
+* Static invocation checks reject missing without-K, unsafe meta flags and an
+  unsafe `@agda` recipe. Aggregate coverage rejects block-commented, nested-
+  commented and line-commented imports. These close the two static-check gaps
+  reported on PR #359; neither check claims to parse arbitrary shell or prove Agda.
+* A comment-only update points `EchoHaplotypeCollapsing.agda` to the inert
+  specimen. That module was rechecked successfully with the pinned compiler and
+  libraries; its SHA256 is
+  `a1eca6beae258a6367298a28ca35501f5eeaa32d87a85aa4c405cca46d9e7ade`.
+  The other 144 files in the earlier 145-file proof manifest matched byte-for-byte.
+* PANIC 2.5.5 at the recorded source revision scanned 213 candidate files with
+  213 completed stated adapters. Initial findings exposed two unpinned container
+  bases and explicit root execution. The repaired container has no high/critical
+  findings in the follow-up scan. Two medium findings remain classified: the
+  deliberately quarantined postulated module is a real documented assumption;
+  the SVG `http://www.w3.org/2000/svg` namespace is not a network operation.
+  No dynamic stress/attack command was executed. PANIC's obsolete optional A2ML
+  manifest-reader warning is recorded; legacy metadata was not reintroduced.
+* PONS 0.1.0 at the recorded revision scanned two JavaScript files. One new
+  inventory allocation pattern was repaired. Eight remaining heuristic warnings
+  concern constant-size banner loops (four corners, eight stages, at most six
+  edges and seven marks), not unbounded input. The run reported 21 skipped inputs;
+  Agda is outside its native source-analysis coverage. Its JSX parser skipped the
+  prototype, but Bun 1.4.4 parsed/bundled that file successfully with dependencies
+  externalized. This is evidence of a PONS coverage gap, not a browser test.
+* The rootless Podman build completed, typechecking `All.agda` with the same
+  checksum-pinned compiler and revision-pinned libraries. Base image:
+  `cgr.dev/chainguard/wolfi-base@sha256:0efdcacdc6ab6d4f00507f1c0aa35e6bcbd50f838a45fe560e0e3b12056e3181`.
+  Package provisioning occurs in the build administrator context; downloads,
+  proof checking and the runtime carrier use UID 65532. The initial build exposed
+  BusyBox/GNU checksum-option incompatibility, repaired by explicitly installing
+  coreutils. The carrier's shell exists; the old static-image shell entrypoint
+  was not executable. Container checking covers All, not every independent root.
+* `stapeln.toml` now records preferences for that single Containerfile instead of
+  a competing unpinned pipeline and unissued signing/verification claims. Its
+  TOML shape matches the owning example at `metadatastician/stapeln`
+  `33d7e5ee28d8de2170fe8671323c41c8bae221d7`. No executable consumer of these TOML
+  preferences was established; Podman flags are the actual enforcement evidence.
+* Gitbot enrollment names three applicable report adapters and explains six
+  declines. The pinned producer and Hypatia consumer share the same source SHA.
+  Consumer negative controls preserve missing/not-run reports as orange advisory
+  rows. A green aggregate color is not proof that every enrolled reporter ran;
+  the actual adapter results must be inspected.
+
+The new Base ruleset requires pull requests, resolved review threads, signed
+commits and linear history. GitHub rejected the canonical organization's
+integration bypass actors for this user-owned repository (HTTP 422). The
+accepted ruleset has *no bypass actors*, preserving stricter protection.
+Existing secret-scanner protection was retained. Required check names are added
+from actual emitted job results, not invented contexts.
+
+After the allowlist repair, fresh baseline Governance run `42221254568` started
+21 jobs instead of failing at startup. Its historical Python source violation and
+Allowlist Preflight findings are distinct from the new PR's results and must not
+be represented as fixed merely because the workflow now starts.
+
+== First PR run and bounded repairs
+
+The first run at `448613f5743696d60b001c1607279490c91ff1f8` provided new
+evidence rather than an all-green release. Agda run `42222241232` passed its
+cold ordinary, experimental and narrowing lanes. The ordinary cached lane
+failed the separate kernel classification guard: seven new modules needed
+explicit documentation classification. Those entries are now supplied without
+weakening the guard. The full-Cubical lane exposed Agda 2.7.0.1's first-use
+primitive-interface compiler panic (exit 154, `Signature.hs:872`). The setup
+helper now bootstraps the compiler's own primitive interface in the safe,
+without-K, cubical-compatible profile. A fresh full-Cubical check then passed;
+the theorem's full-Cubical flags are unchanged. All lanes explicitly disable
+ambient libraries and supply the pinned library paths.
+
+Metadata run `42222241673` exposed the native validator's requirement for an
+executable Nickel path. The wrapper now resolves PATH names to absolute paths;
+the workflow also supplies its installed paths explicitly. PATH-only positive
+validation and missing-tool rejection pass. EI2's historical negative finding
+is preserved by a restored guard, together with the current report's narrower
+interpretation; six rejection controls cover accidental removal or reopening.
+
+Governance run `42222242037` exposed an older callee's stale allowlist and the
+root-file ratchet. The reusable workflow is advanced to the reviewed standards
+revision recorded above. Four root entries register actual architecture files;
+a ledger-scoped ratchet exception records those additions. No proof guard
+exemption is added. A second scoped exception records Hypatia alert #331's
+reviewed false positive: the inventory uses only fixed read-only Git argument
+arrays with `execFileSync` and `shell: false`. The precise file/rule suppression
+must be reconsidered if those calls change. SMTP containment is separately
+repaired with blocking egress and explicit release-download and configured
+SMTP endpoints; credentialed delivery is not tested because notification is
+not enabled.
+
+The secret scanner and both CodeQL language jobs passed on the first head.
+Gitbot's three actual report envelopes contained rhodibot 13 errors/1 info,
+finishingbot 8 errors/257 warnings/6 info, and glambot 1 warning/133 info.
+These are advisory findings, not security clearance. Many expect retired
+A2ML/SCM metadata or miss Agda proof checks; 129 of 209 reference warnings
+resolve by existing relative/root paths or Agda module basenames. Historical
+and explicitly absent research references are not silently rewritten. The
+envelope `ref` identifies fleet tool revision `34908580...`, not the scanned
+source revision. The producer and consumer source checkouts identify the target.
+
+CodeRabbit comment `6685429337` skipped review because 138 selected files exceed
+its 100-file limit; account usage availability was also reported. No independent
+review or paid usage is inferred. Other installed app registrations without
+completed check runs do not establish app health. GitHub installation inventory
+was unavailable to this credential (HTTP 403).
 
 == Decisions and obligations that setup does not settle
 

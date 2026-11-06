@@ -225,6 +225,44 @@ kernel** — the boundary is real and lives outside this core.
   `proofs/agda/Echo/` (dotted submodules), so they are outside the
   flat `Echo*.agda` glob that Check B lints; recorded here for
   discoverability. Not kernel (the kernel remains exactly `Echo`).
+
+| *Derived — Tier 1 additions (2026-11-06)*
+| `EchoSourcePreserving`, `EchoDependentPushforward`
+| Each imports only `Echo` and stdlib. The former proves the source-preserving
+  identity-fibre criterion and Boolean-negation counterexample. The latter
+  develops dependent pushforward/reindexing with pointwise hom equality,
+  unit/counit triangles, and a composition natural isomorphism; it does not
+  establish full base-indexed coherence. Neither adds global funext or UIP.
+
+| *Derived — external semantic bridge (2026-11-06)*
+| `EchoCNOSemantics`
+| Imports `Echo`, `EchoCNOBridge`, stdlib, and the pinned external `CNO` module.
+  Same-program certification and the source-preserving relation-fibre map
+  criterion use native `state-eq`, not propositional equality of function-valued
+  states. The identity/IsCNO characterization is scoped to that total,
+  zero-energy model; it is not a physical theorem or a FibreIso inverse-law claim.
+
+| *Derived — graded interface and model (2026-11-06)*
+| `EchoGradedComonadNaturality`, `EchoErasingGradedComonad`
+| The companion imports `EchoGradedComonadInterface` and adds pointwise map
+  congruence, counit/comultiplication naturality, and an explicit `grade-isSet`
+  field. It does not derive those obligations for every old instance.
+  The erasing model imports both interfaces, preserves values at grade zero,
+  and erases at positive natural grades. Its grade equality is proof irrelevant
+  by decidable Nat equality; no UIP for arbitrary value types is assumed.
+  Its ordered grade-change laws are separate from Echo's proposed tropical model.
+  The accepted `grade-change-compose` and `grade-change-δ` proofs retain the
+  recorded Cubical transport computation warnings.
+
+| *Derived — independent countermodels (2026-11-06)*
+| `EchoNaturalityIndependence`, `EchoThinPreorderExample`
+| The former is stdlib-only: a one-object category of Boolean endomorphisms
+  with pointwise equality shows naturality is an independent categorical
+  obligation; it is not a polymorphic `GradedComonadStructure` instance.
+  The latter imports `Echo.Index.ThinPoset` and stdlib and exhibits mutual
+  reachability of distinct Boolean objects. It refutes antisymmetry of the
+  legacy interface, not its reflexivity, transitivity, or thin homs.
+
 |===
 
 `EchoOrdinal` is Tier-1 off `Echo` but additionally pulls two

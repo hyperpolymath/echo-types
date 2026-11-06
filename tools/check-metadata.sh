@@ -23,8 +23,17 @@ for source in \
   actual_blob=$(git -C "$standards" hash-object --no-filters "$source")
   [[ $actual_blob == "$expected_blob" ]] || fail "validator source differs from its pin: $source"
 done
-command -v "$bun" >/dev/null || fail "Bun is required (set BUN to its executable)"
-command -v "$nickel" >/dev/null || fail "Nickel is required for semantic K9 validation (set K9_NICKEL)"
+resolve_executable() {
+  local resolved
+  resolved=$(command -v -- "$1") || return 1
+  [[ -f $resolved && -x $resolved ]] || return 1
+  case "$resolved" in
+    /*) printf '%s\n' "$resolved" ;;
+    *) printf '%s/%s\n' "$(cd -- "$(dirname -- "$resolved")" && pwd)" "$(basename -- "$resolved")" ;;
+  esac
+}
+bun=$(resolve_executable "$bun") || fail "Bun is required (set BUN to its executable)"
+nickel=$(resolve_executable "$nickel") || fail "Nickel is required for semantic K9 validation (set K9_NICKEL)"
 
 mapfile -d '' retired < <(find .machine_readable -type f -name '*.a2ml' -print0)
 [[ ${#retired[@]} == 0 ]] || fail "retired .a2ml records remain: ${retired[*]}"
@@ -72,8 +81,29 @@ trap 'rm -rf -- "$tmp"' EXIT
   field(clause("clade"), "primary", "symbol", "fv");
   field(clause("clade"), "primary-name", "string", "Formal Verification & Proofs");
   field(clause("forges"), "github", "string", "hyperpolymath/echo-types");
+  const ei2 = clause("ei-2");
+  field(ei2, "record-version", "integer", "1");
+  field(ei2, "status", "symbol", "closed-negatively");
+  field(ei2, "route", "symbol", "path-b");
+  field(ei2, "closed", "string", "2026-04-29");
+  field(ei2, "data-points", "integer", "7");
+  field(ei2, "authoritative-report", "string", "docs/EI2_REPORT.adoc");
+  field(ei2, "superseded-readings", "string", "docs/EI2_READINGS_COMPARISON.adoc");
+  field(ei2, "historical-record-source", "string", "39a7a99cbe19a918843e9624010510b5fc3b8366:.machine_readable/6a2/STATE.a2ml");
+  field(ei2, "historical-trust-source", "string", "3ce822e91c56b9096f351d6582442ded22614bfd:contractiles/Trustfile.a2ml#ei-2-record-intact");
+  field(ei2, "historical-closing-rationale", "string", "The retired STATE record said the full 2D iff theorem was not formalisable in safe Agda without postulates.");
+  field(ei2, "current-qualification", "string", "The report does not prove that every safe formulation is impossible; the generic iff remains unproved.");
+  field(ei2, "audit-contradiction", "string", "The report cites a 2-cell distinctness argument, but the current claims audit records that the cited Sophisticated modules do not exist and that half is unmechanised.");
+  field(ei2, "audit-source", "string", "docs/CLAIMS_AUDIT.adoc");
+  field(ei2, "do-not-reopen", "boolean", "#t");
   console.log("DEED grammar and recorded registry identity: PASS");
 ' "$tmp/chora.json"
+
+grep -Fq 'EI-2 TERMINATED — negative verdict, via PATH B.' docs/EI2_REPORT.adoc || fail "EI-2 negative verdict record is missing"
+grep -Fq 'not a proof that every safe formulation is impossible.' docs/EI2_REPORT.adoc || fail "EI-2 qualification against a universal impossibility claim is missing"
+grep -Fq '= EI-2 readings comparison — SUPERSEDED' docs/EI2_READINGS_COMPARISON.adoc || fail "EI-2 superseded-readings record is missing"
+grep -Fq 'the 2-cell half of the distinctness claim is unmechanised.' docs/CLAIMS_AUDIT.adoc || fail "EI-2 cited-module audit qualification is missing"
+printf 'EI-2 negative record and historical/audit qualifications: PASS\n'
 
 components=(coordination.k9.ncl .machine_readable/self-validating/examples/project-metadata.k9.ncl)
 for verb in must trust adjust dust bust intend; do
