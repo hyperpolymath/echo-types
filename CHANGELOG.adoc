@@ -7,6 +7,13 @@ Changelog].
 
 === [Unreleased]
 
+==== Changed (2026-11-06)
+
+* Recorded the owner's prospective licence policy: CC-BY-SA-4.0 for new
+original prose documentation, MPL-2.0 for code, and per-file SPDX notices.
+Current policy pointers now agree; historical grants, existing leading notices,
+legal texts and archive bytes remain preserved in the licence inventory.
+
 ==== Removed (2026-10-20)
 
 * _The ordinal lane._ echo-types#349 removed `+proofs/agda/Ordinal/**+`

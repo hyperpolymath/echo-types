@@ -20,7 +20,7 @@
     :not ("a new judgmental type theory" "the extracted ordinal-notation project")
     (related :name "absolute-zero" :relationship proof-dependency :notes "CNO definitions used by the CNO boundary proofs.")
     (related :name "EchoTypes.jl" :relationship executable-companion :notes "Finite-domain executable examples; Agda remains the proof source."))
-  (meta :languages (Agda) :license MPL-2.0 :documentation-license "Per-file notices; see docs/audit/2026-11-06-license-inventory.adoc"
+  (meta :languages (Agda) :license MPL-2.0 :documentation-license "CC-BY-SA-4.0 for new original prose from 2026-11-06; per-file notices and historical grants retained; see docs/audit/2026-11-06-license-inventory.adoc"
     :author "Jonathan D.A. Jewell" :build-tool just
     :proof-policy "https://github.com/metadatastician/standards/blob/ba640e9a57f22608710ffecdca282074eac55a0b/3-practice/PROOF-POLICY.adoc")
   (agentic
