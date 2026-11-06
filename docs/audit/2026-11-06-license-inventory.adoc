@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= Prose licence inventory and bounded decision — 2026-11-06
+= Prose licence inventory and owner decision — 2026-11-06
 :toc: macro
 
 == Scope
 
-This is an evidence inventory of the current local notices relevant to the README/prose conflict and CLAUDE's nine-file ruling. It is not a repository-wide rights audit or legal assurance. The source baseline is `cd85288dcce55191ad477c0fa7d1d2421514a0d3`, with the current uncommitted documentation corrections. No existing licence text or licence identifier is changed by this inventory.
+This evidence inventory records the notices relevant to the README/prose conflict and CLAUDE's nine-file ruling, followed by the owner's prospective policy decision. It is not a repository-wide rights audit or legal assurance. The inventory was assembled from baseline `cd85288dcce55191ad477c0fa7d1d2421514a0d3` and the documentation corrections published in `007d749ec02b3836b45a2183ebbbaf72935c9d91`. The observations below describe that audit snapshot, before the owner response. No existing licence text or leading licence identifier is changed by this policy record.
 
-== Current notices and supporting texts
+== Audit-snapshot notices and supporting texts
 
 [cols="2,3,3",options="header"]
 |===
@@ -89,7 +89,7 @@ Seven mapped files have explicit ShareAlike headers; `FOUNDATION_CONTRACT.adoc` 
 
 Commit authorship and copyright labels establish observable provenance; they do not establish complete ownership of every historical contribution or resolve the effect of earlier notices. No inference of relicensing authority is made here.
 
-== What the pending choice changes
+== Decision packet presented before the owner response
 
 [cols="2,3,3",options="header"]
 |===
@@ -104,6 +104,49 @@ Commit authorship and copyright labels establish observable provenance; they do 
 | Specify how existing files and future edits are treated, and which notices are to be reconciled. This choice alone does not authorize a blanket rewrite of existing licences.
 |===
 
-While the choice is pending, keep current legal texts and existing identifiers unchanged, preserve archive bytes and historical records, and report the ambiguity explicitly. Any later metadata or notice correction should cite the chosen scope and the specific files it affects.
+The audit held existing legal texts, leading identifiers and archive bytes unchanged while this choice was pending. The response below resolves the prospective default; the packet remains as the record of what was asked.
 
-The coordinating link:2026-11-06-repository-readiness.adoc[repository-readiness log] records the pending owner decision and any subsequently authorized notice changes.
+== Owner decision — 2026-11-06
+
+The owner answered the question about future documentation policy with
+`cc-by-sa-4.0 for docs and mpl-2.0 for code`, and requested per-file notices.
+The selected identifiers are `CC-BY-SA-4.0` and `MPL-2.0`.
+
+* New original prose documentation uses `CC-BY-SA-4.0`.
+* New original code, configuration and scripts use `MPL-2.0`.
+* Each new file carries the appropriate `SPDX-License-Identifier` and accurate
+  `SPDX-FileCopyrightText`, in the format's comment syntax. A neighbouring
+  `<filename>.license` sidecar serves formats that cannot contain comments.
+* Edits to existing files retain their recorded notices and third-party
+  attribution. A change to an existing file's licence requires a separately
+  scoped record of authority and affected paths. This answer to a prospective
+  policy question does not authorize an automatic rewrite of historical files.
+* `LICENSE-docs`, other legal texts, the nine-file ruling, existing leading
+  SPDX notices and the archived audit bytes are retained. The two missing
+  declarations identified above remain explicit reconciliation work.
+
+The current-policy pointers in README, CONTRIBUTING and the chora deed now
+state this decision. README's former blanket CC-BY-4.0 sentence is replaced
+with the prospective default and a reference to this historical inventory;
+its existing MPL-2.0 header is unchanged. The audit evidence and
+link:2026-11-06-repository-readiness.adoc[repository-readiness log] record that
+the owner response has arrived. This is a policy and documentation correction,
+not a claim that every existing file has been relicensed or audited.
+
+=== Retained scope for existing prose without a file-specific notice
+
+The owner response preserves the existing grants. README at
+`007d749ec02b3836b45a2183ebbbaf72935c9d91` declares CC-BY-4.0 for prose in
+`docs/`, README and roadmap files. Replacing its blanket sentence with a
+prospective default does not withdraw that recorded scope from existing prose
+where no conflicting file-specific notice or recorded owner decision applies.
+Conflicting cases remain in the inventory above rather than being assigned a
+new licence by this rule.
+
+Specifically, link:../build.adoc[docs/build.adoc] exists at that baseline without
+a file-specific licence notice and falls within its `docs/` declaration.
+Its recorded licence remains CC-BY-4.0, supported by `LICENSE-docs`; the new
+CC-BY-SA-4.0 default does not silently apply to this existing file. No header
+or sidecar is added to it by this change. Missing SPDX metadata and an absent
+licence grant are different questions; the former still needs a scoped notice
+reconciliation if a per-file record is later added.

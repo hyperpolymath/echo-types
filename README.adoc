@@ -279,9 +279,24 @@ Use the author and repository metadata in link:CITATION.cff[CITATION.cff]. No ve
 
 == License
 
-SPDX-License-Identifier: MPL-2.0 — see link:LICENSE[LICENSE].
+The owner's 2026-11-06 policy for new original files is *MPL-2.0 for code*
+(including configuration and scripts; see link:LICENSE[LICENSE]) and
+*CC-BY-SA-4.0 for prose documentation*
+(see link:LICENSES/CC-BY-SA-4.0.txt[the ShareAlike licence text]).
+Use per-file SPDX notices as described in link:CONTRIBUTING.md[the contribution guide].
 
-Prose documentation in `docs/`, `README.adoc`, and roadmap files is licensed under CC-BY-4.0; see `LICENSE-docs`.
+Existing file-specific notices, including this README's MPL-2.0 header,
+and third-party attribution remain recorded. The earlier CC-BY-4.0 text in
+link:LICENSE-docs[LICENSE-docs] is retained for the historical grants;
+it is not the default for new documentation. The earlier blanket declaration
+for existing prose in `docs/` and roadmap files is retained where no conflicting
+file-specific notice or recorded owner decision applies. In particular,
+link:docs/build.adoc[docs/build.adoc] has no file-specific notice and retains
+the recorded CC-BY-4.0 scope; this prospective policy does not relicense it.
+See the
+link:docs/audit/2026-11-06-license-inventory.adoc[licence inventory and owner decision]
+for the prior declarations and the scope of this prospective policy.
+
 The claim is established only if all three are met:
 
 . **Distinct phenomenon** — structured loss under non-injective computation.

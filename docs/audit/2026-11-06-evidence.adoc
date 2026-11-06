@@ -106,7 +106,17 @@ The current static invocation-profile check is `sh scripts/check-agda-invocation
 
 The bounded decision is the intended licence scope per path: either document the existing split and resolve README's conflicting notices explicitly, or authorize a broader prose-policy reconciliation after checking its scope and provenance. The estate's current ShareAlike default alone does not establish which project-specific historical notices should be rewritten. Preserve the existing licence texts and prior notices until that owner decision. The successful code-LICENSE consistency gate does not resolve this prose question.
 
-The bounded link:2026-11-06-license-inventory.adoc[licence inventory] records the actual current notices, nine-path ruling, later owner commits, missing declarations, and the pending per-file versus prospective-ShareAlike choice. It is evidence rather than legal assurance.
+The bounded link:2026-11-06-license-inventory.adoc[licence inventory] records the audit-snapshot notices, nine-path ruling, later owner commits, missing declarations, and the decision packet. It is evidence rather than legal assurance.
+
+=== Owner response received — 2026-11-06
+
+After the audit publication, the owner selected `CC-BY-SA-4.0` for future
+documentation and `MPL-2.0` for code, with per-file notices. The licence inventory
+now records this prospective policy, and README, CONTRIBUTING and the chora deed
+state it. The earlier decision packet above is retained as dated provenance.
+Existing leading identifiers, licence texts, third-party attribution and archived
+bytes are preserved; missing or conflicting historical notices remain separately
+scoped reconciliation work.
 
 === Authorization and receipt-delivery update (2026-11-06)
 

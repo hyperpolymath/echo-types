@@ -28,6 +28,12 @@ Keep theorem compatibility names stable where practical, and update affected imp
 
 Use descriptive Conventional Commit messages and include the Developer Certificate of Origin sign-off (`git commit -s`). Follow the estate [signed-commit policy](https://github.com/hyperpolymath/standards/blob/ba640e9a57f22608710ffecdca282074eac55a0b/docs/SIGNING-POLICY.adoc). A DCO sign-off and a cryptographic signature serve different purposes.
 
-Describe what changed, why, and the exact checks performed in the pull request. Kernel, bridge, aggregate, and guard changes need explicit maintainer review. Preserve existing licence notices and third-party attribution; licence changes require an owner decision.
+Describe what changed, why, and the exact checks performed in the pull request. Kernel, bridge, aggregate, and guard changes need explicit maintainer review.
+
+## Per-file licensing
+
+The owner's November 6, 2026 policy for new original files is **CC-BY-SA-4.0 for prose documentation** and **MPL-2.0 for code, configuration and scripts**. Put the appropriate `SPDX-License-Identifier` and an accurate `SPDX-FileCopyrightText` in each file using its comment syntax. For formats that cannot contain comments, use a neighbouring `<filename>.license` sidecar. Choose the notice by the file's content, not merely its directory.
+
+For edits to existing files, preserve their recorded notices and third-party attribution. A missing file-specific notice does not erase a recorded directory-level grant: for example, `docs/build.adoc` retains the earlier CC-BY-4.0 scope described in README. The prospective default does not silently replace an existing file's licence; any scoped notice correction or relicensing needs its own recorded authority and affected paths. Historical grants and archived provenance remain documented in the [licence inventory and owner decision](docs/audit/2026-11-06-license-inventory.adoc).
 
 This root guide is the current contribution entrypoint. `.github/CONTRIBUTING.md` points here; use the live foundation document for proof profiles and trust exceptions.

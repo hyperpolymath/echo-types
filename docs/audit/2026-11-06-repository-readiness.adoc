@@ -364,9 +364,11 @@ claiming a new reconciler, is what updates the stale alerts.
 
 == Decisions and obligations that setup does not settle
 
-* Prose licensing: historical owner decisions use both CC-BY-4.0 and
-  CC-BY-SA-4.0. See link:2026-11-06-license-inventory.adoc[the evidence inventory].
-  Repository-wide relicensing is not inferred from a generic compliance request.
+* Prose licensing: the owner's subsequent 2026-11-06 response selects
+  CC-BY-SA-4.0 for new original documentation and MPL-2.0 for code, with per-file
+  SPDX notices. See link:2026-11-06-license-inventory.adoc[the decision and inventory].
+  Historical grants and existing notices remain recorded; the prospective
+  choice does not settle every existing file's missing or conflicting notice.
 * OpenSSF Best Practices registration, independent human code review and
   published research/DOI validation are not fabricated to clear a score.
 * Entropy infrastructure, cross-repository language mirrors, external bridge
