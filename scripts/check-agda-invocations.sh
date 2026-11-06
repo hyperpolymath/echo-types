@@ -4,7 +4,9 @@
 # Static lint for direct, single-line agda commands; not a shell parser/typecheck.
 set -eu
 if [ "$#" -eq 0 ]; then
-  set -- .github/workflows/agda.yml scripts/check-grade3.sh scripts/verify.sh Justfile
+  # verify.sh delegates to tools/check-audit.sh. That runner constructs argv
+  # arrays and is verified by execution, not this direct-command-only lint.
+  set -- .github/workflows/agda.yml scripts/check-grade3.sh Justfile
 fi
 for file do
   test -r "$file" || { printf '%s: unreadable input\n' "$file" >&2; exit 1; }
