@@ -14,6 +14,14 @@
 ====
 
 [.lead]
+The link:docs/audit/2026-11-06-research-cycle.adoc[2026-11-06 research cycle]
+completes the bounded F1/F2 packets and advances finite recovery,
+sequential consumption and compositional measurement. Its prioritized
+follow-ups distinguish mathematical decisions, proof work and repository
+readers. F3/F4/F5, runtime refinement and full tropical coherence remain open.
+The seven forge mirrors remain dormant by owner choice.
+
+[.lead]
 Single canonical roadmap for the echo-types project. As of 2026-05-26
 this file replaces the previously fragmented set of overlapping
 roadmaps (`docs/echo-types/roadmap.md`, `docs/PRIORITIZED_PROOF_ROADMAP.md`,

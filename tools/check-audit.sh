@@ -30,6 +30,8 @@ check() {
   fi
 }
 for module in EchoSourcePreserving EchoCNOSemantics EchoDependentPushforward \
+              EchoSourcePreservingComparison EchoCNOPackaging EchoFiniteResidue \
+              EchoResidueProtocol Echo/Measure/Composition \
               EchoErasingGradedComonad EchoNaturalityIndependence \
               EchoThinPreorderExample EchoGradedComonadNaturality \
               EchoGradedComonadF1 EchoGradedComonadInstance1 EchoGradedComonadInstance2 \

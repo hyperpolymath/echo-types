@@ -18,3 +18,8 @@ import EchoSeparating
 import EchoCharacteristic
 import EchoResidue
 import EchoNoSectionGeneric
+import EchoSourcePreservingComparison
+import EchoCNOPackaging
+import EchoFiniteResidue
+import EchoResidueProtocol
+import Echo.Measure.Composition

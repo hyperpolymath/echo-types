@@ -1319,3 +1319,21 @@ open import Echo.Measure.Examples using
   ; confidence-measure
   )
 
+-- Bounded foundation and bridge contracts, November 2026.
+open import EchoSourcePreservingComparison using
+  ( SourcePreservingFibreMap; FibreComparisonIso
+  ; pointwise-fibre-map; source-map-pointwise; pointwise-fibre-iso )
+open import EchoCNOPackaging using
+  ( LogicalEquivalence; native-null-iff-cno; native-null-iff-certified
+  ; native-null-iff-source-map; native-null-compose; source-map-compose )
+open import EchoFiniteResidue using
+  ( ExactRecovery; recovery-separates; recovery-forbids-residue-collision
+  ; finite-fibre-bound; constant-recovery; constant-bound; no-one-symbol-for-two )
+open import EchoResidueProtocol using
+  ( Event; Step; Trace; reversal-count; spent-trace-zero; trace-at-most-one
+  ; reversing-step-agrees; one-reversal-trace; no-two-reversal-trace )
+open import Echo.Measure.Composition using
+  ( CompositionalMeasure; list-length-measure; length-cost-cannot-recover
+  ; constant-one-monotone; constant-one-not-additive-unit
+  ; constant-one-not-homomorphism )
+
