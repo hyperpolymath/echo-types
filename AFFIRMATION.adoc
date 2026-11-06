@@ -10,6 +10,23 @@
 *Foundation scope correction, 2026-11-06.* The current contract is link:docs/echo-types/what-echo-is.adoc[the standard dependent fibre and its scoped interfaces]. Earlier “modality” means a preorder-indexed diagram, and historical “no-section” negatives mean no left inverse. The parallel-arrow example refutes arbitrary-arrow independence, not chosen-composite functoriality. Fibre-composition inverses do not establish a tropical graded monad; erasure obstructions do not ban every graded comonad. Selected lossy-encoding examples do not separate Echo from general Σ-types, and novelty/priority remain unresolved. Build counts and green receipts below are dated records, not certification of local edits; see link:docs/audit/2026-11-06-evidence.adoc[the audit evidence]. These qualifications supersede broader formulations below.
 ====
 
+[NOTE]
+====
+*Wiring update, 2026-11-06.* The June 19 snapshot below is retained, including
+its historical “proved-but-unwired” and two-job descriptions. The current
+workflow has an independently named `Experimental echo-additive` job checking
+`proofs/agda/experimental/echo-additive/All.agda`, separate from the shipped
+`All.agda` closure. At repair head `f413ea14012a6d2ea428a3746070e4b92678df1f`,
+https://github.com/hyperpolymath/echo-types/actions/runs/42226213296[Agda run 42226213296]
+passed that job and the separate core, cold, narrowing and Cubical jobs.
+The isolated experimental and narrowing mutants fail on unsolved metas while
+`All.agda` passes; the restored-source controls and local-only receipt paths
+are summarized in link:docs/audit/2026-11-06-repository-readiness.adoc[the readiness ledger].
+This supersedes the snapshot's wiring status, not its dated verdicts or the
+mathematical qualifications above. It is a repair-head receipt, not a claim
+that every later head or main deployment has passed.
+====
+
 _the No-Bullshit file: what we affirm was true and checkable at this moment_
 
 [NOTE]

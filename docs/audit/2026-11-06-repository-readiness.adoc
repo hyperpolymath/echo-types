@@ -336,6 +336,21 @@ and proof runner as `just verify`, without requiring just. Its legacy unsafe
 checker delegates to the existing comment-aware, explicitly scoped guardrails;
 the three established profile/quarantine exemptions are unchanged. It no
 longer rejects the documented quarantined module via an indiscriminate grep.
+An end-to-end run at `ddb08ee4278924bdf91ebedb2539a1407d4e5723` passed all
+four guards and 22 proof roots. The direct-command linter is explicitly scoped
+to direct commands; the runner's constructed argument arrays are checked by
+execution. An unsafe direct-invocation control still fails. The exact 156-file
+source manifest matched workspace and checked snapshot, SHA256
+`e48db7890e240693a89d9ac71a12cb31ae970722be9e942f326eb252f939bde8`.
+
+The final local PANIC run covers 214 candidates with the same two classified
+medium findings and no high/critical findings. PONS still has two supported
+JavaScript files and eight bounded banner warnings, with 22 skipped inputs after
+the Pages helper was added. The final proof carrier builds and runs read-only
+as UID 65532; image ID
+`8483033394f4cb91209902222fa9fc46e221a32f2d1fdba3b720777c3e3e26a8`.
+Generated Pages HTML has not been analyzed by the fleet accessibility adapter;
+its explicit enrollment decline now records that coverage boundary.
 
 Metadata controls additionally reject a missing capability profile, duplicated
 capability, incorrect capability and duplicate capability field. Each failed

@@ -131,9 +131,16 @@ later by the WIRED `+EchoVariance.agda+`* (#243, 2026-06-20 — in
 obstruction; sharpens `+R-2026-05-18+` from "`graded comonad withdrawn`"
 to "`decided against`"). Cite the WIRED `+EchoVariance+` for the
 verdict; the `+experimental/echo-additive/+` track is the earlier
-attempt, still outside the shipped closure. The current workflow invokes
-its own aggregate in both Agda jobs; it is not a separately named job.
-See `+PROOF-STATUS.adoc+` for the current coverage and verification limits. See
+attempt, still outside the shipped closure. The current workflow checks
+its aggregate in the separately named `Experimental echo-additive` job, outside
+the shipped `All.agda` closure. That job passed at repair head
+`f413ea14012a6d2ea428a3746070e4b92678df1f` in
+https://github.com/hyperpolymath/echo-types/actions/runs/42226213296[Agda run 42226213296].
+Local isolated experimental and narrowing mutants fail on unsolved metas while
+`All.agda` passes, as summarized in
+link:audit/2026-11-06-repository-readiness.adoc[the readiness ledger].
+This November 6 wiring update does not reinstate the historical mathematical
+claims in the paragraph above. See `+PROOF-STATUS.adoc+` for coverage limits. See
 `+docs/echo-types/variance-resolution.adoc+`. Build on the wired
 `+Echo+` / `+EchoResidue+`, `+EchoVariance+`, `+EchoGradedComonad+`
 (coassoc/counit), the composition isos, and `+DyadicEchoBridge+`.

@@ -244,8 +244,10 @@ This does not broaden what the test proves.
 * `Smoke.agda` pins selected headline theorems; it is not a coverage
   guarantee for every module. The main `All.agda` closure is distinct
   from the separately invoked cubical and experimental roots. The
-  working-tree narrowing root is pending its first CI check; see the CI
-  coverage audit above. Unwired modules must not be treated as checked.
+  narrowing root now has its own `Bit-narrowing exhibit` job, which passed
+  at repair head `f413ea14012a6d2ea428a3746070e4b92678df1f` in Agda run
+  `42226213296`; see the dated November 6 update and readiness ledger below.
+  Unwired modules must not be treated as checked.
 * The EI-2 integration-recipe-distinctness investigation is *terminated
   negatively* and must not be reopened (see `docs/EI2_REPORT.adoc`);
   the narrower adjacency questions above are separate.
