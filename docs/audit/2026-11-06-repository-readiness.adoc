@@ -366,7 +366,7 @@ bun tools/audit-inventory.mjs
 sh scripts/check-agda-invocations.sh
 sh scripts/kernel-guard.sh
 bash tools/check-guardrails.sh proofs/agda
-sh scripts/check-experimental-aggregate.sh
+bash scripts/check-experimental-aggregate.sh
 bash scripts/setup-agda.sh
 # Source the env.sh path reported by setup before local proof checks.
 bash tools/check-audit.sh

@@ -24,7 +24,7 @@ verify: guard test
 guard:
     sh scripts/kernel-guard.sh
     bash tools/check-guardrails.sh proofs/agda
-    sh scripts/check-experimental-aggregate.sh
+    bash scripts/check-experimental-aggregate.sh
     sh scripts/check-agda-invocations.sh
 
 kernel-guard:

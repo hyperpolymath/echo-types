@@ -8,6 +8,6 @@ cd "$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)"
 # Source the environment from scripts/setup-agda.sh before running this.
 sh scripts/kernel-guard.sh
 bash tools/check-guardrails.sh proofs/agda
-sh scripts/check-experimental-aggregate.sh
+bash scripts/check-experimental-aggregate.sh
 sh scripts/check-agda-invocations.sh
 exec bash tools/check-audit.sh
