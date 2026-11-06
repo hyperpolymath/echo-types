@@ -272,7 +272,7 @@ is not echo-specific.
 === Q2.3 — RoleGraded as nominee N5
 
 `characteristic.RoleGraded.choreo-grade-commute` is flagged as a
-candidate fifth nominee in `gate-2-characteristic.adoc` but not
+candidate fifth nominee in link:characteristic.adoc[characteristic.adoc] but not
 adopted. Should it be?
 
 Status::
@@ -297,7 +297,7 @@ adopting underweights it relative to the per-axis nominees.
 === Q2.4 — Falsifier attempts for surviving nominees
 
 Each of the four surviving Gate 2 nominees has at least one
-unattempted concrete falsifier (`gate-2-characteristic.adoc` §11
+unattempted concrete falsifier (link:characteristic.adoc[characteristic.adoc] §11
 honest qualifications #3). The pass is conditional on those
 falsifiers being attempted and not succeeding.
 

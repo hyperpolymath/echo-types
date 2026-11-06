@@ -36,6 +36,16 @@ parallel-instance lane discipline used to produce it. Rename or symlink
 at integration time.
 ====
 
+[NOTE]
+====
+*Navigation correction, 2026-11-06.* The integration note above is retained
+from Revision 4. Commit `8670ae9` (2026-04-29, “gate-2: characteristic theorem
+family audit, revision 4”) added the document at `docs/characteristic.adoc`.
+The parallel-instance name `docs/gate-2-characteristic.adoc` has no path history
+in the available Git refs. Use `docs/characteristic.adoc` for current navigation;
+this correction changes no historical nominee, theorem, or audit verdict.
+====
+
 == Historical inherited spec (2026-05 audit)
 
 For the sceptic-facing evidence map ("is this just renamed Σ?",

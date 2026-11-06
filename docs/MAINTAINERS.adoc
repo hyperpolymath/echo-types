@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+= Maintainer record
+
+The canonical link:../MAINTAINERS[MAINTAINERS] file lists maintainer roles,
+responsibilities and participation expectations. Consult
+link:../GOVERNANCE.adoc[GOVERNANCE.adoc] for the decision process.
+
+This navigation page does not change those records or their existing licence terms.

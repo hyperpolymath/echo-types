@@ -153,7 +153,7 @@ does not count.
 [NOTE]
 ====
 This table was amended on the basis of the audit in
-`docs/gate-2-characteristic.adoc`. The previous nominees —
+link:docs/characteristic.adoc[docs/characteristic.adoc]. The previous nominees —
 `EchoCharacteristic.visible-constraint`, the same `EchoGraded` lemma
 (then named only descriptively as "compositional degradation law"),
 and `EchoIntegration.knowledge-and-controlled-degradation` — were

@@ -265,6 +265,88 @@ review or paid usage is inferred. Other installed app registrations without
 completed check runs do not establish app health. GitHub installation inventory
 was unavailable to this credential (HTTP 403).
 
+== Repair-head verification and remaining compatibility limits
+
+Repair head `f413ea14012a6d2ea428a3746070e4b92678df1f` passed all five Agda
+jobs in run `42226213296`, metadata `42226213288`, governance `42226214197`,
+secret scanning `42226214020`, CodeQL, GitGuardian and Semgrep. Hypatia run
+`42226214059` and its separate native SARIF check both passed: the graded source
+findings were zero at every severity. Its 20 observations of prior main-branch
+code-scanning alerts are separate from new source findings and require a fresh
+main scan. Fleet advisory findings remain visible rather than being relabelled
+as security findings or suppressed.
+
+Ruleset `26696686` (Verified Gates) requires 30 actually emitted contexts, with
+strict up-to-date checking and no bypass actors. It includes governance gates,
+secret scans, fleet production, Hypatia workflow plus native SARIF check, all
+five proof lanes and metadata. Canonical advisory contexts and CodeQL remain
+non-required, as prescribed by the owning gates table. Existing default-branch
+governance context names were checked; the new proof/metadata lanes were added
+from observed PR results before first merge, closing the otherwise ungated
+first-release interval. Native Hypatia uses app integration 57789; Actions jobs
+use 15368. No nonexistent status name was invented.
+
+The release review added explicit named Smoke pins for the new headline results.
+That ordinary-profile check passed with the pinned compiler and libraries;
+the exact updated Smoke SHA256 is
+`b0d38fb6b82a41964584351b7886aa0f163bd2646c6a766a776852e2416b5d80`.
+Current source and checked snapshot manifests matched. This extends API smoke
+coverage without changing any theorem statement or assumption.
+
+The single deed now includes a populated manifest, descriptive directory map
+and RSR capability profile. The native grammar, registry identity, scoped
+profile checks and all eight strict K9 components pass. The independent native
+`check-rsr-profile.sh` remains nonzero because its pinned gate table still asks
+for `verification/proofs/`, a separate container directory and retired
+manifest/descriptiles paths. Actual proofs live in `proofs/agda`, the root
+Containerfile is executed, and descriptive records live in the one chora deed.
+Real audit/maintainer and GitHub policy navigation pointers were added; empty
+compatibility scaffolding was not. This is recorded in issue #361 and is not
+represented as complete native RSR conformance.
+
+Fleet reference triage accounts for all 209 initial warnings. Verified active
+renamed links were repaired. The last Gate 2 alias was resolved by commit
+`8670ae9`: the delivered file was `docs/characteristic.adoc`; its original
+parallel-instance naming note is retained with a dated correction. Existing
+non-clickable shorthand, theorem identifiers, absent historical artifacts and
+explicit research proposals remain distinguishable. Issues #361 and #362 track
+owning-reader incompatibilities and external review/tool coverage respectively.
+
+== Final setup checks
+
+The Guix development manifest no longer declares a fictitious GNU package or
+unrelated language runtimes. The root `manifest.scm` loads the single primary
+`build/guix.scm`. Both evaluate; a pure shell provisions its 11 prerequisites,
+resolves the tested tools within that profile, supplies CA certificates and
+performs an HTTPS request. The committed pinned Agda setup and an Echo check
+also pass inside that shell. Tested Guix channel:
+`230aa373f315f247852ee07dff34146e9b480aec`. The channel is not pinned in-tree;
+this is not a measured reproducibility claim.
+
+The Pages workflow previously fed a Markdown-only generator a fallback page
+because this repository has an AsciiDoc README. It now builds a substantive
+navigation page linking seven existing canonical documents at the deployed
+source SHA. The exact pinned Ddraig source compiled and rendered that page
+offline in the pinned container; the title and all seven HTML links passed
+checks. Only the default branch can deploy, including manual runs. Public
+availability still requires the actual GitHub Pages deployment result.
+
+The documented `scripts/verify.sh` now invokes the same four canonical guards
+and proof runner as `just verify`, without requiring just. Its legacy unsafe
+checker delegates to the existing comment-aware, explicitly scoped guardrails;
+the three established profile/quarantine exemptions are unchanged. It no
+longer rejects the documented quarantined module via an indiscriminate grep.
+
+Metadata controls additionally reject a missing capability profile, duplicated
+capability, incorrect capability and duplicate capability field. Each failed
+before a healthy verdict; the native positive grammar/K9 run passed. These
+controls do not reinterpret the separately recorded native RSR path failures.
+
+Scorecard now allows a default-branch-only manual refresh and uses the reviewed
+standards callee. Its minimal caller permissions are preserved. The old callee
+already had native action-lock reconciliation; refreshing main, rather than
+claiming a new reconciler, is what updates the stale alerts.
+
 == Decisions and obligations that setup does not settle
 
 * Prose licensing: historical owner decisions use both CC-BY-4.0 and

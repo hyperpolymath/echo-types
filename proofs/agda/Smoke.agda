@@ -8,6 +8,31 @@
 
 module Smoke where
 
+-- Pin the audit's named public results as well as compiling their modules.
+import EchoSourcePreserving as SourcePreserving using
+  ( source-preserving-implies-identity
+  ; identity-fibre-iso; identity-fibre-iso-preserves-source
+  ; negation-iso-not-source-preserving
+  )
+import EchoCNOSemantics as CNOSemantics using
+  ( CertifiedProgramEcho; certified-echo-native-null; native-null-to-cno
+  ; native-null-source-map; source-map-native-null; nop-not-certified
+  )
+import EchoDependentPushforward as DependentPushforward using
+  ( transpose-untranspose; untranspose-transpose
+  ; unit-natural; counit-natural; triangle-push; triangle-reindex
+  ; echo-roundtrip; terminal-push-roundtrip
+  ; push-composite-from-to; push-composite-to-from; push-composite-natural
+  )
+import EchoErasingGradedComonad as Erasing using
+  ( erasing-natural; bool-input-collision; positive-erasure-no-left-inverse
+  ; grade-change-natural; grade-change-id; grade-change-compose
+  ; grade-change-proof-independent; grade-change-ε; grade-change-δ
+  ; erase-is-grade-change
+  )
+import EchoNaturalityIndependence as NaturalityIndependence using
+  ( ε-naturality-fails; δ-naturality-fails )
+
 open import EchoGradedComonadNaturality using (NaturalGradedComonad)
 open import EchoThinPreorderExample using (indiscrete; no-antisymmetry)
 open import EchoGradedComonadInstance1 using (nat-natural-instance)

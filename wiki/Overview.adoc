@@ -76,7 +76,7 @@ The project's standing posture is *narrow-true over broad-easy*:
   indexed/residual modality: a resource algebra may *measure* Echo residues
   (the `Echo.Measure` seam), but it does not *define* Echo. Equal residue
   measure does not imply equal Echo — mechanised in
-  `Echo.Separation.NotResourceInstance`, stated in `FOUNDATION_CONTRACT.md`.
+  `Echo.Separation.NotResourceInstance`, stated in `FOUNDATION_CONTRACT.adoc`.
   Downstream languages must not model Echo as a `Soundness(S)` resource
   instance.
 * The integration recipe across the five decoration axes is *organising

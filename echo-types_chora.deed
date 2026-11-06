@@ -33,6 +33,34 @@
     :supersedes "Retired 6a2 records; historical tree 39a7a99cbe19a918843e9624010510b5fc3b8366."
     :preserves "Proof-profile boundaries, source provenance, and the distinction between declarations and verification receipts."
     :evidence "Local working tree; not a published release or certification.")
+  (manifest
+    :version "1.0.0"
+    :project "echo-types"
+    :purpose "Constructive Agda proofs about dependent fibres and explicitly scoped loss, provenance and reversibility interfaces."
+    :instructions "CLAUDE.md"
+    :roadmap "roadmap.adoc"
+    :audit "docs/AUDIT.adoc"
+    :permissions "The current user task supplies authority; this manifest grants no external mutation or agent permissions."
+    :scope-exclusion "Ordinal mathematics belongs to the separate ordinal-notations repository.")
+  (ply
+    (directory :path "proofs/agda" :description "Mechanised proof sources; independent roots and assumptions are inventoried by tools/audit-inventory.mjs.")
+    (directory :path "docs" :description "Definitions, theorem claims, research obligations and dated audit evidence.")
+    (directory :path ".github" :description "Pinned workflows, repository automation and community discovery pointers.")
+    (directory :path ".machine_readable" :description "K9 contractile declarations, shared schemas and policy configuration; repository identity and descriptive records live in this deed.")
+    (directory :path "scripts" :description "Toolchain setup and proof/profile guards.")
+    (directory :path "tools" :description "Read-only inventory, metadata validation and verification runners."))
+  (rsr-profile
+    :version "1.0.0"
+    :spec "rsr-criteria-v2"
+    :declares-against "2.1.1-draft"
+    :capabilities ("agda" "bash" "library" "formal-proofs" "container"
+      "reproducible-build" "docs-site" "governance-tier")
+    (notes
+      :proofs "Mechanised sources live in proofs/agda, with explicit independent profile boundaries."
+      :container "Root Containerfile builds an unprivileged proof-source carrier; no production service."
+      :reproducibility "build/guix.scm declares the primary recipe; a reproducibility comparison has not been measured."
+      :docs-site "The Pages workflow builds the documentation site; source capability is not deployment availability."
+      :governance "Existing governance, affirmation and maintainer records plus the dated audit ledger; no assurance grade or certification."))
   (standards-sources
     (source :name "standards" :revision "ba640e9a57f22608710ffecdca282074eac55a0b")
     (source :name "rsr-template-repo" :revision "acdc0ebd1d69f3f70995f4eec078e342078dd885")

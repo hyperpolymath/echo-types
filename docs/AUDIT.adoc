@@ -1,0 +1,17 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+= Audit navigation
+
+Use the dated records for their stated source revisions, checks and limits:
+
+* link:audit/2026-11-06-evidence.adoc[Foundation evidence]: compiler checks,
+  dependency identities, inventory and warnings.
+* link:audit/2026-11-06-repository-readiness.adoc[Repository readiness]:
+  standards reconciliation, issue disposition and evolving CI results.
+* link:audit/2026-11-06-foundation-decisions.adoc[Foundation decisions]:
+  bounded mathematical choices and remaining research obligations.
+* link:audit/2026-11-06-license-inventory.adoc[Licence inventory]: existing
+  notices and the unresolved prose-licence scope.
+
+These records distinguish local receipts, remote checks and unresolved work.
+This index adds no execution receipt, certification or assurance grade.

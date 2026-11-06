@@ -81,7 +81,7 @@ narrowing history and `roadmap-gates.adoc` for the test discipline.
 
 | Gate 2: Characteristic theorem family
 | PASSED (narrowed)
-| `docs/characteristic.adoc` — 4 nominees, 3 survive threshold. Aggregate degrade-law family pinned in `docs/theorem-index.md`.
+| `docs/characteristic.adoc` — 4 nominees, 3 survive threshold. Aggregate degrade-law family pinned in `docs/theorem-index.adoc`.
 
 | Gate 3: Canonical examples
 | PROVISIONAL

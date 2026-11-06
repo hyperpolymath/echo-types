@@ -9,7 +9,7 @@ For *end users* — you want to use echo types' structured-loss vocabulary in
 your own language, tool, or proof, and you are not (yet) extending the Agda.
 This is a from-the-outside-in walkthrough: one idea, one definition, what you
 can and cannot do with it, and four real consumers. For the stable interface
-contract read `FOUNDATION_CONTRACT.md` first; for the honest "what it does and
+contract read `FOUNDATION_CONTRACT.adoc` first; for the honest "what it does and
 does not add" read <<Overview.adoc#,Overview>>.
 
 toc::[]
@@ -74,7 +74,7 @@ no-section-of-collapsing-map      -- EchoNoSectionGeneric.agda
 This is the load-bearing negative result. A consumer that wants recovery must
 *store the echo* (Section 4); it cannot reconstruct it from the output. The
 boundary invariant *Echo IS-NOT a resource instance* (see
-`FOUNDATION_CONTRACT.md`) is the same statement read at the interface level.
+`FOUNDATION_CONTRACT.adoc`) is the same statement read at the interface level.
 
 == 6. Four real consumers
 
@@ -110,7 +110,7 @@ table.
 
 == 8. Where to go next
 
-* `FOUNDATION_CONTRACT.md` — the stable `Echo.*` interface to build against.
+* `FOUNDATION_CONTRACT.adoc` — the stable `Echo.*` interface to build against.
 * *EchoTypes.jl* — run the finite-domain shadow on your own data.
 * `docs/bridges/cross-repo-bridge-status.md` — every consumer bridge, with its
   honest scope and main blocker.

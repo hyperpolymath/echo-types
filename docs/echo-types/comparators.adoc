@@ -240,12 +240,12 @@ For balance — the affirmative side of the same discipline:
   credibility asset.
 
 * *No-left-inverse examples across decoration layers.* See the aggregate
-  row in `docs/theorem-index.md`. Each decoration *separately*
+  row in `docs/theorem-index.adoc`. Each decoration *separately*
   gives a non-injectivity consequence equally expressible using raw Σ.
 
 * *Per-decoration composition law lands by the same recipe in
   6 layers.* graded, linear/affine, choreographic, access, cost,
-  search. See `degrade-laws` aggregate row in `theorem-index.md`.
+  search. See `degrade-laws` aggregate row in `docs/theorem-index.adoc`.
 
 * *Consumer-side abstraction barrier at the affine instance.* The
   Echo interface at affine mode does not export `proj₁`, and that

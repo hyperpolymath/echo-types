@@ -81,6 +81,36 @@ trap 'rm -rf -- "$tmp"' EXIT
   field(clause("clade"), "primary", "symbol", "fv");
   field(clause("clade"), "primary-name", "string", "Formal Verification & Proofs");
   field(clause("forges"), "github", "string", "hyperpolymath/echo-types");
+  const manifest = clause("manifest");
+  field(manifest, "project", "string", "echo-types");
+  field(manifest, "instructions", "string", "CLAUDE.md");
+  field(manifest, "roadmap", "string", "roadmap.adoc");
+  field(manifest, "audit", "string", "docs/AUDIT.adoc");
+  const directories = clause("ply").filter(x => x[0] === "clause" && x[1] === "directory");
+  if (directories.length !== 6) fail("expected six descriptive directory records");
+  for (const [index, path] of ["proofs/agda", "docs", ".github", ".machine_readable", "scripts", "tools"].entries()) {
+    field(directories[index][2], "path", "string", path);
+    if (!require("node:fs").statSync(path).isDirectory()) fail(`described directory missing: ${path}`);
+  }
+  const profile = clause("rsr-profile");
+  field(profile, "version", "string", "1.0.0");
+  field(profile, "spec", "string", "rsr-criteria-v2");
+  field(profile, "declares-against", "string", "2.1.1-draft");
+  const capabilities = profile.filter(x => x[0] === "field" && x[1] === "capabilities");
+  const expectedCapabilities = ["agda", "bash", "library", "formal-proofs", "container",
+    "reproducible-build", "docs-site", "governance-tier"].sort();
+  if (capabilities.length !== 1 || capabilities[0][2][0] !== "list")
+    fail("required unique capability list");
+  const declared = capabilities[0][2][1];
+  if (declared.some(x => x[0] !== "string") ||
+      JSON.stringify(declared.map(x => x[1]).sort()) !== JSON.stringify(expectedCapabilities))
+    fail("capabilities must match the reviewed repository profile without duplicates");
+  // Presence checks establish the declared layout, not reproducibility,
+  // deployment availability, or conformance to every estate criterion.
+  for (const path of ["proofs/agda/All.agda", "Containerfile", "build/guix.scm",
+    ".github/workflows/pages.yml", "GOVERNANCE.adoc", "AFFIRMATION.adoc", "MAINTAINERS",
+    "docs/audit/2026-11-06-repository-readiness.adoc"])
+    if (!require("node:fs").existsSync(path)) fail(`capability evidence missing: ${path}`);
   const ei2 = clause("ei-2");
   field(ei2, "record-version", "integer", "1");
   field(ei2, "status", "symbol", "closed-negatively");
