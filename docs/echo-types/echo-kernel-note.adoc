@@ -263,6 +263,26 @@ kernel** — the boundary is real and lives outside this core.
   reachability of distinct Boolean objects. It refutes antisymmetry of the
   legacy interface, not its reflexivity, transitivity, or thin homs.
 
+| *Derived — comparison and finite recovery (2026-11-06 research cycle)*
+| `EchoSourcePreservingComparison`, `EchoFiniteResidue`
+| The comparison imports Echo and the existing source-preserving path lemmas.
+  The finite bound is stdlib-only: a supplied exact source-value decoder and
+  injected finite family in one fibre force a residue-alphabet lower bound.
+  Neither is a new kernel axiom or a uniform optimal encoding algorithm.
+
+| *Derived — certificate and sequential protocol packaging*
+| `EchoCNOPackaging`, `EchoResidueProtocol`
+| Native CNO logical equivalences retain the existing model assumptions.
+  The residue protocol imports the pure holding/spent cell API and proves
+  at-most-one reversal on an explicitly authoritative sequential trajectory.
+  It does not enforce runtime linearity or alias prevention.
+
+| *Derived — lawful compositional measurement*
+| `Echo.Measure.Composition`
+| Uses stdlib monoids and homomorphisms, the existing ordered measure seam,
+  and the finite-recovery collision lemma. Composition, order and evidence
+  recovery remain separate contracts. No semiring or measure enters the kernel.
+
 |===
 
 `EchoOrdinal` is Tier-1 off `Echo` but additionally pulls two

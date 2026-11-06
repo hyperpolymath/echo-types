@@ -16,6 +16,13 @@ Constructive Agda development treating proof-relevant fibers as first-class witn
 
 == Overview
 
+The link:docs/audit/2026-11-06-research-cycle.adoc[November research cycle]
+adds finite residue-alphabet bounds, a sequential consumption protocol and
+lawful compositional measurements, with explicit limits. It also records
+current Mathesis/type-repository bridge points and three local sibling
+integration checks. These results do not establish runtime linearity,
+physical information costs or a general tropical graded (co)monad.
+
 This library presents standard dependent fibres as proof-relevant witnesses for structured loss. A fibre inhabitant contains an actual source and a proof of its output; it is not automatically a compact description of all possible origins.
 
 Given `f : A → B`, the echo at `y : B` is the homotopy fiber:

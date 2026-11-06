@@ -665,6 +665,25 @@ The honesty layer. *Read before citing any claim above as final.*
 
 == Documentation index (canonical vs historical)
 
+=== November foundation and bridge cycle
+
+* `[REAL]` `EchoSourcePreservingComparison`: pointwise equality from a
+  source-preserving fibre map, and induced inverse maps.
+* `[REAL]` `EchoCNOPackaging`: native-model logical equivalences and
+  composition, with the pinned evaluator/energy assumptions retained.
+* `[REAL]` `EchoFiniteResidue`: exact source recovery forces separation
+  within a fibre; supplied finite source families yield alphabet bounds.
+* `[REAL]` `EchoResidueProtocol`: at-most-one reversal along an explicitly
+  authoritative sequential trajectory; runtime linearity remains open.
+* `[REAL]` `Echo.Measure.Composition`: lawful monoid measurement,
+  nonrecoverability from length and a constant-one no-homomorphism control.
+
+See link:../audit/2026-11-06-research-cycle.adoc[contracts, evidence and bounded
+follow-ups] and link:../audit/2026-11-06-bridge-inventory.md[pinned related-repository
+inventory]. These are derived developments; the kernel remains unchanged.
+
+=== Canonical sources
+
 Multiple overlapping docs exist. Use the *canonical* column; the rest
 are kept for history and **may overclaim** (pre-retraction).
 

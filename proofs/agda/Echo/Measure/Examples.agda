@@ -88,12 +88,11 @@ cost-measure = record
 ----------------------------------------------------------------------
 -- Example 2 — a tropical-cost measure.
 --
--- The carrier `ℕ-≤` is exactly the order-reduct of the tropical
--- (min-plus) semiring `(ℕ, min, +, ≤)`: the seam needs only the order,
--- so this measure lands in the tropical carrier under its natural
--- order. (The `min` / `+` operations are not exercised here — the seam
--- is order-only; a measure that also composes additively along
--- degradation would supply them.) A different cost profile from
+-- The carrier `ℕ-≤` models finite nonnegative costs. This order-only
+-- example supplies neither min-plus operations nor an infinity element:
+-- min on ℕ has no additive identity, so ℕ alone is not a unital
+-- min-plus semiring. A full extended tropical target and compositional
+-- measure need separate operations and laws. A different cost profile from
 -- Example 1 — `keep` and `residue` are both free, only `forget` costs
 -- (1) — so it also shows many distinct measures inhabit one carrier.
 ----------------------------------------------------------------------

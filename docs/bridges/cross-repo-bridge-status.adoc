@@ -1,6 +1,12 @@
 == Cross-Repo Bridge Status
 
-Last updated: 2026-06-21.
+The dated table below was last updated on 2026-06-21. For the selected
+Mathesis, Tropical, Resource Algebra, Choreographic, Epistemic, Secret and
+Residual Evidence interfaces, the
+link:../audit/2026-11-06-bridge-inventory.md[2026-11-06 pinned inventory]
+and link:../audit/2026-11-06-sibling-compatibility.md[fresh local sibling checks]
+supersede older pins and status claims below. Other historical rows have not
+been re-audited by this cycle. Ordinal work remains excluded.
 
 This file is the single status ledger for echo-type bridge work that
 touches other repositories.

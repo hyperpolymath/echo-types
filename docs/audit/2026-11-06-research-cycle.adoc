@@ -1,0 +1,267 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Foundations, bridge contracts, and reader compatibility — 2026-11-06
+
+== Scope and authority
+
+This cycle starts at Echo main
+`c3407350844fe4d882fe2c63e9b97f5bbbf441b5`. The owner selected equal effort on
+foundations and repository setup, all three research tracks below, inspection
+of Mathesis and relevant type repositories, and dormant forge mirrors.
+The later authorization to implement and publish through repository gates
+supersedes the initial read-only restriction. Ordinal mathematics is excluded.
+Existing ordinal imports in aggregate checks are build dependencies only.
+
+New original documentation uses CC-BY-SA-4.0 and new code uses MPL-2.0 with
+per-file notices. Existing grants remain governed by the recorded licensing
+inventory. No upstream framework or language equivalence is inferred from
+similar terminology, and no novelty claim is inferred from typechecking.
+
+== Mathematical decisions and checked contracts
+
+[cols="1,3,3",options="header"]
+|===
+|Track |Implemented contract |Limit of the result
+|Finite minimal residue
+|`EchoFiniteResidue.ExactRecovery` supplies a total decoder of the actual
+retained pair and a source-value round trip. Recovery forces residues to
+separate distinct sources in one observation fibre. An injected family of
+`n` such sources and residue alphabet `Fin k` imply `n ≤ k`.
+|The representation class is finite alphabets; cost is alphabet cardinality.
+The family need not enumerate the entire fibre. This is the standard finite
+pigeonhole argument, not a bit/entropy/physical-cost bound or a reconstruction
+of equality witnesses. The constant observation on `Fin n` attains the bound
+by retaining the source; no uniform optimum for arbitrary observations is claimed.
+|Consumption
+|`EchoResidueProtocol` gives an indexed sequential transition/trace system
+for the existing holding/spent API. Spent traces have zero reversals; every
+valid trace has at most one. Reversing agrees with both `takeForReverse`
+and the state returned by `consume`. Two-reversal traces are refuted.
+|A single authoritative state trajectory is an explicit assumption. Arbitrary
+idle steps are permitted, but no rearming or unrelated state mutation is
+specified. Pure Agda values remain duplicable. Runtime alias prevention,
+linear typing, heap ownership, concurrency, progress and refinement remain open.
+|Composition and tropical measurement
+|`Echo.Measure.Composition.CompositionalMeasure` uses standard-library lawful
+source/target monoids and a monoid homomorphism. List length preserves append
+and units. Equal costs can still hide different evidence and prevent recovery.
+A constant-one ordered measure and its no-homomorphism theorem separate
+monotonicity from additive unit preservation.
+|This is an additional measurement contract, not a resource structure on Echo,
+a graded (co)monad or a cross-language translation. No source monoid laws follow
+from measured equalities alone. Extended tropical carriers, order variance,
+grade tensor/unit, infinity and coherence must be supplied separately.
+|F1: source-preserving comparison
+|`EchoSourcePreservingComparison` characterizes pointwise equality of
+`f,g : A → B` by a source-preserving forward fibre map and constructs
+both fibre maps with inverse laws from that pointwise equality.
+|Unrestricted fibre equivalences do not imply this conclusion. There is
+no equality of functions obtained by global function extensionality.
+|F2: CNO packaging
+|`EchoCNOPackaging` packages logical implications among native nullity,
+`IsCNO p`, same-program certified Echo and source-preserving native state
+maps; certificates compose.
+|These are logical equivalences, not equalities of proof records or inverse
+laws on relation witnesses. The pinned native evaluator is total and its
+energy model is zero. No physical reversibility result is added.
+|===
+
+The finite bound imports the existing standard-library theorem
+`Data.Fin.Properties.injective⇒≤`. The compositional example imports
+`Data.List.Properties.length-isMonoidHomomorphism`. Reusing these standard
+constructions is deliberate. Distinguishing sources, retained evidence,
+observable costs and operational permissions is the useful design boundary.
+
+The old natural-number min-plus comment in `Echo/Measure/Examples.agda`
+is corrected: `min` on natural numbers has no additive identity. The
+existing example remains an order-only finite-cost measurement; a unital
+min-plus semiring needs an appropriate extended carrier and its laws.
+
+== Where the related repositories actually connect
+
+link:2026-11-06-bridge-inventory.md[The pinned source inventory] records all
+seven repository heads, source permalinks, exact interfaces and remote receipts.
+link:2026-11-06-sibling-compatibility.md[The subsequent local compatibility checks]
+record commands, compiler/source hashes and warnings for three existing bridges.
+
+[cols="1,3,3",options="header"]
+|Owner |Existing connection |Next meaningful boundary
+|Mathesis
+|Catalogue/atlas for discovery; proofs remain with their owners. Its core and
+bridge directories do not supply an Echo foundation.
+|Index claims by declaration, revision, assumptions and receipts. A catalogue
+grade is not an independent proof or a novelty verdict.
+|Residual Evidence
+|An evidence-refined fibre is explicitly isomorphic to
+`Σ (Echo observe r) (E ∘ proj₁)`. Cases carry a consistency witness and
+claims quantify over all candidates. The current comparison checks locally.
+|Package evidence-bearing pushforward only after specifying the treatment of
+evidence/context composition, revision and inhabitedness. Context composition
+is not the same operation as Echo function composition.
+|Epistemic Types
+|Retention, certified residues, Recovery and Migration already exist;
+CanonicalEcho checks locally against the current core/residue sources.
+|Adapt ExactRecovery to the actual retained-pair Recovery interface, preserving
+certificates. A collision obstruction is necessary for migration; sufficiency
+needs an explicit construction, such as a supplied recovery/representative.
+Do not silently assume choice or a total extension off the reachable image.
+|Secret Types
+|Checked termination-insensitive noninterference uses pointwise observer
+agreement and two successful fuelled executions. No declassification rule
+is established by this audit.
+|Public exact reconstruction must distinguish sources that would otherwise
+share an observation. A secret residue can have a different observation
+policy. Specify visibility and authorized elimination before connecting these
+interfaces; avoid converting pointwise store equality into function equality.
+|Choreographic Types
+|Actual Echo-additive/resource-algebra imports, projectability/consistency
+premises, and guarded projection/grade commutation theorems exist.
+|Use projected-behaviour fibres while retaining those premises. Grade embedding,
+witness retention and operational protocol refinement are separate obligations.
+Its older sibling pins were inspected, not upgraded or newly rechecked here.
+|Tropical Types and Resource Algebra
+|Lean already measures abstract residues; Agda supplies an actual algebra
+interface used by choreography. Echo now has an explicit lawful-monoid seam.
+|Lean's residue record omits source associativity/unit laws despite monoid
+prose. Lean's supplied preorder and Agda's induced antisymmetric order differ;
+their semiring/idempotence/distributivity requirements also differ. A bridge
+must state added laws and order correspondence. HWM-to-MaxPlus is lax in the
+Agda interface, not automatically a strict homomorphism.
+|===
+
+Three sibling integration roots passed with unchanged source and their
+documented proof profiles under Agda 2.7.0.1 / stdlib 2.3:
+`CanonicalEcho`, `EchoComparison`, `EpistemicComparison`. The imported Echo
+core/residue files in CanonicalEcho and EchoComparison match this workspace
+byte-for-byte. EpistemicComparison checks the residual–epistemic interface
+without importing Echo. These checks do not
+cover the new modules above or certify entire sibling repositories. The
+Residual/Echo comparison emitted 33 standard-library indexed-match diagnostics;
+CanonicalEcho retained its existing suppression of that category.
+
+== Prioritized, bounded next operations
+
+The coordinator owns theorem meaning, cross-repository scope and acceptance.
+Model effort below is a suggested execution allocation, not a proof authority.
+Every proof packet requires the actual pinned compiler, a direct check and
+the affected aggregate; a failed check must be reported without weakening flags.
+
+[cols="1,1,3,3",options="header"]
+|Priority |Suggested effort |Bounded operation |Dependencies and stop condition
+|1 |Medium
+|Update sibling Echo pins only after reproducing their original CI jobs at the
+candidate pin; keep separate commits/receipts for each owning repository.
+|The three local compatibility receipts are a starting point, not substitute
+CI. Do not change source or suppress new warnings merely to obtain a pass.
+|1 |High
+|Build an adapter from the actual Epistemic Recovery pair to ExactRecovery,
+then transport the finite-fibre bound. Add a certificate-preserving example
+and a residue-collision counterexample.
+|Agree exact projection/certificate meanings first. Stop if recovery requires
+function extensionality, representative choice or unreachable-pair assumptions
+not already explicit in the contract.
+|1 |High
+|Give an opaque-handle heap model with unique cell ownership and a simulation
+into `EchoResidueProtocol`. Exercise stale-handle/double-use rejection.
+|Select a real implementation revision before claiming runtime refinement.
+Do not infer linearity from pure `consume`, or add concurrency without a
+corresponding operational semantics and invariant.
+|2 |High
+|Choose one shared resource target and implement a law-explicit adapter from
+the new compositional measure; choose strict versus lax preservation.
+|Record order orientation and zero/infinity behavior. A Lean/Agda comparison
+must list the nonmatching fields; no blanket equivalence or graded monad claim.
+|2 |Medium
+|Correct stale sibling prose: Secret's spec-only description and Tropical's
+source-monoid claim. Submit owner-scoped changes with pinned source evidence.
+|Do not rewrite theorem statements, add security guarantees, or edit unrelated
+repositories as a side effect. Keep changes distinct from mathematical decisions.
+|2 |Medium
+|Prepare a Mathesis discovery/context pack containing exact owner/declaration
+links and receipts, labeling source inspection versus local/remote checking.
+|Confirm the actual atlas input schema. Do not invent a ratified grading scheme
+or overwrite the generated census with theorem-level assertions.
+|3 |High
+|Continue earlier F3/F4/F5 packets: base-composition coherence, dependent-product
+adjunction and the concrete iterated-product graded monad.
+|These remain separate specified obligations in the earlier decision record;
+F1/F2 are completed by this cycle. Their categorical meanings require root
+review before implementation, not extrapolation from similarly shaped maps.
+|===
+
+Repository setup runs alongside these tracks. Issue #361 remains the owner
+for native metadata/proof-layout reader compatibility. Proposed upstream
+reader changes and fixture receipts are distinct from released validators.
+Issue #362 retains external-review/scanner coverage limits. OpenSSF registration
+and the historical actor-authorization question remain separately tracked.
+Issue #363 stays open and the seven uncredentialed forge mirrors stay dormant
+by owner choice; this cycle does not rotate credentials or enable mirror pushes.
+
+== Verification and receipts
+
+`AuditSmoke`, `Smoke` and `tools/check-audit.sh` include the five new modules.
+The ordinary profile remains `--safe --without-K --cubical-compatible`;
+the existing full Cubical root keeps its separate profile. No new postulate,
+global function extensionality, global UIP, unsafe option or guard exemption
+is introduced. Existing indexed-match warnings limit Cubical computation
+claims and are recorded rather than described as warning-free checking.
+
+All 27 checks in `tools/check-audit.sh` passed. A separate cold
+`--ignore-interfaces` check of `AuditSmoke` also passed; its log contains
+1,270 `UnsupportedIndexedMatch` diagnostics, including repeated standard-library
+warnings. This is not warning-free Cubical transport computation.
+
+The checked snapshot contains 150 proof source files. Comparing its SHA256
+manifest with this worktree found zero byte mismatches. Manifest SHA256:
+`307a2bc77cc8ce34e8098e68849f54834464f23ce2f21e7e864f25066b355a70`.
+Cold log SHA256:
+`6ebea35774fa8ec417393206150072e70902a04a98e10ec3d9cb9a5f7e0a7d38`.
+The reusable fast snapshot's Git HEAD remains the older `cd85288...`; that
+HEAD alone does not identify these checked sources. The source manifest does.
+Git's configured LF normalization is distinct from the recorded raw worktree
+bytes. Raw logs remain local-only under ignored
+`build/audit-2026-11-06/foundations-cycle/`.
+
+Agda invocation lint, kernel/import classification, the existing safety guard
+and experimental aggregate wiring all passed. No guard exemption was added.
+The pinned metadata validator passed native DEED grammar/registry checks and
+all eight K9 files at layer `all`. Embedded probes were not executed.
+These metadata results do not settle the upstream reader issues in #361.
+
+The current upstream structural reader also requires a governance discovery
+path under `docs/`, `0-canon/` or `.github/`; its row does not include the
+existing root `GOVERNANCE.adoc`. `.github/GOVERNANCE.md` now points to that
+existing policy, avoiding a case collision with historical `docs/governance.adoc`.
+This follows the existing maintainer-discovery pattern and
+corrects a missing discovery entry, not an absence of project governance.
+
+The inventory now contains 160 Agda files, 157 after excluding the same three
+ordinal files. The union of the seven established CI root closures covers
+140 in-scope files; the same 17 remain outside that union. All five new
+modules are covered through `Smoke`/`AuditSmoke` and `All`.
+
+Reproduction uses Agda `2.7.0.1`, stdlib `2.3` at
+`8326c7475af1fa456ca04a0203c168d5d7ff842b`, and absolute-zero at
+`f486c29903434589117fa0662c6f29b0f17d1d5f`:
+
+[source,shell]
+----
+export AGDA=/path/to/agda
+export AGDA_STDLIB=/path/to/stdlib/src
+export ABSOLUTE_ZERO_AGDA=/path/to/absolute-zero/proofs/agda
+AUDIT_LOG_DIR=build/audit-2026-11-06/foundations-cycle bash tools/check-audit.sh
+"$AGDA" --no-libraries --ignore-interfaces --safe --without-K --cubical-compatible \
+  -i proofs/agda -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" proofs/agda/AuditSmoke.agda
+sh scripts/check-agda-invocations.sh
+sh scripts/kernel-guard.sh
+bash tools/check-guardrails.sh proofs/agda
+bash scripts/check-experimental-aggregate.sh
+BUN=/path/to/bun K9_NICKEL=/path/to/nickel bash tools/check-metadata.sh
+bun tools/audit-inventory.mjs
+git diff --check
+----
+
+On this Windows checkout, existing shell files needed their configured LF
+working-tree endings restored before Bash invocation. Those normalizations
+introduce no Git content changes. Intermittent WSL transport timeouts affected
+some new shell launches; completed proof receipts above remain successful.
+No shared distribution restart or process termination was used to hide a failure.

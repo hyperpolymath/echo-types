@@ -3,8 +3,10 @@
 
 == Authority, scope, and baseline
 
-The coordinating review may implement and check local changes. No commits,
-pushes, or pull requests are authorized. Ordinal mathematics is excluded.
+The initial coordinating review authorized local implementation and checking
+only. The owner's later authorization on 2026-11-06 also permits publication
+through the repository gates; see the repository-readiness ledger. Ordinal
+mathematics is excluded.
 The work starts at main `cd85288dcce55191ad477c0fa7d1d2421514a0d3`.
 The existing proof workspace contained eight authorized edited files from
 the earlier proof chat; those changes were retained and completed here.
@@ -99,6 +101,10 @@ remaining obligations. New mathematical claims require successful checks.
 |===
 
 == Bounded follow-up packets
+
+The later link:2026-11-06-research-cycle.adoc[research cycle] completes F1/F2
+and supplies a fresh F6 verification receipt. F3/F4/F5 remain separate
+specified obligations. The original packet contracts are retained below.
 
 These are specified follow-ups, not claims of completed implementation.
 Each must preserve the current safety profile, add no postulates or global
