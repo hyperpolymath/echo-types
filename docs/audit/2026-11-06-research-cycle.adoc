@@ -131,7 +131,9 @@ Agda interface, not automatically a strict homomorphism.
 Three sibling integration roots passed with unchanged source and their
 documented proof profiles under Agda 2.7.0.1 / stdlib 2.3:
 `CanonicalEcho`, `EchoComparison`, `EpistemicComparison`. The imported Echo
-core/residue files match this workspace byte-for-byte. These checks do not
+core/residue files in CanonicalEcho and EchoComparison match this workspace
+byte-for-byte. EpistemicComparison checks the residual–epistemic interface
+without importing Echo. These checks do not
 cover the new modules above or certify entire sibling repositories. The
 Residual/Echo comparison emitted 33 standard-library indexed-match diagnostics;
 CanonicalEcho retained its existing suppression of that category.

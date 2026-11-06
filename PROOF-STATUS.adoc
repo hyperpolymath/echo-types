@@ -13,7 +13,7 @@
 [abstract]
 The link:docs/audit/2026-11-06-research-cycle.adoc[latest research-cycle receipt]
 records five additional modules, 27 successful direct/aggregate checks, and
-three current-core sibling compatibility checks. The claims are finite
+three sibling integration checks. The claims are finite
 alphabet bounds, an explicitly sequential protocol and compositional
 measurements; runtime enforcement and generic tropical coherence remain open.
 

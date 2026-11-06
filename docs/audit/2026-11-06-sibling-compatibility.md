@@ -18,7 +18,7 @@ All three requested positive integration roots passed with unchanged sibling sou
 | residual EchoComparison | 16:38:43–16:39:08 | 0 | 33 UnsupportedIndexedMatch diagnostics, all from stdlib |
 | residual EpistemicComparison | 16:39:08–16:39:10 | 0 | 0 |
 
-These roots import Echo, EchoResidue and (transitively) EchoCharacteristic, not the new dependent-pushforward, source-preserving, CNO, or graded-comonad modules. This is current core/residue interface compatibility, not a check of every sibling module or every new Echo theorem. Negative fixtures and complete sibling CI scripts were not rerun.
+CanonicalEcho imports Echo and EchoResidue, including EchoCharacteristic transitively. EchoComparison imports Echo. EpistemicComparison checks the residual–epistemic interface and does not import Echo. These checks do not cover the new dependent-pushforward, source-preserving, CNO, or graded-comonad modules, every sibling module, or every new Echo theorem. Negative fixtures and complete sibling CI scripts were not rerun.
 
 ## Exact sources and toolchain
 
