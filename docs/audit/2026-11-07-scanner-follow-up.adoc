@@ -94,8 +94,13 @@ is pending. This warning is not represented as a passing aggregate check.
 The scanner repositories' live Actions allowlists were missing the already
 approved standards reusable-workflow pattern. It was appended and read back,
 retaining the existing GitHub-owned/verified settings and SHA-pinning policy.
-PANIC's separate post-merge mirror job still lacks an approved SourceHut SSH
-fingerprint; successful source checks do not establish mirror delivery.
+PANIC's separate post-merge mirror run exposed five unconfigured destinations.
+Following the owner's direction to pause unfinished mirrors, repository flags
+for Bitbucket, Codeberg, Disroot, Gitea and SourceHut were set to `false` and
+read back. GitLab and Radicle remained enabled after their successful jobs.
+The failed-job recheck of run `42388362649`, attempt 2, completed successfully
+with the paused destinations dormant. It does not establish delivery to those
+five destinations; reactivation still requires approved host/credential setup.
 
 SMTP remains intentionally dormant with endpoint and egress containment
 unchanged. No credentialed delivery, browser execution, service registration,
