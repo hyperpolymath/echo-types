@@ -1,0 +1,145 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Scanner and review follow-up — 7 November 2026
+
+This receipt supplements `2026-11-06-repository-readiness.adoc` and issue #362.
+The documentation finding in comment 6691063465 was corrected by #365.
+The scanner defects were fixable source and configuration problems, not a
+failure of Echo's type theory or a requirement to change the assistant model.
+This follow-up does not rerun or expand the earlier Agda proof claims.
+
+== Revisions and repairs
+
+Echo input: `ebde9ac4e1a9f115b441c642c82aced1316c5983`.
+
+PANIC: `f2a6a70eaec0cb02331e3264e05f185b5faab0f7`, incorporating
+https://github.com/hyperpolymath/panic-attack/pull/268[268],
+https://github.com/hyperpolymath/panic-attack/pull/269[269],
+https://github.com/hyperpolymath/panic-attack/pull/270[270] and
+https://github.com/hyperpolymath/panic-attack/pull/271[271].
+Eight colon-containing historical filenames were renamed without changing
+their Git blobs. A complete native Windows checkout succeeded. Portable-path
+CI controls cover reserved devices, superscripts and case/prefix collisions;
+ordinary source-archive tests no longer require Git. New report filenames are
+portable while timestamps within report contents retain their original format.
+Native Rust CI helpers replace policy-prohibited Python helpers. Inventory
+producer errors propagate, test identities include their binary, empty runs
+cannot claim coverage, and recon reads the actual baseline's metadata without
+turning unavailable reports into clean results.
+
+PONS tested source: `0736865c667870731ef757c66287d136598212f7`, building on
+https://github.com/hyperpolymath/pons-asinorum/pull/70[70],
+https://github.com/hyperpolymath/pons-asinorum/pull/71[71] and
+https://github.com/hyperpolymath/pons-asinorum/pull/72[72], with the final
+path corrections in https://github.com/hyperpolymath/pons-asinorum/pull/73[73].
+The tested source tree is `28d2068a3ce40e67daea50090a175d351e7c56ce`.
+PR #73 must complete its final review and merge; the previous merged baseline
+is `0112b2a407b0fa97190c92f5676aa80ac7048b68`.
+Its receipt is `tree-sitter 0.27.0 / javascript 0.25.0+jsx-keywords.3`.
+The targeted vendored patch preserves modern resource declarations, accepts
+JSX keyword attributes/member names, rejects invalid export expressions, and
+handles CR and Unicode operator boundaries. Generated files are reproduced
+with a digest-pinned generator and HTTPS-only download/redirects. A direct
+dependency carries the patch to downstream Git/path consumers; registry
+publication is disabled until the patched grammar is separately distributable.
+
+PONS reports supported parse failures as partial coverage, preserves valid
+frozen 0.4.0 reports, and checks portable root-relative evidence paths without
+consulting the reader's filesystem. New normal and forced-language CLI scans
+and `Engine::scan` use absolute roots. This disambiguates relative POSIX
+colon/backslash filenames, and relative Windows directory reports are read
+independently of the reader host. POSIX filename boundaries and in-root colon
+names remain distinguishable from escaping/drive-qualified paths. For older
+ambiguous relative roots, the reader retains both POSIX and Windows
+interpretations and requires the record path and semantic fingerprint to
+agree on the same one. Native writers retain the historical path behaviour.
+Both current and frozen-envelope controls cover these cases, including
+forward-slash UNC roots, and reject mixed interpretations. Missing
+producer-platform metadata still prevents a universal
+historical filesystem-identity guarantee.
+
+== Executed evidence
+
+* PANIC's final helper follow-up passed ten local test executions and
+  all-target Clippy with warnings denied. Its PR recorded 56 successful
+  checks and eleven declared skips before the guarded merge. The wider
+  migration's checks include native tests, Chapel, Hypatia, governance,
+  K9/DEED and the executed-test ledger; skipped work is not counted as executed.
+* PONS passed 261 native Windows workspace test executions, all-target Clippy,
+  eight parser regressions, the unchanged upstream 116-parse corpus, and an
+  independent downstream Cargo consumer. Hosted Linux/Windows and grammar
+  regeneration checks passed. The final UNC correction passed eight contract
+  tests and three portable-path tests locally. At the recorded #73 revision,
+  hosted Linux/Windows checks passed: 21 successful checks, one declared skip
+  and two neutral external checks described below.
+* The exact `docs/echo-types/prototypes/warrant_debugger_prototype.jsx` source
+  now yields one analysed JavaScript file, no findings, no skips and exit 0
+  with `--no-speculative --fail-on error --fail-on-skips --require-language javascript`.
+  Its SHA-256 is
+  `b69afe5842fc9b4b9b0713f92bbcdfc75200d1f4133c69f25efca52b3c4dde99`.
+  This run used a fresh checkout with automatic CRLF conversion disabled;
+  the earlier Windows-checkout hash was not the Git blob's byte hash.
+* Scanning the complete Echo input with `--no-speculative --fail-on error`
+  yields three analysed JavaScript/JSX files, eight existing heuristic
+  warnings and 21 explicit skips. Exit 0 reflects that severity policy;
+  overall coverage remains `partial`. Agda remains outside PONS coverage.
+* The local JSON receipts have SHA-256
+  `db96a4d67c57215c5a2fc33d597f59a4eb36b660a2d264d037b63d9110e89f3d`
+  (single JSX file) and
+  `beb0d60dc0a7c67cdc6791c814ed7f63862c3e82cf42ae50499e409f34a39c72`
+  (repository). These hashes identify those invocations, including their
+  local path spelling; they are not claimed as portable byte-for-byte output.
+
+== External review and remaining configuration
+
+CodeRabbit and Codex supplied real scoped findings on the scanner changes.
+Earlier findings were addressed through the follow-ups. Codex's post-merge
+review of #72 identified three additional findings: two relative-path issues
+are addressed by #73, and the proposed frozen-format compatibility change
+was checked against the actual historical source. Commits `6a20ca7` and
+`84f58f9` selected the parent before replacing backslashes, so a POSIX
+single-file `/tmp/a\b.py` originally produced `a/b.py`. The current control
+preserves that behaviour; a later temporary normalization bug is not adopted
+as the 0.4.0 contract. Codex's review of #73 at `bb4cc76` then identified
+a forward-slash UNC-root case (`//server/share` with a native Windows child
+path) rejected by the reader. The recorded `0736865` source adds the Windows
+interpretation and regression controls for both current and frozen reports.
+Final #73 review disposition and merge remain required. CodeRabbit's latest
+#73 pass was rate limited and remains neutral;
+it is not a fresh approval or retrospective review of the original 138-file
+audit. The #72 review disposition is therefore recorded explicitly rather than
+claiming its post-merge findings never existed.
+
+CodeQL's Rust and Actions analysis jobs passed, but its aggregate PR check is
+neutral because the default branch retains an obsolete configuration named
+`.github/workflows/codeql.yml:analyze/build-mode:none/language:actions`.
+Its last analysis was 16 August 2026; its sole open finding concerns missing
+permissions in `.github/workflows/main-estate-audit.yml`, which now declares
+`contents: read`. The 15 historical analyses and alert were archived locally.
+Retiring that configuration deletes historical security records, so approval
+is pending. This warning is not represented as a passing aggregate check.
+
+The scanner repositories' live Actions allowlists were missing the already
+approved standards reusable-workflow pattern. It was appended and read back,
+retaining the existing GitHub-owned/verified settings and SHA-pinning policy.
+PANIC's separate post-merge mirror run exposed five unconfigured destinations.
+Following the owner's direction to pause unfinished mirrors, repository flags
+for Bitbucket, Codeberg, Disroot, Gitea and SourceHut were set to `false` and
+read back. GitLab and Radicle remained enabled after their successful jobs.
+The failed-job recheck of run `42388362649`, attempt 2, completed successfully
+with the paused destinations dormant. It does not establish delivery to those
+five destinations; reactivation still requires approved host/credential setup.
+PANIC's separate Pages workflow still times out during its cold Haskell
+`casket-ssg` build: run `42388362313` was cancelled at its 20-minute build
+limit in both attempts. This deployment workflow was already cancelling on
+older source revisions and is not represented as a successful source check.
+
+SMTP remains intentionally dormant with endpoint and egress containment
+unchanged. No credentialed delivery, browser execution, service registration,
+certification or independent human approval is claimed. Creusot with Pearlite
+contracts and Verus remain OPEN/not run for these scanner repairs. Regression
+tests and agreement between related scanners are not formal proofs.
+
+Issue #362 remains open for #73's final review/merge, the external configuration
+disposition and this receipt's final review. The original JSX/Windows defects
+are repaired.
