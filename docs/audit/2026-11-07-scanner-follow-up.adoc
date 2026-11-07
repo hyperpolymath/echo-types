@@ -27,12 +27,12 @@ producer errors propagate, test identities include their binary, empty runs
 cannot claim coverage, and recon reads the actual baseline's metadata without
 turning unavailable reports into clean results.
 
-PONS tested source: `bb4cc76cc17b810098544e11d5da3a583a1a43d9`, building on
+PONS tested source: `0736865c667870731ef757c66287d136598212f7`, building on
 https://github.com/hyperpolymath/pons-asinorum/pull/70[70],
 https://github.com/hyperpolymath/pons-asinorum/pull/71[71] and
 https://github.com/hyperpolymath/pons-asinorum/pull/72[72], with the final
 path corrections in https://github.com/hyperpolymath/pons-asinorum/pull/73[73].
-The tested source tree is `1cd5b93a6a056194ccfc910c1f714dde09b365ae`.
+The tested source tree is `28d2068a3ce40e67daea50090a175d351e7c56ce`.
 PR #73 must complete its final review and merge; the previous merged baseline
 is `0112b2a407b0fa97190c92f5676aa80ac7048b68`.
 Its receipt is `tree-sitter 0.27.0 / javascript 0.25.0+jsx-keywords.3`.
@@ -53,8 +53,9 @@ names remain distinguishable from escaping/drive-qualified paths. For older
 ambiguous relative roots, the reader retains both POSIX and Windows
 interpretations and requires the record path and semantic fingerprint to
 agree on the same one. Native writers retain the historical path behaviour.
-Both current and frozen-envelope controls cover these cases and reject mixed
-interpretations. Missing producer-platform metadata still prevents a universal
+Both current and frozen-envelope controls cover these cases, including
+forward-slash UNC roots, and reject mixed interpretations. Missing
+producer-platform metadata still prevents a universal
 historical filesystem-identity guarantee.
 
 == Executed evidence
@@ -67,8 +68,10 @@ historical filesystem-identity guarantee.
 * PONS passed 261 native Windows workspace test executions, all-target Clippy,
   eight parser regressions, the unchanged upstream 116-parse corpus, and an
   independent downstream Cargo consumer. Hosted Linux/Windows and grammar
-  regeneration checks passed. PR #72 recorded 21 successful checks, one
-  declared skip and two neutral external checks described below.
+  regeneration checks passed. The final UNC correction passed eight contract
+  tests and three portable-path tests locally. At the recorded #73 revision,
+  hosted Linux/Windows checks passed: 21 successful checks, one declared skip
+  and two neutral external checks described below.
 * The exact `docs/echo-types/prototypes/warrant_debugger_prototype.jsx` source
   now yields one analysed JavaScript file, no findings, no skips and exit 0
   with `--no-speculative --fail-on error --fail-on-skips --require-language javascript`.
@@ -97,7 +100,12 @@ was checked against the actual historical source. Commits `6a20ca7` and
 `84f58f9` selected the parent before replacing backslashes, so a POSIX
 single-file `/tmp/a\b.py` originally produced `a/b.py`. The current control
 preserves that behaviour; a later temporary normalization bug is not adopted
-as the 0.4.0 contract. Final #73 review remains required. CodeRabbit's final #72 pass was rate limited and remains neutral;
+as the 0.4.0 contract. Codex's review of #73 at `bb4cc76` then identified
+a forward-slash UNC-root case (`//server/share` with a native Windows child
+path) rejected by the reader. The recorded `0736865` source adds the Windows
+interpretation and regression controls for both current and frozen reports.
+Final #73 review disposition and merge remain required. CodeRabbit's latest
+#73 pass was rate limited and remains neutral;
 it is not a fresh approval or retrospective review of the original 138-file
 audit. The #72 review disposition is therefore recorded explicitly rather than
 claiming its post-merge findings never existed.
