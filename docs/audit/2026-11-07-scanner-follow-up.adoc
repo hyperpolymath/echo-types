@@ -27,12 +27,12 @@ producer errors propagate, test identities include their binary, empty runs
 cannot claim coverage, and recon reads the actual baseline's metadata without
 turning unavailable reports into clean results.
 
-PONS tested source: `2350991fd196f49aa1d8afb36dc20483557ff284`, building on
+PONS tested source: `bb4cc76cc17b810098544e11d5da3a583a1a43d9`, building on
 https://github.com/hyperpolymath/pons-asinorum/pull/70[70],
 https://github.com/hyperpolymath/pons-asinorum/pull/71[71] and
 https://github.com/hyperpolymath/pons-asinorum/pull/72[72], with the final
 path corrections in https://github.com/hyperpolymath/pons-asinorum/pull/73[73].
-The tested source tree is `a39e14eabfcfd7de27c0fa0b76a2edeba5b5b888`.
+The tested source tree is `1cd5b93a6a056194ccfc910c1f714dde09b365ae`.
 PR #73 must complete its final review and merge; the previous merged baseline
 is `0112b2a407b0fa97190c92f5676aa80ac7048b68`.
 Its receipt is `tree-sitter 0.27.0 / javascript 0.25.0+jsx-keywords.3`.
@@ -49,9 +49,13 @@ consulting the reader's filesystem. New normal and forced-language CLI scans
 and `Engine::scan` use absolute roots. This disambiguates relative POSIX
 colon/backslash filenames, and relative Windows directory reports are read
 independently of the reader host. POSIX filename boundaries and in-root colon
-names remain distinguishable from escaping/drive-qualified paths. Older
-intrinsically ambiguous relative single-file roots lack producer-platform
-metadata; no universal historical filesystem-identity guarantee is claimed.
+names remain distinguishable from escaping/drive-qualified paths. For older
+ambiguous relative roots, the reader retains both POSIX and Windows
+interpretations and requires the record path and semantic fingerprint to
+agree on the same one. Native writers retain the historical path behaviour.
+Both current and frozen-envelope controls cover these cases and reject mixed
+interpretations. Missing producer-platform metadata still prevents a universal
+historical filesystem-identity guarantee.
 
 == Executed evidence
 
@@ -60,7 +64,7 @@ metadata; no universal historical filesystem-identity guarantee is claimed.
   checks and eleven declared skips before the guarded merge. The wider
   migration's checks include native tests, Chapel, Hypatia, governance,
   K9/DEED and the executed-test ledger; skipped work is not counted as executed.
-* PONS passed 260 native Windows workspace test executions, all-target Clippy,
+* PONS passed 261 native Windows workspace test executions, all-target Clippy,
   eight parser regressions, the unchanged upstream 116-parse corpus, and an
   independent downstream Cargo consumer. Hosted Linux/Windows and grammar
   regeneration checks passed. PR #72 recorded 21 successful checks, one
@@ -81,7 +85,7 @@ metadata; no universal historical filesystem-identity guarantee is claimed.
   (single JSX file) and
   `beb0d60dc0a7c67cdc6791c814ed7f63862c3e82cf42ae50499e409f34a39c72`
   (repository). These hashes identify those invocations, including their
-  local paths and timestamps; they are not claimed as reproducible byte output.
+  local path spelling; they are not claimed as portable byte-for-byte output.
 
 == External review and remaining configuration
 
@@ -117,6 +121,10 @@ read back. GitLab and Radicle remained enabled after their successful jobs.
 The failed-job recheck of run `42388362649`, attempt 2, completed successfully
 with the paused destinations dormant. It does not establish delivery to those
 five destinations; reactivation still requires approved host/credential setup.
+PANIC's separate Pages workflow still times out during its cold Haskell
+`casket-ssg` build: run `42388362313` was cancelled at its 20-minute build
+limit in both attempts. This deployment workflow was already cancelling on
+older source revisions and is not represented as a successful source check.
 
 SMTP remains intentionally dormant with endpoint and egress containment
 unchanged. No credentialed delivery, browser execution, service registration,
