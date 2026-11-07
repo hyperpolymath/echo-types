@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 = Scanner and review follow-up — 7 November 2026
 
 This receipt supplements `2026-11-06-repository-readiness.adoc` and issue #362.
@@ -26,13 +27,14 @@ producer errors propagate, test identities include their binary, empty runs
 cannot claim coverage, and recon reads the actual baseline's metadata without
 turning unavailable reports into clean results.
 
-PONS: `0112b2a407b0fa97190c92f5676aa80ac7048b68`, incorporating
+PONS tested source: `2350991fd196f49aa1d8afb36dc20483557ff284`, building on
 https://github.com/hyperpolymath/pons-asinorum/pull/70[70],
 https://github.com/hyperpolymath/pons-asinorum/pull/71[71] and
-https://github.com/hyperpolymath/pons-asinorum/pull/72[72].
-The final reviewed source head is
-`f8becf2948b310eedd127a0e14a03c51a645a6a0`; it and the merge commit have
-the same Git tree, `66e647aacc1111c835d505232e91bb7d654eeacc`.
+https://github.com/hyperpolymath/pons-asinorum/pull/72[72], with the final
+path corrections in https://github.com/hyperpolymath/pons-asinorum/pull/73[73].
+The tested source tree is `a39e14eabfcfd7de27c0fa0b76a2edeba5b5b888`.
+PR #73 must complete its final review and merge; the previous merged baseline
+is `0112b2a407b0fa97190c92f5676aa80ac7048b68`.
 Its receipt is `tree-sitter 0.27.0 / javascript 0.25.0+jsx-keywords.3`.
 The targeted vendored patch preserves modern resource declarations, accepts
 JSX keyword attributes/member names, rejects invalid export expressions, and
@@ -43,8 +45,13 @@ publication is disabled until the patched grammar is separately distributable.
 
 PONS reports supported parse failures as partial coverage, preserves valid
 frozen 0.4.0 reports, and checks portable root-relative evidence paths without
-consulting the reader's filesystem. POSIX filename boundaries and in-root
-colon names remain distinguishable from escaping/drive-qualified paths.
+consulting the reader's filesystem. New normal and forced-language CLI scans
+and `Engine::scan` use absolute roots. This disambiguates relative POSIX
+colon/backslash filenames, and relative Windows directory reports are read
+independently of the reader host. POSIX filename boundaries and in-root colon
+names remain distinguishable from escaping/drive-qualified paths. Older
+intrinsically ambiguous relative single-file roots lack producer-platform
+metadata; no universal historical filesystem-identity guarantee is claimed.
 
 == Executed evidence
 
@@ -53,7 +60,7 @@ colon names remain distinguishable from escaping/drive-qualified paths.
   checks and eleven declared skips before the guarded merge. The wider
   migration's checks include native tests, Chapel, Hypatia, governance,
   K9/DEED and the executed-test ledger; skipped work is not counted as executed.
-* PONS passed 258 native Windows workspace test executions, all-target Clippy,
+* PONS passed 260 native Windows workspace test executions, all-target Clippy,
   eight parser regressions, the unchanged upstream 116-parse corpus, and an
   independent downstream Cargo consumer. Hosted Linux/Windows and grammar
   regeneration checks passed. PR #72 recorded 21 successful checks, one
@@ -62,25 +69,34 @@ colon names remain distinguishable from escaping/drive-qualified paths.
   now yields one analysed JavaScript file, no findings, no skips and exit 0
   with `--no-speculative --fail-on error --fail-on-skips --require-language javascript`.
   Its SHA-256 is
-  `74131a8f4d9e6941157132c58abfe3c8d6f1e49da314c7655432512f06253672`.
+  `b69afe5842fc9b4b9b0713f92bbcdfc75200d1f4133c69f25efca52b3c4dde99`.
+  This run used a fresh checkout with automatic CRLF conversion disabled;
+  the earlier Windows-checkout hash was not the Git blob's byte hash.
 * Scanning the complete Echo input with `--no-speculative --fail-on error`
   yields three analysed JavaScript/JSX files, eight existing heuristic
   warnings and 21 explicit skips. Exit 0 reflects that severity policy;
   overall coverage remains `partial`. Agda remains outside PONS coverage.
 * The local JSON receipts have SHA-256
-  `b237f17f9edd38d53f25d032064ebfe061efd124c5787dd24b111ab59a3af9de`
+  `db96a4d67c57215c5a2fc33d597f59a4eb36b660a2d264d037b63d9110e89f3d`
   (single JSX file) and
-  `9ecc74686b589b61634f3eaa9438f40c4623b469857984c721842e5316428df0`
+  `beb0d60dc0a7c67cdc6791c814ed7f63862c3e82cf42ae50499e409f34a39c72`
   (repository). These hashes identify those invocations, including their
   local paths and timestamps; they are not claimed as reproducible byte output.
 
 == External review and remaining configuration
 
 CodeRabbit and Codex supplied real scoped findings on the scanner changes.
-Those findings were addressed through the follow-ups and their review threads
-resolved. CodeRabbit's final #72 pass was rate limited and remains neutral;
+Earlier findings were addressed through the follow-ups. Codex's post-merge
+review of #72 identified three additional findings: two relative-path issues
+are addressed by #73, and the proposed frozen-format compatibility change
+was checked against the actual historical source. Commits `6a20ca7` and
+`84f58f9` selected the parent before replacing backslashes, so a POSIX
+single-file `/tmp/a\b.py` originally produced `a/b.py`. The current control
+preserves that behaviour; a later temporary normalization bug is not adopted
+as the 0.4.0 contract. Final #73 review remains required. CodeRabbit's final #72 pass was rate limited and remains neutral;
 it is not a fresh approval or retrospective review of the original 138-file
-audit. The final PONS source PR currently has no unresolved review threads.
+audit. The #72 review disposition is therefore recorded explicitly rather than
+claiming its post-merge findings never existed.
 
 CodeQL's Rust and Actions analysis jobs passed, but its aggregate PR check is
 neutral because the default branch retains an obsolete configuration named
@@ -108,5 +124,6 @@ certification or independent human approval is claimed. Creusot with Pearlite
 contracts and Verus remain OPEN/not run for these scanner repairs. Regression
 tests and agreement between related scanners are not formal proofs.
 
-Issue #362 remains open for the external configuration disposition and this
-receipt's final review; the original JSX/Windows defects are repaired.
+Issue #362 remains open for #73's final review/merge, the external configuration
+disposition and this receipt's final review. The original JSX/Windows defects
+are repaired.
