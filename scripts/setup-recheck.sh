@@ -22,6 +22,10 @@ mkdir -p "$tool_dir"
 tool_dir="$(cd "$tool_dir" && pwd)"
 
 want="${1:-all}"
+case "$want" in
+  all|rocq|lean) ;;
+  *) printf 'usage: %s [rocq|lean|all]\n' "$0" >&2; exit 2 ;;
+esac
 
 if [ "$want" = all ] || [ "$want" = rocq ]; then
   if ! dpkg-query -W -f='${Version}' coq 2>/dev/null | grep -qx "$COQ_DEB_VERSION"; then

@@ -199,6 +199,7 @@ Theorem search_as_cost_witness : projT1 search_as_cost = 3.
 Proof. reflexivity. Qed.
 
 Print Assumptions search_double_6_decided.
+Print Assumptions search_as_echo.
 Print Assumptions search_as_cost.
 Print Assumptions search_as_dec.
 Print Assumptions search_as_feasible.

@@ -170,6 +170,7 @@ theorem searchAsCostWitness : searchAsCost.1 = 3 := rfl
 end EchoSearchExample
 
 #print axioms EchoSearchExample.searchDouble6Decided
+#print axioms EchoSearchExample.searchAsEcho
 #print axioms EchoSearchExample.searchAsCost
 #print axioms EchoSearchExample.searchAsDec
 #print axioms EchoSearchExample.searchAsFeasible
