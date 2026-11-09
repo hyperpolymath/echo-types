@@ -46,8 +46,12 @@ Lean legs are re-proved and kernel-checked with no axioms. They are
 every witness.
 |===
 
-Census: 1 theorem record is graded (`PWG-2ii`), and none is at `PWG-3` or `PWG-1`. Every other theorem in this
-repository is `ungraded`, because no per-theorem record exists for it yet.
+Census (PROOF-POLICY §8.4), counted per theorem on 2026-11-09 over the 722
+headline pins in the `using` clauses of `proofs/agda/Smoke.agda` (the pins
+include some definitions as well as theorems): `PWG-1` 0, `PWG-2ii` 5,
+`PWG-2i` 0, `PWG-3` 0, `ungraded` 717. The five graded theorems are the
+`EchoSearchExample` headlines above; every other pin is `ungraded` because no
+per-theorem record exists for it yet.
 Agda results for the whole closure are dated checks, not grades.
 
 == Agda cold check (2026-11-09)

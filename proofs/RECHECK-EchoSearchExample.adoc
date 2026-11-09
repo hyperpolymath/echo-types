@@ -22,7 +22,9 @@ differences and the owner's acceptance together as the bridge record.
 
 `PWG-1` additionally needs current receipts from the pinned CI lanes
 (`check`, `cold-check`, `rocq-recheck`, `lean-recheck`) on the exact source
-commit for every witness. Those lanes now run on every push.
+commit for every witness. Those lanes run on pull requests, on pushes to
+`main` and `master`, and on manual dispatch; a push to any other branch with
+no open pull request produces no receipt.
 ====
 
 == Ledger
@@ -181,21 +183,25 @@ are differences between the systems and are listed as the policy requires.
 * Log: `docs/receipts/agda-cold-2026-11-09.log.gz`. The uncompressed log has
   sha256 `7f9de4d1f874a0f249eadeb3fc675be346f437cb28cb31fd3e6db1b635e54eb0`.
 
-*Rocq leg.* `proofs/rocq/EchoSearchExample.v` sha256
-`548777f6d03abf60aece1d12e5d0bf52ffa5da25be636d937c28e360a981813d`, checked
+*Rocq leg.* Source: `hyperpolymath/echo-types` at commit
+`7e9b5f446a50cc6e78faa815e8a5efe7092cdb0b`. `proofs/rocq/EchoSearchExample.v` sha256
+`2a016469af61f11daf2df82ca5ecae6d6ec4b0a2d2a6406b18fef2b516836068`, checked
 with Coq 8.18.0 (OCaml 4.14.1; Ubuntu `coq 8.18.0+dfsg-1build2`). Invocation:
 `bash scripts/check-recheck.sh rocq`, which runs `coqc -q` and requires every
-`Print Assumptions` to report "Closed under the global context". Result: five
-headlines, no axioms.
+`Print Assumptions` to report "Closed under the global context" and requires
+one for each of the five headlines by name. Result: six checks (the five
+headlines and `search_as_cost_witness`), all closed, no axioms.
 
-*Lean leg.* `proofs/lean4/EchoSearchExample.lean` sha256
-`6ef569ac214e428e57b5b2cafa6ee55994360f3591a8e4882d3a4e4ae406fb98`, checked
+*Lean leg.* Source: `hyperpolymath/echo-types` at commit
+`7e9b5f446a50cc6e78faa815e8a5efe7092cdb0b`. `proofs/lean4/EchoSearchExample.lean` sha256
+`fdb271bfbaa9b1feeee99fce767cf269c8dbaa3da374d870300413ffa4068d94`, checked
 with Lean 4.30.0 (commit `d024af099ca4bf2c86f649261ebf59565dc8c622`; release
 archive sha256 `4dad74141c2c119ca1aa626656be83b8e14238afba97271fd7bf1eb3f081b319`).
 Core only, with no imports and no Mathlib. Invocation:
 `bash scripts/check-recheck.sh lean`, which requires no error, warning or
-`sorry`, and every `#print axioms` to report none. Result: five headlines, no
-axioms.
+`sorry`, every `#print axioms` to report none, and an axiom-free result for
+each of the five headlines by name. Result: six checks (the five headlines
+and `searchAsCostWitness`), no axioms.
 
 *Sensitivity.* Planted errors make each leg fail: `double` changed to add one,
 and the decided budget changed from 4 to 3, which leaves the witness out of
