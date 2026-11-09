@@ -1,0 +1,225 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= EchoSearchExample: Agda source, Rocq and Lean recheck legs
+:toc:
+
+This is the per-theorem record that PROOF-POLICY §2.2, §5 and §8.5 ask
+for (https://github.com/metadatastician/standards/blob/9bdf864cc7f2c8e24b4df84bf00d04158eee3ad5/3-practice/PROOF-POLICY.adoc[standards@9bdf864]).
+It covers the headlines of `proofs/agda/EchoSearchExample.agda` (echo-types
+#353), a theory development: a worked axis-8 exhibit with no dependence on
+any one system's code. The Agda proof is the source of truth.
+
+[IMPORTANT]
+====
+*Grade: `PWG-3`, not rested on axioms.* Both recheck legs are kernel-checked
+with no axioms, but their correspondence state is `BRIDGE-PENDING`. A
+`BRIDGE-PENDING` leg does not count towards a grade (§2.2, §8.2). The
+statement comparison below was written by an agent. Under the estate
+doctrine, an equivalence claim stays provisional until the owner has
+reviewed it. Once the owner accepts the comparison, both legs become
+`RECONCILED` and the computed grade is `PWG-2ii`. The `PWG-1` grade also
+needs per-commit receipts from the CI lanes for every witness.
+====
+
+== Ledger
+
+[cols="2,1,1,1,1,3",options="header"]
+|===
+|Leg |Route |§5 token |§2.2 state |Axioms |Receipt
+
+|Agda (source)
+|—
+|`PROVEN`
+|`AGDA-VERIFIED`
+|none
+|Cold check at echo-types `ccec4d79866e3e433ae2268d2f8b7899396cb34f`, 2026-11-09. See "Receipts".
+
+|Rocq
+|`re-proved`
+|`PROVEN`
+|`BRIDGE-PENDING`
+|none (`Print Assumptions`: closed)
+|`proofs/rocq/EchoSearchExample.v`, Coq 8.18.0, 2026-11-09.
+
+|Lean 4
+|`re-proved`
+|`PROVEN`
+|`BRIDGE-PENDING`
+|none (`#print axioms`: none)
+|`proofs/lean4/EchoSearchExample.lean`, Lean 4.30.0, 2026-11-09.
+|===
+
+Record (§8.5): `pwg: 3`, `foundation_diverse: false`.
+
+*Why re-proved, not transported.* The policy prefers Dedukti transport
+(§2). No Agda→Dedukti→Rocq/Lean pipeline is set up in this repo. Separately,
+no released Lambdapi Lean exporter exists, so the Lean leg would be a
+re-proof in any case (§2). The theorems are small and concrete, so a hand
+re-proof against the same definitions is the direct route.
+
+== Statement correspondence
+
+The comparison was made by reading: each Rocq and Lean definition restates
+the Agda definition it mirrors, clause by clause.
+
+[cols="1,3,3,3",options="header"]
+|===
+|Headline |Agda |Rocq |Lean 4
+
+|`double`
+|`double zero = zero`; `double (suc n) = suc (suc (double n))`
+|same two clauses on `nat`
+|`double 0 = 0`; `double (n+1) = double n + 2` (= `succ (succ (double n))` by `Nat.add` unfolding)
+
+|`search-double-6`
+|`EchoS countUp double 6 4`, witness `(3 , s≤s⁴ z≤n , refl)`
+|`EchoS countUp double 6 4`, `existT _ 3 (le_n 4, eq_refl)`
+|`EchoS countUp double 6 4`, `⟨3, by decide, rfl⟩`
+
+|`search-double-6-decided`
+|`bounded-search-is-decidable _≟_ countUp double 6 4 ≡ yes search-double-6`, by `refl`
+|`bounded_search_is_decidable nat_eq_dec countUp double 6 4 = yes search_double_6`, by `reflexivity`
+|`boundedSearchIsDecidable Nat.decEq countUp double 6 4 = Dec.yes searchDouble6`, by `rfl`
+
+|`search-as-echo`
+|`Echo double 6`
+|`Echo double 6`
+|`Echo double 6`
+
+|`search-as-cost`
+|`EchoC search-steps 4 double 6` (`Cost stepCostAlgebra`)
+|`EchoC search_steps 4 double 6`
+|`EchoC searchSteps 4 double 6`
+
+|`search-as-dec`
+|`EchoDec double 6`
+|`EchoDec double 6`
+|`EchoDec double 6`
+
+|`search-as-feasible`
+|`CEcho feasible double 6`, by `degrade-access free≤feasible`
+|`CEcho feasible double 6`, by `degrade_access free_feasible`
+|`CEcho .feasible double 6`, by `degradeAccess .freeFeasible`
+|===
+
+The definitions behind them:
+
+* `Echo f y = Σ A (λ x → f x ≡ y)` (`Echo.agda`). Rocq writes it as
+  `{x : A & f x = y}` (`sigT`), Lean as `(x : A) ×' (f x = y)` (`PSigma`).
+* `EchoS enum f y n = Σ ℕ (λ k → (k < n) × (f (enum k) ≡ y))`
+  (`EchoSearch.agda`). Both targets use a proof-relevant Σ over `k` with the
+  same two components.
+* `bounded-search-is-decidable` recurses structurally on the budget, and its
+  successor step tests the new top index `n` first, then recurses. The
+  targets recurse the same way and in the same order, so the `decided`
+  equation computes to the same witness. The Agda comment notes this is one
+  comparison, not an ascending walk.
+* `EchoC` at `stepCostAlgebra = (ℕ, 0, _+_, _≤_, …)`: `Cost stepCostAlgebra`
+  unfolds to `Σ A (λ x → (f x ≡ y) × (cost x ≤ c))`. The targets restate
+  that instance directly, not the generic `CostAlgebra` record. The generic
+  record and its laws are not part of these headlines.
+* `search-steps = suc`; `count-up-search-to-cost` re-pairs, because `k < n` is
+  `suc k ≤ n` definitionally. This holds in all three systems: stdlib `_<_`;
+  Rocq `lt n m := S n <= m`; Lean `Nat.lt n m := Nat.le (n+1) m`.
+* `EchoDec f y = Dec (Echo f y)`; `search-to-dec s = yes (echo-search-forget s)`.
+* `CEcho`, `_≤a_` (15 Hasse pairs) and `degrade-access` are restated in full,
+  case for case.
+
+== Residual differences and assumptions
+
+These do not change what the headlines state about this example, but they
+are differences between the systems and are listed as the policy requires.
+
+. *Identity type.* Agda's `_≡_` is used under `--without-K`. Rocq's `eq` lives
+  in `Prop`, with no UIP axiom assumed. Lean's `Eq` lives in `Prop` with
+  definitional proof irrelevance, so K holds in Lean. Every proof here is a
+  closed computation (`refl` / `reflexivity` / `rfl`) or a re-pairing, so
+  none of them uses K. The Lean leg is still checked in a strictly stronger
+  theory.
+. *Order and decision types.* Agda's `_<_` is a data type in `Set`; in Rocq
+  and Lean it is a `Prop`. Agda's stdlib `Dec` is a record (`does`/`proof`);
+  the targets use a local `yes`/`no` inductive with the same two cases.
+  Decidable equality on ℕ is stdlib `_≟_` in Agda, a `decide equality` term
+  in Rocq, and `Nat.decEq` in Lean.
+. *Universes.* Agda is universe-polymorphic with `Lift` padding in `CEcho`.
+  Rocq uses `Type` with template polymorphism; Lean uses `Type u` with
+  `PUnit`. Both targets use the unit type where Agda uses `Lift (a ⊔ b) ⊤`.
+. *Scope.* The `CostAlgebra` laws (`≤-refl`, `≤-trans`, `+-identityˡ`,
+  `+-mono-≤`) are not restated, because no headline in this module depends
+  on them. They are Agda-only facts for this theorem.
+
+== Receipts
+
+*Agda (PWG-3 receipt).*
+
+* Source: echo-types `ccec4d79866e3e433ae2268d2f8b7899396cb34f`, clean tree.
+  `proofs/agda/EchoSearchExample.agda` sha256
+  `b73a9bb1fab531531f2442ea5f23cda74bd933e6e80e12e84986aa8ef716be33`.
+* Checker: Agda 2.7.0.1 from `scripts/setup-agda.sh`, release archive sha256
+  `975b515a14877ab6bce5bfc641e16c4a3ee52ca5d7f846577dee80aa2145db8a`.
+  Pins: stdlib `8326c7475af1fa456ca04a0203c168d5d7ff842b`, absolute-zero
+  `f486c29903434589117fa0662c6f29b0f17d1d5f`.
+* Invocation: `agda --no-libraries -i $AGDA_STDLIB -i $ABSOLUTE_ZERO_AGDA
+  --ignore-interfaces --safe --without-K --cubical-compatible -i proofs/agda
+  proofs/agda/All.agda`. That is the §2.1 profile, cold; `All` imports
+  `EchoSearchExample`.
+* The same run also checked `Smoke`, `AuditSmoke`, `characteristic/All`,
+  `examples/All`, `experimental/echo-additive/All`, `NarrowingSmoke`, the
+  `--safe --cubical` island and the five static guards. All exited 0.
+* Import cone (§1.1): first-party `EchoSearchExample`, `Echo`, `EchoCost`,
+  `EchoDecidable`, `EchoAccess`, `EchoSearch`, plus the pinned stdlib.
+  Compiled under `--safe`, which refuses `postulate`. A comment-aware scan of
+  the first-party cone finds zero postulates. Postulate count: 0.
+* Warnings: `UnsupportedIndexedMatch` (Cubical computation on transports)
+  appears in the cone, including `EchoSearch.agda` lines 192–204 (the
+  decider) and `EchoAccess.agda`. These are the known warnings triaged in
+  `PROOF-STATUS.adoc`. They are not errors and not postulates.
+* Log: `docs/receipts/agda-cold-2026-11-09.log.gz`. The uncompressed log has
+  sha256 `7f9de4d1f874a0f249eadeb3fc675be346f437cb28cb31fd3e6db1b635e54eb0`.
+
+*Rocq leg.* `proofs/rocq/EchoSearchExample.v` sha256
+`548777f6d03abf60aece1d12e5d0bf52ffa5da25be636d937c28e360a981813d`, checked
+with Coq 8.18.0 (OCaml 4.14.1; Ubuntu `coq 8.18.0+dfsg-1build2`). Invocation:
+`bash scripts/check-recheck.sh rocq`, which runs `coqc -q` and requires every
+`Print Assumptions` to report "Closed under the global context". Result: five
+headlines, no axioms.
+
+*Lean leg.* `proofs/lean4/EchoSearchExample.lean` sha256
+`6ef569ac214e428e57b5b2cafa6ee55994360f3591a8e4882d3a4e4ae406fb98`, checked
+with Lean 4.30.0 (commit `d024af099ca4bf2c86f649261ebf59565dc8c622`; release
+archive sha256 `4dad74141c2c119ca1aa626656be83b8e14238afba97271fd7bf1eb3f081b319`).
+Core only, with no imports and no Mathlib. Invocation:
+`bash scripts/check-recheck.sh lean`, which requires no error, warning or
+`sorry`, and every `#print axioms` to report none. Result: five headlines, no
+axioms.
+
+*Sensitivity.* Planted errors make each leg fail: `double` changed to add one,
+and the decided budget changed from 4 to 3, which leaves the witness out of
+reach. Each mutant exits non-zero in both Rocq and Lean.
+
+*CI.* The `rocq-recheck` and `lean-recheck` jobs in `.github/workflows/agda.yml`
+run the same scripts on every push and pull request. These are the
+per-commit receipts that `PWG-1` will need.
+
+== Toolchain deviation (§6)
+
+* Legs affected: Rocq and Lean, for this theorem.
+* Tools: Coq 8.18.0 from the Ubuntu 24.04 archive (`coq 8.18.0+dfsg-1build2`);
+  Lean 4.30.0 from the upstream release archive at the sha256 above.
+  `scripts/setup-recheck.sh` asserts both versions and fails on a mismatch.
+* Why not Guix or the container: the repo's Agda lane already installs from a
+  checksum-pinned release archive (`scripts/setup-agda.sh`). These legs follow
+  the same pattern, so that every prover in CI comes from one method, until
+  the Guix manifest carries pinned Rocq and Lean.
+* State: `open`.
+
+== Revalidation triggers
+
+Re-run all three legs, and recompute the grade from the receipts (§8.4.4),
+if any of the following changes:
+
+* the Agda sources in the cone;
+* either target file;
+* the Agda, stdlib, absolute-zero, Coq or Lean pin.
+
+A failing leg drops the grade.
