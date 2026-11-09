@@ -11,14 +11,18 @@ any one system's code. The Agda proof is the source of truth.
 
 [IMPORTANT]
 ====
-*Grade: `PWG-3`, not rested on axioms.* Both recheck legs are kernel-checked
-with no axioms, but their correspondence state is `BRIDGE-PENDING`. A
-`BRIDGE-PENDING` leg does not count towards a grade (§2.2, §8.2). The
-statement comparison below was written by an agent. Under the estate
-doctrine, an equivalence claim stays provisional until the owner has
-reviewed it. Once the owner accepts the comparison, both legs become
-`RECONCILED` and the computed grade is `PWG-2ii`. The `PWG-1` grade also
-needs per-commit receipts from the CI lanes for every witness.
+*Grade: `PWG-2ii`, not rested on axioms.* The Agda source is `PROVEN`. Both
+recheck legs (Rocq and Lean) are kernel-checked as `PROVEN` with no axioms,
+and are `RECONCILED` (§2.2), so both legs count (§8.2).
+
+*How the legs were reconciled.* An agent wrote the statement comparison
+below. The owner accepted it on 2026-11-09 (echo-types#368), without a
+separate line-by-line review. Treat the comparison, the residual
+differences and the owner's acceptance together as the bridge record.
+
+`PWG-1` additionally needs current receipts from the pinned CI lanes
+(`check`, `cold-check`, `rocq-recheck`, `lean-recheck`) on the exact source
+commit for every witness. Those lanes now run on every push.
 ====
 
 == Ledger
@@ -37,19 +41,19 @@ needs per-commit receipts from the CI lanes for every witness.
 |Rocq
 |`re-proved`
 |`PROVEN`
-|`BRIDGE-PENDING`
+|`RECONCILED`
 |none (`Print Assumptions`: closed)
 |`proofs/rocq/EchoSearchExample.v`, Coq 8.18.0, 2026-11-09.
 
 |Lean 4
 |`re-proved`
 |`PROVEN`
-|`BRIDGE-PENDING`
+|`RECONCILED`
 |none (`#print axioms`: none)
 |`proofs/lean4/EchoSearchExample.lean`, Lean 4.30.0, 2026-11-09.
 |===
 
-Record (§8.5): `pwg: 3`, `foundation_diverse: false`.
+Record (§8.5): `pwg: 2ii`, `foundation_diverse: false`. All three legs: `PROVEN`, with no axioms. Rocq and Lean: route `re-proved`, §2.2 `RECONCILED` (owner acceptance, 2026-11-09).
 
 *Why re-proved, not transported.* The policy prefers Dedukti transport
 (§2). No Agda→Dedukti→Rocq/Lean pipeline is set up in this repo. Separately,

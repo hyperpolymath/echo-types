@@ -37,15 +37,16 @@ never assigned to the repository as a whole.
 |Theorem |PWG |Record
 
 |`EchoSearchExample` headlines (`search-double-6-decided`, `search-as-echo`, `search-as-cost`, `search-as-dec`, `search-as-feasible`)
-|`PWG-3`, no axioms
+|`PWG-2ii`, no axioms
 |link:proofs/RECHECK-EchoSearchExample.adoc[`proofs/RECHECK-EchoSearchExample.adoc`].
 The Agda receipt is the cold check at `ccec4d7` (2026-11-09). The Rocq and
-Lean legs are re-proved and kernel-checked with no axioms, but stay
-`BRIDGE-PENDING` until the owner reviews the statement comparison. Once
-accepted, the computed grade is `PWG-2ii`.
+Lean legs are re-proved and kernel-checked with no axioms. They are
+`RECONCILED` by owner acceptance of the recorded statement comparison
+(2026-11-09). `PWG-1` additionally needs current pinned CI receipts for
+every witness.
 |===
 
-Census: 1 theorem record is graded (`PWG-3`). Every other theorem in this
+Census: 1 theorem record is graded (`PWG-2ii`), and none is at `PWG-3` or `PWG-1`. Every other theorem in this
 repository is `ungraded`, because no per-theorem record exists for it yet.
 Agda results for the whole closure are dated checks, not grades.
 
