@@ -429,8 +429,8 @@ The echo-invariant line: epistemic structure, choreographies, roles.
 Certified Null Operations = echo types where `f = id`. absolute-zero is
 both a *dependency* of the core and a *bridge* target.
 
-* Proofs: `proofs/agda/EchoCNOBridge.agda`, `MinimalCNO.agda`,
-  `WorkingCNO.agda`.
+* Proofs: `proofs/agda/EchoCNOBridge.agda` (in `All.agda`). `MinimalCNO.agda`
+  and `WorkingCNO.agda` are not reachable from `All.agda`.
 * Docs: `docs/ECHO-CNO-BRIDGE.adoc`,
   `docs/echo-types/cross-repo-bridge-status.md`.
 
