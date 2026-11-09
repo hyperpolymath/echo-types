@@ -26,17 +26,17 @@
 --   `affine-consumer-cannot-distinguish` — POSITIVE: any
 --   `g : LEcho affine → X` assigns the same value to the weakened
 --   images of `echo-true` and `echo-false`. Direct corollary of
---   `affine-all-equal`. This is what the Echo interface GUARANTEES
---   that raw Σ does not.
+--   `affine-all-equal`: functions out of the contractible affine
+--   carrier are constant.
 --
 --   `sigma-distinguishes` — NEGATIVE: the raw Σ-projection `proj₁`
 --   IS a consumer that distinguishes `echo-true` from `echo-false`.
---   Exhibiting this concrete counter-program makes the abstraction
---   barrier a checked artefact, not a wish: the Echo interface
---   refuses to export `proj₁` *exactly because* `sigma-distinguishes`
---   shows what would happen if it did.
 --
--- Together they say: hiding `proj₁` is a guarantee, not a convention.
+-- Audit 2026-11-09: there is no enforced abstraction barrier. `Echo` is
+-- a transparent Σ (no `abstract` block), and `proj₁` is used on Echo
+-- throughout the repo. The pair of theorems shows what a barrier WOULD
+-- buy (affine consumers are blind, proj₁ is not); hiding `proj₁` is a
+-- convention, not a checked guarantee.
 --
 -- Honest framing notes:
 -- * "Theorem 1" (consumer factorisation) from the original sketch was
