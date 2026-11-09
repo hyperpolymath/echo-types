@@ -33,15 +33,15 @@
 --   * CONST — `f = λ _ → y₀`. Then `Echo f y₀` is canonically `A`
 --     itself (every domain element is a preimage of the unique
 --     image), and `Echo f y ≡ ⊥-shape` for `y ≢ y₀` (the fibre is
---     empty whenever `y` is distinct from `y₀`). The full-domain
---     fibre at `y₀` is packaged as `const-fibre-↔-domain`.
+--     empty whenever `y` is distinct from `y₀`). Only a section
+--     A → fibre at `y₀` is proved; the full ↔ needs UIP on B
+--     (no `const-fibre-↔-domain` exists; audit 2026-11-09).
 --
 -- Closes Tier 2 #2 per the synthesis-roadmap reorder (Image → Loss →
 -- Residue → Decoration → ObsEquiv). The headlines below are
 -- almost-all re-exports / restatements; the load-bearing NEW content
 -- is the EQUIV case's `HasInverse` record + the three small
--- theorems hanging off it, and the CONST case's `↔`-packaged
--- fibre-is-domain witness.
+-- theorems hanging off it, and the CONST case's section.
 --
 -- Headlines (pinned in Smoke.agda):
 --
@@ -266,7 +266,7 @@ const-fibre-section-projects-to-id _ _ = refl
 --   EQUIV                    │  centre + uniq up to UIP / contractibility
 --   INJ                      │  projection unique (K-free here)
 --   SURJ                     │  every fibre inhabited (refl iff)
---   CONST  (at y₀)           │  fibre IS the domain (↔ proved here)
+--   CONST  (at y₀)           │  section from the domain (↔ needs UIP)
 --
 -- Cases NOT covered by the four headlines, with reasons:
 --

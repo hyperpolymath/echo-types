@@ -159,8 +159,8 @@ open import EchoReversibilityBridge using
 -- operational once-only reversal discipline. `takeForReverse` replays a
 -- `holding` cell / fails on `spent`; `consume` transitions Holding→Spent;
 -- `once-only` is the headline — after `consume`, a further `takeForReverse`
--- is always `nothing` (the state-machine form of the Idris `(1 e)` linear
--- consumption). `holding-reverses` / `spent-does-not-reverse` mirror the
+-- is always `nothing`. It holds definitionally and mirrors the Idris
+-- discipline; it does not enforce linear consumption (audit 2026-11-09). `holding-reverses` / `spent-does-not-reverse` mirror the
 -- Idris `holdingReverses` / `spentDoesNotReverse`.
 open import EchoResidueCell using
   ( ResidueCell
@@ -244,8 +244,10 @@ open import EchoImageFactorization using
 
 -- EchoImageFactorizationProp — (epi, mono) image factorisation
 -- module-parameterised in a propositional-truncation interface
--- (`TruncInterface`).  Closes the (epi, mono) earn-back gate the
--- base module flagged: takes ∥_∥ as an explicit module parameter
+-- (`TruncInterface`).  Conditional: nothing in the --safe build supplies
+-- a `TruncInterface` (only the quarantined postulated shadow or the
+-- cubical island does), so the (epi, mono) gate stays OPEN in
+-- PROOF-STATUS.  Takes ∥_∥ as an explicit module parameter
 -- (mirroring the funext-as-module-parameter discipline of
 -- `EchoOFSUnivF5`), then ships the (-1)-truncated image + its
 -- monic right leg + its mere-surjective left leg.  Zero postulates
@@ -259,9 +261,10 @@ open import EchoImageFactorizationProp using
 -- EchoLossTaxonomy — function-side classification of `f : A → B`
 -- by echo shape. Four cases: EQUIV (centre + projection unique),
 -- INJ (projection unique, re-export), SURJ (every fibre inhabited,
--- re-export), CONST (fibre at y₀ ↔ A). The EQUIV/CONST cases ship
--- new content (`HasInverse` record, `const-fibre-↔-domain` packaged
--- as `↔`); INJ/SURJ are taxonomy-side renames of the
+-- re-export), CONST (a section A → fibre at y₀; the full ↔ needs UIP
+-- and is not proved). The EQUIV/CONST cases ship new content
+-- (`HasInverse` record and the CONST section); INJ/SURJ are
+-- taxonomy-side renames of the
 -- `EchoImageFactorization` headlines. Honest scope: the full
 -- "contractible fibre" and "propositional fibre" upgrades need UIP /
 -- truncation and are documented as the next earn-back. Companion to
@@ -366,7 +369,7 @@ open import EchoFiberTriangulation using
   ( echo-is-stdlib-witness                      -- T1 calibration
   ; all-echo→stdlib-strictly-surjective
   ; stdlib-strictly-surjective→all-echo
-  ; echo↔coecho                                 -- T2 genuine content
+  ; echo↔coecho                                 -- T2 (an involution by sym)
   ; all-echo→stdlib-surjection                  -- T3 surjection tie
   )
 
@@ -618,13 +621,12 @@ open import EchoThermodynamics using
   ; landauer-collapse
   )
 
--- EchoEntropy — discrete Shannon-entropy non-distinguishing theorem.
--- Companion to EchoAbstractionBarrier: the entropic shadow (fibre
--- count = 2 bit on collapse@tt) agrees on echo-true vs echo-false,
--- so any consumer factoring through it cannot distinguish them.
+-- EchoEntropy — a discrete entropy shadow (fibre count 2 on a Fin 2
+-- encoding of collapse@tt). The shadow is a constant function, so the
+-- "blind" results hold by construction (refl); they record that a
+-- count-valued consumer cannot see the witness, not a Shannon-entropy
+-- theorem. Real-valued Shannon entropy remains OPEN (audit 2026-11-09).
 -- Matched-negative via `sigma-distinguishes` (witness side does).
--- Closes the "Shannon-entropy formalisations not yet present" item
--- flagged in EchoThermodynamics + EchoStabilityTests.
 open import EchoEntropy using
   ( collapse-as-fin
   ; collapse-fibre-count
@@ -646,8 +648,21 @@ open import EchoThermodynamicsFinite using
   ; landauer-collapse-finite
   )
 
+-- Audit 2026-11-09: `bennett-reversible-arbitrary` does not use its
+-- injectivity hypothesis; the structural cost is 0 for every f
+-- (occupancy is 0 or 1 and ⌊log₂⌋ of either is 0). Vacuous as stated,
+-- kept deprecated.  The faithful statement is `bennett-enumerated`, with
+-- the converse `landauer-fan-in` and the witness `collapse-erasure-cost`.
 open import EchoThermodynamicsArbitrary using
   ( FiberSubsingleton
+  ; FiberEnum
+  ; fiber-card
+  ; enumerated-erasure-cost
+  ; bennett-enumerated
+  ; landauer-fan-in
+  ; collapse-enum
+  ; collapse-erasure-cost
+  ; bennett-enumerated-cno-identity
   ; injective⇒fiber-subsingleton
   ; reversible-erasure-cost
   ; bennett-reversible-arbitrary
@@ -722,13 +737,12 @@ open import EchoAbstractionBarrier using
   ; sigma-distinguishes
   )
 
--- EchoLLEncoding — linear-logic shallow-encoding gap. Companion to
--- EchoAbstractionBarrier: no standard LL `!A`-style shadow encoding
--- preserves Echo's `no-section-weaken` property, because the
--- distinguishing data lives in the witness LL discards. The trivial
--- ⊤-shadow is the canonical LL `!A := 1` model and admits a section
--- of the encoded weakening; the source side does not. Closes the
--- LL-encoding-gap follow-up to the abstraction-barrier audit.
+-- EchoLLEncoding — linear-logic shallow-encoding gap. Every encoding
+-- whose linear carrier is a proposition (`ForgetsWitness`) admits a
+-- section of the encoded weakening, so `no-section-weaken` does not
+-- survive it; the ⊤-shadow (`!A := 1`) is one such encoding. This is
+-- not a claim about all LL encodings: the identity encoding X = LEcho
+-- keeps no-section, and `enc-commutes` is not used (audit 2026-11-09).
 open import EchoLLEncoding using
   ( LLShallowEncoding
   ; trivial-encoding
@@ -854,15 +868,19 @@ open import EchoOFSUnivF5 using
 -- `lift x = h (e⁻¹ x)` where `e⁻¹` is the inverse from `HasInverse e`.
 -- Both triangles (lift ∘ e ≡ h, proj₁ ∘ lift ≡ k) commute pointwise
 -- K-free; strict forms lifted via funext. Uniqueness K-free pointwise;
--- strict via funext. F5-2 partial-pass; F5-3 (factorisation uniqueness
--- up to iso) remains the final open slice for full F5 pass.
+-- strict via funext. (F5-3 landed later; see below.) The lift uses only
+-- that `e` is an equivalence, not anything about proj₁ or Echo.
 open import EchoOFSUnivF5Diag using
   ( module Pointwise
   ; module Strict
   )
 
--- Pillar F, Gate F5 third slice — F5 FULL PASS.
--- Factorisation uniqueness up to iso. Given any second (eq, proj)
+-- Pillar F, Gate F5 third slice. Audit 2026-11-09: this proves that a
+-- comparison iso EXISTS for any second factorisation; it does not prove
+-- the iso unique, and the F5-2 lifting holds against any map, so the
+-- "full OFS" here is not the (equivalence, projection) system in the
+-- usual sense. Read "F5 full pass" below as "three slices landed".
+-- Given any second (eq, proj)
 -- factorisation `f = p ∘ g` with `g : A → X` an equivalence (via
 -- `HasInverse`), construct the canonical iso `φ : X ↔ Σ B (Echo f)`
 -- with `φ.to ∘ g ≡ encode f` and `proj₁ ∘ φ.to ≡ p` (both strict
@@ -929,8 +947,9 @@ open import EchoTransaction using
   )
 
 -- EchoSelectiveProjection — relational-algebra σ–π commutativity (issue
--- #176). Column-safe selection commutes with projection (set-equality of
--- the result relations); a projected-away-column predicate admits no
+-- #176). Column-safe selection commutes with projection (logical
+-- equivalence ⇔ of membership in the result relations); a
+-- projected-away-column predicate admits no
 -- column-restricted lift (the non-commuting counterexample).
 open import EchoSelectiveProjection using
   ( SelectiveProjection
@@ -996,9 +1015,10 @@ open import EchoDifferential using
 -- (2026-06-13). Two production functions at opposite ends of the
 -- deniability spectrum: produce-perfect (constant → fully deniable,
 -- no section) and produce-partial (injective → not deniable for
--- arbitrary openers, has section). IsConstantOpener is the exact
--- cut-point at which deniability is restored for the partial case;
--- it is the type-level analogue of the `affine` mode in
+-- arbitrary openers, has section). For a constant opener the partial
+-- case is deniable, but `partial-deniable-restricted` is its hypothesis
+-- restated (no exactness or minimality is proved); IsConstantOpener
+-- is the type-level analogue of the `affine` mode in
 -- EchoObservationalEquivalence. no-section-produce-perfect / partial-
 -- has-section make the duality a checked theorem pair.
 open import EchoDeniability using
@@ -1051,11 +1071,11 @@ open import EchoStepNDModelF2 using
   ; nd-fibre-not-prop             -- the fibre is not a proposition
   )
 
--- Pillar F, Gate F1 — the MAKE-OR-BREAK gate (docs/echo-types/
--- earn-back-plan.adoc §F1). A genuine graded comonad on the
--- iterated-residue carrier `D r A = r nested R-layers`, with grade
--- monoid (ℕ, +, 0), Echo as the grade-unit object (D 0 (Echo f y) is
--- the bare echo), NESTED comultiplication δ : D (m+n) ⇒ D m ∘ D n,
+-- Pillar F, Gate F1 (docs/echo-types/earn-back-plan.adoc §F1). A graded
+-- comonad on the iterated-product carrier `D r A = A × Bool^r`, with
+-- grade monoid (ℕ, +, 0). It does not mention Echo, and it is lossless:
+-- δ is `coe` along a type equality and is inverted by μ-writer (see
+-- EchoVariance). Comultiplication δ : D (m+n) ⇒ D m ∘ D n,
 -- all three graded-comonad laws proved, and a separating witness
 -- showing D 2 is not collapsing to ⊤. --safe --without-K, zero
 -- postulates, no funext. Scope: this earns back the graded-comonad
@@ -1096,20 +1116,19 @@ open import EchoGradedComonadInstance2 using
 
 -- Variance verdict (docs/echo-types/variance-resolution.adoc): the
 -- monad / comonad / adjunction status of loss accumulation, resolved in
--- --safe Agda rather than asserted. Accumulation is the graded-MONAD
--- multiplication (total + canonical); recoverability is exact on the
--- grade-0 fibre (the section/retraction adjunction); the graded-COMONAD
--- direction fails for genuine loss (no bare-residue recovery); the
--- "graded comonad" reading (F1) is the LOSSLESS complement-storing writer
--- (δ invertible). Pinned so a slide back to an unqualified "graded
--- comonad of loss" claim fails CI fast.
+-- --safe Agda. Audit 2026-11-09: these maps do NOT supply a graded monad,
+-- and the fibre round trips are not an adjunction (EchoVariance's own
+-- header says so; EchoDependentPushforward supplies an adjunction).
+-- `no-bare-recovery` forbids a left inverse of one Boolean collapse; it
+-- does not rule out graded comonads (EchoErasingGradedComonad is one).
+-- The F1 reading is the lossless writer (δ invertible).
 open import EchoVariance using
-  ( accumulate                       -- μ : D_r (D_s A) → D_{r+s} A — accumulation is monadic
+  ( accumulate                       -- μ : D_r (D_s A) → D_{r+s} A (map shape only)
   ; split-with-factoring             -- δ given the factoring (its inverse)
   ; accumulate-split-id              -- exact on the fibre (round-trip refl)
   ; split-accumulate-id              -- exact on the fibre (round-trip refl)
-  ; recoverable-fibre                -- A ↔ Σ B (Echo f): the grade-0 section/retraction adjunction
-  ; no-bare-recovery                 -- the comonad obstruction: collapse has no section
+  ; recoverable-fibre                -- A ↔ Σ B (Echo f): total completion (not an adjunction)
+  ; no-bare-recovery                 -- collapse has no left inverse
   ; fibre-retains-lost-bit           -- the lost bit lives on the fibre, not as a complement
   ; μ-writer                         -- F1 writer's accumulation (inverse of δ)
   ; writer-μ-section                 -- writer δ is invertible ⇒ LOSSLESS (complement-storing)

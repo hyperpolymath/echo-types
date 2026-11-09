@@ -64,9 +64,10 @@
 -- The falsifier per the Echo-vs-Σ Track A/B/C bar: if every
 -- headline below could be re-proved using only `Σ` + `_≡_` (no
 -- `Echo`), the module would fail to clear the bar. The headlines
--- below directly invoke `Echo`'s fibre-shape primitives; replacing
--- `Echo project p` by a generic Σ would lose the residue-collapse
--- alignment with `EchoResidue.collapse-residue-same`.
+-- below directly invoke `Echo`'s fibre-shape primitives.
+-- Audit 2026-11-09: `Echo` is definitionally a Σ, so by the falsifier
+-- above these headlines CAN be re-proved with Σ + `_≡_`; the clearance
+-- claim does not hold, and PROOF-STATUS's Echo-vs-Σ banner governs.
 
 module EchoProvenance where
 
