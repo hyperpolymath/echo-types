@@ -14,9 +14,11 @@
 -- module establishes that invariant in two complementary, mechanised
 -- ways — it does NOT claim the impossible universal "no semiring can
 -- ever encode any echo-like quotient"; it claims the useful project
--- invariant that the proof-relevant Echo structure is not determined
--- by any semiring-valued grade/measure, so any such measure is a
--- lossy observation.
+-- invariant that the specific grade/measure examples below are lossy
+-- observations of the proof-relevant Echo structure. (Audit 2026-11-09:
+-- the general form below is conditional on the measure already agreeing
+-- on two distinct echoes; it does not show that every measure is lossy,
+-- and an injective measure, e.g. the identity, exists.)
 --
 -- Pillar 1 (structural — the index axis is real).
 --   The characteristic degradation law `degrade-compose` is carried
@@ -132,8 +134,8 @@ equal-measure-does-not-imply-equal-echo =
 -- (in particular any semiring-/resource-algebra-valued residue
 -- measure that factors through the trivial residue), if `m` agrees on
 -- the two distinct echoes then it identifies two distinct residues.
--- So a residue measure is always a lossy observation of Echo, never a
--- faithful encoding of it.
+-- This repackages the hypothesis; it is a conditional, not a proof that
+-- every residue measure is lossy.
 ----------------------------------------------------------------------
 
 measure-not-injective :

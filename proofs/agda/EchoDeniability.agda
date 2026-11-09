@@ -173,7 +173,9 @@ IsConstantOpener d = d Trace ≡ d Erased
 -- For any constant opener, the two histories remain indistinguishable
 -- even under injective production: d cannot exploit the residue
 -- difference if it never looks.  Goal reduces by computation to
--- d Trace ≡ d Erased, which is exactly `const`.
+-- d Trace ≡ d Erased, which is exactly `const`: the theorem restates
+-- its hypothesis (audit 2026-11-09). No exactness or minimality of
+-- this class is proved.
 ------------------------------------------------------------------------
 
 partial-deniable-restricted :
