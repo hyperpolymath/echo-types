@@ -512,6 +512,46 @@ Connect echo types with MAA's reversibility proofs
 
 * Docs: `roadmap.adoc` §"Deferred research track", `docs/bridges/EchoJanusBridge.adoc`.
 
+=== Database recovery — squeakwell / VeriSimDB bridge `[REAL]`
+
+The Agda source of truth for the repaired recovery invariants of
+https://github.com/hyperpolymath/squeakwell[squeakwell] (database
+recovery through cross-modal constraint propagation on VeriSimDB; route
+plan rungs R3, R8, R9, R12, R13). Landed 2026-11-09, `--safe --without-K
+--cubical-compatible`, zero postulates, pointwise (funext-free):
+
+* *Partial sections* — `EchoPartialSection.agda`: a VeriSimDB octad is a
+  partial section `(m : M) → Maybe (V m)` of a modality bundle. Information
+  order; `merge resolve` inherits exactly the algebra of `resolve`
+  (`merge-comm` / `merge-assoc` / `merge-idem`, the pointwise twins of
+  verisimdb `Octad.v` R1–R3 — implications, not CRDT laws); guarded fill
+  is the left-biased merge against an oracle proposal, never overwrites
+  (`fill-guarded`), is inflationary (`fill-inflationary`) and is NOT
+  monotone (`fill-not-monotone`, two-modality counter-model); restriction
+  to an observed mask and its Echo fibre (`restrict-fibre-agree`,
+  `restrict-blind`) — the fragment-granularity observation-fidelity shape.
+* *Multi-witness narrowing* — `EchoFibreIntersection.agda`: the fibre of a
+  pairing is the intersection of fibres over one witness
+  (`fibre-intersection-iso`); forgetting or adding a constraint keeps the
+  witness; `narrow-shrinks`: the `EchoFiberCount` count never grows when
+  an observation is added.
+* *Truncation wired* — `EchoTruncation.agda` is now in `All.agda` and
+  pinned (`echo-not-prop`); with `FiberSize-fin≡0⇒no-echo` /
+  `no-echo⇒FiberSize-fin≡0` it is the review-queue completeness kernel.
+
+Not claimed: inhabitation of the narrowed fibre; covering masks ⇒
+subsingleton (needs extensionality over opaque identifiers; dropped);
+termination of the recovery round (finite index set and a conflict test —
+proved in Rocq as `iter_9_fixpoint` in verisimdb `formal/Recovery.v`, not
+restated over an arbitrary `M`). Lean side (reach grades, hub ceilings,
+weighted residue measure): tropical-types `Resource/HubCeiling.lean`.
+Ledger of grades per rung: squeakwell `PROOF-STATUS.adoc`.
+
+* Proofs: `proofs/agda/EchoPartialSection.agda`,
+  `proofs/agda/EchoFibreIntersection.agda`, `proofs/agda/EchoTruncation.agda`.
+* Cross-repo: verisimdb `formal/Recovery.v` + `formal/CROSS-REPO-MAP.adoc`;
+  tropical-types `Resource/HubCeiling.lean`; squeakwell `docs/ROUTE-PLAN.adoc`.
+
 === Shannon / information theory `[REAL*]`
 Partial. The *discrete non-distinguishing* form lands as
 `EchoEntropy.agda` — the fibre-count shadow (uniform-prior Shannon

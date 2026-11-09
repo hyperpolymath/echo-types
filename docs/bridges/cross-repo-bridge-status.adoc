@@ -227,6 +227,25 @@ path; citation-level — echo-types proves the general aggregation
 principle (and its macro instance), oikos’s alib will _consume_ it. The
 alib library itself is not yet built (design-note stage; Route A vs B
 pending owner decision).
+|squeakwell / VeriSimDB recovery ladder
+|`+proofs/agda/EchoPartialSection.agda+`, `+EchoFibreIntersection.agda+`,
+`+EchoTruncation.agda+` (wired 2026-11-09)
+|verisimdb `+formal/Recovery.v+` (Rocq recheck of R2/R3/R4/R9/R10 over
+`+Octad.v+`), tropical-types `+Resource/HubCeiling.lean+` (reach grades,
+hub ceilings, weighted residue measure), squeakwell `+docs/ROUTE-PLAN.adoc+`
+|*Theory landed, pointwise.* Partial sections with the resolve-parametric
+merge (the join-semilattice-of-partial-sections abstraction verisimdb’s
+CROSS-REPO-MAP flagged), guarded fill (inflationary, not monotone), the
+restriction fibre (fragment observation fidelity), binary and `+Fin n+`
+narrowing with `+narrow-shrinks+` on the honest count. Checked here with
+Agda 2.7.0.1 and the pinned stdlib / absolute-zero; Recovery.v with Coq
+8.18.0; HubCeiling with Lean 4.35.0.
+|Correspondence is a refinement, not same-statement: Agda proves the merge
+laws pointwise, Rocq as function equalities under
+`+functional_extensionality_dep+`. Termination (nine rounds) is Rocq-only
+(needs the finite octad). The Creusot export/queue postconditions (R11–R13
+engineering half) and the Idris2 wire contracts (R1, R15, R16) are not
+started; see squeakwell `+PROOF-STATUS.adoc+`.
 |===
 
 === Immediate next actions
@@ -347,6 +366,16 @@ to paper over this in the relational model.
 
 === Revision history
 
+* 2026-11-09: *squeakwell / VeriSimDB recovery ladder.* Added
+`+EchoPartialSection.agda+` (partial sections, information order,
+resolve-parametric merge = pointwise R1–R3 twins of verisimdb `+Octad.v+`,
+guarded fill inflationary-not-monotone, restriction fibre) and
+`+EchoFibreIntersection.agda+` (binary / `+Fin n+` narrowing,
+`+narrow-shrinks+`); wired the orphan `+EchoTruncation.agda+` into
+`+All.agda+`. New Tracks row. Rocq recheck lands as verisimdb
+`+formal/Recovery.v+`; Lean side as tropical-types
+`+Resource/HubCeiling.lean+`. `+--safe --without-K --cubical-compatible+`,
+zero postulates, funext-free.
 * 2026-06-18: *EchoAggregation general/macro split.* Generalised
 `+EchoAggregation.agda+` from the macro-economics-specific module into
 the general monoid-aggregation form requested by issue #175 (`+Monoid+`
