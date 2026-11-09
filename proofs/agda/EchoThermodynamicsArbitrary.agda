@@ -54,7 +54,12 @@
 --   * FiberSubsingleton                     -- K-free "no fan-in"
 --   * injective⇒fiber-subsingleton          -- arbitrary carrier
 --   * reversible-erasure-cost               -- structural Bennett cost
---   * bennett-reversible-arbitrary          -- cost 0 (inj UNUSED; see below)
+--   * bennett-reversible-arbitrary          -- DEPRECATED: cost 0 for every f
+--   * FiberEnum, enumerated-erasure-cost     -- faithful, enumerated fibre
+--   * bennett-enumerated                    -- injective ⇒ cost 0 (uses inj)
+--   * landauer-fan-in                       -- 2 preimages ⇒ cost ≥ k·T
+--   * collapse-erasure-cost                 -- non-vacuity: Bool → ⊤ costs T
+--   * bennett-enumerated-cno-identity       -- faithful form at the CNO identity
 --   * occupancy≡FiberSize-fin               -- faithfulness vs. #58 count
 --   * bennett-arbitrary-refines-finite      -- subsumes #58 finite result
 --   * bennett-reversible-cno-identity       -- cost 0 at the CNO identity
@@ -64,12 +69,24 @@ module EchoThermodynamicsArbitrary where
 open import Level                                 using (Level; _⊔_)
 import      Data.Nat.Base                         as ℕ
 open        ℕ                                     using (ℕ; _*_)
-open import Data.Nat.Properties                   using (*-zeroʳ)
-open import Data.Nat.Logarithm                    using (⌊log₂_⌋)
+open import Data.Nat.Base                         using (_≤_; z≤n; s≤s)
+open import Data.Nat.Properties                   using
+  (*-zeroʳ; *-identityʳ; *-identityˡ; *-monoʳ-≤; m≤n⇒m≤1+n)
+open import Data.Nat.Logarithm                    using (⌊log₂_⌋; ⌊log₂⌋-mono-≤)
+open import Data.Bool.Base                        using (Bool; true; false)
+open import Data.Unit.Base                        using (⊤; tt)
+open import Data.Empty                            using (⊥-elim)
+open import Relation.Nullary.Negation.Core        using (¬_)
+open import Data.List.Base                        using (List; []; _∷_; length)
+open import Data.List.Relation.Unary.All          using (All; []; _∷_)
+open import Data.List.Relation.Unary.Any          using (here; there)
+open import Data.List.Membership.Propositional    using (_∈_)
+open import Data.List.Relation.Unary.Unique.Propositional using (Unique)
+open import Data.List.Relation.Unary.AllPairs     using ([]; _∷_)
 open import Data.Fin.Base                         using (Fin)
 open import Data.Product.Base                     using (Σ; _,_; _×_; proj₁)
 open import Relation.Nullary.Decidable.Core       using (Dec; yes; no)
-open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; trans)
+open import Relation.Binary.PropositionalEquality using (_≡_; refl; sym; trans; cong; subst)
 
 open import Echo                                  using (Echo)
 open import CNO                                   using (Program)
@@ -147,9 +164,10 @@ occupancy-cost-zero f y (no  _) T
 -- Audit 2026-11-09: VACUOUS AS STATED. The proof is
 -- `occupancy-cost-zero`, which holds for EVERY `f` (occupancy is 0 or 1
 -- and ⌊log₂⌋ of either is 0), so the `inj` argument is unused and the
--- non-injective Boolean collapse gets cost 0 too. A faithful Bennett
--- statement needs a cost that can be non-zero for non-injective maps
--- (open). The type is kept for API compatibility.
+-- non-injective Boolean collapse gets cost 0 too.  DEPRECATED: the
+-- faithful statement is `bennett-enumerated` (Step 2b), whose cost can
+-- be non-zero (`landauer-fan-in`, `collapse-erasure-cost`).  The type is
+-- kept for API compatibility.
 bennett-reversible-arbitrary :
   ∀ {a b} {A : Set a} {B : Set b}
   (f : A → B) (y : B)
@@ -198,6 +216,115 @@ bennett-arbitrary-refines-finite f y _≟_ inj d i₀ hit T =
   , bennett-reversible-injective f y _≟_ inj i₀ hit T
 
 ----------------------------------------------------------------------
+-- Step 2b — the enumerated-fibre cost (faithful; added 2026-11-09).
+--
+-- The occupancy cost above is 0 for every `f`, so it cannot tell a
+-- reversible map from an erasing one.  Here the cost is computed from
+-- a supplied enumeration of the fibre: a list of preimages of `y` that
+-- contains every echo's domain point and has no repeats.  No finiteness
+-- of `A` is assumed; only the fibre over `y` must be enumerated.
+-- Both directions are proved:
+--
+--   * `bennett-enumerated` — injective ⇒ cost 0 (uses `inj`);
+--   * `landauer-fan-in`    — two distinct preimages ⇒ cost ≥ k·T;
+--
+-- and `collapse-erasure-cost` exhibits a map with cost exactly T.
+----------------------------------------------------------------------
+
+record FiberEnum {a b} {A : Set a} {B : Set b} (f : A → B) (y : B)
+       : Set (a ⊔ b) where
+  field
+    elems    : List A
+    sound    : All (λ x → f x ≡ y) elems
+    complete : (e : Echo f y) → proj₁ e ∈ elems
+    distinct : Unique elems
+
+open FiberEnum public
+
+fiber-card :
+  ∀ {a b} {A : Set a} {B : Set b} {f : A → B} {y : B} →
+  FiberEnum f y → ℕ
+fiber-card E = length (elems E)
+
+enumerated-erasure-cost :
+  ∀ {a b} {A : Set a} {B : Set b} {f : A → B} {y : B} →
+  FiberEnum f y → Temperature → Energy
+enumerated-erasure-cost E T = landauer-bound T (fiber-card E)
+
+private
+  log₂≤1 : ∀ {n} → n ≤ 1 → ⌊log₂ n ⌋ ≡ 0
+  log₂≤1 z≤n       = refl
+  log₂≤1 (s≤s z≤n) = refl
+
+  -- With no repeats and every element a preimage, injectivity leaves
+  -- room for at most one element.
+  injective-≤1 :
+    ∀ {a b} {A : Set a} {B : Set b} (f : A → B) {y : B} →
+    (∀ {x x′ : A} → f x ≡ f x′ → x ≡ x′) →
+    (xs : List A) → All (λ x → f x ≡ y) xs → Unique xs → length xs ≤ 1
+  injective-≤1 f inj []            _               _ = z≤n
+  injective-≤1 f inj (x ∷ [])      _               _ = s≤s z≤n
+  injective-≤1 f inj (x ∷ x′ ∷ xs) (px ∷ px′ ∷ _) ((x≢x′ ∷ _) ∷ _) =
+    ⊥-elim (x≢x′ (inj (trans px (sym px′))))
+
+  ∈⇒1≤length : ∀ {a} {A : Set a} {x : A} {xs : List A} → x ∈ xs → 1 ≤ length xs
+  ∈⇒1≤length {xs = _ ∷ _} _ = s≤s z≤n
+
+  -- Two distinct members force at least two elements.
+  two-members :
+    ∀ {a} {A : Set a} {x₁ x₂ : A} {xs : List A} →
+    x₁ ∈ xs → x₂ ∈ xs → ¬ (x₁ ≡ x₂) → 2 ≤ length xs
+  two-members (here p₁)  (here p₂)  ne = ⊥-elim (ne (trans p₁ (sym p₂)))
+  two-members (here _)   (there m₂) ne = s≤s (∈⇒1≤length m₂)
+  two-members (there m₁) (here _)   ne = s≤s (∈⇒1≤length m₁)
+  two-members (there m₁) (there m₂) ne = m≤n⇒m≤1+n (two-members m₁ m₂ ne)
+
+-- HEADLINE (Bennett).  An injective map has an enumerated fibre of at
+-- most one element, so its erasure cost is 0.  Unlike the occupancy
+-- version, the hypothesis `inj` is what makes this true.
+bennett-enumerated :
+  ∀ {a b} {A : Set a} {B : Set b}
+  (f : A → B) (y : B)
+  (inj : ∀ {x x′ : A} → f x ≡ f x′ → x ≡ x′)
+  (E : FiberEnum f y) (T : Temperature) →
+  enumerated-erasure-cost E T ≡ 0
+bennett-enumerated f y inj E T =
+  trans (cong (k * T *_)
+              (log₂≤1 (injective-≤1 f inj (elems E) (sound E) (distinct E))))
+        (*-zeroʳ (k * T))
+
+-- HEADLINE (Landauer, converse direction).  Two distinct preimages of
+-- `y` put at least two elements in any enumeration of the fibre, so the
+-- erasure cost is at least k·T.
+landauer-fan-in :
+  ∀ {a b} {A : Set a} {B : Set b}
+  (f : A → B) (y : B) (x₁ x₂ : A) →
+  ¬ (x₁ ≡ x₂) → f x₁ ≡ y → f x₂ ≡ y →
+  (E : FiberEnum f y) (T : Temperature) →
+  k * T ≤ enumerated-erasure-cost E T
+landauer-fan-in f y x₁ x₂ ne h₁ h₂ E T =
+  subst (_≤ k * T * ⌊log₂ fiber-card E ⌋) (*-identityʳ (k * T))
+        (*-monoʳ-≤ (k * T)
+          (⌊log₂⌋-mono-≤ {2} {fiber-card E}
+            (two-members (complete E (x₁ , h₁)) (complete E (x₂ , h₂)) ne)))
+
+-- Non-vacuity: the Boolean collapse has an enumerated fibre of two
+-- elements and costs exactly k·T = T.
+collapse : Bool → ⊤
+collapse _ = tt
+
+collapse-enum : FiberEnum collapse tt
+collapse-enum = record
+  { elems    = true ∷ false ∷ []
+  ; sound    = refl ∷ refl ∷ []
+  ; complete = λ { (true , _) → here refl ; (false , _) → there (here refl) }
+  ; distinct = ((λ ()) ∷ []) ∷ ([] ∷ [])
+  }
+
+collapse-erasure-cost : ∀ T → enumerated-erasure-cost collapse-enum T ≡ T
+collapse-erasure-cost T = trans (*-identityʳ (1 * T)) (*-identityˡ T)
+
+----------------------------------------------------------------------
 -- Step 3 — the real CNO theorem, on the infinite carrier.
 --
 -- A Certified Null Operation is an echo type where `f = id`. The
@@ -223,3 +350,11 @@ bennett-reversible-cno-identity :
   reversible-erasure-cost cno-identity σ d T ≡ 0
 bennett-reversible-cno-identity σ d T =
   bennett-reversible-arbitrary cno-identity σ cno-identity-injective d T
+
+-- The faithful form at the CNO identity, for any enumeration of its
+-- fibre.
+bennett-enumerated-cno-identity :
+  (σ : Program) (E : FiberEnum cno-identity σ) (T : Temperature) →
+  enumerated-erasure-cost E T ≡ 0
+bennett-enumerated-cno-identity σ E T =
+  bennett-enumerated cno-identity σ cno-identity-injective E T

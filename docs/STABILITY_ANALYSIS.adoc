@@ -95,12 +95,12 @@ for *every injective map* (`+bennett-reversible-injective+`), not just
 an explicit bijection (`+FiniteDomain+`, `+bennett-reversible-finite+`,
 `+landauer-collapse-finite+`) — `+--safe --without-K+`, zero postulates
 - Bennett zero-cost lifted further to an *arbitrary carrier — no
-finiteness at all* (`+bennett-reversible-arbitrary+`, occupancy-keyed;
-K-free subsingleton route), certified faithful vs. the established count
-(`+occupancy≡FiberSize-fin+`, `+bennett-arbitrary-refines-finite+`), and
-instantiated on the genuine *infinite* absolute-zero `+Program+` CNO
-(`+bennett-reversible-cno-identity+`) — the historically vacuous "`CNO
-dissipates zero energy`" is now a real theorem - Landauer worst-case
+finiteness at all* (`+bennett-enumerated+`, keyed on an enumeration of
+the fibre, with the converse `+landauer-fan-in+`; the earlier
+`+bennett-reversible-arbitrary+`, occupancy-keyed, is vacuous and deprecated),
+and instantiated on the identity map over the *infinite* absolute-zero
+`+Program+` type (`+bennett-enumerated-cno-identity+`). That is the identity
+function, not an executed CNO - Landauer worst-case
 collapse (`+landauer-collapse[-finite]+`) - *O-THERMO-∞ settled
 `+[CLOSED-NEG]+`*: the quantitative-collapse functional provably does
 _not_ extend to an infinite carrier as a total `+--safe+` function —

@@ -181,7 +181,11 @@ and labels were corrected in the same change; no proof term changed.
 
 | `EchoThermodynamicsArbitrary.bennett-reversible-arbitrary`
 | *Vacuous as stated*: the injectivity hypothesis is unused and the cost is 0
-for every `f`. A faithful Bennett statement is `open`.
+for every `f`. Kept, deprecated. *Resolved 2026-11-09:* `bennett-enumerated`
+computes the cost from an enumeration of the fibre (preimages, complete, no
+repeats) and needs `inj`; `landauer-fan-in` proves the converse (two distinct
+preimages cost at least k·T), and `collapse-erasure-cost` shows `Bool → ⊤`
+costs exactly T.
 
 | `EchoDeniability.partial-deniable-restricted`
 | Restates its hypothesis (`IsConstantOpener d` is the goal). No exactness or
