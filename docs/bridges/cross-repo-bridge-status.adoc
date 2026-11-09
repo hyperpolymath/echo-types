@@ -120,7 +120,9 @@ Coq headlines `+mode_le_prop+`, `+weaken_collapses_distinction+`,
 counterpart pinned in `+Smoke.agda+`. Scope: *L3 only* — ephapax-affine
 has Rust checkers only; L1 has 5 `+Axiom+` + 11 `+Admitted+`; L4 has no
 mechanised theorems yet (cf. ephapax `+formal/PRESERVATION-DESIGN.md+`,
-`+docs/echo-types/paper.adoc+` §"`Threats to validity`"). |Per-bridge
+`+docs/echo-types/paper.adoc+` §"`Threats to validity`"). The counts in
+this row date from 2026-05-30; the row-by-row status as of 2026-11-09
+is §"`Ephapax Coq ↔ echo-types Agda correspondence`" below. |Per-bridge
 docs `+docs/bridges/ECHO-EPHAPAX-BRIDGE.adoc+` (CNO-equivalent) not yet
 authored; tracked as follow-up issue. Full content bridge (round-trip CI
 between Agda + Coq) would require an Agda mirror of ephapax
@@ -345,7 +347,216 @@ in Coq as
 changes the headline’s logical shape. The 3 Coq axioms exist precisely
 to paper over this in the relational model.
 
+=== Ephapax Coq ↔ echo-types Agda correspondence
+
+Added 2026-11-09 from the ephapax v2 survey
+(`+ephapax/docs/reports/2026-11-04-v2-survey/EPHAPAX-V2-ARCHITECTURE-AND-PLAN.adoc+`,
+"`Cross-repo action list`"). The survey plans Coq ports of the
+echo-types artefacts below for ephapax's L3 layer, recorded on the
+ephapax side in `+formal/v2/CORRESPONDENCE.adoc+` (not yet written).
+
+*Revisions.* echo-types `+main+` at `+ccec4d7+`. ephapax `+main+` at
+`+32d8eb7+`; `+formal/Echo.v+` has sha256 `+f2eb75ec…5cd6+`, and
+`+formal/Modality.v+` is also from that revision.
+
+*What these rows are.* Each row is a *conceptual* correspondence. The
+names were looked up on both sides and the statement shapes were
+compared by reading them. No row is `+RECONCILED+` under standards
+PROOF-POLICY §2.2. No checked bridge exists, no transported or
+re-proved statement was produced, and no written justification ties
+the two semantics together. Rows with both legs are `+BRIDGE-PENDING+`.
+Rows with no Coq statement are Agda-only, with no Coq leg.
+
+*Checks run for this table (2026-11-09).*
+
+* Agda leg: the CI profile
+  `+agda --no-libraries -i $AGDA_STDLIB -i $ABSOLUTE_ZERO_AGDA --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/{All,Smoke}.agda+`.
+  The toolchain is `+scripts/setup-agda.sh+`: Agda 2.7.0.1,
+  agda-stdlib `+8326c74+`, absolute-zero `+f486c29+`. Both roots exit 0.
+  The only diagnostics are the `+-W[no]UnsupportedIndexedMatch+`
+  warnings the CI log also shows.
+* Coq leg: `+coqc -Q . Ephapax Echo.v+` and `+coqc -Q . Ephapax Modality.v+`
+  under Coq 8.18.0, on the files at ephapax `+32d8eb7+`. Both exit 0.
+  `+Print Assumptions+` reports "Closed under the global context" for
+  `+degrade_mode_comp+`, `+no_section_collapse_to_residue+`,
+  `+mode_le_prop+`, `+degrade_mode_via_join+` and
+  `+strict_linear_example+`. A green check in each prover does not
+  show that both proved the same proposition (PROOF-POLICY §2.2).
+
+[width="100%",cols="16%,26%,26%,32%",options="header",]
+|===
+|Artefact |echo-types (Agda) |ephapax (Coq) |Correspondence state and observed divergences
+
+|`+weaken+`
+|`+EchoLinear.weaken : LEcho linear → LEcho affine+`, defined as
+`+collapse-to-residue+`. Companions: `+weaken-collapses-distinction+`,
+`+strict-linear-example+`, `+affine-canonical+`. Alias:
+`+EchoEphapaxBridge.ephapax-L3-weaken+`.
+|`+formal/Echo.v+`: `+weaken : LEcho Linear -> LEcho Affine := tt+`.
+Companions: `+weaken_collapses_distinction+`, `+strict_linear_example+`,
+`+affine_canonical+`, `+affine_all_equal+`.
+|`+BRIDGE-PENDING+`. *Divergent carrier.* Agda has
+`+LEcho affine = EchoR ⊤ TrivialCert tt+`, a Σ of `+⊤+` and `+⊤+`, and
+`+weaken+` is the residue lowering. Coq has `+LEcho Affine = unit+`, and
+`+weaken+` is the constant map. Coq's lowering `+collapse_to_residue+`
+is a separate definition, not `+weaken+`. Also, `+strict_linear_example+`
+uses a `+Prop+` `+exists+` where Agda uses a `+Σ+`.
+
+|`+degradeMode-comp+`
+|`+EchoLinear.degradeMode-comp+`, with `+degradeMode+`, `+≤m-trans+`,
+`+degradeMode-compose+`, `+degradeMode-id-{linear,affine}+` and
+`+degradeMode-strict-is-weaken+`.
+|`+formal/Echo.v+`: `+degrade_mode_comp+`, with `+degrade_mode+`,
+`+mode_le_trans+`, `+degrade_mode_compose+`,
+`+degrade_mode_id_{linear,affine}+` and `+degrade_mode_strict_is_weaken+`.
+|`+BRIDGE-PENDING+`. Same quantifier shape:
+`+degrade p23 (degrade p12 e) = degrade (trans p12 p23) e+`. The
+divergences are the affine carrier (see `+weaken+`), and how the order is
+built. Agda's `+_≤m_ : … → Set+` is defined by clauses. Coq's
+`+mode_le : … → Type+` uses `+mode_le_trans+`, which is `+Defined+`
+through an `+eq_rect+` transport. The Agda proof is `+refl+` in each
+clause. The Coq proof uses `+mode_le_prop+`.
+
+|no-section
+|`+EchoResidue.no-section-collapse-to-residue+`,
+`+EchoLinear.no-section-weaken+` (the same statement, since
+`+weaken = collapse-to-residue+`), and the generic
+`+EchoNoSectionGeneric.no-section-of-collapsing-map+`. Alias:
+`+EchoEphapaxBridge.ephapax-L3-no-section-collapse+`.
+|`+formal/Echo.v+`: `+no_section_collapse_to_residue+` and
+`+strict_weakening_collapse+`. There is no Coq counterpart of the
+generic `+no-section-of-collapsing-map+`. There is no no-section lemma
+for Coq's own `+weaken+`, whose codomain is `+unit+`.
+|`+BRIDGE-PENDING+`. This is the closest pair. Agda states
+`+¬ Σ (EchoR ⊤ TrivialCert tt → Echo collapse tt) (λ reify → ∀ e → reify (collapse-to-residue e) ≡ e)+`.
+Coq states
+`+~ exists reify : EchoR unit TrivialCert tt -> Echo collapse tt, forall e, reify (collapse_to_residue e) = e+`.
+`+¬ Σ+` and `+¬ ∃+` (into `+Prop+`) are interderivable, by an informal
+argument that is not checked here. `+EchoR+` is a `+Σ+` in Agda and a
+`+Record+` in Coq. The lowering uses `+subst+` in Agda and `+eq_rect+` in
+Coq. Only the generic form is Agda-only.
+
+|DecorationStructure laws
+|`+EchoDecorationStructure.DecorationStructure+`, with fields
+`+_≤_+`, `+≤-refl+`, `+≤-trans+`, `+≤-prop+`, `+join+` and
+`+≤-join-{left,right,univ}+`. Mode instance:
+`+linear-decoration-structure+`. Generic laws:
+`+DegradeAbstract.degrade-compose-abstract+` and
+`+degrade-via-join-abstract+`. Concrete Mode laws: `+EchoLinear.≤m-prop+`,
+`+_⊔m_+`, `+≤m-⊔m-{left,right,univ}+` and `+degradeMode-via-join+`.
+|There is no record abstraction. Mode instance only, in
+`+formal/Echo.v+`: `+mode_le_refl+`, `+mode_le_trans+`, `+mode_le_prop+`,
+`+mode_join+`, `+mode_le_join_{left,right,univ}+`,
+`+degrade_mode_compose+` and `+degrade_mode_via_join+`. In
+`+formal/Modality.v+` (the L2 modality, which has no join):
+`+modality_le_refl+`, `+modality_le_trans+` and `+modality_le_prop+`.
+|Mode-instance laws are `+BRIDGE-PENDING+`. The join clauses agree
+(`+linear ⊔m m = m+`, `+affine ⊔m _ = affine+`; Coq `+mode_join+` is
+the same). The abstract record and `+DegradeAbstract+` are Agda-only,
+with no Coq leg. `+Modality.v+` is a second, separate Coq copy of the
+same order, used by L2, and it has no join.
+
+|`+reversibility-via-totality+`
+|`+EchoReversibilityBridge.reversibility-via-totality : Σ B (Echo f) ↔ A+`,
+built from `+EchoTotalCompletion.{encode,decode}+`. Companions:
+`+ReversibleCompletion+`, `+echo-reversible+`,
+`+capability-can-be-dropped+` and `+no-recovery-once-dropped+`.
+|None. `+formal/+` at `+32d8eb7+` has no total-completion or
+reversibility statement. The survey plans `+rmr_restores+` in
+`+EchoBridge.v+` (rung P19).
+|Agda-only, with no Coq leg. Nothing to compare yet.
+
+|`+EchoResidueCell+`
+|`+EchoResidueCell.{ResidueCell, holding, spent, takeForReverse, consume}+`,
+with headlines `+holding-reverses+`, `+spent-does-not-reverse+`,
+`+consume-spends+` and `+once-only+`. This is the Agda mirror of 007's
+Idris `+ResidueCell+`.
+|None at `+32d8eb7+`. The survey plans `+residue_once_only+` (rung P19).
+|Agda-only, with no Coq leg. Nothing to compare yet.
+|===
+
+*Constraint carried from the survey.* echo-types' variance verdict
+(`+EchoVariance+`: a graded monad of accumulation, not a graded comonad)
+limits how residues may compose on the ephapax side. A port must not add
+a comonadic "`recover from residue`" rule. `+no-section-weaken+` and
+`+no-section-of-collapsing-map+` refute such a recovery.
+
+=== RMR / RMO / OND correspondence note
+
+The ephapax v2 survey ties three sibling vocabularies to its L3 layer.
+This note records how each one relates to echo-types. All three are
+*conceptual* correspondences. None has a bridge module, none is
+`+RECONCILED+`, and nothing in this note was added to `+All.agda+` or
+`+Smoke.agda+`.
+
+[width="100%",cols="12%,29%,29%,30%",options="header",]
+|===
+|Term |Source and status there |Nearest echo-types artefact |What the correspondence is, and is not
+
+|*RMR* (Reversible Transaction)
+|januskey, `+docs/wiki/theory/rmr-primitive.md+`. The target property:
+for each operation `+F+` on state `+S+`, JanusKey records enough to apply
+an inverse with `+F⁻¹(F(S)) = S+`. The general claim is OPEN in
+januskey's `+PROOF-NEEDS.adoc+`. Only conditional transaction-model
+lemmas are proved in Agda.
+|`+EchoReversibilityBridge.reversibility-via-totality+` and
+`+echo-reversible+` (retaining the full fibre makes the forgetful map
+invertible). Also `+EchoResidueCell.once-only+` (a held residue can be
+taken for reversal at most once).
+|RMR is reversal by *retention*. echo-types' version is about types: if
+the fibre is kept, nothing is lost. It is not a statement about
+filesystem state or about JanusKey's operations, and there is no
+Agda↔Rust/Idris2 import path. The survey reads ephapax's full-fibre
+Linear drop echo as RMR (retention), never as erasure. Per the survey,
+januskey's MAA draft expired on 2026-04-13 and must be restated before
+ephapax cites it. `+EchoJanusBridge+` remains name-only (see the JanusKey
+row above).
+
+|*RMO* (Obliterative Wipe)
+|januskey, `+docs/wiki/theory/rmo-primitive.md+`. This is what
+`+jk obliterate+` does. It is an engineering primitive, best effort, and
+not a theorem. It does not establish that the data is unrecoverable.
+|The no-section family: `+EchoLinear.no-section-weaken+`,
+`+EchoResidue.no-section-collapse-to-residue+` and
+`+EchoNoSectionGeneric.no-section-of-collapsing-map+`.
+|No-section says that inside the type theory there is no left inverse
+from the residue back to the witness. It is *not* physical erasure,
+secure deletion or data remanence. echo-types makes no claim about any
+of these (see the Valence Shell row). Linear→Affine weakening is not RMO.
+For RMO, the survey's D12 recommends non-interference shaped like OND,
+stated over a declared observation model, together with a tagged
+METAL-BOUNDARY scrub assumption. That is an ephapax decision, not an
+echo-types result.
+
+|*OND* (Observational Null Disclosure)
+|absolute-zero `+proofs/agda/OND.agda+` (at `+f486c29+`):
+`+is-OND O o+`, stated relative to a declared observation model `+O+`.
+OND-1..5 are discharged. `+OND5-composition-leaks+` and
+`+OND5-non-composition+` show that two OND operations can compose into a
+leaking one. OND-6 (conditional composition) is open.
+|`+EchoObservationalEquivalence._≡m_+` and
+`+mode-equality-strictly-finer-at-linear+` (affine observation cannot
+see witness distinctions). Also `+EchoDeniability.IsDeniable+` and
+`+perfect-deniable+`.
+|Both say that a chosen observation cannot tell inputs apart. They differ
+in kind. `+is-OND+` quantifies over a program's runs under an observation
+function on executions. `+_≡m_+` is an equality indexed by mode on echo
+carriers. There is no bridge. echo-types imports absolute-zero's
+`+CNO.agda+` (see `+EchoCNOBridge+`) but not `+OND.agda+`. OND-5 is a
+caution: the composition isos echo-types has for `+Echo+` do not give
+OND composition, and none should be assumed.
+|===
+
 === Revision history
+
+* 2026-11-09: *Ephapax correspondence + RMR/RMO/OND note.* Added
+§"`Ephapax Coq ↔ echo-types Agda correspondence`" (six rows:
+`+weaken+`, `+degradeMode-comp+`, no-section, the DecorationStructure
+laws, `+reversibility-via-totality+` and `+EchoResidueCell+`). All are
+conceptual: `+BRIDGE-PENDING+`, or Agda-only with no Coq leg. None is
+`+RECONCILED+` under PROOF-POLICY §2.2. Added
+§"`RMR / RMO / OND correspondence note`". Both come from the ephapax v2
+survey's cross-repo action list. Docs only; no `+.agda+` file changed.
 
 * 2026-06-18: *EchoAggregation general/macro split.* Generalised
 `+EchoAggregation.agda+` from the macro-economics-specific module into
