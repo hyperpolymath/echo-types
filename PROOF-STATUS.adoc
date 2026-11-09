@@ -126,8 +126,10 @@ CI run or the separate named CI check requested in #321.
 == Build invariant (verified)
 
 * `--safe --without-K` throughout `proofs/agda/**`.
-* `agda proofs/agda/All.agda` (≈200 modules) and `agda proofs/agda/Smoke.agda`
-  exit 0. Last verified 2026-06-18.
+* `agda proofs/agda/All.agda` and `agda proofs/agda/Smoke.agda` exit 0. Last
+  verified 2026-11-09 (local, cold, Agda 2.7.0.1 + the pinned stdlib and
+  absolute-zero via `scripts/setup-agda.sh`; all eight CI entrypoints and the
+  four guard scripts passed; not a CI receipt).
 * Guardrails are CI-enforced (`tools/check-guardrails.sh`): every file under
   `proofs/agda/**` must declare `{-# OPTIONS --safe --without-K #-}`, and
   `believe_me`, `postulate`, `TERMINATING`, `REWRITE`, `NO_POSITIVITY_CHECK`,
@@ -141,13 +143,20 @@ CI run or the separate named CI check requested in #321.
   both triangle identities).
 * Pentagon coherence — `Echo-comp-pent-Σ-assoc` (full Σ-associativity iso).
 
-=== Establishment track — Pillars A–D COMPLETE
+=== Establishment track — Pillars A–D (narrowed by R-2026-05-18)
 * *A* `EchoFiberBridge.agda` — `echo↔fib` definitional bridge (Echo ≡ fibre).
-* *B* `EchoGradedComonad.agda` (graded-comonad laws) + `EchoPullback.agda`
-  (funext-free, K-free terminal-cone universal property).
+* *B* `EchoGradedComonad.agda` and `EchoPullback.agda` are real modules, but
+  R-2026-05-18 withdrew the "graded-comonad laws" and "terminal-cone universal
+  property" readings (`docs/retractions.adoc`). What stands: `EchoGraded` is a
+  thin-poset reindexing modality, and `EchoPullback` proves existence with
+  pointwise uniqueness; the strict universal property is the funext-qualified
+  F4 module.
 * *C* `EchoSeparating.agda` — separating model; characteristic law refuted.
-* *D* `EchoRelModel.agda` — model-independence theorem (`GCLaws` once for any
-  model) + `docs/echo-types/conservativity.adoc` metatheorem.
+* *D* `EchoRelModel.agda` — `GCLaws` instantiated at `set-model` and
+  `rel-model`, which share one grade poset: carrier-parametricity over a
+  fixed poset, not semantic model-independence. The conservativity
+  metatheorem was withdrawn and now lives in
+  `docs/retracted/conservativity.adoc`.
 
 === Canonical-identity spine (Tier 1/2/3)
 `EchoTotalCompletion` (`A ≃ Σ B (Echo f)`), `EchoOrthogonalFactorizationSystem`,
@@ -157,7 +166,65 @@ CI run or the separate named CI check requested in #321.
 (`EchoOFSUnivF5*`), the audience moves (`EchoProvenance`, `EchoSecurity`,
 `EchoProbabilisticSupport`, `EchoDifferential`), `EchoCanonicalIdentitySuite`,
 `EchoDeniability`, and `EchoAggregation` (micro→macro aggregation as an Echo
-map; `aggregate-non-injective` + `no-canonical-disaggregation`).
+map; `pairSum-non-injective` + `no-canonical-disaggregation`).
+
+=== Design audit (2026-11-09)
+
+A statement-level review against the claims in this file, `Smoke.agda`
+comments and module headers. Every term type-checks; these entries record
+where a statement says less than the surrounding text claimed. Comments
+and labels were corrected in the same change; no proof term changed.
+
+[cols="2,3",options="header"]
+|===
+| Result | What it actually states
+
+| `EchoThermodynamicsArbitrary.bennett-reversible-arbitrary`
+| *Vacuous as stated*: the injectivity hypothesis is unused and the cost is 0
+for every `f`. A faithful Bennett statement is `open`.
+
+| `EchoDeniability.partial-deniable-restricted`
+| Restates its hypothesis (`IsConstantOpener d` is the goal). No exactness or
+minimality of the constant-opener class is proved.
+
+| `Echo.Separation.NotResourceInstance.measure-not-injective`
+| Conditional: a measure that already agrees on two distinct echoes
+identifies them. It does not show every measure is lossy.
+
+| `EchoAbstractionBarrier`
+| Shows affine consumers are blind and `proj₁` is not. There is no enforced
+barrier: `Echo` is a transparent Σ.
+
+| `EchoEntropy`
+| The shadow is constant, so "blind" holds by construction. Not a Shannon
+entropy result; real-valued entropy stays `open`.
+
+| `EchoLLEncoding`
+| Holds for encodings whose linear carrier is a proposition. Not a statement
+about all LL encodings (the identity encoding keeps no-section).
+
+| F5 (`EchoOFSUnivF5*`)
+| Existence of a comparison iso, not its uniqueness; the lifting uses only
+that one leg is an equivalence. "F5 full pass" means the three slices
+landed, not a full orthogonal factorisation system in the usual sense.
+
+| `EchoVariance`, `EchoGradedComonadF1` (Smoke comments)
+| The maps do not supply a graded monad, the fibre round trips are not an
+adjunction, and F1 is a lossless writer that does not mention Echo.
+
+| `EchoProvenance`
+| Its Echo-vs-Σ clearance claim does not hold (Echo is definitionally Σ).
+
+| `EchoImageFactorizationProp`
+| Conditional on a `TruncInterface` that the `--safe` build does not supply;
+the (epi, mono) gate stays `open`.
+|===
+
+Under PROOF-POLICY §8 every theorem here is `ungraded`: no PWG-3 receipt
+(Agda version, standard-library pin, flags, import cone, commit) is recorded
+in-repo, and no Rocq or Lean leg exists. CNO-facing results also inherit the
+limits recorded in absolute-zero's 2026-11-09 design audit (its `IsCNO` is
+degenerate).
 
 === Ordinal / Buchholz track — moved
 The ordinal lane left echo-types on 2026-10-20 (echo-types#349, decision

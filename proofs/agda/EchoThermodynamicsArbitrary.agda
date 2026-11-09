@@ -54,10 +54,10 @@
 --   * FiberSubsingleton                     -- K-free "no fan-in"
 --   * injective⇒fiber-subsingleton          -- arbitrary carrier
 --   * reversible-erasure-cost               -- structural Bennett cost
---   * bennett-reversible-arbitrary          -- injective ⇒ cost 0, any A
+--   * bennett-reversible-arbitrary          -- cost 0 (inj UNUSED; see below)
 --   * occupancy≡FiberSize-fin               -- faithfulness vs. #58 count
 --   * bennett-arbitrary-refines-finite      -- subsumes #58 finite result
---   * bennett-reversible-cno-identity       -- the real CNO theorem
+--   * bennett-reversible-cno-identity       -- cost 0 at the CNO identity
 
 module EchoThermodynamicsArbitrary where
 
@@ -144,11 +144,12 @@ occupancy-cost-zero f y (yes _) T
 occupancy-cost-zero f y (no  _) T
   rewrite ⌊log₂0⌋≡0 = *-zeroʳ (k * T)
 
--- HEADLINE. Bennett zero-cost for *any* injective `f : A → B`, with
--- `A` an arbitrary `Set a` — no `Fin n`, no `FiniteDomain`. The
--- injectivity hypothesis carries the physical content (it is what
--- makes the cost model faithful, via the subsingleton); the equality
--- to 0 then holds at every temperature and every fibre.
+-- Audit 2026-11-09: VACUOUS AS STATED. The proof is
+-- `occupancy-cost-zero`, which holds for EVERY `f` (occupancy is 0 or 1
+-- and ⌊log₂⌋ of either is 0), so the `inj` argument is unused and the
+-- non-injective Boolean collapse gets cost 0 too. A faithful Bennett
+-- statement needs a cost that can be non-zero for non-injective maps
+-- (open). The type is kept for API compatibility.
 bennett-reversible-arbitrary :
   ∀ {a b} {A : Set a} {B : Set b}
   (f : A → B) (y : B)

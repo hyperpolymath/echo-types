@@ -68,13 +68,13 @@ open import EchoStabilityTests
 open import VecRotation
 
 -- Establishment-plan pillars (docs/echo-types/establishment-plan.adoc).
--- A is a real bridge; B–D are doc-only scaffolds (no declarations,
--- typecheck under --safe --without-K, tracked here per policy).
+-- All four are real modules now; R-2026-05-18 narrowed what B and D
+-- claim (see docs/retractions.adoc and PROOF-STATUS.adoc).
 open import EchoFiberBridge     -- Pillar A (landed)
-open import EchoPullback        -- Pillar B (scaffold)
-open import EchoGradedComonad   -- Pillar B (scaffold)
-open import EchoSeparating      -- Pillar C (scaffold)
-open import EchoRelModel        -- Pillar D (scaffold)
+open import EchoPullback        -- Pillar B
+open import EchoGradedComonad   -- Pillar B
+open import EchoSeparating      -- Pillar C
+open import EchoRelModel        -- Pillar D
 
 -- Pillar F earn-back (docs/echo-types/earn-back-plan.adoc). Wired in
 -- on the gate passing (Sequencing pt 4); see docs/retractions.adoc
