@@ -27,6 +27,56 @@ below. The ordinal lane, including its order-type *Fidelity* scaffold, moved to
 https://github.com/hyperpolymath/ordinal-notation[hyperpolymath/ordinal-notation]
 on 2026-10-20.
 
+== Proof Witness Grades (PROOF-POLICY §8)
+
+Grades are computed per theorem from receipts and §2.2 records. They are
+never assigned to the repository as a whole.
+
+[cols="2,1,4",options="header"]
+|===
+|Theorem |PWG |Record
+
+|`EchoSearchExample` headlines (`search-double-6-decided`, `search-as-echo`, `search-as-cost`, `search-as-dec`, `search-as-feasible`)
+|`PWG-2ii`, no axioms
+|link:proofs/RECHECK-EchoSearchExample.adoc[`proofs/RECHECK-EchoSearchExample.adoc`].
+The Agda receipt is the cold check at `ccec4d7` (2026-11-09). The Rocq and
+Lean legs are re-proved and kernel-checked with no axioms. They are
+`RECONCILED` by owner acceptance of the recorded statement comparison
+(2026-11-09). `PWG-1` additionally needs current pinned CI receipts for
+every witness.
+|===
+
+Census (PROOF-POLICY §8.4), counted per theorem on 2026-11-09 over the 722
+headline pins in the `using` clauses of `proofs/agda/Smoke.agda` (the pins
+include some definitions as well as theorems): `PWG-1` 0, `PWG-2ii` 5,
+`PWG-2i` 0, `PWG-3` 0, `ungraded` 717. The five graded theorems are the
+`EchoSearchExample` headlines above; every other pin is `ungraded` because no
+per-theorem record exists for it yet.
+Agda results for the whole closure are dated checks, not grades.
+
+== Agda cold check (2026-11-09)
+
+At source commit `ccec4d79866e3e433ae2268d2f8b7899396cb34f`, with a clean
+tree and the CI toolchain from `scripts/setup-agda.sh` (Agda 2.7.0.1;
+release archive sha256
+`975b515a14877ab6bce5bfc641e16c4a3ee52ca5d7f846577dee80aa2145db8a`; stdlib
+`8326c74`; absolute-zero `f486c29`), these all exited 0:
+
+* the five static guards (kernel, experimental aggregate wiring and
+  controls, invocation lint, foundation guardrail);
+* the seven `--safe --without-K --cubical-compatible` roots, cold
+  (`--ignore-interfaces`): `All`, `Smoke`, `AuditSmoke`,
+  `characteristic/All`, `examples/All`, `experimental/echo-additive/All`
+  and `NarrowingSmoke`;
+* the `--safe --cubical` island.
+
+The only warnings were the known `UnsupportedIndexedMatch` ones (triage
+remains open; see below). The log is
+`docs/receipts/agda-cold-2026-11-09.log.gz`; the uncompressed log has
+sha256 `7f9de4d1f874a0f249eadeb3fc675be346f437cb28cb31fd3e6db1b635e54eb0`.
+This is a local run of a clean commit with the pinned toolchain. It is not
+a GitHub Actions receipt.
+
 == CI coverage audit (2026-11-01)
 
 * `experimental/echo-additive/` has a separate aggregate entrypoint, but
@@ -43,7 +93,7 @@ on 2026-10-20.
   other three) in warm and cold jobs under the standard profile. A local
   cold check now succeeds as detailed below; the changed workflow has not
   yet had a successful CI run. The exhibit remains outside the shipped
-  `All.agda` closure and is not a clean-commit Grade 3 receipt.
+  `All.agda` closure and is not a clean-commit `PWG-3` receipt.
 * On 2026-11-01 the local cold checks and static guards passed with Agda
   `2.7.0.1-cf6e2d9` and stdlib v2.3. The compiler is not the latest
   upstream stable; CI's compiler remains unpinned (#322). Full provenance,
@@ -110,7 +160,7 @@ with an unsolved hole was rejected (exit 42); it is not a theorem check.
 * Complete combined stdout/stderr is preserved in
   `docs/receipts/agda-local-2026-11-01.log.gz` (uncompressed SHA-256
   `617263834bee297a9f8e092c32e7cd9934af940f1e9fa7f9e19663b44cde99ad`).
-  No new clean-commit Grade 3 promotion is asserted on this basis.
+  No new clean-commit `PWG-3` promotion is asserted on this basis.
 
 In separate copied proof trees, replacing `fin-injective refl = refl` in
 experimental `Grade` with a hole caused its aggregate to exit 42, while

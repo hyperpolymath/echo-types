@@ -115,3 +115,35 @@ jobs:
         run: bash scripts/setup-agda.sh
       - name: Typecheck isolated full-Cubical profile
         run: agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --ignore-interfaces --safe --cubical -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda
+
+  # PROOF-POLICY section 2 recheck legs for EchoSearchExample: hand
+  # re-proofs in Rocq and in Lean core (no Mathlib). Each fails on any axiom.
+  # Toolchains are version-asserted (Lean archive checksum-pinned); the
+  # section 6 deviation is recorded in proofs/RECHECK-EchoSearchExample.adoc.
+  rocq-recheck:
+    name: Rocq recheck leg
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install version-asserted Rocq (Coq 8.18.0)
+        run: bash scripts/setup-recheck.sh rocq
+      - name: Check the Rocq leg (no axioms)
+        run: bash scripts/check-recheck.sh rocq
+
+  lean-recheck:
+    name: Lean recheck leg
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install checksum-pinned Lean 4.30.0
+        run: bash scripts/setup-recheck.sh lean
+      - name: Check the Lean leg (no axioms)
+        run: bash scripts/check-recheck.sh lean
