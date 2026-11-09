@@ -1,6 +1,21 @@
 // SPDX-License-Identifier: MPL-2.0
 = Proof-witness audit: Echo Types and Mathesis
 
+[NOTE]
+====
+*Superseded scale (2026-11-09).* This dated audit uses the Mathesis brief's
+grade definitions. PROOF-POLICY §8, by owner ruling of 2026-11-04, now
+governs, and corrects the brief in two places:
+
+* `PWG-2ii` means both the Rocq leg and the Lean leg count. A non-DTT
+  witness is the tag `+foundation-diverse`, not a condition of the grade
+  (§8.3).
+* Every grade carries the `PWG-` prefix.
+
+The audit text below is kept as written. Current per-theorem grades are
+in `PROOF-STATUS.adoc` §"Proof Witness Grades".
+====
+
 Audit date: 2026-11-01. Echo Types source base:
 `b0982c44f36133acd2d0e1d4e03cf031fff7a470` (working tree also has
 uncommitted CI/documentation edits). This is a source and receipt inspection,
