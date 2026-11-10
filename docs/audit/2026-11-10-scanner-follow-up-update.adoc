@@ -1,0 +1,241 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Scanner follow-up update: 10 November 2026
+
+This record supplements
+link:2026-11-07-scanner-follow-up.adoc[the 7 November receipt] and issue #362.
+It adds observations made on 10 November 2026 and leaves the earlier text
+unchanged. Where it supersedes an earlier statement, it names that statement.
+It reruns no Agda proof and changes no proof claim.
+
+== How the observations were made
+
+* Git: a fresh anonymous clone of `hyperpolymath/panic-attack` (depth 60) and
+  a checkout of `hyperpolymath/pons-asinorum` at its `origin/main`.
+* GitHub API, through a session credential scoped to `echo-types` and
+  `pons-asinorum`: pull-request records, review threads, reviews, check runs
+  with their summaries, and workflow runs with their jobs.
+* Local execution on x86_64 Linux with rustc 1.97.1 (`8bab26f4f`), the
+  toolchain that `pons-asinorum` pins.
+* Not available to this session: code-scanning analyses and alerts, the app
+  installation inventory, check-suite listings, audit logs, and the
+  `panic-attack` pull-request records. Each such item is recorded below as
+  inaccessible. An inaccessible record is not a resolved record.
+
+== Findings and disposition
+
+[cols="2,5,4",options="header"]
+|===
+|Item |Evidence read on 10 November |Disposition
+
+|PANIC attribution per pull request
+|`f2a6a70eaec0cb02331e3264e05f185b5faab0f7` is an ancestor of `origin/main`
+(`36f1055f5b527f085ef70c3a80d42744fc27b2fd`). Its parent chain is
+`f2a6a70` (271), `9d823cb` (270), `acc7a95` (269), `858dfeb` (268), then the
+audit baseline `6d3d52a`. Commit 268 renames the eight colon-named
+`mass-panic-results` reports with unchanged blobs and adds
+`tests/repository_paths.rs` and a Chapel report-name change: eight tracked
+names contain a colon at `6d3d52a`, none at `858dfeb` or later. Commit 269
+moves the path control to `scripts/ci/check-repository-paths.rs`, wires it
+into `ci-integrity.yml` and adds `docs/echo-362-portability.adoc`. Commit 270
+removes `scripts/proven/verify-ledger.py` and `scripts/recon/compare.py` and
+adds the Rust helpers under `tools/ci`: two tracked Python files before, none
+after. Commit 271 corrects the recon baseline and ledger verification in
+`tools/ci`.
+|Supplements the 7 November PANIC paragraph, which did not attribute each
+change. The figure of 56 successful checks and eleven declared skips is
+carried from that receipt; it was not read again. The five paused mirrors
+(#363) and the Pages build timeout were not read again and remain unresolved.
+
+|PONS revision on `main` before pull request 74
+|`origin/main` was `612145d805c6ec519d60fc65e406e9c091462848`, with parent
+`0112b2a407b0fa97190c92f5676aa80ac7048b68` (72) and tree
+`28d2068a3ce40e67daea50090a175d351e7c56ce`. The head of pull request 73,
+`0736865c667870731ef757c66287d136598212f7`, has the same tree. The API record
+of 73 reads closed and merged at 2026-11-07T18:18:38Z, with three commits.
+|Supersedes "PR #73 must complete its final review and merge": 73 is merged
+as a squash with the tested tree, so the scan results recorded for that tree
+apply to that revision. The merge did not wait for the last review thread;
+see the thread table. Git ancestry, not a web view of the pull request, is the
+basis for "on main". The next row records the later revision `d4adad0`.
+
+|Component-equivalent path defect
+|Reproduced at `612145d`. For root `repo` and file `repo/./a.php` the writer
+(`Path::strip_prefix`) keys `a.php`; the reader derived `./a.php`. A report
+that `Engine::scan_files` wrote for `<root>/./sample.php` was rejected by
+`pons validate-report`: `semantic fingerprint mismatch` as 0.5.0 and
+`record/finding mismatch` as its 0.4.0 projection. Also reproduced:
+`repo/./sub/a.php`, `repo//a.php`, `repo/a.php/.`, the root spelling `repo/.`,
+`/tmp/repo/./a.php`, and one file named twice. Not reproduced: the root
+spelling `repo//`, `./a.php` below `.`, and `repo/sub/./a.php`. The Windows
+spelling `repo\.\a.php` does not reproduce on a POSIX writer; no Windows
+writer was run.
+|Repaired on `main`. The owner merged
+https://github.com/hyperpolymath/pons-asinorum/pull/74[pons-asinorum 74] at
+2026-11-10T14:41:28Z as `d4adad08293aa8d0edb1409bb28bb2b4e3d3d0d5`: parent
+`612145d`, tree `4aac3f2c0e1a575ac402962970f3d7c590b12178`, which is the tree
+of the pull-request head `59f3464e654faf5adf28fd8ea46ebb9cc3697911`. The merge
+came before the hosted checks ended. They then completed. On the pull-request
+head, rust-ci run `42836472940` concluded success with its jobs `check`,
+`Windows portability` and `Provenance and coverage`. On `main`, rust-ci run
+`42836649119` concluded success with the same three jobs, and CodeQL run
+`42836648478` and Secret Scanner run `42836649707` concluded success. Both
+`check` and `Windows portability` run a bounded comparison of the native
+writer with the reader: every path of up to six characters over the letter
+`a`, `.` and the host separators, against every root of up to four
+characters. The Windows job leaves out paths that begin with two separators
+and generates no drive prefix. Drive, UNC and verbatim prefixes remain
+ordinary names in the reader, as at `612145d`, and no test covers them. No
+review was obtained: the CodeRabbit check reads cancelled because the pull
+request closed, and Codex reported its usage limit.
+
+|PONS workflows that call the suite
+|On `main` at `d4adad0`, runs `42836648255` (`main-estate-audit.yml`) and
+`42836648268` (`creusot-gate.yml`) concluded failure with no jobs. The same
+two workflows concluded success at `612145d` on 7 November (runs `42400643588`
+and `42400643729`). Their caller files are unchanged between the two commits.
+Both call `hyperpolymath/cicd-suite/.github/workflows/...@bf7dd95c...`; that
+repository name now resolves to `hyperpolymath/proven-cicd-and-workflows`.
+Pull request 74 carried 15 check runs and none from these two workflows.
+|Open, and not caused by the path repair. A run with no jobs is not a pass:
+the estate audit and the Creusot gate did not run on `d4adad0`. The API gives
+no reason for the failure. The suite records the same failure for its own
+caller of the former name; see proven-cicd-and-workflows issue 68.
+
+|CodeQL on `pons-asinorum`
+|Run `42400643452` (workflow CodeQL, push to `main`, head `612145d`), attempt
+2, concluded success. Its attempt 2 jobs `CodeQL Analysis (rust)`
+(`128495831582`) and `CodeQL Analysis (actions)` (`128495831836`) both
+concluded success. The aggregate `CodeQL` check on the head of pull request
+73 still reads neutral. On pull request 74 the aggregate check also read
+neutral; its summary names one configuration as not found, `/language:rust`,
+whose analysis job ended three minutes after that check. It does not name the
+obsolete category.
+|Supersedes "approval is pending" in the 7 November CodeQL paragraph. The
+owner states in issue #362 that approval was given and that the 15 archived
+analyses of the obsolete category were deleted, with the active Actions and
+Rust configurations kept. This session read the runs and the check summary,
+which are consistent with that statement. It could not list analyses or
+alerts, so the deletion and the absence of the old alert are owner-reported,
+not verified here. Historical check records are not rewritten.
+
+|CodeRabbit review of the original audit (360)
+|The API record of 360 reads merged at 2026-11-06T14:35:55Z, head
+`e53960952f89bd5e263fe0eea7d458b1c162cdd3`, 154 changed files. The CodeRabbit
+check on that head is `skipped`. The only review is a comment review from
+GitHub Advanced Security. On pull request 73, CodeRabbit's one review
+requested changes at `2350991` and its check on the final head is neutral.
+|Retrospective review: not obtained. A quota limit or a skipped check is not
+an approval. No paid review was requested.
+
+|App suites and installation inventory
+|The head of 360 carries 39 check runs: 38 successful and the skipped
+CodeRabbit check. This session has no installation or check-suite endpoint,
+so the HTTP 403 probe was not repeated.
+|Unchanged: registration is not health, and suites without completed runs
+remain unverified.
+
+|Echo input rescan
+|Tool: release build of `pons-asinorum` `main` at `d4adad0` (clean), on a
+clean Echo tree at `b6c8b97b40c1cf6489f0c93d2dd6183c30e4d0e4`. `pons scan
+docs/echo-types/prototypes/warrant_debugger_prototype.jsx --no-speculative
+--fail-on error --fail-on-skips --require-language javascript --format json`:
+one file analysed, no findings, no skips, `complete-within-policy`, exit 0.
+The file's SHA-256 is still
+`b69afe5842fc9b4b9b0713f92bbcdfc75200d1f4133c69f25efca52b3c4dde99` and its
+blob is unchanged since `ebde9ac`. `pons scan . --no-speculative --fail-on
+error --format json`: three files analysed, eight heuristic warnings, 23
+explicit skips, `partial`, exit 0. The same command at Echo `ebde9ac`, run
+with the pull-request build `428e81b`, gives 21 skips; the two added skips are
+`scripts/check-recheck.sh` and `scripts/setup-recheck.sh`. Both reports pass
+`pons validate-report`.
+|Consistent with the 7 November results, now on the merged scanner revision.
+Agda remains outside PONS coverage.
+|===
+
+== Review threads on pons-asinorum 72 and 73
+
+Each thread was read from the API and compared with the source at `612145d`.
+
+[cols="2,2,5",options="header"]
+|===
+|Thread |API state |Disposition at `612145d`
+
+|72, Codex: preserve legacy normalisation for frozen reports
+(`r4502800274`)
+|Resolved
+|Checked and not adopted. Commits `6a20ca7` and `84f58f9` take the parent
+before they replace backslashes, so `/tmp/a\b.py` keys `a/b.py`. Control:
+`posix_boundaries_and_ambiguous_historical_keys_are_preserved`.
+
+|72, Codex: relative POSIX colon names read as drive paths (`r4502800276`)
+|Resolved
+|Addressed. Only a root of the form `X:/` or `X:\` is a drive root. Controls:
+the `a:b\c.py` row of the same test, and absolute CLI roots from 73.
+
+|72, Codex: relative Windows roots on every reader host (`r4502800281`)
+|Resolved
+|Addressed. The reader derives the Windows reading without its own host.
+Controls: `windows_reports_have_the_same_keys_on_every_reader_host` and
+`a_relative_windows_report_validates_on_every_reader_host`.
+
+|73, CodeRabbit: document report-root semantics (`r4503034251`)
+|Resolved
+|Addressed in `bb4cc76`: `ScanReport::root` and `docs/PLAN.adoc` describe
+absolute roots and their checkout details.
+
+|73, CodeRabbit: assert the selected root (`r4503034255`)
+|Resolved
+|Addressed in `bb4cc76`: `relative_cli_inputs_emit_absolute_roots` compares
+each reported root with the expected path.
+
+|73, CodeRabbit: historical keys for ambiguous relative paths
+(`r4503034257`)
+|Resolved, outdated
+|Addressed in `bb4cc76`. Controls: the `repo\sub/a.py` rows and
+`ambiguous_legacy_paths_require_one_consistent_record_and_fingerprint`.
+
+|73, CodeRabbit: relative Windows single-file reports (`r4503034260`)
+|Resolved, outdated
+|Addressed in `bb4cc76`. Controls: the `src\a.py` rows of the same tests.
+
+|73, Codex: forward-slash UNC roots (`r4503122573`)
+|Resolved
+|Addressed in `0736865`. Control: the `//server/share\sample.php` cases.
+
+|73, Codex: align validator candidates with native path stripping
+(`r4503157325`)
+|Unresolved
+|Addressed on `main` by pons-asinorum 74 (`d4adad0`). The thread is still
+marked unresolved; this session did not change a thread on a pull request
+that it did not open.
+|===
+
+Codex reviewed `bb4cc76` and `0736865` and left comment reviews. A comment
+review is not an approval.
+
+== States that remain explicit
+
+* Agda is outside PONS coverage.
+* SMTP notification is dormant, with its endpoint and egress containment
+  unchanged. No credentialed delivery is claimed.
+* Creusot with Pearlite contracts and Verus are OPEN, not run, for the
+  scanner repairs. Tests, including the bounded path comparison in
+  pons-asinorum 74, are not formal proofs. That comparison does not cover
+  longer paths, other characters or Windows prefixes.
+* No service registration, certification or independent human approval is
+  claimed. OpenSSF registration remains #191; mirror delivery remains #363.
+
+== Status
+
+Issue #362 remains open. The scanner defects named in it are repaired on
+`main` of both scanners. These items remain:
+
+. The owner marks thread `r4503157325` on pons-asinorum 73 as resolved, or
+  records why not.
+. This update receives its review. Pull request 74 was merged without a
+  review result; a quota limit or a cancelled check is not an approval.
+. The two PONS workflows that call the former suite name start again and
+  report jobs. That repair belongs to the suite and to its callers.
+. The items recorded as inaccessible or not obtained keep those labels, or an
+  authorised credential replaces them with a read record.

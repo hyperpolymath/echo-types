@@ -12,6 +12,11 @@ Use the dated records for their stated source revisions, checks and limits:
   bounded mathematical choices and remaining research obligations.
 * link:audit/2026-11-06-license-inventory.adoc[Licence inventory]: existing
   notices and the unresolved prose-licence scope.
+* link:audit/2026-11-07-scanner-follow-up.adoc[Scanner follow-up]: PANIC and
+  PONS repairs for issue #362 at their stated revisions, and their limits.
+* link:audit/2026-11-10-scanner-follow-up-update.adoc[Scanner follow-up
+  update]: later read-backs, review-thread dispositions and the items still
+  open or inaccessible.
 
 These records distinguish local receipts, remote checks and unresolved work.
 This index adds no execution receipt, certification or assurance grade.
