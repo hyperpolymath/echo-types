@@ -650,9 +650,19 @@ open import EchoThermodynamicsFinite using
 
 -- Audit 2026-11-09: `bennett-reversible-arbitrary` does not use its
 -- injectivity hypothesis; the structural cost is 0 for every f
--- (occupancy is 0 or 1 and ⌊log₂⌋ of either is 0). Vacuous as stated.
+-- (occupancy is 0 or 1 and ⌊log₂⌋ of either is 0). Vacuous as stated,
+-- kept deprecated.  The faithful statement is `bennett-enumerated`, with
+-- the converse `landauer-fan-in` and the witness `collapse-erasure-cost`.
 open import EchoThermodynamicsArbitrary using
   ( FiberSubsingleton
+  ; FiberEnum
+  ; fiber-card
+  ; enumerated-erasure-cost
+  ; bennett-enumerated
+  ; landauer-fan-in
+  ; collapse-enum
+  ; collapse-erasure-cost
+  ; bennett-enumerated-cno-identity
   ; injective⇒fiber-subsingleton
   ; reversible-erasure-cost
   ; bennett-reversible-arbitrary
