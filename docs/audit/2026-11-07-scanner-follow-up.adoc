@@ -143,3 +143,9 @@ tests and agreement between related scanners are not formal proofs.
 Issue #362 remains open for #73's final review/merge, the external configuration
 disposition and this receipt's final review. The original JSX/Windows defects
 are repaired.
+
+== Later record
+
+link:2026-11-10-scanner-follow-up-update.adoc[The 10 November update] records
+later observations and names the statements above that it supersedes. The text
+above is unchanged.
