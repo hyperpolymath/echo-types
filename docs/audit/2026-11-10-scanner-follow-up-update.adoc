@@ -79,8 +79,13 @@ came before the hosted checks ended. They then completed. On the pull-request
 head, rust-ci run `42836472940` concluded success with its jobs `check`,
 `Windows portability` and `Provenance and coverage`. On `main`, rust-ci run
 `42836649119` concluded success with the same three jobs, and CodeQL run
-`42836648478` and Secret Scanner run `42836649707` concluded success. The
-Windows job runs the comparison of the native writer with the reader. No
+`42836648478` and Secret Scanner run `42836649707` concluded success. Both
+`check` and `Windows portability` run a bounded comparison of the native
+writer with the reader: every path of up to six characters over the letter
+`a`, `.` and the host separators, against every root of up to four
+characters. The Windows job leaves out paths that begin with two separators
+and generates no drive prefix. Drive, UNC and verbatim prefixes remain
+ordinary names in the reader, as at `612145d`, and no test covers them. No
 review was obtained: the CodeRabbit check reads cancelled because the pull
 request closed, and Codex reported its usage limit.
 
@@ -215,8 +220,9 @@ review is not an approval.
 * SMTP notification is dormant, with its endpoint and egress containment
   unchanged. No credentialed delivery is claimed.
 * Creusot with Pearlite contracts and Verus are OPEN, not run, for the
-  scanner repairs. Tests, including the exhaustive path comparison in
-  pons-asinorum 74, are not formal proofs.
+  scanner repairs. Tests, including the bounded path comparison in
+  pons-asinorum 74, are not formal proofs. That comparison does not cover
+  longer paths, other characters or Windows prefixes.
 * No service registration, certification or independent human approval is
   claimed. OpenSSF registration remains #191; mirror delivery remains #363.
 
