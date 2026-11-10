@@ -7,6 +7,19 @@ Changelog].
 
 === [Unreleased]
 
+==== Added (2026-11-09)
+
+* _squeakwell / VeriSimDB recovery ladder._ `+EchoPartialSection.agda+`
+(partial sections of a modality bundle; information order; resolve-parametric
+merge with the pointwise R1–R3 twins of verisimdb `+Octad.v+`; guarded fill as
+left-biased merge, inflationary and provably not monotone; restriction to an
+observed mask and its Echo fibre) and `+EchoFibreIntersection.agda+` (binary
+narrowing as the fibre of a pairing, witness-preserving `+Fin n+` steps,
+`+narrow-shrinks+` on `+FiberSize-fin+`). `+EchoTruncation.agda+`, until now
+compiled only through its corollaries, is wired into `+All.agda+` and pinned.
+Rocq recheck: verisimdb `+formal/Recovery.v+`; Lean side: tropical-types
+`+Resource/HubCeiling.lean+`.
+
 ==== Changed (2026-11-06)
 
 * Recorded the owner's prospective licence policy: CC-BY-SA-4.0 for new

@@ -226,6 +226,18 @@ kernel** — the boundary is real and lives outside this core.
   flat `Echo*.agda` glob that Check B lints; recorded here for
   discoverability. Not kernel (the kernel remains exactly `Echo`).
 
+| *Derived — recovery ladder (2026-11-09)*
+| `EchoPartialSection` (Tier 1), `EchoFibreIntersection` (Tier 2)
+| squeakwell / VeriSimDB recovery bridge. `EchoPartialSection` imports only
+  `Echo` and stdlib: partial sections of a modality bundle, the information
+  order, the resolve-parametric merge (pointwise R1–R3 twins of verisimdb
+  `Octad.v`), guarded fill as left-biased merge (inflationary, not
+  monotone) and the restriction fibre. `EchoFibreIntersection` imports
+  `Echo` and `EchoFiberCount`: binary narrowing as the fibre of a pairing,
+  witness-preserving constraint steps, and `narrow-shrinks` on the honest
+  count. Both funext-free; Rocq recheck in verisimdb `formal/Recovery.v`.
+  `EchoTruncation` (Tier 1, already classified) is now wired into `All.agda`.
+
 | *Derived — Tier 1 additions (2026-11-06)*
 | `EchoSourcePreserving`, `EchoDependentPushforward`
 | Each imports only `Echo` and stdlib. The former proves the source-preserving

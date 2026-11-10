@@ -50,6 +50,12 @@ open import EchoSearchInstance
 open import EchoSearchExample
 open import EchoAccess
 open import EchoFiberCount
+-- squeakwell recovery ladder (2026-11-09): wires the once-orphan truncation
+-- lemma, multi-witness narrowing (R8) and partial sections / guarded fill /
+-- restriction fibre (R3, R9, R12). Rocq recheck: verisimdb formal/Recovery.v.
+open import EchoTruncation
+open import EchoFibreIntersection
+open import EchoPartialSection
 open import EchoEpistemicResidue
 open import EchoRelational
 open import EchoCategorical

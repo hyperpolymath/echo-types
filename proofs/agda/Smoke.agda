@@ -611,6 +611,54 @@ open import EchoFiberCount using
   ; no-echo⇒FiberSize-fin≡0
   )
 
+-- EchoTruncation — the generic "non-injective ⇒ Echo not a proposition"
+-- lemma, previously compiled only through its example corollaries; wired
+-- and pinned for the squeakwell review-queue argument (rung R13).
+open import EchoTruncation using
+  ( isProp
+  ; echo-witnesses-distinct
+  ; preimages⇒distinct-echoes
+  ; echo-not-prop
+  )
+
+-- EchoFibreIntersection — multi-witness narrowing (squeakwell R8): the
+-- fibre of a pairing IS the intersection of fibres over one witness
+-- (`fibre-intersection-iso`, K-free `_↔_`); forgetting a constraint keeps
+-- the witness; a `Fin (suc n)` family is one binary step on a `Fin n`
+-- family; and on a finite domain the honest count can only shrink
+-- (`narrow-shrinks`).
+open import EchoFibreIntersection using
+  ( Narrow
+  ; fibre-intersection-iso
+  ; forget-left-witness
+  ; forget-right-witness
+  ; narrow-fin-step-to
+  ; narrow-fin-step-from
+  ; narrow-shrinks
+  )
+
+-- EchoPartialSection — partial sections of a modality bundle (the octad as
+-- an instance), information order, resolve-parametric merge (the pointwise
+-- R1–R3 twins of verisimdb Octad.v), guarded fill as left-biased merge
+-- (inflationary, not monotone), and the restriction fibre (fragment
+-- observation fidelity, R12). Rocq recheck: verisimdb formal/Recovery.v.
+open import EchoPartialSection using
+  ( PartialSection
+  ; ⊑-refl
+  ; ⊑-trans
+  ; merge-comm
+  ; merge-assoc
+  ; merge-idem
+  ; fill-guarded
+  ; fill-inflationary
+  ; restrict-echo
+  ; restrict-fibre-agree
+  ; restrict-blind
+  )
+open EchoPartialSection.FillNotMonotone using
+  ( fill-not-monotone
+  )
+
 open import EchoThermodynamics using
   ( landauer-bound
   ; fiber-erasure-bound
