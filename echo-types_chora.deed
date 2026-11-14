@@ -6,7 +6,7 @@
   :schema-version "1.0.0"
   :canonical-name "echo-types"
   :repo-uuid #u8"gv-clade-index:github.com/hyperpolymath/echo-types"
-  :beholding-chora #u5"estate/chora"
+  :beholding-chora #u8"chora:estate/github.com/hyperpolymath"
   (identity :primary-forge github :owner "hyperpolymath" :prefixed-name "fv-echo-types")
   (clade :primary fv :primary-name "Formal Verification & Proofs" :secondary ())
   (forges :github "hyperpolymath/echo-types")

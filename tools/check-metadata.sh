@@ -64,18 +64,28 @@ trap 'rm -rf -- "$tmp"' EXIT
   // This pinned canonical AST intentionally elides UUID bodies as null.
   // First establish their unique structural positions and types with it.
   field(ast.items, "repo-uuid", "uuid8", null);
-  field(ast.items, "beholding-chora", "uuid5", null);
+  // Both identity fields carry a v8 id (owner ruling g): a #u8 literal over the
+  // registry birth path, and over the estate preimage. #u5 is refused.
+  field(ast.items, "beholding-chora", "uuid8", null);
   // Read only the two typed literal spans after the canonical grammar gate.
   // Whole comments and strings are consumed first, preventing spoofed UUIDs
-  // in prose from satisfying the identity check. JSON handles the four
-  // escapes permitted in canonical DEED strings; no grammar is forked here.
+  // in prose from satisfying the identity check. Each literal is keyed by the
+  // field keyword it follows, not by its #u prefix (both are #u8 now). JSON
+  // handles the four escapes permitted in canonical DEED strings; no grammar
+  // is forked here.
   const source = require("node:fs").readFileSync("echo-types_chora.deed", "utf8");
-  const literalTokens = /;[^\r\n]*|"(?:[^"\\]|\\["\\nt])*"|#u[58]"(?:[^"\\]|\\["\\nt])*"/g;
-  const uuids = [...source.matchAll(literalTokens)].map(x => x[0]).filter(x => x.startsWith("#u"));
+  const literalTokens = /;[^\r\n]*|"(?:[^"\\]|\\["\\nt])*"|:[A-Za-z][A-Za-z0-9-]*|#u[58]"(?:[^"\\]|\\["\\nt])*"/g;
+  const uuids = [];
+  let key = null;
+  for (const m of source.matchAll(literalTokens)) {
+    if (m[0].startsWith(":")) key = m[0].slice(1);
+    else if (m[0].startsWith("#u")) uuids.push([key, m[0]]);
+  }
+  if (uuids.some(([, t]) => t.startsWith("#u5"))) fail("#u5 is not accepted in an identity field (ruling g)");
   if (uuids.length !== 2) fail("exactly the two structural identity UUID literals are expected");
-  const bodies = new Map(uuids.map(x => [x.slice(0, 3), JSON.parse(x.slice(3))]));
-  if (bodies.get("#u8") !== "gv-clade-index:github.com/hyperpolymath/echo-types"
-      || bodies.get("#u5") !== "estate/chora") fail("recorded UUID preimage mismatch");
+  const bodies = new Map(uuids.map(([k, t]) => [k, JSON.parse(t.slice(3))]));
+  if (bodies.get("repo-uuid") !== "gv-clade-index:github.com/hyperpolymath/echo-types"
+      || bodies.get("beholding-chora") !== "chora:estate/github.com/hyperpolymath") fail("recorded UUID preimage mismatch");
   field(clause("identity"), "owner", "string", "hyperpolymath");
   field(clause("identity"), "prefixed-name", "string", "fv-echo-types");
   field(clause("clade"), "primary", "symbol", "fv");
