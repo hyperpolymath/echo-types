@@ -26,7 +26,7 @@ jobs:
   fleet:
     permissions:
       contents: read
-    uses: hyperpolymath/gitbot-fleet/.github/workflows/fleet-report-back-reusable.yml@46d26a4b084c40847d9a2f2ef98305502b7320bc
+    uses: hyperpolymath/gitbot-fleet/.github/workflows/fleet-report-back-reusable.yml@14892a53a0c2c38c7a6dd44964b796ef3044e626
     with:
       enrolment: .gitbot-fleet/enrolment.json
       artifact-name: fleet-report-backs
