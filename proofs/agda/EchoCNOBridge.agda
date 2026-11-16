@@ -1,4 +1,4 @@
-{-# OPTIONS --safe --without-K #-}
+{-# OPTIONS --safe --without-K --cubical-compatible --exact-split --no-sized-types --no-guardedness #-}
 -- SPDX-License-Identifier: MPL-2.0
 -- SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
@@ -9,9 +9,10 @@
 -- identity correspondence. Names are retained for compatibility.
 --
 -- EchoCNOSemantics adds CertifiedProgramEcho (same-program equality plus
--- IsCNO certificate) and a semantic bridge using CNO.state-eq. The pinned
--- external evaluator is total and its energy function is constant zero;
--- these model definitions are not independent physical guarantees.
+-- IsCNO certificate) and a semantic bridge over the pinned pc-driven
+-- machine, using CNO.obs-eq (memory, registers and I/O; not the program
+-- counter).  The pinned model has no energy function; nothing here is a
+-- physical guarantee.
 module EchoCNOBridge where
 
 open import Echo
@@ -21,6 +22,7 @@ open import CNO using
   ; Instruction
   ; Halt
   ; IsCNO
+  ; Closed
   ; empty-is-cno
   ; halt-is-cno
   ; cno-composition
@@ -72,10 +74,12 @@ absolute-zero-echo =
 
 ----------------------------------------------------------------------
 -- This legacy construction accepts external composition evidence, then
--- discards it when constructing the provenance witness.
+-- discards it when constructing the provenance witness.  The pinned
+-- composition theorem needs the first program to be closed (its jumps
+-- stay inside it); CNO.closedness-needed shows why.
 
 cno-compose-echo :
-  ∀ {p₁ p₂} → IsCNO p₁ → IsCNO p₂ →
+  ∀ {p₁ p₂} → Closed p₁ → IsCNO p₁ → IsCNO p₂ →
   ProgramEcho (seq-comp p₁ p₂)
-cno-compose-echo {p₁} {p₂} c₁ c₂ =
-  cno-program-echo (seq-comp p₁ p₂) (cno-composition c₁ c₂)
+cno-compose-echo {p₁} {p₂} cl c₁ c₂ =
+  cno-program-echo (seq-comp p₁ p₂) (cno-composition {p₁} {p₂} cl c₁ c₂)
