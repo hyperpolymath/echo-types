@@ -39,7 +39,7 @@ toc::[]
   `Echo.Modality.{Interface,Core}` (the modality, measure-independent),
   `Echo.Separation.NotResourceInstance` (the *Echo IS-NOT a resource
   instance* invariant), `Echo.Measure.{Interface,Examples}` (the
-  residue-measure observation seam). Contract: `FOUNDATION_CONTRACT.md`.
+  residue-measure observation seam). Contract: `FOUNDATION_CONTRACT.adoc`.
 |===
 
 == Track 1 — Composition (landed)
@@ -155,7 +155,7 @@ vocabulary*, not a distinctness locus.
 == Ecosystem and cross-repo bridges
 
 echo-types is a foundational node in the hyperpolymath / PanLL constellation.
-The authoritative ledger is `docs/bridges/cross-repo-bridge-status.md`.
+The authoritative ledger is `docs/bridges/cross-repo-bridge-status.adoc`.
 
 [cols="1,1,2", options="header"]
 |===

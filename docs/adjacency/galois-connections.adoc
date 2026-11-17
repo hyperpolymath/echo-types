@@ -8,8 +8,8 @@ _Axes engaged: 5 (Comp), 7 (PR/PI). See `README.adoc` § "Axis coverage matrix".
 [.lead]
 *Verdict: distinct, by 2-cell argument.* The natural 2-cell in the
 abstraction lattice is the meet, which is structurally
-Σ-over-preimages with a paired predicate. Formal exhibit in
-`EchoVsGalois.Sophisticated`. Truncation argument applies in a
+Σ-over-preimages with a paired predicate. Historical formal exhibit in
+`EchoVsGalois.Sophisticated` (historical; the module is absent from the tracked tree and is not current checked evidence). Truncation argument applies in a
 modified form (Galois is propositional about the abstract domain).
 
 toc::[]
@@ -60,7 +60,7 @@ This is the *simultaneous fiber* of α₁ over a₁ and α₂ over a₂.
 It is the *intersection of two Echo types*: a witness x that is
 simultaneously in both echoes.
 
-Formal exhibit in `EchoVsGalois.Sophisticated`:
+Historical formal exhibit in `EchoVsGalois.Sophisticated` (module absent from the tracked tree; not current checked evidence):
 
 * `meet→echo-intersection` — any meet witness `(x, p₁, p₂)`
   decomposes mechanically into `((x, p₁), (x, p₂))`: a pair of
@@ -141,7 +141,8 @@ Neither has been exhibited.
 
 == Status
 
-* 2-cell argument: *formalised* via `EchoVsGalois.Sophisticated`.
+* 2-cell argument: *historically formalised* via `EchoVsGalois.Sophisticated`
+  (module absent from the tracked tree; not current checked evidence).
   Diagonal correspondence with the quotient case formalised.
 * Truncation argument: applies via the powerset-on-concrete-side
   framing; formal exhibit lives in gate-3's `EpistemicUpdate`
@@ -156,7 +157,8 @@ artefact of any one neighbour theory's framework.
 * Cousot & Cousot, "Abstract Interpretation: A Unified Lattice
   Model for Static Analysis of Programs by Construction or
   Approximation of Fixpoints" (POPL 1977).
-* `proofs/agda/EchoVsGalois.agda` for the formal exhibits cited
-  above.
+* The `EchoVsGalois` module, which named the formal exhibits cited above,
+  is absent from the current tracked tree; those exhibits are not current
+  checked evidence (see `docs/gate-1-distinct-phenomenon.adoc`).
 * `quotients.adoc` for the parallel quotient-side argument with
   which the diagonal correspondence holds.

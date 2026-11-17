@@ -62,7 +62,7 @@ is one-way (defined as the residue lemma).
 case.
 
 All six are pinned in `+Smoke.agda+`. The family is what carries the
-weight only as selected examples: each non-injective collapse lacks a left inverse. Raw Σ can express exactly these examples; it admits no missing inverse. See also `+docs/theorem-index.md+` and the prose write-up
+weight only as selected examples: each non-injective collapse lacks a left inverse. Raw Σ can express exactly these examples; it admits no missing inverse. See also `+docs/theorem-index.adoc+` and the prose write-up
 at `+docs/characteristic.adoc+`.
 
 ==== 2. Loss is graded, and downgrades cannot be reversed
@@ -161,12 +161,12 @@ the "`raw Σ would leak`" claim is prose, not a checked artefact.
 
 * Gate 2 audit (closest reviewer touchpoint):
 `+docs/characteristic.adoc+`.
-* Theorem-by-theorem ledger: `+docs/theorem-index.md+`.
+* Theorem-by-theorem ledger: `+docs/theorem-index.adoc+`.
 * Adjacency notes (per neighbour framework): `+docs/adjacency/+`.
 * Honest scope of the establishment claim:
 `+docs/echo-types/establishment-plan.adoc+` and
 `+docs/echo-types/paper.adoc+` §"`Reframing note`".
 * AsciiDoc reviewer companion to this file:
 `+docs/echo-types/sigma-distinctness-map.adoc+`.
-* Companion skepticisms: `+is-this-just-fibers.md+`,
-`+what-is-actually-new.md+`, `+failure-conditions.md+`.
+* Companion skepticisms: `+is-this-just-fibers.adoc+`,
+`+what-is-actually-new.adoc+`, `+failure-conditions.adoc+`.

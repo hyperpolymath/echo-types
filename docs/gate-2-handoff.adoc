@@ -7,7 +7,7 @@
 
 [.lead]
 This file collects observations from the Gate 2 audit
-(`docs/gate-2-characteristic.adoc`) that affect the other gates' work.
+(`docs/characteristic.adoc`) that affect the other gates' work.
 Per parallel-instance lane discipline, this lane does not edit Gate 1's
 or Gate 3's files; this is the channel for cross-lane information.
 
@@ -247,8 +247,9 @@ distinctness load is carried by the *truncation argument* (echo
 types are non-truncatable, formalised by the `echo-not-prop`
 family in `proofs/agda/examples/`) and the *2-cell argument*
 (natural 2-cells in neighbour frameworks are
-Σ-over-preimages-shaped, formalised in
-`EchoVsQuotient.Sophisticated` and `EchoVsGalois.Sophisticated`).
+Σ-over-preimages-shaped; historically formalised in
+`EchoVsQuotient.Sophisticated` and `EchoVsGalois.Sophisticated`, modules absent
+from the tracked tree and not current checked evidence).
 
 `gate-1-distinct-phenomenon.adoc` § The Gate #1 claim has been
 updated to reflect this narrowing.

@@ -147,7 +147,7 @@ context in which information loss appears.
 . *Compositional.* Behave well under function composition, parallel
 product, slicing, and change of universe.
 . *Axis-aware.* Distinguish kinds of echoes along the axes in
-`+taxonomy.md+` rather than presenting "`the`" echo construction.
+`+taxonomy.adoc+` rather than presenting "`the`" echo construction.
 . *Formally tractable.* The theory is implementable in
 `+--safe --without-K+` Agda without postulates, at least for the
 extensional/intensional core and a growing list of canonical examples.
@@ -181,7 +181,7 @@ iterated mediated wrappers, and the shared-binder lex cases (`+<ᵇ⁺-ψα+`,
 `+<ᵇ⁺-+2+`) are now internalised in the extended relation
 `+Ordinal.Buchholz.OrderExtended._<ᵇ⁺_+` with proven irrefl + trans;
 well-foundedness for `+_<ᵇ⁺_+` is the next open step, with two design
-routes documented in `+docs/echo-types/buchholz-extended-wf.md+`.
+routes documented in `+docs/bridges/buchholz-extended-wf.adoc+`.
 * *Not (yet) a completed categorical semantics — but* Pillar F Gate F5
 FULL PASS (2026-05-27, follow-up F-2026-05-27a) mechanises the full
 (equivalence, projection) orthogonal factorisation system on Type _at
@@ -194,7 +194,7 @@ narrative and `+docs/assessment.adoc+` for the older M5 verdict.
 === Extensional shadow vs intensional core
 
 This distinction is load-bearing for the rest of the theory and is
-developed in detail in `+taxonomy.md+`. Briefly:
+developed in detail in `+taxonomy.adoc+`. Briefly:
 
 * The *extensional shadow* of `+Echo(f)+` is the subset of `+B+` on
 which `+Echo f y+` is inhabited — equivalent to `+image(f)+`. The shadow
@@ -220,9 +220,9 @@ headlines together as the "`why Echo deserves a name`" demo.
 (the categorical-universal-property story).
 * `+fibration-package.adoc+` — `+map-over+` + composition iso +
 cancellation iso + pentagon coherence (the fibration-side story).
-* `+taxonomy.md+` — axes along which echoes differ.
-* `+examples.md+` — worked cases.
-* `+composition.md+` — how `+Echo+` behaves under function composition.
+* `+taxonomy.adoc+` — axes along which echoes differ.
+* `+examples.adoc+` — worked cases.
+* `+composition.adoc+` — how `+Echo+` behaves under function composition.
 * `+roadmap.adoc+` — what can advance without the current proof
-blockers, and what cannot (note: `+roadmap.md+` was consolidated into
-`+roadmap.adoc+` in 2026-05-26).
+blockers, and what cannot (note: the former echo-types roadmap note was
+consolidated into `+roadmap.adoc+` in 2026-05-26).

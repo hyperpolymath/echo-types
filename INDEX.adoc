@@ -43,7 +43,7 @@ Current reader navigation has two later additions relevant to the
 public description of the repo:
 
 * Semantic-fibre vocabulary now lives in `README.md`,
-  `docs/echo-types/overview.md`, and `docs/echo-types/taxonomy.md`.
+  `docs/echo-types/overview.adoc`, and `docs/echo-types/taxonomy.adoc`.
   It distinguishes semantic fibre, avec fibre, sans fibre, residue,
   provenance/trace, and warrant.
 * Doc-side prototype sketches live under
@@ -281,8 +281,8 @@ Distinctness against neighbour frameworks rests on the *truncation
 argument* (`echo-not-prop` family in `proofs/agda/examples/`,
 formalising that for non-injective `f` with multiple preimages of
 `y`, `Echo f y` is constructively not a mere proposition) and the
-*2-cell argument* (Sophisticated submodules of `EchoVsQuotient.agda`
-and `EchoVsGalois.agda`, formalising that natural 2-cells in
+*2-cell argument* (Sophisticated submodules of the `EchoVsQuotient`
+and `EchoVsGalois` modules, absent from the current tracked tree, formalising that natural 2-cells in
 neighbour frameworks are Σ-over-preimages-shaped). The integration
 recipe is *organising vocabulary*, not the locus of distinctness.
 

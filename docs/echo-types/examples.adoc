@@ -80,7 +80,7 @@ determines the ordinal value.
 * *Extensional / intensional.* Both. The shadow is "`the canonical form
 exists`"; the intensional core records _which tree_ produced it, giving
 provenance across normalisation.
-* *Reference.* `+proofs/agda/Ordinal/CNF.agda+`; trichotomy
+* *Reference.* `+Ordinal/CNF.agda+` in the ordinal-notation repository (moved out of this repo, 2026-10-20); trichotomy
 (`+cnf-trichotomy+`, `+<ᶜ-trans+`, `+<ᶜ-irrefl+`) gives the order
 structure that makes this a well-behaved canonicalisation.
 
@@ -119,7 +119,7 @@ been.
 * *Extensional / intensional.* Both. The approximate version brings in
 the "`Exact vs approximate`" axis (see taxonomy).
 * *Informal.* Approximate-echo formalisation is open (see
-`+taxonomy.md+`, axis 2).
+`+taxonomy.adoc+`, axis 2).
 
 '''''
 
@@ -155,7 +155,7 @@ enormous but enumerable (in principle) set.
 access to the echo, not its existence.
 * *Informal.* Not in repo. This is the example that forced the promotion
 of the information-theoretic/computational access axis — see
-`+taxonomy.md+` axis 8. Candidate refinements of `+Echo+` that would
+`+taxonomy.adoc+` axis 8. Candidate refinements of `+Echo+` that would
 capture the security claim (cost-indexed echo, graded access modality,
 decidability-respecting echo, witness-search abstract machine) are
 listed there.

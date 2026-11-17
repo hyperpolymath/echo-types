@@ -51,7 +51,7 @@ this correction changes no historical nominee, theorem, or audit verdict.
 For the sceptic-facing evidence map ("is this just renamed Σ?",
 organised under five demands and cross-linked to every in-tree
 artefact), see `docs/echo-types/sigma-distinctness-map.adoc` and its
-internal companion `core/skepticisms/is-this-just-sigma-types.md`.
+internal companion `core/skepticisms/is-this-just-sigma-types.adoc`.
 That doc is an evidence index; this file is the per-nominee Gate 2
 audit and remains the authoritative gate artefact.
 

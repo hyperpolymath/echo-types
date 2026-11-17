@@ -164,7 +164,7 @@ group? This could be the "`canonical-form`" operator for echoes.
 === Axis 5 — Compositional vs non-compositional
 
 _Definition._ *Compositional* echoes satisfy a clean law relating
-`+Echo(g ∘ f)+` to `+Echo(f)+` and `+Echo(g)+` (see `+composition.md+`).
+`+Echo(g ∘ f)+` to `+Echo(f)+` and `+Echo(g)+` (see `+composition.adoc+`).
 *Non-compositional* echoes do not — computing `+Echo(g ∘ f)+` requires
 global information beyond the component echoes.
 
@@ -246,7 +246,7 @@ cryptographically strong hash function. `+Echo H y+` is
 information-theoretically inhabited for every `+y ∈   image(H)+`
 (pigeonhole — there exist preimages), but computationally inaccessible
 under the standard security assumption (no polynomial-time algorithm
-produces a witness). See `+examples.md+` §8. - `+square⁻¹ : ℕ → ℕ+`
+produces a witness). See `+examples.adoc+` §8. - `+square⁻¹ : ℕ → ℕ+`
 under the constructive square-root algorithm. Same information content
 as `+Echo square+`, but the witness is produced in `+O(log n)+`
 operations. Computationally accessible.
@@ -369,7 +369,7 @@ _Composition conjecture._ Computational accessibility composes
 extracting a `+g ∘ f+` witness is bounded by the product of component
 costs. This is the standard complexity composition and should carry
 over; would need to be stated carefully since the accumulation iso of
-`+composition.md+` §1 introduces an intermediate `+b : B+` whose
+`+composition.adoc+` §1 introduces an intermediate `+b : B+` whose
 extraction cost is implicit.
 
 _Worked example motivating the axis._ Hash chains in a blockchain. Each
@@ -449,6 +449,6 @@ morphisms factor through a residue). Currently indirect in
 
 _History note._ Axis 8 (information-theoretic vs computational access)
 was promoted from this list on the same commit that added it as a
-numbered axis. The cryptographic-hash example in `+examples.md+` §8 was
+numbered axis. The cryptographic-hash example in `+examples.adoc+` §8 was
 the case that forced the promotion: no other axis could distinguish
 "`preimage exists`" from "`preimage is findable`".

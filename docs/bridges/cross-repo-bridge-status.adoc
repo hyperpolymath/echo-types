@@ -143,7 +143,7 @@ by residue / loss form (recoverable / constrained / residue-bearing /
 observationally equivalent / genuinely lost); Ochránce may supply
 concrete receipt evidence. Downstream application evidence only — not a
 new foundation. No mechanised cross-repo theorem currently exists.
-Companion: `+docs/bridge-status.md+` §7 and
+Companion: `+docs/bridge-status.adoc+` §7 and
 `+docs/echo-types/explorations/accountable-shell/README.adoc+`. |No
 shared schema and no Agda↔Idris2 / Agda↔Rust import path; the
 relationship is citation-level only. Echo Types makes *no* claim about
@@ -618,7 +618,7 @@ citation-level (no Agda↔Rust path).
 bridge row as an exploratory downstream-consumer entry (Core Affect: NO;
 citation-level only, no bridge module, nothing wired into `+All.agda+` /
 `+Smoke.agda+` / `+EchoCanonicalIdentitySuite.agda+`). Mirrored in
-`+docs/bridge-status.md+` §7 and the exploratory note
+`+docs/bridge-status.adoc+` §7 and the exploratory note
 `+docs/echo-types/explorations/accountable-shell/README.adoc+`.
 * 2026-05-20: Closed CNO content-bridge row; baked Agda↔Coq↔Lean4
 correspondence table in; updated JanusKey row with the structural-mirror
