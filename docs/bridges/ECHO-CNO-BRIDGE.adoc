@@ -15,7 +15,16 @@ The earlier proposed definition `UniversalCNO p = ∀ s → Echo p s ≃ Echo id
 
 At baseline `cd85288dcce55191ad477c0fa7d1d2421514a0d3`, `EchoCNOBridge.agda` imports native `CNO.Program` and `CNO.IsCNO`, but its map is the constant `Program → ⊤`. Its `ProgramEcho _` ignores its program index, and `cno-program-echo p _` ignores the certificate. Every program has this echo witness. Passing native certificates through composition does not by itself connect Echo to execution or state preservation.
 
-A semantic replacement must use the native execution semantics and the `CNO.state-eq` evidence. Merely importing a certificate type does not establish that bridge. The local audit adds `EchoCNOSemantics` and `EchoSourcePreserving`, using same-program certificates, native `CNO.state-eq`, and source-preserving fibre comparisons. Their local Agda 2.7.0.1 checks passed, along with the ordinary CI roots. `CertifiedProgramEcho` binds the provenance witness and certificate to the same program. `NativeNull` and `IsCNO` imply each other within the pinned dependency’s total, zero-energy model; the Nop negative control changes the program counter. `SourcePreservingStateMap` characterizes native nullness through a source-preserving map of relation-valued fibres using `state-eq`. Its record does not assert the two inverse laws of the ordinary `FibreIso` interface. This is a scoped semantic bridge, not a theorem about all operational models.
+A semantic replacement must use the native execution semantics and native state evidence. Merely importing a certificate type does not establish that bridge. `EchoCNOSemantics` and `EchoSourcePreserving` use same-program certificates and source-preserving fibre comparisons. `CertifiedProgramEcho` binds the provenance witness and certificate to the same program.
+
+Since the absolute-zero repin to `8a3162a` (2026-11-16), the pinned model is a pc-driven machine: a big-step run relation `p ⊢ s ⇓ s'` from pc 0, and `obs-eq` over memory, registers and I/O (not the program counter). Programs can loop or fault, so the bridge separates identity from termination:
+
+* `NativeNull p`: every start state runs to an observably equal state. It is equivalent to `IsCNO p` (`native-null-iff-cno`) and to partial nullness plus termination (`native-null-iff-partial-terminating`).
+* `PartialNull p`: every run that stops ends in an observably equal state. `SourcePreservingStateMap` characterises this, not `NativeNull` (`partial-null-iff-source-map`). The self-jump `loop` has a source-preserving map but is not natively null (`loop-source-map`, `loop-not-native-null`).
+* Composition (`certified-compose`, `native-null-compose`, `cno-compose-echo`) needs the first program to be closed, as absolute-zero's `cno-composition` does. Composition of partial nullness alone is not provided, and the former `source-map-compose` is removed.
+* `Nop` is now a certified CNO (`nop-certified`), because only the program counter changes. The negative control is a `Load` that changes a register (`load-not-certified`).
+
+The record does not assert the two inverse laws of the ordinary `FibreIso` interface. This is a scoped semantic bridge, not a theorem about all operational models.
 
 == Thermodynamic model
 

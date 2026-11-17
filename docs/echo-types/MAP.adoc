@@ -350,9 +350,10 @@ PR workflow results are tracked in link:../audit/2026-11-06-repository-readiness
   fibre results using pointwise equality, including the source-preserving
   identity criterion and dependent pushforward/reindexing adjunction data.
   Composition is a natural isomorphism; full base-indexed coherence is not claimed.
-* `EchoCNOSemantics`: derived bridge through `EchoCNOBridge` and pinned native
-  `CNO.state-eq`. Its source-preserving relation-fibre map criterion and
-  same-program certification are scoped to the external total zero-energy model.
+* `EchoCNOSemantics`: derived bridge through `EchoCNOBridge` and absolute-zero's
+  pinned pc-driven machine, using `CNO.obs-eq` (memory, registers, I/O).
+  Total nullness (`NativeNull`) is equivalent to `IsCNO`; the source-preserving
+  relation-fibre map characterises partial nullness only (`loop-source-map`).
 * `EchoGradedComonadNaturality` and `EchoErasingGradedComonad`: strengthened
   companion obligations plus a concrete natural-grade erasing model. Grade UIP
   is explicit in the interface and discharged for Nat in the model; no global
