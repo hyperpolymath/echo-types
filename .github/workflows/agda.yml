@@ -41,9 +41,9 @@ jobs:
           path: |
             ${{ runner.temp }}/echo-agda/**/*.agdai
             proofs/agda/**/*.agdai
-          key: agdai-${{ runner.os }}-2.7.0.1-stdlib8326c747-abszf486c299-${{ hashFiles('proofs/agda/**/*.agda') }}
+          key: agdai-${{ runner.os }}-2.7.0.1-stdlib8326c747-absz8a3162a2-${{ hashFiles('proofs/agda/**/*.agda') }}
           restore-keys: |
-            agdai-${{ runner.os }}-2.7.0.1-stdlib8326c747-abszf486c299-
+            agdai-${{ runner.os }}-2.7.0.1-stdlib8326c747-absz8a3162a2-
       - name: Typecheck shipped closure and headlines
         run: |
           agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --safe --without-K --cubical-compatible -i proofs/agda proofs/agda/All.agda

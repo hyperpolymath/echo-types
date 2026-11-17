@@ -16,7 +16,8 @@ import EchoSourcePreserving as SourcePreserving using
   )
 import EchoCNOSemantics as CNOSemantics using
   ( CertifiedProgramEcho; certified-echo-native-null; native-null-to-cno
-  ; native-null-source-map; source-map-native-null; nop-not-certified
+  ; native-null-source-map; source-map-partial-null; nop-certified
+  ; load-not-certified; loop-source-map; loop-not-native-null
   )
 import EchoDependentPushforward as DependentPushforward using
   ( transpose-untranspose; untranspose-transpose
@@ -1392,7 +1393,8 @@ open import EchoSourcePreservingComparison using
   ; pointwise-fibre-map; source-map-pointwise; pointwise-fibre-iso )
 open import EchoCNOPackaging using
   ( LogicalEquivalence; native-null-iff-cno; native-null-iff-certified
-  ; native-null-iff-source-map; native-null-compose; source-map-compose )
+  ; native-null-iff-partial-terminating; partial-null-iff-source-map
+  ; native-null-compose )
 open import EchoFiniteResidue using
   ( ExactRecovery; recovery-separates; recovery-forbids-residue-collision
   ; finite-fibre-bound; constant-recovery; constant-bound; no-one-symbol-for-two )

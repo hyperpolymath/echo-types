@@ -54,6 +54,27 @@ include some definitions as well as theorems): `PWG-1` 0, `PWG-2ii` 5,
 per-theorem record exists for it yet.
 Agda results for the whole closure are dated checks, not grades.
 
+== Agda cold check (2026-11-16): absolute-zero repin
+
+absolute-zero is repinned from `f486c29` to
+`8a3162a24c8524735b464bedb9747517dc8b0467`, the merge of absolute-zero#199,
+which replaces the total evaluator with a pc-driven machine. `EchoCNOBridge`,
+`EchoCNOSemantics` and `EchoCNOPackaging` are restated over it (see
+link:docs/bridges/ECHO-CNO-BRIDGE.adoc[the bridge boundary]).
+
+With the CI toolchain from `scripts/setup-agda.sh` (Agda 2.7.0.1, the same
+release-archive sha256 as below; stdlib `8326c74`; absolute-zero `8a3162a`),
+these all exited 0 on proof sources identical to commit
+`4915be64bd7aeab3febd3a79b070255bbf2d4da5`:
+
+* the five static guards;
+* the seven `--safe --without-K --cubical-compatible` roots, cold
+  (`--ignore-interfaces`), as listed below;
+* the `--safe --cubical` island.
+
+No log was archived for this run. It is a local run, not a GitHub Actions
+receipt.
+
 == Agda cold check (2026-11-09)
 
 At source commit `ccec4d79866e3e433ae2268d2f8b7899396cb34f`, with a clean
