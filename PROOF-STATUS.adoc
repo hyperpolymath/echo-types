@@ -46,12 +46,150 @@ Lean legs are re-proved and kernel-checked with no axioms. They are
 every witness.
 |===
 
-Census (PROOF-POLICY §8.4), counted per theorem on 2026-11-09 over the 722
-headline pins in the `using` clauses of `proofs/agda/Smoke.agda` (the pins
+=== Ledger (PWG receipt rows, 2026-11-17)
+
+The receipt is
+link:verification/receipts/echo-types-proofs_praxis.deed[`verification/receipts/echo-types-proofs_praxis.deed`]
+(PROOF-POLICY §8.5.1). It describes source commit `7a78f1a` and Agda run
+https://github.com/hyperpolymath/echo-types/actions/runs/44171715308[44171715308]
+on that commit:
+
+* the `cold-check` job (Agda 2.7.0.1 at the checksum in
+  `scripts/setup-agda.sh`, agda-stdlib `8326c74`, absolute-zero `8a3162a`)
+  checks `All`, `Smoke`, `AuditSmoke`, `characteristic/All` and
+  `examples/All` with `agda --no-libraries --ignore-interfaces --safe
+  --without-K --cubical-compatible`;
+* the `Rocq recheck leg` (Coq 8.18.0) and `Lean recheck leg` (Lean 4.30.0)
+  jobs check the ET-21 legs, with no axioms.
+
+The import cone of the five roots is recorded in the receipt, with
+agda-stdlib and absolute-zero as imports. A comment-aware postulate scan of
+the cone finds only the four `Agda.Primitive` level postulates, which the
+receipt lists as its trusted base. standards `deed_lint.js
+--proof-receipt-json` and `scripts/check-proof-receipt.sh` both pass on the
+receipt. ET-21 stays `PWG-2ii`, not `PWG-1`: its receipts carry no pinned
+checker image.
+
+[cols="1,3,4,1",options="header"]
+|===
+| Row | Agda term (module) | Statement and scope | Grade
+
+| ET-1
+| `Echo-comp-iso` (`Echo`)
+| The echo of a composite splits through the middle type: `Echo (g ∘ f) y ↔ Σ B (λ b → Echo f b × g b ≡ y)`. Unconditional.
+| `PWG-3`
+
+| ET-2
+| `cancel-iso` (`Echo`)
+| Given a section `s` of `g` with both triangle identities, `Echo (g ∘ f) y ↔ Echo f (s y)`. The triangle identities are hypotheses.
+| `PWG-3`
+
+| ET-3
+| `Echo-comp-pent-Σ-assoc` (`Echo`)
+| For a triple composite, `Σ C (λ c → Σ B (λ b → Echo f b × g b ≡ c) × h c ≡ y) ↔ Σ B (λ b → Echo f b × h (g b) ≡ y)`: the Σ-associativity step of pentagon coherence.
+| `PWG-3`
+
+| ET-4
+| `echo↔fib` (`EchoFiberBridge`)
+| `Echo f y ↔ fiber f y`, with `refl` round trips: Echo is the homotopy fibre by definition.
+| `PWG-3`
+
+| ET-5
+| `A↔ΣEcho` (`EchoTotalCompletion`)
+| `A ↔ Σ B (Echo f)` for every `f`. Funext-free.
+| `PWG-3`
+
+| ET-6
+| `projection-fibre-iso`, `ofs-witness` (`EchoOrthogonalFactorizationSystem`)
+| `f` factors as an equivalence followed by `proj₁`, whose fibre at `y` is `Echo f y`. Factorisation existence only: no uniqueness up to iso and no lifting property.
+| `PWG-3`
+
+| ET-7
+| `no-section-of-collapsing-map` (`EchoNoSectionGeneric`)
+| A map that sends two distinct elements to one value has no left inverse.
+| `PWG-3`
+
+| ET-8
+| `injective-fibres-proj-unique` (`EchoImageFactorization`), `equiv-fibre-proj-unique` (`EchoLossTaxonomy`)
+| For an injective map (and so for an equivalence), two echoes over one point have equal first projections. Not that the echoes are equal: that needs UIP on the codomain.
+| `PWG-3`
+
+| ET-9
+| `echo-pullback-univ` (`EchoPullback`)
+| Every cone over `f` and `y` has a mediator into `Echo f y`, unique pointwise. Not the strict universal property (R-2026-05-18).
+| `PWG-3`
+
+| ET-10
+| `echo-pullback-univ-strict` (`EchoPullbackUnivF4`)
+| The same mediator, unique as a function. Takes function extensionality as a module parameter.
+| `PWG-3`
+
+| ET-11
+| `gcomonad-counit-l`, `gcomonad-counit-r`, `gcomonad-coassoc` (`EchoGradedComonad`)
+| Counit and coassociativity laws of the grade-indexed reindexing on `GEcho`. A thin-poset reindexing modality; the graded-comonad reading is withdrawn (R-2026-05-18).
+| `PWG-3`
+
+| ET-12
+| `sep-degrade-compose-fails` (`EchoSeparating`)
+| Without propositionality of the grade order, the degrade-compose law fails: a checked counterexample.
+| `PWG-3`
+
+| ET-13
+| `model-agreement`, `bridge-natural` (`EchoRelModel`)
+| The set model and the relational model agree on reindexing, and the Echo-to-graph map commutes with `map-over` and `map-rel`. Both models share one grade poset: carrier parametricity, not model independence.
+| `PWG-3`
+
+| ET-14
+| `echo-factorisation-strict` (`EchoOFSUnivF5`)
+| `f ≡ proj₁ ∘ encode f` as functions, given function extensionality. F5 shows existence of the comparison iso, not its uniqueness.
+| `PWG-3`
+
+| ET-15
+| `aggregation-as-fold`, `no-canonical-disaggregation-of` (`EchoAggregation`)
+| Aggregating a concatenation is the monoid product of the two aggregates. An aggregation that identifies two inputs has no left inverse. Not SQL GROUP-BY semantics.
+| `PWG-3`
+
+| ET-16
+| `perfect-deniable`, `partial-not-deniable` (`EchoDeniability`)
+| The constant producer is deniable to every opener (`refl`); the partial producer is not. No cryptographic or side-channel claim.
+| `PWG-3`
+
+| ET-17
+| `no-bare-recovery` (`EchoVariance`)
+| `collapse : Bool → ⊤` has no left inverse. The surrounding maps are not a graded monad or an adjunction (design audit).
+| `PWG-3`
+
+| ET-18
+| `native-null-iff-cno`, `partial-null-iff-source-map`, `loop-not-native-null` (`EchoCNOPackaging`, `EchoCNOSemantics`)
+| Over absolute-zero's pc-driven model: total nullness is equivalent to `IsCNO`; a source-preserving fibre map is equivalent to partial nullness; the self-jump has such a map but is not natively null.
+| `PWG-3`
+
+| ET-19
+| `bennett-enumerated`, `landauer-fan-in`, `collapse-erasure-cost` (`EchoThermodynamicsArbitrary`)
+| On an enumerated fibre: injective maps cost nothing; two distinct preimages cost at least k·T; `Bool → ⊤` costs exactly T. A counting model, not a physical derivation.
+| `PWG-3`
+
+| ET-20
+| `mode-equality-strictly-finer-at-linear` (`EchoObservationalEquivalence`)
+| Two echoes that linear-mode equality distinguishes and affine-mode equality identifies.
+| `PWG-3`
+
+| ET-21
+| `search-double-6-decided`, `search-as-echo`, `search-as-cost`, `search-as-dec`, `search-as-feasible` (`EchoSearchExample`)
+| The worked axis-8 search exhibit. Rocq and Lean re-prove each headline with no axioms; both legs are `RECONCILED` (link:proofs/RECHECK-EchoSearchExample.adoc[record]).
+| `PWG-2ii`
+|===
+
+Census (PROOF-POLICY §8.4), counted per name over the 775 distinct names in
+the `using` clauses of `proofs/agda/Smoke.agda` at `7a78f1a` (the pins
 include some definitions as well as theorems): `PWG-1` 0, `PWG-2ii` 5,
-`PWG-2i` 0, `PWG-3` 0, `ungraded` 717. The five graded theorems are the
-`EchoSearchExample` headlines above; every other pin is `ungraded` because no
-per-theorem record exists for it yet.
+`PWG-2i` 0, `PWG-3` 31, `ungraded` 739. The graded names are those of
+ET-1..ET-21; every other pin is `ungraded` because no row records it. The
+scope notes of the design audit below apply to the graded rows.
+
+A later commit that changes a file in the receipt's manifests is not
+described by it.
+
 Agda results for the whole closure are dated checks, not grades.
 
 == Agda cold check (2026-11-16): absolute-zero repin
@@ -295,11 +433,10 @@ adjunction, and F1 is a lossless writer that does not mention Echo.
 the (epi, mono) gate stays `open`.
 |===
 
-Under PROOF-POLICY §8 every theorem here is `ungraded`: no PWG-3 receipt
-(Agda version, standard-library pin, flags, import cone, commit) is recorded
-in-repo, and no Rocq or Lean leg exists. CNO-facing results also inherit the
-limits recorded in absolute-zero's 2026-11-09 design audit (its `IsCNO` is
-degenerate).
+Under PROOF-POLICY §8 the theorems in this section are `ungraded` unless a
+row of "Ledger (PWG receipt rows)" above grades them. CNO-facing results are
+stated over absolute-zero `8a3162a`, whose pc-driven model (absolute-zero#199)
+resolved the degenerate `IsCNO` that its 2026-11-09 design audit recorded.
 
 === Ordinal / Buchholz track — moved
 The ordinal lane left echo-types on 2026-10-20 (echo-types#349, decision
