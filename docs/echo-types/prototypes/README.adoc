@@ -25,6 +25,6 @@ unqualified proof.
 
 Read this as an explanatory companion to:
 
-* `../overview.md` - semantic fibre, avec fibre, sans fibre, warrant.
-* `../taxonomy.md` - cross-axis fibre status and access distinctions.
+* `../overview.adoc` - semantic fibre, avec fibre, sans fibre, warrant.
+* `../taxonomy.adoc` - cross-axis fibre status and access distinctions.
 * `../../../README.md` - public README placement.

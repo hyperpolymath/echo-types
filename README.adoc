@@ -200,7 +200,7 @@ Intended proof-use cases: non-injective computation, provenance, structured irre
 
 == Foundation Contract
 
-If you are wiring Echo into another language, the stable entry point is `FOUNDATION_CONTRACT.md` plus the curated `Echo.*` namespace. It re-exports the proven core behind a small surface so you depend on the contract, not the research sprawl:
+If you are wiring Echo into another language, the stable entry point is `FOUNDATION_CONTRACT.adoc` plus the curated `Echo.*` namespace. It re-exports the proven core behind a small surface so you depend on the contract, not the research sprawl:
 
 [cols="1,2", options="header"]
 |===

@@ -134,7 +134,8 @@ neighbours have weaker formalisation; this is the template.
 * The Cubical Agda primitives for higher-inductive quotients
   (out of scope for `--safe --without-K` here; relevant for the
   S-4 sub-case).
-* `proofs/agda/EchoVsQuotient.agda` for the formal exhibits
-  cited above.
+* The `EchoVsQuotient` module, which named the formal exhibits cited above,
+  is absent from the current tracked tree; those exhibits are not current
+  checked evidence (see `docs/gate-1-distinct-phenomenon.adoc`).
 * `gate-1-distinct-phenomenon.adoc` § "Falsification tests" for
   the T2 retraction protocol this note instantiates.

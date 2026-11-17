@@ -190,7 +190,7 @@ Differential surface::
 
 [[foundation-contract]]
 Foundation contract::
-  The stable API surface (`Echo.*` namespace + `FOUNDATION_CONTRACT.md`) that downstream languages depend on, isolating them from research sprawl.
+  The stable API surface (`Echo.*` namespace + `FOUNDATION_CONTRACT.adoc`) that downstream languages depend on, isolating them from research sprawl.
   *Classification:* **project-specific**.
 
 [[anti-collapse-separation]]
@@ -416,7 +416,7 @@ Differential surface::
 
 [[foundation-contract]]
 Foundation contract::
-  The stable API surface (`Echo.*` namespace + `FOUNDATION_CONTRACT.md`) that downstream languages depend on, isolating them from research sprawl.
+  The stable API surface (`Echo.*` namespace + `FOUNDATION_CONTRACT.adoc`) that downstream languages depend on, isolating them from research sprawl.
   *Classification:* **project-specific**.
 
 == Audience surfaces

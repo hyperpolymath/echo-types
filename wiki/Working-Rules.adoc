@@ -85,8 +85,8 @@ Each time a named theorem or iso-shape lands on the composition or ordinal
 tracks:
 
 . Branch housekeeping; cherry-pick to a consolidation branch in dependency order.
-. Update human docs (`composition.md`, `roadmap.adoc`, `overview.md`,
-  `cross-repo-bridge-status.md`) — sweep stale `(Open)`/`[unblocked]` tags;
+. Update human docs (`docs/echo-types/composition.adoc`, `roadmap.adoc`, `docs/echo-types/overview.adoc`,
+  `docs/bridges/cross-repo-bridge-status.adoc`) — sweep stale `(Open)`/`[unblocked]` tags;
   honest labels `(Landed)` / `(Partial)` / `(Open)`.
 . Update machine docs (`CLAUDE.md` current-rung-state + the `6a2/` files).
 . Verify `All.agda` + `Smoke.agda` exit 0; no postulates introduced.

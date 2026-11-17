@@ -7,7 +7,7 @@
 
 [.lead]
 This file collects observations from the Gate 2 audit
-(`docs/gate-2-characteristic.adoc`) that affect the other gates' work.
+(`docs/characteristic.adoc`) that affect the other gates' work.
 Per parallel-instance lane discipline, this lane does not edit Gate 1's
 or Gate 3's files; this is the channel for cross-lane information.
 

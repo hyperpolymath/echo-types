@@ -19,7 +19,7 @@ the strongest honest statement available under
 ====
 This is Track B of the "Echo ≠ Σ" identity-claim consolidation
 (`roadmap.adoc` §Lane 2; sceptic-facing map at
-`core/skepticisms/is-this-just-sigma-types.md` §4). The theorems below
+`core/skepticisms/is-this-just-sigma-types.adoc` §4). The theorems below
 respect the R-2026-05-18 retraction discipline: the claim is a
 *consumer-side free theorem at the headline affine instance*, NOT a
 general Reynolds-style parametricity result. The scope narrowness is
@@ -175,7 +175,7 @@ The pair is the artefact. Either alone is half the story.
 
 * Agda module: `proofs/agda/EchoAbstractionBarrier.agda` (this file's
   companion).
-* Sceptic-facing map: `core/skepticisms/is-this-just-sigma-types.md`
+* Sceptic-facing map: `core/skepticisms/is-this-just-sigma-types.adoc`
   §4 and `docs/echo-types/sigma-distinctness-map.adoc` §"Demand 4".
 * The retraction governing the narrowing discipline:
   `docs/retractions.adoc` R-2026-05-18.

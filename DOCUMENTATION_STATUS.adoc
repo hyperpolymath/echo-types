@@ -6,11 +6,11 @@
 
 [arabic]
 . *Core Bridge Documentation*
-* `+docs/EchoJanusBridge.md+` - Comprehensive explanation of echo types
+* `+docs/bridges/EchoJanusBridge.adoc+` - Comprehensive explanation of echo types
 → JanusKey bridge
 * `+roadmap.adoc+` §"`Deferred research track`" - Strategic proof
-development roadmap (consolidated from former `+docs/ProofRoadmap.md+`)
-* `+docs/COMPREHENSIVE_DOCUMENTATION.md+` - Complete 3-2-1 structured
+development roadmap (consolidated from the former proof-roadmap note)
+* `+docs/COMPREHENSIVE_DOCUMENTATION.adoc+` - Complete 3-2-1 structured
 documentation
 . *Formal Proofs*
 * `+proofs/agda/EchoJanusBridge.agda+` - Core bridging theorems
@@ -54,8 +54,8 @@ documentation
 * Comprehensive documentation in `+docs/+`
 * Updated `+All.agda+` module
 . *JanusKey Repository*
-* Existing formal proofs directory: `+docs/wiki/formal-proofs/+`
-* Theory documentation: `+docs/wiki/theory/formal-model.adoc+`
+* Existing formal proofs directory (januskey repository): `+docs/wiki/formal-proofs/+`
+* Theory documentation: `+docs/wiki/theory/formal-model.adoc+` in the januskey repository
 * Ready for echo type integration
 . *MAA Framework*
 * Potential integration with absolute-zero proofs
@@ -94,10 +94,10 @@ code
 
 * [x] Create `+EchoJanusBridge.agda+` with core theorems
 * [x] Update `+All.agda+` to include new module
-* [x] Write `+EchoJanusBridge.md+` documentation
-* [x] Consolidate `+ProofRoadmap.md+` into `+roadmap.adoc+` (single
+* [x] Write `+docs/bridges/EchoJanusBridge.adoc+` documentation
+* [x] Consolidate the former proof-roadmap note into `+roadmap.adoc+` (single
 canonical roadmap)
-* [x] Develop `+COMPREHENSIVE_DOCUMENTATION.md+` (3-2-1 structure)
+* [x] Develop `+docs/COMPREHENSIVE_DOCUMENTATION.adoc+` (3-2-1 structure)
 * [x] Verify Agda proofs compile successfully
 * [ ] Add architecture diagrams
 * [ ] Create integration tests

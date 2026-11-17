@@ -90,7 +90,7 @@ it.
 
 Artifact (type-checked, gated, with the honest self-assessment): . The
 relevant module is `+proofs/agda/characteristic/NonTruncatable.agda+`;
-the taxonomy is `+docs/echo-types/taxonomy.md+`; the falsifiable-claim
+the taxonomy is `+docs/echo-types/taxonomy.adoc+`; the falsifiable-claim
 protocol is `+roadmap-gates.adoc+`.
 
 Grateful for pointers, corrections, or "`this is just X under another
@@ -116,7 +116,7 @@ a notion`".
 * [ ] Replace `+<repo URL>+` with the public URL at send time.
 * [ ] Trim to ≤ ~400 words of body before sending; list readers reward
 brevity. The taxonomy enumeration can become "`(8 axes; see
-`+taxonomy.md+`)`".
+`+taxonomy.adoc+`)`".
 
 === Why this is postable now (vs. earlier)
 

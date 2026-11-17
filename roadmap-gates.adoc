@@ -62,8 +62,10 @@ are specific to the models and witness information they retain.
 The current scoped evidence consists of the *truncation comparison* (the chosen fibres have distinct source projections, so propositional truncation cannot retain that same source-sensitive information, formally certified by the
 `echo-not-prop` family in `proofs/agda/examples/`) and the selected *2-cell constructions* (neighbour-framework natural 2-cells are
 Σ-over-preimages-shaped, formally certified by
-`Sophisticated.equalizer→echo-pair` in `EchoVsQuotient.agda` and
-`Sophisticated.meet→echo-intersection` in `EchoVsGalois.agda`).
+`Sophisticated.equalizer→echo-pair` in the `EchoVsQuotient` module and
+`Sophisticated.meet→echo-intersection` in the `EchoVsGalois` module; both
+modules are absent from the current tracked tree, so these are historical
+claims, not current checked evidence).
 
 The integration recipe (decoration order + echo-indexed family +
 transport action) is useful as organising vocabulary across the
@@ -113,7 +115,7 @@ The library contains useful fibre presentations and examples. Their novelty, pri
 The reviewer-facing evidence map answering "is this just renamed Σ?" —
 organised under five sceptic demands — lives at
 `docs/echo-types/sigma-distinctness-map.adoc` (companion to
-`core/skepticisms/is-this-just-sigma-types.md`). It is an *evidence
+`core/skepticisms/is-this-just-sigma-types.adoc`). It is an *evidence
 index*, not a substitute for the per-nominee audit below or for the
 Gate 2 decision itself.
 ====

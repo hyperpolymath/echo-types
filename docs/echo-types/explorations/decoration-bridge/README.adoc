@@ -112,7 +112,7 @@ triggers immediate retirement of the offending content.
 == Echo-vs-Σ clearance argument
 
 Per `roadmap.adoc` Lane 2, any echo-types construction must clear the
-Track A/B/C bar set out in `core/skepticisms/is-this-just-sigma-types.md`:
+Track A/B/C bar set out in `core/skepticisms/is-this-just-sigma-types.adoc`:
 the construction has to lean on at least one echo-specific property
 that bare `Σ` + `≡` does not give.  The bridge clears the bar via four
 inherited properties, in descending order of confidence:
@@ -496,4 +496,4 @@ does not require gate theory.
   the `earn-back-summary § forbidden-rebrandings` list.
 * EI-2 termination record: `docs/EI2_REPORT.adoc` § "Status".
 * R-2026-05-18 retraction record: `docs/retractions.adoc`.
-* Track A/B/C bar: `core/skepticisms/is-this-just-sigma-types.md`.
+* Track A/B/C bar: `core/skepticisms/is-this-just-sigma-types.adoc`.

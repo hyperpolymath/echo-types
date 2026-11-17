@@ -262,7 +262,7 @@ For balance — the affirmative side of the same discipline:
 * The retraction discipline that governs the narrowed claims here:
   `docs/retractions.adoc` R-2026-05-18.
 * Sceptic-facing answer to the "is this just Σ?" question, organised
-  under five demands: `core/skepticisms/is-this-just-sigma-types.md`
+  under five demands: `core/skepticisms/is-this-just-sigma-types.adoc`
   and `docs/echo-types/sigma-distinctness-map.adoc`.
 * The abstraction-barrier theorems referenced above:
   `proofs/agda/EchoAbstractionBarrier.agda` +

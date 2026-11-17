@@ -161,7 +161,7 @@ saves the next session from re-deriving the unpark plan.
 == References
 
 * `roadmap.adoc` §"Lane 4 [PARKED] — Bridges-CI"
-* `docs/bridges/cross-repo-bridge-status.md` — current per-bridge status
+* `docs/bridges/cross-repo-bridge-status.adoc` — current per-bridge status
 * `proofs/agda/EchoJanusBridge.agda`, `EchoTropical.agda`,
   `EchoCNOBridge.agda`, `DyadicEchoBridge.agda` — in-tree mirrors
 * `CLAUDE.md` §"Ecosystem context" — list of adjacent target repos

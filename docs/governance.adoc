@@ -6,11 +6,11 @@ proof-preservation rules. It is treated as a sensitive proof artifact.
 === Core vs. Bridge
 
 * *Core:* The minimal, mechanically verified theory of echo types
-(`+proofs/agda/Echo/Core.agda+`, `+Characteristic.agda+`,
-`+Residue.agda+`). This is the unshakeable foundation.
+(`+proofs/agda/Echo.agda+`, `+proofs/agda/characteristic/All.agda+`,
+`+proofs/agda/EchoResidue.agda+`). This is the unshakeable foundation.
 * *Bridge:* Speculative extensions, cross-domain mappings, and
 integrations. Bridge materials are strictly labeled (e.g., PARTIAL,
-EXPLORATORY, BLOCKED) and reside in `+proofs/agda/Echo/Bridges/+` and
+EXPLORATORY, BLOCKED) and reside in the `+proofs/agda/Echo*Bridge.agda+` modules and
 `+docs/bridges/+`. They do _not_ affect the core identity.
 
 === Retractions

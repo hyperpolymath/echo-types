@@ -102,5 +102,5 @@ After the surgery:
   asked whether to do it) is closed by the existence of this
   directory. The QC.1 entry should be updated in
   `next-questions.adoc` to reflect closure.
-* The `gate-1-handoff.adoc` cross-lane observations remain as
+* The Gate 1 cross-lane observations remain as
   evidence of how the split was reached; no edit needed.

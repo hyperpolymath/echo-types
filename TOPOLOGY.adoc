@@ -38,7 +38,7 @@ echo-types/
 └── (RSR template files at root)
 ----
 
-For planned work use link:roadmap.adoc[roadmap.adoc]; no uppercase `ROADMAP.adoc` exists in this checkout.
+For planned work use link:roadmap.adoc[roadmap.adoc]; no uppercase-named roadmap file exists in this checkout.
 
 == Cross-repo dependencies
 

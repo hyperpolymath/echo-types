@@ -203,7 +203,7 @@ Separating model (locates the reduction):
 `+true ≢ false+` failure when the single load-bearing hypothesis
 `+≤g-prop+` is removed.
 
-See `+core/skepticisms/is-this-just-sigma-types.md+` §2 and
+See `+core/skepticisms/is-this-just-sigma-types.adoc+` §2 and
 `+docs/echo-types/sigma-distinctness-map.adoc+` §"`Demand 2`" for the
 sceptic-facing framing. Honest framing per `+docs/retractions.adoc+`
 R-2026-05-18: this is a _thin-poset reindexing modality_, not a graded
@@ -240,7 +240,7 @@ above) |`+proofs/agda/EchoNoSectionGeneric.agda+`
 `+no-section-of-collapsing-map+`) |`+proofs/agda/EchoSecurity.agda+`
 |===
 
-See `+core/skepticisms/is-this-just-sigma-types.md+` §1 and
+See `+core/skepticisms/is-this-just-sigma-types.adoc+` §1 and
 `+docs/echo-types/sigma-distinctness-map.adoc+` §"`Demand 1`" for the
 sceptic-facing framing.
 
@@ -270,5 +270,5 @@ follow-ups: `+docs/retractions.adoc+` (R-2026-05-18 + F-2026-05-18a +
 F-2026-05-20a/b + F-2026-05-27a).
 
 _Note: For experimental bridges or retracted claims, refer to the
-link:proof-obligations.md[Proof Obligation Ledger] and
-link:bridge-status.md[Bridge Status]._
+link:proof-obligations.adoc[Proof Obligation Ledger] and
+link:bridge-status.adoc[Bridge Status]._

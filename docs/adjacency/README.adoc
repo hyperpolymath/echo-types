@@ -207,7 +207,7 @@ this directory is the intended structure.
 == Axis coverage matrix (Gate 1 refresh 2026-05-20)
 
 Cross-reference of each adjacency note against the 8 taxonomy axes
-defined in `docs/echo-types/taxonomy.md`. Refreshed 2026-05-20 — most
+defined in `docs/echo-types/taxonomy.adoc`. Refreshed 2026-05-20 — most
 notes predate axis 8 (added with the `EchoDecidable`/`EchoFiberCount`
 landings) and therefore do not currently engage it; the open ○
 markings below flag where axis-8 implications exist but are not

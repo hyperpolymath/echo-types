@@ -156,7 +156,8 @@ artefact of any one neighbour theory's framework.
 * Cousot & Cousot, "Abstract Interpretation: A Unified Lattice
   Model for Static Analysis of Programs by Construction or
   Approximation of Fixpoints" (POPL 1977).
-* `proofs/agda/EchoVsGalois.agda` for the formal exhibits cited
-  above.
+* The `EchoVsGalois` module, which named the formal exhibits cited above,
+  is absent from the current tracked tree; those exhibits are not current
+  checked evidence (see `docs/gate-1-distinct-phenomenon.adoc`).
 * `quotients.adoc` for the parallel quotient-side argument with
   which the diagonal correspondence holds.

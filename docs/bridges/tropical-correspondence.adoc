@@ -12,7 +12,7 @@ named theorems; this document is a cross-reference that lets a reader
 verify "`the same fact is established in all three systems,`" but does
 not constitute a unified verification artefact. It closes the "`Adjacent
 repo not recently audited`" blocker noted in
-`+cross-repo-bridge-status.md+`.
+`+cross-repo-bridge-status.adoc+`.
 
 === Source files
 

@@ -15,7 +15,7 @@
 
 [.lead]
 This file is the reviewer-facing companion to
-`core/skepticisms/is-this-just-sigma-types.md`. Its job is one thing:
+`core/skepticisms/is-this-just-sigma-types.adoc`. Its job is one thing:
 collect the in-repo constructions around `Echo f y`, which is definitionally `Σ A (λ x → f x ≡ y)`. None of the rows separates Echo from general dependent pairs. Selected lossy representations can forget information; that is a statement about those representations.
 
 [IMPORTANT]
@@ -52,7 +52,7 @@ sceptic might want.
 `proofs/agda/Smoke.agda`.
 
 | Prose | `docs/characteristic.adoc`,
-`docs/proof-obligations.md` §"No-section" entries,
+`docs/proof-obligations.adoc` §"No-section" entries,
 `README.md` §"Characteristic family".
 
 | Narrowing | These are no-left-inverse results, not a general absence of categorical sections or a separation from dependent pairs. The family lemmas are negative results under
@@ -156,7 +156,7 @@ just decorative wrapping.
 `proofs/agda/examples/EchoVsSigma.agda` — Track C in the work plan.
 Contrasts the chosen API with a deliberately lossy or insufficiently constrained representation. Raw `Σ` can express the same invariants as Echo; a universal raw-`Σ` leakage claim is false.
 
-| Prose | `docs/echo-types/examples.md`,
+| Prose | `docs/echo-types/examples.adoc`,
 `roadmap-gates.adoc` Gate 3.
 
 | Narrowing | Until Track C lands, the "raw `Σ` would leak" half is
@@ -179,9 +179,9 @@ the gate decisions. In particular:
 
 == See also
 
-* `core/skepticisms/is-this-just-sigma-types.md` — internal devil's
+* `core/skepticisms/is-this-just-sigma-types.adoc` — internal devil's
   advocate ledger this file is the AsciiDoc companion to.
-* `core/skepticisms/is-this-just-fibers.md` — adjacent skepticism.
-* `core/skepticisms/what-is-actually-new.md` — the broader question.
+* `core/skepticisms/is-this-just-fibers.adoc` — adjacent skepticism.
+* `core/skepticisms/what-is-actually-new.adoc` — the broader question.
 * `docs/retractions.adoc` — the R-2026-05-18 narrowing that governs
   the prose discipline here.

@@ -253,7 +253,7 @@ paper's own abstract grows into.
 | readme-status
 | degrade-law family lands across decoration layers (graded, linear/affine, choreographic, access, cost, search)
 | `EchoGraded.degrade-compose` + `EchoLinear.degradeMode-compose` + `EchoChoreo.applyChoreo-compose` + `EchoAccess` + `EchoCost` + `EchoSearch`
-| Six decoration layers named; per-layer headlines listed in `docs/theorem-index.md`.
+| Six decoration layers named; per-layer headlines listed in `docs/theorem-index.adoc`.
 | MATCHES
 | All six decoration layers ship a degrade-style composition headline: `EchoGraded.degrade-compose`, `EchoLinear.degradeMode-compose`, `EchoChoreo.applyChoreo-compose`, `EchoAccess.degrade-access-compose`, `EchoCost.echo-cost-compose`, `EchoSearch.echo-search-postcompose`/`relax` — all built `--safe --without-K`.
 

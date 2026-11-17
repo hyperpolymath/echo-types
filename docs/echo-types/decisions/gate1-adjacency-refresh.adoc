@@ -8,7 +8,7 @@
 :icons: font
 
 [.lead]
-Coherence pass requested by the legacy `roadmap.md` (now consolidated into `roadmap.adoc`) § "Theory work" item
+Coherence pass requested by the former echo-types roadmap note (now consolidated into `roadmap.adoc`) § "Theory work" item
 "Gate 1 adjacency refresh: the five existing adjacency notes
 predate the taxonomy. Cross-check each against the current axes
 and flag any neighbour whose identity claim should be
@@ -83,7 +83,7 @@ this refresh — see `gate-1-distinct-phenomenon.adoc` lines
 == The current taxonomy lens
 
 The taxonomy that the notes are being cross-checked against
-(`docs/echo-types/taxonomy.md`, refreshed through 2026-05-20)
+(`docs/echo-types/taxonomy.adoc`, refreshed through 2026-05-20)
 is now eight numbered axes plus three open candidates. The
 five distinctness claims sit in a richer axis-space than they
 were originally written against:
@@ -280,7 +280,7 @@ are coherence-flavoured and can be batched:
   this refresh.
 
 . *No new RE-EVALUATE work.* If a future axis is added to
-  `taxonomy.md`, this refresh should be re-run; the protocol
+  `../taxonomy.adoc`, this refresh should be re-run; the protocol
   is the same. The refresh is *not* premature — the five notes
   do predate axes 2 and 8 and the post-2026-05 Pillars A–D
   package, and the coherence gain from naming the axes
@@ -293,14 +293,14 @@ are coherence-flavoured and can be batched:
 * No content rewrites scheduled in this PR; the coherence
   follow-ups (per-note one-liner, README refresh) are listed
   above as separate optional moves.
-* the legacy `roadmap.md` (now consolidated into `roadmap.adoc`) § "Theory work" entry updated from `[unblocked]`
+* the former echo-types roadmap note (now consolidated into `roadmap.adoc`) § "Theory work" entry updated from `[unblocked]`
   to `[refreshed — see decisions/gate1-adjacency-refresh.adoc]`.
 
 == Cross-references
 
-* `roadmap.adoc` (legacy `docs/echo-types/roadmap.md` consolidated 2026-05-26) — Theory-work entry updated to
+* `roadmap.adoc` (the former echo-types roadmap note, consolidated 2026-05-26) — Theory-work entry updated to
   `[refreshed]`.
-* `docs/echo-types/taxonomy.md` — the eight-axis post-2026-05
+* `docs/echo-types/taxonomy.adoc` — the eight-axis post-2026-05
   taxonomy this refresh cross-checks against.
 * `docs/adjacency/README.adoc` — the directory index; itself
   refresh-eligible (see § "Cross-cutting findings").

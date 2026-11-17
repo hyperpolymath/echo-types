@@ -159,7 +159,7 @@ A Galois-only encoding would establish a scoped correspondence for
 the selected statement. Record any required assumptions; an unclosed
 attempt is not a proof that no encoding exists.
 
-Attempt scaffolded in `proofs/agda/EchoVsGalois.agda`.
+Attempt scaffolded in the `EchoVsGalois` module, which is absent from the current tracked tree (see "Status of attempts" below).
 
 === T2 — Quotient reduction
 
@@ -171,7 +171,7 @@ A quotient-only restatement would establish a scoped correspondence
 for the selected statement. A failure to construct one is not by itself
 a universal quotient no-go theorem.
 
-Attempt scaffolded in `proofs/agda/EchoVsQuotient.agda`.
+Attempt scaffolded in the `EchoVsQuotient` module, which is absent from the current tracked tree (see "Status of attempts" below).
 
 === T3 — Informativeness collapse
 
@@ -190,7 +190,7 @@ This test is currently unstubbed; see <<open-questions>>.
 The attempt descriptions below name `proofs/agda/EchoVsGalois.agda` and `proofs/agda/EchoVsQuotient.agda`, which are absent from the current tracked checkout. Those named results are not current checked evidence in this audit. The current `characteristic.RoleGraded.choreo-grade-commute` is a scoped commutation lemma; `characteristic/IntegrationAudit.agda` and the EI-2 record do not license a universal encoding obstruction. Any revived T1/T2 attempt needs an actual source revision and its own check receipt.
 
 T1 (Galois)::
-Scaffolded in `proofs/agda/EchoVsGalois.agda`. The basic reduction
+Scaffolded in the (now absent) `EchoVsGalois` module. The basic reduction
 holds for the foundation module. The non-monotone-grade obstruction
 is now *witnessed* by the `Sophisticated` submodule, which attacks
 the natural AI 2-cell candidate — the MEET in the abstraction
@@ -210,7 +210,7 @@ SPECIFIC, not an artifact of any one neighbour theory's framework.
 A further construction would refine these selected neighbour comparisons. Its success would not independently falsify Gate 1 or reopen EI-2.
 
 T2 (Quotient)::
-Scaffolded in `proofs/agda/EchoVsQuotient.agda`. Foundation reduces
+Scaffolded in the (now absent) `EchoVsQuotient` module. Foundation reduces
 cleanly. The naive-quotient-stacking obstruction is now *witnessed*
 by the `Miniature` submodule: a concrete two-element-type setting
 (A = Bool × Bool, one grade step, one role projection) where role
@@ -266,7 +266,7 @@ candidate axis must come with its own characteristic theorem
 
 Q1.5 [partial answer]::
 The smallest counter-example for naive quotient stacking has been
-constructed: see `proofs/agda/EchoVsQuotient.agda` § `Miniature`.
+constructed: see the `Miniature` submodule of the (now absent) `EchoVsQuotient` module.
 +
 The full T2 obligation is now decomposed into three claims:
 +
