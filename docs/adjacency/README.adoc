@@ -338,7 +338,8 @@ to Q2.x or example work to Q3.x. These are not a reopening of EI-2's
 terminated integration-distinctness claim.
 
 The honest summary: gate #1 has a strong consolidated argument
-plus formalised obstructions against the two strongest neighbours
-(quotients, Galois) plus formalised truncation wins on three
+plus historical obstructions against the two strongest neighbours
+(quotients, Galois; their modules are absent from the tracked tree and are
+not current checked evidence) plus formalised truncation wins on three
 domains (tropical, epistemic, linear). The remaining neighbours
 have framed but unformalised distinctness claims.
