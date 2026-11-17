@@ -247,8 +247,9 @@ distinctness load is carried by the *truncation argument* (echo
 types are non-truncatable, formalised by the `echo-not-prop`
 family in `proofs/agda/examples/`) and the *2-cell argument*
 (natural 2-cells in neighbour frameworks are
-Σ-over-preimages-shaped, formalised in
-`EchoVsQuotient.Sophisticated` and `EchoVsGalois.Sophisticated`).
+Σ-over-preimages-shaped; historically formalised in
+`EchoVsQuotient.Sophisticated` and `EchoVsGalois.Sophisticated`, modules absent
+from the tracked tree and not current checked evidence).
 
 `gate-1-distinct-phenomenon.adoc` § The Gate #1 claim has been
 updated to reflect this narrowing.

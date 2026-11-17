@@ -39,9 +39,8 @@ Briefly:
   `proofs/agda/examples/`.
 * *2-cell arguments* (quotients, Galois): echo wins because the
   natural 2-cell in the neighbour's framework is
-  Σ-over-preimages-shaped. Formal certificates are
-  `EchoVsQuotient.Sophisticated.equalizer→echo-pair` and
-  `EchoVsGalois.Sophisticated.meet→echo-intersection`.
+  Σ-over-preimages-shaped. No formal certificate for this argument
+  is in the tracked tree; see `docs/gate-1-distinct-phenomenon.adoc`.
 
 Two neighbours not in the original five-neighbour list are now
 also covered:
@@ -69,8 +68,8 @@ The files:
 |===
 
 The honest summary: gate #1 has a strong consolidated argument
-plus formalised obstructions against the two strongest neighbours
-(quotients, Galois) plus formalised truncation wins on three
+plus historical (not currently checked) obstructions against the two
+strongest neighbours (quotients, Galois) plus formalised truncation wins on three
 domains (tropical, epistemic, linear). The remaining neighbours
 have framed but only-partially-formalised distinctness claims;
 see each file for what's done and what's open.

@@ -47,9 +47,10 @@ Briefly:
   `proofs/agda/examples/`.
 * *2-cell arguments* (quotients, Galois): echo wins because the
   natural 2-cell in the neighbour's framework is
-  Σ-over-preimages-shaped. Formal certificates are
+  Σ-over-preimages-shaped. Historical attempt references are
   `EchoVsQuotient.Sophisticated.equalizer→echo-pair` and
-  `EchoVsGalois.Sophisticated.meet→echo-intersection`.
+  `EchoVsGalois.Sophisticated.meet→echo-intersection`; their modules are
+  absent from the current tracked tree (see "Status of attempts" below).
 
 Two neighbours not in the original five-neighbour list are now
 also covered:
@@ -109,13 +110,14 @@ neighbouring frameworks rests on two structural arguments:
 
 . *2-cell argument.* The natural 2-cells in neighbour frameworks
   (quotient equalizers, Galois meets) are structurally
-  Σ-over-preimages-shaped — i.e., already echo-shaped. Formal
-  certificates in
+  Σ-over-preimages-shaped — i.e., already echo-shaped. Historical
+  attempt references in
   `proofs/agda/EchoVsQuotient.Sophisticated.equalizer→echo-pair`
   and
   `proofs/agda/EchoVsGalois.Sophisticated.meet→echo-intersection`,
   with diagonal correspondence via
-  `meet-on-diagonal→equalizer`.
+  `meet-on-diagonal→equalizer`. These modules are absent from the current
+  tracked tree and are not current checked evidence.
 
 The earlier framing — distinctness as the *coherent integration
 of structured loss across five orthogonal axes simultaneously* —

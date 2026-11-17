@@ -63,9 +63,10 @@ is, honestly, just the generic Σ fact "`a Σ with two
 first-component-distinct elements is not `+isProp+``"; only the
 _constructed-`+y+`_ form is more than that.)
 * *2-cell.* The natural 2-cell in the quotient and Galois encodings is
-itself Σ-over-preimages-shaped (equalizer; lattice meet) — formal
-exhibits `+EchoVsQuotient.Sophisticated+`,
-`+EchoVsGalois.Sophisticated+`.
+itself Σ-over-preimages-shaped (equalizer; lattice meet) — historical
+formal exhibits `+EchoVsQuotient.Sophisticated+` and
+`+EchoVsGalois.Sophisticated+`, whose modules are absent from the tracked tree
+(not current checked evidence; do not cite them as available).
 
 A negative result is also recorded rather than hidden: a cross-axis
 "`integration recipe`" over the five named decoration axes does *not*
