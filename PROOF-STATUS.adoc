@@ -64,8 +64,10 @@ on that commit:
 
 The import cone of the five roots is recorded in the receipt, with
 agda-stdlib and absolute-zero as imports. A comment-aware postulate scan of
-the cone finds only the four `Agda.Primitive` level postulates, which the
-receipt lists as its trusted base. standards `deed_lint.js
+the cone finds only six prover-supplied postulates: the four
+`Agda.Primitive` level postulates (`Level`, `lzero`, `lsuc`, `_⊔_`) and
+`Char` and `String` from `Agda.Builtin.Char` and `Agda.Builtin.String`. The
+receipt lists all six, with their `BUILTIN` bindings, as its trusted base. standards `deed_lint.js
 --proof-receipt-json` and `scripts/check-proof-receipt.sh` both pass on the
 receipt. ET-21 stays `PWG-2ii`, not `PWG-1`: its receipts carry no pinned
 checker image.
