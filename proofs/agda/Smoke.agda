@@ -658,6 +658,9 @@ open import EchoPartialSection using
 open EchoPartialSection.FillNotMonotone using
   ( fill-not-monotone
   )
+open EchoPartialSection.NoJoin using
+  ( no-common-upper-bound
+  )
 
 open import EchoThermodynamics using
   ( landauer-bound

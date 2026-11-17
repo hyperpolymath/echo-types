@@ -7,6 +7,15 @@ Changelog].
 
 === [Unreleased]
 
+==== Added (2026-11-17)
+
+* `+EchoPartialSection.NoJoin.no-common-upper-bound+`: two partial sections
+holding different values at one index have no common upper bound under the
+information order `+_⊑_+`. The R1–R3 merge laws are therefore a
+resolver-parametric merge algebra, not a join-semilattice for `+_⊑_+`; the
+module header and the bridge-status row that called it a join-semilattice are
+corrected. Pinned in `+Smoke.agda+`.
+
 ==== Added (2026-11-09)
 
 * _squeakwell / VeriSimDB recovery ladder._ `+EchoPartialSection.agda+`
