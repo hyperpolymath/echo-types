@@ -72,7 +72,6 @@ checkout at commit `8326c7475af1fa456ca04a0203c168d5d7ff842b`:
 
 [source,shell]
 ----
-AGDA_STDLIB_DIR=/path/to/agda-stdlib   # checkout at commit 8326c74
 cd proofs/agda
 agda --no-libraries -i "$AGDA_STDLIB_DIR/src" --ignore-interfaces \
   --safe --cubical -i . EchoImageFactorizationPropCubical.agda
