@@ -16,8 +16,10 @@
 --
 -- Distinctness against neighbour frameworks rests on the truncation
 -- argument (`echo-not-prop` family in proofs/agda/examples/) and the
--- 2-cell argument (Sophisticated submodules of EchoVsQuotient.agda
--- and EchoVsGalois.agda), not on the integration argument. The
+-- 2-cell argument (historically the Sophisticated submodules of the
+-- EchoVsQuotient and EchoVsGalois modules, which are absent from the
+-- tracked tree and not current checked evidence), not on the
+-- integration argument. The
 -- integration recipe remains useful as organising vocabulary; it is
 -- not the locus of distinctness.
 ------------------------------------------------------------------------
