@@ -1,0 +1,93 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2025-2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Proof profile: the full-Cubical island
+:toc: macro
+
+This is the separately reviewed proof profile that
+https://github.com/hyperpolymath/standards/blob/main/3-practice/PROOF-POLICY.adoc[PROOF-POLICY]
+§2.1 requires for a theory proof that genuinely needs full Cubical Agda.
+
+*Status: DRAFT, not reviewed.* An agent drafted this record. It is not a
+review until the owner fills in the review block below and signs it off.
+Until then the profile review stays *OPEN*, as `PROOF-STATUS.adoc` says.
+
+toc::[]
+
+== Scope
+
+[cols="1,3"]
+|===
+| Module | `proofs/agda/EchoImageFactorizationPropCubical.agda` (the only module in this profile)
+| SHA-256 at drafting | `20f77384844fcf4e73e41877caa3e0742f4a9d3121ac91806c3141fbe793f6bf` (echo-types `main` at `140002f`)
+| Options | `{-# OPTIONS --cubical --safe #-}`, in the file
+| CI entrypoint | `.github/workflows/agda.yml`, job `cubical`: `agda --no-libraries -i "$AGDA_STDLIB" -i "$ABSOLUTE_ZERO_AGDA" --ignore-interfaces --safe --cubical -i proofs/agda proofs/agda/EchoImageFactorizationPropCubical.agda`
+| Toolchain pins (CI) | Agda 2.7.0.1, release tarball SHA-256 `975b515a…5db8a`; agda-stdlib `8326c7475af1fa456ca04a0203c168d5d7ff842b`; absolute-zero `8a3162a24c8524735b464bedb9747517dc8b0467` (all from `scripts/setup-agda.sh`)
+|===
+
+== Why this module departs from the default profile
+
+The default profile is `--safe --without-K --cubical-compatible`. Under it,
+propositional truncation `∥_∥` cannot be constructed, because it is a higher
+inductive type. `EchoImageFactorizationPropPostulated` therefore assumes it
+through four postulates. Those postulates are a necessary axiom under the
+Trusted-Base Reduction Policy (`docs/proof-debt.adoc`).
+
+This module constructs `∥_∥` as a real higher inductive type under
+`--cubical`. It proves the four interface obligations, so the (epi, mono)
+image factorisation becomes a proof instead of a consequence of assumed laws.
+
+Agda forbids a `--cubical` module from importing a `--without-K` module that is
+not `--cubical-compatible`. The module therefore restates `TruncInterface`,
+`Echo`, `echo-intro` and the `ImageProp` content locally.
+
+== What the profile establishes, and what it does not
+
+Established when the CI job is green:
+
+* The module type-checks under `--cubical --safe`, so there are no postulates
+  and no unsafe pragmas in it. `--safe` rejects a `postulate` under `--cubical`:
+  a one-line control module with a postulate exits 42.
+* The four truncation obligations and the factorisation are proved in Cubical
+  Agda.
+
+Not established:
+
+* *Definitional identity with the `--without-K` originals.* The module's
+  header comment says the restated pieces are "definitionally identical" to
+  their `--safe --without-K` originals. No tool checks this. It is an argued
+  claim, and a reviewer should compare the restated definitions by hand.
+* *Membership of the `--without-K` aggregate.* This module is outside that
+  aggregate, and nothing proved here transfers to the default-profile modules.
+* *Warning-free compatibility.* Agda reports warnings on this module (17 with
+  Agda 2.8.0.2 locally). They are `UnsupportedIndexedMatch` notes on transports
+  in Cubical Agda, not errors. Triage remains open in `PROOF-STATUS.adoc`.
+
+== Evidence at drafting (2026-11-18)
+
+The CI pin is Agda 2.7.0.1. This local run used a different compiler, so it
+supports the CI receipt and does not replace it.
+
+[source,shell]
+----
+agda --no-libraries -i <agda-stdlib 8326c74>/src --ignore-interfaces \
+  --safe --cubical -i . EchoImageFactorizationPropCubical.agda
+----
+
+* Agda 2.8.0.2, agda-stdlib `8326c74`: exit 0, with 17 warnings.
+* The control (`--cubical --safe` module containing a `postulate`): exit 42.
+
+== Review
+
+Fill this block in to complete the profile review. Leaving any field blank
+keeps the review OPEN.
+
+[cols="1,3"]
+|===
+| Reviewer |
+| Date |
+| Module SHA-256 reviewed |
+| CI run inspected (link) |
+| Restated definitions compared with the originals (yes/no, notes) |
+| Decision (accept / accept with conditions / reject) |
+| Conditions or follow-ups |
+|===
