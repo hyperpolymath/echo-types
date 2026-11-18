@@ -7,7 +7,9 @@ _Axes engaged: 1 (Ext/Int), 5 (Comp), 7 (PR/PI). See `README.adoc` § "Axis cove
 
 [.lead]
 *Verdict: distinct.* Both the truncation and 2-cell arguments are
-active and formalised against this neighbour. This is the gate-1
+active against this neighbour. The truncation argument is formalised;
+the 2-cell exhibits are historical (module absent from the tracked tree).
+This is the gate-1
 case argued in most depth.
 
 toc::[]
@@ -120,7 +122,8 @@ Neither has been exhibited.
 
 * Truncation argument: *formalised* on three domains via
   `echo-not-prop`. General theorem awaits Q2.1.
-* 2-cell argument: *formalised* via `EchoVsQuotient.Sophisticated`
+* 2-cell argument: *historically formalised* via `EchoVsQuotient.Sophisticated`
+  (module absent from the tracked tree; not current checked evidence)
   with three sub-cases sealed (core + S-1 + S-2). S-3 and S-4
   have informal closures.
 
@@ -134,7 +137,8 @@ neighbours have weaker formalisation; this is the template.
 * The Cubical Agda primitives for higher-inductive quotients
   (out of scope for `--safe --without-K` here; relevant for the
   S-4 sub-case).
-* `proofs/agda/EchoVsQuotient.agda` for the formal exhibits
-  cited above.
+* The `EchoVsQuotient` module, which named the formal exhibits cited above,
+  is absent from the current tracked tree; those exhibits are not current
+  checked evidence (see `docs/gate-1-distinct-phenomenon.adoc`).
 * `gate-1-distinct-phenomenon.adoc` § "Falsification tests" for
   the T2 retraction protocol this note instantiates.

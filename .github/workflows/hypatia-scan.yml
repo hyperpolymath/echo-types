@@ -45,7 +45,7 @@ jobs:
       security-events: write
       vulnerability-alerts: read # Dependabot alerts, for Hypatia's DA rules
     env:
-      HYPATIA_SHA: '7c10e5d712af7178f8c175e10a21c5216216c198'
+      HYPATIA_SHA: '6d8ab664b47a3e2abc6dedcd861e1422cd24d23f'
     steps:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

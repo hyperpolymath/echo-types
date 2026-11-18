@@ -36,8 +36,8 @@ The integration recipe with the existing five named axes does not
 carry substantive simultaneous cross-axis content. Distinctness
 against neighbour frameworks rests on the truncation argument
 (`echo-not-prop` family in `proofs/agda/examples/`) and the
-2-cell argument (Sophisticated submodules in `EchoVsQuotient.agda`
-and `EchoVsGalois.agda`), not on the integration argument.
+2-cell argument (Sophisticated submodules of the `EchoVsQuotient`
+and `EchoVsGalois` modules, absent from the current tracked tree), not on the integration argument.
 
 See `EI2_REPORT.adoc` for the authoritative termination record.
 The companion files `EI2_READING1_PATCHES.adoc` and

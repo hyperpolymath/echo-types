@@ -18,9 +18,9 @@ Source of truth:
 |===
 |Foundation |Axis exported |Contract |Machine-checked in
 |`+tropical-resource-typing+` |resource-grade axis
-|`+FOUNDATION_CONTRACT.md+` |Lean 4 `+Resource.*+`
+|`+FOUNDATION_CONTRACT.adoc+` |Lean 4 `+Resource.*+`
 
-|`+echo-types+` |residual-modality axis |`+FOUNDATION_CONTRACT.md+`
+|`+echo-types+` |residual-modality axis |`+FOUNDATION_CONTRACT.adoc+`
 |Agda `+Echo.*+` (`+--safe --without-K+`)
 |===
 
@@ -202,8 +202,8 @@ sharper informative-measure witness
 
 '''''
 
-_This brief restates the two `+FOUNDATION_CONTRACT.md+` files for the
+_This brief restates the two `+FOUNDATION_CONTRACT.adoc+` files for the
 downstream direction and adds nothing to them. For the full contracts
 and the parametric transport / anti-collapse theorems, read each
-foundation’s `+FOUNDATION_CONTRACT.md+` and (tropical)
+foundation’s `+FOUNDATION_CONTRACT.adoc+` and, in the tropical foundation's own repository,
 `+docs/ECHO-RESIDUE-BRIDGE.adoc+`._

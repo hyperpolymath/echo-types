@@ -114,5 +114,5 @@ in-repo residue / loss framing.
 
 Status anchors:
 
-* `docs/bridge-status.md` §7 (concise ledger, Core Affect: NO);
-* `docs/bridges/cross-repo-bridge-status.md` (cross-repo track table).
+* `docs/bridge-status.adoc` §7 (concise ledger, Core Affect: NO);
+* `docs/bridges/cross-repo-bridge-status.adoc` (cross-repo track table).

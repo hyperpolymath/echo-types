@@ -54,8 +54,8 @@ Per `CLAUDE.md`, each named theorem / iso-shape that lands triggers:
   decide landing / superseded / abandoned.
 . *Cherry-pick* to a consolidation branch off latest `main`, in dependency
   order (conflicts are usually additive, in `Smoke.agda` / `All.agda`).
-. *Human docs* — sweep `roadmap.adoc`, `docs/echo-types/composition.md`,
-  `overview.md`, and the wiki for stale `(Open)` tags; use honest labels
+. *Human docs* — sweep `roadmap.adoc`, `docs/echo-types/composition.adoc`,
+  `docs/echo-types/overview.adoc`, and the wiki for stale `(Open)` tags; use honest labels
   `(Landed)` / `(Partial)` / `(Open)`.
 . *Machine docs* — update `CLAUDE.md` current-rung-state and the `6a2/` files
   (see Section 4).
@@ -72,7 +72,7 @@ When a *track's status changes*, the change must propagate to all of:
   framing (historical blocks are preserved, not deleted; mark them HISTORY).
 * `.machine_readable/6a2/META.a2ml` — add an ADR for any architecture-level
   decision (status / supersedes per `[development-practices.versioning-of-decisions]`).
-* `docs/bridges/cross-repo-bridge-status.md` — the bridge ledger.
+* `docs/bridges/cross-repo-bridge-status.adoc` — the bridge ledger.
 * the wiki (<<Home.adoc#,Home>> one-line status + <<Roadmap.adoc#,Roadmap>>).
 
 Worked example: the 2026-06-21 ordinal-track *retirement* (`D-2026-06-21`) was
@@ -88,7 +88,7 @@ Versioning is SemVer 2.0.0 (current target `0.1.1`; recipe-extension target
 . [ ] Build cone green (Section 1) on `main`.
 . [ ] Identity gates reassessed (Section 2); any failure recorded in
   `docs/retractions.adoc`.
-. [ ] `CHANGELOG.md` updated; `[Unreleased]` rolled to the version.
+. [ ] `CHANGELOG.adoc` updated; `[Unreleased]` rolled to the version.
 . [ ] Machine docs current (Section 4): `6a2/STATE.a2ml`, `META.a2ml`,
   bridge ledger, wiki one-line status.
 . [ ] Tag minted; mirrors (gitlab, codeberg) consistent.

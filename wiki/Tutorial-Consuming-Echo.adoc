@@ -79,7 +79,7 @@ boundary invariant *Echo IS-NOT a resource instance* (see
 == 6. Four real consumers
 
 These are in-repo or in-estate bridges, not hypotheticals (ledger:
-`docs/bridges/cross-repo-bridge-status.md`).
+`docs/bridges/cross-repo-bridge-status.adoc`).
 
 * *phronesis (agentic ethics).* An ethical verdict's provenance IS
   `Echo verdict v`: the evaluator is non-injective, so the fibre retains *which*
@@ -112,7 +112,7 @@ table.
 
 * `FOUNDATION_CONTRACT.adoc` — the stable `Echo.*` interface to build against.
 * *EchoTypes.jl* — run the finite-domain shadow on your own data.
-* `docs/bridges/cross-repo-bridge-status.md` — every consumer bridge, with its
+* `docs/bridges/cross-repo-bridge-status.adoc` — every consumer bridge, with its
   honest scope and main blocker.
 * <<Deniability.adoc#,Deniability>> — a worked first-class echo property
   (perfect vs partial; section vs no-section) to see the shape of a result.

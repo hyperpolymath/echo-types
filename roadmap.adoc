@@ -24,8 +24,8 @@ The seven forge mirrors remain dormant by owner choice.
 [.lead]
 Single canonical roadmap for the echo-types project. As of 2026-05-26
 this file replaces the previously fragmented set of overlapping
-roadmaps (`docs/echo-types/roadmap.md`, `docs/PRIORITIZED_PROOF_ROADMAP.md`,
-`docs/ProofRoadmap.md`, `docs/WORK_PLAN.md` — all deleted in this
+roadmaps (the former echo-types roadmap, prioritized-proof-roadmap,
+proof-roadmap and work-plan notes — all deleted in this
 sweep; CLAUDE.md retains the per-session rung-consolidation ledger,
 `roadmap-gates.adoc` retains the identity-claim gates,
 `docs/echo-types/establishment-plan.adoc` retains the five-pillar
@@ -300,10 +300,10 @@ architectural keystone).
   `characteristic.N5Falsifier`) and finds none of it weakens any
   surviving nominee.
 
-*Artefacts (landed today).* `core/skepticisms/is-this-just-sigma-types.md`
+*Artefacts (landed today).* `core/skepticisms/is-this-just-sigma-types.adoc`
 (canonical answer doc, 5-section structure mirroring the demands);
 `docs/echo-types/sigma-distinctness-map.adoc` (AsciiDoc reviewer
-companion); `docs/theorem-index.md` (no-section and degrade-law
+companion); `docs/theorem-index.adoc` (no-section and degrade-law
 aggregate rows); cross-link from `roadmap-gates.adoc` Gate 2 and
 `docs/characteristic.adoc` §"Inherited spec".
 

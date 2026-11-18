@@ -62,7 +62,7 @@ Truncation arguments are load-bearing against:
 Echo wins because the natural 2-cell in the neighbour's framework
 is *Σ-over-preimages-shaped*, i.e., already echo-shaped, when
 incomparable kernels force a true 2-cell rather than a refinement
-map. The formal certificates:
+map. The historical certificates (their modules are absent from the tracked tree and are not current checked evidence; see `docs/gate-1-distinct-phenomenon.adoc`):
 
 * `EchoVsQuotient.Sophisticated.equalizer→echo-pair` — quotients'
   2-categorical encoding's natural 2-cell is the equalizer of two
@@ -207,7 +207,7 @@ this directory is the intended structure.
 == Axis coverage matrix (Gate 1 refresh 2026-05-20)
 
 Cross-reference of each adjacency note against the 8 taxonomy axes
-defined in `docs/echo-types/taxonomy.md`. Refreshed 2026-05-20 — most
+defined in `docs/echo-types/taxonomy.adoc`. Refreshed 2026-05-20 — most
 notes predate axis 8 (added with the `EchoDecidable`/`EchoFiberCount`
 landings) and therefore do not currently engage it; the open ○
 markings below flag where axis-8 implications exist but are not
@@ -325,8 +325,9 @@ the three n=2 instances. The remaining open work is the gate-2
 Σ-reducible and forwards only the constructed-`y` form), not the
 formalisation.
 
-The 2-cell argument has formal exhibits for both of its target
-neighbours (quotients via `EchoVsQuotient.Sophisticated`, Galois
+The 2-cell argument had formal exhibits for both of its target
+neighbours, now historical and absent from the tracked tree, not current
+checked evidence (quotients via `EchoVsQuotient.Sophisticated`, Galois
 via `EchoVsGalois.Sophisticated`).
 
 The remaining neighbours (IFC, provenance, modal type theories,
@@ -337,7 +338,8 @@ to Q2.x or example work to Q3.x. These are not a reopening of EI-2's
 terminated integration-distinctness claim.
 
 The honest summary: gate #1 has a strong consolidated argument
-plus formalised obstructions against the two strongest neighbours
-(quotients, Galois) plus formalised truncation wins on three
+plus historical obstructions against the two strongest neighbours
+(quotients, Galois; their modules are absent from the tracked tree and are
+not current checked evidence) plus formalised truncation wins on three
 domains (tropical, epistemic, linear). The remaining neighbours
 have framed but unformalised distinctness claims.

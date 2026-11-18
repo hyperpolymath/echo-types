@@ -250,9 +250,10 @@ kernel** — the boundary is real and lives outside this core.
 | `EchoCNOSemantics`
 | Imports `Echo`, `EchoCNOBridge`, stdlib, and the pinned external `CNO` module.
   Same-program certification and the source-preserving relation-fibre map
-  criterion use native `state-eq`, not propositional equality of function-valued
-  states. The identity/IsCNO characterization is scoped to that total,
-  zero-energy model; it is not a physical theorem or a FibreIso inverse-law claim.
+  criterion use native `obs-eq`, not propositional equality of function-valued
+  states. `NativeNull` (every start state runs to an observably equal state) is
+  equivalent to `IsCNO` in that model; the source-preserving map characterises
+  partial nullness only. It is not a physical theorem or a FibreIso inverse-law claim.
 
 | *Derived — graded interface and model (2026-11-06)*
 | `EchoGradedComonadNaturality`, `EchoErasingGradedComonad`

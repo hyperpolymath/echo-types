@@ -50,7 +50,7 @@ intensional core is the per-target structure of what got lost.
 
 The framework's specific contribution is twofold:
 
-. *Compositionality.* The accumulation isomorphism (`composition.md`
+. *Compositionality.* The accumulation isomorphism (`composition.adoc`
   §1) says `Echo (g ∘ f) y ≅ Σ B (λ b → Echo f b × g b ≡ y)`. The
   residue of a multi-pass pipeline factors through the residue of
   each pass; nothing is collapsed.
@@ -67,7 +67,7 @@ concrete pass.
 == Example 1 — Parser error recovery (axis 4)
 
 [.lead]
-Example 9 of `examples.md`. The pass:
+Example 9 of `examples.adoc`. The pass:
 
 [source]
 ----
@@ -137,7 +137,7 @@ operational stances:
 == Example 2 — Abstract interpretation widening (axis 2)
 
 [.lead]
-Example 10 of `examples.md`. The pass:
+Example 10 of `examples.adoc`. The pass:
 
 [source]
 ----
@@ -304,8 +304,8 @@ It is *not* additive value over:
 * `proofs/agda/EchoCost.agda` — axis 8 refinement 1.
 * `proofs/agda/EchoAccess.agda` — axis 8 refinement 2.
 * `proofs/agda/EchoSearch.agda` — axis 8 refinement 4.
-* `docs/echo-types/composition.md` — compositionality details.
-* `docs/echo-types/taxonomy.md` — the 8-axis taxonomy.
+* `docs/echo-types/composition.adoc` — compositionality details.
+* `docs/echo-types/taxonomy.adoc` — the 8-axis taxonomy.
 * `docs/adjacency/galois-connections.adoc` — Galois neighbour
   for example 2.
 * `docs/adjacency/refinement-types.adoc` — refinement-types
@@ -325,4 +325,4 @@ be expanded to a fully worked Agda exhibit:
   `echo-approx-compose`.
 
 Both are tracked in `roadmap.adoc` as deferred examples-library work
-(`Add example-library Agda files matching examples.md`).
+(`Add example-library Agda files matching examples.adoc`).

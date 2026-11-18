@@ -238,13 +238,13 @@ These are `⊤`-aliased matched-negatives in `EchoDeniability.agda`;
 
 `proofs/agda/EchoDeniability.agda` — wired into `All.agda` and pinned in `Smoke.agda`.
 
-Companion explorations (not part of the verified suite, standalone Agda files):
+Companion explorations (local sketches kept outside this repository; not part of the verified suite):
 
-- `Deniability.agda` — perfect case only (two histories, one residue constructor).
-- `DeniabilityPartial.agda` — both cases side by side; failing proofs as commented
+- `Deniability` — perfect case only (two histories, one residue constructor).
+- `DeniabilityPartial` — both cases side by side; failing proofs as commented
   blocks with error annotations; counterexample `witness-distinguishes`; restricted
   `cannotDistinguishConstant`.
 
-See also: `EchoObservationalEquivalence.adoc`, `EchoSecurity.adoc` in
-`docs/echo-types/`, and `EchoNoSectionGeneric.agda` for the generic
+See also: `EchoObservationalEquivalence.agda`, `EchoSecurity.agda` in
+`proofs/agda/`, and `EchoNoSectionGeneric.agda` for the generic
 no-section theorem this module instantiates.

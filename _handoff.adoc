@@ -26,7 +26,7 @@ pieces as a stdlib `+Function.Bundles._↔_+` record.
 * `+CLAUDE.md+` — updated composition-track summary (cancel-iso
 staleness fixed, pentagon marked complete) and Phase 1.3 sub-bullet
 under "`Open at this rung`" marked landed.
-* `+docs/echo-types/composition.md+` — Q4 ("`Pentagon coherence`")
+* `+docs/echo-types/composition.adoc+` — Q4 ("`Pentagon coherence`")
 flipped from "`partially landed`" to "`landed`" with the
 `+Echo-comp-pent-Σ-assoc+` reference.
 
@@ -120,7 +120,7 @@ The full frontier punch list from this session:
 . *`+rank-mono+`* in `+RankBrouwer.agda+` — falls out from #1
 . *Unbudgeted `+wf-<ᵇʳᶠ+`* — assembled from #2
 . *`+_<ᵇ⁺_+` WF Route B* — uses the same `+rank+` machinery; design note
-at `+docs/echo-types/buchholz-extended-wf.md+`
+at `+docs/bridges/buchholz-extended-wf.adoc+`
 . *Push surface-route WF back into `+Order.agda+`’s main `+_<ᵇ_+`* —
 gated on #4
 . *EchoApprox headline pinning* — minor:

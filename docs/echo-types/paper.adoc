@@ -703,8 +703,10 @@ we treat it as such; what it does *not* do is independently
 corroborate the modality across decorations — the four instances
 are not four independent witnesses, they are one structural pattern
 applied four times.  Cross-axis distinctness arguments
-(`docs/gate-1-handoff.adoc`) supply the per-decoration independence
-the recipe itself cannot.  Anyone reading the four-instance
+(`docs/gate-1-distinct-phenomenon.adoc`) are the intended route to
+per-decoration independence, but that document leaves the
+epistemic-versus-linear independence test open, so the independence is
+unresolved here, not established.  Anyone reading the four-instance
 table in §"Worked examples" as a robustness check should weaken that
 reading accordingly.
 

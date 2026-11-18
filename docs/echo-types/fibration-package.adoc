@@ -238,7 +238,7 @@ Citers of Echo's fibration package should read, in order:
 . `EchoFiberBridge.agda` — the definitional bridge to `fiber`;
 . `EchoFiberTriangulation.agda` — calibration against stdlib's
   own fibre / surjection notions;
-. `docs/echo-types/composition.md` (or `composition.adoc` if
+. `docs/echo-types/composition.adoc` (or `composition.adoc` if
   present) — the originally-handwritten narrative the
   mechanisation discharges.
 

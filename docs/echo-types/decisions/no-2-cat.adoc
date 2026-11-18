@@ -10,7 +10,7 @@
 [.lead]
 Closure note for the `roadmap.adoc` entry
 "2-categorical shape: commit to a 2-category or rule it out"
-and for `composition.md` §Q1 / §Q6. The verdict is *rule out*,
+and for `../composition.adoc` §Q1 / §Q6. The verdict is *rule out*,
 on argued grounds against the landed Pillars A–D evidence. The
 question is closed; future composition write-ups need not hedge
 for a 2-cat refinement.
@@ -78,17 +78,17 @@ forced trivial by a propositionality hypothesis.
 
 == Implication
 
-* `composition.md` §Q1 is closed (rule-out). The composition
+* `../composition.adoc` §Q1 is closed (rule-out). The composition
   laws (accumulation iso, cancel-iso, pentagon Σ-assoc,
   decoration commuting) are promoted from "ad-hoc candidates" to
   *the complete 1-categorical story* — not 2-coherence laws of a
   hypothesised 2-category, but the 1-categorical composition
   laws of a pullback-presented type, full stop.
-* `composition.md` §Q6 (composition in the presence of recovery /
+* `../composition.adoc` §Q6 (composition in the presence of recovery /
   echo-erasure) reformulates as a 1-categorical question:
   recovery as a slice morphism or a fibration section, not a
   2-cell. Write-up-tractable on this footing.
-* `composition.md` §Q4's "Evidence this is the right shape"
+* `../composition.adoc` §Q4's "Evidence this is the right shape"
   upgrades to a *characterisation*: pentagon is `refl` because
   there is no associator 2-cell to obstruct it.
 * The `EchoGradedComonad` + `EchoRelModel` package is the
@@ -119,7 +119,7 @@ None is on the active roadmap. The verdict stands.
 
 * `roadmap.adoc` — Theory-work entry updated to
   `[ruled out]`.
-* `docs/echo-types/composition.md` §Q1 / §Q4 / §Q6 — open
+* `docs/echo-types/composition.adoc` §Q1 / §Q4 / §Q6 — open
   framings folded into this closure.
 * `docs/echo-types/establishment-plan.adoc` — minimal
   cross-reference at the H2 verdict / guardrails site.

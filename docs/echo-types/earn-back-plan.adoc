@@ -315,12 +315,12 @@ single index; it moves no claim.
   wired into `All`/`Smoke`. Retraction follow-up F-2026-05-18a.
 
 | B
-| Buchholz order: `Ordinal/Buchholz/Order.agda` `_<ᵇ_` compares ψ by
+| Buchholz order: `Ordinal/Buchholz/Order.agda` (now in the ordinal-notation repository) `_<ᵇ_` compares ψ by
   Ω-index only and asserts `<ᵇ-ψΩ≤` as a constructor; same-binder
   sub-cases (`bpsi ν α <ᵇ bpsi ν β` with `α <ᵇ β`;
   `bplus x y₂ <ᵇ bplus x z₂` with `y₂ <ᵇ z₂`) are not constructible
   pending a K-free reformulation. Direct-constructor totality / WF do
-  not land; `ExtendedOrder.agda` is the honest closed wrapper (WF via
+  not land; `ExtendedOrder.agda` (likewise moved) is the honest closed wrapper (WF via
   the comparison *measure* `_<ᵇ⁺_`).
 | Disclosed structural-fidelity gap. *Off the echo-types paper
   critical path.* Long-tail workstream.
