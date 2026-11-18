@@ -67,9 +67,14 @@ Not established:
 The CI pin is Agda 2.7.0.1. This local run used a different compiler, so it
 supports the CI receipt and does not replace it.
 
+Run from `proofs/agda`, with `AGDA_STDLIB_DIR` set to an agda-stdlib
+checkout at commit `8326c7475af1fa456ca04a0203c168d5d7ff842b`:
+
 [source,shell]
 ----
-agda --no-libraries -i <agda-stdlib 8326c74>/src --ignore-interfaces \
+AGDA_STDLIB_DIR=/path/to/agda-stdlib   # checkout at commit 8326c74
+cd proofs/agda
+agda --no-libraries -i "$AGDA_STDLIB_DIR/src" --ignore-interfaces \
   --safe --cubical -i . EchoImageFactorizationPropCubical.agda
 ----
 
