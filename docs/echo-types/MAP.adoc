@@ -528,7 +528,10 @@ plan rungs R3, R8, R9, R12, R13). Landed 2026-11-09, `--safe --without-K
   verisimdb `Octad.v` R1–R3 — implications, not CRDT laws); guarded fill
   is the left-biased merge against an oracle proposal, never overwrites
   (`fill-guarded`), is inflationary (`fill-inflationary`) and is NOT
-  monotone (`fill-not-monotone`, two-modality counter-model); restriction
+  monotone (`fill-not-monotone`, two-modality counter-model); `merge` is
+  not a join for the information order (`NoJoin.no-common-upper-bound`:
+  two sections with different values at one index have no common upper
+  bound); restriction
   to an observed mask and its Echo fibre (`restrict-fibre-agree`,
   `restrict-blind`) — the fragment-granularity observation-fidelity shape.
 * *Multi-witness narrowing* — `EchoFibreIntersection.agda`: the fibre of a

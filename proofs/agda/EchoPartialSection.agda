@@ -13,9 +13,11 @@
 -- modality carries a value or bot. Here that is
 -- `PartialSection M V = (m : M) → Maybe (V m)`, with no assumption on
 -- `M` (so the eight-slot octad is one instance). This is the
--- "join-semilattice of partial sections" abstraction that
--- verisimdb/formal/CROSS-REPO-MAP.adoc flagged as the missing
--- echo-types companion to Octad.v's R1–R3.
+-- partial-section companion to Octad.v R1–R3 that
+-- verisimdb/formal/CROSS-REPO-MAP.adoc flagged as missing. It is a
+-- resolver-parametric merge algebra, NOT a join-semilattice for the
+-- information order `_⊑_`: `NoJoin.no-common-upper-bound` exhibits two
+-- sections with no common upper bound at all.
 --
 -- Everything is stated POINTWISE (equalities at each `m`), never as an
 -- equality of functions, so the module is funext-free. Octad.v proves
@@ -50,6 +52,7 @@
 --   * ⊑-refl, ⊑-trans
 --   * merge-comm, merge-assoc, merge-idem
 --   * fill-guarded, fill-inflationary, fill-not-monotone
+--   * no-common-upper-bound (merge is not a join for `_⊑_`)
 --   * restrict-fibre-agree, restrict-blind, restrict-echo
 
 module EchoPartialSection where
@@ -240,6 +243,33 @@ module FillNotMonotone where
   fill-not-monotone mono = absurd (mono true true refl)
     where
       absurd : fill propose₂ one₂ true ≡ just true → ⊥
+      absurd ()
+
+----------------------------------------------------------------------
+-- `merge` is not a join for `_⊑_` (counter-model).
+--
+-- `merge-comm` / `merge-assoc` / `merge-idem` are algebraic laws of a
+-- resolver-parametric merge; they do NOT make `merge resolve` a least
+-- upper bound in the information order. `_⊑_` keeps every present
+-- value unchanged, so two sections holding different values at one
+-- index have no common upper bound at all, whatever `resolve` does.
+----------------------------------------------------------------------
+
+module NoJoin where
+
+  V₁ : Bool → Set
+  V₁ _ = Bool
+
+  yes no : PartialSection Bool V₁
+  yes _ = just true
+  no  _ = just false
+
+  no-common-upper-bound :
+    ¬ Σ (PartialSection Bool V₁) (λ t → (yes ⊑ t) × (no ⊑ t))
+  no-common-upper-bound (t , y , n) =
+    absurd (trans (sym (y true true refl)) (n true false refl))
+    where
+      absurd : just true ≡ just false → ⊥
       absurd ()
 
 ----------------------------------------------------------------------
