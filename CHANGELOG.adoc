@@ -7,6 +7,15 @@ Changelog].
 
 === [Unreleased]
 
+==== Added (2026-11-23)
+
+* _CI/gate caller._ `+.github/workflows/ci-gate.yml+`, a thin caller of the
+estate gate in `+proven-cicd-and-workflows+` that publishes the commit status
+`+CI/gate+` required by the Branch-Floor ruleset. De-onboarded from
+`+actions.lock+` on purpose (a cross-repository reusable startup-fails when
+onboarded). The suite pin is a placeholder until the repository profile is on
+the suite `+main+`; until then the gate fails closed.
+
 ==== Added (2026-11-09)
 
 * _squeakwell / VeriSimDB recovery ladder._ `+EchoPartialSection.agda+`
