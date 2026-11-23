@@ -8,6 +8,8 @@ workflows:
         - 'actions/cache@v6.1.0'
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/checkout@v7.0.1'
+    '.github/workflows/ci-gate.yml':
+        - 'hyperpolymath/proven-cicd-and-workflows@a0760cea695a815a96b3944f3d03ee015da856d0'
     '.github/workflows/codeql.yml':
         - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
         - 'actions/checkout@v7.0.1'
@@ -108,6 +110,11 @@ dependencies:
         commit: 'sha1-33d7b85da1a04171e211befe2c739303b9a4c066'
         owner_id: 9919
         repo_id: 259445878
+    'hyperpolymath/proven-cicd-and-workflows@a0760cea695a815a96b3944f3d03ee015da856d0':
+        ref: 'main'
+        commit: 'sha1-a0760cea695a815a96b3944f3d03ee015da856d0'
+        owner_id: 6759885
+        repo_id: 1326697643
     'hyperpolymath/smtp-notify-action@e384daf6167a7a7567642d6a62060106244d2413':
         ref: 'v0.5.1'
         commit: 'sha1-e384daf6167a7a7567642d6a62060106244d2413'
