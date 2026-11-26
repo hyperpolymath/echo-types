@@ -1,0 +1,53 @@
+# SPDX-License-Identifier: MPL-2.0
+# Manifest for this repository (schema proven/manifest/v1); see
+# hyperpolymath/proven-cicd-and-workflows docs/PROVEN-ADOPTION.adoc.
+schema = "proven/manifest/v1"
+
+# ---------------------------------------------------------------- languages
+# echo-types is an Agda proof library. Agda is NOT in the umbrella's release-0.1
+# toolchain set, so it is handled by time-boxed waivers below, not ignored.
+# Shell is the repo's real, toolchain-free check tooling and is run for real.
+
+[languages.ignore.lean]
+reason = "proofs/lean4/EchoSearchExample.lean is a single hand re-proof checked by the lean-recheck job in agda.yml (checksum-pinned Lean 4.30.0, fails on any axiom); the umbrella cannot provision lean in release 0.1"
+
+[languages.ignore.coq]
+reason = "proofs/rocq/EchoSearchExample.v is a single hand re-proof checked by the rocq-recheck job in agda.yml (version-asserted Coq 8.18.0, fails on any axiom); the umbrella cannot provision rocq in release 0.1"
+
+[languages.ignore.julia]
+reason = "docs/echo-types/applications/haplotype-collapsing.jl is a documentation example, not a package (no Project.toml) and has no tests; the umbrella cannot provision julia in release 0.1"
+
+[languages.ignore.javascript]
+reason = "tools/audit-inventory.mjs and tools/banner/build-banner.mjs are Bun maintenance scripts (no package.json, no tests); the umbrella has no bun runner for bare scripts"
+
+# ------------------------------------------------------------------- unit
+# Static guard suite (no Agda needed): the same checks as `just guard`, plus the
+# negative-control test for the experimental aggregate checker.
+[categories.unit.shell]
+command = "sh scripts/kernel-guard.sh && bash tools/check-guardrails.sh proofs/agda && bash scripts/check-experimental-aggregate.sh && bash scripts/test-experimental-aggregate.sh && sh scripts/check-agda-invocations.sh"
+
+# Typechecking the proofs is the real unit test; needs Agda 2.7.0.1 + pinned
+# stdlib, installed today by scripts/setup-agda.sh in agda.yml.
+[categories.unit.agda.waiver]
+reason = "umbrella cannot provision Agda 2.7.0.1 (release 0.1); proofs are typechecked by agda.yml (check, cold-check, experimental, narrowing, cubical) and by `just test`. Needs an umbrella Agda toolchain (F1/F2)"
+until = "2027-01-15"
+
+# ------------------------------------------------------------------ smoke
+[categories.smoke.shell]
+na = "the shell scripts are check tooling, not a product with a launchable artefact; the repo's smoke targets are Agda modules (Smoke.agda, AuditSmoke.agda), covered by the agda waiver"
+
+[categories.smoke.agda.waiver]
+reason = "Smoke.agda, AuditSmoke.agda and NarrowingSmoke.agda are typechecked by agda.yml; the umbrella cannot provision Agda in release 0.1"
+until = "2027-01-15"
+
+# ------------------------------------------------------------------ build
+[categories.build.shell]
+na = "interpreted shell scripts; nothing to build (the proof build is the agda category)"
+
+[categories.build.agda.waiver]
+reason = "`just build` typechecks proofs/agda/All.agda and needs Agda 2.7.0.1 plus pinned libraries (AGDA_STDLIB, ABSOLUTE_ZERO_AGDA); umbrella cannot provision them in release 0.1; agda.yml does it today"
+until = "2027-01-15"
+
+# -------------------------------------------------------------------- p2p
+[categories.p2p]
+na = "a proof library with no running components and no inter-component seam; nothing to exercise peer to peer"
