@@ -142,7 +142,9 @@ its historical success is not review or a receipt for the default profile.
 The current working-tree entrypoint uses the source's existing separate
 `--safe --cubical` options because it constructs propositional truncation
 as a higher inductive type; profile review remains *OPEN*, and this island
-is not part of the `--without-K` aggregate. The postulated shadow remains
+is not part of the `--without-K` aggregate. A draft review record, awaiting
+the owner's review and sign-off, is
+link:docs/proof-profiles/cubical-island.adoc[`docs/proof-profiles/cubical-island.adoc`]. The postulated shadow remains
 quarantined as documented in `docs/proof-debt.adoc`.
 
 === Local cold-check record (2026-11-01)
